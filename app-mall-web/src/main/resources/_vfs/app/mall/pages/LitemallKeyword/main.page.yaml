@@ -1,0 +1,4 @@
+
+xui:js: '@include:LitemallKeyword.action.js'
+x:gen-extends: |
+    <web:GenPage view="LitemallKeyword.view.xml" page="main" xpl:lib="/nop/web/xlib/web.xlib" />

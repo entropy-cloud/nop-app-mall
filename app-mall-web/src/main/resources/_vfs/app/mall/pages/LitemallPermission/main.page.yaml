@@ -1,0 +1,4 @@
+
+xui:js: '@include:LitemallPermission.action.js'
+x:gen-extends: |
+    <web:GenPage view="LitemallPermission.view.xml" page="main" xpl:lib="/nop/web/xlib/web.xlib" />

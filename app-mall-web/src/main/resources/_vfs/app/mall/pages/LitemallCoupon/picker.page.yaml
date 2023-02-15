@@ -1,0 +1,3 @@
+
+x:gen-extends: |
+    <web:GenPage view="LitemallCoupon.view.xml" page="picker" xpl:lib="/nop/web/xlib/web.xlib" />

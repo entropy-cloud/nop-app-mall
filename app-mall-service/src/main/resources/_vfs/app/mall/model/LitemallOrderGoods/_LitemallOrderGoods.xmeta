@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<meta x:schema="/nop/schema/xmeta.xdef" xmlns:x="/nop/schema/xdsl.xdef" xmlns:i18n-en="i18n-en" xmlns:ext="ext"
+      xmlns:xpl="xpl" xmlns:biz-gen="biz-gen" displayName="订单商品表">
+
+    <entityName>app.mall.dao.entity.LitemallOrderGoods</entityName>
+
+    <primaryKey>id</primaryKey>
+
+    <displayProp/>
+
+    <x:post-extends>
+        <biz-gen:DefaultMetaPostExtends xpl:lib="/nop/biz/xlib/biz-gen.xlib"/>
+    </x:post-extends>
+
+    <prop name="id" displayName="Id" mandatory="true" queryable="true" sortable="true" insertable="true"
+          updatable="false">
+        <schema type="java.lang.Integer"/>
+    </prop>
+
+    <prop name="orderId" displayName="订单表的订单ID" mandatory="true" queryable="true" sortable="true" insertable="true"
+          updatable="true">
+        <schema type="java.lang.Integer"/>
+    </prop>
+
+    <prop name="goodsId" displayName="商品表的商品ID" mandatory="true" queryable="true" sortable="true" insertable="true"
+          updatable="true">
+        <schema type="java.lang.Integer"/>
+    </prop>
+
+    <prop name="goodsName" displayName="商品名称" mandatory="true" queryable="true" sortable="true" insertable="true"
+          updatable="true">
+        <schema type="java.lang.String" precision="127"/>
+    </prop>
+
+    <prop name="goodsSn" displayName="商品编号" mandatory="true" queryable="true" sortable="true" insertable="true"
+          updatable="true">
+        <schema type="java.lang.String" precision="63"/>
+    </prop>
+
+    <prop name="productId" displayName="商品货品表的货品ID" mandatory="true" queryable="true" sortable="true" insertable="true"
+          updatable="true">
+        <schema type="java.lang.Integer"/>
+    </prop>
+
+    <prop name="number" displayName="商品货品的购买数量" mandatory="true" queryable="true" sortable="true" insertable="true"
+          updatable="true">
+        <schema type="java.lang.Short"/>
+    </prop>
+
+    <prop name="price" displayName="商品货品的售价" mandatory="true" queryable="true" sortable="true" insertable="true"
+          updatable="true">
+        <schema type="java.math.BigDecimal" precision="10" scale="2"/>
+    </prop>
+
+    <prop name="specifications" displayName="商品货品的规格列表" mandatory="true" queryable="true" sortable="true"
+          insertable="true" updatable="true">
+        <schema type="java.lang.String" precision="1023"/>
+    </prop>
+
+    <prop name="picUrl" displayName="商品货品图片或者商品图片" mandatory="true" queryable="true" sortable="true" insertable="true"
+          updatable="true">
+        <schema type="java.lang.String" precision="255"/>
+    </prop>
+
+    <prop name="comment" displayName="订单商品评论，如果是-1，则超期不能评价；如果是0，则可以评价；如果其他值，则是comment表里面的评论ID。" queryable="true"
+          sortable="true" insertable="true" updatable="true">
+        <schema type="java.lang.Integer"/>
+    </prop>
+
+    <prop name="addTime" displayName="创建时间" queryable="true" sortable="true" insertable="true" updatable="true">
+        <schema type="java.time.LocalDateTime"/>
+    </prop>
+
+    <prop name="updateTime" displayName="更新时间" queryable="true" sortable="true" insertable="true" updatable="true">
+        <schema type="java.time.LocalDateTime"/>
+    </prop>
+
+    <prop name="deleted" displayName="逻辑删除" queryable="true" sortable="true" insertable="true" updatable="true">
+        <schema type="java.lang.Boolean"/>
+    </prop>
+</meta>

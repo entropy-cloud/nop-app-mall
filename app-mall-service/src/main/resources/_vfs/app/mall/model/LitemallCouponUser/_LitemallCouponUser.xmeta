@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<meta x:schema="/nop/schema/xmeta.xdef" xmlns:x="/nop/schema/xdsl.xdef" xmlns:i18n-en="i18n-en" xmlns:ext="ext"
+      xmlns:xpl="xpl" xmlns:biz-gen="biz-gen" displayName="优惠券用户使用表">
+
+    <entityName>app.mall.dao.entity.LitemallCouponUser</entityName>
+
+    <primaryKey>id</primaryKey>
+
+    <displayProp/>
+
+    <x:post-extends>
+        <biz-gen:DefaultMetaPostExtends xpl:lib="/nop/biz/xlib/biz-gen.xlib"/>
+    </x:post-extends>
+
+    <prop name="id" displayName="Id" mandatory="true" queryable="true" sortable="true" insertable="true"
+          updatable="false">
+        <schema type="java.lang.Integer"/>
+    </prop>
+
+    <prop name="userId" displayName="用户ID" mandatory="true" queryable="true" sortable="true" insertable="true"
+          updatable="true">
+        <schema type="java.lang.Integer"/>
+    </prop>
+
+    <prop name="couponId" displayName="优惠券ID" mandatory="true" queryable="true" sortable="true" insertable="true"
+          updatable="true">
+        <schema type="java.lang.Integer"/>
+    </prop>
+
+    <prop name="status" displayName="使用状态, 如果是0则未使用；如果是1则已使用；如果是2则已过期；如果是3则已经下架；" queryable="true" sortable="true"
+          insertable="true" updatable="true">
+        <schema type="java.lang.Short"/>
+    </prop>
+
+    <prop name="usedTime" displayName="使用时间" queryable="true" sortable="true" insertable="true" updatable="true">
+        <schema type="java.time.LocalDateTime"/>
+    </prop>
+
+    <prop name="startTime" displayName="有效期开始时间" queryable="true" sortable="true" insertable="true" updatable="true">
+        <schema type="java.time.LocalDateTime"/>
+    </prop>
+
+    <prop name="endTime" displayName="有效期截至时间" queryable="true" sortable="true" insertable="true" updatable="true">
+        <schema type="java.time.LocalDateTime"/>
+    </prop>
+
+    <prop name="orderId" displayName="订单ID" queryable="true" sortable="true" insertable="true" updatable="true">
+        <schema type="java.lang.Integer"/>
+    </prop>
+
+    <prop name="addTime" displayName="创建时间" queryable="true" sortable="true" insertable="true" updatable="true">
+        <schema type="java.time.LocalDateTime"/>
+    </prop>
+
+    <prop name="updateTime" displayName="更新时间" queryable="true" sortable="true" insertable="true" updatable="true">
+        <schema type="java.time.LocalDateTime"/>
+    </prop>
+
+    <prop name="deleted" displayName="逻辑删除" queryable="true" sortable="true" insertable="true" updatable="true">
+        <schema type="java.lang.Boolean"/>
+    </prop>
+</meta>

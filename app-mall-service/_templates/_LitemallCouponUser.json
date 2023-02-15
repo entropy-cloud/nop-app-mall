@@ -1,0 +1,13 @@
+{
+  "id": 0,
+  "userId": 0,
+  "couponId": 0,
+  "status": 0,
+  "usedTime": "2000-01-01 14:00:00",
+  "startTime": "2000-01-01 14:00:00",
+  "endTime": "2000-01-01 14:00:00",
+  "orderId": 0,
+  "addTime": "2000-01-01 14:00:00",
+  "updateTime": "2000-01-01 14:00:00",
+  "deleted": false
+}

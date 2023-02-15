@@ -1,0 +1,961 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<orm ext:mavenArtifactId="app-mall" ext:entityPackageName="app.mall.dao.entity" ext:registerShortName="true"
+     ext:mavenGroupId="io.nop.app" ext:basePackageName="app.mall" ext:appName="app-mall"
+     ext:platformVersion="2.0.0-SNAPSHOT" ext:dialect="mysql,oracle,postgresql" ext:mavenVersion="1.0-SNAPSHOT"
+     x:schema="/nop/schema/orm/orm.xdef" xmlns:x="/nop/schema/xdsl.xdef" xmlns:i18n-en="i18n-en"
+     xmlns:ref-i18n-en="ref-i18n-en" xmlns:ext="ext" xmlns:orm-gen="orm-gen" xmlns:xpl="xpl">
+
+    <x:post-extends>
+        <orm-gen:DefaultPostExtends xpl:lib="/nop/orm/xlib/orm-gen.xlib"/>
+    </x:post-extends>
+
+    <domains>
+        <domain name="userName" precision="50" stdSqlType="VARCHAR"/>
+        <domain name="image" precision="100" stdSqlType="VARCHAR"/>
+        <domain name="email" precision="100" stdSqlType="VARCHAR"/>
+        <domain name="phone" precision="100" stdSqlType="VARCHAR"/>
+        <domain name="roleId" precision="100" stdSqlType="VARCHAR"/>
+        <domain name="userId" precision="50" stdSqlType="VARCHAR"/>
+        <domain name="deptId" precision="50" stdSqlType="VARCHAR"/>
+        <domain name="boolFlag" stdSqlType="TINYINT"/>
+        <domain name="json-1000" precision="1" stdDomain="json" stdSqlType="VARCHAR"/>
+        <domain name="remark" precision="1" stdSqlType="VARCHAR"/>
+        <domain name="version" stdSqlType="INTEGER"/>
+        <domain name="createTime" stdSqlType="TIMESTAMP"/>
+        <domain name="createdBy" precision="50" stdSqlType="VARCHAR"/>
+        <domain name="updateTime" stdSqlType="TIMESTAMP"/>
+        <domain name="updatedBy" precision="50" stdSqlType="VARCHAR"/>
+        <domain name="delFlag" stdDomain="boolFlag" stdSqlType="TINYINT"/>
+    </domains>
+
+    <entities>
+        <entity className="app.mall.dao.entity.LitemallAd" displayName="广告表" name="app.mall.dao.entity.LitemallAd"
+                registerShortName="true" tableName="litemall_ad">
+            <columns>
+                <column code="ID" displayName="Id" mandatory="true" name="id" primary="true" propId="1"
+                        stdDataType="int" stdSqlType="INTEGER"/>
+                <column code="NAME" displayName="广告标题" mandatory="true" name="name" precision="63" propId="2"
+                        stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="LINK" displayName="所广告的商品页面或者活动页面链接地址" mandatory="true" name="link" precision="255"
+                        propId="3" stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="URL" displayName="广告宣传图片" mandatory="true" name="url" precision="255" propId="4"
+                        stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="POSITION" displayName="广告位置：1则是首页" name="position" propId="5" stdDataType="byte"
+                        stdSqlType="TINYINT"/>
+                <column code="CONTENT" displayName="活动内容" name="content" precision="255" propId="6" stdDataType="string"
+                        stdSqlType="VARCHAR"/>
+                <column code="START_TIME" displayName="广告开始时间" name="startTime" propId="7" stdDataType="datetime"
+                        stdSqlType="DATETIME"/>
+                <column code="END_TIME" displayName="广告结束时间" name="endTime" propId="8" stdDataType="datetime"
+                        stdSqlType="DATETIME"/>
+                <column code="ENABLED" displayName="是否启动" name="enabled" propId="9" stdDataType="boolean"
+                        stdSqlType="BOOLEAN"/>
+                <column code="ADD_TIME" displayName="创建时间" name="addTime" propId="10" stdDataType="datetime"
+                        stdSqlType="DATETIME"/>
+                <column code="UPDATE_TIME" displayName="更新时间" name="updateTime" propId="11" stdDataType="datetime"
+                        stdSqlType="DATETIME"/>
+                <column code="DELETED" displayName="逻辑删除" name="deleted" propId="12" stdDataType="boolean"
+                        stdSqlType="BOOLEAN"/>
+            </columns>
+        </entity>
+        <entity className="app.mall.dao.entity.LitemallAddress" displayName="收货地址表"
+                name="app.mall.dao.entity.LitemallAddress" registerShortName="true" tableName="litemall_address">
+            <columns>
+                <column code="ID" displayName="Id" mandatory="true" name="id" primary="true" propId="1"
+                        stdDataType="int" stdSqlType="INTEGER"/>
+                <column code="NAME" displayName="收货人名称" mandatory="true" name="name" precision="63" propId="2"
+                        stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="USER_ID" displayName="用户表的用户ID" mandatory="true" name="userId" propId="3"
+                        stdDataType="int" stdSqlType="INTEGER"/>
+                <column code="PROVINCE" displayName="行政区域表的省ID" mandatory="true" name="province" precision="63"
+                        propId="4" stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="CITY" displayName="行政区域表的市ID" mandatory="true" name="city" precision="63" propId="5"
+                        stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="COUNTY" displayName="行政区域表的区县ID" mandatory="true" name="county" precision="63" propId="6"
+                        stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="ADDRESS_DETAIL" displayName="详细收货地址" mandatory="true" name="addressDetail" precision="127"
+                        propId="7" stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="AREA_CODE" displayName="地区编码" name="areaCode" precision="6" propId="8"
+                        stdDataType="string" stdSqlType="CHAR"/>
+                <column code="POSTAL_CODE" displayName="邮政编码" name="postalCode" precision="6" propId="9"
+                        stdDataType="string" stdSqlType="CHAR"/>
+                <column code="TEL" displayName="手机号码" mandatory="true" name="tel" precision="20" propId="10"
+                        stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="IS_DEFAULT" displayName="是否默认地址" mandatory="true" name="isDefault" propId="11"
+                        stdDataType="boolean" stdSqlType="BOOLEAN"/>
+                <column code="ADD_TIME" displayName="创建时间" name="addTime" propId="12" stdDataType="datetime"
+                        stdSqlType="DATETIME"/>
+                <column code="UPDATE_TIME" displayName="更新时间" name="updateTime" propId="13" stdDataType="datetime"
+                        stdSqlType="DATETIME"/>
+                <column code="DELETED" displayName="逻辑删除" name="deleted" propId="14" stdDataType="boolean"
+                        stdSqlType="BOOLEAN"/>
+            </columns>
+        </entity>
+        <entity className="app.mall.dao.entity.LitemallAdmin" displayName="管理员表"
+                name="app.mall.dao.entity.LitemallAdmin" registerShortName="true" tableName="litemall_admin">
+            <columns>
+                <column code="ID" displayName="Id" mandatory="true" name="id" primary="true" propId="1"
+                        stdDataType="int" stdSqlType="INTEGER"/>
+                <column code="USERNAME" displayName="管理员名称" mandatory="true" name="username" precision="63" propId="2"
+                        stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="PASSWORD" displayName="管理员密码" mandatory="true" name="password" precision="63" propId="3"
+                        stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="LAST_LOGIN_IP" displayName="最近一次登录IP地址" name="lastLoginIp" precision="63" propId="4"
+                        stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="LAST_LOGIN_TIME" displayName="最近一次登录时间" name="lastLoginTime" propId="5"
+                        stdDataType="datetime" stdSqlType="DATETIME"/>
+                <column code="AVATAR" displayName="头像图片" name="avatar" precision="255" propId="6" stdDataType="string"
+                        stdSqlType="VARCHAR"/>
+                <column code="ADD_TIME" displayName="创建时间" name="addTime" propId="7" stdDataType="datetime"
+                        stdSqlType="DATETIME"/>
+                <column code="UPDATE_TIME" displayName="更新时间" name="updateTime" propId="8" stdDataType="datetime"
+                        stdSqlType="DATETIME"/>
+                <column code="DELETED" displayName="逻辑删除" name="deleted" propId="9" stdDataType="boolean"
+                        stdSqlType="BOOLEAN"/>
+                <column code="ROLE_IDS" displayName="角色列表" name="roleIds" precision="127" propId="10"
+                        stdDataType="string" stdSqlType="VARCHAR"/>
+            </columns>
+        </entity>
+        <entity className="app.mall.dao.entity.LitemallAftersale" displayName="售后表"
+                name="app.mall.dao.entity.LitemallAftersale" registerShortName="true" tableName="litemall_aftersale">
+            <columns>
+                <column code="ID" displayName="Id" mandatory="true" name="id" primary="true" propId="1"
+                        stdDataType="int" stdSqlType="INTEGER"/>
+                <column code="AFTERSALE_SN" displayName="售后编号" name="aftersaleSn" precision="63" propId="2"
+                        stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="ORDER_ID" displayName="订单ID" mandatory="true" name="orderId" propId="3" stdDataType="int"
+                        stdSqlType="INTEGER"/>
+                <column code="USER_ID" displayName="用户ID" mandatory="true" name="userId" propId="4" stdDataType="int"
+                        stdSqlType="INTEGER"/>
+                <column code="TYPE" displayName="售后类型，0是未收货退款，1是已收货（无需退货）退款，2用户退货退款" name="type" propId="5"
+                        stdDataType="short" stdSqlType="SMALLINT"/>
+                <column code="REASON" displayName="退款原因" name="reason" precision="31" propId="6" stdDataType="string"
+                        stdSqlType="VARCHAR"/>
+                <column code="AMOUNT" displayName="退款金额" name="amount" precision="10" propId="7" scale="2"
+                        stdDataType="decimal" stdSqlType="DECIMAL"/>
+                <column code="PICTURES" displayName="退款凭证图片链接数组" name="pictures" precision="1023" propId="8"
+                        stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="COMMENT" displayName="退款说明" name="comment" precision="511" propId="9" stdDataType="string"
+                        stdSqlType="VARCHAR"/>
+                <column code="STATUS" displayName="售后状态，0是可申请，1是用户已申请，2是管理员审核通过，3是管理员退款成功，4是管理员审核拒绝，5是用户已取消"
+                        name="status" propId="10" stdDataType="short" stdSqlType="SMALLINT"/>
+                <column code="HANDLE_TIME" displayName="管理员操作时间" name="handleTime" propId="11" stdDataType="datetime"
+                        stdSqlType="DATETIME"/>
+                <column code="ADD_TIME" displayName="添加时间" name="addTime" propId="12" stdDataType="datetime"
+                        stdSqlType="DATETIME"/>
+                <column code="UPDATE_TIME" displayName="更新时间" name="updateTime" propId="13" stdDataType="datetime"
+                        stdSqlType="DATETIME"/>
+                <column code="DELETED" displayName="逻辑删除" name="deleted" propId="14" stdDataType="boolean"
+                        stdSqlType="BOOLEAN"/>
+            </columns>
+        </entity>
+        <entity className="app.mall.dao.entity.LitemallBrand" displayName="品牌商表"
+                name="app.mall.dao.entity.LitemallBrand" registerShortName="true" tableName="litemall_brand">
+            <columns>
+                <column code="ID" displayName="Id" mandatory="true" name="id" primary="true" propId="1"
+                        stdDataType="int" stdSqlType="INTEGER"/>
+                <column code="NAME" displayName="品牌商名称" mandatory="true" name="name" precision="255" propId="2"
+                        stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="DESC" displayName="品牌商简介" mandatory="true" name="desc" precision="255" propId="3"
+                        stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="PIC_URL" displayName="品牌商页的品牌商图片" mandatory="true" name="picUrl" precision="255"
+                        propId="4" stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="SORT_ORDER" displayName="Sortorder" name="sortOrder" propId="5" stdDataType="byte"
+                        stdSqlType="TINYINT"/>
+                <column code="FLOOR_PRICE" displayName="品牌商的商品低价，仅用于页面展示" name="floorPrice" precision="10" propId="6"
+                        scale="2" stdDataType="decimal" stdSqlType="DECIMAL"/>
+                <column code="ADD_TIME" displayName="创建时间" name="addTime" propId="7" stdDataType="datetime"
+                        stdSqlType="DATETIME"/>
+                <column code="UPDATE_TIME" displayName="更新时间" name="updateTime" propId="8" stdDataType="datetime"
+                        stdSqlType="DATETIME"/>
+                <column code="DELETED" displayName="逻辑删除" name="deleted" propId="9" stdDataType="boolean"
+                        stdSqlType="BOOLEAN"/>
+            </columns>
+        </entity>
+        <entity className="app.mall.dao.entity.LitemallCart" displayName="购物车商品表"
+                name="app.mall.dao.entity.LitemallCart" registerShortName="true" tableName="litemall_cart">
+            <columns>
+                <column code="ID" displayName="Id" mandatory="true" name="id" primary="true" propId="1"
+                        stdDataType="int" stdSqlType="INTEGER"/>
+                <column code="USER_ID" displayName="用户表的用户ID" name="userId" propId="2" stdDataType="int"
+                        stdSqlType="INTEGER"/>
+                <column code="GOODS_ID" displayName="商品表的商品ID" name="goodsId" propId="3" stdDataType="int"
+                        stdSqlType="INTEGER"/>
+                <column code="GOODS_SN" displayName="商品编号" name="goodsSn" precision="63" propId="4" stdDataType="string"
+                        stdSqlType="VARCHAR"/>
+                <column code="GOODS_NAME" displayName="商品名称" name="goodsName" precision="127" propId="5"
+                        stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="PRODUCT_ID" displayName="商品货品表的货品ID" name="productId" propId="6" stdDataType="int"
+                        stdSqlType="INTEGER"/>
+                <column code="PRICE" displayName="商品货品的价格" name="price" precision="10" propId="7" scale="2"
+                        stdDataType="decimal" stdSqlType="DECIMAL"/>
+                <column code="NUMBER" displayName="商品货品的数量" name="number" propId="8" stdDataType="short"
+                        stdSqlType="SMALLINT"/>
+                <column code="SPECIFICATIONS" displayName="商品规格值列表，采用JSON数组格式" name="specifications" precision="1023"
+                        propId="9" stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="CHECKED" displayName="购物车中商品是否选择状态" name="checked" propId="10" stdDataType="boolean"
+                        stdSqlType="BOOLEAN"/>
+                <column code="PIC_URL" displayName="商品图片或者商品货品图片" name="picUrl" precision="255" propId="11"
+                        stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="ADD_TIME" displayName="创建时间" name="addTime" propId="12" stdDataType="datetime"
+                        stdSqlType="DATETIME"/>
+                <column code="UPDATE_TIME" displayName="更新时间" name="updateTime" propId="13" stdDataType="datetime"
+                        stdSqlType="DATETIME"/>
+                <column code="DELETED" displayName="逻辑删除" name="deleted" propId="14" stdDataType="boolean"
+                        stdSqlType="BOOLEAN"/>
+            </columns>
+        </entity>
+        <entity className="app.mall.dao.entity.LitemallCategory" displayName="类目表"
+                name="app.mall.dao.entity.LitemallCategory" registerShortName="true" tableName="litemall_category">
+            <columns>
+                <column code="ID" displayName="Id" mandatory="true" name="id" primary="true" propId="1"
+                        stdDataType="int" stdSqlType="INTEGER"/>
+                <column code="NAME" displayName="类目名称" mandatory="true" name="name" precision="63" propId="2"
+                        stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="KEYWORDS" displayName="类目关键字，以JSON数组格式" mandatory="true" name="keywords" precision="1023"
+                        propId="3" stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="DESC" displayName="类目广告语介绍" name="desc" precision="255" propId="4" stdDataType="string"
+                        stdSqlType="VARCHAR"/>
+                <column code="PID" displayName="父类目ID" mandatory="true" name="pid" propId="5" stdDataType="int"
+                        stdSqlType="INTEGER"/>
+                <column code="ICON_URL" displayName="类目图标" name="iconUrl" precision="255" propId="6"
+                        stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="PIC_URL" displayName="类目图片" name="picUrl" precision="255" propId="7" stdDataType="string"
+                        stdSqlType="VARCHAR"/>
+                <column code="LEVEL" displayName="Level" name="level" precision="255" propId="8" stdDataType="string"
+                        stdSqlType="VARCHAR"/>
+                <column code="SORT_ORDER" displayName="排序" name="sortOrder" propId="9" stdDataType="byte"
+                        stdSqlType="TINYINT"/>
+                <column code="ADD_TIME" displayName="创建时间" name="addTime" propId="10" stdDataType="datetime"
+                        stdSqlType="DATETIME"/>
+                <column code="UPDATE_TIME" displayName="更新时间" name="updateTime" propId="11" stdDataType="datetime"
+                        stdSqlType="DATETIME"/>
+                <column code="DELETED" displayName="逻辑删除" name="deleted" propId="12" stdDataType="boolean"
+                        stdSqlType="BOOLEAN"/>
+            </columns>
+        </entity>
+        <entity className="app.mall.dao.entity.LitemallCollect" displayName="收藏表"
+                name="app.mall.dao.entity.LitemallCollect" registerShortName="true" tableName="litemall_collect">
+            <columns>
+                <column code="ID" displayName="Id" mandatory="true" name="id" primary="true" propId="1"
+                        stdDataType="int" stdSqlType="INTEGER"/>
+                <column code="USER_ID" displayName="用户表的用户ID" mandatory="true" name="userId" propId="2"
+                        stdDataType="int" stdSqlType="INTEGER"/>
+                <column code="VALUE_ID" displayName="如果type=0，则是商品ID；如果type=1，则是专题ID" mandatory="true" name="valueId"
+                        propId="3" stdDataType="int" stdSqlType="INTEGER"/>
+                <column code="TYPE" displayName="收藏类型，如果type=0，则是商品ID；如果type=1，则是专题ID" mandatory="true" name="type"
+                        propId="4" stdDataType="byte" stdSqlType="TINYINT"/>
+                <column code="ADD_TIME" displayName="创建时间" name="addTime" propId="5" stdDataType="datetime"
+                        stdSqlType="DATETIME"/>
+                <column code="UPDATE_TIME" displayName="更新时间" name="updateTime" propId="6" stdDataType="datetime"
+                        stdSqlType="DATETIME"/>
+                <column code="DELETED" displayName="逻辑删除" name="deleted" propId="7" stdDataType="boolean"
+                        stdSqlType="BOOLEAN"/>
+            </columns>
+        </entity>
+        <entity className="app.mall.dao.entity.LitemallComment" displayName="评论表"
+                name="app.mall.dao.entity.LitemallComment" registerShortName="true" tableName="litemall_comment">
+            <columns>
+                <column code="ID" displayName="Id" mandatory="true" name="id" primary="true" propId="1"
+                        stdDataType="int" stdSqlType="INTEGER"/>
+                <column code="VALUE_ID" displayName="如果type=0，则是商品评论；如果是type=1，则是专题评论。" mandatory="true" name="valueId"
+                        propId="2" stdDataType="int" stdSqlType="INTEGER"/>
+                <column code="TYPE" displayName="评论类型，如果type=0，则是商品评论；如果是type=1，则是专题评论；" mandatory="true" name="type"
+                        propId="3" stdDataType="byte" stdSqlType="TINYINT"/>
+                <column code="CONTENT" displayName="评论内容" name="content" precision="1023" propId="4"
+                        stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="ADMIN_CONTENT" displayName="管理员回复内容" name="adminContent" precision="511" propId="5"
+                        stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="USER_ID" displayName="用户表的用户ID" mandatory="true" name="userId" propId="6"
+                        stdDataType="int" stdSqlType="INTEGER"/>
+                <column code="HAS_PICTURE" displayName="是否含有图片" name="hasPicture" propId="7" stdDataType="boolean"
+                        stdSqlType="BOOLEAN"/>
+                <column code="PIC_URLS" displayName="图片地址列表，采用JSON数组格式" name="picUrls" precision="1023" propId="8"
+                        stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="STAR" displayName="评分， 1-5" name="star" propId="9" stdDataType="short"
+                        stdSqlType="SMALLINT"/>
+                <column code="ADD_TIME" displayName="创建时间" name="addTime" propId="10" stdDataType="datetime"
+                        stdSqlType="DATETIME"/>
+                <column code="UPDATE_TIME" displayName="更新时间" name="updateTime" propId="11" stdDataType="datetime"
+                        stdSqlType="DATETIME"/>
+                <column code="DELETED" displayName="逻辑删除" name="deleted" propId="12" stdDataType="boolean"
+                        stdSqlType="BOOLEAN"/>
+            </columns>
+        </entity>
+        <entity className="app.mall.dao.entity.LitemallCoupon" displayName="优惠券信息及规则表"
+                name="app.mall.dao.entity.LitemallCoupon" registerShortName="true" tableName="litemall_coupon">
+            <columns>
+                <column code="ID" displayName="Id" mandatory="true" name="id" primary="true" propId="1"
+                        stdDataType="int" stdSqlType="INTEGER"/>
+                <column code="NAME" displayName="优惠券名称" mandatory="true" name="name" precision="63" propId="2"
+                        stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="DESC" displayName="优惠券介绍，通常是显示优惠券使用限制文字" name="desc" precision="127" propId="3"
+                        stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="TAG" displayName="优惠券标签，例如新人专用" name="tag" precision="63" propId="4" stdDataType="string"
+                        stdSqlType="VARCHAR"/>
+                <column code="TOTAL" displayName="优惠券数量，如果是0，则是无限量" mandatory="true" name="total" propId="5"
+                        stdDataType="int" stdSqlType="INTEGER"/>
+                <column code="DISCOUNT" displayName="优惠金额，" name="discount" precision="10" propId="6" scale="2"
+                        stdDataType="decimal" stdSqlType="DECIMAL"/>
+                <column code="MIN" displayName="最少消费金额才能使用优惠券。" name="min" precision="10" propId="7" scale="2"
+                        stdDataType="decimal" stdSqlType="DECIMAL"/>
+                <column code="LIMIT" displayName="用户领券限制数量，如果是0，则是不限制；默认是1，限领一张." name="limit" propId="8"
+                        stdDataType="short" stdSqlType="SMALLINT"/>
+                <column code="TYPE" displayName="优惠券赠送类型，如果是0则通用券，用户领取；如果是1，则是注册赠券；如果是2，则是优惠券码兑换；" name="type"
+                        propId="9" stdDataType="short" stdSqlType="SMALLINT"/>
+                <column code="STATUS" displayName="优惠券状态，如果是0则是正常可用；如果是1则是过期; 如果是2则是下架。" name="status" propId="10"
+                        stdDataType="short" stdSqlType="SMALLINT"/>
+                <column code="GOODS_TYPE" displayName="商品限制类型，如果0则全商品，如果是1则是类目限制，如果是2则是商品限制。" name="goodsType"
+                        propId="11" stdDataType="short" stdSqlType="SMALLINT"/>
+                <column code="GOODS_VALUE" displayName="商品限制值，goods_type如果是0则空集合，如果是1则是类目集合，如果是2则是商品集合。"
+                        name="goodsValue" precision="1023" propId="12" stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="CODE" displayName="优惠券兑换码" name="code" precision="63" propId="13" stdDataType="string"
+                        stdSqlType="VARCHAR"/>
+                <column code="TIME_TYPE" displayName="有效时间限制，如果是0，则基于领取时间的有效天数days；如果是1，则start_time和end_time是优惠券有效期；"
+                        name="timeType" propId="14" stdDataType="short" stdSqlType="SMALLINT"/>
+                <column code="DAYS" displayName="基于领取时间的有效天数days。" name="days" propId="15" stdDataType="short"
+                        stdSqlType="SMALLINT"/>
+                <column code="START_TIME" displayName="使用券开始时间" name="startTime" propId="16" stdDataType="datetime"
+                        stdSqlType="DATETIME"/>
+                <column code="END_TIME" displayName="使用券截至时间" name="endTime" propId="17" stdDataType="datetime"
+                        stdSqlType="DATETIME"/>
+                <column code="ADD_TIME" displayName="创建时间" name="addTime" propId="18" stdDataType="datetime"
+                        stdSqlType="DATETIME"/>
+                <column code="UPDATE_TIME" displayName="更新时间" name="updateTime" propId="19" stdDataType="datetime"
+                        stdSqlType="DATETIME"/>
+                <column code="DELETED" displayName="逻辑删除" name="deleted" propId="20" stdDataType="boolean"
+                        stdSqlType="BOOLEAN"/>
+            </columns>
+        </entity>
+        <entity className="app.mall.dao.entity.LitemallCouponUser" displayName="优惠券用户使用表"
+                name="app.mall.dao.entity.LitemallCouponUser" registerShortName="true" tableName="litemall_coupon_user">
+            <columns>
+                <column code="ID" displayName="Id" mandatory="true" name="id" primary="true" propId="1"
+                        stdDataType="int" stdSqlType="INTEGER"/>
+                <column code="USER_ID" displayName="用户ID" mandatory="true" name="userId" propId="2" stdDataType="int"
+                        stdSqlType="INTEGER"/>
+                <column code="COUPON_ID" displayName="优惠券ID" mandatory="true" name="couponId" propId="3"
+                        stdDataType="int" stdSqlType="INTEGER"/>
+                <column code="STATUS" displayName="使用状态, 如果是0则未使用；如果是1则已使用；如果是2则已过期；如果是3则已经下架；" name="status" propId="4"
+                        stdDataType="short" stdSqlType="SMALLINT"/>
+                <column code="USED_TIME" displayName="使用时间" name="usedTime" propId="5" stdDataType="datetime"
+                        stdSqlType="DATETIME"/>
+                <column code="START_TIME" displayName="有效期开始时间" name="startTime" propId="6" stdDataType="datetime"
+                        stdSqlType="DATETIME"/>
+                <column code="END_TIME" displayName="有效期截至时间" name="endTime" propId="7" stdDataType="datetime"
+                        stdSqlType="DATETIME"/>
+                <column code="ORDER_ID" displayName="订单ID" name="orderId" propId="8" stdDataType="int"
+                        stdSqlType="INTEGER"/>
+                <column code="ADD_TIME" displayName="创建时间" name="addTime" propId="9" stdDataType="datetime"
+                        stdSqlType="DATETIME"/>
+                <column code="UPDATE_TIME" displayName="更新时间" name="updateTime" propId="10" stdDataType="datetime"
+                        stdSqlType="DATETIME"/>
+                <column code="DELETED" displayName="逻辑删除" name="deleted" propId="11" stdDataType="boolean"
+                        stdSqlType="BOOLEAN"/>
+            </columns>
+        </entity>
+        <entity className="app.mall.dao.entity.LitemallFeedback" displayName="意见反馈表"
+                name="app.mall.dao.entity.LitemallFeedback" registerShortName="true" tableName="litemall_feedback">
+            <columns>
+                <column code="ID" displayName="Id" mandatory="true" name="id" primary="true" propId="1"
+                        stdDataType="int" stdSqlType="INTEGER"/>
+                <column code="USER_ID" displayName="用户表的用户ID" mandatory="true" name="userId" propId="2"
+                        stdDataType="int" stdSqlType="INTEGER"/>
+                <column code="USERNAME" displayName="用户名称" mandatory="true" name="username" precision="63" propId="3"
+                        stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="MOBILE" displayName="手机号" mandatory="true" name="mobile" precision="20" propId="4"
+                        stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="FEED_TYPE" displayName="反馈类型" mandatory="true" name="feedType" precision="63" propId="5"
+                        stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="CONTENT" displayName="反馈内容" mandatory="true" name="content" precision="1023" propId="6"
+                        stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="STATUS" displayName="状态" mandatory="true" name="status" propId="7" stdDataType="int"
+                        stdSqlType="INTEGER"/>
+                <column code="HAS_PICTURE" displayName="是否含有图片" name="hasPicture" propId="8" stdDataType="boolean"
+                        stdSqlType="BOOLEAN"/>
+                <column code="PIC_URLS" displayName="图片地址列表，采用JSON数组格式" name="picUrls" precision="1023" propId="9"
+                        stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="ADD_TIME" displayName="创建时间" name="addTime" propId="10" stdDataType="datetime"
+                        stdSqlType="DATETIME"/>
+                <column code="UPDATE_TIME" displayName="更新时间" name="updateTime" propId="11" stdDataType="datetime"
+                        stdSqlType="DATETIME"/>
+                <column code="DELETED" displayName="逻辑删除" name="deleted" propId="12" stdDataType="boolean"
+                        stdSqlType="BOOLEAN"/>
+            </columns>
+        </entity>
+        <entity className="app.mall.dao.entity.LitemallFootprint" displayName="用户浏览足迹表"
+                name="app.mall.dao.entity.LitemallFootprint" registerShortName="true" tableName="litemall_footprint">
+            <columns>
+                <column code="ID" displayName="Id" mandatory="true" name="id" primary="true" propId="1"
+                        stdDataType="int" stdSqlType="INTEGER"/>
+                <column code="USER_ID" displayName="用户表的用户ID" mandatory="true" name="userId" propId="2"
+                        stdDataType="int" stdSqlType="INTEGER"/>
+                <column code="GOODS_ID" displayName="浏览商品ID" mandatory="true" name="goodsId" propId="3"
+                        stdDataType="int" stdSqlType="INTEGER"/>
+                <column code="ADD_TIME" displayName="创建时间" name="addTime" propId="4" stdDataType="datetime"
+                        stdSqlType="DATETIME"/>
+                <column code="UPDATE_TIME" displayName="更新时间" name="updateTime" propId="5" stdDataType="datetime"
+                        stdSqlType="DATETIME"/>
+                <column code="DELETED" displayName="逻辑删除" name="deleted" propId="6" stdDataType="boolean"
+                        stdSqlType="BOOLEAN"/>
+            </columns>
+        </entity>
+        <entity className="app.mall.dao.entity.LitemallGoods" displayName="商品基本信息表"
+                name="app.mall.dao.entity.LitemallGoods" registerShortName="true" tableName="litemall_goods">
+            <columns>
+                <column code="ID" displayName="Id" mandatory="true" name="id" primary="true" propId="1"
+                        stdDataType="int" stdSqlType="INTEGER"/>
+                <column code="GOODS_SN" displayName="商品编号" mandatory="true" name="goodsSn" precision="63" propId="2"
+                        stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="NAME" displayName="商品名称" mandatory="true" name="name" precision="127" propId="3"
+                        stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="CATEGORY_ID" displayName="商品所属类目ID" name="categoryId" propId="4" stdDataType="int"
+                        stdSqlType="INTEGER"/>
+                <column code="BRAND_ID" displayName="Brandid" name="brandId" propId="5" stdDataType="int"
+                        stdSqlType="INTEGER"/>
+                <column code="GALLERY" displayName="商品宣传图片列表，采用JSON数组格式" name="gallery" precision="1023" propId="6"
+                        stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="KEYWORDS" displayName="商品关键字，采用逗号间隔" name="keywords" precision="255" propId="7"
+                        stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="BRIEF" displayName="商品简介" name="brief" precision="255" propId="8" stdDataType="string"
+                        stdSqlType="VARCHAR"/>
+                <column code="IS_ON_SALE" displayName="是否上架" name="isOnSale" propId="9" stdDataType="boolean"
+                        stdSqlType="BOOLEAN"/>
+                <column code="SORT_ORDER" displayName="Sortorder" name="sortOrder" propId="10" stdDataType="short"
+                        stdSqlType="SMALLINT"/>
+                <column code="PIC_URL" displayName="商品页面商品图片" name="picUrl" precision="255" propId="11"
+                        stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="SHARE_URL" displayName="商品分享海报" name="shareUrl" precision="255" propId="12"
+                        stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="IS_NEW" displayName="是否新品首发，如果设置则可以在新品首发页面展示" name="isNew" propId="13"
+                        stdDataType="boolean" stdSqlType="BOOLEAN"/>
+                <column code="IS_HOT" displayName="是否人气推荐，如果设置则可以在人气推荐页面展示" name="isHot" propId="14"
+                        stdDataType="boolean" stdSqlType="BOOLEAN"/>
+                <column code="UNIT" displayName="商品单位，例如件、盒" name="unit" precision="31" propId="15" stdDataType="string"
+                        stdSqlType="VARCHAR"/>
+                <column code="COUNTER_PRICE" displayName="专柜价格" name="counterPrice" precision="10" propId="16" scale="2"
+                        stdDataType="decimal" stdSqlType="DECIMAL"/>
+                <column code="RETAIL_PRICE" displayName="零售价格" name="retailPrice" precision="10" propId="17" scale="2"
+                        stdDataType="decimal" stdSqlType="DECIMAL"/>
+                <column code="DETAIL" displayName="商品详细介绍，是富文本格式" name="detail" precision="65535" propId="18"
+                        stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="ADD_TIME" displayName="创建时间" name="addTime" propId="19" stdDataType="datetime"
+                        stdSqlType="DATETIME"/>
+                <column code="UPDATE_TIME" displayName="更新时间" name="updateTime" propId="20" stdDataType="datetime"
+                        stdSqlType="DATETIME"/>
+                <column code="DELETED" displayName="逻辑删除" name="deleted" propId="21" stdDataType="boolean"
+                        stdSqlType="BOOLEAN"/>
+            </columns>
+        </entity>
+        <entity className="app.mall.dao.entity.LitemallGoodsAttribute" displayName="商品参数表"
+                name="app.mall.dao.entity.LitemallGoodsAttribute" registerShortName="true"
+                tableName="litemall_goods_attribute">
+            <columns>
+                <column code="ID" displayName="Id" mandatory="true" name="id" primary="true" propId="1"
+                        stdDataType="int" stdSqlType="INTEGER"/>
+                <column code="GOODS_ID" displayName="商品表的商品ID" mandatory="true" name="goodsId" propId="2"
+                        stdDataType="int" stdSqlType="INTEGER"/>
+                <column code="ATTRIBUTE" displayName="商品参数名称" mandatory="true" name="attribute" precision="255"
+                        propId="3" stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="VALUE" displayName="商品参数值" mandatory="true" name="value" precision="255" propId="4"
+                        stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="ADD_TIME" displayName="创建时间" name="addTime" propId="5" stdDataType="datetime"
+                        stdSqlType="DATETIME"/>
+                <column code="UPDATE_TIME" displayName="更新时间" name="updateTime" propId="6" stdDataType="datetime"
+                        stdSqlType="DATETIME"/>
+                <column code="DELETED" displayName="逻辑删除" name="deleted" propId="7" stdDataType="boolean"
+                        stdSqlType="BOOLEAN"/>
+            </columns>
+        </entity>
+        <entity className="app.mall.dao.entity.LitemallGoodsProduct" displayName="商品货品表"
+                name="app.mall.dao.entity.LitemallGoodsProduct" registerShortName="true"
+                tableName="litemall_goods_product">
+            <columns>
+                <column code="ID" displayName="Id" mandatory="true" name="id" primary="true" propId="1"
+                        stdDataType="int" stdSqlType="INTEGER"/>
+                <column code="GOODS_ID" displayName="商品表的商品ID" mandatory="true" name="goodsId" propId="2"
+                        stdDataType="int" stdSqlType="INTEGER"/>
+                <column code="SPECIFICATIONS" displayName="商品规格值列表，采用JSON数组格式" mandatory="true" name="specifications"
+                        precision="1023" propId="3" stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="PRICE" displayName="商品货品价格" mandatory="true" name="price" precision="10" propId="4"
+                        scale="2" stdDataType="decimal" stdSqlType="DECIMAL"/>
+                <column code="NUMBER" displayName="商品货品数量" mandatory="true" name="number" propId="5" stdDataType="int"
+                        stdSqlType="INTEGER"/>
+                <column code="URL" displayName="商品货品图片" name="url" precision="125" propId="6" stdDataType="string"
+                        stdSqlType="VARCHAR"/>
+                <column code="ADD_TIME" displayName="创建时间" name="addTime" propId="7" stdDataType="datetime"
+                        stdSqlType="DATETIME"/>
+                <column code="UPDATE_TIME" displayName="更新时间" name="updateTime" propId="8" stdDataType="datetime"
+                        stdSqlType="DATETIME"/>
+                <column code="DELETED" displayName="逻辑删除" name="deleted" propId="9" stdDataType="boolean"
+                        stdSqlType="BOOLEAN"/>
+            </columns>
+        </entity>
+        <entity className="app.mall.dao.entity.LitemallGoodsSpecification" displayName="商品规格表"
+                name="app.mall.dao.entity.LitemallGoodsSpecification" registerShortName="true"
+                tableName="litemall_goods_specification">
+            <columns>
+                <column code="ID" displayName="Id" mandatory="true" name="id" primary="true" propId="1"
+                        stdDataType="int" stdSqlType="INTEGER"/>
+                <column code="GOODS_ID" displayName="商品表的商品ID" mandatory="true" name="goodsId" propId="2"
+                        stdDataType="int" stdSqlType="INTEGER"/>
+                <column code="SPECIFICATION" displayName="商品规格名称" mandatory="true" name="specification" precision="255"
+                        propId="3" stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="VALUE" displayName="商品规格值" mandatory="true" name="value" precision="255" propId="4"
+                        stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="PIC_URL" displayName="商品规格图片" mandatory="true" name="picUrl" precision="255" propId="5"
+                        stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="ADD_TIME" displayName="创建时间" name="addTime" propId="6" stdDataType="datetime"
+                        stdSqlType="DATETIME"/>
+                <column code="UPDATE_TIME" displayName="更新时间" name="updateTime" propId="7" stdDataType="datetime"
+                        stdSqlType="DATETIME"/>
+                <column code="DELETED" displayName="逻辑删除" name="deleted" propId="8" stdDataType="boolean"
+                        stdSqlType="BOOLEAN"/>
+            </columns>
+        </entity>
+        <entity className="app.mall.dao.entity.LitemallGroupon" displayName="团购活动表"
+                name="app.mall.dao.entity.LitemallGroupon" registerShortName="true" tableName="litemall_groupon">
+            <columns>
+                <column code="ID" displayName="Id" mandatory="true" name="id" primary="true" propId="1"
+                        stdDataType="int" stdSqlType="INTEGER"/>
+                <column code="ORDER_ID" displayName="关联的订单ID" mandatory="true" name="orderId" propId="2"
+                        stdDataType="int" stdSqlType="INTEGER"/>
+                <column code="GROUPON_ID" displayName="如果是开团用户，则groupon_id是0；如果是参团用户，则groupon_id是团购活动ID"
+                        name="grouponId" propId="3" stdDataType="int" stdSqlType="INTEGER"/>
+                <column code="RULES_ID" displayName="团购规则ID，关联litemall_groupon_rules表ID字段" mandatory="true"
+                        name="rulesId" propId="4" stdDataType="int" stdSqlType="INTEGER"/>
+                <column code="USER_ID" displayName="用户ID" mandatory="true" name="userId" propId="5" stdDataType="int"
+                        stdSqlType="INTEGER"/>
+                <column code="SHARE_URL" displayName="团购分享图片地址" name="shareUrl" precision="255" propId="6"
+                        stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="CREATOR_USER_ID" displayName="开团用户ID" mandatory="true" name="creatorUserId" propId="7"
+                        stdDataType="int" stdSqlType="INTEGER"/>
+                <column code="CREATOR_USER_TIME" displayName="开团时间" name="creatorUserTime" propId="8"
+                        stdDataType="datetime" stdSqlType="DATETIME"/>
+                <column code="STATUS" displayName="团购活动状态，开团未支付则0，开团中则1，开团失败则2" name="status" propId="9"
+                        stdDataType="short" stdSqlType="SMALLINT"/>
+                <column code="ADD_TIME" displayName="创建时间" mandatory="true" name="addTime" propId="10"
+                        stdDataType="datetime" stdSqlType="DATETIME"/>
+                <column code="UPDATE_TIME" displayName="更新时间" name="updateTime" propId="11" stdDataType="datetime"
+                        stdSqlType="DATETIME"/>
+                <column code="DELETED" displayName="逻辑删除" name="deleted" propId="12" stdDataType="boolean"
+                        stdSqlType="BOOLEAN"/>
+            </columns>
+        </entity>
+        <entity className="app.mall.dao.entity.LitemallGrouponRules" displayName="团购规则表"
+                name="app.mall.dao.entity.LitemallGrouponRules" registerShortName="true"
+                tableName="litemall_groupon_rules">
+            <columns>
+                <column code="ID" displayName="Id" mandatory="true" name="id" primary="true" propId="1"
+                        stdDataType="int" stdSqlType="INTEGER"/>
+                <column code="GOODS_ID" displayName="商品表的商品ID" mandatory="true" name="goodsId" propId="2"
+                        stdDataType="int" stdSqlType="INTEGER"/>
+                <column code="GOODS_NAME" displayName="商品名称" mandatory="true" name="goodsName" precision="127"
+                        propId="3" stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="PIC_URL" displayName="商品图片或者商品货品图片" name="picUrl" precision="255" propId="4"
+                        stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="DISCOUNT" displayName="优惠金额" mandatory="true" name="discount" precision="63" propId="5"
+                        scale="0" stdDataType="decimal" stdSqlType="DECIMAL"/>
+                <column code="DISCOUNT_MEMBER" displayName="达到优惠条件的人数" mandatory="true" name="discountMember" propId="6"
+                        stdDataType="int" stdSqlType="INTEGER"/>
+                <column code="EXPIRE_TIME" displayName="团购过期时间" name="expireTime" propId="7" stdDataType="datetime"
+                        stdSqlType="DATETIME"/>
+                <column code="STATUS" displayName="团购规则状态，正常上线则0，到期自动下线则1，管理手动下线则2" name="status" propId="8"
+                        stdDataType="short" stdSqlType="SMALLINT"/>
+                <column code="ADD_TIME" displayName="创建时间" mandatory="true" name="addTime" propId="9"
+                        stdDataType="datetime" stdSqlType="DATETIME"/>
+                <column code="UPDATE_TIME" displayName="更新时间" name="updateTime" propId="10" stdDataType="datetime"
+                        stdSqlType="DATETIME"/>
+                <column code="DELETED" displayName="逻辑删除" name="deleted" propId="11" stdDataType="boolean"
+                        stdSqlType="BOOLEAN"/>
+            </columns>
+        </entity>
+        <entity className="app.mall.dao.entity.LitemallIssue" displayName="常见问题表"
+                name="app.mall.dao.entity.LitemallIssue" registerShortName="true" tableName="litemall_issue">
+            <columns>
+                <column code="ID" displayName="Id" mandatory="true" name="id" primary="true" propId="1"
+                        stdDataType="int" stdSqlType="INTEGER"/>
+                <column code="QUESTION" displayName="问题标题" name="question" precision="255" propId="2"
+                        stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="ANSWER" displayName="问题答案" name="answer" precision="255" propId="3" stdDataType="string"
+                        stdSqlType="VARCHAR"/>
+                <column code="ADD_TIME" displayName="创建时间" name="addTime" propId="4" stdDataType="datetime"
+                        stdSqlType="DATETIME"/>
+                <column code="UPDATE_TIME" displayName="更新时间" name="updateTime" propId="5" stdDataType="datetime"
+                        stdSqlType="DATETIME"/>
+                <column code="DELETED" displayName="逻辑删除" name="deleted" propId="6" stdDataType="boolean"
+                        stdSqlType="BOOLEAN"/>
+            </columns>
+        </entity>
+        <entity className="app.mall.dao.entity.LitemallKeyword" displayName="关键字表"
+                name="app.mall.dao.entity.LitemallKeyword" registerShortName="true" tableName="litemall_keyword">
+            <columns>
+                <column code="ID" displayName="Id" mandatory="true" name="id" primary="true" propId="1"
+                        stdDataType="int" stdSqlType="INTEGER"/>
+                <column code="KEYWORD" displayName="关键字" mandatory="true" name="keyword" precision="127" propId="2"
+                        stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="URL" displayName="关键字的跳转链接" mandatory="true" name="url" precision="255" propId="3"
+                        stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="IS_HOT" displayName="是否是热门关键字" mandatory="true" name="isHot" propId="4"
+                        stdDataType="boolean" stdSqlType="BOOLEAN"/>
+                <column code="IS_DEFAULT" displayName="是否是默认关键字" mandatory="true" name="isDefault" propId="5"
+                        stdDataType="boolean" stdSqlType="BOOLEAN"/>
+                <column code="SORT_ORDER" displayName="排序" mandatory="true" name="sortOrder" propId="6"
+                        stdDataType="int" stdSqlType="INTEGER"/>
+                <column code="ADD_TIME" displayName="创建时间" name="addTime" propId="7" stdDataType="datetime"
+                        stdSqlType="DATETIME"/>
+                <column code="UPDATE_TIME" displayName="更新时间" name="updateTime" propId="8" stdDataType="datetime"
+                        stdSqlType="DATETIME"/>
+                <column code="DELETED" displayName="逻辑删除" name="deleted" propId="9" stdDataType="boolean"
+                        stdSqlType="BOOLEAN"/>
+            </columns>
+        </entity>
+        <entity className="app.mall.dao.entity.LitemallLog" displayName="操作日志表" name="app.mall.dao.entity.LitemallLog"
+                registerShortName="true" tableName="litemall_log">
+            <columns>
+                <column code="ID" displayName="Id" mandatory="true" name="id" primary="true" propId="1"
+                        stdDataType="int" stdSqlType="INTEGER"/>
+                <column code="ADMIN" displayName="管理员" name="admin" precision="45" propId="2" stdDataType="string"
+                        stdSqlType="VARCHAR"/>
+                <column code="IP" displayName="管理员地址" name="ip" precision="45" propId="3" stdDataType="string"
+                        stdSqlType="VARCHAR"/>
+                <column code="TYPE" displayName="操作分类" name="type" propId="4" stdDataType="int" stdSqlType="INTEGER"/>
+                <column code="ACTION" displayName="操作动作" name="action" precision="45" propId="5" stdDataType="string"
+                        stdSqlType="VARCHAR"/>
+                <column code="STATUS" displayName="操作状态" name="status" propId="6" stdDataType="boolean"
+                        stdSqlType="BOOLEAN"/>
+                <column code="RESULT" displayName="操作结果，或者成功消息，或者失败消息" name="result" precision="127" propId="7"
+                        stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="COMMENT" displayName="补充信息" name="comment" precision="255" propId="8" stdDataType="string"
+                        stdSqlType="VARCHAR"/>
+                <column code="ADD_TIME" displayName="创建时间" name="addTime" propId="9" stdDataType="datetime"
+                        stdSqlType="DATETIME"/>
+                <column code="UPDATE_TIME" displayName="更新时间" name="updateTime" propId="10" stdDataType="datetime"
+                        stdSqlType="DATETIME"/>
+                <column code="DELETED" displayName="逻辑删除" name="deleted" propId="11" stdDataType="boolean"
+                        stdSqlType="BOOLEAN"/>
+            </columns>
+        </entity>
+        <entity className="app.mall.dao.entity.LitemallNotice" displayName="通知表"
+                name="app.mall.dao.entity.LitemallNotice" registerShortName="true" tableName="litemall_notice">
+            <columns>
+                <column code="ID" displayName="Id" mandatory="true" name="id" primary="true" propId="1"
+                        stdDataType="int" stdSqlType="INTEGER"/>
+                <column code="TITLE" displayName="通知标题" name="title" precision="63" propId="2" stdDataType="string"
+                        stdSqlType="VARCHAR"/>
+                <column code="CONTENT" displayName="通知内容" name="content" precision="511" propId="3" stdDataType="string"
+                        stdSqlType="VARCHAR"/>
+                <column code="ADMIN_ID" displayName="创建通知的管理员ID，如果是系统内置通知则是0." name="adminId" propId="4"
+                        stdDataType="int" stdSqlType="INTEGER"/>
+                <column code="ADD_TIME" displayName="创建时间" name="addTime" propId="5" stdDataType="datetime"
+                        stdSqlType="DATETIME"/>
+                <column code="UPDATE_TIME" displayName="更新时间" name="updateTime" propId="6" stdDataType="datetime"
+                        stdSqlType="DATETIME"/>
+                <column code="DELETED" displayName="逻辑删除" name="deleted" propId="7" stdDataType="boolean"
+                        stdSqlType="BOOLEAN"/>
+            </columns>
+        </entity>
+        <entity className="app.mall.dao.entity.LitemallNoticeAdmin" displayName="通知管理员表"
+                name="app.mall.dao.entity.LitemallNoticeAdmin" registerShortName="true"
+                tableName="litemall_notice_admin">
+            <columns>
+                <column code="ID" displayName="Id" mandatory="true" name="id" primary="true" propId="1"
+                        stdDataType="int" stdSqlType="INTEGER"/>
+                <column code="NOTICE_ID" displayName="通知ID" name="noticeId" propId="2" stdDataType="int"
+                        stdSqlType="INTEGER"/>
+                <column code="NOTICE_TITLE" displayName="通知标题" name="noticeTitle" precision="63" propId="3"
+                        stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="ADMIN_ID" displayName="接收通知的管理员ID" name="adminId" propId="4" stdDataType="int"
+                        stdSqlType="INTEGER"/>
+                <column code="READ_TIME" displayName="阅读时间，如果是NULL则是未读状态" name="readTime" propId="5"
+                        stdDataType="datetime" stdSqlType="DATETIME"/>
+                <column code="ADD_TIME" displayName="创建时间" name="addTime" propId="6" stdDataType="datetime"
+                        stdSqlType="DATETIME"/>
+                <column code="UPDATE_TIME" displayName="更新时间" name="updateTime" propId="7" stdDataType="datetime"
+                        stdSqlType="DATETIME"/>
+                <column code="DELETED" displayName="逻辑删除" name="deleted" propId="8" stdDataType="boolean"
+                        stdSqlType="BOOLEAN"/>
+            </columns>
+        </entity>
+        <entity className="app.mall.dao.entity.LitemallOrder" displayName="订单表" name="app.mall.dao.entity.LitemallOrder"
+                registerShortName="true" tableName="litemall_order">
+            <columns>
+                <column code="ID" displayName="Id" mandatory="true" name="id" primary="true" propId="1"
+                        stdDataType="int" stdSqlType="INTEGER"/>
+                <column code="USER_ID" displayName="用户表的用户ID" mandatory="true" name="userId" propId="2"
+                        stdDataType="int" stdSqlType="INTEGER"/>
+                <column code="ORDER_SN" displayName="订单编号" mandatory="true" name="orderSn" precision="63" propId="3"
+                        stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="ORDER_STATUS" displayName="订单状态" mandatory="true" name="orderStatus" propId="4"
+                        stdDataType="short" stdSqlType="SMALLINT"/>
+                <column code="AFTERSALE_STATUS" displayName="售后状态，0是可申请，1是用户已申请，2是管理员审核通过，3是管理员退款成功，4是管理员审核拒绝，5是用户已取消"
+                        name="aftersaleStatus" propId="5" stdDataType="short" stdSqlType="SMALLINT"/>
+                <column code="CONSIGNEE" displayName="收货人名称" mandatory="true" name="consignee" precision="63" propId="6"
+                        stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="MOBILE" displayName="收货人手机号" mandatory="true" name="mobile" precision="63" propId="7"
+                        stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="ADDRESS" displayName="收货具体地址" mandatory="true" name="address" precision="127" propId="8"
+                        stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="MESSAGE" displayName="用户订单留言" mandatory="true" name="message" precision="512" propId="9"
+                        stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="GOODS_PRICE" displayName="商品总费用" mandatory="true" name="goodsPrice" precision="10"
+                        propId="10" scale="2" stdDataType="decimal" stdSqlType="DECIMAL"/>
+                <column code="FREIGHT_PRICE" displayName="配送费用" mandatory="true" name="freightPrice" precision="10"
+                        propId="11" scale="2" stdDataType="decimal" stdSqlType="DECIMAL"/>
+                <column code="COUPON_PRICE" displayName="优惠券减免" mandatory="true" name="couponPrice" precision="10"
+                        propId="12" scale="2" stdDataType="decimal" stdSqlType="DECIMAL"/>
+                <column code="INTEGRAL_PRICE" displayName="用户积分减免" mandatory="true" name="integralPrice" precision="10"
+                        propId="13" scale="2" stdDataType="decimal" stdSqlType="DECIMAL"/>
+                <column code="GROUPON_PRICE" displayName="团购优惠价减免" mandatory="true" name="grouponPrice" precision="10"
+                        propId="14" scale="2" stdDataType="decimal" stdSqlType="DECIMAL"/>
+                <column code="ORDER_PRICE" displayName="订单费用， = goods_price + freight_price - coupon_price"
+                        mandatory="true" name="orderPrice" precision="10" propId="15" scale="2" stdDataType="decimal"
+                        stdSqlType="DECIMAL"/>
+                <column code="ACTUAL_PRICE" displayName="实付费用， = order_price - integral_price" mandatory="true"
+                        name="actualPrice" precision="10" propId="16" scale="2" stdDataType="decimal"
+                        stdSqlType="DECIMAL"/>
+                <column code="PAY_ID" displayName="微信付款编号" name="payId" precision="63" propId="17" stdDataType="string"
+                        stdSqlType="VARCHAR"/>
+                <column code="PAY_TIME" displayName="微信付款时间" name="payTime" propId="18" stdDataType="datetime"
+                        stdSqlType="DATETIME"/>
+                <column code="SHIP_SN" displayName="发货编号" name="shipSn" precision="63" propId="19" stdDataType="string"
+                        stdSqlType="VARCHAR"/>
+                <column code="SHIP_CHANNEL" displayName="发货快递公司" name="shipChannel" precision="63" propId="20"
+                        stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="SHIP_TIME" displayName="发货开始时间" name="shipTime" propId="21" stdDataType="datetime"
+                        stdSqlType="DATETIME"/>
+                <column code="REFUND_AMOUNT" displayName="实际退款金额，（有可能退款金额小于实际支付金额）" name="refundAmount" precision="10"
+                        propId="22" scale="2" stdDataType="decimal" stdSqlType="DECIMAL"/>
+                <column code="REFUND_TYPE" displayName="退款方式" name="refundType" precision="63" propId="23"
+                        stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="REFUND_CONTENT" displayName="退款备注" name="refundContent" precision="127" propId="24"
+                        stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="REFUND_TIME" displayName="退款时间" name="refundTime" propId="25" stdDataType="datetime"
+                        stdSqlType="DATETIME"/>
+                <column code="CONFIRM_TIME" displayName="用户确认收货时间" name="confirmTime" propId="26" stdDataType="datetime"
+                        stdSqlType="DATETIME"/>
+                <column code="COMMENTS" displayName="待评价订单商品数量" name="comments" propId="27" stdDataType="short"
+                        stdSqlType="SMALLINT"/>
+                <column code="END_TIME" displayName="订单关闭时间" name="endTime" propId="28" stdDataType="datetime"
+                        stdSqlType="DATETIME"/>
+                <column code="ADD_TIME" displayName="创建时间" name="addTime" propId="29" stdDataType="datetime"
+                        stdSqlType="DATETIME"/>
+                <column code="UPDATE_TIME" displayName="更新时间" name="updateTime" propId="30" stdDataType="datetime"
+                        stdSqlType="DATETIME"/>
+                <column code="DELETED" displayName="逻辑删除" name="deleted" propId="31" stdDataType="boolean"
+                        stdSqlType="BOOLEAN"/>
+            </columns>
+        </entity>
+        <entity className="app.mall.dao.entity.LitemallOrderGoods" displayName="订单商品表"
+                name="app.mall.dao.entity.LitemallOrderGoods" registerShortName="true" tableName="litemall_order_goods">
+            <columns>
+                <column code="ID" displayName="Id" mandatory="true" name="id" primary="true" propId="1"
+                        stdDataType="int" stdSqlType="INTEGER"/>
+                <column code="ORDER_ID" displayName="订单表的订单ID" mandatory="true" name="orderId" propId="2"
+                        stdDataType="int" stdSqlType="INTEGER"/>
+                <column code="GOODS_ID" displayName="商品表的商品ID" mandatory="true" name="goodsId" propId="3"
+                        stdDataType="int" stdSqlType="INTEGER"/>
+                <column code="GOODS_NAME" displayName="商品名称" mandatory="true" name="goodsName" precision="127"
+                        propId="4" stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="GOODS_SN" displayName="商品编号" mandatory="true" name="goodsSn" precision="63" propId="5"
+                        stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="PRODUCT_ID" displayName="商品货品表的货品ID" mandatory="true" name="productId" propId="6"
+                        stdDataType="int" stdSqlType="INTEGER"/>
+                <column code="NUMBER" displayName="商品货品的购买数量" mandatory="true" name="number" propId="7"
+                        stdDataType="short" stdSqlType="SMALLINT"/>
+                <column code="PRICE" displayName="商品货品的售价" mandatory="true" name="price" precision="10" propId="8"
+                        scale="2" stdDataType="decimal" stdSqlType="DECIMAL"/>
+                <column code="SPECIFICATIONS" displayName="商品货品的规格列表" mandatory="true" name="specifications"
+                        precision="1023" propId="9" stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="PIC_URL" displayName="商品货品图片或者商品图片" mandatory="true" name="picUrl" precision="255"
+                        propId="10" stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="COMMENT" displayName="订单商品评论，如果是-1，则超期不能评价；如果是0，则可以评价；如果其他值，则是comment表里面的评论ID。"
+                        name="comment" propId="11" stdDataType="int" stdSqlType="INTEGER"/>
+                <column code="ADD_TIME" displayName="创建时间" name="addTime" propId="12" stdDataType="datetime"
+                        stdSqlType="DATETIME"/>
+                <column code="UPDATE_TIME" displayName="更新时间" name="updateTime" propId="13" stdDataType="datetime"
+                        stdSqlType="DATETIME"/>
+                <column code="DELETED" displayName="逻辑删除" name="deleted" propId="14" stdDataType="boolean"
+                        stdSqlType="BOOLEAN"/>
+            </columns>
+        </entity>
+        <entity className="app.mall.dao.entity.LitemallPermission" displayName="权限表"
+                name="app.mall.dao.entity.LitemallPermission" registerShortName="true" tableName="litemall_permission">
+            <columns>
+                <column code="ID" displayName="Id" mandatory="true" name="id" primary="true" propId="1"
+                        stdDataType="int" stdSqlType="INTEGER"/>
+                <column code="ROLE_ID" displayName="角色ID" name="roleId" propId="2" stdDataType="int"
+                        stdSqlType="INTEGER"/>
+                <column code="PERMISSION" displayName="权限" name="permission" precision="63" propId="3"
+                        stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="ADD_TIME" displayName="创建时间" name="addTime" propId="4" stdDataType="datetime"
+                        stdSqlType="DATETIME"/>
+                <column code="UPDATE_TIME" displayName="更新时间" name="updateTime" propId="5" stdDataType="datetime"
+                        stdSqlType="DATETIME"/>
+                <column code="DELETED" displayName="逻辑删除" name="deleted" propId="6" stdDataType="boolean"
+                        stdSqlType="BOOLEAN"/>
+            </columns>
+        </entity>
+        <entity className="app.mall.dao.entity.LitemallRegion" displayName="行政区域表"
+                name="app.mall.dao.entity.LitemallRegion" registerShortName="true" tableName="litemall_region">
+            <columns>
+                <column code="ID" displayName="Id" mandatory="true" name="id" primary="true" propId="1"
+                        stdDataType="int" stdSqlType="INTEGER"/>
+                <column code="PID" displayName="行政区域父ID，例如区县的pid指向市，市的pid指向省，省的pid则是0" mandatory="true" name="pid"
+                        propId="2" stdDataType="int" stdSqlType="INTEGER"/>
+                <column code="NAME" displayName="行政区域名称" mandatory="true" name="name" precision="120" propId="3"
+                        stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="TYPE" displayName="行政区域类型，如如1则是省， 如果是2则是市，如果是3则是区县" mandatory="true" name="type"
+                        propId="4" stdDataType="byte" stdSqlType="TINYINT"/>
+                <column code="CODE" displayName="行政区域编码" mandatory="true" name="code" propId="5" stdDataType="int"
+                        stdSqlType="INTEGER"/>
+            </columns>
+        </entity>
+        <entity className="app.mall.dao.entity.LitemallRole" displayName="角色表" name="app.mall.dao.entity.LitemallRole"
+                registerShortName="true" tableName="litemall_role">
+            <columns>
+                <column code="ID" displayName="Id" mandatory="true" name="id" primary="true" propId="1"
+                        stdDataType="int" stdSqlType="INTEGER"/>
+                <column code="NAME" displayName="角色名称" mandatory="true" name="name" precision="63" propId="2"
+                        stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="DESC" displayName="角色描述" name="desc" precision="1023" propId="3" stdDataType="string"
+                        stdSqlType="VARCHAR"/>
+                <column code="ENABLED" displayName="是否启用" name="enabled" propId="4" stdDataType="boolean"
+                        stdSqlType="BOOLEAN"/>
+                <column code="ADD_TIME" displayName="创建时间" name="addTime" propId="5" stdDataType="datetime"
+                        stdSqlType="DATETIME"/>
+                <column code="UPDATE_TIME" displayName="更新时间" name="updateTime" propId="6" stdDataType="datetime"
+                        stdSqlType="DATETIME"/>
+                <column code="DELETED" displayName="逻辑删除" name="deleted" propId="7" stdDataType="boolean"
+                        stdSqlType="BOOLEAN"/>
+            </columns>
+        </entity>
+        <entity className="app.mall.dao.entity.LitemallSearchHistory" displayName="搜索历史表"
+                name="app.mall.dao.entity.LitemallSearchHistory" registerShortName="true"
+                tableName="litemall_search_history">
+            <columns>
+                <column code="ID" displayName="Id" mandatory="true" name="id" primary="true" propId="1"
+                        stdDataType="int" stdSqlType="INTEGER"/>
+                <column code="USER_ID" displayName="用户表的用户ID" mandatory="true" name="userId" propId="2"
+                        stdDataType="int" stdSqlType="INTEGER"/>
+                <column code="KEYWORD" displayName="搜索关键字" mandatory="true" name="keyword" precision="63" propId="3"
+                        stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="FROM" displayName="搜索来源，如pc、wx、app" mandatory="true" name="from" precision="63" propId="4"
+                        stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="ADD_TIME" displayName="创建时间" name="addTime" propId="5" stdDataType="datetime"
+                        stdSqlType="DATETIME"/>
+                <column code="UPDATE_TIME" displayName="更新时间" name="updateTime" propId="6" stdDataType="datetime"
+                        stdSqlType="DATETIME"/>
+                <column code="DELETED" displayName="逻辑删除" name="deleted" propId="7" stdDataType="boolean"
+                        stdSqlType="BOOLEAN"/>
+            </columns>
+        </entity>
+        <entity className="app.mall.dao.entity.LitemallStorage" displayName="文件存储表"
+                name="app.mall.dao.entity.LitemallStorage" registerShortName="true" tableName="litemall_storage">
+            <columns>
+                <column code="ID" displayName="Id" mandatory="true" name="id" primary="true" propId="1"
+                        stdDataType="int" stdSqlType="INTEGER"/>
+                <column code="KEY" displayName="文件的唯一索引" mandatory="true" name="key" precision="63" propId="2"
+                        stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="NAME" displayName="文件名" mandatory="true" name="name" precision="255" propId="3"
+                        stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="TYPE" displayName="文件类型" mandatory="true" name="type" precision="20" propId="4"
+                        stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="SIZE" displayName="文件大小" mandatory="true" name="size" propId="5" stdDataType="int"
+                        stdSqlType="INTEGER"/>
+                <column code="URL" displayName="文件访问链接" name="url" precision="255" propId="6" stdDataType="string"
+                        stdSqlType="VARCHAR"/>
+                <column code="ADD_TIME" displayName="创建时间" name="addTime" propId="7" stdDataType="datetime"
+                        stdSqlType="DATETIME"/>
+                <column code="UPDATE_TIME" displayName="更新时间" name="updateTime" propId="8" stdDataType="datetime"
+                        stdSqlType="DATETIME"/>
+                <column code="DELETED" displayName="逻辑删除" name="deleted" propId="9" stdDataType="boolean"
+                        stdSqlType="BOOLEAN"/>
+            </columns>
+        </entity>
+        <entity className="app.mall.dao.entity.LitemallSystem" displayName="系统配置表"
+                name="app.mall.dao.entity.LitemallSystem" registerShortName="true" tableName="litemall_system">
+            <columns>
+                <column code="ID" displayName="Id" mandatory="true" name="id" primary="true" propId="1"
+                        stdDataType="int" stdSqlType="INTEGER"/>
+                <column code="KEY_NAME" displayName="系统配置名" mandatory="true" name="keyName" precision="255" propId="2"
+                        stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="KEY_VALUE" displayName="系统配置值" mandatory="true" name="keyValue" precision="255" propId="3"
+                        stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="ADD_TIME" displayName="创建时间" name="addTime" propId="4" stdDataType="datetime"
+                        stdSqlType="DATETIME"/>
+                <column code="UPDATE_TIME" displayName="更新时间" name="updateTime" propId="5" stdDataType="datetime"
+                        stdSqlType="DATETIME"/>
+                <column code="DELETED" displayName="逻辑删除" name="deleted" propId="6" stdDataType="boolean"
+                        stdSqlType="BOOLEAN"/>
+            </columns>
+        </entity>
+        <entity className="app.mall.dao.entity.LitemallTopic" displayName="专题表" name="app.mall.dao.entity.LitemallTopic"
+                registerShortName="true" tableName="litemall_topic">
+            <columns>
+                <column code="ID" displayName="Id" mandatory="true" name="id" primary="true" propId="1"
+                        stdDataType="int" stdSqlType="INTEGER"/>
+                <column code="TITLE" displayName="专题标题" mandatory="true" name="title" precision="255" propId="2"
+                        stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="SUBTITLE" displayName="专题子标题" name="subtitle" precision="255" propId="3"
+                        stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="CONTENT" displayName="专题内容，富文本格式" name="content" precision="65535" propId="4"
+                        stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="PRICE" displayName="专题相关商品最低价" name="price" precision="10" propId="5" scale="2"
+                        stdDataType="decimal" stdSqlType="DECIMAL"/>
+                <column code="READ_COUNT" displayName="专题阅读量" name="readCount" precision="255" propId="6"
+                        stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="PIC_URL" displayName="专题图片" name="picUrl" precision="255" propId="7" stdDataType="string"
+                        stdSqlType="VARCHAR"/>
+                <column code="SORT_ORDER" displayName="排序" name="sortOrder" propId="8" stdDataType="int"
+                        stdSqlType="INTEGER"/>
+                <column code="GOODS" displayName="专题相关商品，采用JSON数组格式" name="goods" precision="1023" propId="9"
+                        stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="ADD_TIME" displayName="创建时间" name="addTime" propId="10" stdDataType="datetime"
+                        stdSqlType="DATETIME"/>
+                <column code="UPDATE_TIME" displayName="更新时间" name="updateTime" propId="11" stdDataType="datetime"
+                        stdSqlType="DATETIME"/>
+                <column code="DELETED" displayName="逻辑删除" name="deleted" propId="12" stdDataType="boolean"
+                        stdSqlType="BOOLEAN"/>
+            </columns>
+        </entity>
+        <entity className="app.mall.dao.entity.LitemallUser" displayName="用户表" name="app.mall.dao.entity.LitemallUser"
+                registerShortName="true" tableName="litemall_user">
+            <columns>
+                <column code="ID" displayName="Id" mandatory="true" name="id" primary="true" propId="1"
+                        stdDataType="int" stdSqlType="INTEGER"/>
+                <column code="USERNAME" displayName="用户名称" mandatory="true" name="username" precision="63" propId="2"
+                        stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="PASSWORD" displayName="用户密码" mandatory="true" name="password" precision="63" propId="3"
+                        stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="GENDER" displayName="性别：0 未知， 1男， 1 女" mandatory="true" name="gender" propId="4"
+                        stdDataType="byte" stdSqlType="TINYINT"/>
+                <column code="BIRTHDAY" displayName="生日" name="birthday" propId="5" stdDataType="date" stdSqlType="DATE"/>
+                <column code="LAST_LOGIN_TIME" displayName="最近一次登录时间" name="lastLoginTime" propId="6"
+                        stdDataType="datetime" stdSqlType="DATETIME"/>
+                <column code="LAST_LOGIN_IP" displayName="最近一次登录IP地址" mandatory="true" name="lastLoginIp" precision="63"
+                        propId="7" stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="USER_LEVEL" displayName="0 普通用户，1 VIP用户，2 高级VIP用户" name="userLevel" propId="8"
+                        stdDataType="byte" stdSqlType="TINYINT"/>
+                <column code="NICKNAME" displayName="用户昵称或网络名称" mandatory="true" name="nickname" precision="63"
+                        propId="9" stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="MOBILE" displayName="用户手机号码" mandatory="true" name="mobile" precision="20" propId="10"
+                        stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="AVATAR" displayName="用户头像图片" mandatory="true" name="avatar" precision="255" propId="11"
+                        stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="WEIXIN_OPENID" displayName="微信登录openid" mandatory="true" name="weixinOpenid"
+                        precision="63" propId="12" stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="SESSION_KEY" displayName="微信登录会话KEY" mandatory="true" name="sessionKey" precision="100"
+                        propId="13" stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="STATUS" displayName="0 可用, 1 禁用, 2 注销" mandatory="true" name="status" propId="14"
+                        stdDataType="byte" stdSqlType="TINYINT"/>
+                <column code="ADD_TIME" displayName="创建时间" name="addTime" propId="15" stdDataType="datetime"
+                        stdSqlType="DATETIME"/>
+                <column code="UPDATE_TIME" displayName="更新时间" name="updateTime" propId="16" stdDataType="datetime"
+                        stdSqlType="DATETIME"/>
+                <column code="DELETED" displayName="逻辑删除" name="deleted" propId="17" stdDataType="boolean"
+                        stdSqlType="BOOLEAN"/>
+            </columns>
+        </entity>
+    </entities>
+</orm>

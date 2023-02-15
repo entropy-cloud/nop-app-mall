@@ -1,0 +1,19 @@
+{
+  "id": 0,
+  "username": "",
+  "password": "",
+  "gender": 0,
+  "birthday": "2000-01-01",
+  "lastLoginTime": "2000-01-01 14:00:00",
+  "lastLoginIp": "",
+  "userLevel": 0,
+  "nickname": "",
+  "mobile": "",
+  "avatar": "",
+  "weixinOpenid": "",
+  "sessionKey": "",
+  "status": 0,
+  "addTime": "2000-01-01 14:00:00",
+  "updateTime": "2000-01-01 14:00:00",
+  "deleted": false
+}

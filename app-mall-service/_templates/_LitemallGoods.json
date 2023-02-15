@@ -1,0 +1,23 @@
+{
+  "id": 0,
+  "goodsSn": "",
+  "name": "",
+  "categoryId": 0,
+  "brandId": 0,
+  "gallery": "",
+  "keywords": "",
+  "brief": "",
+  "isOnSale": false,
+  "sortOrder": 0,
+  "picUrl": "",
+  "shareUrl": "",
+  "isNew": false,
+  "isHot": false,
+  "unit": "",
+  "counterPrice": 0.0,
+  "retailPrice": 0.0,
+  "detail": "",
+  "addTime": "2000-01-01 14:00:00",
+  "updateTime": "2000-01-01 14:00:00",
+  "deleted": false
+}

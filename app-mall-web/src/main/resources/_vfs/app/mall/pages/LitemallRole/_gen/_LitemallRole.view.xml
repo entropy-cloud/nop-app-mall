@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<view x:schema="/nop/schema/xui/xview.xdef" bizObjName="LitemallRole" xmlns:i18n-en="i18n-en"
+      xmlns:x="/nop/schema/xdsl.xdef" xmlns:j="j">
+
+    <objMeta>/app/mall/model/LitemallRole/LitemallRole.xmeta</objMeta>
+
+    <controlLib>/nop/web/xlib/control.xlib</controlLib>
+
+    <grids>
+        <grid id="list" x:abstract="true">
+            <cols>
+
+                <!--Id-->
+                <col id="id" mandatory="true" sortable="true"/>
+
+                <!--角色名称-->
+                <col id="name" mandatory="true" sortable="true"/>
+
+                <!--角色描述-->
+                <col id="desc" sortable="true"/>
+
+                <!--是否启用-->
+                <col id="enabled" sortable="true"/>
+
+                <!--创建时间-->
+                <col id="addTime" sortable="true"/>
+
+                <!--更新时间-->
+                <col id="updateTime" sortable="true"/>
+
+                <!--逻辑删除-->
+                <col id="deleted" sortable="true"/>
+            </cols>
+        </grid>
+        <grid id="pick-list" x:prototype="list" x:abstract="true"/>
+    </grids>
+
+    <forms>
+        <form id="view" editMode="view" title="查看-角色表" i18n-en:title="View ">
+            <layout>
+ id[Id]
+ name[角色名称]
+ desc[角色描述]
+ enabled[是否启用]
+ addTime[创建时间]
+ updateTime[更新时间]
+ deleted[逻辑删除]
+</layout>
+        </form>
+        <form id="add" editMode="add" title="新增-角色表" i18n-en:title="Add " x:prototype="edit"/>
+        <form id="edit" editMode="update" title="编辑-角色表" i18n-en:title="Edit ">
+            <layout>
+ id[Id]
+ name[角色名称]
+ desc[角色描述]
+ enabled[是否启用]
+ addTime[创建时间]
+ updateTime[更新时间]
+ deleted[逻辑删除]
+</layout>
+        </form>
+        <form id="query" editMode="query" title="查询条件" i18n-en:title="Query Condition" x:abstract="true">
+            <layout/>
+        </form>
+        <form id="asideFilter" editMode="query" x:abstract="true" submitOnChange="true">
+            <layout/>
+        </form>
+        <form id="batchUpdate" editMode="update" x:abstract="true" title="修改-角色表" i18n-en:title="Update ">
+            <layout/>
+        </form>
+    </forms>
+
+    <pages>
+        <crud name="main" grid="list" asideFilterForm="asideFilter" filterForm="query" x:abstract="true">
+            <table autoFillHeight="true">
+                <api url="@query:LitemallRole__findPage/{@pageSelection}"/>
+            </table>
+            <listActions>
+                <action id="batch-delete-button" label="@i18n:common.batchDelete" batch="true">
+                    <api url="@mutation:LitemallRole__delete?ids=$ids"/>
+                    <confirmText>@i18n:common.confirmBatchDelete</confirmText>
+                </action>
+                <action id="add-button" level="primary" label="@i18n:common.add" icon="fa fa-plus pull-left">
+                    <dialog page="add"/>
+                </action>
+            </listActions>
+            <rowActions>
+                <action id="row-view-button" level="primary" label="@i18n:common.view">
+                    <dialog page="view"/>
+                </action>
+                <actionGroup id="row-more-button" label="@i18n:common.more" level="primary">
+                    <action id="row-update-button" level="primary" label="@i18n:common.edit">
+                        <dialog page="update"/>
+                    </action>
+                    <action id="row-delete-button" level="danger" label="@i18n:common.delete">
+                        <api url="@mutation:LitemallRole__delete?id=$id"/>
+                        <confirmText>@i18n:common.confirmDelete</confirmText>
+                    </action>
+                </actionGroup>
+            </rowActions>
+        </crud>
+        <picker name="picker" grid="pick-list" asideFilterForm="asideFilter" filterForm="query" x:abstract="true">
+            <table>
+                <api url="@query:LitemallRole__findPage/{@pageSelection}"/>
+            </table>
+        </picker>
+        <simple name="add" form="add">
+            <api url="@mutation:LitemallRole__save/id"/>
+        </simple>
+        <simple name="view" form="view">
+            <api url="@query:LitemallRole__get/{@formSelection}?id=$id"/>
+        </simple>
+        <simple name="update" form="edit">
+            <initApi url="@query:LitemallRole__get/{@formSelection}?id=$id"/>
+            <api url="@mutation:LitemallRole__update/id?id=$id" withFormData="true"/>
+        </simple>
+    </pages>
+</view>

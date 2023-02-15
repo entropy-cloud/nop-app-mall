@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<meta x:schema="/nop/schema/xmeta.xdef" xmlns:x="/nop/schema/xdsl.xdef" xmlns:i18n-en="i18n-en" xmlns:ext="ext"
+      xmlns:xpl="xpl" xmlns:biz-gen="biz-gen" displayName="商品基本信息表">
+
+    <entityName>app.mall.dao.entity.LitemallGoods</entityName>
+
+    <primaryKey>id</primaryKey>
+
+    <displayProp/>
+
+    <x:post-extends>
+        <biz-gen:DefaultMetaPostExtends xpl:lib="/nop/biz/xlib/biz-gen.xlib"/>
+    </x:post-extends>
+
+    <prop name="id" displayName="Id" mandatory="true" queryable="true" sortable="true" insertable="true"
+          updatable="false">
+        <schema type="java.lang.Integer"/>
+    </prop>
+
+    <prop name="goodsSn" displayName="商品编号" mandatory="true" queryable="true" sortable="true" insertable="true"
+          updatable="true">
+        <schema type="java.lang.String" precision="63"/>
+    </prop>
+
+    <prop name="name" displayName="商品名称" mandatory="true" queryable="true" sortable="true" insertable="true"
+          updatable="true">
+        <schema type="java.lang.String" precision="127"/>
+    </prop>
+
+    <prop name="categoryId" displayName="商品所属类目ID" queryable="true" sortable="true" insertable="true" updatable="true">
+        <schema type="java.lang.Integer"/>
+    </prop>
+
+    <prop name="brandId" displayName="Brandid" queryable="true" sortable="true" insertable="true" updatable="true">
+        <schema type="java.lang.Integer"/>
+    </prop>
+
+    <prop name="gallery" displayName="商品宣传图片列表，采用JSON数组格式" queryable="true" sortable="true" insertable="true"
+          updatable="true">
+        <schema type="java.lang.String" precision="1023"/>
+    </prop>
+
+    <prop name="keywords" displayName="商品关键字，采用逗号间隔" queryable="true" sortable="true" insertable="true" updatable="true">
+        <schema type="java.lang.String" precision="255"/>
+    </prop>
+
+    <prop name="brief" displayName="商品简介" queryable="true" sortable="true" insertable="true" updatable="true">
+        <schema type="java.lang.String" precision="255"/>
+    </prop>
+
+    <prop name="isOnSale" displayName="是否上架" queryable="true" sortable="true" insertable="true" updatable="true">
+        <schema type="java.lang.Boolean"/>
+    </prop>
+
+    <prop name="sortOrder" displayName="Sortorder" queryable="true" sortable="true" insertable="true" updatable="true">
+        <schema type="java.lang.Short"/>
+    </prop>
+
+    <prop name="picUrl" displayName="商品页面商品图片" queryable="true" sortable="true" insertable="true" updatable="true">
+        <schema type="java.lang.String" precision="255"/>
+    </prop>
+
+    <prop name="shareUrl" displayName="商品分享海报" queryable="true" sortable="true" insertable="true" updatable="true">
+        <schema type="java.lang.String" precision="255"/>
+    </prop>
+
+    <prop name="isNew" displayName="是否新品首发，如果设置则可以在新品首发页面展示" queryable="true" sortable="true" insertable="true"
+          updatable="true">
+        <schema type="java.lang.Boolean"/>
+    </prop>
+
+    <prop name="isHot" displayName="是否人气推荐，如果设置则可以在人气推荐页面展示" queryable="true" sortable="true" insertable="true"
+          updatable="true">
+        <schema type="java.lang.Boolean"/>
+    </prop>
+
+    <prop name="unit" displayName="商品单位，例如件、盒" queryable="true" sortable="true" insertable="true" updatable="true">
+        <schema type="java.lang.String" precision="31"/>
+    </prop>
+
+    <prop name="counterPrice" displayName="专柜价格" queryable="true" sortable="true" insertable="true" updatable="true">
+        <schema type="java.math.BigDecimal" precision="10" scale="2"/>
+    </prop>
+
+    <prop name="retailPrice" displayName="零售价格" queryable="true" sortable="true" insertable="true" updatable="true">
+        <schema type="java.math.BigDecimal" precision="10" scale="2"/>
+    </prop>
+
+    <prop name="detail" displayName="商品详细介绍，是富文本格式" queryable="true" sortable="true" insertable="true" updatable="true">
+        <schema type="java.lang.String" precision="65535"/>
+    </prop>
+
+    <prop name="addTime" displayName="创建时间" queryable="true" sortable="true" insertable="true" updatable="true">
+        <schema type="java.time.LocalDateTime"/>
+    </prop>
+
+    <prop name="updateTime" displayName="更新时间" queryable="true" sortable="true" insertable="true" updatable="true">
+        <schema type="java.time.LocalDateTime"/>
+    </prop>
+
+    <prop name="deleted" displayName="逻辑删除" queryable="true" sortable="true" insertable="true" updatable="true">
+        <schema type="java.lang.Boolean"/>
+    </prop>
+</meta>

@@ -1,0 +1,22 @@
+{
+  "id": 0,
+  "name": "",
+  "desc": "",
+  "tag": "",
+  "total": 0,
+  "discount": 0.0,
+  "min": 0.0,
+  "limit": 0,
+  "type": 0,
+  "status": 0,
+  "goodsType": 0,
+  "goodsValue": "",
+  "code": "",
+  "timeType": 0,
+  "days": 0,
+  "startTime": "2000-01-01 14:00:00",
+  "endTime": "2000-01-01 14:00:00",
+  "addTime": "2000-01-01 14:00:00",
+  "updateTime": "2000-01-01 14:00:00",
+  "deleted": false
+}

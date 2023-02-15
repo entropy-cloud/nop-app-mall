@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<beans x:schema="/nop/schema/beans.xdef" xmlns:x="/nop/schema/xdsl.xdef" xmlns:ioc="ioc"
+       xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
+
+    <bean id="app.mall.service.entity.LitemallAdBizModel" ioc:type="@bean:id" ioc:tags="impl"/>
+
+    <bean id="app.mall.service.entity.LitemallAddressBizModel" ioc:type="@bean:id" ioc:tags="impl"/>
+
+    <bean id="app.mall.service.entity.LitemallAdminBizModel" ioc:type="@bean:id" ioc:tags="impl"/>
+
+    <bean id="app.mall.service.entity.LitemallAftersaleBizModel" ioc:type="@bean:id" ioc:tags="impl"/>
+
+    <bean id="app.mall.service.entity.LitemallBrandBizModel" ioc:type="@bean:id" ioc:tags="impl"/>
+
+    <bean id="app.mall.service.entity.LitemallCartBizModel" ioc:type="@bean:id" ioc:tags="impl"/>
+
+    <bean id="app.mall.service.entity.LitemallCategoryBizModel" ioc:type="@bean:id" ioc:tags="impl"/>
+
+    <bean id="app.mall.service.entity.LitemallCollectBizModel" ioc:type="@bean:id" ioc:tags="impl"/>
+
+    <bean id="app.mall.service.entity.LitemallCommentBizModel" ioc:type="@bean:id" ioc:tags="impl"/>
+
+    <bean id="app.mall.service.entity.LitemallCouponBizModel" ioc:type="@bean:id" ioc:tags="impl"/>
+
+    <bean id="app.mall.service.entity.LitemallCouponUserBizModel" ioc:type="@bean:id" ioc:tags="impl"/>
+
+    <bean id="app.mall.service.entity.LitemallFeedbackBizModel" ioc:type="@bean:id" ioc:tags="impl"/>
+
+    <bean id="app.mall.service.entity.LitemallFootprintBizModel" ioc:type="@bean:id" ioc:tags="impl"/>
+
+    <bean id="app.mall.service.entity.LitemallGoodsBizModel" ioc:type="@bean:id" ioc:tags="impl"/>
+
+    <bean id="app.mall.service.entity.LitemallGoodsAttributeBizModel" ioc:type="@bean:id" ioc:tags="impl"/>
+
+    <bean id="app.mall.service.entity.LitemallGoodsProductBizModel" ioc:type="@bean:id" ioc:tags="impl"/>
+
+    <bean id="app.mall.service.entity.LitemallGoodsSpecificationBizModel" ioc:type="@bean:id" ioc:tags="impl"/>
+
+    <bean id="app.mall.service.entity.LitemallGrouponBizModel" ioc:type="@bean:id" ioc:tags="impl"/>
+
+    <bean id="app.mall.service.entity.LitemallGrouponRulesBizModel" ioc:type="@bean:id" ioc:tags="impl"/>
+
+    <bean id="app.mall.service.entity.LitemallIssueBizModel" ioc:type="@bean:id" ioc:tags="impl"/>
+
+    <bean id="app.mall.service.entity.LitemallKeywordBizModel" ioc:type="@bean:id" ioc:tags="impl"/>
+
+    <bean id="app.mall.service.entity.LitemallLogBizModel" ioc:type="@bean:id" ioc:tags="impl"/>
+
+    <bean id="app.mall.service.entity.LitemallNoticeBizModel" ioc:type="@bean:id" ioc:tags="impl"/>
+
+    <bean id="app.mall.service.entity.LitemallNoticeAdminBizModel" ioc:type="@bean:id" ioc:tags="impl"/>
+
+    <bean id="app.mall.service.entity.LitemallOrderBizModel" ioc:type="@bean:id" ioc:tags="impl"/>
+
+    <bean id="app.mall.service.entity.LitemallOrderGoodsBizModel" ioc:type="@bean:id" ioc:tags="impl"/>
+
+    <bean id="app.mall.service.entity.LitemallPermissionBizModel" ioc:type="@bean:id" ioc:tags="impl"/>
+
+    <bean id="app.mall.service.entity.LitemallRegionBizModel" ioc:type="@bean:id" ioc:tags="impl"/>
+
+    <bean id="app.mall.service.entity.LitemallRoleBizModel" ioc:type="@bean:id" ioc:tags="impl"/>
+
+    <bean id="app.mall.service.entity.LitemallSearchHistoryBizModel" ioc:type="@bean:id" ioc:tags="impl"/>
+
+    <bean id="app.mall.service.entity.LitemallStorageBizModel" ioc:type="@bean:id" ioc:tags="impl"/>
+
+    <bean id="app.mall.service.entity.LitemallSystemBizModel" ioc:type="@bean:id" ioc:tags="impl"/>
+
+    <bean id="app.mall.service.entity.LitemallTopicBizModel" ioc:type="@bean:id" ioc:tags="impl"/>
+
+    <bean id="app.mall.service.entity.LitemallUserBizModel" ioc:type="@bean:id" ioc:tags="impl"/>
+</beans>

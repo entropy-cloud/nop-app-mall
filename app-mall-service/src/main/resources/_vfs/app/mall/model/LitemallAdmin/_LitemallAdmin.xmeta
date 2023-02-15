@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<meta x:schema="/nop/schema/xmeta.xdef" xmlns:x="/nop/schema/xdsl.xdef" xmlns:i18n-en="i18n-en" xmlns:ext="ext"
+      xmlns:xpl="xpl" xmlns:biz-gen="biz-gen" displayName="管理员表">
+
+    <entityName>app.mall.dao.entity.LitemallAdmin</entityName>
+
+    <primaryKey>id</primaryKey>
+
+    <displayProp/>
+
+    <x:post-extends>
+        <biz-gen:DefaultMetaPostExtends xpl:lib="/nop/biz/xlib/biz-gen.xlib"/>
+    </x:post-extends>
+
+    <prop name="id" displayName="Id" mandatory="true" queryable="true" sortable="true" insertable="true"
+          updatable="false">
+        <schema type="java.lang.Integer"/>
+    </prop>
+
+    <prop name="username" displayName="管理员名称" mandatory="true" queryable="true" sortable="true" insertable="true"
+          updatable="true">
+        <schema type="java.lang.String" precision="63"/>
+    </prop>
+
+    <prop name="password" displayName="管理员密码" mandatory="true" queryable="true" sortable="true" insertable="true"
+          updatable="true">
+        <schema type="java.lang.String" precision="63"/>
+    </prop>
+
+    <prop name="lastLoginIp" displayName="最近一次登录IP地址" queryable="true" sortable="true" insertable="true"
+          updatable="true">
+        <schema type="java.lang.String" precision="63"/>
+    </prop>
+
+    <prop name="lastLoginTime" displayName="最近一次登录时间" queryable="true" sortable="true" insertable="true"
+          updatable="true">
+        <schema type="java.time.LocalDateTime"/>
+    </prop>
+
+    <prop name="avatar" displayName="头像图片" queryable="true" sortable="true" insertable="true" updatable="true">
+        <schema type="java.lang.String" precision="255"/>
+    </prop>
+
+    <prop name="addTime" displayName="创建时间" queryable="true" sortable="true" insertable="true" updatable="true">
+        <schema type="java.time.LocalDateTime"/>
+    </prop>
+
+    <prop name="updateTime" displayName="更新时间" queryable="true" sortable="true" insertable="true" updatable="true">
+        <schema type="java.time.LocalDateTime"/>
+    </prop>
+
+    <prop name="deleted" displayName="逻辑删除" queryable="true" sortable="true" insertable="true" updatable="true">
+        <schema type="java.lang.Boolean"/>
+    </prop>
+
+    <prop name="roleIds" displayName="角色列表" queryable="true" sortable="true" insertable="true" updatable="true">
+        <schema type="java.lang.String" precision="127"/>
+    </prop>
+</meta>

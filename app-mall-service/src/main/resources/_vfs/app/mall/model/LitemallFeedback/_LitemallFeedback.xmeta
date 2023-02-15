@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<meta x:schema="/nop/schema/xmeta.xdef" xmlns:x="/nop/schema/xdsl.xdef" xmlns:i18n-en="i18n-en" xmlns:ext="ext"
+      xmlns:xpl="xpl" xmlns:biz-gen="biz-gen" displayName="意见反馈表">
+
+    <entityName>app.mall.dao.entity.LitemallFeedback</entityName>
+
+    <primaryKey>id</primaryKey>
+
+    <displayProp/>
+
+    <x:post-extends>
+        <biz-gen:DefaultMetaPostExtends xpl:lib="/nop/biz/xlib/biz-gen.xlib"/>
+    </x:post-extends>
+
+    <prop name="id" displayName="Id" mandatory="true" queryable="true" sortable="true" insertable="true"
+          updatable="false">
+        <schema type="java.lang.Integer"/>
+    </prop>
+
+    <prop name="userId" displayName="用户表的用户ID" mandatory="true" queryable="true" sortable="true" insertable="true"
+          updatable="true">
+        <schema type="java.lang.Integer"/>
+    </prop>
+
+    <prop name="username" displayName="用户名称" mandatory="true" queryable="true" sortable="true" insertable="true"
+          updatable="true">
+        <schema type="java.lang.String" precision="63"/>
+    </prop>
+
+    <prop name="mobile" displayName="手机号" mandatory="true" queryable="true" sortable="true" insertable="true"
+          updatable="true">
+        <schema type="java.lang.String" precision="20"/>
+    </prop>
+
+    <prop name="feedType" displayName="反馈类型" mandatory="true" queryable="true" sortable="true" insertable="true"
+          updatable="true">
+        <schema type="java.lang.String" precision="63"/>
+    </prop>
+
+    <prop name="content" displayName="反馈内容" mandatory="true" queryable="true" sortable="true" insertable="true"
+          updatable="true">
+        <schema type="java.lang.String" precision="1023"/>
+    </prop>
+
+    <prop name="status" displayName="状态" mandatory="true" queryable="true" sortable="true" insertable="true"
+          updatable="true">
+        <schema type="java.lang.Integer"/>
+    </prop>
+
+    <prop name="hasPicture" displayName="是否含有图片" queryable="true" sortable="true" insertable="true" updatable="true">
+        <schema type="java.lang.Boolean"/>
+    </prop>
+
+    <prop name="picUrls" displayName="图片地址列表，采用JSON数组格式" queryable="true" sortable="true" insertable="true"
+          updatable="true">
+        <schema type="java.lang.String" precision="1023"/>
+    </prop>
+
+    <prop name="addTime" displayName="创建时间" queryable="true" sortable="true" insertable="true" updatable="true">
+        <schema type="java.time.LocalDateTime"/>
+    </prop>
+
+    <prop name="updateTime" displayName="更新时间" queryable="true" sortable="true" insertable="true" updatable="true">
+        <schema type="java.time.LocalDateTime"/>
+    </prop>
+
+    <prop name="deleted" displayName="逻辑删除" queryable="true" sortable="true" insertable="true" updatable="true">
+        <schema type="java.lang.Boolean"/>
+    </prop>
+</meta>

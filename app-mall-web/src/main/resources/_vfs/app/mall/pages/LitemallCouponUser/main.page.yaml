@@ -1,0 +1,4 @@
+
+xui:js: '@include:LitemallCouponUser.action.js'
+x:gen-extends: |
+    <web:GenPage view="LitemallCouponUser.view.xml" page="main" xpl:lib="/nop/web/xlib/web.xlib" />

@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<view x:schema="/nop/schema/xui/xview.xdef" bizObjName="LitemallGrouponRules" xmlns:i18n-en="i18n-en"
+      xmlns:x="/nop/schema/xdsl.xdef" xmlns:j="j">
+
+    <objMeta>/app/mall/model/LitemallGrouponRules/LitemallGrouponRules.xmeta</objMeta>
+
+    <controlLib>/nop/web/xlib/control.xlib</controlLib>
+
+    <grids>
+        <grid id="list" x:abstract="true">
+            <cols>
+
+                <!--Id-->
+                <col id="id" mandatory="true" sortable="true"/>
+
+                <!--商品表的商品ID-->
+                <col id="goodsId" mandatory="true" sortable="true"/>
+
+                <!--商品名称-->
+                <col id="goodsName" mandatory="true" sortable="true"/>
+
+                <!--商品图片或者商品货品图片-->
+                <col id="picUrl" sortable="true"/>
+
+                <!--优惠金额-->
+                <col id="discount" mandatory="true" sortable="true"/>
+
+                <!--达到优惠条件的人数-->
+                <col id="discountMember" mandatory="true" sortable="true"/>
+
+                <!--团购过期时间-->
+                <col id="expireTime" sortable="true"/>
+
+                <!--团购规则状态，正常上线则0，到期自动下线则1，管理手动下线则2-->
+                <col id="status" sortable="true"/>
+
+                <!--创建时间-->
+                <col id="addTime" mandatory="true" sortable="true"/>
+
+                <!--更新时间-->
+                <col id="updateTime" sortable="true"/>
+
+                <!--逻辑删除-->
+                <col id="deleted" sortable="true"/>
+            </cols>
+        </grid>
+        <grid id="pick-list" x:prototype="list" x:abstract="true"/>
+    </grids>
+
+    <forms>
+        <form id="view" editMode="view" title="查看-团购规则表" i18n-en:title="View ">
+            <layout>
+ id[Id] goodsId[商品表的商品ID]
+ goodsName[商品名称] picUrl[商品图片或者商品货品图片]
+ discount[优惠金额] discountMember[达到优惠条件的人数]
+ expireTime[团购过期时间] status[团购规则状态，正常上线则0，到期自动下线则1，管理手动下线则2]
+ addTime[创建时间] updateTime[更新时间]
+ deleted[逻辑删除] 
+</layout>
+        </form>
+        <form id="add" editMode="add" title="新增-团购规则表" i18n-en:title="Add " x:prototype="edit"/>
+        <form id="edit" editMode="update" title="编辑-团购规则表" i18n-en:title="Edit ">
+            <layout>
+ id[Id] goodsId[商品表的商品ID]
+ goodsName[商品名称] picUrl[商品图片或者商品货品图片]
+ discount[优惠金额] discountMember[达到优惠条件的人数]
+ expireTime[团购过期时间] status[团购规则状态，正常上线则0，到期自动下线则1，管理手动下线则2]
+ addTime[创建时间] updateTime[更新时间]
+ deleted[逻辑删除] 
+</layout>
+        </form>
+        <form id="query" editMode="query" title="查询条件" i18n-en:title="Query Condition" x:abstract="true">
+            <layout/>
+        </form>
+        <form id="asideFilter" editMode="query" x:abstract="true" submitOnChange="true">
+            <layout/>
+        </form>
+        <form id="batchUpdate" editMode="update" x:abstract="true" title="修改-团购规则表" i18n-en:title="Update ">
+            <layout/>
+        </form>
+    </forms>
+
+    <pages>
+        <crud name="main" grid="list" asideFilterForm="asideFilter" filterForm="query" x:abstract="true">
+            <table autoFillHeight="true">
+                <api url="@query:LitemallGrouponRules__findPage/{@pageSelection}"/>
+            </table>
+            <listActions>
+                <action id="batch-delete-button" label="@i18n:common.batchDelete" batch="true">
+                    <api url="@mutation:LitemallGrouponRules__delete?ids=$ids"/>
+                    <confirmText>@i18n:common.confirmBatchDelete</confirmText>
+                </action>
+                <action id="add-button" level="primary" label="@i18n:common.add" icon="fa fa-plus pull-left">
+                    <dialog page="add"/>
+                </action>
+            </listActions>
+            <rowActions>
+                <action id="row-view-button" level="primary" label="@i18n:common.view">
+                    <dialog page="view"/>
+                </action>
+                <actionGroup id="row-more-button" label="@i18n:common.more" level="primary">
+                    <action id="row-update-button" level="primary" label="@i18n:common.edit">
+                        <dialog page="update"/>
+                    </action>
+                    <action id="row-delete-button" level="danger" label="@i18n:common.delete">
+                        <api url="@mutation:LitemallGrouponRules__delete?id=$id"/>
+                        <confirmText>@i18n:common.confirmDelete</confirmText>
+                    </action>
+                </actionGroup>
+            </rowActions>
+        </crud>
+        <picker name="picker" grid="pick-list" asideFilterForm="asideFilter" filterForm="query" x:abstract="true">
+            <table>
+                <api url="@query:LitemallGrouponRules__findPage/{@pageSelection}"/>
+            </table>
+        </picker>
+        <simple name="add" form="add">
+            <api url="@mutation:LitemallGrouponRules__save/id"/>
+        </simple>
+        <simple name="view" form="view">
+            <api url="@query:LitemallGrouponRules__get/{@formSelection}?id=$id"/>
+        </simple>
+        <simple name="update" form="edit">
+            <initApi url="@query:LitemallGrouponRules__get/{@formSelection}?id=$id"/>
+            <api url="@mutation:LitemallGrouponRules__update/id?id=$id" withFormData="true"/>
+        </simple>
+    </pages>
+</view>

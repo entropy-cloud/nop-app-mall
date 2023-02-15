@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<meta x:schema="/nop/schema/xmeta.xdef" xmlns:x="/nop/schema/xdsl.xdef" xmlns:i18n-en="i18n-en" xmlns:ext="ext"
+      xmlns:xpl="xpl" xmlns:biz-gen="biz-gen" displayName="购物车商品表">
+
+    <entityName>app.mall.dao.entity.LitemallCart</entityName>
+
+    <primaryKey>id</primaryKey>
+
+    <displayProp/>
+
+    <x:post-extends>
+        <biz-gen:DefaultMetaPostExtends xpl:lib="/nop/biz/xlib/biz-gen.xlib"/>
+    </x:post-extends>
+
+    <prop name="id" displayName="Id" mandatory="true" queryable="true" sortable="true" insertable="true"
+          updatable="false">
+        <schema type="java.lang.Integer"/>
+    </prop>
+
+    <prop name="userId" displayName="用户表的用户ID" queryable="true" sortable="true" insertable="true" updatable="true">
+        <schema type="java.lang.Integer"/>
+    </prop>
+
+    <prop name="goodsId" displayName="商品表的商品ID" queryable="true" sortable="true" insertable="true" updatable="true">
+        <schema type="java.lang.Integer"/>
+    </prop>
+
+    <prop name="goodsSn" displayName="商品编号" queryable="true" sortable="true" insertable="true" updatable="true">
+        <schema type="java.lang.String" precision="63"/>
+    </prop>
+
+    <prop name="goodsName" displayName="商品名称" queryable="true" sortable="true" insertable="true" updatable="true">
+        <schema type="java.lang.String" precision="127"/>
+    </prop>
+
+    <prop name="productId" displayName="商品货品表的货品ID" queryable="true" sortable="true" insertable="true" updatable="true">
+        <schema type="java.lang.Integer"/>
+    </prop>
+
+    <prop name="price" displayName="商品货品的价格" queryable="true" sortable="true" insertable="true" updatable="true">
+        <schema type="java.math.BigDecimal" precision="10" scale="2"/>
+    </prop>
+
+    <prop name="number" displayName="商品货品的数量" queryable="true" sortable="true" insertable="true" updatable="true">
+        <schema type="java.lang.Short"/>
+    </prop>
+
+    <prop name="specifications" displayName="商品规格值列表，采用JSON数组格式" queryable="true" sortable="true" insertable="true"
+          updatable="true">
+        <schema type="java.lang.String" precision="1023"/>
+    </prop>
+
+    <prop name="checked" displayName="购物车中商品是否选择状态" queryable="true" sortable="true" insertable="true" updatable="true">
+        <schema type="java.lang.Boolean"/>
+    </prop>
+
+    <prop name="picUrl" displayName="商品图片或者商品货品图片" queryable="true" sortable="true" insertable="true" updatable="true">
+        <schema type="java.lang.String" precision="255"/>
+    </prop>
+
+    <prop name="addTime" displayName="创建时间" queryable="true" sortable="true" insertable="true" updatable="true">
+        <schema type="java.time.LocalDateTime"/>
+    </prop>
+
+    <prop name="updateTime" displayName="更新时间" queryable="true" sortable="true" insertable="true" updatable="true">
+        <schema type="java.time.LocalDateTime"/>
+    </prop>
+
+    <prop name="deleted" displayName="逻辑删除" queryable="true" sortable="true" insertable="true" updatable="true">
+        <schema type="java.lang.Boolean"/>
+    </prop>
+</meta>

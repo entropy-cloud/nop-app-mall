@@ -1,0 +1,16 @@
+{
+  "id": 0,
+  "orderId": 0,
+  "goodsId": 0,
+  "goodsName": "",
+  "goodsSn": "",
+  "productId": 0,
+  "number": 0,
+  "price": 0.0,
+  "specifications": "",
+  "picUrl": "",
+  "comment": 0,
+  "addTime": "2000-01-01 14:00:00",
+  "updateTime": "2000-01-01 14:00:00",
+  "deleted": false
+}

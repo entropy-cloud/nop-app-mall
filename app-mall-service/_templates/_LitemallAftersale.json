@@ -1,0 +1,16 @@
+{
+  "id": 0,
+  "aftersaleSn": "",
+  "orderId": 0,
+  "userId": 0,
+  "type": 0,
+  "reason": "",
+  "amount": 0.0,
+  "pictures": "",
+  "comment": "",
+  "status": 0,
+  "handleTime": "2000-01-01 14:00:00",
+  "addTime": "2000-01-01 14:00:00",
+  "updateTime": "2000-01-01 14:00:00",
+  "deleted": false
+}

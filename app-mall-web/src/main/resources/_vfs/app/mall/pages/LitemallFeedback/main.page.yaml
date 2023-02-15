@@ -1,0 +1,4 @@
+
+xui:js: '@include:LitemallFeedback.action.js'
+x:gen-extends: |
+    <web:GenPage view="LitemallFeedback.view.xml" page="main" xpl:lib="/nop/web/xlib/web.xlib" />

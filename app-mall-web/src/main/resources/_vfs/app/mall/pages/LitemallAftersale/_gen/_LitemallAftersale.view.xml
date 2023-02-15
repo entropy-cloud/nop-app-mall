@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<view x:schema="/nop/schema/xui/xview.xdef" bizObjName="LitemallAftersale" xmlns:i18n-en="i18n-en"
+      xmlns:x="/nop/schema/xdsl.xdef" xmlns:j="j">
+
+    <objMeta>/app/mall/model/LitemallAftersale/LitemallAftersale.xmeta</objMeta>
+
+    <controlLib>/nop/web/xlib/control.xlib</controlLib>
+
+    <grids>
+        <grid id="list" x:abstract="true">
+            <cols>
+
+                <!--Id-->
+                <col id="id" mandatory="true" sortable="true"/>
+
+                <!--售后编号-->
+                <col id="aftersaleSn" sortable="true"/>
+
+                <!--订单ID-->
+                <col id="orderId" mandatory="true" sortable="true"/>
+
+                <!--用户ID-->
+                <col id="userId" mandatory="true" sortable="true"/>
+
+                <!--售后类型，0是未收货退款，1是已收货（无需退货）退款，2用户退货退款-->
+                <col id="type" sortable="true"/>
+
+                <!--退款原因-->
+                <col id="reason" sortable="true"/>
+
+                <!--退款金额-->
+                <col id="amount" sortable="true"/>
+
+                <!--退款凭证图片链接数组-->
+                <col id="pictures" sortable="true"/>
+
+                <!--退款说明-->
+                <col id="comment" sortable="true"/>
+
+                <!--售后状态，0是可申请，1是用户已申请，2是管理员审核通过，3是管理员退款成功，4是管理员审核拒绝，5是用户已取消-->
+                <col id="status" sortable="true"/>
+
+                <!--管理员操作时间-->
+                <col id="handleTime" sortable="true"/>
+
+                <!--添加时间-->
+                <col id="addTime" sortable="true"/>
+
+                <!--更新时间-->
+                <col id="updateTime" sortable="true"/>
+
+                <!--逻辑删除-->
+                <col id="deleted" sortable="true"/>
+            </cols>
+        </grid>
+        <grid id="pick-list" x:prototype="list" x:abstract="true"/>
+    </grids>
+
+    <forms>
+        <form id="view" editMode="view" title="查看-售后表" i18n-en:title="View ">
+            <layout>
+ id[Id] aftersaleSn[售后编号]
+ orderId[订单ID] userId[用户ID]
+ type[售后类型，0是未收货退款，1是已收货（无需退货）退款，2用户退货退款] reason[退款原因]
+ amount[退款金额] pictures[退款凭证图片链接数组]
+ comment[退款说明] status[售后状态，0是可申请，1是用户已申请，2是管理员审核通过，3是管理员退款成功，4是管理员审核拒绝，5是用户已取消]
+ handleTime[管理员操作时间] addTime[添加时间]
+ updateTime[更新时间] deleted[逻辑删除]
+</layout>
+        </form>
+        <form id="add" editMode="add" title="新增-售后表" i18n-en:title="Add " x:prototype="edit"/>
+        <form id="edit" editMode="update" title="编辑-售后表" i18n-en:title="Edit ">
+            <layout>
+ id[Id] aftersaleSn[售后编号]
+ orderId[订单ID] userId[用户ID]
+ type[售后类型，0是未收货退款，1是已收货（无需退货）退款，2用户退货退款] reason[退款原因]
+ amount[退款金额] pictures[退款凭证图片链接数组]
+ comment[退款说明] status[售后状态，0是可申请，1是用户已申请，2是管理员审核通过，3是管理员退款成功，4是管理员审核拒绝，5是用户已取消]
+ handleTime[管理员操作时间] addTime[添加时间]
+ updateTime[更新时间] deleted[逻辑删除]
+</layout>
+        </form>
+        <form id="query" editMode="query" title="查询条件" i18n-en:title="Query Condition" x:abstract="true">
+            <layout/>
+        </form>
+        <form id="asideFilter" editMode="query" x:abstract="true" submitOnChange="true">
+            <layout/>
+        </form>
+        <form id="batchUpdate" editMode="update" x:abstract="true" title="修改-售后表" i18n-en:title="Update ">
+            <layout/>
+        </form>
+    </forms>
+
+    <pages>
+        <crud name="main" grid="list" asideFilterForm="asideFilter" filterForm="query" x:abstract="true">
+            <table autoFillHeight="true">
+                <api url="@query:LitemallAftersale__findPage/{@pageSelection}"/>
+            </table>
+            <listActions>
+                <action id="batch-delete-button" label="@i18n:common.batchDelete" batch="true">
+                    <api url="@mutation:LitemallAftersale__delete?ids=$ids"/>
+                    <confirmText>@i18n:common.confirmBatchDelete</confirmText>
+                </action>
+                <action id="add-button" level="primary" label="@i18n:common.add" icon="fa fa-plus pull-left">
+                    <dialog page="add"/>
+                </action>
+            </listActions>
+            <rowActions>
+                <action id="row-view-button" level="primary" label="@i18n:common.view">
+                    <dialog page="view"/>
+                </action>
+                <actionGroup id="row-more-button" label="@i18n:common.more" level="primary">
+                    <action id="row-update-button" level="primary" label="@i18n:common.edit">
+                        <dialog page="update"/>
+                    </action>
+                    <action id="row-delete-button" level="danger" label="@i18n:common.delete">
+                        <api url="@mutation:LitemallAftersale__delete?id=$id"/>
+                        <confirmText>@i18n:common.confirmDelete</confirmText>
+                    </action>
+                </actionGroup>
+            </rowActions>
+        </crud>
+        <picker name="picker" grid="pick-list" asideFilterForm="asideFilter" filterForm="query" x:abstract="true">
+            <table>
+                <api url="@query:LitemallAftersale__findPage/{@pageSelection}"/>
+            </table>
+        </picker>
+        <simple name="add" form="add">
+            <api url="@mutation:LitemallAftersale__save/id"/>
+        </simple>
+        <simple name="view" form="view">
+            <api url="@query:LitemallAftersale__get/{@formSelection}?id=$id"/>
+        </simple>
+        <simple name="update" form="edit">
+            <initApi url="@query:LitemallAftersale__get/{@formSelection}?id=$id"/>
+            <api url="@mutation:LitemallAftersale__update/id?id=$id" withFormData="true"/>
+        </simple>
+    </pages>
+</view>

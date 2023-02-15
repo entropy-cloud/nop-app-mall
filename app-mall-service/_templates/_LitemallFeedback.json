@@ -1,0 +1,14 @@
+{
+  "id": 0,
+  "userId": 0,
+  "username": "",
+  "mobile": "",
+  "feedType": "",
+  "content": "",
+  "status": 0,
+  "hasPicture": false,
+  "picUrls": "",
+  "addTime": "2000-01-01 14:00:00",
+  "updateTime": "2000-01-01 14:00:00",
+  "deleted": false
+}
