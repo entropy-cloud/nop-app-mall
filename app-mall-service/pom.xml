@@ -32,6 +32,10 @@
         </dependency>
         <dependency>
             <groupId>io.nop</groupId>
+            <artifactId>nop-sys-dao</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.nop</groupId>
             <artifactId>nop-autotest-junit</artifactId>
             <scope>test</scope>
         </dependency>

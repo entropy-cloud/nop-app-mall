@@ -1,1 +1,1 @@
-java -Dfile.encoding=UTF8 -jar nop-cli.jar reverse dev app.mall -c=com.mysql.cj.jdbc.Driver --username=nop --password=nop-test --jdbcUrl="jdbc:mysql://127.0.0.1:3306/dev?useUnicode=true&characterEncoding=utf-8&useSSL=true&serverTimezone=UTC" 
+java -Dfile.encoding=UTF8 -jar nop-cli.jar reverse litemall app.mall -c=com.mysql.cj.jdbc.Driver --username=litemall --password=litemall123456 --jdbcUrl="jdbc:mysql://127.0.0.1:3306/litemall?useUnicode=true&characterEncoding=utf-8&useSSL=true&serverTimezone=UTC"

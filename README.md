@@ -33,10 +33,3 @@ java -Dfile.encoding=UTF8 -Dquarkus.profile=dev -jar app-mall-app/target/app-mal
 服务链接http://localhost:8080，用户名nop，密码123
 
 
-
-#### 使用说明
-
-1.  xxxx
-2.  xxxx
-3.  xxxx
-
