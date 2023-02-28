@@ -10,5 +10,7 @@
   "status": 0,
   "addTime": "2000-01-01 14:00:00",
   "updateTime": "2000-01-01 14:00:00",
-  "deleted": false
+  "deleted": false,
+  "order": null,
+  "order.orderSn": ""
 }

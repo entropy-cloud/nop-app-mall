@@ -28,7 +28,7 @@ public class _LitemallCategory extends DynamicOrmEntity{
     public static final String PROP_NAME_name = "name";
     public static final int PROP_ID_name = 2;
     
-    /* 类目关键字，以JSON数组格式: KEYWORDS VARCHAR */
+    /* 类目关键字: KEYWORDS VARCHAR */
     public static final String PROP_NAME_keywords = "keywords";
     public static final int PROP_ID_keywords = 3;
     
@@ -125,7 +125,7 @@ public class _LitemallCategory extends DynamicOrmEntity{
     /* 类目名称: NAME */
     private java.lang.String _name;
     
-    /* 类目关键字，以JSON数组格式: KEYWORDS */
+    /* 类目关键字: KEYWORDS */
     private java.lang.String _keywords;
     
     /* 类目广告语介绍: DESC */
@@ -530,7 +530,7 @@ public class _LitemallCategory extends DynamicOrmEntity{
     }
     
     /**
-     * 类目关键字，以JSON数组格式: KEYWORDS
+     * 类目关键字: KEYWORDS
      */
     public java.lang.String getKeywords(){
          onPropGet(PROP_ID_keywords);
@@ -538,7 +538,7 @@ public class _LitemallCategory extends DynamicOrmEntity{
     }
 
     /**
-     * 类目关键字，以JSON数组格式: KEYWORDS
+     * 类目关键字: KEYWORDS
      */
     public void setKeywords(java.lang.String value){
         if(onPropSet(PROP_ID_keywords,value)){

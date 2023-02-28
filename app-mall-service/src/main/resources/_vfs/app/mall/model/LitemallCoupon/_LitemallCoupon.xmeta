@@ -1,38 +1,37 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <meta x:schema="/nop/schema/xmeta.xdef" xmlns:x="/nop/schema/xdsl.xdef" xmlns:i18n-en="i18n-en" xmlns:ext="ext"
-      xmlns:xpl="xpl" xmlns:biz-gen="biz-gen" displayName="优惠券信息及规则表">
+      xmlns:xpl="xpl" xmlns:biz-gen="biz-gen" ext:model="orm" displayName="优惠券信息及规则表">
 
     <entityName>app.mall.dao.entity.LitemallCoupon</entityName>
 
     <primaryKey>id</primaryKey>
 
-    <displayProp/>
+    <displayProp>name</displayProp>
 
     <x:post-extends>
         <biz-gen:DefaultMetaPostExtends xpl:lib="/nop/biz/xlib/biz-gen.xlib"/>
     </x:post-extends>
 
-    <prop name="id" displayName="Id" mandatory="true" queryable="true" sortable="true" insertable="true"
+    <prop name="id" displayName="Id" tagSet="seq" mandatory="true" queryable="true" sortable="true" insertable="true"
           updatable="false">
         <schema type="java.lang.Integer"/>
     </prop>
 
-    <prop name="name" displayName="优惠券名称" mandatory="true" queryable="true" sortable="true" insertable="true"
-          updatable="true">
+    <prop name="name" displayName="优惠券名称" tagSet="disp" mandatory="true" queryable="true" sortable="true"
+          insertable="true" updatable="true">
         <schema type="java.lang.String" precision="63"/>
     </prop>
 
-    <prop name="desc" displayName="优惠券介绍，通常是显示优惠券使用限制文字" queryable="true" sortable="true" insertable="true"
-          updatable="true">
+    <prop name="desc" displayName="优惠券介绍" queryable="true" sortable="true" insertable="true" updatable="true">
         <schema type="java.lang.String" precision="127"/>
     </prop>
 
-    <prop name="tag" displayName="优惠券标签，例如新人专用" queryable="true" sortable="true" insertable="true" updatable="true">
+    <prop name="tag" displayName="优惠券标签" queryable="true" sortable="true" insertable="true" updatable="true">
         <schema type="java.lang.String" precision="63"/>
     </prop>
 
-    <prop name="total" displayName="优惠券数量，如果是0，则是无限量" mandatory="true" queryable="true" sortable="true"
-          insertable="true" updatable="true">
+    <prop name="total" displayName="优惠券数量" mandatory="true" queryable="true" sortable="true" insertable="true"
+          updatable="true">
         <schema type="java.lang.Integer"/>
     </prop>
 
@@ -44,24 +43,20 @@
         <schema type="java.math.BigDecimal" precision="10" scale="2"/>
     </prop>
 
-    <prop name="limit" displayName="用户领券限制数量，如果是0，则是不限制；默认是1，限领一张." queryable="true" sortable="true" insertable="true"
-          updatable="true">
+    <prop name="limit" displayName="用户领券限制数量" queryable="true" sortable="true" insertable="true" updatable="true">
         <schema type="java.lang.Short"/>
     </prop>
 
-    <prop name="type" displayName="优惠券赠送类型，如果是0则通用券，用户领取；如果是1，则是注册赠券；如果是2，则是优惠券码兑换；" queryable="true" sortable="true"
-          insertable="true" updatable="true">
-        <schema type="java.lang.Short"/>
+    <prop name="type" displayName="优惠券赠送类型" queryable="true" sortable="true" insertable="true" updatable="true">
+        <schema type="java.lang.Short" dict="mall/coupon-type"/>
     </prop>
 
-    <prop name="status" displayName="优惠券状态，如果是0则是正常可用；如果是1则是过期; 如果是2则是下架。" queryable="true" sortable="true"
-          insertable="true" updatable="true">
-        <schema type="java.lang.Short"/>
+    <prop name="status" displayName="优惠券状态" queryable="true" sortable="true" insertable="true" updatable="true">
+        <schema type="java.lang.Short" dict="mall/coupon-status"/>
     </prop>
 
-    <prop name="goodsType" displayName="商品限制类型，如果0则全商品，如果是1则是类目限制，如果是2则是商品限制。" queryable="true" sortable="true"
-          insertable="true" updatable="true">
-        <schema type="java.lang.Short"/>
+    <prop name="goodsType" displayName="商品限制类型" queryable="true" sortable="true" insertable="true" updatable="true">
+        <schema type="java.lang.Short" dict="mall/coupon-goods-type"/>
     </prop>
 
     <prop name="goodsValue" displayName="商品限制值，goods_type如果是0则空集合，如果是1则是类目集合，如果是2则是商品集合。" queryable="true"
@@ -73,9 +68,8 @@
         <schema type="java.lang.String" precision="63"/>
     </prop>
 
-    <prop name="timeType" displayName="有效时间限制，如果是0，则基于领取时间的有效天数days；如果是1，则start_time和end_time是优惠券有效期；" queryable="true"
-          sortable="true" insertable="true" updatable="true">
-        <schema type="java.lang.Short"/>
+    <prop name="timeType" displayName="有效时间限制" queryable="true" sortable="true" insertable="true" updatable="true">
+        <schema type="java.lang.Short" dict="mall/coupon-time-type"/>
     </prop>
 
     <prop name="days" displayName="基于领取时间的有效天数days。" queryable="true" sortable="true" insertable="true" updatable="true">
@@ -90,15 +84,15 @@
         <schema type="java.time.LocalDateTime"/>
     </prop>
 
-    <prop name="addTime" displayName="创建时间" queryable="true" sortable="true" insertable="true" updatable="true">
-        <schema type="java.time.LocalDateTime"/>
+    <prop name="addTime" displayName="创建时间" queryable="true" sortable="true" insertable="false" updatable="false">
+        <schema domain="createTime" type="java.time.LocalDateTime"/>
     </prop>
 
-    <prop name="updateTime" displayName="更新时间" queryable="true" sortable="true" insertable="true" updatable="true">
-        <schema type="java.time.LocalDateTime"/>
+    <prop name="updateTime" displayName="更新时间" queryable="true" sortable="true" insertable="false" updatable="false">
+        <schema domain="updateTime" type="java.time.LocalDateTime"/>
     </prop>
 
-    <prop name="deleted" displayName="逻辑删除" queryable="true" sortable="true" insertable="true" updatable="true">
-        <schema type="java.lang.Boolean"/>
+    <prop name="deleted" displayName="逻辑删除" queryable="true" sortable="true" insertable="false" updatable="true">
+        <schema stdDomain="boolFlag" domain="delFlag" type="java.lang.Boolean"/>
     </prop>
 </meta>

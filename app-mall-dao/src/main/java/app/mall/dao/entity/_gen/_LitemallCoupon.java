@@ -28,15 +28,15 @@ public class _LitemallCoupon extends DynamicOrmEntity{
     public static final String PROP_NAME_name = "name";
     public static final int PROP_ID_name = 2;
     
-    /* 优惠券介绍，通常是显示优惠券使用限制文字: DESC VARCHAR */
+    /* 优惠券介绍: DESC VARCHAR */
     public static final String PROP_NAME_desc = "desc";
     public static final int PROP_ID_desc = 3;
     
-    /* 优惠券标签，例如新人专用: TAG VARCHAR */
+    /* 优惠券标签: TAG VARCHAR */
     public static final String PROP_NAME_tag = "tag";
     public static final int PROP_ID_tag = 4;
     
-    /* 优惠券数量，如果是0，则是无限量: TOTAL INTEGER */
+    /* 优惠券数量: TOTAL INTEGER */
     public static final String PROP_NAME_total = "total";
     public static final int PROP_ID_total = 5;
     
@@ -48,19 +48,19 @@ public class _LitemallCoupon extends DynamicOrmEntity{
     public static final String PROP_NAME_min = "min";
     public static final int PROP_ID_min = 7;
     
-    /* 用户领券限制数量，如果是0，则是不限制；默认是1，限领一张.: LIMIT SMALLINT */
+    /* 用户领券限制数量: LIMIT SMALLINT */
     public static final String PROP_NAME_limit = "limit";
     public static final int PROP_ID_limit = 8;
     
-    /* 优惠券赠送类型，如果是0则通用券，用户领取；如果是1，则是注册赠券；如果是2，则是优惠券码兑换；: TYPE SMALLINT */
+    /* 优惠券赠送类型: TYPE SMALLINT */
     public static final String PROP_NAME_type = "type";
     public static final int PROP_ID_type = 9;
     
-    /* 优惠券状态，如果是0则是正常可用；如果是1则是过期; 如果是2则是下架。: STATUS SMALLINT */
+    /* 优惠券状态: STATUS SMALLINT */
     public static final String PROP_NAME_status = "status";
     public static final int PROP_ID_status = 10;
     
-    /* 商品限制类型，如果0则全商品，如果是1则是类目限制，如果是2则是商品限制。: GOODS_TYPE SMALLINT */
+    /* 商品限制类型: GOODS_TYPE SMALLINT */
     public static final String PROP_NAME_goodsType = "goodsType";
     public static final int PROP_ID_goodsType = 11;
     
@@ -72,7 +72,7 @@ public class _LitemallCoupon extends DynamicOrmEntity{
     public static final String PROP_NAME_code = "code";
     public static final int PROP_ID_code = 13;
     
-    /* 有效时间限制，如果是0，则基于领取时间的有效天数days；如果是1，则start_time和end_time是优惠券有效期；: TIME_TYPE SMALLINT */
+    /* 有效时间限制: TIME_TYPE SMALLINT */
     public static final String PROP_NAME_timeType = "timeType";
     public static final int PROP_ID_timeType = 14;
     
@@ -181,13 +181,13 @@ public class _LitemallCoupon extends DynamicOrmEntity{
     /* 优惠券名称: NAME */
     private java.lang.String _name;
     
-    /* 优惠券介绍，通常是显示优惠券使用限制文字: DESC */
+    /* 优惠券介绍: DESC */
     private java.lang.String _desc;
     
-    /* 优惠券标签，例如新人专用: TAG */
+    /* 优惠券标签: TAG */
     private java.lang.String _tag;
     
-    /* 优惠券数量，如果是0，则是无限量: TOTAL */
+    /* 优惠券数量: TOTAL */
     private java.lang.Integer _total;
     
     /* 优惠金额，: DISCOUNT */
@@ -196,16 +196,16 @@ public class _LitemallCoupon extends DynamicOrmEntity{
     /* 最少消费金额才能使用优惠券。: MIN */
     private java.math.BigDecimal _min;
     
-    /* 用户领券限制数量，如果是0，则是不限制；默认是1，限领一张.: LIMIT */
+    /* 用户领券限制数量: LIMIT */
     private java.lang.Short _limit;
     
-    /* 优惠券赠送类型，如果是0则通用券，用户领取；如果是1，则是注册赠券；如果是2，则是优惠券码兑换；: TYPE */
+    /* 优惠券赠送类型: TYPE */
     private java.lang.Short _type;
     
-    /* 优惠券状态，如果是0则是正常可用；如果是1则是过期; 如果是2则是下架。: STATUS */
+    /* 优惠券状态: STATUS */
     private java.lang.Short _status;
     
-    /* 商品限制类型，如果0则全商品，如果是1则是类目限制，如果是2则是商品限制。: GOODS_TYPE */
+    /* 商品限制类型: GOODS_TYPE */
     private java.lang.Short _goodsType;
     
     /* 商品限制值，goods_type如果是0则空集合，如果是1则是类目集合，如果是2则是商品集合。: GOODS_VALUE */
@@ -214,7 +214,7 @@ public class _LitemallCoupon extends DynamicOrmEntity{
     /* 优惠券兑换码: CODE */
     private java.lang.String _code;
     
-    /* 有效时间限制，如果是0，则基于领取时间的有效天数days；如果是1，则start_time和end_time是优惠券有效期；: TIME_TYPE */
+    /* 有效时间限制: TIME_TYPE */
     private java.lang.Short _timeType;
     
     /* 基于领取时间的有效天数days。: DAYS */
@@ -770,7 +770,7 @@ public class _LitemallCoupon extends DynamicOrmEntity{
     }
     
     /**
-     * 优惠券介绍，通常是显示优惠券使用限制文字: DESC
+     * 优惠券介绍: DESC
      */
     public java.lang.String getDesc(){
          onPropGet(PROP_ID_desc);
@@ -778,7 +778,7 @@ public class _LitemallCoupon extends DynamicOrmEntity{
     }
 
     /**
-     * 优惠券介绍，通常是显示优惠券使用限制文字: DESC
+     * 优惠券介绍: DESC
      */
     public void setDesc(java.lang.String value){
         if(onPropSet(PROP_ID_desc,value)){
@@ -789,7 +789,7 @@ public class _LitemallCoupon extends DynamicOrmEntity{
     }
     
     /**
-     * 优惠券标签，例如新人专用: TAG
+     * 优惠券标签: TAG
      */
     public java.lang.String getTag(){
          onPropGet(PROP_ID_tag);
@@ -797,7 +797,7 @@ public class _LitemallCoupon extends DynamicOrmEntity{
     }
 
     /**
-     * 优惠券标签，例如新人专用: TAG
+     * 优惠券标签: TAG
      */
     public void setTag(java.lang.String value){
         if(onPropSet(PROP_ID_tag,value)){
@@ -808,7 +808,7 @@ public class _LitemallCoupon extends DynamicOrmEntity{
     }
     
     /**
-     * 优惠券数量，如果是0，则是无限量: TOTAL
+     * 优惠券数量: TOTAL
      */
     public java.lang.Integer getTotal(){
          onPropGet(PROP_ID_total);
@@ -816,7 +816,7 @@ public class _LitemallCoupon extends DynamicOrmEntity{
     }
 
     /**
-     * 优惠券数量，如果是0，则是无限量: TOTAL
+     * 优惠券数量: TOTAL
      */
     public void setTotal(java.lang.Integer value){
         if(onPropSet(PROP_ID_total,value)){
@@ -865,7 +865,7 @@ public class _LitemallCoupon extends DynamicOrmEntity{
     }
     
     /**
-     * 用户领券限制数量，如果是0，则是不限制；默认是1，限领一张.: LIMIT
+     * 用户领券限制数量: LIMIT
      */
     public java.lang.Short getLimit(){
          onPropGet(PROP_ID_limit);
@@ -873,7 +873,7 @@ public class _LitemallCoupon extends DynamicOrmEntity{
     }
 
     /**
-     * 用户领券限制数量，如果是0，则是不限制；默认是1，限领一张.: LIMIT
+     * 用户领券限制数量: LIMIT
      */
     public void setLimit(java.lang.Short value){
         if(onPropSet(PROP_ID_limit,value)){
@@ -884,7 +884,7 @@ public class _LitemallCoupon extends DynamicOrmEntity{
     }
     
     /**
-     * 优惠券赠送类型，如果是0则通用券，用户领取；如果是1，则是注册赠券；如果是2，则是优惠券码兑换；: TYPE
+     * 优惠券赠送类型: TYPE
      */
     public java.lang.Short getType(){
          onPropGet(PROP_ID_type);
@@ -892,7 +892,7 @@ public class _LitemallCoupon extends DynamicOrmEntity{
     }
 
     /**
-     * 优惠券赠送类型，如果是0则通用券，用户领取；如果是1，则是注册赠券；如果是2，则是优惠券码兑换；: TYPE
+     * 优惠券赠送类型: TYPE
      */
     public void setType(java.lang.Short value){
         if(onPropSet(PROP_ID_type,value)){
@@ -903,7 +903,7 @@ public class _LitemallCoupon extends DynamicOrmEntity{
     }
     
     /**
-     * 优惠券状态，如果是0则是正常可用；如果是1则是过期; 如果是2则是下架。: STATUS
+     * 优惠券状态: STATUS
      */
     public java.lang.Short getStatus(){
          onPropGet(PROP_ID_status);
@@ -911,7 +911,7 @@ public class _LitemallCoupon extends DynamicOrmEntity{
     }
 
     /**
-     * 优惠券状态，如果是0则是正常可用；如果是1则是过期; 如果是2则是下架。: STATUS
+     * 优惠券状态: STATUS
      */
     public void setStatus(java.lang.Short value){
         if(onPropSet(PROP_ID_status,value)){
@@ -922,7 +922,7 @@ public class _LitemallCoupon extends DynamicOrmEntity{
     }
     
     /**
-     * 商品限制类型，如果0则全商品，如果是1则是类目限制，如果是2则是商品限制。: GOODS_TYPE
+     * 商品限制类型: GOODS_TYPE
      */
     public java.lang.Short getGoodsType(){
          onPropGet(PROP_ID_goodsType);
@@ -930,7 +930,7 @@ public class _LitemallCoupon extends DynamicOrmEntity{
     }
 
     /**
-     * 商品限制类型，如果0则全商品，如果是1则是类目限制，如果是2则是商品限制。: GOODS_TYPE
+     * 商品限制类型: GOODS_TYPE
      */
     public void setGoodsType(java.lang.Short value){
         if(onPropSet(PROP_ID_goodsType,value)){
@@ -979,7 +979,7 @@ public class _LitemallCoupon extends DynamicOrmEntity{
     }
     
     /**
-     * 有效时间限制，如果是0，则基于领取时间的有效天数days；如果是1，则start_time和end_time是优惠券有效期；: TIME_TYPE
+     * 有效时间限制: TIME_TYPE
      */
     public java.lang.Short getTimeType(){
          onPropGet(PROP_ID_timeType);
@@ -987,7 +987,7 @@ public class _LitemallCoupon extends DynamicOrmEntity{
     }
 
     /**
-     * 有效时间限制，如果是0，则基于领取时间的有效天数days；如果是1，则start_time和end_time是优惠券有效期；: TIME_TYPE
+     * 有效时间限制: TIME_TYPE
      */
     public void setTimeType(java.lang.Short value){
         if(onPropSet(PROP_ID_timeType,value)){

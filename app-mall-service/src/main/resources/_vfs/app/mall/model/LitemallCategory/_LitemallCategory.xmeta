@@ -1,29 +1,29 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <meta x:schema="/nop/schema/xmeta.xdef" xmlns:x="/nop/schema/xdsl.xdef" xmlns:i18n-en="i18n-en" xmlns:ext="ext"
-      xmlns:xpl="xpl" xmlns:biz-gen="biz-gen" displayName="类目表">
+      xmlns:xpl="xpl" xmlns:biz-gen="biz-gen" ext:model="orm" displayName="类目表">
 
     <entityName>app.mall.dao.entity.LitemallCategory</entityName>
 
     <primaryKey>id</primaryKey>
 
-    <displayProp/>
+    <displayProp>name</displayProp>
 
     <x:post-extends>
         <biz-gen:DefaultMetaPostExtends xpl:lib="/nop/biz/xlib/biz-gen.xlib"/>
     </x:post-extends>
 
-    <prop name="id" displayName="Id" mandatory="true" queryable="true" sortable="true" insertable="true"
+    <prop name="id" displayName="Id" tagSet="seq" mandatory="true" queryable="true" sortable="true" insertable="true"
           updatable="false">
         <schema type="java.lang.Integer"/>
     </prop>
 
-    <prop name="name" displayName="类目名称" mandatory="true" queryable="true" sortable="true" insertable="true"
-          updatable="true">
+    <prop name="name" displayName="类目名称" tagSet="disp" mandatory="true" queryable="true" sortable="true"
+          insertable="true" updatable="true">
         <schema type="java.lang.String" precision="63"/>
     </prop>
 
-    <prop name="keywords" displayName="类目关键字，以JSON数组格式" mandatory="true" queryable="true" sortable="true"
-          insertable="true" updatable="true">
+    <prop name="keywords" displayName="类目关键字" mandatory="true" queryable="true" sortable="true" insertable="true"
+          updatable="true">
         <schema type="java.lang.String" precision="1023"/>
     </prop>
 
@@ -52,15 +52,15 @@
         <schema type="java.lang.Byte"/>
     </prop>
 
-    <prop name="addTime" displayName="创建时间" queryable="true" sortable="true" insertable="true" updatable="true">
-        <schema type="java.time.LocalDateTime"/>
+    <prop name="addTime" displayName="创建时间" queryable="true" sortable="true" insertable="false" updatable="false">
+        <schema domain="createTime" type="java.time.LocalDateTime"/>
     </prop>
 
-    <prop name="updateTime" displayName="更新时间" queryable="true" sortable="true" insertable="true" updatable="true">
-        <schema type="java.time.LocalDateTime"/>
+    <prop name="updateTime" displayName="更新时间" queryable="true" sortable="true" insertable="false" updatable="false">
+        <schema domain="updateTime" type="java.time.LocalDateTime"/>
     </prop>
 
-    <prop name="deleted" displayName="逻辑删除" queryable="true" sortable="true" insertable="true" updatable="true">
-        <schema type="java.lang.Boolean"/>
+    <prop name="deleted" displayName="逻辑删除" queryable="true" sortable="true" insertable="false" updatable="true">
+        <schema stdDomain="boolFlag" domain="delFlag" type="java.lang.Boolean"/>
     </prop>
 </meta>

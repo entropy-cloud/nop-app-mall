@@ -108,6 +108,9 @@ public class _LitemallGoods extends DynamicOrmEntity{
     private static int _PROP_ID_BOUND = 22;
 
     
+    /* relation: 优惠券 */
+    public static final String PROP_NAME_category = "category";
+    
 
     public static final List<String> PK_PROP_NAMES = Arrays.asList(PROP_NAME_id);
     public static final int[] PK_PROP_IDS = new int[]{PROP_ID_id};
@@ -1160,5 +1163,26 @@ public class _LitemallGoods extends DynamicOrmEntity{
         }
     }
     
+    /**
+     * 优惠券
+     */
+    public app.mall.dao.entity.LitemallCategory getCategory(){
+       return (app.mall.dao.entity.LitemallCategory)internalGetRefEntity(PROP_NAME_category);
+    }
+
+    public void setCategory(app.mall.dao.entity.LitemallCategory refEntity){
+       if(refEntity == null){
+         
+         this.setCategoryId(null);
+         
+       }else{
+          internalSetRefEntity(PROP_NAME_category, refEntity,()->{
+             
+                    this.setCategoryId(refEntity.getId());
+                 
+          });
+       }
+    }
+       
 }
 // resume CPD analysis - CPD-ON

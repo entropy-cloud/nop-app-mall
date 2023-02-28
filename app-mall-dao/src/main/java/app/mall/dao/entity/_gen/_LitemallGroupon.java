@@ -24,7 +24,7 @@ public class _LitemallGroupon extends DynamicOrmEntity{
     public static final String PROP_NAME_id = "id";
     public static final int PROP_ID_id = 1;
     
-    /* 关联的订单ID: ORDER_ID INTEGER */
+    /* 订单ID: ORDER_ID INTEGER */
     public static final String PROP_NAME_orderId = "orderId";
     public static final int PROP_ID_orderId = 2;
     
@@ -32,7 +32,7 @@ public class _LitemallGroupon extends DynamicOrmEntity{
     public static final String PROP_NAME_grouponId = "grouponId";
     public static final int PROP_ID_grouponId = 3;
     
-    /* 团购规则ID，关联litemall_groupon_rules表ID字段: RULES_ID INTEGER */
+    /* 团购规则ID: RULES_ID INTEGER */
     public static final String PROP_NAME_rulesId = "rulesId";
     public static final int PROP_ID_rulesId = 4;
     
@@ -71,6 +71,9 @@ public class _LitemallGroupon extends DynamicOrmEntity{
 
     private static int _PROP_ID_BOUND = 13;
 
+    
+    /* relation: 订单 */
+    public static final String PROP_NAME_order = "order";
     
 
     public static final List<String> PK_PROP_NAMES = Arrays.asList(PROP_NAME_id);
@@ -122,13 +125,13 @@ public class _LitemallGroupon extends DynamicOrmEntity{
     /* Id: ID */
     private java.lang.Integer _id;
     
-    /* 关联的订单ID: ORDER_ID */
+    /* 订单ID: ORDER_ID */
     private java.lang.Integer _orderId;
     
     /* 如果是开团用户，则groupon_id是0；如果是参团用户，则groupon_id是团购活动ID: GROUPON_ID */
     private java.lang.Integer _grouponId;
     
-    /* 团购规则ID，关联litemall_groupon_rules表ID字段: RULES_ID */
+    /* 团购规则ID: RULES_ID */
     private java.lang.Integer _rulesId;
     
     /* 用户ID: USER_ID */
@@ -511,7 +514,7 @@ public class _LitemallGroupon extends DynamicOrmEntity{
     }
     
     /**
-     * 关联的订单ID: ORDER_ID
+     * 订单ID: ORDER_ID
      */
     public java.lang.Integer getOrderId(){
          onPropGet(PROP_ID_orderId);
@@ -519,7 +522,7 @@ public class _LitemallGroupon extends DynamicOrmEntity{
     }
 
     /**
-     * 关联的订单ID: ORDER_ID
+     * 订单ID: ORDER_ID
      */
     public void setOrderId(java.lang.Integer value){
         if(onPropSet(PROP_ID_orderId,value)){
@@ -549,7 +552,7 @@ public class _LitemallGroupon extends DynamicOrmEntity{
     }
     
     /**
-     * 团购规则ID，关联litemall_groupon_rules表ID字段: RULES_ID
+     * 团购规则ID: RULES_ID
      */
     public java.lang.Integer getRulesId(){
          onPropGet(PROP_ID_rulesId);
@@ -557,7 +560,7 @@ public class _LitemallGroupon extends DynamicOrmEntity{
     }
 
     /**
-     * 团购规则ID，关联litemall_groupon_rules表ID字段: RULES_ID
+     * 团购规则ID: RULES_ID
      */
     public void setRulesId(java.lang.Integer value){
         if(onPropSet(PROP_ID_rulesId,value)){
@@ -719,5 +722,26 @@ public class _LitemallGroupon extends DynamicOrmEntity{
         }
     }
     
+    /**
+     * 订单
+     */
+    public app.mall.dao.entity.LitemallOrder getOrder(){
+       return (app.mall.dao.entity.LitemallOrder)internalGetRefEntity(PROP_NAME_order);
+    }
+
+    public void setOrder(app.mall.dao.entity.LitemallOrder refEntity){
+       if(refEntity == null){
+         
+         this.setOrderId(null);
+         
+       }else{
+          internalSetRefEntity(PROP_NAME_order, refEntity,()->{
+             
+                    this.setOrderId(refEntity.getId());
+                 
+          });
+       }
+    }
+       
 }
 // resume CPD analysis - CPD-ON

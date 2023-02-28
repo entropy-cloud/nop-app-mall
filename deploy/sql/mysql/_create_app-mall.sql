@@ -52,12 +52,12 @@ CREATE TABLE litemall_aftersale(
   AFTERSALE_SN VARCHAR(63)     COMMENT '售后编号',
   ORDER_ID INTEGER NOT NULL    COMMENT '订单ID',
   USER_ID INTEGER NOT NULL    COMMENT '用户ID',
-  TYPE SMALLINT     COMMENT '售后类型，0是未收货退款，1是已收货（无需退货）退款，2用户退货退款',
+  TYPE SMALLINT     COMMENT '售后类型',
   REASON VARCHAR(31)     COMMENT '退款原因',
   AMOUNT DECIMAL(10,2)     COMMENT '退款金额',
   PICTURES VARCHAR(1023)     COMMENT '退款凭证图片链接数组',
   COMMENT VARCHAR(511)     COMMENT '退款说明',
-  STATUS SMALLINT     COMMENT '售后状态，0是可申请，1是用户已申请，2是管理员审核通过，3是管理员退款成功，4是管理员审核拒绝，5是用户已取消',
+  STATUS SMALLINT     COMMENT '售后状态',
   HANDLE_TIME DATETIME     COMMENT '管理员操作时间',
   ADD_TIME DATETIME     COMMENT '添加时间',
   UPDATE_TIME DATETIME     COMMENT '更新时间',
@@ -80,8 +80,8 @@ CREATE TABLE litemall_brand(
 
 CREATE TABLE litemall_cart(
   ID INTEGER NOT NULL    COMMENT 'Id',
-  USER_ID INTEGER     COMMENT '用户表的用户ID',
-  GOODS_ID INTEGER     COMMENT '商品表的商品ID',
+  USER_ID INTEGER     COMMENT '用户ID',
+  GOODS_ID INTEGER     COMMENT '商品ID',
   GOODS_SN VARCHAR(63)     COMMENT '商品编号',
   GOODS_NAME VARCHAR(127)     COMMENT '商品名称',
   PRODUCT_ID INTEGER     COMMENT '商品货品表的货品ID',
@@ -96,25 +96,9 @@ CREATE TABLE litemall_cart(
   constraint PK_litemall_cart primary key (ID)
 );
 
-CREATE TABLE litemall_category(
-  ID INTEGER NOT NULL    COMMENT 'Id',
-  NAME VARCHAR(63) NOT NULL    COMMENT '类目名称',
-  KEYWORDS VARCHAR(1023) NOT NULL    COMMENT '类目关键字，以JSON数组格式',
-  `DESC` VARCHAR(255)     COMMENT '类目广告语介绍',
-  PID INTEGER NOT NULL    COMMENT '父类目ID',
-  ICON_URL VARCHAR(255)     COMMENT '类目图标',
-  PIC_URL VARCHAR(255)     COMMENT '类目图片',
-  LEVEL VARCHAR(255)     COMMENT 'Level',
-  SORT_ORDER TINYINT     COMMENT '排序',
-  ADD_TIME DATETIME     COMMENT '创建时间',
-  UPDATE_TIME DATETIME     COMMENT '更新时间',
-  DELETED BOOLEAN     COMMENT '逻辑删除',
-  constraint PK_litemall_category primary key (ID)
-);
-
 CREATE TABLE litemall_collect(
   ID INTEGER NOT NULL    COMMENT 'Id',
-  USER_ID INTEGER NOT NULL    COMMENT '用户表的用户ID',
+  USER_ID INTEGER NOT NULL    COMMENT '用户ID',
   VALUE_ID INTEGER NOT NULL    COMMENT '如果type=0，则是商品ID；如果type=1，则是专题ID',
   TYPE TINYINT NOT NULL    COMMENT '收藏类型，如果type=0，则是商品ID；如果type=1，则是专题ID',
   ADD_TIME DATETIME     COMMENT '创建时间',
@@ -137,30 +121,6 @@ CREATE TABLE litemall_comment(
   UPDATE_TIME DATETIME     COMMENT '更新时间',
   DELETED BOOLEAN     COMMENT '逻辑删除',
   constraint PK_litemall_comment primary key (ID)
-);
-
-CREATE TABLE litemall_coupon(
-  ID INTEGER NOT NULL    COMMENT 'Id',
-  NAME VARCHAR(63) NOT NULL    COMMENT '优惠券名称',
-  `DESC` VARCHAR(127)     COMMENT '优惠券介绍，通常是显示优惠券使用限制文字',
-  TAG VARCHAR(63)     COMMENT '优惠券标签，例如新人专用',
-  TOTAL INTEGER NOT NULL    COMMENT '优惠券数量，如果是0，则是无限量',
-  DISCOUNT DECIMAL(10,2)     COMMENT '优惠金额，',
-  MIN DECIMAL(10,2)     COMMENT '最少消费金额才能使用优惠券。',
-  `LIMIT` SMALLINT     COMMENT '用户领券限制数量，如果是0，则是不限制；默认是1，限领一张.',
-  TYPE SMALLINT     COMMENT '优惠券赠送类型，如果是0则通用券，用户领取；如果是1，则是注册赠券；如果是2，则是优惠券码兑换；',
-  STATUS SMALLINT     COMMENT '优惠券状态，如果是0则是正常可用；如果是1则是过期; 如果是2则是下架。',
-  GOODS_TYPE SMALLINT     COMMENT '商品限制类型，如果0则全商品，如果是1则是类目限制，如果是2则是商品限制。',
-  GOODS_VALUE VARCHAR(1023)     COMMENT '商品限制值，goods_type如果是0则空集合，如果是1则是类目集合，如果是2则是商品集合。',
-  CODE VARCHAR(63)     COMMENT '优惠券兑换码',
-  TIME_TYPE SMALLINT     COMMENT '有效时间限制，如果是0，则基于领取时间的有效天数days；如果是1，则start_time和end_time是优惠券有效期；',
-  DAYS SMALLINT     COMMENT '基于领取时间的有效天数days。',
-  START_TIME DATETIME     COMMENT '使用券开始时间',
-  END_TIME DATETIME     COMMENT '使用券截至时间',
-  ADD_TIME DATETIME     COMMENT '创建时间',
-  UPDATE_TIME DATETIME     COMMENT '更新时间',
-  DELETED BOOLEAN     COMMENT '逻辑删除',
-  constraint PK_litemall_coupon primary key (ID)
 );
 
 CREATE TABLE litemall_coupon_user(
@@ -204,31 +164,6 @@ CREATE TABLE litemall_footprint(
   constraint PK_litemall_footprint primary key (ID)
 );
 
-CREATE TABLE litemall_goods(
-  ID INTEGER NOT NULL    COMMENT 'Id',
-  GOODS_SN VARCHAR(63) NOT NULL    COMMENT '商品编号',
-  NAME VARCHAR(127) NOT NULL    COMMENT '商品名称',
-  CATEGORY_ID INTEGER     COMMENT '商品所属类目ID',
-  BRAND_ID INTEGER     COMMENT 'Brandid',
-  GALLERY VARCHAR(1023)     COMMENT '商品宣传图片列表，采用JSON数组格式',
-  KEYWORDS VARCHAR(255)     COMMENT '商品关键字，采用逗号间隔',
-  BRIEF VARCHAR(255)     COMMENT '商品简介',
-  IS_ON_SALE BOOLEAN     COMMENT '是否上架',
-  SORT_ORDER SMALLINT     COMMENT 'Sortorder',
-  PIC_URL VARCHAR(255)     COMMENT '商品页面商品图片',
-  SHARE_URL VARCHAR(255)     COMMENT '商品分享海报',
-  IS_NEW BOOLEAN     COMMENT '是否新品首发，如果设置则可以在新品首发页面展示',
-  IS_HOT BOOLEAN     COMMENT '是否人气推荐，如果设置则可以在人气推荐页面展示',
-  UNIT VARCHAR(31)     COMMENT '商品单位，例如件、盒',
-  COUNTER_PRICE DECIMAL(10,2)     COMMENT '专柜价格',
-  RETAIL_PRICE DECIMAL(10,2)     COMMENT '零售价格',
-  DETAIL TEXT     COMMENT '商品详细介绍，是富文本格式',
-  ADD_TIME DATETIME     COMMENT '创建时间',
-  UPDATE_TIME DATETIME     COMMENT '更新时间',
-  DELETED BOOLEAN     COMMENT '逻辑删除',
-  constraint PK_litemall_goods primary key (ID)
-);
-
 CREATE TABLE litemall_goods_attribute(
   ID INTEGER NOT NULL    COMMENT 'Id',
   GOODS_ID INTEGER NOT NULL    COMMENT '商品表的商品ID',
@@ -242,8 +177,8 @@ CREATE TABLE litemall_goods_attribute(
 
 CREATE TABLE litemall_goods_product(
   ID INTEGER NOT NULL    COMMENT 'Id',
-  GOODS_ID INTEGER NOT NULL    COMMENT '商品表的商品ID',
-  SPECIFICATIONS VARCHAR(1023) NOT NULL    COMMENT '商品规格值列表，采用JSON数组格式',
+  GOODS_ID INTEGER NOT NULL    COMMENT '商品ID',
+  SPECIFICATIONS VARCHAR(1023) NOT NULL    COMMENT '商品规格值',
   PRICE DECIMAL(10,2) NOT NULL    COMMENT '商品货品价格',
   NUMBER INTEGER NOT NULL    COMMENT '商品货品数量',
   URL VARCHAR(125)     COMMENT '商品货品图片',
@@ -255,7 +190,7 @@ CREATE TABLE litemall_goods_product(
 
 CREATE TABLE litemall_goods_specification(
   ID INTEGER NOT NULL    COMMENT 'Id',
-  GOODS_ID INTEGER NOT NULL    COMMENT '商品表的商品ID',
+  GOODS_ID INTEGER NOT NULL    COMMENT '商品ID',
   SPECIFICATION VARCHAR(255) NOT NULL    COMMENT '商品规格名称',
   VALUE VARCHAR(255) NOT NULL    COMMENT '商品规格值',
   PIC_URL VARCHAR(255) NOT NULL    COMMENT '商品规格图片',
@@ -267,9 +202,9 @@ CREATE TABLE litemall_goods_specification(
 
 CREATE TABLE litemall_groupon(
   ID INTEGER NOT NULL    COMMENT 'Id',
-  ORDER_ID INTEGER NOT NULL    COMMENT '关联的订单ID',
+  ORDER_ID INTEGER NOT NULL    COMMENT '订单ID',
   GROUPON_ID INTEGER     COMMENT '如果是开团用户，则groupon_id是0；如果是参团用户，则groupon_id是团购活动ID',
-  RULES_ID INTEGER NOT NULL    COMMENT '团购规则ID，关联litemall_groupon_rules表ID字段',
+  RULES_ID INTEGER NOT NULL    COMMENT '团购规则ID',
   USER_ID INTEGER NOT NULL    COMMENT '用户ID',
   SHARE_URL VARCHAR(255)     COMMENT '团购分享图片地址',
   CREATOR_USER_ID INTEGER NOT NULL    COMMENT '开团用户ID',
@@ -283,7 +218,7 @@ CREATE TABLE litemall_groupon(
 
 CREATE TABLE litemall_groupon_rules(
   ID INTEGER NOT NULL    COMMENT 'Id',
-  GOODS_ID INTEGER NOT NULL    COMMENT '商品表的商品ID',
+  GOODS_ID INTEGER NOT NULL    COMMENT '商品ID',
   GOODS_NAME VARCHAR(127) NOT NULL    COMMENT '商品名称',
   PIC_URL VARCHAR(255)     COMMENT '商品图片或者商品货品图片',
   DISCOUNT DECIMAL(63,0) NOT NULL    COMMENT '优惠金额',
@@ -357,45 +292,10 @@ CREATE TABLE litemall_notice_admin(
   constraint PK_litemall_notice_admin primary key (ID)
 );
 
-CREATE TABLE litemall_order(
-  ID INTEGER NOT NULL    COMMENT 'Id',
-  USER_ID INTEGER NOT NULL    COMMENT '用户表的用户ID',
-  ORDER_SN VARCHAR(63) NOT NULL    COMMENT '订单编号',
-  ORDER_STATUS SMALLINT NOT NULL    COMMENT '订单状态',
-  AFTERSALE_STATUS SMALLINT     COMMENT '售后状态，0是可申请，1是用户已申请，2是管理员审核通过，3是管理员退款成功，4是管理员审核拒绝，5是用户已取消',
-  CONSIGNEE VARCHAR(63) NOT NULL    COMMENT '收货人名称',
-  MOBILE VARCHAR(63) NOT NULL    COMMENT '收货人手机号',
-  ADDRESS VARCHAR(127) NOT NULL    COMMENT '收货具体地址',
-  MESSAGE VARCHAR(512) NOT NULL    COMMENT '用户订单留言',
-  GOODS_PRICE DECIMAL(10,2) NOT NULL    COMMENT '商品总费用',
-  FREIGHT_PRICE DECIMAL(10,2) NOT NULL    COMMENT '配送费用',
-  COUPON_PRICE DECIMAL(10,2) NOT NULL    COMMENT '优惠券减免',
-  INTEGRAL_PRICE DECIMAL(10,2) NOT NULL    COMMENT '用户积分减免',
-  GROUPON_PRICE DECIMAL(10,2) NOT NULL    COMMENT '团购优惠价减免',
-  ORDER_PRICE DECIMAL(10,2) NOT NULL    COMMENT '订单费用， = goods_price + freight_price - coupon_price',
-  ACTUAL_PRICE DECIMAL(10,2) NOT NULL    COMMENT '实付费用， = order_price - integral_price',
-  PAY_ID VARCHAR(63)     COMMENT '微信付款编号',
-  PAY_TIME DATETIME     COMMENT '微信付款时间',
-  SHIP_SN VARCHAR(63)     COMMENT '发货编号',
-  SHIP_CHANNEL VARCHAR(63)     COMMENT '发货快递公司',
-  SHIP_TIME DATETIME     COMMENT '发货开始时间',
-  REFUND_AMOUNT DECIMAL(10,2)     COMMENT '实际退款金额，（有可能退款金额小于实际支付金额）',
-  REFUND_TYPE VARCHAR(63)     COMMENT '退款方式',
-  REFUND_CONTENT VARCHAR(127)     COMMENT '退款备注',
-  REFUND_TIME DATETIME     COMMENT '退款时间',
-  CONFIRM_TIME DATETIME     COMMENT '用户确认收货时间',
-  COMMENTS SMALLINT     COMMENT '待评价订单商品数量',
-  END_TIME DATETIME     COMMENT '订单关闭时间',
-  ADD_TIME DATETIME     COMMENT '创建时间',
-  UPDATE_TIME DATETIME     COMMENT '更新时间',
-  DELETED BOOLEAN     COMMENT '逻辑删除',
-  constraint PK_litemall_order primary key (ID)
-);
-
 CREATE TABLE litemall_order_goods(
   ID INTEGER NOT NULL    COMMENT 'Id',
-  ORDER_ID INTEGER NOT NULL    COMMENT '订单表的订单ID',
-  GOODS_ID INTEGER NOT NULL    COMMENT '商品表的商品ID',
+  ORDER_ID INTEGER NOT NULL    COMMENT '订单ID',
+  GOODS_ID INTEGER NOT NULL    COMMENT '商品ID',
   GOODS_NAME VARCHAR(127) NOT NULL    COMMENT '商品名称',
   GOODS_SN VARCHAR(63) NOT NULL    COMMENT '商品编号',
   PRODUCT_ID INTEGER NOT NULL    COMMENT '商品货品表的货品ID',
@@ -511,6 +411,106 @@ CREATE TABLE litemall_user(
   constraint PK_litemall_user primary key (ID)
 );
 
+CREATE TABLE litemall_coupon(
+  ID INTEGER NOT NULL    COMMENT 'Id',
+  NAME VARCHAR(63) NOT NULL    COMMENT '优惠券名称',
+  `DESC` VARCHAR(127)     COMMENT '优惠券介绍',
+  TAG VARCHAR(63)     COMMENT '优惠券标签',
+  TOTAL INTEGER NOT NULL    COMMENT '优惠券数量',
+  DISCOUNT DECIMAL(10,2)     COMMENT '优惠金额，',
+  MIN DECIMAL(10,2)     COMMENT '最少消费金额才能使用优惠券。',
+  `LIMIT` SMALLINT     COMMENT '用户领券限制数量',
+  TYPE SMALLINT     COMMENT '优惠券赠送类型',
+  STATUS SMALLINT     COMMENT '优惠券状态',
+  GOODS_TYPE SMALLINT     COMMENT '商品限制类型',
+  GOODS_VALUE VARCHAR(1023)     COMMENT '商品限制值，goods_type如果是0则空集合，如果是1则是类目集合，如果是2则是商品集合。',
+  CODE VARCHAR(63)     COMMENT '优惠券兑换码',
+  TIME_TYPE SMALLINT     COMMENT '有效时间限制',
+  DAYS SMALLINT     COMMENT '基于领取时间的有效天数days。',
+  START_TIME DATETIME     COMMENT '使用券开始时间',
+  END_TIME DATETIME     COMMENT '使用券截至时间',
+  ADD_TIME DATETIME     COMMENT '创建时间',
+  UPDATE_TIME DATETIME     COMMENT '更新时间',
+  DELETED BOOLEAN     COMMENT '逻辑删除',
+  constraint PK_litemall_coupon primary key (ID)
+);
+
+CREATE TABLE litemall_order(
+  ID INTEGER NOT NULL    COMMENT 'Id',
+  USER_ID INTEGER NOT NULL    COMMENT '用户表的用户ID',
+  ORDER_SN VARCHAR(63) NOT NULL    COMMENT '订单编号',
+  ORDER_STATUS SMALLINT NOT NULL    COMMENT '订单状态',
+  AFTERSALE_STATUS SMALLINT     COMMENT '售后状态',
+  CONSIGNEE VARCHAR(63) NOT NULL    COMMENT '收货人名称',
+  MOBILE VARCHAR(63) NOT NULL    COMMENT '收货人手机号',
+  ADDRESS VARCHAR(127) NOT NULL    COMMENT '收货具体地址',
+  MESSAGE VARCHAR(512) NOT NULL    COMMENT '用户订单留言',
+  GOODS_PRICE DECIMAL(10,2) NOT NULL    COMMENT '商品总费用',
+  FREIGHT_PRICE DECIMAL(10,2) NOT NULL    COMMENT '配送费用',
+  COUPON_PRICE DECIMAL(10,2) NOT NULL    COMMENT '优惠券减免',
+  INTEGRAL_PRICE DECIMAL(10,2) NOT NULL    COMMENT '用户积分减免',
+  GROUPON_PRICE DECIMAL(10,2) NOT NULL    COMMENT '团购优惠价减免',
+  ORDER_PRICE DECIMAL(10,2) NOT NULL    COMMENT '订单费用',
+  ACTUAL_PRICE DECIMAL(10,2) NOT NULL    COMMENT '实付费用',
+  PAY_ID VARCHAR(63)     COMMENT '微信付款编号',
+  PAY_TIME DATETIME     COMMENT '微信付款时间',
+  SHIP_SN VARCHAR(63)     COMMENT '发货编号',
+  SHIP_CHANNEL VARCHAR(63)     COMMENT '发货快递公司',
+  SHIP_TIME DATETIME     COMMENT '发货开始时间',
+  REFUND_AMOUNT DECIMAL(10,2)     COMMENT '实际退款金额',
+  REFUND_TYPE VARCHAR(63)     COMMENT '退款方式',
+  REFUND_CONTENT VARCHAR(127)     COMMENT '退款备注',
+  REFUND_TIME DATETIME     COMMENT '退款时间',
+  CONFIRM_TIME DATETIME     COMMENT '用户确认收货时间',
+  COMMENTS SMALLINT     COMMENT '待评价订单商品数量',
+  END_TIME DATETIME     COMMENT '订单关闭时间',
+  ADD_TIME DATETIME     COMMENT '创建时间',
+  UPDATE_TIME DATETIME     COMMENT '更新时间',
+  DELETED BOOLEAN     COMMENT '逻辑删除',
+  constraint PK_litemall_order primary key (ID)
+);
+
+CREATE TABLE litemall_goods(
+  ID INTEGER NOT NULL    COMMENT 'Id',
+  GOODS_SN VARCHAR(63) NOT NULL    COMMENT '商品编号',
+  NAME VARCHAR(127) NOT NULL    COMMENT '商品名称',
+  CATEGORY_ID INTEGER     COMMENT '商品所属类目ID',
+  BRAND_ID INTEGER     COMMENT 'Brandid',
+  GALLERY VARCHAR(1023)     COMMENT '商品宣传图片列表，采用JSON数组格式',
+  KEYWORDS VARCHAR(255)     COMMENT '商品关键字，采用逗号间隔',
+  BRIEF VARCHAR(255)     COMMENT '商品简介',
+  IS_ON_SALE BOOLEAN     COMMENT '是否上架',
+  SORT_ORDER SMALLINT     COMMENT 'Sortorder',
+  PIC_URL VARCHAR(255)     COMMENT '商品页面商品图片',
+  SHARE_URL VARCHAR(255)     COMMENT '商品分享海报',
+  IS_NEW BOOLEAN     COMMENT '是否新品首发，如果设置则可以在新品首发页面展示',
+  IS_HOT BOOLEAN     COMMENT '是否人气推荐，如果设置则可以在人气推荐页面展示',
+  UNIT VARCHAR(31)     COMMENT '商品单位，例如件、盒',
+  COUNTER_PRICE DECIMAL(10,2)     COMMENT '专柜价格',
+  RETAIL_PRICE DECIMAL(10,2)     COMMENT '零售价格',
+  DETAIL TEXT     COMMENT '商品详细介绍，是富文本格式',
+  ADD_TIME DATETIME     COMMENT '创建时间',
+  UPDATE_TIME DATETIME     COMMENT '更新时间',
+  DELETED BOOLEAN     COMMENT '逻辑删除',
+  constraint PK_litemall_goods primary key (ID)
+);
+
+CREATE TABLE litemall_category(
+  ID INTEGER NOT NULL    COMMENT 'Id',
+  NAME VARCHAR(63) NOT NULL    COMMENT '类目名称',
+  KEYWORDS VARCHAR(1023) NOT NULL    COMMENT '类目关键字',
+  `DESC` VARCHAR(255)     COMMENT '类目广告语介绍',
+  PID INTEGER NOT NULL    COMMENT '父类目ID',
+  ICON_URL VARCHAR(255)     COMMENT '类目图标',
+  PIC_URL VARCHAR(255)     COMMENT '类目图片',
+  LEVEL VARCHAR(255)     COMMENT 'Level',
+  SORT_ORDER TINYINT     COMMENT '排序',
+  ADD_TIME DATETIME     COMMENT '创建时间',
+  UPDATE_TIME DATETIME     COMMENT '更新时间',
+  DELETED BOOLEAN     COMMENT '逻辑删除',
+  constraint PK_litemall_category primary key (ID)
+);
+
 
    ALTER TABLE litemall_ad COMMENT '广告表';
                 
@@ -524,21 +524,15 @@ CREATE TABLE litemall_user(
                 
    ALTER TABLE litemall_cart COMMENT '购物车商品表';
                 
-   ALTER TABLE litemall_category COMMENT '类目表';
-                
    ALTER TABLE litemall_collect COMMENT '收藏表';
                 
    ALTER TABLE litemall_comment COMMENT '评论表';
-                
-   ALTER TABLE litemall_coupon COMMENT '优惠券信息及规则表';
                 
    ALTER TABLE litemall_coupon_user COMMENT '优惠券用户使用表';
                 
    ALTER TABLE litemall_feedback COMMENT '意见反馈表';
                 
    ALTER TABLE litemall_footprint COMMENT '用户浏览足迹表';
-                
-   ALTER TABLE litemall_goods COMMENT '商品基本信息表';
                 
    ALTER TABLE litemall_goods_attribute COMMENT '商品参数表';
                 
@@ -560,8 +554,6 @@ CREATE TABLE litemall_user(
                 
    ALTER TABLE litemall_notice_admin COMMENT '通知管理员表';
                 
-   ALTER TABLE litemall_order COMMENT '订单表';
-                
    ALTER TABLE litemall_order_goods COMMENT '订单商品表';
                 
    ALTER TABLE litemall_permission COMMENT '权限表';
@@ -579,4 +571,12 @@ CREATE TABLE litemall_user(
    ALTER TABLE litemall_topic COMMENT '专题表';
                 
    ALTER TABLE litemall_user COMMENT '用户表';
+                
+   ALTER TABLE litemall_coupon COMMENT '优惠券信息及规则表';
+                
+   ALTER TABLE litemall_order COMMENT '订单表';
+                
+   ALTER TABLE litemall_goods COMMENT '商品基本信息表';
+                
+   ALTER TABLE litemall_category COMMENT '类目表';
                 

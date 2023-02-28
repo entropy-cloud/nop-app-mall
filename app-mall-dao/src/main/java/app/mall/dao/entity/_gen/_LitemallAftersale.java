@@ -36,7 +36,7 @@ public class _LitemallAftersale extends DynamicOrmEntity{
     public static final String PROP_NAME_userId = "userId";
     public static final int PROP_ID_userId = 4;
     
-    /* 售后类型，0是未收货退款，1是已收货（无需退货）退款，2用户退货退款: TYPE SMALLINT */
+    /* 售后类型: TYPE SMALLINT */
     public static final String PROP_NAME_type = "type";
     public static final int PROP_ID_type = 5;
     
@@ -56,7 +56,7 @@ public class _LitemallAftersale extends DynamicOrmEntity{
     public static final String PROP_NAME_comment = "comment";
     public static final int PROP_ID_comment = 9;
     
-    /* 售后状态，0是可申请，1是用户已申请，2是管理员审核通过，3是管理员退款成功，4是管理员审核拒绝，5是用户已取消: STATUS SMALLINT */
+    /* 售后状态: STATUS SMALLINT */
     public static final String PROP_NAME_status = "status";
     public static final int PROP_ID_status = 10;
     
@@ -79,6 +79,9 @@ public class _LitemallAftersale extends DynamicOrmEntity{
 
     private static int _PROP_ID_BOUND = 15;
 
+    
+    /* relation: 订单 */
+    public static final String PROP_NAME_order = "order";
     
 
     public static final List<String> PK_PROP_NAMES = Arrays.asList(PROP_NAME_id);
@@ -145,7 +148,7 @@ public class _LitemallAftersale extends DynamicOrmEntity{
     /* 用户ID: USER_ID */
     private java.lang.Integer _userId;
     
-    /* 售后类型，0是未收货退款，1是已收货（无需退货）退款，2用户退货退款: TYPE */
+    /* 售后类型: TYPE */
     private java.lang.Short _type;
     
     /* 退款原因: REASON */
@@ -160,7 +163,7 @@ public class _LitemallAftersale extends DynamicOrmEntity{
     /* 退款说明: COMMENT */
     private java.lang.String _comment;
     
-    /* 售后状态，0是可申请，1是用户已申请，2是管理员审核通过，3是管理员退款成功，4是管理员审核拒绝，5是用户已取消: STATUS */
+    /* 售后状态: STATUS */
     private java.lang.Short _status;
     
     /* 管理员操作时间: HANDLE_TIME */
@@ -628,7 +631,7 @@ public class _LitemallAftersale extends DynamicOrmEntity{
     }
     
     /**
-     * 售后类型，0是未收货退款，1是已收货（无需退货）退款，2用户退货退款: TYPE
+     * 售后类型: TYPE
      */
     public java.lang.Short getType(){
          onPropGet(PROP_ID_type);
@@ -636,7 +639,7 @@ public class _LitemallAftersale extends DynamicOrmEntity{
     }
 
     /**
-     * 售后类型，0是未收货退款，1是已收货（无需退货）退款，2用户退货退款: TYPE
+     * 售后类型: TYPE
      */
     public void setType(java.lang.Short value){
         if(onPropSet(PROP_ID_type,value)){
@@ -723,7 +726,7 @@ public class _LitemallAftersale extends DynamicOrmEntity{
     }
     
     /**
-     * 售后状态，0是可申请，1是用户已申请，2是管理员审核通过，3是管理员退款成功，4是管理员审核拒绝，5是用户已取消: STATUS
+     * 售后状态: STATUS
      */
     public java.lang.Short getStatus(){
          onPropGet(PROP_ID_status);
@@ -731,7 +734,7 @@ public class _LitemallAftersale extends DynamicOrmEntity{
     }
 
     /**
-     * 售后状态，0是可申请，1是用户已申请，2是管理员审核通过，3是管理员退款成功，4是管理员审核拒绝，5是用户已取消: STATUS
+     * 售后状态: STATUS
      */
     public void setStatus(java.lang.Short value){
         if(onPropSet(PROP_ID_status,value)){
@@ -817,5 +820,26 @@ public class _LitemallAftersale extends DynamicOrmEntity{
         }
     }
     
+    /**
+     * 订单
+     */
+    public app.mall.dao.entity.LitemallOrder getOrder(){
+       return (app.mall.dao.entity.LitemallOrder)internalGetRefEntity(PROP_NAME_order);
+    }
+
+    public void setOrder(app.mall.dao.entity.LitemallOrder refEntity){
+       if(refEntity == null){
+         
+         this.setOrderId(null);
+         
+       }else{
+          internalSetRefEntity(PROP_NAME_order, refEntity,()->{
+             
+                    this.setOrderId(refEntity.getId());
+                 
+          });
+       }
+    }
+       
 }
 // resume CPD analysis - CPD-ON

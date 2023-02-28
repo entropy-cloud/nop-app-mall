@@ -1,0 +1,18 @@
+# __XGEN_FORCE_OVERRIDE__
+label: 优惠券商品限制类型
+locale: 
+description: 
+options:
+
+  - label: 全商品
+    value: 0
+    description: 
+  
+  - label: 类目限制
+    value: 1
+    description: 
+  
+  - label: 商品限制
+    value: 2
+    description: 
+  

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <meta x:schema="/nop/schema/xmeta.xdef" xmlns:x="/nop/schema/xdsl.xdef" xmlns:i18n-en="i18n-en" xmlns:ext="ext"
-      xmlns:xpl="xpl" xmlns:biz-gen="biz-gen" displayName="角色表">
+      xmlns:xpl="xpl" xmlns:biz-gen="biz-gen" ext:model="orm" displayName="角色表">
 
     <entityName>app.mall.dao.entity.LitemallRole</entityName>
 

@@ -1,0 +1,14 @@
+# __XGEN_FORCE_OVERRIDE__
+label: 优惠券时间限制类型
+locale: 
+description: 
+options:
+
+  - label: 基于领取时间的天数
+    value: 0
+    description: 
+  
+  - label: 使用startTime和endTime限制
+    value: 1
+    description: 
+  

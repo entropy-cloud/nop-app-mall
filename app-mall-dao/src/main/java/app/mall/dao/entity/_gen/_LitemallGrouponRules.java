@@ -24,7 +24,7 @@ public class _LitemallGrouponRules extends DynamicOrmEntity{
     public static final String PROP_NAME_id = "id";
     public static final int PROP_ID_id = 1;
     
-    /* 商品表的商品ID: GOODS_ID INTEGER */
+    /* 商品ID: GOODS_ID INTEGER */
     public static final String PROP_NAME_goodsId = "goodsId";
     public static final int PROP_ID_goodsId = 2;
     
@@ -67,6 +67,9 @@ public class _LitemallGrouponRules extends DynamicOrmEntity{
 
     private static int _PROP_ID_BOUND = 12;
 
+    
+    /* relation: 订单 */
+    public static final String PROP_NAME_goods = "goods";
     
 
     public static final List<String> PK_PROP_NAMES = Arrays.asList(PROP_NAME_id);
@@ -115,7 +118,7 @@ public class _LitemallGrouponRules extends DynamicOrmEntity{
     /* Id: ID */
     private java.lang.Integer _id;
     
-    /* 商品表的商品ID: GOODS_ID */
+    /* 商品ID: GOODS_ID */
     private java.lang.Integer _goodsId;
     
     /* 商品名称: GOODS_NAME */
@@ -481,7 +484,7 @@ public class _LitemallGrouponRules extends DynamicOrmEntity{
     }
     
     /**
-     * 商品表的商品ID: GOODS_ID
+     * 商品ID: GOODS_ID
      */
     public java.lang.Integer getGoodsId(){
          onPropGet(PROP_ID_goodsId);
@@ -489,7 +492,7 @@ public class _LitemallGrouponRules extends DynamicOrmEntity{
     }
 
     /**
-     * 商品表的商品ID: GOODS_ID
+     * 商品ID: GOODS_ID
      */
     public void setGoodsId(java.lang.Integer value){
         if(onPropSet(PROP_ID_goodsId,value)){
@@ -670,5 +673,26 @@ public class _LitemallGrouponRules extends DynamicOrmEntity{
         }
     }
     
+    /**
+     * 订单
+     */
+    public app.mall.dao.entity.LitemallGoods getGoods(){
+       return (app.mall.dao.entity.LitemallGoods)internalGetRefEntity(PROP_NAME_goods);
+    }
+
+    public void setGoods(app.mall.dao.entity.LitemallGoods refEntity){
+       if(refEntity == null){
+         
+         this.setGoodsId(null);
+         
+       }else{
+          internalSetRefEntity(PROP_NAME_goods, refEntity,()->{
+             
+                    this.setGoodsId(refEntity.getId());
+                 
+          });
+       }
+    }
+       
 }
 // resume CPD analysis - CPD-ON

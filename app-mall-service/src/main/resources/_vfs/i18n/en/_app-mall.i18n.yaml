@@ -81,15 +81,19 @@ prop:
       orderId: null
       userId: null
       type: null
+      type_label: null
       reason: null
       amount: null
       pictures: null
       comment: null
       status: null
+      status_label: null
       handleTime: null
       addTime: null
       updateTime: null
       deleted: null
+      order: Order
+      order.orderSn: Order
     LitemallBrand:
       id: null
       name: null
@@ -115,6 +119,8 @@ prop:
       addTime: null
       updateTime: null
       deleted: null
+      goods: Goods
+      goods.name: Goods
     LitemallCategory:
       id: null
       name: null
@@ -159,11 +165,15 @@ prop:
       min: null
       limit: null
       type: null
+      type_label: null
       status: null
+      status_label: null
       goodsType: null
+      goodsType_label: null
       goodsValue: null
       code: null
       timeType: null
+      timeType_label: null
       days: null
       startTime: null
       endTime: null
@@ -182,6 +192,8 @@ prop:
       addTime: null
       updateTime: null
       deleted: null
+      coupon: Coupon
+      coupon.name: Coupon
     LitemallFeedback:
       id: null
       userId: null
@@ -202,6 +214,8 @@ prop:
       addTime: null
       updateTime: null
       deleted: null
+      goods: Goods
+      goods.name: Goods
     LitemallGoods:
       id: null
       goodsSn: null
@@ -224,6 +238,8 @@ prop:
       addTime: null
       updateTime: null
       deleted: null
+      category: Category
+      category.name: Category
     LitemallGoodsAttribute:
       id: null
       goodsId: null
@@ -242,6 +258,8 @@ prop:
       addTime: null
       updateTime: null
       deleted: null
+      goods: Goods
+      goods.name: Goods
     LitemallGoodsSpecification:
       id: null
       goodsId: null
@@ -251,6 +269,8 @@ prop:
       addTime: null
       updateTime: null
       deleted: null
+      goods: Goods
+      goods.name: Goods
     LitemallGroupon:
       id: null
       orderId: null
@@ -264,6 +284,8 @@ prop:
       addTime: null
       updateTime: null
       deleted: null
+      order: Order
+      order.orderSn: Order
     LitemallGrouponRules:
       id: null
       goodsId: null
@@ -276,6 +298,8 @@ prop:
       addTime: null
       updateTime: null
       deleted: null
+      goods: Goods
+      goods.name: Goods
     LitemallIssue:
       id: null
       question: null
@@ -327,7 +351,9 @@ prop:
       userId: null
       orderSn: null
       orderStatus: null
+      orderStatus_label: null
       aftersaleStatus: null
+      aftersaleStatus_label: null
       consignee: null
       mobile: null
       address: null

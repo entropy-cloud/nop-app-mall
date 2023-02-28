@@ -36,7 +36,7 @@ public class _LitemallOrder extends DynamicOrmEntity{
     public static final String PROP_NAME_orderStatus = "orderStatus";
     public static final int PROP_ID_orderStatus = 4;
     
-    /* 售后状态，0是可申请，1是用户已申请，2是管理员审核通过，3是管理员退款成功，4是管理员审核拒绝，5是用户已取消: AFTERSALE_STATUS SMALLINT */
+    /* 售后状态: AFTERSALE_STATUS SMALLINT */
     public static final String PROP_NAME_aftersaleStatus = "aftersaleStatus";
     public static final int PROP_ID_aftersaleStatus = 5;
     
@@ -76,11 +76,11 @@ public class _LitemallOrder extends DynamicOrmEntity{
     public static final String PROP_NAME_grouponPrice = "grouponPrice";
     public static final int PROP_ID_grouponPrice = 14;
     
-    /* 订单费用， = goods_price + freight_price - coupon_price: ORDER_PRICE DECIMAL */
+    /* 订单费用: ORDER_PRICE DECIMAL */
     public static final String PROP_NAME_orderPrice = "orderPrice";
     public static final int PROP_ID_orderPrice = 15;
     
-    /* 实付费用， = order_price - integral_price: ACTUAL_PRICE DECIMAL */
+    /* 实付费用: ACTUAL_PRICE DECIMAL */
     public static final String PROP_NAME_actualPrice = "actualPrice";
     public static final int PROP_ID_actualPrice = 16;
     
@@ -104,7 +104,7 @@ public class _LitemallOrder extends DynamicOrmEntity{
     public static final String PROP_NAME_shipTime = "shipTime";
     public static final int PROP_ID_shipTime = 21;
     
-    /* 实际退款金额，（有可能退款金额小于实际支付金额）: REFUND_AMOUNT DECIMAL */
+    /* 实际退款金额: REFUND_AMOUNT DECIMAL */
     public static final String PROP_NAME_refundAmount = "refundAmount";
     public static final int PROP_ID_refundAmount = 22;
     
@@ -264,7 +264,7 @@ public class _LitemallOrder extends DynamicOrmEntity{
     /* 订单状态: ORDER_STATUS */
     private java.lang.Short _orderStatus;
     
-    /* 售后状态，0是可申请，1是用户已申请，2是管理员审核通过，3是管理员退款成功，4是管理员审核拒绝，5是用户已取消: AFTERSALE_STATUS */
+    /* 售后状态: AFTERSALE_STATUS */
     private java.lang.Short _aftersaleStatus;
     
     /* 收货人名称: CONSIGNEE */
@@ -294,10 +294,10 @@ public class _LitemallOrder extends DynamicOrmEntity{
     /* 团购优惠价减免: GROUPON_PRICE */
     private java.math.BigDecimal _grouponPrice;
     
-    /* 订单费用， = goods_price + freight_price - coupon_price: ORDER_PRICE */
+    /* 订单费用: ORDER_PRICE */
     private java.math.BigDecimal _orderPrice;
     
-    /* 实付费用， = order_price - integral_price: ACTUAL_PRICE */
+    /* 实付费用: ACTUAL_PRICE */
     private java.math.BigDecimal _actualPrice;
     
     /* 微信付款编号: PAY_ID */
@@ -315,7 +315,7 @@ public class _LitemallOrder extends DynamicOrmEntity{
     /* 发货开始时间: SHIP_TIME */
     private java.time.LocalDateTime _shipTime;
     
-    /* 实际退款金额，（有可能退款金额小于实际支付金额）: REFUND_AMOUNT */
+    /* 实际退款金额: REFUND_AMOUNT */
     private java.math.BigDecimal _refundAmount;
     
     /* 退款方式: REFUND_TYPE */
@@ -1138,7 +1138,7 @@ public class _LitemallOrder extends DynamicOrmEntity{
     }
     
     /**
-     * 售后状态，0是可申请，1是用户已申请，2是管理员审核通过，3是管理员退款成功，4是管理员审核拒绝，5是用户已取消: AFTERSALE_STATUS
+     * 售后状态: AFTERSALE_STATUS
      */
     public java.lang.Short getAftersaleStatus(){
          onPropGet(PROP_ID_aftersaleStatus);
@@ -1146,7 +1146,7 @@ public class _LitemallOrder extends DynamicOrmEntity{
     }
 
     /**
-     * 售后状态，0是可申请，1是用户已申请，2是管理员审核通过，3是管理员退款成功，4是管理员审核拒绝，5是用户已取消: AFTERSALE_STATUS
+     * 售后状态: AFTERSALE_STATUS
      */
     public void setAftersaleStatus(java.lang.Short value){
         if(onPropSet(PROP_ID_aftersaleStatus,value)){
@@ -1328,7 +1328,7 @@ public class _LitemallOrder extends DynamicOrmEntity{
     }
     
     /**
-     * 订单费用， = goods_price + freight_price - coupon_price: ORDER_PRICE
+     * 订单费用: ORDER_PRICE
      */
     public java.math.BigDecimal getOrderPrice(){
          onPropGet(PROP_ID_orderPrice);
@@ -1336,7 +1336,7 @@ public class _LitemallOrder extends DynamicOrmEntity{
     }
 
     /**
-     * 订单费用， = goods_price + freight_price - coupon_price: ORDER_PRICE
+     * 订单费用: ORDER_PRICE
      */
     public void setOrderPrice(java.math.BigDecimal value){
         if(onPropSet(PROP_ID_orderPrice,value)){
@@ -1347,7 +1347,7 @@ public class _LitemallOrder extends DynamicOrmEntity{
     }
     
     /**
-     * 实付费用， = order_price - integral_price: ACTUAL_PRICE
+     * 实付费用: ACTUAL_PRICE
      */
     public java.math.BigDecimal getActualPrice(){
          onPropGet(PROP_ID_actualPrice);
@@ -1355,7 +1355,7 @@ public class _LitemallOrder extends DynamicOrmEntity{
     }
 
     /**
-     * 实付费用， = order_price - integral_price: ACTUAL_PRICE
+     * 实付费用: ACTUAL_PRICE
      */
     public void setActualPrice(java.math.BigDecimal value){
         if(onPropSet(PROP_ID_actualPrice,value)){
@@ -1461,7 +1461,7 @@ public class _LitemallOrder extends DynamicOrmEntity{
     }
     
     /**
-     * 实际退款金额，（有可能退款金额小于实际支付金额）: REFUND_AMOUNT
+     * 实际退款金额: REFUND_AMOUNT
      */
     public java.math.BigDecimal getRefundAmount(){
          onPropGet(PROP_ID_refundAmount);
@@ -1469,7 +1469,7 @@ public class _LitemallOrder extends DynamicOrmEntity{
     }
 
     /**
-     * 实际退款金额，（有可能退款金额小于实际支付金额）: REFUND_AMOUNT
+     * 实际退款金额: REFUND_AMOUNT
      */
     public void setRefundAmount(java.math.BigDecimal value){
         if(onPropSet(PROP_ID_refundAmount,value)){

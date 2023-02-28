@@ -83,11 +83,15 @@ prop:
       deleted: 逻辑删除
       handleTime: 管理员操作时间
       id: Id
+      order: 订单
+      order.orderSn: 订单
       orderId: 订单ID
       pictures: 退款凭证图片链接数组
       reason: 退款原因
-      status: 售后状态，0是可申请，1是用户已申请，2是管理员审核通过，3是管理员退款成功，4是管理员审核拒绝，5是用户已取消
-      type: 售后类型，0是未收货退款，1是已收货（无需退货）退款，2用户退货退款
+      status: 售后状态
+      status_label: 售后状态
+      type: 售后类型
+      type_label: 售后类型
       updateTime: 更新时间
       userId: 用户ID
     LitemallBrand:
@@ -104,7 +108,9 @@ prop:
       addTime: 创建时间
       checked: 购物车中商品是否选择状态
       deleted: 逻辑删除
-      goodsId: 商品表的商品ID
+      goods: 订单
+      goods.name: 订单
+      goodsId: 商品ID
       goodsName: 商品名称
       goodsSn: 商品编号
       id: Id
@@ -114,14 +120,14 @@ prop:
       productId: 商品货品表的货品ID
       specifications: 商品规格值列表，采用JSON数组格式
       updateTime: 更新时间
-      userId: 用户表的用户ID
+      userId: 用户ID
     LitemallCategory:
       addTime: 创建时间
       deleted: 逻辑删除
       desc: 类目广告语介绍
       iconUrl: 类目图标
       id: Id
-      keywords: 类目关键字，以JSON数组格式
+      keywords: 类目关键字
       level: Level
       name: 类目名称
       picUrl: 类目图片
@@ -134,7 +140,7 @@ prop:
       id: Id
       type: 收藏类型，如果type=0，则是商品ID；如果type=1，则是专题ID
       updateTime: 更新时间
-      userId: 用户表的用户ID
+      userId: 用户ID
       valueId: 如果type=0，则是商品ID；如果type=1，则是专题ID
     LitemallComment:
       addTime: 创建时间
@@ -154,24 +160,30 @@ prop:
       code: 优惠券兑换码
       days: 基于领取时间的有效天数days。
       deleted: 逻辑删除
-      desc: 优惠券介绍，通常是显示优惠券使用限制文字
+      desc: 优惠券介绍
       discount: 优惠金额，
       endTime: 使用券截至时间
-      goodsType: 商品限制类型，如果0则全商品，如果是1则是类目限制，如果是2则是商品限制。
+      goodsType: 商品限制类型
+      goodsType_label: 商品限制类型
       goodsValue: 商品限制值，goods_type如果是0则空集合，如果是1则是类目集合，如果是2则是商品集合。
       id: Id
-      limit: 用户领券限制数量，如果是0，则是不限制；默认是1，限领一张.
+      limit: 用户领券限制数量
       min: 最少消费金额才能使用优惠券。
       name: 优惠券名称
       startTime: 使用券开始时间
-      status: 优惠券状态，如果是0则是正常可用；如果是1则是过期; 如果是2则是下架。
-      tag: 优惠券标签，例如新人专用
-      timeType: 有效时间限制，如果是0，则基于领取时间的有效天数days；如果是1，则start_time和end_time是优惠券有效期；
-      total: 优惠券数量，如果是0，则是无限量
-      type: 优惠券赠送类型，如果是0则通用券，用户领取；如果是1，则是注册赠券；如果是2，则是优惠券码兑换；
+      status: 优惠券状态
+      status_label: 优惠券状态
+      tag: 优惠券标签
+      timeType: 有效时间限制
+      timeType_label: 有效时间限制
+      total: 优惠券数量
+      type: 优惠券赠送类型
+      type_label: 优惠券赠送类型
       updateTime: 更新时间
     LitemallCouponUser:
       addTime: 创建时间
+      coupon: 优惠券
+      coupon.name: 优惠券
       couponId: 优惠券ID
       deleted: 逻辑删除
       endTime: 有效期截至时间
@@ -198,6 +210,8 @@ prop:
     LitemallFootprint:
       addTime: 创建时间
       deleted: 逻辑删除
+      goods: 订单
+      goods.name: 订单
       goodsId: 浏览商品ID
       id: Id
       updateTime: 更新时间
@@ -206,6 +220,8 @@ prop:
       addTime: 创建时间
       brandId: Brandid
       brief: 商品简介
+      category: 优惠券
+      category.name: 优惠券
       categoryId: 商品所属类目ID
       counterPrice: 专柜价格
       deleted: 逻辑删除
@@ -235,17 +251,21 @@ prop:
     LitemallGoodsProduct:
       addTime: 创建时间
       deleted: 逻辑删除
-      goodsId: 商品表的商品ID
+      goods: 订单
+      goods.name: 订单
+      goodsId: 商品ID
       id: Id
       number: 商品货品数量
       price: 商品货品价格
-      specifications: 商品规格值列表，采用JSON数组格式
+      specifications: 商品规格值
       updateTime: 更新时间
       url: 商品货品图片
     LitemallGoodsSpecification:
       addTime: 创建时间
       deleted: 逻辑删除
-      goodsId: 商品表的商品ID
+      goods: 订单
+      goods.name: 订单
+      goodsId: 商品ID
       id: Id
       picUrl: 商品规格图片
       specification: 商品规格名称
@@ -258,8 +278,10 @@ prop:
       deleted: 逻辑删除
       grouponId: 如果是开团用户，则groupon_id是0；如果是参团用户，则groupon_id是团购活动ID
       id: Id
-      orderId: 关联的订单ID
-      rulesId: 团购规则ID，关联litemall_groupon_rules表ID字段
+      order: 订单
+      order.orderSn: 订单
+      orderId: 订单ID
+      rulesId: 团购规则ID
       shareUrl: 团购分享图片地址
       status: 团购活动状态，开团未支付则0，开团中则1，开团失败则2
       updateTime: 更新时间
@@ -270,7 +292,9 @@ prop:
       discount: 优惠金额
       discountMember: 达到优惠条件的人数
       expireTime: 团购过期时间
-      goodsId: 商品表的商品ID
+      goods: 订单
+      goods.name: 订单
+      goodsId: 商品ID
       goodsName: 商品名称
       id: Id
       picUrl: 商品图片或者商品货品图片
@@ -323,10 +347,11 @@ prop:
       readTime: 阅读时间，如果是NULL则是未读状态
       updateTime: 更新时间
     LitemallOrder:
-      actualPrice: 实付费用， = order_price - integral_price
+      actualPrice: 实付费用
       addTime: 创建时间
       address: 收货具体地址
-      aftersaleStatus: 售后状态，0是可申请，1是用户已申请，2是管理员审核通过，3是管理员退款成功，4是管理员审核拒绝，5是用户已取消
+      aftersaleStatus: 售后状态
+      aftersaleStatus_label: 售后状态
       comments: 待评价订单商品数量
       confirmTime: 用户确认收货时间
       consignee: 收货人名称
@@ -340,12 +365,13 @@ prop:
       integralPrice: 用户积分减免
       message: 用户订单留言
       mobile: 收货人手机号
-      orderPrice: 订单费用， = goods_price + freight_price - coupon_price
+      orderPrice: 订单费用
       orderSn: 订单编号
       orderStatus: 订单状态
+      orderStatus_label: 订单状态
       payId: 微信付款编号
       payTime: 微信付款时间
-      refundAmount: 实际退款金额，（有可能退款金额小于实际支付金额）
+      refundAmount: 实际退款金额
       refundContent: 退款备注
       refundTime: 退款时间
       refundType: 退款方式
@@ -358,12 +384,12 @@ prop:
       addTime: 创建时间
       comment: 订单商品评论，如果是-1，则超期不能评价；如果是0，则可以评价；如果其他值，则是comment表里面的评论ID。
       deleted: 逻辑删除
-      goodsId: 商品表的商品ID
+      goodsId: 商品ID
       goodsName: 商品名称
       goodsSn: 商品编号
       id: Id
       number: 商品货品的购买数量
-      orderId: 订单表的订单ID
+      orderId: 订单ID
       picUrl: 商品货品图片或者商品图片
       price: 商品货品的售价
       productId: 商品货品表的货品ID

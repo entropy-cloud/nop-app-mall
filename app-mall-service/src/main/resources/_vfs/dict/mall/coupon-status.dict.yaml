@@ -1,0 +1,18 @@
+# __XGEN_FORCE_OVERRIDE__
+label: 优惠券状态
+locale: 
+description: 
+options:
+
+  - label: 正常可用
+    value: 0
+    description: 
+  
+  - label: 过期
+    value: 1
+    description: 
+  
+  - label: 下架
+    value: 2
+    description: 
+  

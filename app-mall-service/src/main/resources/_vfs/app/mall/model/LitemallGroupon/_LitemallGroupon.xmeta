@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <meta x:schema="/nop/schema/xmeta.xdef" xmlns:x="/nop/schema/xdsl.xdef" xmlns:i18n-en="i18n-en" xmlns:ext="ext"
-      xmlns:xpl="xpl" xmlns:biz-gen="biz-gen" displayName="团购活动表">
+      xmlns:xpl="xpl" xmlns:biz-gen="biz-gen" ext:model="orm" displayName="团购活动表">
 
     <entityName>app.mall.dao.entity.LitemallGroupon</entityName>
 
@@ -12,13 +12,13 @@
         <biz-gen:DefaultMetaPostExtends xpl:lib="/nop/biz/xlib/biz-gen.xlib"/>
     </x:post-extends>
 
-    <prop name="id" displayName="Id" mandatory="true" queryable="true" sortable="true" insertable="true"
+    <prop name="id" displayName="Id" tagSet="seq" mandatory="true" queryable="true" sortable="true" insertable="true"
           updatable="false">
         <schema type="java.lang.Integer"/>
     </prop>
 
-    <prop name="orderId" displayName="关联的订单ID" mandatory="true" queryable="true" sortable="true" insertable="true"
-          updatable="true">
+    <prop name="orderId" displayName="订单ID" mandatory="true" queryable="true" sortable="true" insertable="true"
+          updatable="true" ext:relation="order">
         <schema type="java.lang.Integer"/>
     </prop>
 
@@ -27,8 +27,8 @@
         <schema type="java.lang.Integer"/>
     </prop>
 
-    <prop name="rulesId" displayName="团购规则ID，关联litemall_groupon_rules表ID字段" mandatory="true" queryable="true"
-          sortable="true" insertable="true" updatable="true">
+    <prop name="rulesId" displayName="团购规则ID" mandatory="true" queryable="true" sortable="true" insertable="true"
+          updatable="true">
         <schema type="java.lang.Integer"/>
     </prop>
 
@@ -55,16 +55,27 @@
         <schema type="java.lang.Short"/>
     </prop>
 
-    <prop name="addTime" displayName="创建时间" mandatory="true" queryable="true" sortable="true" insertable="true"
-          updatable="true">
-        <schema type="java.time.LocalDateTime"/>
+    <prop name="addTime" displayName="创建时间" mandatory="true" queryable="true" sortable="true" insertable="false"
+          updatable="false">
+        <schema domain="createTime" type="java.time.LocalDateTime"/>
     </prop>
 
-    <prop name="updateTime" displayName="更新时间" queryable="true" sortable="true" insertable="true" updatable="true">
-        <schema type="java.time.LocalDateTime"/>
+    <prop name="updateTime" displayName="更新时间" queryable="true" sortable="true" insertable="false" updatable="false">
+        <schema domain="updateTime" type="java.time.LocalDateTime"/>
     </prop>
 
-    <prop name="deleted" displayName="逻辑删除" queryable="true" sortable="true" insertable="true" updatable="true">
-        <schema type="java.lang.Boolean"/>
+    <prop name="deleted" displayName="逻辑删除" queryable="true" sortable="true" insertable="false" updatable="true">
+        <schema stdDomain="boolFlag" domain="delFlag" type="java.lang.Boolean"/>
+    </prop>
+
+    <prop name="order" displayName="订单" i18n-en:displayName="Order" tagSet="pub,ref-pub" ext:kind="to-one"
+          internal="true" queryable="true" ext:joinLeftProp="orderId" ext:joinRightProp="id"
+          ext:joinRightDisplayProp="orderSn" insertable="false" updatable="false" mandatory="true" lazy="true">
+        <schema type="app.mall.dao.entity.LitemallOrder" bizObjName="LitemallOrder"/>
+    </prop>
+
+    <prop name="order.orderSn" displayName="订单" i18n-en:displayName="Order" internal="true" queryable="true"
+          sortable="true" lazy="true">
+        <schema type="String"/>
     </prop>
 </meta>

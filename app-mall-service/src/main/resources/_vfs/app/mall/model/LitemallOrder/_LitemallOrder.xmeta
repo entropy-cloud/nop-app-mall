@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <meta x:schema="/nop/schema/xmeta.xdef" xmlns:x="/nop/schema/xdsl.xdef" xmlns:i18n-en="i18n-en" xmlns:ext="ext"
-      xmlns:xpl="xpl" xmlns:biz-gen="biz-gen" displayName="订单表">
+      xmlns:xpl="xpl" xmlns:biz-gen="biz-gen" ext:model="orm" displayName="订单表">
 
     <entityName>app.mall.dao.entity.LitemallOrder</entityName>
 
     <primaryKey>id</primaryKey>
 
-    <displayProp/>
+    <displayProp>orderSn</displayProp>
 
     <x:post-extends>
         <biz-gen:DefaultMetaPostExtends xpl:lib="/nop/biz/xlib/biz-gen.xlib"/>
     </x:post-extends>
 
-    <prop name="id" displayName="Id" mandatory="true" queryable="true" sortable="true" insertable="true"
+    <prop name="id" displayName="Id" tagSet="seq" mandatory="true" queryable="true" sortable="true" insertable="true"
           updatable="false">
         <schema type="java.lang.Integer"/>
     </prop>
@@ -22,19 +22,18 @@
         <schema type="java.lang.Integer"/>
     </prop>
 
-    <prop name="orderSn" displayName="订单编号" mandatory="true" queryable="true" sortable="true" insertable="true"
-          updatable="true">
+    <prop name="orderSn" displayName="订单编号" tagSet="disp" mandatory="true" queryable="true" sortable="true"
+          insertable="true" updatable="true">
         <schema type="java.lang.String" precision="63"/>
     </prop>
 
     <prop name="orderStatus" displayName="订单状态" mandatory="true" queryable="true" sortable="true" insertable="true"
           updatable="true">
-        <schema type="java.lang.Short"/>
+        <schema type="java.lang.Short" dict="mall/order-status"/>
     </prop>
 
-    <prop name="aftersaleStatus" displayName="售后状态，0是可申请，1是用户已申请，2是管理员审核通过，3是管理员退款成功，4是管理员审核拒绝，5是用户已取消" queryable="true"
-          sortable="true" insertable="true" updatable="true">
-        <schema type="java.lang.Short"/>
+    <prop name="aftersaleStatus" displayName="售后状态" queryable="true" sortable="true" insertable="true" updatable="true">
+        <schema type="java.lang.Short" dict="mall/aftersale-status"/>
     </prop>
 
     <prop name="consignee" displayName="收货人名称" mandatory="true" queryable="true" sortable="true" insertable="true"
@@ -82,13 +81,13 @@
         <schema type="java.math.BigDecimal" precision="10" scale="2"/>
     </prop>
 
-    <prop name="orderPrice" displayName="订单费用， = goods_price + freight_price - coupon_price" mandatory="true"
-          queryable="true" sortable="true" insertable="true" updatable="true">
+    <prop name="orderPrice" displayName="订单费用" mandatory="true" queryable="true" sortable="true" insertable="true"
+          updatable="true">
         <schema type="java.math.BigDecimal" precision="10" scale="2"/>
     </prop>
 
-    <prop name="actualPrice" displayName="实付费用， = order_price - integral_price" mandatory="true" queryable="true"
-          sortable="true" insertable="true" updatable="true">
+    <prop name="actualPrice" displayName="实付费用" mandatory="true" queryable="true" sortable="true" insertable="true"
+          updatable="true">
         <schema type="java.math.BigDecimal" precision="10" scale="2"/>
     </prop>
 
@@ -112,8 +111,7 @@
         <schema type="java.time.LocalDateTime"/>
     </prop>
 
-    <prop name="refundAmount" displayName="实际退款金额，（有可能退款金额小于实际支付金额）" queryable="true" sortable="true" insertable="true"
-          updatable="true">
+    <prop name="refundAmount" displayName="实际退款金额" queryable="true" sortable="true" insertable="true" updatable="true">
         <schema type="java.math.BigDecimal" precision="10" scale="2"/>
     </prop>
 
@@ -141,15 +139,15 @@
         <schema type="java.time.LocalDateTime"/>
     </prop>
 
-    <prop name="addTime" displayName="创建时间" queryable="true" sortable="true" insertable="true" updatable="true">
-        <schema type="java.time.LocalDateTime"/>
+    <prop name="addTime" displayName="创建时间" queryable="true" sortable="true" insertable="false" updatable="false">
+        <schema domain="createTime" type="java.time.LocalDateTime"/>
     </prop>
 
-    <prop name="updateTime" displayName="更新时间" queryable="true" sortable="true" insertable="true" updatable="true">
-        <schema type="java.time.LocalDateTime"/>
+    <prop name="updateTime" displayName="更新时间" queryable="true" sortable="true" insertable="false" updatable="false">
+        <schema domain="updateTime" type="java.time.LocalDateTime"/>
     </prop>
 
-    <prop name="deleted" displayName="逻辑删除" queryable="true" sortable="true" insertable="true" updatable="true">
-        <schema type="java.lang.Boolean"/>
+    <prop name="deleted" displayName="逻辑删除" queryable="true" sortable="true" insertable="false" updatable="true">
+        <schema stdDomain="boolFlag" domain="delFlag" type="java.lang.Boolean"/>
     </prop>
 </meta>

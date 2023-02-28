@@ -24,7 +24,7 @@ public class _LitemallCollect extends DynamicOrmEntity{
     public static final String PROP_NAME_id = "id";
     public static final int PROP_ID_id = 1;
     
-    /* 用户表的用户ID: USER_ID INTEGER */
+    /* 用户ID: USER_ID INTEGER */
     public static final String PROP_NAME_userId = "userId";
     public static final int PROP_ID_userId = 2;
     
@@ -87,7 +87,7 @@ public class _LitemallCollect extends DynamicOrmEntity{
     /* Id: ID */
     private java.lang.Integer _id;
     
-    /* 用户表的用户ID: USER_ID */
+    /* 用户ID: USER_ID */
     private java.lang.Integer _userId;
     
     /* 如果type=0，则是商品ID；如果type=1，则是专题ID: VALUE_ID */
@@ -361,7 +361,7 @@ public class _LitemallCollect extends DynamicOrmEntity{
     }
     
     /**
-     * 用户表的用户ID: USER_ID
+     * 用户ID: USER_ID
      */
     public java.lang.Integer getUserId(){
          onPropGet(PROP_ID_userId);
@@ -369,7 +369,7 @@ public class _LitemallCollect extends DynamicOrmEntity{
     }
 
     /**
-     * 用户表的用户ID: USER_ID
+     * 用户ID: USER_ID
      */
     public void setUserId(java.lang.Integer value){
         if(onPropSet(PROP_ID_userId,value)){

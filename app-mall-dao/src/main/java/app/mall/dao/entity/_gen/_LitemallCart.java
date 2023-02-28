@@ -24,11 +24,11 @@ public class _LitemallCart extends DynamicOrmEntity{
     public static final String PROP_NAME_id = "id";
     public static final int PROP_ID_id = 1;
     
-    /* 用户表的用户ID: USER_ID INTEGER */
+    /* 用户ID: USER_ID INTEGER */
     public static final String PROP_NAME_userId = "userId";
     public static final int PROP_ID_userId = 2;
     
-    /* 商品表的商品ID: GOODS_ID INTEGER */
+    /* 商品ID: GOODS_ID INTEGER */
     public static final String PROP_NAME_goodsId = "goodsId";
     public static final int PROP_ID_goodsId = 3;
     
@@ -79,6 +79,9 @@ public class _LitemallCart extends DynamicOrmEntity{
 
     private static int _PROP_ID_BOUND = 15;
 
+    
+    /* relation: 订单 */
+    public static final String PROP_NAME_goods = "goods";
     
 
     public static final List<String> PK_PROP_NAMES = Arrays.asList(PROP_NAME_id);
@@ -136,10 +139,10 @@ public class _LitemallCart extends DynamicOrmEntity{
     /* Id: ID */
     private java.lang.Integer _id;
     
-    /* 用户表的用户ID: USER_ID */
+    /* 用户ID: USER_ID */
     private java.lang.Integer _userId;
     
-    /* 商品表的商品ID: GOODS_ID */
+    /* 商品ID: GOODS_ID */
     private java.lang.Integer _goodsId;
     
     /* 商品编号: GOODS_SN */
@@ -571,7 +574,7 @@ public class _LitemallCart extends DynamicOrmEntity{
     }
     
     /**
-     * 用户表的用户ID: USER_ID
+     * 用户ID: USER_ID
      */
     public java.lang.Integer getUserId(){
          onPropGet(PROP_ID_userId);
@@ -579,7 +582,7 @@ public class _LitemallCart extends DynamicOrmEntity{
     }
 
     /**
-     * 用户表的用户ID: USER_ID
+     * 用户ID: USER_ID
      */
     public void setUserId(java.lang.Integer value){
         if(onPropSet(PROP_ID_userId,value)){
@@ -590,7 +593,7 @@ public class _LitemallCart extends DynamicOrmEntity{
     }
     
     /**
-     * 商品表的商品ID: GOODS_ID
+     * 商品ID: GOODS_ID
      */
     public java.lang.Integer getGoodsId(){
          onPropGet(PROP_ID_goodsId);
@@ -598,7 +601,7 @@ public class _LitemallCart extends DynamicOrmEntity{
     }
 
     /**
-     * 商品表的商品ID: GOODS_ID
+     * 商品ID: GOODS_ID
      */
     public void setGoodsId(java.lang.Integer value){
         if(onPropSet(PROP_ID_goodsId,value)){
@@ -817,5 +820,26 @@ public class _LitemallCart extends DynamicOrmEntity{
         }
     }
     
+    /**
+     * 订单
+     */
+    public app.mall.dao.entity.LitemallGoods getGoods(){
+       return (app.mall.dao.entity.LitemallGoods)internalGetRefEntity(PROP_NAME_goods);
+    }
+
+    public void setGoods(app.mall.dao.entity.LitemallGoods refEntity){
+       if(refEntity == null){
+         
+         this.setGoodsId(null);
+         
+       }else{
+          internalSetRefEntity(PROP_NAME_goods, refEntity,()->{
+             
+                    this.setGoodsId(refEntity.getId());
+                 
+          });
+       }
+    }
+       
 }
 // resume CPD analysis - CPD-ON

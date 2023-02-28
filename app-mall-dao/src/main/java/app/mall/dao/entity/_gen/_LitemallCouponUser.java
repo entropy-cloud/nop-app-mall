@@ -68,6 +68,9 @@ public class _LitemallCouponUser extends DynamicOrmEntity{
     private static int _PROP_ID_BOUND = 12;
 
     
+    /* relation: 优惠券 */
+    public static final String PROP_NAME_coupon = "coupon";
+    
 
     public static final List<String> PK_PROP_NAMES = Arrays.asList(PROP_NAME_id);
     public static final int[] PK_PROP_IDS = new int[]{PROP_ID_id};
@@ -670,5 +673,26 @@ public class _LitemallCouponUser extends DynamicOrmEntity{
         }
     }
     
+    /**
+     * 优惠券
+     */
+    public app.mall.dao.entity.LitemallCoupon getCoupon(){
+       return (app.mall.dao.entity.LitemallCoupon)internalGetRefEntity(PROP_NAME_coupon);
+    }
+
+    public void setCoupon(app.mall.dao.entity.LitemallCoupon refEntity){
+       if(refEntity == null){
+         
+         this.setCouponId(null);
+         
+       }else{
+          internalSetRefEntity(PROP_NAME_coupon, refEntity,()->{
+             
+                    this.setCouponId(refEntity.getId());
+                 
+          });
+       }
+    }
+       
 }
 // resume CPD analysis - CPD-ON

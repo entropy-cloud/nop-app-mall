@@ -24,11 +24,11 @@ public class _LitemallOrderGoods extends DynamicOrmEntity{
     public static final String PROP_NAME_id = "id";
     public static final int PROP_ID_id = 1;
     
-    /* 订单表的订单ID: ORDER_ID INTEGER */
+    /* 订单ID: ORDER_ID INTEGER */
     public static final String PROP_NAME_orderId = "orderId";
     public static final int PROP_ID_orderId = 2;
     
-    /* 商品表的商品ID: GOODS_ID INTEGER */
+    /* 商品ID: GOODS_ID INTEGER */
     public static final String PROP_NAME_goodsId = "goodsId";
     public static final int PROP_ID_goodsId = 3;
     
@@ -136,10 +136,10 @@ public class _LitemallOrderGoods extends DynamicOrmEntity{
     /* Id: ID */
     private java.lang.Integer _id;
     
-    /* 订单表的订单ID: ORDER_ID */
+    /* 订单ID: ORDER_ID */
     private java.lang.Integer _orderId;
     
-    /* 商品表的商品ID: GOODS_ID */
+    /* 商品ID: GOODS_ID */
     private java.lang.Integer _goodsId;
     
     /* 商品名称: GOODS_NAME */
@@ -571,7 +571,7 @@ public class _LitemallOrderGoods extends DynamicOrmEntity{
     }
     
     /**
-     * 订单表的订单ID: ORDER_ID
+     * 订单ID: ORDER_ID
      */
     public java.lang.Integer getOrderId(){
          onPropGet(PROP_ID_orderId);
@@ -579,7 +579,7 @@ public class _LitemallOrderGoods extends DynamicOrmEntity{
     }
 
     /**
-     * 订单表的订单ID: ORDER_ID
+     * 订单ID: ORDER_ID
      */
     public void setOrderId(java.lang.Integer value){
         if(onPropSet(PROP_ID_orderId,value)){
@@ -590,7 +590,7 @@ public class _LitemallOrderGoods extends DynamicOrmEntity{
     }
     
     /**
-     * 商品表的商品ID: GOODS_ID
+     * 商品ID: GOODS_ID
      */
     public java.lang.Integer getGoodsId(){
          onPropGet(PROP_ID_goodsId);
@@ -598,7 +598,7 @@ public class _LitemallOrderGoods extends DynamicOrmEntity{
     }
 
     /**
-     * 商品表的商品ID: GOODS_ID
+     * 商品ID: GOODS_ID
      */
     public void setGoodsId(java.lang.Integer value){
         if(onPropSet(PROP_ID_goodsId,value)){
