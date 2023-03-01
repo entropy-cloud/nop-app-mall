@@ -1,0 +1,1 @@
+java  -jar nop-cli.jar gen -t=v:/nop/templates/orm model/app-mall.orm.xlsx

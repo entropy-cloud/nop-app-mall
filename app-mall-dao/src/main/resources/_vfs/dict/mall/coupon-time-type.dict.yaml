@@ -1,6 +1,7 @@
 # __XGEN_FORCE_OVERRIDE__
 label: 优惠券时间限制类型
-locale: 
+locale: zh-CN
+valueType: int
 description: 
 options:
 

@@ -1,6 +1,7 @@
 # __XGEN_FORCE_OVERRIDE__
 label: 售后状态
-locale: 
+locale: zh-CN
+valueType: int
 description: 
 options:
 

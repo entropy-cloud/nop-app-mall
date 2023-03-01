@@ -1,18 +1,19 @@
 # __XGEN_FORCE_OVERRIDE__
-label: 售后类型
-locale: 
+label: 优惠券状态
+locale: zh-CN
+valueType: int
 description: 
 options:
 
-  - label: 未收货退款
+  - label: 正常可用
     value: 0
     description: 
   
-  - label: 已收货（无需退货）退款
+  - label: 过期
     value: 1
     description: 
   
-  - label: 用户退货退款
+  - label: 下架
     value: 2
     description: 
   

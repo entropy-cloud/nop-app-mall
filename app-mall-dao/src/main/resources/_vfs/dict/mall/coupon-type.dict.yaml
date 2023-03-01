@@ -1,18 +1,19 @@
 # __XGEN_FORCE_OVERRIDE__
-label: 优惠券状态
-locale: 
+label: 优惠券赠送类型
+locale: zh-CN
+valueType: int
 description: 
 options:
 
-  - label: 正常可用
+  - label: 通用券，用户领取
     value: 0
     description: 
   
-  - label: 过期
+  - label: 注册赠券
     value: 1
     description: 
   
-  - label: 下架
+  - label: 优惠券码兑换
     value: 2
     description: 
   

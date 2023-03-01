@@ -7,6 +7,7 @@ bin-release/
 *.iml
 
 target/
+_dump/
 
 # Other files and folders
 .settings/

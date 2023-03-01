@@ -1,18 +1,19 @@
 # __XGEN_FORCE_OVERRIDE__
-label: 优惠券赠送类型
-locale: 
+label: 优惠券商品限制类型
+locale: zh-CN
+valueType: int
 description: 
 options:
 
-  - label: 通用券，用户领取
+  - label: 全商品
     value: 0
     description: 
   
-  - label: 注册赠券
+  - label: 类目限制
     value: 1
     description: 
   
-  - label: 优惠券码兑换
+  - label: 商品限制
     value: 2
     description: 
   
