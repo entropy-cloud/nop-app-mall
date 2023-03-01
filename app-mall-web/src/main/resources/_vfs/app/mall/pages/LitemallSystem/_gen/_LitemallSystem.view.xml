@@ -18,15 +18,6 @@
 
                 <!--系统配置值-->
                 <col id="keyValue" mandatory="true" sortable="true"/>
-
-                <!--创建时间-->
-                <col id="addTime" sortable="true"/>
-
-                <!--更新时间-->
-                <col id="updateTime" sortable="true"/>
-
-                <!--逻辑删除-->
-                <col id="deleted" sortable="true"/>
             </cols>
         </grid>
         <grid id="pick-list" x:prototype="list" x:abstract="true"/>
@@ -38,9 +29,6 @@
  id[Id]
  keyName[系统配置名]
  keyValue[系统配置值]
- addTime[创建时间]
- updateTime[更新时间]
- deleted[逻辑删除]
 </layout>
         </form>
         <form id="add" editMode="add" title="新增-系统配置表" i18n-en:title="Add " x:prototype="edit"/>
@@ -49,9 +37,6 @@
  id[Id]
  keyName[系统配置名]
  keyValue[系统配置值]
- addTime[创建时间]
- updateTime[更新时间]
- deleted[逻辑删除]
 </layout>
         </form>
         <form id="query" editMode="query" title="查询条件" i18n-en:title="Query Condition" x:abstract="true">

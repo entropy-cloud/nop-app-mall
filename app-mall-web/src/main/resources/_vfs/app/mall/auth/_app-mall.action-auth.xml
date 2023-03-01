@@ -2,8 +2,8 @@
 <auth x:schema="/nop/schema/action-auth.xdef" xmlns:x="/nop/schema/xdsl.xdef" xmlns:i18n-en="i18n-en">
 
     <site id="main">
-        <resource id="test-app-mall" displayName="测试app-mall" icon="ion:grid-outline" resourceType="TOPM"
-                  routePath="/test-app-mall" component="layouts/default/index">
+        <resource id="test-orm-app-mall" displayName="测试app-mall" icon="ion:grid-outline" resourceType="TOPM"
+                  routePath="/test-orm-app-mall" component="layouts/default/index">
             <children>
                 <resource id="LitemallAd-main" displayName="广告表" icon="ant-design:appstore-twotone" component="AMIS"
                           resourceType="SUBM" url="/app/mall/pages/LitemallAd/main.page.yaml"/>

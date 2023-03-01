@@ -13,7 +13,7 @@
                 <!--Id-->
                 <col id="id" mandatory="true" sortable="true"/>
 
-                <!--商品表的商品ID-->
+                <!--商品ID-->
                 <col id="goodsId" mandatory="true" sortable="true"/>
 
                 <!--商品规格名称-->
@@ -24,15 +24,6 @@
 
                 <!--商品规格图片-->
                 <col id="picUrl" mandatory="true" sortable="true"/>
-
-                <!--创建时间-->
-                <col id="addTime" sortable="true"/>
-
-                <!--更新时间-->
-                <col id="updateTime" sortable="true"/>
-
-                <!--逻辑删除-->
-                <col id="deleted" sortable="true"/>
             </cols>
         </grid>
         <grid id="pick-list" x:prototype="list" x:abstract="true"/>
@@ -42,26 +33,20 @@
         <form id="view" editMode="view" title="查看-商品规格表" i18n-en:title="View ">
             <layout>
  id[Id]
- goodsId[商品表的商品ID]
+ goodsId[商品ID]
  specification[商品规格名称]
  value[商品规格值]
  picUrl[商品规格图片]
- addTime[创建时间]
- updateTime[更新时间]
- deleted[逻辑删除]
 </layout>
         </form>
         <form id="add" editMode="add" title="新增-商品规格表" i18n-en:title="Add " x:prototype="edit"/>
         <form id="edit" editMode="update" title="编辑-商品规格表" i18n-en:title="Edit ">
             <layout>
  id[Id]
- goodsId[商品表的商品ID]
+ goodsId[商品ID]
  specification[商品规格名称]
  value[商品规格值]
  picUrl[商品规格图片]
- addTime[创建时间]
- updateTime[更新时间]
- deleted[逻辑删除]
 </layout>
         </form>
         <form id="query" editMode="query" title="查询条件" i18n-en:title="Query Condition" x:abstract="true">

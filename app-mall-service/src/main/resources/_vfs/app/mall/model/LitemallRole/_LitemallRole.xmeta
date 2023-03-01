@@ -30,15 +30,18 @@
         <schema type="java.lang.Boolean"/>
     </prop>
 
-    <prop name="addTime" displayName="创建时间" queryable="true" sortable="true" insertable="true" updatable="true">
+    <prop name="addTime" displayName="创建时间" queryable="true" sortable="true" insertable="true" updatable="true"
+          internal="true" ext:show="X">
         <schema type="java.time.LocalDateTime"/>
     </prop>
 
-    <prop name="updateTime" displayName="更新时间" queryable="true" sortable="true" insertable="true" updatable="true">
+    <prop name="updateTime" displayName="更新时间" queryable="true" sortable="true" insertable="true" updatable="true"
+          internal="true" ext:show="X">
         <schema type="java.time.LocalDateTime"/>
     </prop>
 
-    <prop name="deleted" displayName="逻辑删除" queryable="true" sortable="true" insertable="true" updatable="true">
+    <prop name="deleted" displayName="逻辑删除" queryable="true" sortable="true" insertable="true" updatable="true"
+          internal="true" ext:show="X">
         <schema type="java.lang.Boolean"/>
     </prop>
 </meta>

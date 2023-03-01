@@ -36,15 +36,6 @@
 
                 <!--专题相关商品，采用JSON数组格式-->
                 <col id="goods" sortable="true"/>
-
-                <!--创建时间-->
-                <col id="addTime" sortable="true"/>
-
-                <!--更新时间-->
-                <col id="updateTime" sortable="true"/>
-
-                <!--逻辑删除-->
-                <col id="deleted" sortable="true"/>
             </cols>
         </grid>
         <grid id="pick-list" x:prototype="list" x:abstract="true"/>
@@ -53,23 +44,29 @@
     <forms>
         <form id="view" editMode="view" title="查看-专题表" i18n-en:title="View ">
             <layout>
- id[Id] title[专题标题]
- subtitle[专题子标题] content[专题内容，富文本格式]
- price[专题相关商品最低价] readCount[专题阅读量]
- picUrl[专题图片] sortOrder[排序]
- goods[专题相关商品，采用JSON数组格式] addTime[创建时间]
- updateTime[更新时间] deleted[逻辑删除]
+ id[Id]
+ title[专题标题]
+ subtitle[专题子标题]
+ content[专题内容，富文本格式]
+ price[专题相关商品最低价]
+ readCount[专题阅读量]
+ picUrl[专题图片]
+ sortOrder[排序]
+ goods[专题相关商品，采用JSON数组格式]
 </layout>
         </form>
         <form id="add" editMode="add" title="新增-专题表" i18n-en:title="Add " x:prototype="edit"/>
         <form id="edit" editMode="update" title="编辑-专题表" i18n-en:title="Edit ">
             <layout>
- id[Id] title[专题标题]
- subtitle[专题子标题] content[专题内容，富文本格式]
- price[专题相关商品最低价] readCount[专题阅读量]
- picUrl[专题图片] sortOrder[排序]
- goods[专题相关商品，采用JSON数组格式] addTime[创建时间]
- updateTime[更新时间] deleted[逻辑删除]
+ id[Id]
+ title[专题标题]
+ subtitle[专题子标题]
+ content[专题内容，富文本格式]
+ price[专题相关商品最低价]
+ readCount[专题阅读量]
+ picUrl[专题图片]
+ sortOrder[排序]
+ goods[专题相关商品，采用JSON数组格式]
 </layout>
         </form>
         <form id="query" editMode="query" title="查询条件" i18n-en:title="Query Condition" x:abstract="true">

@@ -21,15 +21,6 @@
 
                 <!--创建通知的管理员ID，如果是系统内置通知则是0.-->
                 <col id="adminId" sortable="true"/>
-
-                <!--创建时间-->
-                <col id="addTime" sortable="true"/>
-
-                <!--更新时间-->
-                <col id="updateTime" sortable="true"/>
-
-                <!--逻辑删除-->
-                <col id="deleted" sortable="true"/>
             </cols>
         </grid>
         <grid id="pick-list" x:prototype="list" x:abstract="true"/>
@@ -42,9 +33,6 @@
  title[通知标题]
  content[通知内容]
  adminId[创建通知的管理员ID，如果是系统内置通知则是0.]
- addTime[创建时间]
- updateTime[更新时间]
- deleted[逻辑删除]
 </layout>
         </form>
         <form id="add" editMode="add" title="新增-通知表" i18n-en:title="Add " x:prototype="edit"/>
@@ -54,9 +42,6 @@
  title[通知标题]
  content[通知内容]
  adminId[创建通知的管理员ID，如果是系统内置通知则是0.]
- addTime[创建时间]
- updateTime[更新时间]
- deleted[逻辑删除]
 </layout>
         </form>
         <form id="query" editMode="query" title="查询条件" i18n-en:title="Query Condition" x:abstract="true">

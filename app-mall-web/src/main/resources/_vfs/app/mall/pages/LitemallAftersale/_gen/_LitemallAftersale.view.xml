@@ -22,7 +22,7 @@
                 <!--用户ID-->
                 <col id="userId" mandatory="true" sortable="true"/>
 
-                <!--售后类型，0是未收货退款，1是已收货（无需退货）退款，2用户退货退款-->
+                <!--售后类型-->
                 <col id="type" sortable="true"/>
 
                 <!--退款原因-->
@@ -37,20 +37,11 @@
                 <!--退款说明-->
                 <col id="comment" sortable="true"/>
 
-                <!--售后状态，0是可申请，1是用户已申请，2是管理员审核通过，3是管理员退款成功，4是管理员审核拒绝，5是用户已取消-->
+                <!--售后状态-->
                 <col id="status" sortable="true"/>
 
                 <!--管理员操作时间-->
                 <col id="handleTime" sortable="true"/>
-
-                <!--添加时间-->
-                <col id="addTime" sortable="true"/>
-
-                <!--更新时间-->
-                <col id="updateTime" sortable="true"/>
-
-                <!--逻辑删除-->
-                <col id="deleted" sortable="true"/>
             </cols>
         </grid>
         <grid id="pick-list" x:prototype="list" x:abstract="true"/>
@@ -61,11 +52,10 @@
             <layout>
  id[Id] aftersaleSn[售后编号]
  orderId[订单ID] userId[用户ID]
- type[售后类型，0是未收货退款，1是已收货（无需退货）退款，2用户退货退款] reason[退款原因]
+ type[售后类型] reason[退款原因]
  amount[退款金额] pictures[退款凭证图片链接数组]
- comment[退款说明] status[售后状态，0是可申请，1是用户已申请，2是管理员审核通过，3是管理员退款成功，4是管理员审核拒绝，5是用户已取消]
- handleTime[管理员操作时间] addTime[添加时间]
- updateTime[更新时间] deleted[逻辑删除]
+ comment[退款说明] status[售后状态]
+ handleTime[管理员操作时间] 
 </layout>
         </form>
         <form id="add" editMode="add" title="新增-售后表" i18n-en:title="Add " x:prototype="edit"/>
@@ -73,11 +63,10 @@
             <layout>
  id[Id] aftersaleSn[售后编号]
  orderId[订单ID] userId[用户ID]
- type[售后类型，0是未收货退款，1是已收货（无需退货）退款，2用户退货退款] reason[退款原因]
+ type[售后类型] reason[退款原因]
  amount[退款金额] pictures[退款凭证图片链接数组]
- comment[退款说明] status[售后状态，0是可申请，1是用户已申请，2是管理员审核通过，3是管理员退款成功，4是管理员审核拒绝，5是用户已取消]
- handleTime[管理员操作时间] addTime[添加时间]
- updateTime[更新时间] deleted[逻辑删除]
+ comment[退款说明] status[售后状态]
+ handleTime[管理员操作时间] 
 </layout>
         </form>
         <form id="query" editMode="query" title="查询条件" i18n-en:title="Query Condition" x:abstract="true">

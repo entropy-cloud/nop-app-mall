@@ -13,10 +13,10 @@
                 <!--Id-->
                 <col id="id" mandatory="true" sortable="true"/>
 
-                <!--订单表的订单ID-->
+                <!--订单ID-->
                 <col id="orderId" mandatory="true" sortable="true"/>
 
-                <!--商品表的商品ID-->
+                <!--商品ID-->
                 <col id="goodsId" mandatory="true" sortable="true"/>
 
                 <!--商品名称-->
@@ -42,15 +42,6 @@
 
                 <!--订单商品评论，如果是-1，则超期不能评价；如果是0，则可以评价；如果其他值，则是comment表里面的评论ID。-->
                 <col id="comment" sortable="true"/>
-
-                <!--创建时间-->
-                <col id="addTime" sortable="true"/>
-
-                <!--更新时间-->
-                <col id="updateTime" sortable="true"/>
-
-                <!--逻辑删除-->
-                <col id="deleted" sortable="true"/>
             </cols>
         </grid>
         <grid id="pick-list" x:prototype="list" x:abstract="true"/>
@@ -59,25 +50,23 @@
     <forms>
         <form id="view" editMode="view" title="查看-订单商品表" i18n-en:title="View ">
             <layout>
- id[Id] orderId[订单表的订单ID]
- goodsId[商品表的商品ID] goodsName[商品名称]
+ id[Id] orderId[订单ID]
+ goodsId[商品ID] goodsName[商品名称]
  goodsSn[商品编号] productId[商品货品表的货品ID]
  number[商品货品的购买数量] price[商品货品的售价]
  specifications[商品货品的规格列表] picUrl[商品货品图片或者商品图片]
- comment[订单商品评论，如果是-1，则超期不能评价；如果是0，则可以评价；如果其他值，则是comment表里面的评论ID。] addTime[创建时间]
- updateTime[更新时间] deleted[逻辑删除]
+ comment[订单商品评论，如果是-1，则超期不能评价；如果是0，则可以评价；如果其他值，则是comment表里面的评论ID。] 
 </layout>
         </form>
         <form id="add" editMode="add" title="新增-订单商品表" i18n-en:title="Add " x:prototype="edit"/>
         <form id="edit" editMode="update" title="编辑-订单商品表" i18n-en:title="Edit ">
             <layout>
- id[Id] orderId[订单表的订单ID]
- goodsId[商品表的商品ID] goodsName[商品名称]
+ id[Id] orderId[订单ID]
+ goodsId[商品ID] goodsName[商品名称]
  goodsSn[商品编号] productId[商品货品表的货品ID]
  number[商品货品的购买数量] price[商品货品的售价]
  specifications[商品货品的规格列表] picUrl[商品货品图片或者商品图片]
- comment[订单商品评论，如果是-1，则超期不能评价；如果是0，则可以评价；如果其他值，则是comment表里面的评论ID。] addTime[创建时间]
- updateTime[更新时间] deleted[逻辑删除]
+ comment[订单商品评论，如果是-1，则超期不能评价；如果是0，则可以评价；如果其他值，则是comment表里面的评论ID。] 
 </layout>
         </form>
         <form id="query" editMode="query" title="查询条件" i18n-en:title="Query Condition" x:abstract="true">

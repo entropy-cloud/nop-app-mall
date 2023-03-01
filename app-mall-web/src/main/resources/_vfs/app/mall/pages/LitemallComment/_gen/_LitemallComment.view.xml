@@ -36,15 +36,6 @@
 
                 <!--评分， 1-5-->
                 <col id="star" sortable="true"/>
-
-                <!--创建时间-->
-                <col id="addTime" sortable="true"/>
-
-                <!--更新时间-->
-                <col id="updateTime" sortable="true"/>
-
-                <!--逻辑删除-->
-                <col id="deleted" sortable="true"/>
             </cols>
         </grid>
         <grid id="pick-list" x:prototype="list" x:abstract="true"/>
@@ -53,23 +44,29 @@
     <forms>
         <form id="view" editMode="view" title="查看-评论表" i18n-en:title="View ">
             <layout>
- id[Id] valueId[如果type=0，则是商品评论；如果是type=1，则是专题评论。]
- type[评论类型，如果type=0，则是商品评论；如果是type=1，则是专题评论；] content[评论内容]
- adminContent[管理员回复内容] userId[用户表的用户ID]
- hasPicture[是否含有图片] picUrls[图片地址列表，采用JSON数组格式]
- star[评分， 1-5] addTime[创建时间]
- updateTime[更新时间] deleted[逻辑删除]
+ id[Id]
+ valueId[如果type=0，则是商品评论；如果是type=1，则是专题评论。]
+ type[评论类型，如果type=0，则是商品评论；如果是type=1，则是专题评论；]
+ content[评论内容]
+ adminContent[管理员回复内容]
+ userId[用户表的用户ID]
+ hasPicture[是否含有图片]
+ picUrls[图片地址列表，采用JSON数组格式]
+ star[评分， 1-5]
 </layout>
         </form>
         <form id="add" editMode="add" title="新增-评论表" i18n-en:title="Add " x:prototype="edit"/>
         <form id="edit" editMode="update" title="编辑-评论表" i18n-en:title="Edit ">
             <layout>
- id[Id] valueId[如果type=0，则是商品评论；如果是type=1，则是专题评论。]
- type[评论类型，如果type=0，则是商品评论；如果是type=1，则是专题评论；] content[评论内容]
- adminContent[管理员回复内容] userId[用户表的用户ID]
- hasPicture[是否含有图片] picUrls[图片地址列表，采用JSON数组格式]
- star[评分， 1-5] addTime[创建时间]
- updateTime[更新时间] deleted[逻辑删除]
+ id[Id]
+ valueId[如果type=0，则是商品评论；如果是type=1，则是专题评论。]
+ type[评论类型，如果type=0，则是商品评论；如果是type=1，则是专题评论；]
+ content[评论内容]
+ adminContent[管理员回复内容]
+ userId[用户表的用户ID]
+ hasPicture[是否含有图片]
+ picUrls[图片地址列表，采用JSON数组格式]
+ star[评分， 1-5]
 </layout>
         </form>
         <form id="query" editMode="query" title="查询条件" i18n-en:title="Query Condition" x:abstract="true">

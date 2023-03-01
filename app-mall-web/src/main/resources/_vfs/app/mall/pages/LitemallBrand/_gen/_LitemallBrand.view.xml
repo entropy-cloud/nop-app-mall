@@ -27,15 +27,6 @@
 
                 <!--品牌商的商品低价，仅用于页面展示-->
                 <col id="floorPrice" sortable="true"/>
-
-                <!--创建时间-->
-                <col id="addTime" sortable="true"/>
-
-                <!--更新时间-->
-                <col id="updateTime" sortable="true"/>
-
-                <!--逻辑删除-->
-                <col id="deleted" sortable="true"/>
             </cols>
         </grid>
         <grid id="pick-list" x:prototype="list" x:abstract="true"/>
@@ -50,9 +41,6 @@
  picUrl[品牌商页的品牌商图片]
  sortOrder[Sortorder]
  floorPrice[品牌商的商品低价，仅用于页面展示]
- addTime[创建时间]
- updateTime[更新时间]
- deleted[逻辑删除]
 </layout>
         </form>
         <form id="add" editMode="add" title="新增-品牌商表" i18n-en:title="Add " x:prototype="edit"/>
@@ -64,9 +52,6 @@
  picUrl[品牌商页的品牌商图片]
  sortOrder[Sortorder]
  floorPrice[品牌商的商品低价，仅用于页面展示]
- addTime[创建时间]
- updateTime[更新时间]
- deleted[逻辑删除]
 </layout>
         </form>
         <form id="query" editMode="query" title="查询条件" i18n-en:title="Query Condition" x:abstract="true">

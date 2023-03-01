@@ -36,15 +36,6 @@
 
                 <!--图片地址列表，采用JSON数组格式-->
                 <col id="picUrls" sortable="true"/>
-
-                <!--创建时间-->
-                <col id="addTime" sortable="true"/>
-
-                <!--更新时间-->
-                <col id="updateTime" sortable="true"/>
-
-                <!--逻辑删除-->
-                <col id="deleted" sortable="true"/>
             </cols>
         </grid>
         <grid id="pick-list" x:prototype="list" x:abstract="true"/>
@@ -53,23 +44,29 @@
     <forms>
         <form id="view" editMode="view" title="查看-意见反馈表" i18n-en:title="View ">
             <layout>
- id[Id] userId[用户表的用户ID]
- username[用户名称] mobile[手机号]
- feedType[反馈类型] content[反馈内容]
- status[状态] hasPicture[是否含有图片]
- picUrls[图片地址列表，采用JSON数组格式] addTime[创建时间]
- updateTime[更新时间] deleted[逻辑删除]
+ id[Id]
+ userId[用户表的用户ID]
+ username[用户名称]
+ mobile[手机号]
+ feedType[反馈类型]
+ content[反馈内容]
+ status[状态]
+ hasPicture[是否含有图片]
+ picUrls[图片地址列表，采用JSON数组格式]
 </layout>
         </form>
         <form id="add" editMode="add" title="新增-意见反馈表" i18n-en:title="Add " x:prototype="edit"/>
         <form id="edit" editMode="update" title="编辑-意见反馈表" i18n-en:title="Edit ">
             <layout>
- id[Id] userId[用户表的用户ID]
- username[用户名称] mobile[手机号]
- feedType[反馈类型] content[反馈内容]
- status[状态] hasPicture[是否含有图片]
- picUrls[图片地址列表，采用JSON数组格式] addTime[创建时间]
- updateTime[更新时间] deleted[逻辑删除]
+ id[Id]
+ userId[用户表的用户ID]
+ username[用户名称]
+ mobile[手机号]
+ feedType[反馈类型]
+ content[反馈内容]
+ status[状态]
+ hasPicture[是否含有图片]
+ picUrls[图片地址列表，采用JSON数组格式]
 </layout>
         </form>
         <form id="query" editMode="query" title="查询条件" i18n-en:title="Query Condition" x:abstract="true">

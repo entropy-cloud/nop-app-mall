@@ -13,13 +13,13 @@
                 <!--Id-->
                 <col id="id" mandatory="true" sortable="true"/>
 
-                <!--关联的订单ID-->
+                <!--订单ID-->
                 <col id="orderId" mandatory="true" sortable="true"/>
 
                 <!--如果是开团用户，则groupon_id是0；如果是参团用户，则groupon_id是团购活动ID-->
                 <col id="grouponId" sortable="true"/>
 
-                <!--团购规则ID，关联litemall_groupon_rules表ID字段-->
+                <!--团购规则ID-->
                 <col id="rulesId" mandatory="true" sortable="true"/>
 
                 <!--用户ID-->
@@ -36,15 +36,6 @@
 
                 <!--团购活动状态，开团未支付则0，开团中则1，开团失败则2-->
                 <col id="status" sortable="true"/>
-
-                <!--创建时间-->
-                <col id="addTime" mandatory="true" sortable="true"/>
-
-                <!--更新时间-->
-                <col id="updateTime" sortable="true"/>
-
-                <!--逻辑删除-->
-                <col id="deleted" sortable="true"/>
             </cols>
         </grid>
         <grid id="pick-list" x:prototype="list" x:abstract="true"/>
@@ -53,23 +44,29 @@
     <forms>
         <form id="view" editMode="view" title="查看-团购活动表" i18n-en:title="View ">
             <layout>
- id[Id] orderId[关联的订单ID]
- grouponId[如果是开团用户，则groupon_id是0；如果是参团用户，则groupon_id是团购活动ID] rulesId[团购规则ID，关联litemall_groupon_rules表ID字段]
- userId[用户ID] shareUrl[团购分享图片地址]
- creatorUserId[开团用户ID] creatorUserTime[开团时间]
- status[团购活动状态，开团未支付则0，开团中则1，开团失败则2] addTime[创建时间]
- updateTime[更新时间] deleted[逻辑删除]
+ id[Id]
+ orderId[订单ID]
+ grouponId[如果是开团用户，则groupon_id是0；如果是参团用户，则groupon_id是团购活动ID]
+ rulesId[团购规则ID]
+ userId[用户ID]
+ shareUrl[团购分享图片地址]
+ creatorUserId[开团用户ID]
+ creatorUserTime[开团时间]
+ status[团购活动状态，开团未支付则0，开团中则1，开团失败则2]
 </layout>
         </form>
         <form id="add" editMode="add" title="新增-团购活动表" i18n-en:title="Add " x:prototype="edit"/>
         <form id="edit" editMode="update" title="编辑-团购活动表" i18n-en:title="Edit ">
             <layout>
- id[Id] orderId[关联的订单ID]
- grouponId[如果是开团用户，则groupon_id是0；如果是参团用户，则groupon_id是团购活动ID] rulesId[团购规则ID，关联litemall_groupon_rules表ID字段]
- userId[用户ID] shareUrl[团购分享图片地址]
- creatorUserId[开团用户ID] creatorUserTime[开团时间]
- status[团购活动状态，开团未支付则0，开团中则1，开团失败则2] addTime[创建时间]
- updateTime[更新时间] deleted[逻辑删除]
+ id[Id]
+ orderId[订单ID]
+ grouponId[如果是开团用户，则groupon_id是0；如果是参团用户，则groupon_id是团购活动ID]
+ rulesId[团购规则ID]
+ userId[用户ID]
+ shareUrl[团购分享图片地址]
+ creatorUserId[开团用户ID]
+ creatorUserTime[开团时间]
+ status[团购活动状态，开团未支付则0，开团中则1，开团失败则2]
 </layout>
         </form>
         <form id="query" editMode="query" title="查询条件" i18n-en:title="Query Condition" x:abstract="true">

@@ -13,7 +13,7 @@
                 <!--Id-->
                 <col id="id" mandatory="true" sortable="true"/>
 
-                <!--商品表的商品ID-->
+                <!--商品ID-->
                 <col id="goodsId" mandatory="true" sortable="true"/>
 
                 <!--商品名称-->
@@ -33,15 +33,6 @@
 
                 <!--团购规则状态，正常上线则0，到期自动下线则1，管理手动下线则2-->
                 <col id="status" sortable="true"/>
-
-                <!--创建时间-->
-                <col id="addTime" mandatory="true" sortable="true"/>
-
-                <!--更新时间-->
-                <col id="updateTime" sortable="true"/>
-
-                <!--逻辑删除-->
-                <col id="deleted" sortable="true"/>
             </cols>
         </grid>
         <grid id="pick-list" x:prototype="list" x:abstract="true"/>
@@ -50,23 +41,27 @@
     <forms>
         <form id="view" editMode="view" title="查看-团购规则表" i18n-en:title="View ">
             <layout>
- id[Id] goodsId[商品表的商品ID]
- goodsName[商品名称] picUrl[商品图片或者商品货品图片]
- discount[优惠金额] discountMember[达到优惠条件的人数]
- expireTime[团购过期时间] status[团购规则状态，正常上线则0，到期自动下线则1，管理手动下线则2]
- addTime[创建时间] updateTime[更新时间]
- deleted[逻辑删除] 
+ id[Id]
+ goodsId[商品ID]
+ goodsName[商品名称]
+ picUrl[商品图片或者商品货品图片]
+ discount[优惠金额]
+ discountMember[达到优惠条件的人数]
+ expireTime[团购过期时间]
+ status[团购规则状态，正常上线则0，到期自动下线则1，管理手动下线则2]
 </layout>
         </form>
         <form id="add" editMode="add" title="新增-团购规则表" i18n-en:title="Add " x:prototype="edit"/>
         <form id="edit" editMode="update" title="编辑-团购规则表" i18n-en:title="Edit ">
             <layout>
- id[Id] goodsId[商品表的商品ID]
- goodsName[商品名称] picUrl[商品图片或者商品货品图片]
- discount[优惠金额] discountMember[达到优惠条件的人数]
- expireTime[团购过期时间] status[团购规则状态，正常上线则0，到期自动下线则1，管理手动下线则2]
- addTime[创建时间] updateTime[更新时间]
- deleted[逻辑删除] 
+ id[Id]
+ goodsId[商品ID]
+ goodsName[商品名称]
+ picUrl[商品图片或者商品货品图片]
+ discount[优惠金额]
+ discountMember[达到优惠条件的人数]
+ expireTime[团购过期时间]
+ status[团购规则状态，正常上线则0，到期自动下线则1，管理手动下线则2]
 </layout>
         </form>
         <form id="query" editMode="query" title="查询条件" i18n-en:title="Query Condition" x:abstract="true">

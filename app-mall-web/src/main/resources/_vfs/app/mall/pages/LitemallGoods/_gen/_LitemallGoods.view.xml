@@ -63,15 +63,6 @@
 
                 <!--商品详细介绍，是富文本格式-->
                 <col id="detail" sortable="true"/>
-
-                <!--创建时间-->
-                <col id="addTime" sortable="true"/>
-
-                <!--更新时间-->
-                <col id="updateTime" sortable="true"/>
-
-                <!--逻辑删除-->
-                <col id="deleted" sortable="true"/>
             </cols>
         </grid>
         <grid id="pick-list" x:prototype="list" x:abstract="true"/>
@@ -89,8 +80,6 @@
  isNew[是否新品首发，如果设置则可以在新品首发页面展示] isHot[是否人气推荐，如果设置则可以在人气推荐页面展示]
  unit[商品单位，例如件、盒] counterPrice[专柜价格]
  retailPrice[零售价格] detail[商品详细介绍，是富文本格式]
- addTime[创建时间] updateTime[更新时间]
- deleted[逻辑删除] 
 </layout>
         </form>
         <form id="add" editMode="add" title="新增-商品基本信息表" i18n-en:title="Add " x:prototype="edit"/>
@@ -105,8 +94,6 @@
  isNew[是否新品首发，如果设置则可以在新品首发页面展示] isHot[是否人气推荐，如果设置则可以在人气推荐页面展示]
  unit[商品单位，例如件、盒] counterPrice[专柜价格]
  retailPrice[零售价格] detail[商品详细介绍，是富文本格式]
- addTime[创建时间] updateTime[更新时间]
- deleted[逻辑删除] 
 </layout>
         </form>
         <form id="query" editMode="query" title="查询条件" i18n-en:title="Query Condition" x:abstract="true">

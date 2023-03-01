@@ -42,15 +42,6 @@
 
                 <!--是否默认地址-->
                 <col id="isDefault" mandatory="true" sortable="true"/>
-
-                <!--创建时间-->
-                <col id="addTime" sortable="true"/>
-
-                <!--更新时间-->
-                <col id="updateTime" sortable="true"/>
-
-                <!--逻辑删除-->
-                <col id="deleted" sortable="true"/>
             </cols>
         </grid>
         <grid id="pick-list" x:prototype="list" x:abstract="true"/>
@@ -64,8 +55,7 @@
  city[行政区域表的市ID] county[行政区域表的区县ID]
  addressDetail[详细收货地址] areaCode[地区编码]
  postalCode[邮政编码] tel[手机号码]
- isDefault[是否默认地址] addTime[创建时间]
- updateTime[更新时间] deleted[逻辑删除]
+ isDefault[是否默认地址] 
 </layout>
         </form>
         <form id="add" editMode="add" title="新增-收货地址表" i18n-en:title="Add " x:prototype="edit"/>
@@ -76,8 +66,7 @@
  city[行政区域表的市ID] county[行政区域表的区县ID]
  addressDetail[详细收货地址] areaCode[地区编码]
  postalCode[邮政编码] tel[手机号码]
- isDefault[是否默认地址] addTime[创建时间]
- updateTime[更新时间] deleted[逻辑删除]
+ isDefault[是否默认地址] 
 </layout>
         </form>
         <form id="query" editMode="query" title="查询条件" i18n-en:title="Query Condition" x:abstract="true">

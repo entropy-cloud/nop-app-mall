@@ -28,15 +28,6 @@
                 <!--头像图片-->
                 <col id="avatar" sortable="true"/>
 
-                <!--创建时间-->
-                <col id="addTime" sortable="true"/>
-
-                <!--更新时间-->
-                <col id="updateTime" sortable="true"/>
-
-                <!--逻辑删除-->
-                <col id="deleted" sortable="true"/>
-
                 <!--角色列表-->
                 <col id="roleIds" sortable="true"/>
             </cols>
@@ -47,21 +38,25 @@
     <forms>
         <form id="view" editMode="view" title="查看-管理员表" i18n-en:title="View ">
             <layout>
- id[Id] username[管理员名称]
- password[管理员密码] lastLoginIp[最近一次登录IP地址]
- lastLoginTime[最近一次登录时间] avatar[头像图片]
- addTime[创建时间] updateTime[更新时间]
- deleted[逻辑删除] roleIds[角色列表]
+ id[Id]
+ username[管理员名称]
+ password[管理员密码]
+ lastLoginIp[最近一次登录IP地址]
+ lastLoginTime[最近一次登录时间]
+ avatar[头像图片]
+ roleIds[角色列表]
 </layout>
         </form>
         <form id="add" editMode="add" title="新增-管理员表" i18n-en:title="Add " x:prototype="edit"/>
         <form id="edit" editMode="update" title="编辑-管理员表" i18n-en:title="Edit ">
             <layout>
- id[Id] username[管理员名称]
- password[管理员密码] lastLoginIp[最近一次登录IP地址]
- lastLoginTime[最近一次登录时间] avatar[头像图片]
- addTime[创建时间] updateTime[更新时间]
- deleted[逻辑删除] roleIds[角色列表]
+ id[Id]
+ username[管理员名称]
+ password[管理员密码]
+ lastLoginIp[最近一次登录IP地址]
+ lastLoginTime[最近一次登录时间]
+ avatar[头像图片]
+ roleIds[角色列表]
 </layout>
         </form>
         <form id="query" editMode="query" title="查询条件" i18n-en:title="Query Condition" x:abstract="true">

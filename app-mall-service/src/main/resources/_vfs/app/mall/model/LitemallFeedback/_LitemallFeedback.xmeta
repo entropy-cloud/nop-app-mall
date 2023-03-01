@@ -56,15 +56,18 @@
         <schema type="java.lang.String" precision="1023"/>
     </prop>
 
-    <prop name="addTime" displayName="创建时间" queryable="true" sortable="true" insertable="false" updatable="false">
+    <prop name="addTime" displayName="创建时间" queryable="true" sortable="true" insertable="false" updatable="false"
+          internal="true" ext:show="X">
         <schema domain="createTime" type="java.time.LocalDateTime"/>
     </prop>
 
-    <prop name="updateTime" displayName="更新时间" queryable="true" sortable="true" insertable="false" updatable="false">
+    <prop name="updateTime" displayName="更新时间" queryable="true" sortable="true" insertable="false" updatable="false"
+          internal="true" ext:show="X">
         <schema domain="updateTime" type="java.time.LocalDateTime"/>
     </prop>
 
-    <prop name="deleted" displayName="逻辑删除" queryable="true" sortable="true" insertable="false" updatable="true">
-        <schema stdDomain="boolFlag" domain="delFlag" type="java.lang.Boolean"/>
+    <prop name="deleted" displayName="逻辑删除" queryable="true" sortable="true" insertable="false" updatable="true"
+          internal="true" ext:show="X">
+        <schema domain="delFlag" type="java.lang.Boolean"/>
     </prop>
 </meta>

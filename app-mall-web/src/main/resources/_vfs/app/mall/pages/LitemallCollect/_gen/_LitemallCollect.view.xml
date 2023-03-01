@@ -13,7 +13,7 @@
                 <!--Id-->
                 <col id="id" mandatory="true" sortable="true"/>
 
-                <!--用户表的用户ID-->
+                <!--用户ID-->
                 <col id="userId" mandatory="true" sortable="true"/>
 
                 <!--如果type=0，则是商品ID；如果type=1，则是专题ID-->
@@ -21,15 +21,6 @@
 
                 <!--收藏类型，如果type=0，则是商品ID；如果type=1，则是专题ID-->
                 <col id="type" mandatory="true" sortable="true"/>
-
-                <!--创建时间-->
-                <col id="addTime" sortable="true"/>
-
-                <!--更新时间-->
-                <col id="updateTime" sortable="true"/>
-
-                <!--逻辑删除-->
-                <col id="deleted" sortable="true"/>
             </cols>
         </grid>
         <grid id="pick-list" x:prototype="list" x:abstract="true"/>
@@ -39,24 +30,18 @@
         <form id="view" editMode="view" title="查看-收藏表" i18n-en:title="View ">
             <layout>
  id[Id]
- userId[用户表的用户ID]
+ userId[用户ID]
  valueId[如果type=0，则是商品ID；如果type=1，则是专题ID]
  type[收藏类型，如果type=0，则是商品ID；如果type=1，则是专题ID]
- addTime[创建时间]
- updateTime[更新时间]
- deleted[逻辑删除]
 </layout>
         </form>
         <form id="add" editMode="add" title="新增-收藏表" i18n-en:title="Add " x:prototype="edit"/>
         <form id="edit" editMode="update" title="编辑-收藏表" i18n-en:title="Edit ">
             <layout>
  id[Id]
- userId[用户表的用户ID]
+ userId[用户ID]
  valueId[如果type=0，则是商品ID；如果type=1，则是专题ID]
  type[收藏类型，如果type=0，则是商品ID；如果type=1，则是专题ID]
- addTime[创建时间]
- updateTime[更新时间]
- deleted[逻辑删除]
 </layout>
         </form>
         <form id="query" editMode="query" title="查询条件" i18n-en:title="Query Condition" x:abstract="true">

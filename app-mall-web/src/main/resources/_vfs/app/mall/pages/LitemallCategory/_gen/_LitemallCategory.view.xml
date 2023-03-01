@@ -16,7 +16,7 @@
                 <!--类目名称-->
                 <col id="name" mandatory="true" sortable="true"/>
 
-                <!--类目关键字，以JSON数组格式-->
+                <!--类目关键字-->
                 <col id="keywords" mandatory="true" sortable="true"/>
 
                 <!--类目广告语介绍-->
@@ -36,15 +36,6 @@
 
                 <!--排序-->
                 <col id="sortOrder" sortable="true"/>
-
-                <!--创建时间-->
-                <col id="addTime" sortable="true"/>
-
-                <!--更新时间-->
-                <col id="updateTime" sortable="true"/>
-
-                <!--逻辑删除-->
-                <col id="deleted" sortable="true"/>
             </cols>
         </grid>
         <grid id="pick-list" x:prototype="list" x:abstract="true"/>
@@ -53,23 +44,29 @@
     <forms>
         <form id="view" editMode="view" title="查看-类目表" i18n-en:title="View ">
             <layout>
- id[Id] name[类目名称]
- keywords[类目关键字，以JSON数组格式] desc[类目广告语介绍]
- pid[父类目ID] iconUrl[类目图标]
- picUrl[类目图片] level[Level]
- sortOrder[排序] addTime[创建时间]
- updateTime[更新时间] deleted[逻辑删除]
+ id[Id]
+ name[类目名称]
+ keywords[类目关键字]
+ desc[类目广告语介绍]
+ pid[父类目ID]
+ iconUrl[类目图标]
+ picUrl[类目图片]
+ level[Level]
+ sortOrder[排序]
 </layout>
         </form>
         <form id="add" editMode="add" title="新增-类目表" i18n-en:title="Add " x:prototype="edit"/>
         <form id="edit" editMode="update" title="编辑-类目表" i18n-en:title="Edit ">
             <layout>
- id[Id] name[类目名称]
- keywords[类目关键字，以JSON数组格式] desc[类目广告语介绍]
- pid[父类目ID] iconUrl[类目图标]
- picUrl[类目图片] level[Level]
- sortOrder[排序] addTime[创建时间]
- updateTime[更新时间] deleted[逻辑删除]
+ id[Id]
+ name[类目名称]
+ keywords[类目关键字]
+ desc[类目广告语介绍]
+ pid[父类目ID]
+ iconUrl[类目图标]
+ picUrl[类目图片]
+ level[Level]
+ sortOrder[排序]
 </layout>
         </form>
         <form id="query" editMode="query" title="查询条件" i18n-en:title="Query Condition" x:abstract="true">
