@@ -21,5 +21,8 @@
   "updateTime": "2000-01-01 14:00:00",
   "deleted": false,
   "category": null,
-  "category.name": ""
+  "category.name": "",
+  "brand": null,
+  "brand.name": "",
+  "products": null
 }

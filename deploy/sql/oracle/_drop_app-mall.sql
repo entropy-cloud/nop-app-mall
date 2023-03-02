@@ -3,7 +3,6 @@ drop table litemall_ad;
 drop table litemall_address;
 drop table litemall_admin;
 drop table litemall_aftersale;
-drop table litemall_brand;
 drop table litemall_cart;
 drop table litemall_collect;
 drop table litemall_comment;
@@ -33,4 +32,5 @@ drop table litemall_coupon;
 drop table litemall_order;
 drop table litemall_goods;
 drop table litemall_category;
+drop table litemall_brand;
 

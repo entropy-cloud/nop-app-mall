@@ -65,19 +65,6 @@ CREATE TABLE litemall_aftersale(
   constraint PK_litemall_aftersale primary key (ID)
 );
 
-CREATE TABLE litemall_brand(
-  ID INT4 NOT NULL ,
-  NAME VARCHAR(255) NOT NULL ,
-  "DESC" VARCHAR(255) NOT NULL ,
-  PIC_URL VARCHAR(255) NOT NULL ,
-  SORT_ORDER INT4  ,
-  FLOOR_PRICE NUMERIC(10,2)  ,
-  ADD_TIME TIMESTAMP  ,
-  UPDATE_TIME TIMESTAMP  ,
-  DELETED BOOLEAN  ,
-  constraint PK_litemall_brand primary key (ID)
-);
-
 CREATE TABLE litemall_cart(
   ID INT4 NOT NULL ,
   USER_ID INT4  ,
@@ -511,6 +498,19 @@ CREATE TABLE litemall_category(
   constraint PK_litemall_category primary key (ID)
 );
 
+CREATE TABLE litemall_brand(
+  ID INT4 NOT NULL ,
+  NAME VARCHAR(255) NOT NULL ,
+  "DESC" VARCHAR(255) NOT NULL ,
+  PIC_URL VARCHAR(255) NOT NULL ,
+  SORT_ORDER INT4  ,
+  FLOOR_PRICE NUMERIC(10,2)  ,
+  ADD_TIME TIMESTAMP  ,
+  UPDATE_TIME TIMESTAMP  ,
+  DELETED BOOLEAN  ,
+  constraint PK_litemall_brand primary key (ID)
+);
+
 
       COMMENT ON TABLE litemall_ad IS '广告表';
                 
@@ -620,26 +620,6 @@ CREATE TABLE litemall_category(
                     
       COMMENT ON COLUMN litemall_aftersale.DELETED IS '逻辑删除';
                     
-      COMMENT ON TABLE litemall_brand IS '品牌商表';
-                
-      COMMENT ON COLUMN litemall_brand.ID IS 'Id';
-                    
-      COMMENT ON COLUMN litemall_brand.NAME IS '品牌商名称';
-                    
-      COMMENT ON COLUMN litemall_brand."DESC" IS '品牌商简介';
-                    
-      COMMENT ON COLUMN litemall_brand.PIC_URL IS '品牌商页的品牌商图片';
-                    
-      COMMENT ON COLUMN litemall_brand.SORT_ORDER IS 'Sortorder';
-                    
-      COMMENT ON COLUMN litemall_brand.FLOOR_PRICE IS '品牌商的商品低价，仅用于页面展示';
-                    
-      COMMENT ON COLUMN litemall_brand.ADD_TIME IS '创建时间';
-                    
-      COMMENT ON COLUMN litemall_brand.UPDATE_TIME IS '更新时间';
-                    
-      COMMENT ON COLUMN litemall_brand.DELETED IS '逻辑删除';
-                    
       COMMENT ON TABLE litemall_cart IS '购物车商品表';
                 
       COMMENT ON COLUMN litemall_cart.ID IS 'Id';
@@ -658,7 +638,7 @@ CREATE TABLE litemall_category(
                     
       COMMENT ON COLUMN litemall_cart.NUMBER IS '商品货品的数量';
                     
-      COMMENT ON COLUMN litemall_cart.SPECIFICATIONS IS '商品规格值列表，采用JSON数组格式';
+      COMMENT ON COLUMN litemall_cart.SPECIFICATIONS IS '商品规格值列表';
                     
       COMMENT ON COLUMN litemall_cart.CHECKED IS '购物车中商品是否选择状态';
                     
@@ -780,7 +760,7 @@ CREATE TABLE litemall_category(
                 
       COMMENT ON COLUMN litemall_goods_attribute.ID IS 'Id';
                     
-      COMMENT ON COLUMN litemall_goods_attribute.GOODS_ID IS '商品表的商品ID';
+      COMMENT ON COLUMN litemall_goods_attribute.GOODS_ID IS '商品ID';
                     
       COMMENT ON COLUMN litemall_goods_attribute.ATTRIBUTE IS '商品参数名称';
                     
@@ -1170,7 +1150,7 @@ CREATE TABLE litemall_category(
                     
       COMMENT ON COLUMN litemall_coupon.DISCOUNT IS '优惠金额，';
                     
-      COMMENT ON COLUMN litemall_coupon.MIN IS '最少消费金额才能使用优惠券。';
+      COMMENT ON COLUMN litemall_coupon.MIN IS '最少消费金额';
                     
       COMMENT ON COLUMN litemall_coupon."LIMIT" IS '用户领券限制数量';
                     
@@ -1180,7 +1160,7 @@ CREATE TABLE litemall_category(
                     
       COMMENT ON COLUMN litemall_coupon.GOODS_TYPE IS '商品限制类型';
                     
-      COMMENT ON COLUMN litemall_coupon.GOODS_VALUE IS '商品限制值，goods_type如果是0则空集合，如果是1则是类目集合，如果是2则是商品集合。';
+      COMMENT ON COLUMN litemall_coupon.GOODS_VALUE IS '商品限制值';
                     
       COMMENT ON COLUMN litemall_coupon.CODE IS '优惠券兑换码';
                     
@@ -1262,7 +1242,7 @@ CREATE TABLE litemall_category(
                     
       COMMENT ON COLUMN litemall_order.DELETED IS '逻辑删除';
                     
-      COMMENT ON TABLE litemall_goods IS '商品基本信息表';
+      COMMENT ON TABLE litemall_goods IS '商品基本信息';
                 
       COMMENT ON COLUMN litemall_goods.ID IS 'Id';
                     
@@ -1272,33 +1252,33 @@ CREATE TABLE litemall_category(
                     
       COMMENT ON COLUMN litemall_goods.CATEGORY_ID IS '商品所属类目ID';
                     
-      COMMENT ON COLUMN litemall_goods.BRAND_ID IS 'Brandid';
+      COMMENT ON COLUMN litemall_goods.BRAND_ID IS '品牌ID';
                     
-      COMMENT ON COLUMN litemall_goods.GALLERY IS '商品宣传图片列表，采用JSON数组格式';
+      COMMENT ON COLUMN litemall_goods.GALLERY IS '商品宣传图片列表';
                     
-      COMMENT ON COLUMN litemall_goods.KEYWORDS IS '商品关键字，采用逗号间隔';
+      COMMENT ON COLUMN litemall_goods.KEYWORDS IS '商品关键字';
                     
       COMMENT ON COLUMN litemall_goods.BRIEF IS '商品简介';
                     
-      COMMENT ON COLUMN litemall_goods.IS_ON_SALE IS '是否上架';
+      COMMENT ON COLUMN litemall_goods.IS_ON_SALE IS '是否在售';
                     
-      COMMENT ON COLUMN litemall_goods.SORT_ORDER IS 'Sortorder';
+      COMMENT ON COLUMN litemall_goods.SORT_ORDER IS '排序顺序';
                     
-      COMMENT ON COLUMN litemall_goods.PIC_URL IS '商品页面商品图片';
+      COMMENT ON COLUMN litemall_goods.PIC_URL IS '商品图片';
                     
       COMMENT ON COLUMN litemall_goods.SHARE_URL IS '商品分享海报';
                     
-      COMMENT ON COLUMN litemall_goods.IS_NEW IS '是否新品首发，如果设置则可以在新品首发页面展示';
+      COMMENT ON COLUMN litemall_goods.IS_NEW IS '是否新品';
                     
-      COMMENT ON COLUMN litemall_goods.IS_HOT IS '是否人气推荐，如果设置则可以在人气推荐页面展示';
+      COMMENT ON COLUMN litemall_goods.IS_HOT IS '是否热品';
                     
-      COMMENT ON COLUMN litemall_goods.UNIT IS '商品单位，例如件、盒';
+      COMMENT ON COLUMN litemall_goods.UNIT IS '商品单位';
                     
-      COMMENT ON COLUMN litemall_goods.COUNTER_PRICE IS '专柜价格';
+      COMMENT ON COLUMN litemall_goods.COUNTER_PRICE IS '市场售价';
                     
-      COMMENT ON COLUMN litemall_goods.RETAIL_PRICE IS '零售价格';
+      COMMENT ON COLUMN litemall_goods.RETAIL_PRICE IS '当前价格';
                     
-      COMMENT ON COLUMN litemall_goods.DETAIL IS '商品详细介绍，是富文本格式';
+      COMMENT ON COLUMN litemall_goods.DETAIL IS '详情';
                     
       COMMENT ON COLUMN litemall_goods.ADD_TIME IS '创建时间';
                     
@@ -1331,4 +1311,24 @@ CREATE TABLE litemall_category(
       COMMENT ON COLUMN litemall_category.UPDATE_TIME IS '更新时间';
                     
       COMMENT ON COLUMN litemall_category.DELETED IS '逻辑删除';
+                    
+      COMMENT ON TABLE litemall_brand IS '品牌商表';
+                
+      COMMENT ON COLUMN litemall_brand.ID IS 'Id';
+                    
+      COMMENT ON COLUMN litemall_brand.NAME IS '品牌商名称';
+                    
+      COMMENT ON COLUMN litemall_brand."DESC" IS '品牌商简介';
+                    
+      COMMENT ON COLUMN litemall_brand.PIC_URL IS '品牌商图片';
+                    
+      COMMENT ON COLUMN litemall_brand.SORT_ORDER IS '排序';
+                    
+      COMMENT ON COLUMN litemall_brand.FLOOR_PRICE IS '品牌商的商品低价，仅用于页面展示';
+                    
+      COMMENT ON COLUMN litemall_brand.ADD_TIME IS '创建时间';
+                    
+      COMMENT ON COLUMN litemall_brand.UPDATE_TIME IS '更新时间';
+                    
+      COMMENT ON COLUMN litemall_brand.DELETED IS '逻辑删除';
                     

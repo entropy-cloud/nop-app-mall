@@ -2,14 +2,61 @@
 <view x:extends="_gen/_LitemallGoods.view.xml" x:schema="/nop/schema/xui/xview.xdef" xmlns:x="/nop/schema/xdsl.xdef">
 
     <grids>
-        <grid id="list"/>
+        <grid id="list">
+            <cols>
+                <col id="id"/>
+
+                <!--商品名称-->
+                <col id="name"/>
+
+                <!--商品页面商品图片-->
+                <col id="picUrl"/>
+
+                <!--商品分享海报-->
+                <col id="shareUrl"/>
+
+                <!--商品宣传图片列表，采用JSON数组格式-->
+                <col id="gallery" label="详情"/>
+
+                <!--专柜价格-->
+                <col id="counterPrice"/>
+
+                <!--零售价格-->
+                <col id="retailPrice"/>
+
+                <!--是否新品首发，如果设置则可以在新品首发页面展示-->
+                <col id="isNew"/>
+
+                <!--是否人气推荐，如果设置则可以在人气推荐页面展示-->
+                <col id="isHot"/>
+
+                <!--是否上架-->
+                <col id="isOnSale"/>
+
+            </cols>
+        </grid>
         <grid id="pick-list"/>
     </grids>
 
     <forms>
         <form id="view"/>
-        <form id="edit"/>
-        <form id="add"/>
+        <form id="edit">
+            <layout>
+                name[商品名称] goodsSn[商品编号]
+                retailPrice[零售价格] sortOrder[Sortorder]
+                isNew[是否新品首发，如果设置则可以在新品首发页面展示] isHot[是否人气推荐，如果设置则可以在人气推荐页面展示]
+                isOnSale[是否上架]
+                picUrl[商品页面商品图片]
+                gallery[商品宣传图片列表，采用JSON数组格式]
+                unit[商品单位，例如件、盒]
+                keywords[商品关键字，采用逗号间隔]
+                categoryId[商品所属类目ID] brandId[Brandid]
+                brief[商品简介]
+                detail[商品详细介绍，是富文本格式]
+            </layout>
+        </form>
+
+        <form id="add" x:prototype="edit"/>
     </forms>
 
     <pages>

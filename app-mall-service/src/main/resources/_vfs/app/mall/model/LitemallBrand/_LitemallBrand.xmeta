@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <meta x:schema="/nop/schema/xmeta.xdef" xmlns:x="/nop/schema/xdsl.xdef" xmlns:i18n-en="i18n-en" xmlns:ext="ext"
-      xmlns:xpl="xpl" xmlns:biz-gen="biz-gen" ext:model="orm" displayName="品牌商表">
+      xmlns:xpl="xpl" xmlns:biz-gen="biz-gen" ext:model="orm" xmlns:c="c" displayName="品牌商表">
 
     <entityName>app.mall.dao.entity.LitemallBrand</entityName>
 
@@ -11,6 +11,8 @@
     <x:post-extends>
         <biz-gen:DefaultMetaPostExtends xpl:lib="/nop/biz/xlib/biz-gen.xlib"/>
     </x:post-extends>
+
+    <keys/>
 
     <prop name="id" displayName="Id" tagSet="seq" mandatory="true" queryable="true" sortable="true" insertable="true"
           updatable="false">
@@ -27,12 +29,12 @@
         <schema type="java.lang.String" precision="255"/>
     </prop>
 
-    <prop name="picUrl" displayName="品牌商页的品牌商图片" mandatory="true" queryable="true" sortable="true" insertable="true"
+    <prop name="picUrl" displayName="品牌商图片" mandatory="true" queryable="true" sortable="true" insertable="true"
           updatable="true">
         <schema type="java.lang.String" precision="255"/>
     </prop>
 
-    <prop name="sortOrder" displayName="Sortorder" queryable="true" sortable="true" insertable="true" updatable="true">
+    <prop name="sortOrder" displayName="排序" queryable="true" sortable="true" insertable="true" updatable="true">
         <schema type="java.lang.Byte"/>
     </prop>
 

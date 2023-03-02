@@ -13,7 +13,7 @@
                 <!--Id-->
                 <col id="id" mandatory="true" sortable="true"/>
 
-                <!--商品表的商品ID-->
+                <!--商品ID-->
                 <col id="goodsId" mandatory="true" sortable="true"/>
 
                 <!--商品参数名称-->
@@ -30,7 +30,7 @@
         <form id="view" editMode="view" title="查看-商品参数表" i18n-en:title="View ">
             <layout>
  id[Id]
- goodsId[商品表的商品ID]
+ goodsId[商品ID]
  attribute[商品参数名称]
  value[商品参数值]
 </layout>
@@ -39,7 +39,7 @@
         <form id="edit" editMode="update" title="编辑-商品参数表" i18n-en:title="Edit ">
             <layout>
  id[Id]
- goodsId[商品表的商品ID]
+ goodsId[商品ID]
  attribute[商品参数名称]
  value[商品参数值]
 </layout>

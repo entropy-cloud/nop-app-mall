@@ -14,7 +14,7 @@ import app.mall.dao.entity.LitemallGoods;
 
 // tell cpd to start ignoring code - CPD-OFF
 /**
- *  商品基本信息表: litemall_goods
+ *  商品基本信息: litemall_goods
  */
 @SuppressWarnings({"PMD.UselessOverridingMethod","PMD.UnusedLocalVariable",
         "PMD.UnnecessaryFullyQualifiedName","PMD.EmptyControlStatement"})
@@ -36,15 +36,15 @@ public class _LitemallGoods extends DynamicOrmEntity{
     public static final String PROP_NAME_categoryId = "categoryId";
     public static final int PROP_ID_categoryId = 4;
     
-    /* Brandid: BRAND_ID INTEGER */
+    /* 品牌ID: BRAND_ID INTEGER */
     public static final String PROP_NAME_brandId = "brandId";
     public static final int PROP_ID_brandId = 5;
     
-    /* 商品宣传图片列表，采用JSON数组格式: GALLERY VARCHAR */
+    /* 商品宣传图片列表: GALLERY VARCHAR */
     public static final String PROP_NAME_gallery = "gallery";
     public static final int PROP_ID_gallery = 6;
     
-    /* 商品关键字，采用逗号间隔: KEYWORDS VARCHAR */
+    /* 商品关键字: KEYWORDS VARCHAR */
     public static final String PROP_NAME_keywords = "keywords";
     public static final int PROP_ID_keywords = 7;
     
@@ -52,15 +52,15 @@ public class _LitemallGoods extends DynamicOrmEntity{
     public static final String PROP_NAME_brief = "brief";
     public static final int PROP_ID_brief = 8;
     
-    /* 是否上架: IS_ON_SALE BOOLEAN */
+    /* 是否在售: IS_ON_SALE BOOLEAN */
     public static final String PROP_NAME_isOnSale = "isOnSale";
     public static final int PROP_ID_isOnSale = 9;
     
-    /* Sortorder: SORT_ORDER SMALLINT */
+    /* 排序顺序: SORT_ORDER SMALLINT */
     public static final String PROP_NAME_sortOrder = "sortOrder";
     public static final int PROP_ID_sortOrder = 10;
     
-    /* 商品页面商品图片: PIC_URL VARCHAR */
+    /* 商品图片: PIC_URL VARCHAR */
     public static final String PROP_NAME_picUrl = "picUrl";
     public static final int PROP_ID_picUrl = 11;
     
@@ -68,27 +68,27 @@ public class _LitemallGoods extends DynamicOrmEntity{
     public static final String PROP_NAME_shareUrl = "shareUrl";
     public static final int PROP_ID_shareUrl = 12;
     
-    /* 是否新品首发，如果设置则可以在新品首发页面展示: IS_NEW BOOLEAN */
+    /* 是否新品: IS_NEW BOOLEAN */
     public static final String PROP_NAME_isNew = "isNew";
     public static final int PROP_ID_isNew = 13;
     
-    /* 是否人气推荐，如果设置则可以在人气推荐页面展示: IS_HOT BOOLEAN */
+    /* 是否热品: IS_HOT BOOLEAN */
     public static final String PROP_NAME_isHot = "isHot";
     public static final int PROP_ID_isHot = 14;
     
-    /* 商品单位，例如件、盒: UNIT VARCHAR */
+    /* 商品单位: UNIT VARCHAR */
     public static final String PROP_NAME_unit = "unit";
     public static final int PROP_ID_unit = 15;
     
-    /* 专柜价格: COUNTER_PRICE DECIMAL */
+    /* 市场售价: COUNTER_PRICE DECIMAL */
     public static final String PROP_NAME_counterPrice = "counterPrice";
     public static final int PROP_ID_counterPrice = 16;
     
-    /* 零售价格: RETAIL_PRICE DECIMAL */
+    /* 当前价格: RETAIL_PRICE DECIMAL */
     public static final String PROP_NAME_retailPrice = "retailPrice";
     public static final int PROP_ID_retailPrice = 17;
     
-    /* 商品详细介绍，是富文本格式: DETAIL VARCHAR */
+    /* 详情: DETAIL VARCHAR */
     public static final String PROP_NAME_detail = "detail";
     public static final int PROP_ID_detail = 18;
     
@@ -108,8 +108,14 @@ public class _LitemallGoods extends DynamicOrmEntity{
     private static int _PROP_ID_BOUND = 22;
 
     
-    /* relation: 优惠券 */
+    /* relation: 商品类目 */
     public static final String PROP_NAME_category = "category";
+    
+    /* relation: 商品品牌 */
+    public static final String PROP_NAME_brand = "brand";
+    
+    /* relation: 包含产品 */
+    public static final String PROP_NAME_products = "products";
     
 
     public static final List<String> PK_PROP_NAMES = Arrays.asList(PROP_NAME_id);
@@ -197,46 +203,46 @@ public class _LitemallGoods extends DynamicOrmEntity{
     /* 商品所属类目ID: CATEGORY_ID */
     private java.lang.Integer _categoryId;
     
-    /* Brandid: BRAND_ID */
+    /* 品牌ID: BRAND_ID */
     private java.lang.Integer _brandId;
     
-    /* 商品宣传图片列表，采用JSON数组格式: GALLERY */
+    /* 商品宣传图片列表: GALLERY */
     private java.lang.String _gallery;
     
-    /* 商品关键字，采用逗号间隔: KEYWORDS */
+    /* 商品关键字: KEYWORDS */
     private java.lang.String _keywords;
     
     /* 商品简介: BRIEF */
     private java.lang.String _brief;
     
-    /* 是否上架: IS_ON_SALE */
+    /* 是否在售: IS_ON_SALE */
     private java.lang.Boolean _isOnSale;
     
-    /* Sortorder: SORT_ORDER */
+    /* 排序顺序: SORT_ORDER */
     private java.lang.Short _sortOrder;
     
-    /* 商品页面商品图片: PIC_URL */
+    /* 商品图片: PIC_URL */
     private java.lang.String _picUrl;
     
     /* 商品分享海报: SHARE_URL */
     private java.lang.String _shareUrl;
     
-    /* 是否新品首发，如果设置则可以在新品首发页面展示: IS_NEW */
+    /* 是否新品: IS_NEW */
     private java.lang.Boolean _isNew;
     
-    /* 是否人气推荐，如果设置则可以在人气推荐页面展示: IS_HOT */
+    /* 是否热品: IS_HOT */
     private java.lang.Boolean _isHot;
     
-    /* 商品单位，例如件、盒: UNIT */
+    /* 商品单位: UNIT */
     private java.lang.String _unit;
     
-    /* 专柜价格: COUNTER_PRICE */
+    /* 市场售价: COUNTER_PRICE */
     private java.math.BigDecimal _counterPrice;
     
-    /* 零售价格: RETAIL_PRICE */
+    /* 当前价格: RETAIL_PRICE */
     private java.math.BigDecimal _retailPrice;
     
-    /* 商品详细介绍，是富文本格式: DETAIL */
+    /* 详情: DETAIL */
     private java.lang.String _detail;
     
     /* 创建时间: ADD_TIME */
@@ -841,7 +847,7 @@ public class _LitemallGoods extends DynamicOrmEntity{
     }
     
     /**
-     * Brandid: BRAND_ID
+     * 品牌ID: BRAND_ID
      */
     public java.lang.Integer getBrandId(){
          onPropGet(PROP_ID_brandId);
@@ -849,7 +855,7 @@ public class _LitemallGoods extends DynamicOrmEntity{
     }
 
     /**
-     * Brandid: BRAND_ID
+     * 品牌ID: BRAND_ID
      */
     public void setBrandId(java.lang.Integer value){
         if(onPropSet(PROP_ID_brandId,value)){
@@ -860,7 +866,7 @@ public class _LitemallGoods extends DynamicOrmEntity{
     }
     
     /**
-     * 商品宣传图片列表，采用JSON数组格式: GALLERY
+     * 商品宣传图片列表: GALLERY
      */
     public java.lang.String getGallery(){
          onPropGet(PROP_ID_gallery);
@@ -868,7 +874,7 @@ public class _LitemallGoods extends DynamicOrmEntity{
     }
 
     /**
-     * 商品宣传图片列表，采用JSON数组格式: GALLERY
+     * 商品宣传图片列表: GALLERY
      */
     public void setGallery(java.lang.String value){
         if(onPropSet(PROP_ID_gallery,value)){
@@ -879,7 +885,7 @@ public class _LitemallGoods extends DynamicOrmEntity{
     }
     
     /**
-     * 商品关键字，采用逗号间隔: KEYWORDS
+     * 商品关键字: KEYWORDS
      */
     public java.lang.String getKeywords(){
          onPropGet(PROP_ID_keywords);
@@ -887,7 +893,7 @@ public class _LitemallGoods extends DynamicOrmEntity{
     }
 
     /**
-     * 商品关键字，采用逗号间隔: KEYWORDS
+     * 商品关键字: KEYWORDS
      */
     public void setKeywords(java.lang.String value){
         if(onPropSet(PROP_ID_keywords,value)){
@@ -917,7 +923,7 @@ public class _LitemallGoods extends DynamicOrmEntity{
     }
     
     /**
-     * 是否上架: IS_ON_SALE
+     * 是否在售: IS_ON_SALE
      */
     public java.lang.Boolean getIsOnSale(){
          onPropGet(PROP_ID_isOnSale);
@@ -925,7 +931,7 @@ public class _LitemallGoods extends DynamicOrmEntity{
     }
 
     /**
-     * 是否上架: IS_ON_SALE
+     * 是否在售: IS_ON_SALE
      */
     public void setIsOnSale(java.lang.Boolean value){
         if(onPropSet(PROP_ID_isOnSale,value)){
@@ -936,7 +942,7 @@ public class _LitemallGoods extends DynamicOrmEntity{
     }
     
     /**
-     * Sortorder: SORT_ORDER
+     * 排序顺序: SORT_ORDER
      */
     public java.lang.Short getSortOrder(){
          onPropGet(PROP_ID_sortOrder);
@@ -944,7 +950,7 @@ public class _LitemallGoods extends DynamicOrmEntity{
     }
 
     /**
-     * Sortorder: SORT_ORDER
+     * 排序顺序: SORT_ORDER
      */
     public void setSortOrder(java.lang.Short value){
         if(onPropSet(PROP_ID_sortOrder,value)){
@@ -955,7 +961,7 @@ public class _LitemallGoods extends DynamicOrmEntity{
     }
     
     /**
-     * 商品页面商品图片: PIC_URL
+     * 商品图片: PIC_URL
      */
     public java.lang.String getPicUrl(){
          onPropGet(PROP_ID_picUrl);
@@ -963,7 +969,7 @@ public class _LitemallGoods extends DynamicOrmEntity{
     }
 
     /**
-     * 商品页面商品图片: PIC_URL
+     * 商品图片: PIC_URL
      */
     public void setPicUrl(java.lang.String value){
         if(onPropSet(PROP_ID_picUrl,value)){
@@ -993,7 +999,7 @@ public class _LitemallGoods extends DynamicOrmEntity{
     }
     
     /**
-     * 是否新品首发，如果设置则可以在新品首发页面展示: IS_NEW
+     * 是否新品: IS_NEW
      */
     public java.lang.Boolean getIsNew(){
          onPropGet(PROP_ID_isNew);
@@ -1001,7 +1007,7 @@ public class _LitemallGoods extends DynamicOrmEntity{
     }
 
     /**
-     * 是否新品首发，如果设置则可以在新品首发页面展示: IS_NEW
+     * 是否新品: IS_NEW
      */
     public void setIsNew(java.lang.Boolean value){
         if(onPropSet(PROP_ID_isNew,value)){
@@ -1012,7 +1018,7 @@ public class _LitemallGoods extends DynamicOrmEntity{
     }
     
     /**
-     * 是否人气推荐，如果设置则可以在人气推荐页面展示: IS_HOT
+     * 是否热品: IS_HOT
      */
     public java.lang.Boolean getIsHot(){
          onPropGet(PROP_ID_isHot);
@@ -1020,7 +1026,7 @@ public class _LitemallGoods extends DynamicOrmEntity{
     }
 
     /**
-     * 是否人气推荐，如果设置则可以在人气推荐页面展示: IS_HOT
+     * 是否热品: IS_HOT
      */
     public void setIsHot(java.lang.Boolean value){
         if(onPropSet(PROP_ID_isHot,value)){
@@ -1031,7 +1037,7 @@ public class _LitemallGoods extends DynamicOrmEntity{
     }
     
     /**
-     * 商品单位，例如件、盒: UNIT
+     * 商品单位: UNIT
      */
     public java.lang.String getUnit(){
          onPropGet(PROP_ID_unit);
@@ -1039,7 +1045,7 @@ public class _LitemallGoods extends DynamicOrmEntity{
     }
 
     /**
-     * 商品单位，例如件、盒: UNIT
+     * 商品单位: UNIT
      */
     public void setUnit(java.lang.String value){
         if(onPropSet(PROP_ID_unit,value)){
@@ -1050,7 +1056,7 @@ public class _LitemallGoods extends DynamicOrmEntity{
     }
     
     /**
-     * 专柜价格: COUNTER_PRICE
+     * 市场售价: COUNTER_PRICE
      */
     public java.math.BigDecimal getCounterPrice(){
          onPropGet(PROP_ID_counterPrice);
@@ -1058,7 +1064,7 @@ public class _LitemallGoods extends DynamicOrmEntity{
     }
 
     /**
-     * 专柜价格: COUNTER_PRICE
+     * 市场售价: COUNTER_PRICE
      */
     public void setCounterPrice(java.math.BigDecimal value){
         if(onPropSet(PROP_ID_counterPrice,value)){
@@ -1069,7 +1075,7 @@ public class _LitemallGoods extends DynamicOrmEntity{
     }
     
     /**
-     * 零售价格: RETAIL_PRICE
+     * 当前价格: RETAIL_PRICE
      */
     public java.math.BigDecimal getRetailPrice(){
          onPropGet(PROP_ID_retailPrice);
@@ -1077,7 +1083,7 @@ public class _LitemallGoods extends DynamicOrmEntity{
     }
 
     /**
-     * 零售价格: RETAIL_PRICE
+     * 当前价格: RETAIL_PRICE
      */
     public void setRetailPrice(java.math.BigDecimal value){
         if(onPropSet(PROP_ID_retailPrice,value)){
@@ -1088,7 +1094,7 @@ public class _LitemallGoods extends DynamicOrmEntity{
     }
     
     /**
-     * 商品详细介绍，是富文本格式: DETAIL
+     * 详情: DETAIL
      */
     public java.lang.String getDetail(){
          onPropGet(PROP_ID_detail);
@@ -1096,7 +1102,7 @@ public class _LitemallGoods extends DynamicOrmEntity{
     }
 
     /**
-     * 商品详细介绍，是富文本格式: DETAIL
+     * 详情: DETAIL
      */
     public void setDetail(java.lang.String value){
         if(onPropSet(PROP_ID_detail,value)){
@@ -1164,7 +1170,7 @@ public class _LitemallGoods extends DynamicOrmEntity{
     }
     
     /**
-     * 优惠券
+     * 商品类目
      */
     public app.mall.dao.entity.LitemallCategory getCategory(){
        return (app.mall.dao.entity.LitemallCategory)internalGetRefEntity(PROP_NAME_category);
@@ -1182,6 +1188,37 @@ public class _LitemallGoods extends DynamicOrmEntity{
                  
           });
        }
+    }
+       
+    /**
+     * 商品品牌
+     */
+    public app.mall.dao.entity.LitemallBrand getBrand(){
+       return (app.mall.dao.entity.LitemallBrand)internalGetRefEntity(PROP_NAME_brand);
+    }
+
+    public void setBrand(app.mall.dao.entity.LitemallBrand refEntity){
+       if(refEntity == null){
+         
+         this.setBrandId(null);
+         
+       }else{
+          internalSetRefEntity(PROP_NAME_brand, refEntity,()->{
+             
+                    this.setBrandId(refEntity.getId());
+                 
+          });
+       }
+    }
+       
+    private final OrmEntitySet<app.mall.dao.entity.LitemallGoodsProduct> _products = new OrmEntitySet<>(this, PROP_NAME_products,
+        app.mall.dao.entity.LitemallGoodsProduct.PROP_NAME_goods, null,app.mall.dao.entity.LitemallGoodsProduct.class);
+
+    /**
+     * 包含产品。 refPropName: goods, keyProp: {rel.keyProp}
+     */
+    public IOrmEntitySet<app.mall.dao.entity.LitemallGoodsProduct> getProducts(){
+       return _products;
     }
        
 }

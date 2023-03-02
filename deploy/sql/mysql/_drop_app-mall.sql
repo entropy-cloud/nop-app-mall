@@ -3,7 +3,6 @@ drop table  if exists  litemall_ad;
 drop table  if exists  litemall_address;
 drop table  if exists  litemall_admin;
 drop table  if exists  litemall_aftersale;
-drop table  if exists  litemall_brand;
 drop table  if exists  litemall_cart;
 drop table  if exists  litemall_collect;
 drop table  if exists  litemall_comment;
@@ -33,4 +32,5 @@ drop table  if exists  litemall_coupon;
 drop table  if exists  litemall_order;
 drop table  if exists  litemall_goods;
 drop table  if exists  litemall_category;
+drop table  if exists  litemall_brand;
 

@@ -44,7 +44,7 @@ public class _LitemallCoupon extends DynamicOrmEntity{
     public static final String PROP_NAME_discount = "discount";
     public static final int PROP_ID_discount = 6;
     
-    /* 最少消费金额才能使用优惠券。: MIN DECIMAL */
+    /* 最少消费金额: MIN DECIMAL */
     public static final String PROP_NAME_min = "min";
     public static final int PROP_ID_min = 7;
     
@@ -64,7 +64,7 @@ public class _LitemallCoupon extends DynamicOrmEntity{
     public static final String PROP_NAME_goodsType = "goodsType";
     public static final int PROP_ID_goodsType = 11;
     
-    /* 商品限制值，goods_type如果是0则空集合，如果是1则是类目集合，如果是2则是商品集合。: GOODS_VALUE VARCHAR */
+    /* 商品限制值: GOODS_VALUE VARCHAR */
     public static final String PROP_NAME_goodsValue = "goodsValue";
     public static final int PROP_ID_goodsValue = 12;
     
@@ -193,7 +193,7 @@ public class _LitemallCoupon extends DynamicOrmEntity{
     /* 优惠金额，: DISCOUNT */
     private java.math.BigDecimal _discount;
     
-    /* 最少消费金额才能使用优惠券。: MIN */
+    /* 最少消费金额: MIN */
     private java.math.BigDecimal _min;
     
     /* 用户领券限制数量: LIMIT */
@@ -208,7 +208,7 @@ public class _LitemallCoupon extends DynamicOrmEntity{
     /* 商品限制类型: GOODS_TYPE */
     private java.lang.Short _goodsType;
     
-    /* 商品限制值，goods_type如果是0则空集合，如果是1则是类目集合，如果是2则是商品集合。: GOODS_VALUE */
+    /* 商品限制值: GOODS_VALUE */
     private java.lang.String _goodsValue;
     
     /* 优惠券兑换码: CODE */
@@ -846,7 +846,7 @@ public class _LitemallCoupon extends DynamicOrmEntity{
     }
     
     /**
-     * 最少消费金额才能使用优惠券。: MIN
+     * 最少消费金额: MIN
      */
     public java.math.BigDecimal getMin(){
          onPropGet(PROP_ID_min);
@@ -854,7 +854,7 @@ public class _LitemallCoupon extends DynamicOrmEntity{
     }
 
     /**
-     * 最少消费金额才能使用优惠券。: MIN
+     * 最少消费金额: MIN
      */
     public void setMin(java.math.BigDecimal value){
         if(onPropSet(PROP_ID_min,value)){
@@ -941,7 +941,7 @@ public class _LitemallCoupon extends DynamicOrmEntity{
     }
     
     /**
-     * 商品限制值，goods_type如果是0则空集合，如果是1则是类目集合，如果是2则是商品集合。: GOODS_VALUE
+     * 商品限制值: GOODS_VALUE
      */
     public java.lang.String getGoodsValue(){
          onPropGet(PROP_ID_goodsValue);
@@ -949,7 +949,7 @@ public class _LitemallCoupon extends DynamicOrmEntity{
     }
 
     /**
-     * 商品限制值，goods_type如果是0则空集合，如果是1则是类目集合，如果是2则是商品集合。: GOODS_VALUE
+     * 商品限制值: GOODS_VALUE
      */
     public void setGoodsValue(java.lang.String value){
         if(onPropSet(PROP_ID_goodsValue,value)){

@@ -14,7 +14,7 @@
                 <col id="id" mandatory="true" sortable="true"/>
 
                 <!--商品编号-->
-                <col id="goodsSn" mandatory="true" sortable="true"/>
+                <col id="goodsSn" mandatory="true" sortable="true" x:abstract="true"/>
 
                 <!--商品名称-->
                 <col id="name" mandatory="true" sortable="true"/>
@@ -22,46 +22,46 @@
                 <!--商品所属类目ID-->
                 <col id="categoryId" sortable="true"/>
 
-                <!--Brandid-->
+                <!--品牌ID-->
                 <col id="brandId" sortable="true"/>
 
-                <!--商品宣传图片列表，采用JSON数组格式-->
+                <!--商品宣传图片列表-->
                 <col id="gallery" sortable="true"/>
 
-                <!--商品关键字，采用逗号间隔-->
+                <!--商品关键字-->
                 <col id="keywords" sortable="true"/>
 
                 <!--商品简介-->
                 <col id="brief" sortable="true"/>
 
-                <!--是否上架-->
+                <!--是否在售-->
                 <col id="isOnSale" sortable="true"/>
 
-                <!--Sortorder-->
+                <!--排序顺序-->
                 <col id="sortOrder" sortable="true"/>
 
-                <!--商品页面商品图片-->
+                <!--商品图片-->
                 <col id="picUrl" sortable="true"/>
 
                 <!--商品分享海报-->
                 <col id="shareUrl" sortable="true"/>
 
-                <!--是否新品首发，如果设置则可以在新品首发页面展示-->
+                <!--是否新品-->
                 <col id="isNew" sortable="true"/>
 
-                <!--是否人气推荐，如果设置则可以在人气推荐页面展示-->
+                <!--是否热品-->
                 <col id="isHot" sortable="true"/>
 
-                <!--商品单位，例如件、盒-->
+                <!--商品单位-->
                 <col id="unit" sortable="true"/>
 
-                <!--专柜价格-->
+                <!--市场售价-->
                 <col id="counterPrice" sortable="true"/>
 
-                <!--零售价格-->
+                <!--当前价格-->
                 <col id="retailPrice" sortable="true"/>
 
-                <!--商品详细介绍，是富文本格式-->
+                <!--详情-->
                 <col id="detail" sortable="true"/>
             </cols>
         </grid>
@@ -69,31 +69,31 @@
     </grids>
 
     <forms>
-        <form id="view" editMode="view" title="查看-商品基本信息表" i18n-en:title="View ">
+        <form id="view" editMode="view" title="查看-商品基本信息" i18n-en:title="View ">
             <layout>
  id[Id] goodsSn[商品编号]
  name[商品名称] categoryId[商品所属类目ID]
- brandId[Brandid] gallery[商品宣传图片列表，采用JSON数组格式]
- keywords[商品关键字，采用逗号间隔] brief[商品简介]
- isOnSale[是否上架] sortOrder[Sortorder]
- picUrl[商品页面商品图片] shareUrl[商品分享海报]
- isNew[是否新品首发，如果设置则可以在新品首发页面展示] isHot[是否人气推荐，如果设置则可以在人气推荐页面展示]
- unit[商品单位，例如件、盒] counterPrice[专柜价格]
- retailPrice[零售价格] detail[商品详细介绍，是富文本格式]
+ brandId[品牌ID] gallery[商品宣传图片列表]
+ keywords[商品关键字] brief[商品简介]
+ isOnSale[是否在售] sortOrder[排序顺序]
+ picUrl[商品图片] shareUrl[商品分享海报]
+ isNew[是否新品] isHot[是否热品]
+ unit[商品单位] counterPrice[市场售价]
+ retailPrice[当前价格] detail[详情]
 </layout>
         </form>
-        <form id="add" editMode="add" title="新增-商品基本信息表" i18n-en:title="Add " x:prototype="edit"/>
-        <form id="edit" editMode="update" title="编辑-商品基本信息表" i18n-en:title="Edit ">
+        <form id="add" editMode="add" title="新增-商品基本信息" i18n-en:title="Add " x:prototype="edit"/>
+        <form id="edit" editMode="update" title="编辑-商品基本信息" i18n-en:title="Edit ">
             <layout>
  id[Id] goodsSn[商品编号]
  name[商品名称] categoryId[商品所属类目ID]
- brandId[Brandid] gallery[商品宣传图片列表，采用JSON数组格式]
- keywords[商品关键字，采用逗号间隔] brief[商品简介]
- isOnSale[是否上架] sortOrder[Sortorder]
- picUrl[商品页面商品图片] shareUrl[商品分享海报]
- isNew[是否新品首发，如果设置则可以在新品首发页面展示] isHot[是否人气推荐，如果设置则可以在人气推荐页面展示]
- unit[商品单位，例如件、盒] counterPrice[专柜价格]
- retailPrice[零售价格] detail[商品详细介绍，是富文本格式]
+ brandId[品牌ID] gallery[商品宣传图片列表]
+ keywords[商品关键字] brief[商品简介]
+ isOnSale[是否在售] sortOrder[排序顺序]
+ picUrl[商品图片] shareUrl[商品分享海报]
+ isNew[是否新品] isHot[是否热品]
+ unit[商品单位] counterPrice[市场售价]
+ retailPrice[当前价格] detail[详情]
 </layout>
         </form>
         <form id="query" editMode="query" title="查询条件" i18n-en:title="Query Condition" x:abstract="true">
@@ -102,7 +102,7 @@
         <form id="asideFilter" editMode="query" x:abstract="true" submitOnChange="true">
             <layout/>
         </form>
-        <form id="batchUpdate" editMode="update" x:abstract="true" title="修改-商品基本信息表" i18n-en:title="Update ">
+        <form id="batchUpdate" editMode="update" x:abstract="true" title="修改-商品基本信息" i18n-en:title="Update ">
             <layout/>
         </form>
     </forms>

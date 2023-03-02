@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<sql-lib x:schema="/nop/schema/orm/sql-lib.xdef" xmlns:x="/nop/schema/xdsl.xdef">
+
+    <sqls>
+        <eql name="syncCartProduct" sqlMethod="execute">
+            <arg name="product"/>
+
+            <source>
+                update LitemallCart o
+                set o.price = ${product.price},
+                  o.goodsName = ${product.goods.name},
+                  o.url = ${product.url},
+                  o.goodsSn = ${product.goods.goodsSn}
+                where o.productId = ${product.id}
+            </source>
+        </eql>
+    </sqls>
+</sql-lib>

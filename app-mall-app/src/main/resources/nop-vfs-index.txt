@@ -314,6 +314,9 @@
 /app/mall/pages/LitemallUser/_gen/_LitemallUser.view.xml
 /app/mall/pages/LitemallUser/main.page.yaml
 /app/mall/pages/LitemallUser/picker.page.yaml
+/app/mall/qrcode/back.png
+/app/mall/qrcode/back_groupon.png
+/app/mall/sql/LitemallGoods.sql-lib.xml
 /dict/auth/gender.dict.yaml
 /dict/auth/login-status.dict.yaml
 /dict/auth/login-type.dict.yaml

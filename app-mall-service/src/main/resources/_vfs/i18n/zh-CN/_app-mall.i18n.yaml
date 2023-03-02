@@ -13,7 +13,7 @@ entity:
     LitemallCouponUser: 优惠券用户使用表
     LitemallFeedback: 意见反馈表
     LitemallFootprint: 用户浏览足迹表
-    LitemallGoods: 商品基本信息表
+    LitemallGoods: 商品基本信息
     LitemallGoodsAttribute: 商品参数表
     LitemallGoodsProduct: 商品货品表
     LitemallGoodsSpecification: 商品规格表
@@ -101,8 +101,8 @@ prop:
       floorPrice: 品牌商的商品低价，仅用于页面展示
       id: Id
       name: 品牌商名称
-      picUrl: 品牌商页的品牌商图片
-      sortOrder: Sortorder
+      picUrl: 品牌商图片
+      sortOrder: 排序
       updateTime: 更新时间
     LitemallCart:
       addTime: 创建时间
@@ -118,7 +118,7 @@ prop:
       picUrl: 商品图片或者商品货品图片
       price: 商品货品的价格
       productId: 商品货品表的货品ID
-      specifications: 商品规格值列表，采用JSON数组格式
+      specifications: 商品规格值列表
       updateTime: 更新时间
       userId: 用户ID
     LitemallCategory:
@@ -165,10 +165,10 @@ prop:
       endTime: 使用券截至时间
       goodsType: 商品限制类型
       goodsType_label: 商品限制类型
-      goodsValue: 商品限制值，goods_type如果是0则空集合，如果是1则是类目集合，如果是2则是商品集合。
+      goodsValue: 商品限制值
       id: Id
       limit: 用户领券限制数量
-      min: 最少消费金额才能使用优惠券。
+      min: 最少消费金额
       name: 优惠券名称
       startTime: 使用券开始时间
       status: 优惠券状态
@@ -218,41 +218,44 @@ prop:
       userId: 用户表的用户ID
     LitemallGoods:
       addTime: 创建时间
-      brandId: Brandid
+      brand: 商品品牌
+      brand.name: 商品品牌
+      brandId: 品牌ID
       brief: 商品简介
-      category: 优惠券
-      category.name: 优惠券
+      category: 商品类目
+      category.name: 商品类目
       categoryId: 商品所属类目ID
-      counterPrice: 专柜价格
+      counterPrice: 市场售价
       deleted: 逻辑删除
-      detail: 商品详细介绍，是富文本格式
-      gallery: 商品宣传图片列表，采用JSON数组格式
+      detail: 详情
+      gallery: 商品宣传图片列表
       goodsSn: 商品编号
       id: Id
-      isHot: 是否人气推荐，如果设置则可以在人气推荐页面展示
-      isNew: 是否新品首发，如果设置则可以在新品首发页面展示
-      isOnSale: 是否上架
-      keywords: 商品关键字，采用逗号间隔
+      isHot: 是否热品
+      isNew: 是否新品
+      isOnSale: 是否在售
+      keywords: 商品关键字
       name: 商品名称
-      picUrl: 商品页面商品图片
-      retailPrice: 零售价格
+      picUrl: 商品图片
+      products: 包含产品
+      retailPrice: 当前价格
       shareUrl: 商品分享海报
-      sortOrder: Sortorder
-      unit: 商品单位，例如件、盒
+      sortOrder: 排序顺序
+      unit: 商品单位
       updateTime: 更新时间
     LitemallGoodsAttribute:
       addTime: 创建时间
       attribute: 商品参数名称
       deleted: 逻辑删除
-      goodsId: 商品表的商品ID
+      goodsId: 商品ID
       id: Id
       updateTime: 更新时间
       value: 商品参数值
     LitemallGoodsProduct:
       addTime: 创建时间
       deleted: 逻辑删除
-      goods: 订单
-      goods.name: 订单
+      goods: 所属商品
+      goods.name: 所属商品
       goodsId: 商品ID
       id: Id
       number: 商品货品数量

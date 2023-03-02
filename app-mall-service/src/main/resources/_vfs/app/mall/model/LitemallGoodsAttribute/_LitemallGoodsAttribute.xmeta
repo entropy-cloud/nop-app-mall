@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <meta x:schema="/nop/schema/xmeta.xdef" xmlns:x="/nop/schema/xdsl.xdef" xmlns:i18n-en="i18n-en" xmlns:ext="ext"
-      xmlns:xpl="xpl" xmlns:biz-gen="biz-gen" ext:model="orm" displayName="商品参数表">
+      xmlns:xpl="xpl" xmlns:biz-gen="biz-gen" ext:model="orm" xmlns:c="c" displayName="商品参数表">
 
     <entityName>app.mall.dao.entity.LitemallGoodsAttribute</entityName>
 
@@ -12,12 +12,14 @@
         <biz-gen:DefaultMetaPostExtends xpl:lib="/nop/biz/xlib/biz-gen.xlib"/>
     </x:post-extends>
 
+    <keys/>
+
     <prop name="id" displayName="Id" tagSet="seq" mandatory="true" queryable="true" sortable="true" insertable="true"
           updatable="false">
         <schema type="java.lang.Integer"/>
     </prop>
 
-    <prop name="goodsId" displayName="商品表的商品ID" mandatory="true" queryable="true" sortable="true" insertable="true"
+    <prop name="goodsId" displayName="商品ID" mandatory="true" queryable="true" sortable="true" insertable="true"
           updatable="true">
         <schema type="java.lang.Integer"/>
     </prop>

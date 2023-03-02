@@ -34,7 +34,7 @@
                 <!--商品货品的数量-->
                 <col id="number" sortable="true"/>
 
-                <!--商品规格值列表，采用JSON数组格式-->
+                <!--商品规格值列表-->
                 <col id="specifications" sortable="true"/>
 
                 <!--购物车中商品是否选择状态-->
@@ -54,7 +54,7 @@
  goodsId[商品ID] goodsSn[商品编号]
  goodsName[商品名称] productId[商品货品表的货品ID]
  price[商品货品的价格] number[商品货品的数量]
- specifications[商品规格值列表，采用JSON数组格式] checked[购物车中商品是否选择状态]
+ specifications[商品规格值列表] checked[购物车中商品是否选择状态]
  picUrl[商品图片或者商品货品图片] 
 </layout>
         </form>
@@ -65,7 +65,7 @@
  goodsId[商品ID] goodsSn[商品编号]
  goodsName[商品名称] productId[商品货品表的货品ID]
  price[商品货品的价格] number[商品货品的数量]
- specifications[商品规格值列表，采用JSON数组格式] checked[购物车中商品是否选择状态]
+ specifications[商品规格值列表] checked[购物车中商品是否选择状态]
  picUrl[商品图片或者商品货品图片] 
 </layout>
         </form>

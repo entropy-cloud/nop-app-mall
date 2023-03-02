@@ -217,29 +217,32 @@ prop:
       goods: Goods
       goods.name: Goods
     LitemallGoods:
-      id: null
-      goodsSn: null
-      name: null
-      categoryId: null
-      brandId: null
-      gallery: null
-      keywords: null
-      brief: null
-      isOnSale: null
-      sortOrder: null
-      picUrl: null
-      shareUrl: null
-      isNew: null
-      isHot: null
-      unit: null
-      counterPrice: null
-      retailPrice: null
-      detail: null
-      addTime: null
-      updateTime: null
-      deleted: null
+      id: ID
+      goodsSn: Goods SN
+      name: Name
+      categoryId: Category
+      brandId: Brand
+      gallery: Gallery
+      keywords: Keywords
+      brief: Brief
+      isOnSale: Is On Sale
+      sortOrder: Sort Order
+      picUrl: Picture Url
+      shareUrl: Share Url
+      isNew: Is New
+      isHot: Is Hot
+      unit: Unit
+      counterPrice: Counter Price
+      retailPrice: Retail Price
+      detail: Detail
+      addTime: Add Time
+      updateTime: Update Time
+      deleted: Deleted
       category: Category
       category.name: Category
+      brand: Brand
+      brand.name: Brand
+      products: Products
     LitemallGoodsAttribute:
       id: null
       goodsId: null

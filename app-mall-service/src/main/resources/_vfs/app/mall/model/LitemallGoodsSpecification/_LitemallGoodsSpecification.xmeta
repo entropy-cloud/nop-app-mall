@@ -1,16 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <meta x:schema="/nop/schema/xmeta.xdef" xmlns:x="/nop/schema/xdsl.xdef" xmlns:i18n-en="i18n-en" xmlns:ext="ext"
-      xmlns:xpl="xpl" xmlns:biz-gen="biz-gen" ext:model="orm" displayName="商品规格表">
+      xmlns:xpl="xpl" xmlns:biz-gen="biz-gen" ext:model="orm" xmlns:c="c" displayName="商品规格表">
 
     <entityName>app.mall.dao.entity.LitemallGoodsSpecification</entityName>
 
     <primaryKey>id</primaryKey>
 
-    <displayProp/>
+    <displayProp>specification</displayProp>
 
     <x:post-extends>
         <biz-gen:DefaultMetaPostExtends xpl:lib="/nop/biz/xlib/biz-gen.xlib"/>
     </x:post-extends>
+
+    <keys/>
 
     <prop name="id" displayName="Id" tagSet="seq" mandatory="true" queryable="true" sortable="true" insertable="true"
           updatable="false">
@@ -22,7 +24,7 @@
         <schema type="java.lang.Integer"/>
     </prop>
 
-    <prop name="specification" displayName="商品规格名称" tagSet="label" mandatory="true" queryable="true" sortable="true"
+    <prop name="specification" displayName="商品规格名称" tagSet="disp" mandatory="true" queryable="true" sortable="true"
           insertable="true" updatable="true">
         <schema type="java.lang.String" precision="255"/>
     </prop>
@@ -52,8 +54,8 @@
         <schema domain="delFlag" type="java.lang.Boolean"/>
     </prop>
 
-    <prop name="goods" displayName="订单" i18n-en:displayName="Goods" tagSet="pub,ref-pub" ext:kind="to-one"
-          internal="true" queryable="true" ext:joinLeftProp="goodsId" ext:joinRightProp="id"
+    <prop name="goods" displayName="订单" i18n-en:displayName="Goods" tagSet="pub,ref-pub,ref-cascade-delete"
+          ext:kind="to-one" internal="true" queryable="true" ext:joinLeftProp="goodsId" ext:joinRightProp="id"
           ext:joinRightDisplayProp="name" insertable="false" updatable="false" mandatory="true" lazy="true">
         <schema type="app.mall.dao.entity.LitemallGoods" bizObjName="LitemallGoods"/>
     </prop>

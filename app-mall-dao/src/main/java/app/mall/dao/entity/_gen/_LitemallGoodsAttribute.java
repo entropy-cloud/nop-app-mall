@@ -24,7 +24,7 @@ public class _LitemallGoodsAttribute extends DynamicOrmEntity{
     public static final String PROP_NAME_id = "id";
     public static final int PROP_ID_id = 1;
     
-    /* 商品表的商品ID: GOODS_ID INTEGER */
+    /* 商品ID: GOODS_ID INTEGER */
     public static final String PROP_NAME_goodsId = "goodsId";
     public static final int PROP_ID_goodsId = 2;
     
@@ -87,7 +87,7 @@ public class _LitemallGoodsAttribute extends DynamicOrmEntity{
     /* Id: ID */
     private java.lang.Integer _id;
     
-    /* 商品表的商品ID: GOODS_ID */
+    /* 商品ID: GOODS_ID */
     private java.lang.Integer _goodsId;
     
     /* 商品参数名称: ATTRIBUTE */
@@ -361,7 +361,7 @@ public class _LitemallGoodsAttribute extends DynamicOrmEntity{
     }
     
     /**
-     * 商品表的商品ID: GOODS_ID
+     * 商品ID: GOODS_ID
      */
     public java.lang.Integer getGoodsId(){
          onPropGet(PROP_ID_goodsId);
@@ -369,7 +369,7 @@ public class _LitemallGoodsAttribute extends DynamicOrmEntity{
     }
 
     /**
-     * 商品表的商品ID: GOODS_ID
+     * 商品ID: GOODS_ID
      */
     public void setGoodsId(java.lang.Integer value){
         if(onPropSet(PROP_ID_goodsId,value)){

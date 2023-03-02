@@ -19,10 +19,10 @@
                 <!--品牌商简介-->
                 <col id="desc" mandatory="true" sortable="true"/>
 
-                <!--品牌商页的品牌商图片-->
+                <!--品牌商图片-->
                 <col id="picUrl" mandatory="true" sortable="true"/>
 
-                <!--Sortorder-->
+                <!--排序-->
                 <col id="sortOrder" sortable="true"/>
 
                 <!--品牌商的商品低价，仅用于页面展示-->
@@ -38,8 +38,8 @@
  id[Id]
  name[品牌商名称]
  desc[品牌商简介]
- picUrl[品牌商页的品牌商图片]
- sortOrder[Sortorder]
+ picUrl[品牌商图片]
+ sortOrder[排序]
  floorPrice[品牌商的商品低价，仅用于页面展示]
 </layout>
         </form>
@@ -49,8 +49,8 @@
  id[Id]
  name[品牌商名称]
  desc[品牌商简介]
- picUrl[品牌商页的品牌商图片]
- sortOrder[Sortorder]
+ picUrl[品牌商图片]
+ sortOrder[排序]
  floorPrice[品牌商的商品低价，仅用于页面展示]
 </layout>
         </form>

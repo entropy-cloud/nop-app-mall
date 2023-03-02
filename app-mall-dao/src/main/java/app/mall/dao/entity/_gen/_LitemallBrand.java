@@ -32,11 +32,11 @@ public class _LitemallBrand extends DynamicOrmEntity{
     public static final String PROP_NAME_desc = "desc";
     public static final int PROP_ID_desc = 3;
     
-    /* 品牌商页的品牌商图片: PIC_URL VARCHAR */
+    /* 品牌商图片: PIC_URL VARCHAR */
     public static final String PROP_NAME_picUrl = "picUrl";
     public static final int PROP_ID_picUrl = 4;
     
-    /* Sortorder: SORT_ORDER TINYINT */
+    /* 排序: SORT_ORDER TINYINT */
     public static final String PROP_NAME_sortOrder = "sortOrder";
     public static final int PROP_ID_sortOrder = 5;
     
@@ -107,10 +107,10 @@ public class _LitemallBrand extends DynamicOrmEntity{
     /* 品牌商简介: DESC */
     private java.lang.String _desc;
     
-    /* 品牌商页的品牌商图片: PIC_URL */
+    /* 品牌商图片: PIC_URL */
     private java.lang.String _picUrl;
     
-    /* Sortorder: SORT_ORDER */
+    /* 排序: SORT_ORDER */
     private java.lang.Byte _sortOrder;
     
     /* 品牌商的商品低价，仅用于页面展示: FLOOR_PRICE */
@@ -459,7 +459,7 @@ public class _LitemallBrand extends DynamicOrmEntity{
     }
     
     /**
-     * 品牌商页的品牌商图片: PIC_URL
+     * 品牌商图片: PIC_URL
      */
     public java.lang.String getPicUrl(){
          onPropGet(PROP_ID_picUrl);
@@ -467,7 +467,7 @@ public class _LitemallBrand extends DynamicOrmEntity{
     }
 
     /**
-     * 品牌商页的品牌商图片: PIC_URL
+     * 品牌商图片: PIC_URL
      */
     public void setPicUrl(java.lang.String value){
         if(onPropSet(PROP_ID_picUrl,value)){
@@ -478,7 +478,7 @@ public class _LitemallBrand extends DynamicOrmEntity{
     }
     
     /**
-     * Sortorder: SORT_ORDER
+     * 排序: SORT_ORDER
      */
     public java.lang.Byte getSortOrder(){
          onPropGet(PROP_ID_sortOrder);
@@ -486,7 +486,7 @@ public class _LitemallBrand extends DynamicOrmEntity{
     }
 
     /**
-     * Sortorder: SORT_ORDER
+     * 排序: SORT_ORDER
      */
     public void setSortOrder(java.lang.Byte value){
         if(onPropSet(PROP_ID_sortOrder,value)){

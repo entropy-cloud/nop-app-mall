@@ -3,7 +3,7 @@
 
     <site id="main">
         <resource id="test-orm-app-mall" displayName="测试app-mall" icon="ion:grid-outline" resourceType="TOPM"
-                  routePath="/test-orm-app-mall" component="layouts/default/index">
+                  orderNo="0" routePath="/test-orm-app-mall" component="layouts/default/index">
             <children>
                 <resource id="LitemallAd-main" displayName="广告表" icon="ant-design:appstore-twotone" component="AMIS"
                           resourceType="SUBM" url="/app/mall/pages/LitemallAd/main.page.yaml"/>
@@ -31,7 +31,7 @@
                           component="AMIS" resourceType="SUBM" url="/app/mall/pages/LitemallFeedback/main.page.yaml"/>
                 <resource id="LitemallFootprint-main" displayName="用户浏览足迹表" icon="ant-design:appstore-twotone"
                           component="AMIS" resourceType="SUBM" url="/app/mall/pages/LitemallFootprint/main.page.yaml"/>
-                <resource id="LitemallGoods-main" displayName="商品基本信息表" icon="ant-design:appstore-twotone"
+                <resource id="LitemallGoods-main" displayName="商品基本信息" icon="ant-design:appstore-twotone"
                           component="AMIS" resourceType="SUBM" url="/app/mall/pages/LitemallGoods/main.page.yaml"/>
                 <resource id="LitemallGoodsAttribute-main" displayName="商品参数表" icon="ant-design:appstore-twotone"
                           component="AMIS" resourceType="SUBM"

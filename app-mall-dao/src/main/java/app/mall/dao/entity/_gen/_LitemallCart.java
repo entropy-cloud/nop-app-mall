@@ -52,7 +52,7 @@ public class _LitemallCart extends DynamicOrmEntity{
     public static final String PROP_NAME_number = "number";
     public static final int PROP_ID_number = 8;
     
-    /* 商品规格值列表，采用JSON数组格式: SPECIFICATIONS VARCHAR */
+    /* 商品规格值列表: SPECIFICATIONS VARCHAR */
     public static final String PROP_NAME_specifications = "specifications";
     public static final int PROP_ID_specifications = 9;
     
@@ -160,7 +160,7 @@ public class _LitemallCart extends DynamicOrmEntity{
     /* 商品货品的数量: NUMBER */
     private java.lang.Short _number;
     
-    /* 商品规格值列表，采用JSON数组格式: SPECIFICATIONS */
+    /* 商品规格值列表: SPECIFICATIONS */
     private java.lang.String _specifications;
     
     /* 购物车中商品是否选择状态: CHECKED */
@@ -707,7 +707,7 @@ public class _LitemallCart extends DynamicOrmEntity{
     }
     
     /**
-     * 商品规格值列表，采用JSON数组格式: SPECIFICATIONS
+     * 商品规格值列表: SPECIFICATIONS
      */
     public java.lang.String getSpecifications(){
          onPropGet(PROP_ID_specifications);
@@ -715,7 +715,7 @@ public class _LitemallCart extends DynamicOrmEntity{
     }
 
     /**
-     * 商品规格值列表，采用JSON数组格式: SPECIFICATIONS
+     * 商品规格值列表: SPECIFICATIONS
      */
     public void setSpecifications(java.lang.String value){
         if(onPropSet(PROP_ID_specifications,value)){

@@ -28,7 +28,7 @@
                 <!--优惠金额，-->
                 <col id="discount" sortable="true"/>
 
-                <!--最少消费金额才能使用优惠券。-->
+                <!--最少消费金额-->
                 <col id="min" sortable="true"/>
 
                 <!--用户领券限制数量-->
@@ -43,7 +43,7 @@
                 <!--商品限制类型-->
                 <col id="goodsType" sortable="true"/>
 
-                <!--商品限制值，goods_type如果是0则空集合，如果是1则是类目集合，如果是2则是商品集合。-->
+                <!--商品限制值-->
                 <col id="goodsValue" sortable="true"/>
 
                 <!--优惠券兑换码-->
@@ -71,9 +71,9 @@
  id[Id] name[优惠券名称]
  desc[优惠券介绍] tag[优惠券标签]
  total[优惠券数量] discount[优惠金额，]
- min[最少消费金额才能使用优惠券。] limit[用户领券限制数量]
+ min[最少消费金额] limit[用户领券限制数量]
  type[优惠券赠送类型] status[优惠券状态]
- goodsType[商品限制类型] goodsValue[商品限制值，goods_type如果是0则空集合，如果是1则是类目集合，如果是2则是商品集合。]
+ goodsType[商品限制类型] goodsValue[商品限制值]
  code[优惠券兑换码] timeType[有效时间限制]
  days[基于领取时间的有效天数days。] startTime[使用券开始时间]
  endTime[使用券截至时间] 
@@ -85,9 +85,9 @@
  id[Id] name[优惠券名称]
  desc[优惠券介绍] tag[优惠券标签]
  total[优惠券数量] discount[优惠金额，]
- min[最少消费金额才能使用优惠券。] limit[用户领券限制数量]
+ min[最少消费金额] limit[用户领券限制数量]
  type[优惠券赠送类型] status[优惠券状态]
- goodsType[商品限制类型] goodsValue[商品限制值，goods_type如果是0则空集合，如果是1则是类目集合，如果是2则是商品集合。]
+ goodsType[商品限制类型] goodsValue[商品限制值]
  code[优惠券兑换码] timeType[有效时间限制]
  days[基于领取时间的有效天数days。] startTime[使用券开始时间]
  endTime[使用券截至时间] 

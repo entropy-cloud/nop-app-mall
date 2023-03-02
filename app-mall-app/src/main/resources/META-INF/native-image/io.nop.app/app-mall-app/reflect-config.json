@@ -135,7 +135,12 @@
     "allPublicConstructors": true,
     "allPublicMethods": true,
     "fields": [],
-    "methods": [],
+    "methods": [
+      {
+        "name": "syncRetailPrice",
+        "parameterTypes": []
+      }
+    ],
     "name": "app.mall.dao.entity.LitemallGoods",
     "unsafeAllocated": false
   },
@@ -4628,6 +4633,11 @@
       {
         "allowUnsafeAccess": false,
         "allowWrite": false,
+        "name": "PROP_NAME_brand"
+      },
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
         "name": "PROP_NAME_brandId"
       },
       {
@@ -4708,6 +4718,11 @@
       {
         "allowUnsafeAccess": false,
         "allowWrite": false,
+        "name": "PROP_NAME_products"
+      },
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
         "name": "PROP_NAME_retailPrice"
       },
       {
@@ -4738,6 +4753,10 @@
       },
       {
         "name": "getAddTime",
+        "parameterTypes": []
+      },
+      {
+        "name": "getBrand",
         "parameterTypes": []
       },
       {
@@ -4802,6 +4821,10 @@
       },
       {
         "name": "getPicUrl",
+        "parameterTypes": []
+      },
+      {
+        "name": "getProducts",
         "parameterTypes": []
       },
       {
@@ -4882,6 +4905,12 @@
         "name": "setAddTime",
         "parameterTypes": [
           "java.time.LocalDateTime"
+        ]
+      },
+      {
+        "name": "setBrand",
+        "parameterTypes": [
+          "app.mall.dao.entity.LitemallBrand"
         ]
       },
       {
@@ -10859,8 +10888,36 @@
     "allDeclaredMethods": true,
     "allPublicConstructors": true,
     "allPublicMethods": true,
-    "fields": [],
-    "methods": [],
+    "fields": [
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": true,
+        "name": "goodsMapper"
+      }
+    ],
+    "methods": [
+      {
+        "name": "defaultPrepareQuery",
+        "parameterTypes": [
+          "io.nop.api.core.beans.query.QueryBean",
+          "io.nop.core.context.IServiceContext"
+        ]
+      },
+      {
+        "name": "defaultPrepareSave",
+        "parameterTypes": [
+          "io.nop.biz.crud.EntityData",
+          "io.nop.core.context.IServiceContext"
+        ]
+      },
+      {
+        "name": "defaultPrepareUpdate",
+        "parameterTypes": [
+          "io.nop.biz.crud.EntityData",
+          "io.nop.core.context.IServiceContext"
+        ]
+      }
+    ],
     "name": "app.mall.service.entity.LitemallGoodsBizModel",
     "unsafeAllocated": false
   },
@@ -35668,6 +35725,10 @@
     "fields": [],
     "methods": [
       {
+        "name": "containsTenantIdInPk",
+        "parameterTypes": []
+      },
+      {
         "name": "getAliasPropPath",
         "parameterTypes": [
           "java.lang.String"
@@ -36402,6 +36463,10 @@
         ]
       },
       {
+        "name": "containsTenantIdInPk",
+        "parameterTypes": []
+      },
+      {
         "name": "getAliasPropPath",
         "parameterTypes": [
           "java.lang.String"
@@ -36671,6 +36736,10 @@
         "parameterTypes": []
       },
       {
+        "name": "isAnyEntityUseTenant",
+        "parameterTypes": []
+      },
+      {
         "name": "isMerged",
         "parameterTypes": []
       },
@@ -36876,6 +36945,27 @@
       }
     ],
     "name": "io.nop.orm.model.OrmToOneReferenceModel",
+    "unsafeAllocated": false
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [
+      {
+        "name": "getColumnModels",
+        "parameterTypes": []
+      },
+      {
+        "name": "setColumnModels",
+        "parameterTypes": [
+          "java.util.List"
+        ]
+      }
+    ],
+    "name": "io.nop.orm.model.OrmUniqueKeyModel",
     "unsafeAllocated": false
   },
   {
@@ -38624,6 +38714,79 @@
       }
     ],
     "name": "io.nop.orm.model._gen._OrmToOneReferenceModel",
+    "unsafeAllocated": false
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [
+      {
+        "name": "freeze",
+        "parameterTypes": [
+          "boolean"
+        ]
+      },
+      {
+        "name": "getColumns",
+        "parameterTypes": []
+      },
+      {
+        "name": "getComment",
+        "parameterTypes": []
+      },
+      {
+        "name": "getConstraint",
+        "parameterTypes": []
+      },
+      {
+        "name": "getDisplayName",
+        "parameterTypes": []
+      },
+      {
+        "name": "getName",
+        "parameterTypes": []
+      },
+      {
+        "name": "outputJson",
+        "parameterTypes": [
+          "io.nop.core.lang.json.IJsonHandler"
+        ]
+      },
+      {
+        "name": "setColumns",
+        "parameterTypes": [
+          "java.util.List"
+        ]
+      },
+      {
+        "name": "setComment",
+        "parameterTypes": [
+          "java.lang.String"
+        ]
+      },
+      {
+        "name": "setConstraint",
+        "parameterTypes": [
+          "java.lang.String"
+        ]
+      },
+      {
+        "name": "setDisplayName",
+        "parameterTypes": [
+          "java.lang.String"
+        ]
+      },
+      {
+        "name": "setName",
+        "parameterTypes": [
+          "java.lang.String"
+        ]
+      }
+    ],
+    "name": "io.nop.orm.model._gen._OrmUniqueKeyModel",
     "unsafeAllocated": false
   },
   {
