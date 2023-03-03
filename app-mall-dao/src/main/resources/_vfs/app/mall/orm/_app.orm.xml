@@ -54,6 +54,10 @@
             <option code="CONFIRM" label="已收货" value="401"/>
             <option code="AUTO_CONFIRM" label="已收货(系统)" value="402"/>
         </dict>
+        <dict label="商品类目级别" name="mall/category-level" valueType="int" i18n-en:label="Goods Category Level">
+            <option label="一级类目" value="1"/>
+            <option label="二级类目" value="2"/>
+        </dict>
     </dicts>
 
     <domains>
@@ -65,14 +69,15 @@
         <domain name="userId" precision="50" stdSqlType="VARCHAR"/>
         <domain name="deptId" precision="50" stdSqlType="VARCHAR"/>
         <domain name="boolFlag" stdSqlType="TINYINT"/>
-        <domain name="json-1000" precision="1" stdDomain="json" stdSqlType="VARCHAR"/>
-        <domain name="remark" precision="1" stdSqlType="VARCHAR"/>
+        <domain name="json-1000" precision="1000" stdDomain="json" stdSqlType="VARCHAR"/>
+        <domain name="remark" precision="1000" stdSqlType="VARCHAR"/>
         <domain name="version" stdSqlType="INTEGER"/>
         <domain name="createTime" stdSqlType="DATETIME"/>
         <domain name="createdBy" precision="50" stdSqlType="VARCHAR"/>
         <domain name="updateTime" stdSqlType="DATETIME"/>
         <domain name="updatedBy" precision="50" stdSqlType="VARCHAR"/>
         <domain name="delFlag" stdSqlType="BOOLEAN"/>
+        <domain name="html-64k" precision="65535" stdSqlType="VARCHAR"/>
     </domains>
 
     <entities>
@@ -210,20 +215,20 @@
         </entity>
         <entity className="app.mall.dao.entity.LitemallBrand" createTimeProp="addTime" deleteFlagProp="deleted"
                 displayName="品牌商表" name="app.mall.dao.entity.LitemallBrand" registerShortName="true"
-                tableName="litemall_brand" updateTimeProp="updateTime" useLogicalDelete="true">
+                tableName="litemall_brand" tagSet="dict" updateTimeProp="updateTime" useLogicalDelete="true">
             <columns>
                 <column code="ID" displayName="Id" mandatory="true" name="id" primary="true" propId="1"
-                        stdDataType="int" stdSqlType="INTEGER" tagSet="seq"/>
+                        stdDataType="int" stdSqlType="INTEGER" tagSet="seq" ext:show="R"/>
                 <column code="NAME" displayName="品牌商名称" mandatory="true" name="name" precision="255" propId="2"
                         stdDataType="string" stdSqlType="VARCHAR" tagSet="disp"/>
-                <column code="DESC" displayName="品牌商简介" mandatory="true" name="desc" precision="255" propId="3"
+                <column code="PIC_URL" displayName="品牌商图片" mandatory="true" name="picUrl" precision="255" propId="3"
                         stdDataType="string" stdSqlType="VARCHAR"/>
-                <column code="PIC_URL" displayName="品牌商图片" mandatory="true" name="picUrl" precision="255" propId="4"
+                <column code="DESC" displayName="品牌商简介" mandatory="true" name="desc" precision="255" propId="4"
                         stdDataType="string" stdSqlType="VARCHAR"/>
                 <column code="SORT_ORDER" displayName="排序" name="sortOrder" propId="5" stdDataType="byte"
-                        stdSqlType="TINYINT"/>
-                <column code="FLOOR_PRICE" displayName="品牌商的商品低价，仅用于页面展示" name="floorPrice" precision="10" propId="6"
-                        scale="2" stdDataType="decimal" stdSqlType="DECIMAL"/>
+                        stdSqlType="TINYINT" ext:show="X"/>
+                <column code="FLOOR_PRICE" displayName="底价" name="floorPrice" precision="10" propId="6" scale="2"
+                        stdDataType="decimal" stdSqlType="DECIMAL"/>
                 <column code="ADD_TIME" displayName="创建时间" domain="createTime" name="addTime" propId="7"
                         stdDataType="datetime" stdSqlType="DATETIME" ext:show="X"/>
                 <column code="UPDATE_TIME" displayName="更新时间" domain="updateTime" name="updateTime" propId="8"
@@ -282,20 +287,20 @@
                         stdDataType="int" stdSqlType="INTEGER" tagSet="seq"/>
                 <column code="NAME" displayName="类目名称" mandatory="true" name="name" precision="63" propId="2"
                         stdDataType="string" stdSqlType="VARCHAR" tagSet="disp"/>
-                <column code="KEYWORDS" comment="JSON数组格式" displayName="类目关键字" mandatory="true" name="keywords"
-                        precision="1023" propId="3" stdDataType="string" stdSqlType="VARCHAR"/>
-                <column code="DESC" displayName="类目广告语介绍" name="desc" precision="255" propId="4" stdDataType="string"
-                        stdSqlType="VARCHAR"/>
-                <column code="PID" displayName="父类目ID" mandatory="true" name="pid" propId="5" stdDataType="int"
-                        stdSqlType="INTEGER"/>
-                <column code="ICON_URL" displayName="类目图标" name="iconUrl" precision="255" propId="6"
+                <column code="ICON_URL" displayName="类目图标" name="iconUrl" precision="255" propId="3"
                         stdDataType="string" stdSqlType="VARCHAR"/>
-                <column code="PIC_URL" displayName="类目图片" name="picUrl" precision="255" propId="7" stdDataType="string"
+                <column code="PIC_URL" displayName="类目图片" name="picUrl" precision="255" propId="4" stdDataType="string"
                         stdSqlType="VARCHAR"/>
-                <column code="LEVEL" displayName="Level" name="level" precision="255" propId="8" stdDataType="string"
+                <column code="KEYWORDS" comment="JSON数组格式" displayName="类目关键字" mandatory="true" name="keywords"
+                        precision="1023" propId="5" stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="DESC" displayName="简介" name="desc" precision="255" propId="6" stdDataType="string"
                         stdSqlType="VARCHAR"/>
+                <column code="LEVEL" displayName="级别" mandatory="true" name="level" precision="255" propId="7"
+                        stdDataType="string" stdSqlType="VARCHAR" tagSet="layerLevel" ext:dict="mall/category-level"/>
+                <column code="PID" displayName="父类目ID" name="pid" propId="8" stdDataType="int" stdSqlType="INTEGER"
+                        tagSet="parent" ext:show="L"/>
                 <column code="SORT_ORDER" displayName="排序" name="sortOrder" propId="9" stdDataType="byte"
-                        stdSqlType="TINYINT"/>
+                        stdSqlType="TINYINT" ext:show="X"/>
                 <column code="ADD_TIME" displayName="创建时间" domain="createTime" name="addTime" propId="10"
                         stdDataType="datetime" stdSqlType="DATETIME" ext:show="X"/>
                 <column code="UPDATE_TIME" displayName="更新时间" domain="updateTime" name="updateTime" propId="11"
@@ -303,6 +308,21 @@
                 <column code="DELETED" displayName="逻辑删除" domain="delFlag" name="deleted" propId="12"
                         stdDataType="boolean" stdSqlType="BOOLEAN" ext:show="X"/>
             </columns>
+            <relations>
+                <to-one displayName="父类目" name="parent" refEntityName="app.mall.dao.entity.LitemallCategory"
+                        refPropName="children" tagSet="pub,ref-pub" i18n-en:displayName="Parent"
+                        ref-i18n-en:displayName="Children">
+                    <join>
+                        <on leftProp="pid" rightProp="id"/>
+                    </join>
+                </to-one>
+                <to-many displayName="子类目" name="children" refEntityName="app.mall.dao.entity.LitemallCategory"
+                         refPropName="parent" tagSet="pub" i18n-en:displayName="Children">
+                    <join>
+                        <on leftProp="id" rightProp="pid"/>
+                    </join>
+                </to-many>
+            </relations>
         </entity>
         <entity className="app.mall.dao.entity.LitemallCollect" createTimeProp="addTime" deleteFlagProp="deleted"
                 displayName="收藏表" name="app.mall.dao.entity.LitemallCollect" registerShortName="true"
@@ -505,7 +525,7 @@
                 <column code="CATEGORY_ID" displayName="商品所属类目ID" name="categoryId" propId="4" stdDataType="int"
                         stdSqlType="INTEGER" i18n-en:displayName="Category"/>
                 <column code="BRAND_ID" displayName="品牌ID" name="brandId" propId="5" stdDataType="int"
-                        stdSqlType="INTEGER" i18n-en:displayName="Brand"/>
+                        stdSqlType="INTEGER" i18n-en:displayName="Brand" ext:dict="obj/LitemallBrand"/>
                 <column code="GALLERY" displayName="商品宣传图片列表" name="gallery" precision="1023" propId="6"
                         stdDataType="string" stdSqlType="VARCHAR" i18n-en:displayName="Gallery"/>
                 <column code="KEYWORDS" displayName="商品关键字" name="keywords" precision="255" propId="7"
@@ -530,8 +550,8 @@
                         stdDataType="decimal" stdSqlType="DECIMAL" i18n-en:displayName="Counter Price"/>
                 <column code="RETAIL_PRICE" displayName="当前价格" name="retailPrice" precision="10" propId="17" scale="2"
                         stdDataType="decimal" stdSqlType="DECIMAL" i18n-en:displayName="Retail Price"/>
-                <column code="DETAIL" displayName="详情" name="detail" precision="65535" propId="18" stdDataType="string"
-                        stdSqlType="VARCHAR" i18n-en:displayName="Detail"/>
+                <column code="DETAIL" displayName="详情" domain="html-64k" name="detail" precision="65535" propId="18"
+                        stdDataType="string" stdSqlType="VARCHAR" i18n-en:displayName="Detail"/>
                 <column code="ADD_TIME" displayName="创建时间" domain="createTime" name="addTime" propId="19"
                         stdDataType="datetime" stdSqlType="DATETIME" tagSet="sort-desc" i18n-en:displayName="Add Time"
                         ext:show="X"/>
@@ -553,8 +573,21 @@
                         <on leftProp="brandId" rightProp="id"/>
                     </join>
                 </to-one>
+                <to-many displayName="商品参数" name="attributes" refEntityName="app.mall.dao.entity.LitemallGoodsAttribute"
+                         refPropName="goods" tagSet="pub,cascade-delete" i18n-en:displayName="Goods Attributes">
+                    <join>
+                        <on leftProp="id" rightProp="goodsId"/>
+                    </join>
+                </to-many>
                 <to-many displayName="包含产品" name="products" refEntityName="app.mall.dao.entity.LitemallGoodsProduct"
                          refPropName="goods" tagSet="pub,cascade-delete" i18n-en:displayName="Products">
+                    <join>
+                        <on leftProp="id" rightProp="goodsId"/>
+                    </join>
+                </to-many>
+                <to-many displayName="商品规格" name="specifications"
+                         refEntityName="app.mall.dao.entity.LitemallGoodsSpecification" refPropName="goods"
+                         tagSet="pub,cascade-delete" i18n-en:displayName="Specifications">
                     <join>
                         <on leftProp="id" rightProp="goodsId"/>
                     </join>
@@ -583,6 +616,15 @@
                 <column code="DELETED" displayName="逻辑删除" domain="delFlag" name="deleted" propId="7"
                         stdDataType="boolean" stdSqlType="BOOLEAN" ext:show="X"/>
             </columns>
+            <relations>
+                <to-one displayName="商品" name="goods" refEntityName="app.mall.dao.entity.LitemallGoods"
+                        refPropName="attributes" tagSet="pub,ref-pub,ref-cascade-delete" i18n-en:displayName="Goods"
+                        ref-i18n-en:displayName="Goods Attributes">
+                    <join>
+                        <on leftProp="goodsId" rightProp="id"/>
+                    </join>
+                </to-one>
+            </relations>
         </entity>
         <entity className="app.mall.dao.entity.LitemallGoodsProduct" createTimeProp="addTime" deleteFlagProp="deleted"
                 displayName="商品货品表" name="app.mall.dao.entity.LitemallGoodsProduct" registerShortName="true"
@@ -640,8 +682,9 @@
                         stdDataType="boolean" stdSqlType="BOOLEAN" ext:show="X"/>
             </columns>
             <relations>
-                <to-one displayName="订单" name="goods" refEntityName="app.mall.dao.entity.LitemallGoods"
-                        tagSet="pub,ref-pub,ref-cascade-delete" i18n-en:displayName="Goods">
+                <to-one displayName="商品" name="goods" refEntityName="app.mall.dao.entity.LitemallGoods"
+                        refPropName="specifications" tagSet="pub,ref-pub,ref-cascade-delete" i18n-en:displayName="Goods"
+                        ref-i18n-en:displayName="Specifications">
                     <join>
                         <on leftProp="goodsId" rightProp="id"/>
                     </join>

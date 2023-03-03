@@ -98,7 +98,7 @@ prop:
       addTime: 创建时间
       deleted: 逻辑删除
       desc: 品牌商简介
-      floorPrice: 品牌商的商品低价，仅用于页面展示
+      floorPrice: 底价
       id: Id
       name: 品牌商名称
       picUrl: 品牌商图片
@@ -123,13 +123,17 @@ prop:
       userId: 用户ID
     LitemallCategory:
       addTime: 创建时间
+      children: 子类目
       deleted: 逻辑删除
-      desc: 类目广告语介绍
+      desc: 简介
       iconUrl: 类目图标
       id: Id
       keywords: 类目关键字
-      level: Level
+      level: 级别
+      level_label: 级别
       name: 类目名称
+      parent: 父类目
+      parent.name: 父类目
       picUrl: 类目图片
       pid: 父类目ID
       sortOrder: 排序
@@ -221,6 +225,7 @@ prop:
       brand: 商品品牌
       brand.name: 商品品牌
       brandId: 品牌ID
+      brandId_label: 品牌ID
       brief: 商品简介
       category: 商品类目
       category.name: 商品类目

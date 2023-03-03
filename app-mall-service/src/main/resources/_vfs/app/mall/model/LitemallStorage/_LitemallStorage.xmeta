@@ -14,47 +14,41 @@
 
     <keys/>
 
-    <prop name="id" displayName="Id" mandatory="true" queryable="true" sortable="true" insertable="true"
-          updatable="false">
-        <schema type="java.lang.Integer"/>
-    </prop>
-
-    <prop name="key" displayName="文件的唯一索引" mandatory="true" queryable="true" sortable="true" insertable="true"
-          updatable="true">
-        <schema type="java.lang.String" precision="63"/>
-    </prop>
-
-    <prop name="name" displayName="文件名" mandatory="true" queryable="true" sortable="true" insertable="true"
-          updatable="true">
-        <schema type="java.lang.String" precision="255"/>
-    </prop>
-
-    <prop name="type" displayName="文件类型" mandatory="true" queryable="true" sortable="true" insertable="true"
-          updatable="true">
-        <schema type="java.lang.String" precision="20"/>
-    </prop>
-
-    <prop name="size" displayName="文件大小" mandatory="true" queryable="true" sortable="true" insertable="true"
-          updatable="true">
-        <schema type="java.lang.Integer"/>
-    </prop>
-
-    <prop name="url" displayName="文件访问链接" queryable="true" sortable="true" insertable="true" updatable="true">
-        <schema type="java.lang.String" precision="255"/>
-    </prop>
-
-    <prop name="addTime" displayName="创建时间" queryable="true" sortable="true" insertable="false" updatable="false"
-          internal="true" ext:show="X">
-        <schema domain="createTime" type="java.time.LocalDateTime"/>
-    </prop>
-
-    <prop name="updateTime" displayName="更新时间" queryable="true" sortable="true" insertable="false" updatable="false"
-          internal="true" ext:show="X">
-        <schema domain="updateTime" type="java.time.LocalDateTime"/>
-    </prop>
-
-    <prop name="deleted" displayName="逻辑删除" queryable="true" sortable="true" insertable="false" updatable="true"
-          internal="true" ext:show="X">
-        <schema domain="delFlag" type="java.lang.Boolean"/>
-    </prop>
+    <props>
+        <prop name="id" displayName="Id" mandatory="true" queryable="true" sortable="true" insertable="true"
+              updatable="false">
+            <schema type="java.lang.Integer"/>
+        </prop>
+        <prop name="key" displayName="文件的唯一索引" mandatory="true" queryable="true" sortable="true" insertable="true"
+              updatable="true">
+            <schema type="java.lang.String" precision="63"/>
+        </prop>
+        <prop name="name" displayName="文件名" mandatory="true" queryable="true" sortable="true" insertable="true"
+              updatable="true">
+            <schema type="java.lang.String" precision="255"/>
+        </prop>
+        <prop name="type" displayName="文件类型" mandatory="true" queryable="true" sortable="true" insertable="true"
+              updatable="true">
+            <schema type="java.lang.String" precision="20"/>
+        </prop>
+        <prop name="size" displayName="文件大小" mandatory="true" queryable="true" sortable="true" insertable="true"
+              updatable="true">
+            <schema type="java.lang.Integer"/>
+        </prop>
+        <prop name="url" displayName="文件访问链接" queryable="true" sortable="true" insertable="true" updatable="true">
+            <schema type="java.lang.String" precision="255"/>
+        </prop>
+        <prop name="addTime" displayName="创建时间" queryable="true" sortable="true" insertable="false" updatable="false"
+              internal="true" ext:show="X">
+            <schema domain="createTime" type="java.time.LocalDateTime"/>
+        </prop>
+        <prop name="updateTime" displayName="更新时间" queryable="true" sortable="true" insertable="false" updatable="false"
+              internal="true" ext:show="X">
+            <schema domain="updateTime" type="java.time.LocalDateTime"/>
+        </prop>
+        <prop name="deleted" displayName="逻辑删除" queryable="true" sortable="true" insertable="false" updatable="true"
+              internal="true" ext:show="X">
+            <schema domain="delFlag" type="java.lang.Boolean"/>
+        </prop>
+    </props>
 </meta>

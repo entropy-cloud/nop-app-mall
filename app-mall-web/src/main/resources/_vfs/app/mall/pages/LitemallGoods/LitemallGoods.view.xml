@@ -3,7 +3,10 @@
 
     <grids>
         <grid id="list">
-            <cols>
+            <!-- bounded-merge表示继承基础模型的配置，但是仅保留当前指定的col。
+                基础模型中有，而当前模型中没有的子节点将会被自动删除
+             -->
+            <cols x:override="bounded-merge">
                 <col id="id"/>
 
                 <!--商品名称-->
@@ -15,8 +18,7 @@
                 <!--商品分享海报-->
                 <col id="shareUrl"/>
 
-                <!--商品宣传图片列表，采用JSON数组格式-->
-                <col id="gallery" label="详情"/>
+                <col id="detail" label="详情"/>
 
                 <!--专柜价格-->
                 <col id="counterPrice"/>
@@ -33,34 +35,122 @@
                 <!--是否上架-->
                 <col id="isOnSale"/>
 
+                <col id="goodsSn" breakpoint="*"/>
+
+                <col id="gallery" breakpoint="*"/>
+
+                <col id="brief" breakpoint="*"/>
+
+                <col id="unit" breakpoint="*"/>
+
+                <col id="keywordsList" breakpoint="*"/>
+
+                <col id="categoryId" breakpoint="*"/>
+
+                <col id="brandId" breakpoint="*"/>
+
             </cols>
         </grid>
         <grid id="pick-list"/>
     </grids>
 
     <forms>
+        <form id="query">
+            <layout>
+                id goodsSn keywords
+            </layout>
+        </form>
         <form id="view"/>
         <form id="edit">
             <layout>
-                name[商品名称] goodsSn[商品编号]
-                retailPrice[零售价格] sortOrder[Sortorder]
-                isNew[是否新品首发，如果设置则可以在新品首发页面展示] isHot[是否人气推荐，如果设置则可以在人气推荐页面展示]
+                ========== intro[商品介绍] ================
+                goodsSn[商品编号] name[商品名称]
+                counterPrice[市场价格]
+                isNew[是否新品首发] isHot[是否人气推荐]
                 isOnSale[是否上架]
                 picUrl[商品页面商品图片]
                 gallery[商品宣传图片列表，采用JSON数组格式]
                 unit[商品单位，例如件、盒]
-                keywords[商品关键字，采用逗号间隔]
+                keywordsList[商品关键字，采用逗号间隔]
                 categoryId[商品所属类目ID] brandId[Brandid]
                 brief[商品简介]
                 detail[商品详细介绍，是富文本格式]
+
+                =========specs[商品规格]=======
+                !specifications
+
+                =========goodsProducts[商品库存]=======
+                !products
+
+                =========attrs[商品参数]========
+                !attributes
+
             </layout>
+            <cells>
+                <cell id="unit">
+                    <placeholder>件/个/盒</placeholder>
+                </cell>
+
+                <cell id="specifications">
+                    <gen-control>
+                        <input-table addable="@:true" editable="@:true"
+                                     removable="@:true" needConfirm="@:false">
+                            <columns j:list="true">
+                                <input-text name="specification" label="规格名" />
+                                <input-text name="value" label="规格值">
+
+                                </input-text>
+                                <input-text name="picUrl" label="图片" />
+                            </columns>
+                        </input-table>
+                    </gen-control>
+                </cell>
+
+                <cell id="attributes">
+                    <gen-control>
+                        <input-table addable="@:true" editable="@:true"
+                                     removable="@:true" needConfirm="@:false">
+                            <columns j:list="true">
+                                <input-text name="name" label="属性名" required="true" />
+                                <input-text name="value" label="属性值">
+
+                                </input-text>
+                            </columns>
+                        </input-table>
+
+                        <web:GenInputTable objMeta="${}" grid="value"
+                                           addable="true" editable="true" removeable="true" />
+                    </gen-control>
+                </cell>
+            </cells>
         </form>
 
-        <form id="add" x:prototype="edit"/>
+        <form id="add" x:prototype="edit">
+            <!-- 删除从基础模型继承的layout。
+               指定了x:prototype，所以会从edit又继承得到layout
+            -->
+            <layout x:override="remove"/>
+        </form>
     </forms>
 
     <pages>
-        <crud name="main"/>
+        <crud name="main">
+            <listActions>
+                <!--
+                修改新增按钮的功能为跳转到新增页面
+                -->
+                <action id="add-button" x:override="merge-replace" actionType="link" url="/mall-goods-create">
+
+                </action>
+            </listActions>
+        </crud>
+
+        <simple name="add" useFormActions="true" panelClassName="no-heading no-border actions-center">
+            <actions>
+                <action id="cancel" label="取消" actionType="cancel"/>
+                <action id="confirm" label="上架" actionType="submit" />
+            </actions>
+        </simple>
         <picker name="picker"/>
     </pages>
 </view>

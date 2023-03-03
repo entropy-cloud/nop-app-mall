@@ -485,12 +485,12 @@ CREATE TABLE litemall_goods(
 CREATE TABLE litemall_category(
   ID INTEGER NOT NULL ,
   NAME VARCHAR2(63) NOT NULL ,
-  KEYWORDS VARCHAR2(1023) NOT NULL ,
-  "DESC" VARCHAR2(255)  ,
-  PID INTEGER NOT NULL ,
   ICON_URL VARCHAR2(255)  ,
   PIC_URL VARCHAR2(255)  ,
-  "LEVEL" VARCHAR2(255)  ,
+  KEYWORDS VARCHAR2(1023) NOT NULL ,
+  "DESC" VARCHAR2(255)  ,
+  "LEVEL" VARCHAR2(255) NOT NULL ,
+  PID INTEGER  ,
   SORT_ORDER SMALLINT  ,
   ADD_TIME DATE  ,
   UPDATE_TIME DATE  ,
@@ -501,8 +501,8 @@ CREATE TABLE litemall_category(
 CREATE TABLE litemall_brand(
   ID INTEGER NOT NULL ,
   NAME VARCHAR2(255) NOT NULL ,
-  "DESC" VARCHAR2(255) NOT NULL ,
   PIC_URL VARCHAR2(255) NOT NULL ,
+  "DESC" VARCHAR2(255) NOT NULL ,
   SORT_ORDER SMALLINT  ,
   FLOOR_PRICE NUMBER(10,2)  ,
   ADD_TIME DATE  ,
@@ -1292,17 +1292,17 @@ CREATE TABLE litemall_brand(
                     
       COMMENT ON COLUMN litemall_category.NAME IS '类目名称';
                     
-      COMMENT ON COLUMN litemall_category.KEYWORDS IS '类目关键字';
-                    
-      COMMENT ON COLUMN litemall_category."DESC" IS '类目广告语介绍';
-                    
-      COMMENT ON COLUMN litemall_category.PID IS '父类目ID';
-                    
       COMMENT ON COLUMN litemall_category.ICON_URL IS '类目图标';
                     
       COMMENT ON COLUMN litemall_category.PIC_URL IS '类目图片';
                     
-      COMMENT ON COLUMN litemall_category."LEVEL" IS 'Level';
+      COMMENT ON COLUMN litemall_category.KEYWORDS IS '类目关键字';
+                    
+      COMMENT ON COLUMN litemall_category."DESC" IS '简介';
+                    
+      COMMENT ON COLUMN litemall_category."LEVEL" IS '级别';
+                    
+      COMMENT ON COLUMN litemall_category.PID IS '父类目ID';
                     
       COMMENT ON COLUMN litemall_category.SORT_ORDER IS '排序';
                     
@@ -1318,13 +1318,13 @@ CREATE TABLE litemall_brand(
                     
       COMMENT ON COLUMN litemall_brand.NAME IS '品牌商名称';
                     
-      COMMENT ON COLUMN litemall_brand."DESC" IS '品牌商简介';
-                    
       COMMENT ON COLUMN litemall_brand.PIC_URL IS '品牌商图片';
+                    
+      COMMENT ON COLUMN litemall_brand."DESC" IS '品牌商简介';
                     
       COMMENT ON COLUMN litemall_brand.SORT_ORDER IS '排序';
                     
-      COMMENT ON COLUMN litemall_brand.FLOOR_PRICE IS '品牌商的商品低价，仅用于页面展示';
+      COMMENT ON COLUMN litemall_brand.FLOOR_PRICE IS '底价';
                     
       COMMENT ON COLUMN litemall_brand.ADD_TIME IS '创建时间';
                     

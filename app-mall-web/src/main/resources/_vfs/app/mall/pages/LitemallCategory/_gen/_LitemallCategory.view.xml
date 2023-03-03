@@ -16,27 +16,27 @@
                 <!--类目名称-->
                 <col id="name" mandatory="true" sortable="true"/>
 
-                <!--类目关键字-->
-                <col id="keywords" mandatory="true" sortable="true"/>
-
-                <!--类目广告语介绍-->
-                <col id="desc" sortable="true"/>
-
-                <!--父类目ID-->
-                <col id="pid" mandatory="true" sortable="true"/>
-
                 <!--类目图标-->
                 <col id="iconUrl" sortable="true"/>
 
                 <!--类目图片-->
                 <col id="picUrl" sortable="true"/>
 
-                <!--Level-->
-                <col id="level" sortable="true"/>
+                <!--类目关键字-->
+                <col id="keywords" mandatory="true" sortable="true"/>
 
-                <!--排序-->
-                <col id="sortOrder" sortable="true"/>
+                <!--简介-->
+                <col id="desc" sortable="true"/>
+
+                <!--级别-->
+                <col id="level" mandatory="true" sortable="true"/>
+
+                <!--父类目ID-->
+                <col id="pid" sortable="true" x:abstract="true"/>
             </cols>
+        </grid>
+        <grid id="tree-list" x:prototype="list">
+            <selection>children @TreeChildren(max:5)</selection>
         </grid>
         <grid id="pick-list" x:prototype="list" x:abstract="true"/>
     </grids>
@@ -46,13 +46,12 @@
             <layout>
  id[Id]
  name[类目名称]
- keywords[类目关键字]
- desc[类目广告语介绍]
- pid[父类目ID]
  iconUrl[类目图标]
  picUrl[类目图片]
- level[Level]
- sortOrder[排序]
+ keywords[类目关键字]
+ desc[简介]
+ level[级别]
+ pid[父类目ID]
 </layout>
         </form>
         <form id="add" editMode="add" title="新增-类目表" i18n-en:title="Add " x:prototype="edit"/>
@@ -60,13 +59,12 @@
             <layout>
  id[Id]
  name[类目名称]
- keywords[类目关键字]
- desc[类目广告语介绍]
- pid[父类目ID]
  iconUrl[类目图标]
  picUrl[类目图片]
- level[Level]
- sortOrder[排序]
+ keywords[类目关键字]
+ desc[简介]
+ level[级别]
+ pid[父类目ID]
 </layout>
         </form>
         <form id="query" editMode="query" title="查询条件" i18n-en:title="Query Condition" x:abstract="true">
@@ -81,9 +79,9 @@
     </forms>
 
     <pages>
-        <crud name="main" grid="list" asideFilterForm="asideFilter" filterForm="query" x:abstract="true">
-            <table autoFillHeight="true">
-                <api url="@query:LitemallCategory__findPage/{@pageSelection}"/>
+        <crud name="main" grid="tree-list" asideFilterForm="asideFilter" filterForm="query" x:abstract="true">
+            <table loadDataOnce="true" sortable="false" pager="none">
+                <api url="@query:LitemallCategory__findList/{@listSelection}?filter_pid="/>
             </table>
             <listActions>
                 <action id="batch-delete-button" label="@i18n:common.batchDelete" batch="true">
@@ -101,6 +99,9 @@
                 <actionGroup id="row-more-button" label="@i18n:common.more" level="primary">
                     <action id="row-update-button" level="primary" label="@i18n:common.edit">
                         <dialog page="update"/>
+                    </action>
+                    <action id="row-add-child-button" label="@i18n:common.addChild">
+                        <dialog page="add-child"/>
                     </action>
                     <action id="row-delete-button" level="danger" label="@i18n:common.delete">
                         <api url="@mutation:LitemallCategory__delete?id=$id"/>
@@ -123,6 +124,12 @@
         <simple name="update" form="edit">
             <initApi url="@query:LitemallCategory__get/{@formSelection}?id=$id"/>
             <api url="@mutation:LitemallCategory__update/id?id=$id" withFormData="true"/>
+        </simple>
+        <simple name="add-child" form="add">
+            <api url="@mutation:LitemallCategory__save/id" withFormData="true"/>
+            <data>
+                <_ j:key="pid">$id</_>
+            </data>
         </simple>
     </pages>
 </view>

@@ -1,0 +1,37 @@
+<lib x:extends="super" x:schema="/nop/schema/xlib.xdef" xmlns:x="/nop/schema/xdsl.xdef">
+
+    <tags>
+        <edit-tag-list>
+            <description>json数组类型的标签列表</description>
+            <attr name="dispMeta"/>
+            <attr name="propMeta"/>
+            <attr name="editMode"/>
+            <attr name="objMeta" mandatory="true"/>
+            <attr name="bizObjName" mandatory="true"/>
+
+            <source><![CDATA[
+           return {
+              type: "input-tag",
+              clearable:true
+            }
+        ]]></source>
+        </edit-tag-list>
+
+        <view-tag-list>
+            <description>json数组类型的标签列表</description>
+            <attr name="dispMeta"/>
+            <attr name="propMeta"/>
+            <attr name="editMode"/>
+            <attr name="objMeta" mandatory="true"/>
+            <attr name="bizObjName" mandatory="true"/>
+
+            <source><![CDATA[
+           return {
+              type: "input-tag",
+              disabled:true
+            }
+        ]]></source>
+        </view-tag-list>
+    </tags>
+
+</lib>

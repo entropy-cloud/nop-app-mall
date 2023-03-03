@@ -1,2 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<meta x:schema="/nop/schema/xmeta.xdef" xmlns:x="/nop/schema/xdsl.xdef" x:extends="_LitemallBrand.xmeta"/>
+<meta x:schema="/nop/schema/xmeta.xdef" xmlns:x="/nop/schema/xdsl.xdef" x:extends="_LitemallBrand.xmeta">
+
+    <props>
+        <prop name="name" allowFilterOp="eq,icontains" xui:defaultFilterOp="icontains"/>
+    </props>
+
+</meta>

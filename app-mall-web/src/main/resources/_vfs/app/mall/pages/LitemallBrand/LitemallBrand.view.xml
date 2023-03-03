@@ -10,6 +10,11 @@
         <form id="view"/>
         <form id="edit"/>
         <form id="add"/>
+        <form id="query">
+            <layout>
+                id name
+            </layout>
+        </form>
     </forms>
 
     <pages>

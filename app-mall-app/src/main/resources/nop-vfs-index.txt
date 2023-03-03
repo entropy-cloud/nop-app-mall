@@ -1,3 +1,4 @@
+/_delta/default/nop/web/xlib/control.xlib
 /app/mall/_module
 /app/mall/auth/_app-mall.action-auth.xml
 /app/mall/auth/app-mall.action-auth.xml
@@ -331,6 +332,7 @@
 /dict/core/std-domain.dict.yaml
 /dict/mall/aftersale-status.dict.yaml
 /dict/mall/aftersale-type.dict.yaml
+/dict/mall/category-level.dict.yaml
 /dict/mall/coupon-goods-type.dict.yaml
 /dict/mall/coupon-status.dict.yaml
 /dict/mall/coupon-time-type.dict.yaml

@@ -97,8 +97,8 @@ prop:
     LitemallBrand:
       id: null
       name: null
-      desc: null
       picUrl: null
+      desc: null
       sortOrder: null
       floorPrice: null
       addTime: null
@@ -124,16 +124,20 @@ prop:
     LitemallCategory:
       id: null
       name: null
-      keywords: null
-      desc: null
-      pid: null
       iconUrl: null
       picUrl: null
+      keywords: null
+      desc: null
       level: null
+      level_label: null
+      pid: null
       sortOrder: null
       addTime: null
       updateTime: null
       deleted: null
+      parent: Parent
+      parent.name: Parent
+      children: Children
     LitemallCollect:
       id: null
       userId: null
@@ -222,6 +226,7 @@ prop:
       name: Name
       categoryId: Category
       brandId: Brand
+      brandId_label: null
       gallery: Gallery
       keywords: Keywords
       brief: Brief

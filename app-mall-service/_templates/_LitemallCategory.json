@@ -1,14 +1,18 @@
 {
   "id": 0,
   "name": "",
-  "keywords": "",
-  "desc": "",
-  "pid": 0,
   "iconUrl": "",
   "picUrl": "",
+  "keywords": "",
+  "desc": "",
   "level": "",
+  "level_label": "",
+  "pid": 0,
   "sortOrder": 0,
   "addTime": "2000-01-01 14:00:00",
   "updateTime": "2000-01-01 14:00:00",
-  "deleted": false
+  "deleted": false,
+  "parent": null,
+  "parent.name": "",
+  "children": null
 }

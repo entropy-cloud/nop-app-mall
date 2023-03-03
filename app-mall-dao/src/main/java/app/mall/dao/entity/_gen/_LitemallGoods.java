@@ -114,8 +114,14 @@ public class _LitemallGoods extends DynamicOrmEntity{
     /* relation: 商品品牌 */
     public static final String PROP_NAME_brand = "brand";
     
+    /* relation: 商品参数 */
+    public static final String PROP_NAME_attributes = "attributes";
+    
     /* relation: 包含产品 */
     public static final String PROP_NAME_products = "products";
+    
+    /* relation: 商品规格 */
+    public static final String PROP_NAME_specifications = "specifications";
     
 
     public static final List<String> PK_PROP_NAMES = Arrays.asList(PROP_NAME_id);
@@ -1211,6 +1217,16 @@ public class _LitemallGoods extends DynamicOrmEntity{
        }
     }
        
+    private final OrmEntitySet<app.mall.dao.entity.LitemallGoodsAttribute> _attributes = new OrmEntitySet<>(this, PROP_NAME_attributes,
+        app.mall.dao.entity.LitemallGoodsAttribute.PROP_NAME_goods, null,app.mall.dao.entity.LitemallGoodsAttribute.class);
+
+    /**
+     * 商品参数。 refPropName: goods, keyProp: {rel.keyProp}
+     */
+    public IOrmEntitySet<app.mall.dao.entity.LitemallGoodsAttribute> getAttributes(){
+       return _attributes;
+    }
+       
     private final OrmEntitySet<app.mall.dao.entity.LitemallGoodsProduct> _products = new OrmEntitySet<>(this, PROP_NAME_products,
         app.mall.dao.entity.LitemallGoodsProduct.PROP_NAME_goods, null,app.mall.dao.entity.LitemallGoodsProduct.class);
 
@@ -1219,6 +1235,16 @@ public class _LitemallGoods extends DynamicOrmEntity{
      */
     public IOrmEntitySet<app.mall.dao.entity.LitemallGoodsProduct> getProducts(){
        return _products;
+    }
+       
+    private final OrmEntitySet<app.mall.dao.entity.LitemallGoodsSpecification> _specifications = new OrmEntitySet<>(this, PROP_NAME_specifications,
+        app.mall.dao.entity.LitemallGoodsSpecification.PROP_NAME_goods, null,app.mall.dao.entity.LitemallGoodsSpecification.class);
+
+    /**
+     * 商品规格。 refPropName: goods, keyProp: {rel.keyProp}
+     */
+    public IOrmEntitySet<app.mall.dao.entity.LitemallGoodsSpecification> getSpecifications(){
+       return _specifications;
     }
        
 }

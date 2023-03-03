@@ -56,7 +56,7 @@ public class _LitemallGoodsSpecification extends DynamicOrmEntity{
     private static int _PROP_ID_BOUND = 9;
 
     
-    /* relation: 订单 */
+    /* relation: 商品 */
     public static final String PROP_NAME_goods = "goods";
     
 
@@ -527,7 +527,7 @@ public class _LitemallGoodsSpecification extends DynamicOrmEntity{
     }
     
     /**
-     * 订单
+     * 商品
      */
     public app.mall.dao.entity.LitemallGoods getGoods(){
        return (app.mall.dao.entity.LitemallGoods)internalGetRefEntity(PROP_NAME_goods);

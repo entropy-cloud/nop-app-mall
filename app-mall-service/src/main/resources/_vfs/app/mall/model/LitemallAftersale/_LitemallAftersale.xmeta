@@ -14,77 +14,66 @@
 
     <keys/>
 
-    <prop name="id" displayName="Id" tagSet="seq" mandatory="true" queryable="true" sortable="true" insertable="true"
-          updatable="false">
-        <schema type="java.lang.Integer"/>
-    </prop>
-
-    <prop name="aftersaleSn" displayName="售后编号" tagSet="disp" queryable="true" sortable="true" insertable="true"
-          updatable="true">
-        <schema type="java.lang.String" precision="63"/>
-    </prop>
-
-    <prop name="orderId" displayName="订单ID" mandatory="true" queryable="true" sortable="true" insertable="true"
-          updatable="true" ext:relation="order">
-        <schema type="java.lang.Integer"/>
-    </prop>
-
-    <prop name="userId" displayName="用户ID" mandatory="true" queryable="true" sortable="true" insertable="true"
-          updatable="true">
-        <schema type="java.lang.Integer"/>
-    </prop>
-
-    <prop name="type" displayName="售后类型" queryable="true" sortable="true" insertable="true" updatable="true">
-        <schema type="java.lang.Short" dict="mall/aftersale-type"/>
-    </prop>
-
-    <prop name="reason" displayName="退款原因" queryable="true" sortable="true" insertable="true" updatable="true">
-        <schema type="java.lang.String" precision="31"/>
-    </prop>
-
-    <prop name="amount" displayName="退款金额" queryable="true" sortable="true" insertable="true" updatable="true">
-        <schema type="java.math.BigDecimal" precision="10" scale="2"/>
-    </prop>
-
-    <prop name="pictures" displayName="退款凭证图片链接数组" queryable="true" sortable="true" insertable="true" updatable="true">
-        <schema type="java.lang.String" precision="1023"/>
-    </prop>
-
-    <prop name="comment" displayName="退款说明" queryable="true" sortable="true" insertable="true" updatable="true">
-        <schema type="java.lang.String" precision="511"/>
-    </prop>
-
-    <prop name="status" displayName="售后状态" queryable="true" sortable="true" insertable="true" updatable="true">
-        <schema type="java.lang.Short" dict="mall/aftersale-status"/>
-    </prop>
-
-    <prop name="handleTime" displayName="管理员操作时间" queryable="true" sortable="true" insertable="true" updatable="true">
-        <schema type="java.time.LocalDateTime"/>
-    </prop>
-
-    <prop name="addTime" displayName="添加时间" queryable="true" sortable="true" insertable="false" updatable="false"
-          internal="true" ext:show="X">
-        <schema domain="createTime" type="java.time.LocalDateTime"/>
-    </prop>
-
-    <prop name="updateTime" displayName="更新时间" queryable="true" sortable="true" insertable="false" updatable="false"
-          internal="true" ext:show="X">
-        <schema domain="updateTime" type="java.time.LocalDateTime"/>
-    </prop>
-
-    <prop name="deleted" displayName="逻辑删除" queryable="true" sortable="true" insertable="false" updatable="true"
-          internal="true" ext:show="X">
-        <schema domain="delFlag" type="java.lang.Boolean"/>
-    </prop>
-
-    <prop name="order" displayName="订单" i18n-en:displayName="Order" tagSet="pub,ref-pub" ext:kind="to-one"
-          internal="true" queryable="true" ext:joinLeftProp="orderId" ext:joinRightProp="id"
-          ext:joinRightDisplayProp="orderSn" insertable="false" updatable="false" mandatory="true" lazy="true">
-        <schema type="app.mall.dao.entity.LitemallOrder" bizObjName="LitemallOrder"/>
-    </prop>
-
-    <prop name="order.orderSn" displayName="订单" i18n-en:displayName="Order" internal="true" queryable="true"
-          sortable="true" lazy="true">
-        <schema type="String"/>
-    </prop>
+    <props>
+        <prop name="id" displayName="Id" tagSet="seq" mandatory="true" queryable="true" sortable="true"
+              insertable="true" updatable="false">
+            <schema type="java.lang.Integer"/>
+        </prop>
+        <prop name="aftersaleSn" displayName="售后编号" tagSet="disp" queryable="true" sortable="true" insertable="true"
+              updatable="true">
+            <schema type="java.lang.String" precision="63"/>
+        </prop>
+        <prop name="orderId" displayName="订单ID" mandatory="true" queryable="true" sortable="true" insertable="true"
+              updatable="true" ext:relation="order">
+            <schema type="java.lang.Integer"/>
+        </prop>
+        <prop name="userId" displayName="用户ID" mandatory="true" queryable="true" sortable="true" insertable="true"
+              updatable="true">
+            <schema type="java.lang.Integer"/>
+        </prop>
+        <prop name="type" displayName="售后类型" queryable="true" sortable="true" insertable="true" updatable="true">
+            <schema type="java.lang.Short" dict="mall/aftersale-type"/>
+        </prop>
+        <prop name="reason" displayName="退款原因" queryable="true" sortable="true" insertable="true" updatable="true">
+            <schema type="java.lang.String" precision="31"/>
+        </prop>
+        <prop name="amount" displayName="退款金额" queryable="true" sortable="true" insertable="true" updatable="true">
+            <schema type="java.math.BigDecimal" precision="10" scale="2"/>
+        </prop>
+        <prop name="pictures" displayName="退款凭证图片链接数组" queryable="true" sortable="true" insertable="true"
+              updatable="true">
+            <schema type="java.lang.String" precision="1023"/>
+        </prop>
+        <prop name="comment" displayName="退款说明" queryable="true" sortable="true" insertable="true" updatable="true">
+            <schema type="java.lang.String" precision="511"/>
+        </prop>
+        <prop name="status" displayName="售后状态" queryable="true" sortable="true" insertable="true" updatable="true">
+            <schema type="java.lang.Short" dict="mall/aftersale-status"/>
+        </prop>
+        <prop name="handleTime" displayName="管理员操作时间" queryable="true" sortable="true" insertable="true"
+              updatable="true">
+            <schema type="java.time.LocalDateTime"/>
+        </prop>
+        <prop name="addTime" displayName="添加时间" queryable="true" sortable="true" insertable="false" updatable="false"
+              internal="true" ext:show="X">
+            <schema domain="createTime" type="java.time.LocalDateTime"/>
+        </prop>
+        <prop name="updateTime" displayName="更新时间" queryable="true" sortable="true" insertable="false" updatable="false"
+              internal="true" ext:show="X">
+            <schema domain="updateTime" type="java.time.LocalDateTime"/>
+        </prop>
+        <prop name="deleted" displayName="逻辑删除" queryable="true" sortable="true" insertable="false" updatable="true"
+              internal="true" ext:show="X">
+            <schema domain="delFlag" type="java.lang.Boolean"/>
+        </prop>
+        <prop name="order" displayName="订单" i18n-en:displayName="Order" tagSet="pub,ref-pub" ext:kind="to-one"
+              internal="true" queryable="true" ext:joinLeftProp="orderId" ext:joinRightProp="id"
+              ext:joinRightDisplayProp="orderSn" insertable="false" updatable="false" mandatory="true" lazy="true">
+            <schema type="app.mall.dao.entity.LitemallOrder" bizObjName="LitemallOrder"/>
+        </prop>
+        <prop name="order.orderSn" displayName="订单" i18n-en:displayName="Order" internal="true" queryable="true"
+              sortable="true" lazy="true">
+            <schema type="String"/>
+        </prop>
+    </props>
 </meta>

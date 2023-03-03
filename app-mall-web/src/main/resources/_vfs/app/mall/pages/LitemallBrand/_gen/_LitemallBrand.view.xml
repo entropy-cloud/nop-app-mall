@@ -16,16 +16,13 @@
                 <!--品牌商名称-->
                 <col id="name" mandatory="true" sortable="true"/>
 
-                <!--品牌商简介-->
-                <col id="desc" mandatory="true" sortable="true"/>
-
                 <!--品牌商图片-->
                 <col id="picUrl" mandatory="true" sortable="true"/>
 
-                <!--排序-->
-                <col id="sortOrder" sortable="true"/>
+                <!--品牌商简介-->
+                <col id="desc" mandatory="true" sortable="true"/>
 
-                <!--品牌商的商品低价，仅用于页面展示-->
+                <!--底价-->
                 <col id="floorPrice" sortable="true"/>
             </cols>
         </grid>
@@ -37,21 +34,18 @@
             <layout>
  id[Id]
  name[品牌商名称]
- desc[品牌商简介]
  picUrl[品牌商图片]
- sortOrder[排序]
- floorPrice[品牌商的商品低价，仅用于页面展示]
+ desc[品牌商简介]
+ floorPrice[底价]
 </layout>
         </form>
         <form id="add" editMode="add" title="新增-品牌商表" i18n-en:title="Add " x:prototype="edit"/>
         <form id="edit" editMode="update" title="编辑-品牌商表" i18n-en:title="Edit ">
             <layout>
- id[Id]
  name[品牌商名称]
- desc[品牌商简介]
  picUrl[品牌商图片]
- sortOrder[排序]
- floorPrice[品牌商的商品低价，仅用于页面展示]
+ desc[品牌商简介]
+ floorPrice[底价]
 </layout>
         </form>
         <form id="query" editMode="query" title="查询条件" i18n-en:title="Query Condition" x:abstract="true">

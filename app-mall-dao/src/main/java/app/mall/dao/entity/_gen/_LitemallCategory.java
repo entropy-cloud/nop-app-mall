@@ -28,29 +28,29 @@ public class _LitemallCategory extends DynamicOrmEntity{
     public static final String PROP_NAME_name = "name";
     public static final int PROP_ID_name = 2;
     
-    /* 类目关键字: KEYWORDS VARCHAR */
-    public static final String PROP_NAME_keywords = "keywords";
-    public static final int PROP_ID_keywords = 3;
-    
-    /* 类目广告语介绍: DESC VARCHAR */
-    public static final String PROP_NAME_desc = "desc";
-    public static final int PROP_ID_desc = 4;
-    
-    /* 父类目ID: PID INTEGER */
-    public static final String PROP_NAME_pid = "pid";
-    public static final int PROP_ID_pid = 5;
-    
     /* 类目图标: ICON_URL VARCHAR */
     public static final String PROP_NAME_iconUrl = "iconUrl";
-    public static final int PROP_ID_iconUrl = 6;
+    public static final int PROP_ID_iconUrl = 3;
     
     /* 类目图片: PIC_URL VARCHAR */
     public static final String PROP_NAME_picUrl = "picUrl";
-    public static final int PROP_ID_picUrl = 7;
+    public static final int PROP_ID_picUrl = 4;
     
-    /* Level: LEVEL VARCHAR */
+    /* 类目关键字: KEYWORDS VARCHAR */
+    public static final String PROP_NAME_keywords = "keywords";
+    public static final int PROP_ID_keywords = 5;
+    
+    /* 简介: DESC VARCHAR */
+    public static final String PROP_NAME_desc = "desc";
+    public static final int PROP_ID_desc = 6;
+    
+    /* 级别: LEVEL VARCHAR */
     public static final String PROP_NAME_level = "level";
-    public static final int PROP_ID_level = 8;
+    public static final int PROP_ID_level = 7;
+    
+    /* 父类目ID: PID INTEGER */
+    public static final String PROP_NAME_pid = "pid";
+    public static final int PROP_ID_pid = 8;
     
     /* 排序: SORT_ORDER TINYINT */
     public static final String PROP_NAME_sortOrder = "sortOrder";
@@ -72,6 +72,12 @@ public class _LitemallCategory extends DynamicOrmEntity{
     private static int _PROP_ID_BOUND = 13;
 
     
+    /* relation: 父类目 */
+    public static final String PROP_NAME_parent = "parent";
+    
+    /* relation: 子类目 */
+    public static final String PROP_NAME_children = "children";
+    
 
     public static final List<String> PK_PROP_NAMES = Arrays.asList(PROP_NAME_id);
     public static final int[] PK_PROP_IDS = new int[]{PROP_ID_id};
@@ -86,23 +92,23 @@ public class _LitemallCategory extends DynamicOrmEntity{
           PROP_ID_TO_NAME[PROP_ID_name] = PROP_NAME_name;
           PROP_NAME_TO_ID.put(PROP_NAME_name, PROP_ID_name);
       
-          PROP_ID_TO_NAME[PROP_ID_keywords] = PROP_NAME_keywords;
-          PROP_NAME_TO_ID.put(PROP_NAME_keywords, PROP_ID_keywords);
-      
-          PROP_ID_TO_NAME[PROP_ID_desc] = PROP_NAME_desc;
-          PROP_NAME_TO_ID.put(PROP_NAME_desc, PROP_ID_desc);
-      
-          PROP_ID_TO_NAME[PROP_ID_pid] = PROP_NAME_pid;
-          PROP_NAME_TO_ID.put(PROP_NAME_pid, PROP_ID_pid);
-      
           PROP_ID_TO_NAME[PROP_ID_iconUrl] = PROP_NAME_iconUrl;
           PROP_NAME_TO_ID.put(PROP_NAME_iconUrl, PROP_ID_iconUrl);
       
           PROP_ID_TO_NAME[PROP_ID_picUrl] = PROP_NAME_picUrl;
           PROP_NAME_TO_ID.put(PROP_NAME_picUrl, PROP_ID_picUrl);
       
+          PROP_ID_TO_NAME[PROP_ID_keywords] = PROP_NAME_keywords;
+          PROP_NAME_TO_ID.put(PROP_NAME_keywords, PROP_ID_keywords);
+      
+          PROP_ID_TO_NAME[PROP_ID_desc] = PROP_NAME_desc;
+          PROP_NAME_TO_ID.put(PROP_NAME_desc, PROP_ID_desc);
+      
           PROP_ID_TO_NAME[PROP_ID_level] = PROP_NAME_level;
           PROP_NAME_TO_ID.put(PROP_NAME_level, PROP_ID_level);
+      
+          PROP_ID_TO_NAME[PROP_ID_pid] = PROP_NAME_pid;
+          PROP_NAME_TO_ID.put(PROP_NAME_pid, PROP_ID_pid);
       
           PROP_ID_TO_NAME[PROP_ID_sortOrder] = PROP_NAME_sortOrder;
           PROP_NAME_TO_ID.put(PROP_NAME_sortOrder, PROP_ID_sortOrder);
@@ -125,23 +131,23 @@ public class _LitemallCategory extends DynamicOrmEntity{
     /* 类目名称: NAME */
     private java.lang.String _name;
     
-    /* 类目关键字: KEYWORDS */
-    private java.lang.String _keywords;
-    
-    /* 类目广告语介绍: DESC */
-    private java.lang.String _desc;
-    
-    /* 父类目ID: PID */
-    private java.lang.Integer _pid;
-    
     /* 类目图标: ICON_URL */
     private java.lang.String _iconUrl;
     
     /* 类目图片: PIC_URL */
     private java.lang.String _picUrl;
     
-    /* Level: LEVEL */
+    /* 类目关键字: KEYWORDS */
+    private java.lang.String _keywords;
+    
+    /* 简介: DESC */
+    private java.lang.String _desc;
+    
+    /* 级别: LEVEL */
     private java.lang.String _level;
+    
+    /* 父类目ID: PID */
+    private java.lang.Integer _pid;
     
     /* 排序: SORT_ORDER */
     private java.lang.Byte _sortOrder;
@@ -231,23 +237,23 @@ public class _LitemallCategory extends DynamicOrmEntity{
             case PROP_ID_name:
                return getName();
         
-            case PROP_ID_keywords:
-               return getKeywords();
-        
-            case PROP_ID_desc:
-               return getDesc();
-        
-            case PROP_ID_pid:
-               return getPid();
-        
             case PROP_ID_iconUrl:
                return getIconUrl();
         
             case PROP_ID_picUrl:
                return getPicUrl();
         
+            case PROP_ID_keywords:
+               return getKeywords();
+        
+            case PROP_ID_desc:
+               return getDesc();
+        
             case PROP_ID_level:
                return getLevel();
+        
+            case PROP_ID_pid:
+               return getPid();
         
             case PROP_ID_sortOrder:
                return getSortOrder();
@@ -292,36 +298,6 @@ public class _LitemallCategory extends DynamicOrmEntity{
                break;
             }
         
-            case PROP_ID_keywords:{
-               java.lang.String typedValue = null;
-               if(value != null){
-                   typedValue = ConvertHelper.toString(value,
-                       err-> newTypeConversionError(PROP_NAME_keywords));
-               }
-               setKeywords(typedValue);
-               break;
-            }
-        
-            case PROP_ID_desc:{
-               java.lang.String typedValue = null;
-               if(value != null){
-                   typedValue = ConvertHelper.toString(value,
-                       err-> newTypeConversionError(PROP_NAME_desc));
-               }
-               setDesc(typedValue);
-               break;
-            }
-        
-            case PROP_ID_pid:{
-               java.lang.Integer typedValue = null;
-               if(value != null){
-                   typedValue = ConvertHelper.toInteger(value,
-                       err-> newTypeConversionError(PROP_NAME_pid));
-               }
-               setPid(typedValue);
-               break;
-            }
-        
             case PROP_ID_iconUrl:{
                java.lang.String typedValue = null;
                if(value != null){
@@ -342,6 +318,26 @@ public class _LitemallCategory extends DynamicOrmEntity{
                break;
             }
         
+            case PROP_ID_keywords:{
+               java.lang.String typedValue = null;
+               if(value != null){
+                   typedValue = ConvertHelper.toString(value,
+                       err-> newTypeConversionError(PROP_NAME_keywords));
+               }
+               setKeywords(typedValue);
+               break;
+            }
+        
+            case PROP_ID_desc:{
+               java.lang.String typedValue = null;
+               if(value != null){
+                   typedValue = ConvertHelper.toString(value,
+                       err-> newTypeConversionError(PROP_NAME_desc));
+               }
+               setDesc(typedValue);
+               break;
+            }
+        
             case PROP_ID_level:{
                java.lang.String typedValue = null;
                if(value != null){
@@ -349,6 +345,16 @@ public class _LitemallCategory extends DynamicOrmEntity{
                        err-> newTypeConversionError(PROP_NAME_level));
                }
                setLevel(typedValue);
+               break;
+            }
+        
+            case PROP_ID_pid:{
+               java.lang.Integer typedValue = null;
+               if(value != null){
+                   typedValue = ConvertHelper.toInteger(value,
+                       err-> newTypeConversionError(PROP_NAME_pid));
+               }
+               setPid(typedValue);
                break;
             }
         
@@ -415,27 +421,6 @@ public class _LitemallCategory extends DynamicOrmEntity{
                break;
             }
         
-            case PROP_ID_keywords:{
-               onInitProp(propId);
-               this._keywords = (java.lang.String)value;
-               
-               break;
-            }
-        
-            case PROP_ID_desc:{
-               onInitProp(propId);
-               this._desc = (java.lang.String)value;
-               
-               break;
-            }
-        
-            case PROP_ID_pid:{
-               onInitProp(propId);
-               this._pid = (java.lang.Integer)value;
-               
-               break;
-            }
-        
             case PROP_ID_iconUrl:{
                onInitProp(propId);
                this._iconUrl = (java.lang.String)value;
@@ -450,9 +435,30 @@ public class _LitemallCategory extends DynamicOrmEntity{
                break;
             }
         
+            case PROP_ID_keywords:{
+               onInitProp(propId);
+               this._keywords = (java.lang.String)value;
+               
+               break;
+            }
+        
+            case PROP_ID_desc:{
+               onInitProp(propId);
+               this._desc = (java.lang.String)value;
+               
+               break;
+            }
+        
             case PROP_ID_level:{
                onInitProp(propId);
                this._level = (java.lang.String)value;
+               
+               break;
+            }
+        
+            case PROP_ID_pid:{
+               onInitProp(propId);
+               this._pid = (java.lang.Integer)value;
                
                break;
             }
@@ -530,63 +536,6 @@ public class _LitemallCategory extends DynamicOrmEntity{
     }
     
     /**
-     * 类目关键字: KEYWORDS
-     */
-    public java.lang.String getKeywords(){
-         onPropGet(PROP_ID_keywords);
-         return _keywords;
-    }
-
-    /**
-     * 类目关键字: KEYWORDS
-     */
-    public void setKeywords(java.lang.String value){
-        if(onPropSet(PROP_ID_keywords,value)){
-            this._keywords = value;
-            internalClearRefs(PROP_ID_keywords);
-            
-        }
-    }
-    
-    /**
-     * 类目广告语介绍: DESC
-     */
-    public java.lang.String getDesc(){
-         onPropGet(PROP_ID_desc);
-         return _desc;
-    }
-
-    /**
-     * 类目广告语介绍: DESC
-     */
-    public void setDesc(java.lang.String value){
-        if(onPropSet(PROP_ID_desc,value)){
-            this._desc = value;
-            internalClearRefs(PROP_ID_desc);
-            
-        }
-    }
-    
-    /**
-     * 父类目ID: PID
-     */
-    public java.lang.Integer getPid(){
-         onPropGet(PROP_ID_pid);
-         return _pid;
-    }
-
-    /**
-     * 父类目ID: PID
-     */
-    public void setPid(java.lang.Integer value){
-        if(onPropSet(PROP_ID_pid,value)){
-            this._pid = value;
-            internalClearRefs(PROP_ID_pid);
-            
-        }
-    }
-    
-    /**
      * 类目图标: ICON_URL
      */
     public java.lang.String getIconUrl(){
@@ -625,7 +574,45 @@ public class _LitemallCategory extends DynamicOrmEntity{
     }
     
     /**
-     * Level: LEVEL
+     * 类目关键字: KEYWORDS
+     */
+    public java.lang.String getKeywords(){
+         onPropGet(PROP_ID_keywords);
+         return _keywords;
+    }
+
+    /**
+     * 类目关键字: KEYWORDS
+     */
+    public void setKeywords(java.lang.String value){
+        if(onPropSet(PROP_ID_keywords,value)){
+            this._keywords = value;
+            internalClearRefs(PROP_ID_keywords);
+            
+        }
+    }
+    
+    /**
+     * 简介: DESC
+     */
+    public java.lang.String getDesc(){
+         onPropGet(PROP_ID_desc);
+         return _desc;
+    }
+
+    /**
+     * 简介: DESC
+     */
+    public void setDesc(java.lang.String value){
+        if(onPropSet(PROP_ID_desc,value)){
+            this._desc = value;
+            internalClearRefs(PROP_ID_desc);
+            
+        }
+    }
+    
+    /**
+     * 级别: LEVEL
      */
     public java.lang.String getLevel(){
          onPropGet(PROP_ID_level);
@@ -633,12 +620,31 @@ public class _LitemallCategory extends DynamicOrmEntity{
     }
 
     /**
-     * Level: LEVEL
+     * 级别: LEVEL
      */
     public void setLevel(java.lang.String value){
         if(onPropSet(PROP_ID_level,value)){
             this._level = value;
             internalClearRefs(PROP_ID_level);
+            
+        }
+    }
+    
+    /**
+     * 父类目ID: PID
+     */
+    public java.lang.Integer getPid(){
+         onPropGet(PROP_ID_pid);
+         return _pid;
+    }
+
+    /**
+     * 父类目ID: PID
+     */
+    public void setPid(java.lang.Integer value){
+        if(onPropSet(PROP_ID_pid,value)){
+            this._pid = value;
+            internalClearRefs(PROP_ID_pid);
             
         }
     }
@@ -719,5 +725,36 @@ public class _LitemallCategory extends DynamicOrmEntity{
         }
     }
     
+    /**
+     * 父类目
+     */
+    public app.mall.dao.entity.LitemallCategory getParent(){
+       return (app.mall.dao.entity.LitemallCategory)internalGetRefEntity(PROP_NAME_parent);
+    }
+
+    public void setParent(app.mall.dao.entity.LitemallCategory refEntity){
+       if(refEntity == null){
+         
+         this.setPid(null);
+         
+       }else{
+          internalSetRefEntity(PROP_NAME_parent, refEntity,()->{
+             
+                    this.setPid(refEntity.getId());
+                 
+          });
+       }
+    }
+       
+    private final OrmEntitySet<app.mall.dao.entity.LitemallCategory> _children = new OrmEntitySet<>(this, PROP_NAME_children,
+        app.mall.dao.entity.LitemallCategory.PROP_NAME_parent, null,app.mall.dao.entity.LitemallCategory.class);
+
+    /**
+     * 子类目。 refPropName: parent, keyProp: {rel.keyProp}
+     */
+    public IOrmEntitySet<app.mall.dao.entity.LitemallCategory> getChildren(){
+       return _children;
+    }
+       
 }
 // resume CPD analysis - CPD-ON

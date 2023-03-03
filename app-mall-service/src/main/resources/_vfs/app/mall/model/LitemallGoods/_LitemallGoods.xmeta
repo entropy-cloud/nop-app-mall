@@ -20,137 +20,126 @@
         <field name="addTime" desc="true"/>
     </orderBy>
 
-    <prop name="id" displayName="Id" i18n-en:displayName="ID" tagSet="seq" mandatory="true" queryable="true"
-          sortable="true" insertable="true" updatable="false">
-        <schema type="java.lang.Integer"/>
-    </prop>
-
-    <prop name="goodsSn" displayName="商品编号" i18n-en:displayName="Goods SN" mandatory="true" queryable="true"
-          sortable="true" insertable="true" updatable="true" ext:show="L">
-        <schema type="java.lang.String" precision="63"/>
-    </prop>
-
-    <prop name="name" displayName="商品名称" i18n-en:displayName="Name" tagSet="disp" mandatory="true" queryable="true"
-          sortable="true" insertable="true" updatable="true">
-        <schema type="java.lang.String" precision="127"/>
-    </prop>
-
-    <prop name="categoryId" displayName="商品所属类目ID" i18n-en:displayName="Category" queryable="true" sortable="true"
-          insertable="true" updatable="true" ext:relation="category">
-        <schema type="java.lang.Integer"/>
-    </prop>
-
-    <prop name="brandId" displayName="品牌ID" i18n-en:displayName="Brand" queryable="true" sortable="true"
-          insertable="true" updatable="true" ext:relation="brand">
-        <schema type="java.lang.Integer"/>
-    </prop>
-
-    <prop name="gallery" displayName="商品宣传图片列表" i18n-en:displayName="Gallery" queryable="true" sortable="true"
-          insertable="true" updatable="true">
-        <schema type="java.lang.String" precision="1023"/>
-    </prop>
-
-    <prop name="keywords" displayName="商品关键字" i18n-en:displayName="Keywords" queryable="true" sortable="true"
-          insertable="true" updatable="true">
-        <schema type="java.lang.String" precision="255"/>
-    </prop>
-
-    <prop name="brief" displayName="商品简介" i18n-en:displayName="Brief" queryable="true" sortable="true" insertable="true"
-          updatable="true">
-        <schema type="java.lang.String" precision="255"/>
-    </prop>
-
-    <prop name="isOnSale" displayName="是否在售" i18n-en:displayName="Is On Sale" queryable="true" sortable="true"
-          insertable="true" updatable="true">
-        <schema type="java.lang.Boolean"/>
-    </prop>
-
-    <prop name="sortOrder" displayName="排序顺序" i18n-en:displayName="Sort Order" queryable="true" sortable="true"
-          insertable="true" updatable="true">
-        <schema type="java.lang.Short"/>
-    </prop>
-
-    <prop name="picUrl" displayName="商品图片" i18n-en:displayName="Picture Url" queryable="true" sortable="true"
-          insertable="true" updatable="true">
-        <schema type="java.lang.String" precision="255"/>
-    </prop>
-
-    <prop name="shareUrl" displayName="商品分享海报" i18n-en:displayName="Share Url" queryable="true" sortable="true"
-          insertable="true" updatable="true">
-        <schema type="java.lang.String" precision="255"/>
-    </prop>
-
-    <prop name="isNew" displayName="是否新品" i18n-en:displayName="Is New" queryable="true" sortable="true"
-          insertable="true" updatable="true">
-        <schema type="java.lang.Boolean"/>
-    </prop>
-
-    <prop name="isHot" displayName="是否热品" i18n-en:displayName="Is Hot" queryable="true" sortable="true"
-          insertable="true" updatable="true">
-        <schema type="java.lang.Boolean"/>
-    </prop>
-
-    <prop name="unit" displayName="商品单位" i18n-en:displayName="Unit" queryable="true" sortable="true" insertable="true"
-          updatable="true">
-        <schema type="java.lang.String" precision="31"/>
-    </prop>
-
-    <prop name="counterPrice" displayName="市场售价" i18n-en:displayName="Counter Price" queryable="true" sortable="true"
-          insertable="true" updatable="true">
-        <schema type="java.math.BigDecimal" precision="10" scale="2"/>
-    </prop>
-
-    <prop name="retailPrice" displayName="当前价格" i18n-en:displayName="Retail Price" queryable="true" sortable="true"
-          insertable="true" updatable="true">
-        <schema type="java.math.BigDecimal" precision="10" scale="2"/>
-    </prop>
-
-    <prop name="detail" displayName="详情" i18n-en:displayName="Detail" queryable="true" sortable="true" insertable="true"
-          updatable="true">
-        <schema type="java.lang.String" precision="65535"/>
-    </prop>
-
-    <prop name="addTime" displayName="创建时间" i18n-en:displayName="Add Time" tagSet="sort-desc" queryable="true"
-          sortable="true" insertable="false" updatable="false" internal="true" ext:show="X">
-        <schema domain="createTime" type="java.time.LocalDateTime"/>
-    </prop>
-
-    <prop name="updateTime" displayName="更新时间" i18n-en:displayName="Update Time" queryable="true" sortable="true"
-          insertable="false" updatable="false" internal="true" ext:show="X">
-        <schema domain="updateTime" type="java.time.LocalDateTime"/>
-    </prop>
-
-    <prop name="deleted" displayName="逻辑删除" i18n-en:displayName="Deleted" queryable="true" sortable="true"
-          insertable="false" updatable="true" internal="true" ext:show="X">
-        <schema domain="delFlag" type="java.lang.Boolean"/>
-    </prop>
-
-    <prop name="category" displayName="商品类目" i18n-en:displayName="Category" tagSet="pub,ref-pub" ext:kind="to-one"
-          internal="true" queryable="true" ext:joinLeftProp="categoryId" ext:joinRightProp="id"
-          ext:joinRightDisplayProp="name" insertable="false" updatable="false" lazy="true">
-        <schema type="app.mall.dao.entity.LitemallCategory" bizObjName="LitemallCategory"/>
-    </prop>
-
-    <prop name="category.name" displayName="商品类目" i18n-en:displayName="Category" internal="true" queryable="true"
-          sortable="true" lazy="true">
-        <schema type="String"/>
-    </prop>
-
-    <prop name="brand" displayName="商品品牌" i18n-en:displayName="Brand" tagSet="pub,ref-pub" ext:kind="to-one"
-          internal="true" queryable="true" ext:joinLeftProp="brandId" ext:joinRightProp="id"
-          ext:joinRightDisplayProp="name" insertable="false" updatable="false" lazy="true">
-        <schema type="app.mall.dao.entity.LitemallBrand" bizObjName="LitemallBrand"/>
-    </prop>
-
-    <prop name="brand.name" displayName="商品品牌" i18n-en:displayName="Brand" internal="true" queryable="true"
-          sortable="true" lazy="true">
-        <schema type="String"/>
-    </prop>
-
-    <prop name="products" displayName="包含产品" i18n-en:displayName="Products" tagSet="pub,cascade-delete"
-          ext:kind="to-many" internal="true" ext:joinLeftProp="id" ext:joinRightProp="goodsId" insertable="false"
-          updatable="false" mandatory="true" lazy="true">
-        <schema type="io.nop.orm.IOrmEntitySet&lt;app.mall.dao.entity.LitemallGoodsProduct&gt;"
-                bizObjName="LitemallGoodsProduct"/>
-    </prop>
+    <props>
+        <prop name="id" displayName="Id" i18n-en:displayName="ID" tagSet="seq" mandatory="true" queryable="true"
+              sortable="true" insertable="true" updatable="false">
+            <schema type="java.lang.Integer"/>
+        </prop>
+        <prop name="goodsSn" displayName="商品编号" i18n-en:displayName="Goods SN" mandatory="true" queryable="true"
+              sortable="true" insertable="true" updatable="true" ext:show="L">
+            <schema type="java.lang.String" precision="63"/>
+        </prop>
+        <prop name="name" displayName="商品名称" i18n-en:displayName="Name" tagSet="disp" mandatory="true" queryable="true"
+              sortable="true" insertable="true" updatable="true">
+            <schema type="java.lang.String" precision="127"/>
+        </prop>
+        <prop name="categoryId" displayName="商品所属类目ID" i18n-en:displayName="Category" queryable="true" sortable="true"
+              insertable="true" updatable="true" ext:relation="category">
+            <schema type="java.lang.Integer"/>
+        </prop>
+        <prop name="brandId" displayName="品牌ID" i18n-en:displayName="Brand" queryable="true" sortable="true"
+              insertable="true" updatable="true" ext:relation="brand">
+            <schema type="java.lang.Integer" dict="obj/LitemallBrand"/>
+        </prop>
+        <prop name="gallery" displayName="商品宣传图片列表" i18n-en:displayName="Gallery" queryable="true" sortable="true"
+              insertable="true" updatable="true">
+            <schema type="java.lang.String" precision="1023"/>
+        </prop>
+        <prop name="keywords" displayName="商品关键字" i18n-en:displayName="Keywords" queryable="true" sortable="true"
+              insertable="true" updatable="true">
+            <schema type="java.lang.String" precision="255"/>
+        </prop>
+        <prop name="brief" displayName="商品简介" i18n-en:displayName="Brief" queryable="true" sortable="true"
+              insertable="true" updatable="true">
+            <schema type="java.lang.String" precision="255"/>
+        </prop>
+        <prop name="isOnSale" displayName="是否在售" i18n-en:displayName="Is On Sale" queryable="true" sortable="true"
+              insertable="true" updatable="true">
+            <schema type="java.lang.Boolean"/>
+        </prop>
+        <prop name="sortOrder" displayName="排序顺序" i18n-en:displayName="Sort Order" queryable="true" sortable="true"
+              insertable="true" updatable="true">
+            <schema type="java.lang.Short"/>
+        </prop>
+        <prop name="picUrl" displayName="商品图片" i18n-en:displayName="Picture Url" queryable="true" sortable="true"
+              insertable="true" updatable="true">
+            <schema type="java.lang.String" precision="255"/>
+        </prop>
+        <prop name="shareUrl" displayName="商品分享海报" i18n-en:displayName="Share Url" queryable="true" sortable="true"
+              insertable="true" updatable="true">
+            <schema type="java.lang.String" precision="255"/>
+        </prop>
+        <prop name="isNew" displayName="是否新品" i18n-en:displayName="Is New" queryable="true" sortable="true"
+              insertable="true" updatable="true">
+            <schema type="java.lang.Boolean"/>
+        </prop>
+        <prop name="isHot" displayName="是否热品" i18n-en:displayName="Is Hot" queryable="true" sortable="true"
+              insertable="true" updatable="true">
+            <schema type="java.lang.Boolean"/>
+        </prop>
+        <prop name="unit" displayName="商品单位" i18n-en:displayName="Unit" queryable="true" sortable="true"
+              insertable="true" updatable="true">
+            <schema type="java.lang.String" precision="31"/>
+        </prop>
+        <prop name="counterPrice" displayName="市场售价" i18n-en:displayName="Counter Price" queryable="true"
+              sortable="true" insertable="true" updatable="true">
+            <schema type="java.math.BigDecimal" precision="10" scale="2"/>
+        </prop>
+        <prop name="retailPrice" displayName="当前价格" i18n-en:displayName="Retail Price" queryable="true" sortable="true"
+              insertable="true" updatable="true">
+            <schema type="java.math.BigDecimal" precision="10" scale="2"/>
+        </prop>
+        <prop name="detail" displayName="详情" i18n-en:displayName="Detail" queryable="true" sortable="true"
+              insertable="true" updatable="true">
+            <schema domain="html-64k" type="java.lang.String" precision="65535"/>
+        </prop>
+        <prop name="addTime" displayName="创建时间" i18n-en:displayName="Add Time" tagSet="sort-desc" queryable="true"
+              sortable="true" insertable="false" updatable="false" internal="true" ext:show="X">
+            <schema domain="createTime" type="java.time.LocalDateTime"/>
+        </prop>
+        <prop name="updateTime" displayName="更新时间" i18n-en:displayName="Update Time" queryable="true" sortable="true"
+              insertable="false" updatable="false" internal="true" ext:show="X">
+            <schema domain="updateTime" type="java.time.LocalDateTime"/>
+        </prop>
+        <prop name="deleted" displayName="逻辑删除" i18n-en:displayName="Deleted" queryable="true" sortable="true"
+              insertable="false" updatable="true" internal="true" ext:show="X">
+            <schema domain="delFlag" type="java.lang.Boolean"/>
+        </prop>
+        <prop name="category" displayName="商品类目" i18n-en:displayName="Category" tagSet="pub,ref-pub" ext:kind="to-one"
+              internal="true" queryable="true" ext:joinLeftProp="categoryId" ext:joinRightProp="id"
+              ext:joinRightDisplayProp="name" insertable="false" updatable="false" lazy="true">
+            <schema type="app.mall.dao.entity.LitemallCategory" bizObjName="LitemallCategory"/>
+        </prop>
+        <prop name="category.name" displayName="商品类目" i18n-en:displayName="Category" internal="true" queryable="true"
+              sortable="true" lazy="true">
+            <schema type="String"/>
+        </prop>
+        <prop name="brand" displayName="商品品牌" i18n-en:displayName="Brand" tagSet="pub,ref-pub" ext:kind="to-one"
+              internal="true" queryable="true" ext:joinLeftProp="brandId" ext:joinRightProp="id"
+              ext:joinRightDisplayProp="name" insertable="false" updatable="false" lazy="true">
+            <schema type="app.mall.dao.entity.LitemallBrand" bizObjName="LitemallBrand"/>
+        </prop>
+        <prop name="brand.name" displayName="商品品牌" i18n-en:displayName="Brand" internal="true" queryable="true"
+              sortable="true" lazy="true">
+            <schema type="String"/>
+        </prop>
+        <prop name="attributes" displayName="商品参数" i18n-en:displayName="Goods Attributes" tagSet="pub,cascade-delete"
+              ext:kind="to-many" internal="true" ext:joinLeftProp="id" ext:joinRightProp="goodsId"
+              ext:joinRightDisplayProp="attribute" insertable="false" updatable="false" mandatory="true" lazy="true">
+            <schema type="io.nop.orm.IOrmEntitySet&lt;app.mall.dao.entity.LitemallGoodsAttribute&gt;"
+                    bizObjName="LitemallGoodsAttribute"/>
+        </prop>
+        <prop name="products" displayName="包含产品" i18n-en:displayName="Products" tagSet="pub,cascade-delete"
+              ext:kind="to-many" internal="true" ext:joinLeftProp="id" ext:joinRightProp="goodsId" insertable="false"
+              updatable="false" mandatory="true" lazy="true">
+            <schema type="io.nop.orm.IOrmEntitySet&lt;app.mall.dao.entity.LitemallGoodsProduct&gt;"
+                    bizObjName="LitemallGoodsProduct"/>
+        </prop>
+        <prop name="specifications" displayName="商品规格" i18n-en:displayName="Specifications" tagSet="pub,cascade-delete"
+              ext:kind="to-many" internal="true" ext:joinLeftProp="id" ext:joinRightProp="goodsId"
+              ext:joinRightDisplayProp="specification" insertable="false" updatable="false" mandatory="true" lazy="true">
+            <schema type="io.nop.orm.IOrmEntitySet&lt;app.mall.dao.entity.LitemallGoodsSpecification&gt;"
+                    bizObjName="LitemallGoodsSpecification"/>
+        </prop>
+    </props>
 </meta>

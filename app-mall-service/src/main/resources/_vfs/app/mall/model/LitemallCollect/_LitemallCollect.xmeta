@@ -14,38 +14,34 @@
 
     <keys/>
 
-    <prop name="id" displayName="Id" tagSet="seq" mandatory="true" queryable="true" sortable="true" insertable="true"
-          updatable="false">
-        <schema type="java.lang.Integer"/>
-    </prop>
-
-    <prop name="userId" displayName="用户ID" mandatory="true" queryable="true" sortable="true" insertable="true"
-          updatable="true">
-        <schema type="java.lang.Integer"/>
-    </prop>
-
-    <prop name="valueId" displayName="如果type=0，则是商品ID；如果type=1，则是专题ID" mandatory="true" queryable="true" sortable="true"
-          insertable="true" updatable="true">
-        <schema type="java.lang.Integer"/>
-    </prop>
-
-    <prop name="type" displayName="收藏类型，如果type=0，则是商品ID；如果type=1，则是专题ID" mandatory="true" queryable="true"
-          sortable="true" insertable="true" updatable="true">
-        <schema type="java.lang.Byte"/>
-    </prop>
-
-    <prop name="addTime" displayName="创建时间" queryable="true" sortable="true" insertable="false" updatable="false"
-          internal="true" ext:show="X">
-        <schema domain="createTime" type="java.time.LocalDateTime"/>
-    </prop>
-
-    <prop name="updateTime" displayName="更新时间" queryable="true" sortable="true" insertable="false" updatable="false"
-          internal="true" ext:show="X">
-        <schema domain="updateTime" type="java.time.LocalDateTime"/>
-    </prop>
-
-    <prop name="deleted" displayName="逻辑删除" queryable="true" sortable="true" insertable="false" updatable="true"
-          internal="true" ext:show="X">
-        <schema domain="delFlag" type="java.lang.Boolean"/>
-    </prop>
+    <props>
+        <prop name="id" displayName="Id" tagSet="seq" mandatory="true" queryable="true" sortable="true"
+              insertable="true" updatable="false">
+            <schema type="java.lang.Integer"/>
+        </prop>
+        <prop name="userId" displayName="用户ID" mandatory="true" queryable="true" sortable="true" insertable="true"
+              updatable="true">
+            <schema type="java.lang.Integer"/>
+        </prop>
+        <prop name="valueId" displayName="如果type=0，则是商品ID；如果type=1，则是专题ID" mandatory="true" queryable="true"
+              sortable="true" insertable="true" updatable="true">
+            <schema type="java.lang.Integer"/>
+        </prop>
+        <prop name="type" displayName="收藏类型，如果type=0，则是商品ID；如果type=1，则是专题ID" mandatory="true" queryable="true"
+              sortable="true" insertable="true" updatable="true">
+            <schema type="java.lang.Byte"/>
+        </prop>
+        <prop name="addTime" displayName="创建时间" queryable="true" sortable="true" insertable="false" updatable="false"
+              internal="true" ext:show="X">
+            <schema domain="createTime" type="java.time.LocalDateTime"/>
+        </prop>
+        <prop name="updateTime" displayName="更新时间" queryable="true" sortable="true" insertable="false" updatable="false"
+              internal="true" ext:show="X">
+            <schema domain="updateTime" type="java.time.LocalDateTime"/>
+        </prop>
+        <prop name="deleted" displayName="逻辑删除" queryable="true" sortable="true" insertable="false" updatable="true"
+              internal="true" ext:show="X">
+            <schema domain="delFlag" type="java.lang.Boolean"/>
+        </prop>
+    </props>
 </meta>

@@ -28,19 +28,19 @@ public class _LitemallBrand extends DynamicOrmEntity{
     public static final String PROP_NAME_name = "name";
     public static final int PROP_ID_name = 2;
     
-    /* 品牌商简介: DESC VARCHAR */
-    public static final String PROP_NAME_desc = "desc";
-    public static final int PROP_ID_desc = 3;
-    
     /* 品牌商图片: PIC_URL VARCHAR */
     public static final String PROP_NAME_picUrl = "picUrl";
-    public static final int PROP_ID_picUrl = 4;
+    public static final int PROP_ID_picUrl = 3;
+    
+    /* 品牌商简介: DESC VARCHAR */
+    public static final String PROP_NAME_desc = "desc";
+    public static final int PROP_ID_desc = 4;
     
     /* 排序: SORT_ORDER TINYINT */
     public static final String PROP_NAME_sortOrder = "sortOrder";
     public static final int PROP_ID_sortOrder = 5;
     
-    /* 品牌商的商品低价，仅用于页面展示: FLOOR_PRICE DECIMAL */
+    /* 底价: FLOOR_PRICE DECIMAL */
     public static final String PROP_NAME_floorPrice = "floorPrice";
     public static final int PROP_ID_floorPrice = 6;
     
@@ -74,11 +74,11 @@ public class _LitemallBrand extends DynamicOrmEntity{
           PROP_ID_TO_NAME[PROP_ID_name] = PROP_NAME_name;
           PROP_NAME_TO_ID.put(PROP_NAME_name, PROP_ID_name);
       
-          PROP_ID_TO_NAME[PROP_ID_desc] = PROP_NAME_desc;
-          PROP_NAME_TO_ID.put(PROP_NAME_desc, PROP_ID_desc);
-      
           PROP_ID_TO_NAME[PROP_ID_picUrl] = PROP_NAME_picUrl;
           PROP_NAME_TO_ID.put(PROP_NAME_picUrl, PROP_ID_picUrl);
+      
+          PROP_ID_TO_NAME[PROP_ID_desc] = PROP_NAME_desc;
+          PROP_NAME_TO_ID.put(PROP_NAME_desc, PROP_ID_desc);
       
           PROP_ID_TO_NAME[PROP_ID_sortOrder] = PROP_NAME_sortOrder;
           PROP_NAME_TO_ID.put(PROP_NAME_sortOrder, PROP_ID_sortOrder);
@@ -104,16 +104,16 @@ public class _LitemallBrand extends DynamicOrmEntity{
     /* 品牌商名称: NAME */
     private java.lang.String _name;
     
-    /* 品牌商简介: DESC */
-    private java.lang.String _desc;
-    
     /* 品牌商图片: PIC_URL */
     private java.lang.String _picUrl;
+    
+    /* 品牌商简介: DESC */
+    private java.lang.String _desc;
     
     /* 排序: SORT_ORDER */
     private java.lang.Byte _sortOrder;
     
-    /* 品牌商的商品低价，仅用于页面展示: FLOOR_PRICE */
+    /* 底价: FLOOR_PRICE */
     private java.math.BigDecimal _floorPrice;
     
     /* 创建时间: ADD_TIME */
@@ -201,11 +201,11 @@ public class _LitemallBrand extends DynamicOrmEntity{
             case PROP_ID_name:
                return getName();
         
-            case PROP_ID_desc:
-               return getDesc();
-        
             case PROP_ID_picUrl:
                return getPicUrl();
+        
+            case PROP_ID_desc:
+               return getDesc();
         
             case PROP_ID_sortOrder:
                return getSortOrder();
@@ -253,16 +253,6 @@ public class _LitemallBrand extends DynamicOrmEntity{
                break;
             }
         
-            case PROP_ID_desc:{
-               java.lang.String typedValue = null;
-               if(value != null){
-                   typedValue = ConvertHelper.toString(value,
-                       err-> newTypeConversionError(PROP_NAME_desc));
-               }
-               setDesc(typedValue);
-               break;
-            }
-        
             case PROP_ID_picUrl:{
                java.lang.String typedValue = null;
                if(value != null){
@@ -270,6 +260,16 @@ public class _LitemallBrand extends DynamicOrmEntity{
                        err-> newTypeConversionError(PROP_NAME_picUrl));
                }
                setPicUrl(typedValue);
+               break;
+            }
+        
+            case PROP_ID_desc:{
+               java.lang.String typedValue = null;
+               if(value != null){
+                   typedValue = ConvertHelper.toString(value,
+                       err-> newTypeConversionError(PROP_NAME_desc));
+               }
+               setDesc(typedValue);
                break;
             }
         
@@ -346,16 +346,16 @@ public class _LitemallBrand extends DynamicOrmEntity{
                break;
             }
         
-            case PROP_ID_desc:{
+            case PROP_ID_picUrl:{
                onInitProp(propId);
-               this._desc = (java.lang.String)value;
+               this._picUrl = (java.lang.String)value;
                
                break;
             }
         
-            case PROP_ID_picUrl:{
+            case PROP_ID_desc:{
                onInitProp(propId);
-               this._picUrl = (java.lang.String)value;
+               this._desc = (java.lang.String)value;
                
                break;
             }
@@ -440,25 +440,6 @@ public class _LitemallBrand extends DynamicOrmEntity{
     }
     
     /**
-     * 品牌商简介: DESC
-     */
-    public java.lang.String getDesc(){
-         onPropGet(PROP_ID_desc);
-         return _desc;
-    }
-
-    /**
-     * 品牌商简介: DESC
-     */
-    public void setDesc(java.lang.String value){
-        if(onPropSet(PROP_ID_desc,value)){
-            this._desc = value;
-            internalClearRefs(PROP_ID_desc);
-            
-        }
-    }
-    
-    /**
      * 品牌商图片: PIC_URL
      */
     public java.lang.String getPicUrl(){
@@ -473,6 +454,25 @@ public class _LitemallBrand extends DynamicOrmEntity{
         if(onPropSet(PROP_ID_picUrl,value)){
             this._picUrl = value;
             internalClearRefs(PROP_ID_picUrl);
+            
+        }
+    }
+    
+    /**
+     * 品牌商简介: DESC
+     */
+    public java.lang.String getDesc(){
+         onPropGet(PROP_ID_desc);
+         return _desc;
+    }
+
+    /**
+     * 品牌商简介: DESC
+     */
+    public void setDesc(java.lang.String value){
+        if(onPropSet(PROP_ID_desc,value)){
+            this._desc = value;
+            internalClearRefs(PROP_ID_desc);
             
         }
     }
@@ -497,7 +497,7 @@ public class _LitemallBrand extends DynamicOrmEntity{
     }
     
     /**
-     * 品牌商的商品低价，仅用于页面展示: FLOOR_PRICE
+     * 底价: FLOOR_PRICE
      */
     public java.math.BigDecimal getFloorPrice(){
          onPropGet(PROP_ID_floorPrice);
@@ -505,7 +505,7 @@ public class _LitemallBrand extends DynamicOrmEntity{
     }
 
     /**
-     * 品牌商的商品低价，仅用于页面展示: FLOOR_PRICE
+     * 底价: FLOOR_PRICE
      */
     public void setFloorPrice(java.math.BigDecimal value){
         if(onPropSet(PROP_ID_floorPrice,value)){

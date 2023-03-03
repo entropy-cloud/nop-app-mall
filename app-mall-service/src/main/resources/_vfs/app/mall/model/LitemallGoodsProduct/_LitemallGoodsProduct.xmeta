@@ -14,58 +14,50 @@
 
     <keys/>
 
-    <prop name="id" displayName="Id" tagSet="seq" mandatory="true" queryable="true" sortable="true" insertable="true"
-          updatable="false">
-        <schema type="java.lang.Integer"/>
-    </prop>
-
-    <prop name="goodsId" displayName="商品ID" mandatory="true" queryable="true" sortable="true" insertable="true"
-          updatable="true" ext:relation="goods">
-        <schema type="java.lang.Integer"/>
-    </prop>
-
-    <prop name="specifications" displayName="商品规格值" mandatory="true" queryable="true" sortable="true" insertable="true"
-          updatable="true">
-        <schema type="java.lang.String" precision="1023"/>
-    </prop>
-
-    <prop name="price" displayName="商品货品价格" mandatory="true" queryable="true" sortable="true" insertable="true"
-          updatable="true">
-        <schema type="java.math.BigDecimal" precision="10" scale="2"/>
-    </prop>
-
-    <prop name="number" displayName="商品货品数量" mandatory="true" queryable="true" sortable="true" insertable="true"
-          updatable="true">
-        <schema type="java.lang.Integer"/>
-    </prop>
-
-    <prop name="url" displayName="商品货品图片" queryable="true" sortable="true" insertable="true" updatable="true">
-        <schema type="java.lang.String" precision="125"/>
-    </prop>
-
-    <prop name="addTime" displayName="创建时间" queryable="true" sortable="true" insertable="false" updatable="false"
-          internal="true" ext:show="X">
-        <schema domain="createTime" type="java.time.LocalDateTime"/>
-    </prop>
-
-    <prop name="updateTime" displayName="更新时间" queryable="true" sortable="true" insertable="false" updatable="false"
-          internal="true" ext:show="X">
-        <schema domain="updateTime" type="java.time.LocalDateTime"/>
-    </prop>
-
-    <prop name="deleted" displayName="逻辑删除" queryable="true" sortable="true" insertable="false" updatable="true"
-          internal="true" ext:show="X">
-        <schema domain="delFlag" type="java.lang.Boolean"/>
-    </prop>
-
-    <prop name="goods" displayName="所属商品" i18n-en:displayName="Goods" tagSet="pub,ref-pub,ref-cascade-delete"
-          ext:kind="to-one" internal="true" queryable="true" ext:joinLeftProp="goodsId" ext:joinRightProp="id"
-          ext:joinRightDisplayProp="name" insertable="false" updatable="false" mandatory="true" lazy="true">
-        <schema type="app.mall.dao.entity.LitemallGoods" bizObjName="LitemallGoods"/>
-    </prop>
-
-    <prop name="goods.name" displayName="所属商品" i18n-en:displayName="Goods" internal="true" queryable="true"
-          sortable="true" lazy="true">
-        <schema type="String"/>
-    </prop>
+    <props>
+        <prop name="id" displayName="Id" tagSet="seq" mandatory="true" queryable="true" sortable="true"
+              insertable="true" updatable="false">
+            <schema type="java.lang.Integer"/>
+        </prop>
+        <prop name="goodsId" displayName="商品ID" mandatory="true" queryable="true" sortable="true" insertable="true"
+              updatable="true" ext:relation="goods">
+            <schema type="java.lang.Integer"/>
+        </prop>
+        <prop name="specifications" displayName="商品规格值" mandatory="true" queryable="true" sortable="true"
+              insertable="true" updatable="true">
+            <schema type="java.lang.String" precision="1023"/>
+        </prop>
+        <prop name="price" displayName="商品货品价格" mandatory="true" queryable="true" sortable="true" insertable="true"
+              updatable="true">
+            <schema type="java.math.BigDecimal" precision="10" scale="2"/>
+        </prop>
+        <prop name="number" displayName="商品货品数量" mandatory="true" queryable="true" sortable="true" insertable="true"
+              updatable="true">
+            <schema type="java.lang.Integer"/>
+        </prop>
+        <prop name="url" displayName="商品货品图片" queryable="true" sortable="true" insertable="true" updatable="true">
+            <schema type="java.lang.String" precision="125"/>
+        </prop>
+        <prop name="addTime" displayName="创建时间" queryable="true" sortable="true" insertable="false" updatable="false"
+              internal="true" ext:show="X">
+            <schema domain="createTime" type="java.time.LocalDateTime"/>
+        </prop>
+        <prop name="updateTime" displayName="更新时间" queryable="true" sortable="true" insertable="false" updatable="false"
+              internal="true" ext:show="X">
+            <schema domain="updateTime" type="java.time.LocalDateTime"/>
+        </prop>
+        <prop name="deleted" displayName="逻辑删除" queryable="true" sortable="true" insertable="false" updatable="true"
+              internal="true" ext:show="X">
+            <schema domain="delFlag" type="java.lang.Boolean"/>
+        </prop>
+        <prop name="goods" displayName="所属商品" i18n-en:displayName="Goods" tagSet="pub,ref-pub,ref-cascade-delete"
+              ext:kind="to-one" internal="true" queryable="true" ext:joinLeftProp="goodsId" ext:joinRightProp="id"
+              ext:joinRightDisplayProp="name" insertable="false" updatable="false" mandatory="true" lazy="true">
+            <schema type="app.mall.dao.entity.LitemallGoods" bizObjName="LitemallGoods"/>
+        </prop>
+        <prop name="goods.name" displayName="所属商品" i18n-en:displayName="Goods" internal="true" queryable="true"
+              sortable="true" lazy="true">
+            <schema type="String"/>
+        </prop>
+    </props>
 </meta>

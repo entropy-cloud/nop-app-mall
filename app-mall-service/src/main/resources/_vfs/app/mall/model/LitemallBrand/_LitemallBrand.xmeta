@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <meta x:schema="/nop/schema/xmeta.xdef" xmlns:x="/nop/schema/xdsl.xdef" xmlns:i18n-en="i18n-en" xmlns:ext="ext"
-      xmlns:xpl="xpl" xmlns:biz-gen="biz-gen" ext:model="orm" xmlns:c="c" displayName="品牌商表">
+      xmlns:xpl="xpl" xmlns:biz-gen="biz-gen" ext:model="orm" xmlns:c="c" displayName="品牌商表" tagSet="dict">
 
     <entityName>app.mall.dao.entity.LitemallBrand</entityName>
 
@@ -14,47 +14,41 @@
 
     <keys/>
 
-    <prop name="id" displayName="Id" tagSet="seq" mandatory="true" queryable="true" sortable="true" insertable="true"
-          updatable="false">
-        <schema type="java.lang.Integer"/>
-    </prop>
-
-    <prop name="name" displayName="品牌商名称" tagSet="disp" mandatory="true" queryable="true" sortable="true"
-          insertable="true" updatable="true">
-        <schema type="java.lang.String" precision="255"/>
-    </prop>
-
-    <prop name="desc" displayName="品牌商简介" mandatory="true" queryable="true" sortable="true" insertable="true"
-          updatable="true">
-        <schema type="java.lang.String" precision="255"/>
-    </prop>
-
-    <prop name="picUrl" displayName="品牌商图片" mandatory="true" queryable="true" sortable="true" insertable="true"
-          updatable="true">
-        <schema type="java.lang.String" precision="255"/>
-    </prop>
-
-    <prop name="sortOrder" displayName="排序" queryable="true" sortable="true" insertable="true" updatable="true">
-        <schema type="java.lang.Byte"/>
-    </prop>
-
-    <prop name="floorPrice" displayName="品牌商的商品低价，仅用于页面展示" queryable="true" sortable="true" insertable="true"
-          updatable="true">
-        <schema type="java.math.BigDecimal" precision="10" scale="2"/>
-    </prop>
-
-    <prop name="addTime" displayName="创建时间" queryable="true" sortable="true" insertable="false" updatable="false"
-          internal="true" ext:show="X">
-        <schema domain="createTime" type="java.time.LocalDateTime"/>
-    </prop>
-
-    <prop name="updateTime" displayName="更新时间" queryable="true" sortable="true" insertable="false" updatable="false"
-          internal="true" ext:show="X">
-        <schema domain="updateTime" type="java.time.LocalDateTime"/>
-    </prop>
-
-    <prop name="deleted" displayName="逻辑删除" queryable="true" sortable="true" insertable="false" updatable="true"
-          internal="true" ext:show="X">
-        <schema domain="delFlag" type="java.lang.Boolean"/>
-    </prop>
+    <props>
+        <prop name="id" displayName="Id" tagSet="seq" mandatory="true" queryable="true" sortable="true"
+              insertable="false" updatable="false" ext:show="R">
+            <schema type="java.lang.Integer"/>
+        </prop>
+        <prop name="name" displayName="品牌商名称" tagSet="disp" mandatory="true" queryable="true" sortable="true"
+              insertable="true" updatable="true">
+            <schema type="java.lang.String" precision="255"/>
+        </prop>
+        <prop name="picUrl" displayName="品牌商图片" mandatory="true" queryable="true" sortable="true" insertable="true"
+              updatable="true">
+            <schema type="java.lang.String" precision="255"/>
+        </prop>
+        <prop name="desc" displayName="品牌商简介" mandatory="true" queryable="true" sortable="true" insertable="true"
+              updatable="true">
+            <schema type="java.lang.String" precision="255"/>
+        </prop>
+        <prop name="sortOrder" displayName="排序" queryable="true" sortable="true" insertable="true" updatable="true"
+              internal="true" ext:show="X">
+            <schema type="java.lang.Byte"/>
+        </prop>
+        <prop name="floorPrice" displayName="底价" queryable="true" sortable="true" insertable="true" updatable="true">
+            <schema type="java.math.BigDecimal" precision="10" scale="2"/>
+        </prop>
+        <prop name="addTime" displayName="创建时间" queryable="true" sortable="true" insertable="false" updatable="false"
+              internal="true" ext:show="X">
+            <schema domain="createTime" type="java.time.LocalDateTime"/>
+        </prop>
+        <prop name="updateTime" displayName="更新时间" queryable="true" sortable="true" insertable="false" updatable="false"
+              internal="true" ext:show="X">
+            <schema domain="updateTime" type="java.time.LocalDateTime"/>
+        </prop>
+        <prop name="deleted" displayName="逻辑删除" queryable="true" sortable="true" insertable="false" updatable="true"
+              internal="true" ext:show="X">
+            <schema domain="delFlag" type="java.lang.Boolean"/>
+        </prop>
+    </props>
 </meta>

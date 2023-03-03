@@ -1,5 +1,8 @@
 [
   [
+    "app.mall.dao.mapper.LitemallGoodsMapper"
+  ],
+  [
     "io.nop.auth.dao.mapper.NopAuthRoleMapper"
   ],
   [

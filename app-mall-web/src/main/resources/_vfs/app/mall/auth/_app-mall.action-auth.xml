@@ -3,79 +3,97 @@
 
     <site id="main">
         <resource id="test-orm-app-mall" displayName="测试app-mall" icon="ion:grid-outline" resourceType="TOPM"
-                  orderNo="0" routePath="/test-orm-app-mall" component="layouts/default/index">
+                  orderNo="10000" routePath="/test-orm-app-mall" component="layouts/default/index">
             <children>
-                <resource id="LitemallAd-main" displayName="广告表" icon="ant-design:appstore-twotone" component="AMIS"
-                          resourceType="SUBM" url="/app/mall/pages/LitemallAd/main.page.yaml"/>
-                <resource id="LitemallAddress-main" displayName="收货地址表" icon="ant-design:appstore-twotone"
-                          component="AMIS" resourceType="SUBM" url="/app/mall/pages/LitemallAddress/main.page.yaml"/>
-                <resource id="LitemallAdmin-main" displayName="管理员表" icon="ant-design:appstore-twotone" component="AMIS"
-                          resourceType="SUBM" url="/app/mall/pages/LitemallAdmin/main.page.yaml"/>
-                <resource id="LitemallAftersale-main" displayName="售后表" icon="ant-design:appstore-twotone"
-                          component="AMIS" resourceType="SUBM" url="/app/mall/pages/LitemallAftersale/main.page.yaml"/>
-                <resource id="LitemallBrand-main" displayName="品牌商表" icon="ant-design:appstore-twotone" component="AMIS"
-                          resourceType="SUBM" url="/app/mall/pages/LitemallBrand/main.page.yaml"/>
-                <resource id="LitemallCart-main" displayName="购物车商品表" icon="ant-design:appstore-twotone"
+                <resource id="LitemallAd-main" displayName="广告表" orderNo="10001" icon="ant-design:appstore-twotone"
+                          component="AMIS" resourceType="SUBM" url="/app/mall/pages/LitemallAd/main.page.yaml"/>
+                <resource id="LitemallAddress-main" displayName="收货地址表" orderNo="10002"
+                          icon="ant-design:appstore-twotone" component="AMIS" resourceType="SUBM"
+                          url="/app/mall/pages/LitemallAddress/main.page.yaml"/>
+                <resource id="LitemallAdmin-main" displayName="管理员表" orderNo="10003" icon="ant-design:appstore-twotone"
+                          component="AMIS" resourceType="SUBM" url="/app/mall/pages/LitemallAdmin/main.page.yaml"/>
+                <resource id="LitemallAftersale-main" displayName="售后表" orderNo="10004"
+                          icon="ant-design:appstore-twotone" component="AMIS" resourceType="SUBM"
+                          url="/app/mall/pages/LitemallAftersale/main.page.yaml"/>
+                <resource id="LitemallBrand-main" displayName="品牌商表" orderNo="10005" icon="ant-design:appstore-twotone"
+                          component="AMIS" resourceType="SUBM" url="/app/mall/pages/LitemallBrand/main.page.yaml"/>
+                <resource id="LitemallCart-main" displayName="购物车商品表" orderNo="10006" icon="ant-design:appstore-twotone"
                           component="AMIS" resourceType="SUBM" url="/app/mall/pages/LitemallCart/main.page.yaml"/>
-                <resource id="LitemallCategory-main" displayName="类目表" icon="ant-design:appstore-twotone"
-                          component="AMIS" resourceType="SUBM" url="/app/mall/pages/LitemallCategory/main.page.yaml"/>
-                <resource id="LitemallCollect-main" displayName="收藏表" icon="ant-design:appstore-twotone"
+                <resource id="LitemallCategory-main" displayName="类目表" orderNo="10007"
+                          icon="ant-design:appstore-twotone" component="AMIS" resourceType="SUBM"
+                          url="/app/mall/pages/LitemallCategory/main.page.yaml"/>
+                <resource id="LitemallCollect-main" displayName="收藏表" orderNo="10008" icon="ant-design:appstore-twotone"
                           component="AMIS" resourceType="SUBM" url="/app/mall/pages/LitemallCollect/main.page.yaml"/>
-                <resource id="LitemallComment-main" displayName="评论表" icon="ant-design:appstore-twotone"
+                <resource id="LitemallComment-main" displayName="评论表" orderNo="10009" icon="ant-design:appstore-twotone"
                           component="AMIS" resourceType="SUBM" url="/app/mall/pages/LitemallComment/main.page.yaml"/>
-                <resource id="LitemallCoupon-main" displayName="优惠券信息及规则表" icon="ant-design:appstore-twotone"
-                          component="AMIS" resourceType="SUBM" url="/app/mall/pages/LitemallCoupon/main.page.yaml"/>
-                <resource id="LitemallCouponUser-main" displayName="优惠券用户使用表" icon="ant-design:appstore-twotone"
-                          component="AMIS" resourceType="SUBM" url="/app/mall/pages/LitemallCouponUser/main.page.yaml"/>
-                <resource id="LitemallFeedback-main" displayName="意见反馈表" icon="ant-design:appstore-twotone"
-                          component="AMIS" resourceType="SUBM" url="/app/mall/pages/LitemallFeedback/main.page.yaml"/>
-                <resource id="LitemallFootprint-main" displayName="用户浏览足迹表" icon="ant-design:appstore-twotone"
-                          component="AMIS" resourceType="SUBM" url="/app/mall/pages/LitemallFootprint/main.page.yaml"/>
-                <resource id="LitemallGoods-main" displayName="商品基本信息" icon="ant-design:appstore-twotone"
-                          component="AMIS" resourceType="SUBM" url="/app/mall/pages/LitemallGoods/main.page.yaml"/>
-                <resource id="LitemallGoodsAttribute-main" displayName="商品参数表" icon="ant-design:appstore-twotone"
-                          component="AMIS" resourceType="SUBM"
+                <resource id="LitemallCoupon-main" displayName="优惠券信息及规则表" orderNo="10010"
+                          icon="ant-design:appstore-twotone" component="AMIS" resourceType="SUBM"
+                          url="/app/mall/pages/LitemallCoupon/main.page.yaml"/>
+                <resource id="LitemallCouponUser-main" displayName="优惠券用户使用表" orderNo="10011"
+                          icon="ant-design:appstore-twotone" component="AMIS" resourceType="SUBM"
+                          url="/app/mall/pages/LitemallCouponUser/main.page.yaml"/>
+                <resource id="LitemallFeedback-main" displayName="意见反馈表" orderNo="10012"
+                          icon="ant-design:appstore-twotone" component="AMIS" resourceType="SUBM"
+                          url="/app/mall/pages/LitemallFeedback/main.page.yaml"/>
+                <resource id="LitemallFootprint-main" displayName="用户浏览足迹表" orderNo="10013"
+                          icon="ant-design:appstore-twotone" component="AMIS" resourceType="SUBM"
+                          url="/app/mall/pages/LitemallFootprint/main.page.yaml"/>
+                <resource id="LitemallGoods-main" displayName="商品基本信息" orderNo="10014"
+                          icon="ant-design:appstore-twotone" component="AMIS" resourceType="SUBM"
+                          url="/app/mall/pages/LitemallGoods/main.page.yaml"/>
+                <resource id="LitemallGoodsAttribute-main" displayName="商品参数表" orderNo="10015"
+                          icon="ant-design:appstore-twotone" component="AMIS" resourceType="SUBM"
                           url="/app/mall/pages/LitemallGoodsAttribute/main.page.yaml"/>
-                <resource id="LitemallGoodsProduct-main" displayName="商品货品表" icon="ant-design:appstore-twotone"
-                          component="AMIS" resourceType="SUBM" url="/app/mall/pages/LitemallGoodsProduct/main.page.yaml"/>
-                <resource id="LitemallGoodsSpecification-main" displayName="商品规格表" icon="ant-design:appstore-twotone"
-                          component="AMIS" resourceType="SUBM"
+                <resource id="LitemallGoodsProduct-main" displayName="商品货品表" orderNo="10016"
+                          icon="ant-design:appstore-twotone" component="AMIS" resourceType="SUBM"
+                          url="/app/mall/pages/LitemallGoodsProduct/main.page.yaml"/>
+                <resource id="LitemallGoodsSpecification-main" displayName="商品规格表" orderNo="10017"
+                          icon="ant-design:appstore-twotone" component="AMIS" resourceType="SUBM"
                           url="/app/mall/pages/LitemallGoodsSpecification/main.page.yaml"/>
-                <resource id="LitemallGroupon-main" displayName="团购活动表" icon="ant-design:appstore-twotone"
-                          component="AMIS" resourceType="SUBM" url="/app/mall/pages/LitemallGroupon/main.page.yaml"/>
-                <resource id="LitemallGrouponRules-main" displayName="团购规则表" icon="ant-design:appstore-twotone"
-                          component="AMIS" resourceType="SUBM" url="/app/mall/pages/LitemallGrouponRules/main.page.yaml"/>
-                <resource id="LitemallIssue-main" displayName="常见问题表" icon="ant-design:appstore-twotone"
+                <resource id="LitemallGroupon-main" displayName="团购活动表" orderNo="10018"
+                          icon="ant-design:appstore-twotone" component="AMIS" resourceType="SUBM"
+                          url="/app/mall/pages/LitemallGroupon/main.page.yaml"/>
+                <resource id="LitemallGrouponRules-main" displayName="团购规则表" orderNo="10019"
+                          icon="ant-design:appstore-twotone" component="AMIS" resourceType="SUBM"
+                          url="/app/mall/pages/LitemallGrouponRules/main.page.yaml"/>
+                <resource id="LitemallIssue-main" displayName="常见问题表" orderNo="10020" icon="ant-design:appstore-twotone"
                           component="AMIS" resourceType="SUBM" url="/app/mall/pages/LitemallIssue/main.page.yaml"/>
-                <resource id="LitemallKeyword-main" displayName="关键字表" icon="ant-design:appstore-twotone"
-                          component="AMIS" resourceType="SUBM" url="/app/mall/pages/LitemallKeyword/main.page.yaml"/>
-                <resource id="LitemallLog-main" displayName="操作日志表" icon="ant-design:appstore-twotone" component="AMIS"
-                          resourceType="SUBM" url="/app/mall/pages/LitemallLog/main.page.yaml"/>
-                <resource id="LitemallNotice-main" displayName="通知表" icon="ant-design:appstore-twotone" component="AMIS"
-                          resourceType="SUBM" url="/app/mall/pages/LitemallNotice/main.page.yaml"/>
-                <resource id="LitemallNoticeAdmin-main" displayName="通知管理员表" icon="ant-design:appstore-twotone"
-                          component="AMIS" resourceType="SUBM" url="/app/mall/pages/LitemallNoticeAdmin/main.page.yaml"/>
-                <resource id="LitemallOrder-main" displayName="订单表" icon="ant-design:appstore-twotone" component="AMIS"
-                          resourceType="SUBM" url="/app/mall/pages/LitemallOrder/main.page.yaml"/>
-                <resource id="LitemallOrderGoods-main" displayName="订单商品表" icon="ant-design:appstore-twotone"
-                          component="AMIS" resourceType="SUBM" url="/app/mall/pages/LitemallOrderGoods/main.page.yaml"/>
-                <resource id="LitemallPermission-main" displayName="权限表" icon="ant-design:appstore-twotone"
-                          component="AMIS" resourceType="SUBM" url="/app/mall/pages/LitemallPermission/main.page.yaml"/>
-                <resource id="LitemallRegion-main" displayName="行政区域表" icon="ant-design:appstore-twotone"
-                          component="AMIS" resourceType="SUBM" url="/app/mall/pages/LitemallRegion/main.page.yaml"/>
-                <resource id="LitemallRole-main" displayName="角色表" icon="ant-design:appstore-twotone" component="AMIS"
-                          resourceType="SUBM" url="/app/mall/pages/LitemallRole/main.page.yaml"/>
-                <resource id="LitemallSearchHistory-main" displayName="搜索历史表" icon="ant-design:appstore-twotone"
-                          component="AMIS" resourceType="SUBM"
+                <resource id="LitemallKeyword-main" displayName="关键字表" orderNo="10021"
+                          icon="ant-design:appstore-twotone" component="AMIS" resourceType="SUBM"
+                          url="/app/mall/pages/LitemallKeyword/main.page.yaml"/>
+                <resource id="LitemallLog-main" displayName="操作日志表" orderNo="10022" icon="ant-design:appstore-twotone"
+                          component="AMIS" resourceType="SUBM" url="/app/mall/pages/LitemallLog/main.page.yaml"/>
+                <resource id="LitemallNotice-main" displayName="通知表" orderNo="10023" icon="ant-design:appstore-twotone"
+                          component="AMIS" resourceType="SUBM" url="/app/mall/pages/LitemallNotice/main.page.yaml"/>
+                <resource id="LitemallNoticeAdmin-main" displayName="通知管理员表" orderNo="10024"
+                          icon="ant-design:appstore-twotone" component="AMIS" resourceType="SUBM"
+                          url="/app/mall/pages/LitemallNoticeAdmin/main.page.yaml"/>
+                <resource id="LitemallOrder-main" displayName="订单表" orderNo="10025" icon="ant-design:appstore-twotone"
+                          component="AMIS" resourceType="SUBM" url="/app/mall/pages/LitemallOrder/main.page.yaml"/>
+                <resource id="LitemallOrderGoods-main" displayName="订单商品表" orderNo="10026"
+                          icon="ant-design:appstore-twotone" component="AMIS" resourceType="SUBM"
+                          url="/app/mall/pages/LitemallOrderGoods/main.page.yaml"/>
+                <resource id="LitemallPermission-main" displayName="权限表" orderNo="10027"
+                          icon="ant-design:appstore-twotone" component="AMIS" resourceType="SUBM"
+                          url="/app/mall/pages/LitemallPermission/main.page.yaml"/>
+                <resource id="LitemallRegion-main" displayName="行政区域表" orderNo="10028"
+                          icon="ant-design:appstore-twotone" component="AMIS" resourceType="SUBM"
+                          url="/app/mall/pages/LitemallRegion/main.page.yaml"/>
+                <resource id="LitemallRole-main" displayName="角色表" orderNo="10029" icon="ant-design:appstore-twotone"
+                          component="AMIS" resourceType="SUBM" url="/app/mall/pages/LitemallRole/main.page.yaml"/>
+                <resource id="LitemallSearchHistory-main" displayName="搜索历史表" orderNo="10030"
+                          icon="ant-design:appstore-twotone" component="AMIS" resourceType="SUBM"
                           url="/app/mall/pages/LitemallSearchHistory/main.page.yaml"/>
-                <resource id="LitemallStorage-main" displayName="文件存储表" icon="ant-design:appstore-twotone"
-                          component="AMIS" resourceType="SUBM" url="/app/mall/pages/LitemallStorage/main.page.yaml"/>
-                <resource id="LitemallSystem-main" displayName="系统配置表" icon="ant-design:appstore-twotone"
-                          component="AMIS" resourceType="SUBM" url="/app/mall/pages/LitemallSystem/main.page.yaml"/>
-                <resource id="LitemallTopic-main" displayName="专题表" icon="ant-design:appstore-twotone" component="AMIS"
-                          resourceType="SUBM" url="/app/mall/pages/LitemallTopic/main.page.yaml"/>
-                <resource id="LitemallUser-main" displayName="用户表" icon="ant-design:appstore-twotone" component="AMIS"
-                          resourceType="SUBM" url="/app/mall/pages/LitemallUser/main.page.yaml"/>
+                <resource id="LitemallStorage-main" displayName="文件存储表" orderNo="10031"
+                          icon="ant-design:appstore-twotone" component="AMIS" resourceType="SUBM"
+                          url="/app/mall/pages/LitemallStorage/main.page.yaml"/>
+                <resource id="LitemallSystem-main" displayName="系统配置表" orderNo="10032"
+                          icon="ant-design:appstore-twotone" component="AMIS" resourceType="SUBM"
+                          url="/app/mall/pages/LitemallSystem/main.page.yaml"/>
+                <resource id="LitemallTopic-main" displayName="专题表" orderNo="10033" icon="ant-design:appstore-twotone"
+                          component="AMIS" resourceType="SUBM" url="/app/mall/pages/LitemallTopic/main.page.yaml"/>
+                <resource id="LitemallUser-main" displayName="用户表" orderNo="10034" icon="ant-design:appstore-twotone"
+                          component="AMIS" resourceType="SUBM" url="/app/mall/pages/LitemallUser/main.page.yaml"/>
             </children>
         </resource>
     </site>

@@ -14,65 +14,55 @@
 
     <keys/>
 
-    <prop name="id" displayName="Id" tagSet="seq" mandatory="true" queryable="true" sortable="true" insertable="true"
-          updatable="false">
-        <schema type="java.lang.Integer"/>
-    </prop>
-
-    <prop name="userId" displayName="用户ID" mandatory="true" queryable="true" sortable="true" insertable="true"
-          updatable="true">
-        <schema type="java.lang.Integer"/>
-    </prop>
-
-    <prop name="couponId" displayName="优惠券ID" mandatory="true" queryable="true" sortable="true" insertable="true"
-          updatable="true" ext:relation="coupon">
-        <schema type="java.lang.Integer"/>
-    </prop>
-
-    <prop name="status" displayName="使用状态, 如果是0则未使用；如果是1则已使用；如果是2则已过期；如果是3则已经下架；" queryable="true" sortable="true"
-          insertable="true" updatable="true">
-        <schema type="java.lang.Short"/>
-    </prop>
-
-    <prop name="usedTime" displayName="使用时间" queryable="true" sortable="true" insertable="true" updatable="true">
-        <schema type="java.time.LocalDateTime"/>
-    </prop>
-
-    <prop name="startTime" displayName="有效期开始时间" queryable="true" sortable="true" insertable="true" updatable="true">
-        <schema type="java.time.LocalDateTime"/>
-    </prop>
-
-    <prop name="endTime" displayName="有效期截至时间" queryable="true" sortable="true" insertable="true" updatable="true">
-        <schema type="java.time.LocalDateTime"/>
-    </prop>
-
-    <prop name="orderId" displayName="订单ID" queryable="true" sortable="true" insertable="true" updatable="true">
-        <schema type="java.lang.Integer"/>
-    </prop>
-
-    <prop name="addTime" displayName="创建时间" queryable="true" sortable="true" insertable="false" updatable="false"
-          internal="true" ext:show="X">
-        <schema domain="createTime" type="java.time.LocalDateTime"/>
-    </prop>
-
-    <prop name="updateTime" displayName="更新时间" queryable="true" sortable="true" insertable="false" updatable="false"
-          internal="true" ext:show="X">
-        <schema domain="updateTime" type="java.time.LocalDateTime"/>
-    </prop>
-
-    <prop name="deleted" displayName="逻辑删除" queryable="true" sortable="true" insertable="false" updatable="true"
-          internal="true" ext:show="X">
-        <schema domain="delFlag" type="java.lang.Boolean"/>
-    </prop>
-
-    <prop name="coupon" displayName="优惠券" i18n-en:displayName="Coupon" tagSet="pub,ref-pub" ext:kind="to-one"
-          internal="true" queryable="true" ext:joinLeftProp="couponId" ext:joinRightProp="id"
-          ext:joinRightDisplayProp="name" insertable="false" updatable="false" mandatory="true" lazy="true">
-        <schema type="app.mall.dao.entity.LitemallCoupon" bizObjName="LitemallCoupon"/>
-    </prop>
-
-    <prop name="coupon.name" displayName="优惠券" i18n-en:displayName="Coupon" internal="true" queryable="true"
-          sortable="true" lazy="true">
-        <schema type="String"/>
-    </prop>
+    <props>
+        <prop name="id" displayName="Id" tagSet="seq" mandatory="true" queryable="true" sortable="true"
+              insertable="true" updatable="false">
+            <schema type="java.lang.Integer"/>
+        </prop>
+        <prop name="userId" displayName="用户ID" mandatory="true" queryable="true" sortable="true" insertable="true"
+              updatable="true">
+            <schema type="java.lang.Integer"/>
+        </prop>
+        <prop name="couponId" displayName="优惠券ID" mandatory="true" queryable="true" sortable="true" insertable="true"
+              updatable="true" ext:relation="coupon">
+            <schema type="java.lang.Integer"/>
+        </prop>
+        <prop name="status" displayName="使用状态, 如果是0则未使用；如果是1则已使用；如果是2则已过期；如果是3则已经下架；" queryable="true" sortable="true"
+              insertable="true" updatable="true">
+            <schema type="java.lang.Short"/>
+        </prop>
+        <prop name="usedTime" displayName="使用时间" queryable="true" sortable="true" insertable="true" updatable="true">
+            <schema type="java.time.LocalDateTime"/>
+        </prop>
+        <prop name="startTime" displayName="有效期开始时间" queryable="true" sortable="true" insertable="true" updatable="true">
+            <schema type="java.time.LocalDateTime"/>
+        </prop>
+        <prop name="endTime" displayName="有效期截至时间" queryable="true" sortable="true" insertable="true" updatable="true">
+            <schema type="java.time.LocalDateTime"/>
+        </prop>
+        <prop name="orderId" displayName="订单ID" queryable="true" sortable="true" insertable="true" updatable="true">
+            <schema type="java.lang.Integer"/>
+        </prop>
+        <prop name="addTime" displayName="创建时间" queryable="true" sortable="true" insertable="false" updatable="false"
+              internal="true" ext:show="X">
+            <schema domain="createTime" type="java.time.LocalDateTime"/>
+        </prop>
+        <prop name="updateTime" displayName="更新时间" queryable="true" sortable="true" insertable="false" updatable="false"
+              internal="true" ext:show="X">
+            <schema domain="updateTime" type="java.time.LocalDateTime"/>
+        </prop>
+        <prop name="deleted" displayName="逻辑删除" queryable="true" sortable="true" insertable="false" updatable="true"
+              internal="true" ext:show="X">
+            <schema domain="delFlag" type="java.lang.Boolean"/>
+        </prop>
+        <prop name="coupon" displayName="优惠券" i18n-en:displayName="Coupon" tagSet="pub,ref-pub" ext:kind="to-one"
+              internal="true" queryable="true" ext:joinLeftProp="couponId" ext:joinRightProp="id"
+              ext:joinRightDisplayProp="name" insertable="false" updatable="false" mandatory="true" lazy="true">
+            <schema type="app.mall.dao.entity.LitemallCoupon" bizObjName="LitemallCoupon"/>
+        </prop>
+        <prop name="coupon.name" displayName="优惠券" i18n-en:displayName="Coupon" internal="true" queryable="true"
+              sortable="true" lazy="true">
+            <schema type="String"/>
+        </prop>
+    </props>
 </meta>

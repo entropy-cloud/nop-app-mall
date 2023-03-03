@@ -14,71 +14,60 @@
 
     <keys/>
 
-    <prop name="id" displayName="Id" tagSet="seq" mandatory="true" queryable="true" sortable="true" insertable="true"
-          updatable="false">
-        <schema type="java.lang.Integer"/>
-    </prop>
-
-    <prop name="name" displayName="收货人名称" tagSet="disp" mandatory="true" queryable="true" sortable="true"
-          insertable="true" updatable="true">
-        <schema type="java.lang.String" precision="63"/>
-    </prop>
-
-    <prop name="userId" displayName="用户表的用户ID" mandatory="true" queryable="true" sortable="true" insertable="true"
-          updatable="true">
-        <schema type="java.lang.Integer"/>
-    </prop>
-
-    <prop name="province" displayName="行政区域表的省ID" mandatory="true" queryable="true" sortable="true" insertable="true"
-          updatable="true">
-        <schema type="java.lang.String" precision="63"/>
-    </prop>
-
-    <prop name="city" displayName="行政区域表的市ID" mandatory="true" queryable="true" sortable="true" insertable="true"
-          updatable="true">
-        <schema type="java.lang.String" precision="63"/>
-    </prop>
-
-    <prop name="county" displayName="行政区域表的区县ID" mandatory="true" queryable="true" sortable="true" insertable="true"
-          updatable="true">
-        <schema type="java.lang.String" precision="63"/>
-    </prop>
-
-    <prop name="addressDetail" displayName="详细收货地址" mandatory="true" queryable="true" sortable="true" insertable="true"
-          updatable="true">
-        <schema type="java.lang.String" precision="127"/>
-    </prop>
-
-    <prop name="areaCode" displayName="地区编码" queryable="true" sortable="true" insertable="true" updatable="true">
-        <schema type="java.lang.String" precision="6"/>
-    </prop>
-
-    <prop name="postalCode" displayName="邮政编码" queryable="true" sortable="true" insertable="true" updatable="true">
-        <schema type="java.lang.String" precision="6"/>
-    </prop>
-
-    <prop name="tel" displayName="手机号码" mandatory="true" queryable="true" sortable="true" insertable="true"
-          updatable="true">
-        <schema type="java.lang.String" precision="20"/>
-    </prop>
-
-    <prop name="isDefault" displayName="是否默认地址" mandatory="true" queryable="true" sortable="true" insertable="true"
-          updatable="true">
-        <schema type="java.lang.Boolean"/>
-    </prop>
-
-    <prop name="addTime" displayName="创建时间" queryable="true" sortable="true" insertable="false" updatable="false"
-          internal="true" ext:show="X">
-        <schema domain="createTime" type="java.time.LocalDateTime"/>
-    </prop>
-
-    <prop name="updateTime" displayName="更新时间" queryable="true" sortable="true" insertable="false" updatable="false"
-          internal="true" ext:show="X">
-        <schema domain="updateTime" type="java.time.LocalDateTime"/>
-    </prop>
-
-    <prop name="deleted" displayName="逻辑删除" queryable="true" sortable="true" insertable="false" updatable="true"
-          internal="true" ext:show="X">
-        <schema domain="delFlag" type="java.lang.Boolean"/>
-    </prop>
+    <props>
+        <prop name="id" displayName="Id" tagSet="seq" mandatory="true" queryable="true" sortable="true"
+              insertable="true" updatable="false">
+            <schema type="java.lang.Integer"/>
+        </prop>
+        <prop name="name" displayName="收货人名称" tagSet="disp" mandatory="true" queryable="true" sortable="true"
+              insertable="true" updatable="true">
+            <schema type="java.lang.String" precision="63"/>
+        </prop>
+        <prop name="userId" displayName="用户表的用户ID" mandatory="true" queryable="true" sortable="true" insertable="true"
+              updatable="true">
+            <schema type="java.lang.Integer"/>
+        </prop>
+        <prop name="province" displayName="行政区域表的省ID" mandatory="true" queryable="true" sortable="true"
+              insertable="true" updatable="true">
+            <schema type="java.lang.String" precision="63"/>
+        </prop>
+        <prop name="city" displayName="行政区域表的市ID" mandatory="true" queryable="true" sortable="true" insertable="true"
+              updatable="true">
+            <schema type="java.lang.String" precision="63"/>
+        </prop>
+        <prop name="county" displayName="行政区域表的区县ID" mandatory="true" queryable="true" sortable="true" insertable="true"
+              updatable="true">
+            <schema type="java.lang.String" precision="63"/>
+        </prop>
+        <prop name="addressDetail" displayName="详细收货地址" mandatory="true" queryable="true" sortable="true"
+              insertable="true" updatable="true">
+            <schema type="java.lang.String" precision="127"/>
+        </prop>
+        <prop name="areaCode" displayName="地区编码" queryable="true" sortable="true" insertable="true" updatable="true">
+            <schema type="java.lang.String" precision="6"/>
+        </prop>
+        <prop name="postalCode" displayName="邮政编码" queryable="true" sortable="true" insertable="true" updatable="true">
+            <schema type="java.lang.String" precision="6"/>
+        </prop>
+        <prop name="tel" displayName="手机号码" mandatory="true" queryable="true" sortable="true" insertable="true"
+              updatable="true">
+            <schema type="java.lang.String" precision="20"/>
+        </prop>
+        <prop name="isDefault" displayName="是否默认地址" mandatory="true" queryable="true" sortable="true" insertable="true"
+              updatable="true">
+            <schema type="java.lang.Boolean"/>
+        </prop>
+        <prop name="addTime" displayName="创建时间" queryable="true" sortable="true" insertable="false" updatable="false"
+              internal="true" ext:show="X">
+            <schema domain="createTime" type="java.time.LocalDateTime"/>
+        </prop>
+        <prop name="updateTime" displayName="更新时间" queryable="true" sortable="true" insertable="false" updatable="false"
+              internal="true" ext:show="X">
+            <schema domain="updateTime" type="java.time.LocalDateTime"/>
+        </prop>
+        <prop name="deleted" displayName="逻辑删除" queryable="true" sortable="true" insertable="false" updatable="true"
+              internal="true" ext:show="X">
+            <schema domain="delFlag" type="java.lang.Boolean"/>
+        </prop>
+    </props>
 </meta>

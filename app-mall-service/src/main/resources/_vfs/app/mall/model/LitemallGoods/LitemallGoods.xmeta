@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <meta x:schema="/nop/schema/xmeta.xdef" xmlns:x="/nop/schema/xdsl.xdef" x:extends="_LitemallGoods.xmeta">
 
-
+    <props>
+        <!--
+        演示在实体上增加扩展字段
+        -->
+        <prop name="keywordsList" displayName="关键字"
+              insertable="true" updatable="true" queryable="false" sortable="false">
+            <schema type="List&lt;String>" domain="tag-list"></schema>
+        </prop>
+    </props>
 </meta>

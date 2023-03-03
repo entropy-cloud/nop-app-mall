@@ -8,12 +8,59 @@
 
     <forms>
         <form id="view"/>
-        <form id="edit"/>
+        <form id="edit" >
+            <layout>
+                name[类目名称]
+                keywords[类目关键字]
+                level[级别]
+                pid[父类目ID]
+                iconUrl[类目图标]
+                picUrl[类目图片]
+                desc[简介]
+            </layout>
+            <cells>
+                <cell id="pid">
+                    <requiredOn>${level == 2}</requiredOn>
+                    <visibleOn>${level == 2}</visibleOn>
+                    <gen-control>
+                        <select clearable="@:true">
+                            <source>
+                                <url>@query:LitemallCategory__findList/value:id,label:name?filter_level=1
+                                </url>
+                            </source>
+                        </select>
+                    </gen-control>
+                </cell>
+            </cells>
+        </form>
         <form id="add"/>
     </forms>
 
     <pages>
-        <crud name="main"/>
+        <crud name="main">
+            <table loadDataOnce="true" sortable="false" initFetch="false">
+                <!--
+                在url中可以通过{@gql:listSelection}来引用后台根据grid配置生成的字段选择列表
+                -->
+                <api url="@query:LitemallCategory__findList/{@listSelection}?filter_level=1"/>
+            </table>
+
+            <rowActions>
+                <actionGroup id="row-more-button">
+                    <action id="row-add-child-button">
+                        <visibleOn>${level == 1}</visibleOn>
+                    </action>
+                </actionGroup>
+            </rowActions>
+        </crud>
+
         <picker name="picker"/>
+
+        <simple name="add-child">
+            <data>
+                <pid>$id</pid>
+                <level>2</level>
+            </data>
+        </simple>
     </pages>
 </view>

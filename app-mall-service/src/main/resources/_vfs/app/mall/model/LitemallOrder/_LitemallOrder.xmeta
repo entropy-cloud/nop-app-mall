@@ -14,145 +14,123 @@
 
     <keys/>
 
-    <prop name="id" displayName="Id" tagSet="seq" mandatory="true" queryable="true" sortable="true" insertable="true"
-          updatable="false">
-        <schema type="java.lang.Integer"/>
-    </prop>
-
-    <prop name="userId" displayName="用户表的用户ID" mandatory="true" queryable="true" sortable="true" insertable="true"
-          updatable="true">
-        <schema type="java.lang.Integer"/>
-    </prop>
-
-    <prop name="orderSn" displayName="订单编号" tagSet="disp" mandatory="true" queryable="true" sortable="true"
-          insertable="true" updatable="true">
-        <schema type="java.lang.String" precision="63"/>
-    </prop>
-
-    <prop name="orderStatus" displayName="订单状态" mandatory="true" queryable="true" sortable="true" insertable="true"
-          updatable="true">
-        <schema type="java.lang.Short" dict="mall/order-status"/>
-    </prop>
-
-    <prop name="aftersaleStatus" displayName="售后状态" queryable="true" sortable="true" insertable="true" updatable="true">
-        <schema type="java.lang.Short" dict="mall/aftersale-status"/>
-    </prop>
-
-    <prop name="consignee" displayName="收货人名称" mandatory="true" queryable="true" sortable="true" insertable="true"
-          updatable="true">
-        <schema type="java.lang.String" precision="63"/>
-    </prop>
-
-    <prop name="mobile" displayName="收货人手机号" mandatory="true" queryable="true" sortable="true" insertable="true"
-          updatable="true">
-        <schema type="java.lang.String" precision="63"/>
-    </prop>
-
-    <prop name="address" displayName="收货具体地址" mandatory="true" queryable="true" sortable="true" insertable="true"
-          updatable="true">
-        <schema type="java.lang.String" precision="127"/>
-    </prop>
-
-    <prop name="message" displayName="用户订单留言" mandatory="true" queryable="true" sortable="true" insertable="true"
-          updatable="true">
-        <schema type="java.lang.String" precision="512"/>
-    </prop>
-
-    <prop name="goodsPrice" displayName="商品总费用" mandatory="true" queryable="true" sortable="true" insertable="true"
-          updatable="true">
-        <schema type="java.math.BigDecimal" precision="10" scale="2"/>
-    </prop>
-
-    <prop name="freightPrice" displayName="配送费用" mandatory="true" queryable="true" sortable="true" insertable="true"
-          updatable="true">
-        <schema type="java.math.BigDecimal" precision="10" scale="2"/>
-    </prop>
-
-    <prop name="couponPrice" displayName="优惠券减免" mandatory="true" queryable="true" sortable="true" insertable="true"
-          updatable="true">
-        <schema type="java.math.BigDecimal" precision="10" scale="2"/>
-    </prop>
-
-    <prop name="integralPrice" displayName="用户积分减免" mandatory="true" queryable="true" sortable="true" insertable="true"
-          updatable="true">
-        <schema type="java.math.BigDecimal" precision="10" scale="2"/>
-    </prop>
-
-    <prop name="grouponPrice" displayName="团购优惠价减免" mandatory="true" queryable="true" sortable="true" insertable="true"
-          updatable="true">
-        <schema type="java.math.BigDecimal" precision="10" scale="2"/>
-    </prop>
-
-    <prop name="orderPrice" displayName="订单费用" mandatory="true" queryable="true" sortable="true" insertable="true"
-          updatable="true">
-        <schema type="java.math.BigDecimal" precision="10" scale="2"/>
-    </prop>
-
-    <prop name="actualPrice" displayName="实付费用" mandatory="true" queryable="true" sortable="true" insertable="true"
-          updatable="true">
-        <schema type="java.math.BigDecimal" precision="10" scale="2"/>
-    </prop>
-
-    <prop name="payId" displayName="微信付款编号" queryable="true" sortable="true" insertable="true" updatable="true">
-        <schema type="java.lang.String" precision="63"/>
-    </prop>
-
-    <prop name="payTime" displayName="微信付款时间" queryable="true" sortable="true" insertable="true" updatable="true">
-        <schema type="java.time.LocalDateTime"/>
-    </prop>
-
-    <prop name="shipSn" displayName="发货编号" queryable="true" sortable="true" insertable="true" updatable="true">
-        <schema type="java.lang.String" precision="63"/>
-    </prop>
-
-    <prop name="shipChannel" displayName="发货快递公司" queryable="true" sortable="true" insertable="true" updatable="true">
-        <schema type="java.lang.String" precision="63"/>
-    </prop>
-
-    <prop name="shipTime" displayName="发货开始时间" queryable="true" sortable="true" insertable="true" updatable="true">
-        <schema type="java.time.LocalDateTime"/>
-    </prop>
-
-    <prop name="refundAmount" displayName="实际退款金额" queryable="true" sortable="true" insertable="true" updatable="true">
-        <schema type="java.math.BigDecimal" precision="10" scale="2"/>
-    </prop>
-
-    <prop name="refundType" displayName="退款方式" queryable="true" sortable="true" insertable="true" updatable="true">
-        <schema type="java.lang.String" precision="63"/>
-    </prop>
-
-    <prop name="refundContent" displayName="退款备注" queryable="true" sortable="true" insertable="true" updatable="true">
-        <schema type="java.lang.String" precision="127"/>
-    </prop>
-
-    <prop name="refundTime" displayName="退款时间" queryable="true" sortable="true" insertable="true" updatable="true">
-        <schema type="java.time.LocalDateTime"/>
-    </prop>
-
-    <prop name="confirmTime" displayName="用户确认收货时间" queryable="true" sortable="true" insertable="true" updatable="true">
-        <schema type="java.time.LocalDateTime"/>
-    </prop>
-
-    <prop name="comments" displayName="待评价订单商品数量" queryable="true" sortable="true" insertable="true" updatable="true">
-        <schema type="java.lang.Short"/>
-    </prop>
-
-    <prop name="endTime" displayName="订单关闭时间" queryable="true" sortable="true" insertable="true" updatable="true">
-        <schema type="java.time.LocalDateTime"/>
-    </prop>
-
-    <prop name="addTime" displayName="创建时间" queryable="true" sortable="true" insertable="false" updatable="false"
-          internal="true" ext:show="X">
-        <schema domain="createTime" type="java.time.LocalDateTime"/>
-    </prop>
-
-    <prop name="updateTime" displayName="更新时间" queryable="true" sortable="true" insertable="false" updatable="false"
-          internal="true" ext:show="X">
-        <schema domain="updateTime" type="java.time.LocalDateTime"/>
-    </prop>
-
-    <prop name="deleted" displayName="逻辑删除" queryable="true" sortable="true" insertable="false" updatable="true"
-          internal="true" ext:show="X">
-        <schema domain="delFlag" type="java.lang.Boolean"/>
-    </prop>
+    <props>
+        <prop name="id" displayName="Id" tagSet="seq" mandatory="true" queryable="true" sortable="true"
+              insertable="true" updatable="false">
+            <schema type="java.lang.Integer"/>
+        </prop>
+        <prop name="userId" displayName="用户表的用户ID" mandatory="true" queryable="true" sortable="true" insertable="true"
+              updatable="true">
+            <schema type="java.lang.Integer"/>
+        </prop>
+        <prop name="orderSn" displayName="订单编号" tagSet="disp" mandatory="true" queryable="true" sortable="true"
+              insertable="true" updatable="true">
+            <schema type="java.lang.String" precision="63"/>
+        </prop>
+        <prop name="orderStatus" displayName="订单状态" mandatory="true" queryable="true" sortable="true" insertable="true"
+              updatable="true">
+            <schema type="java.lang.Short" dict="mall/order-status"/>
+        </prop>
+        <prop name="aftersaleStatus" displayName="售后状态" queryable="true" sortable="true" insertable="true"
+              updatable="true">
+            <schema type="java.lang.Short" dict="mall/aftersale-status"/>
+        </prop>
+        <prop name="consignee" displayName="收货人名称" mandatory="true" queryable="true" sortable="true" insertable="true"
+              updatable="true">
+            <schema type="java.lang.String" precision="63"/>
+        </prop>
+        <prop name="mobile" displayName="收货人手机号" mandatory="true" queryable="true" sortable="true" insertable="true"
+              updatable="true">
+            <schema type="java.lang.String" precision="63"/>
+        </prop>
+        <prop name="address" displayName="收货具体地址" mandatory="true" queryable="true" sortable="true" insertable="true"
+              updatable="true">
+            <schema type="java.lang.String" precision="127"/>
+        </prop>
+        <prop name="message" displayName="用户订单留言" mandatory="true" queryable="true" sortable="true" insertable="true"
+              updatable="true">
+            <schema type="java.lang.String" precision="512"/>
+        </prop>
+        <prop name="goodsPrice" displayName="商品总费用" mandatory="true" queryable="true" sortable="true" insertable="true"
+              updatable="true">
+            <schema type="java.math.BigDecimal" precision="10" scale="2"/>
+        </prop>
+        <prop name="freightPrice" displayName="配送费用" mandatory="true" queryable="true" sortable="true" insertable="true"
+              updatable="true">
+            <schema type="java.math.BigDecimal" precision="10" scale="2"/>
+        </prop>
+        <prop name="couponPrice" displayName="优惠券减免" mandatory="true" queryable="true" sortable="true" insertable="true"
+              updatable="true">
+            <schema type="java.math.BigDecimal" precision="10" scale="2"/>
+        </prop>
+        <prop name="integralPrice" displayName="用户积分减免" mandatory="true" queryable="true" sortable="true"
+              insertable="true" updatable="true">
+            <schema type="java.math.BigDecimal" precision="10" scale="2"/>
+        </prop>
+        <prop name="grouponPrice" displayName="团购优惠价减免" mandatory="true" queryable="true" sortable="true"
+              insertable="true" updatable="true">
+            <schema type="java.math.BigDecimal" precision="10" scale="2"/>
+        </prop>
+        <prop name="orderPrice" displayName="订单费用" mandatory="true" queryable="true" sortable="true" insertable="true"
+              updatable="true">
+            <schema type="java.math.BigDecimal" precision="10" scale="2"/>
+        </prop>
+        <prop name="actualPrice" displayName="实付费用" mandatory="true" queryable="true" sortable="true" insertable="true"
+              updatable="true">
+            <schema type="java.math.BigDecimal" precision="10" scale="2"/>
+        </prop>
+        <prop name="payId" displayName="微信付款编号" queryable="true" sortable="true" insertable="true" updatable="true">
+            <schema type="java.lang.String" precision="63"/>
+        </prop>
+        <prop name="payTime" displayName="微信付款时间" queryable="true" sortable="true" insertable="true" updatable="true">
+            <schema type="java.time.LocalDateTime"/>
+        </prop>
+        <prop name="shipSn" displayName="发货编号" queryable="true" sortable="true" insertable="true" updatable="true">
+            <schema type="java.lang.String" precision="63"/>
+        </prop>
+        <prop name="shipChannel" displayName="发货快递公司" queryable="true" sortable="true" insertable="true"
+              updatable="true">
+            <schema type="java.lang.String" precision="63"/>
+        </prop>
+        <prop name="shipTime" displayName="发货开始时间" queryable="true" sortable="true" insertable="true" updatable="true">
+            <schema type="java.time.LocalDateTime"/>
+        </prop>
+        <prop name="refundAmount" displayName="实际退款金额" queryable="true" sortable="true" insertable="true"
+              updatable="true">
+            <schema type="java.math.BigDecimal" precision="10" scale="2"/>
+        </prop>
+        <prop name="refundType" displayName="退款方式" queryable="true" sortable="true" insertable="true" updatable="true">
+            <schema type="java.lang.String" precision="63"/>
+        </prop>
+        <prop name="refundContent" displayName="退款备注" queryable="true" sortable="true" insertable="true"
+              updatable="true">
+            <schema type="java.lang.String" precision="127"/>
+        </prop>
+        <prop name="refundTime" displayName="退款时间" queryable="true" sortable="true" insertable="true" updatable="true">
+            <schema type="java.time.LocalDateTime"/>
+        </prop>
+        <prop name="confirmTime" displayName="用户确认收货时间" queryable="true" sortable="true" insertable="true"
+              updatable="true">
+            <schema type="java.time.LocalDateTime"/>
+        </prop>
+        <prop name="comments" displayName="待评价订单商品数量" queryable="true" sortable="true" insertable="true"
+              updatable="true">
+            <schema type="java.lang.Short"/>
+        </prop>
+        <prop name="endTime" displayName="订单关闭时间" queryable="true" sortable="true" insertable="true" updatable="true">
+            <schema type="java.time.LocalDateTime"/>
+        </prop>
+        <prop name="addTime" displayName="创建时间" queryable="true" sortable="true" insertable="false" updatable="false"
+              internal="true" ext:show="X">
+            <schema domain="createTime" type="java.time.LocalDateTime"/>
+        </prop>
+        <prop name="updateTime" displayName="更新时间" queryable="true" sortable="true" insertable="false" updatable="false"
+              internal="true" ext:show="X">
+            <schema domain="updateTime" type="java.time.LocalDateTime"/>
+        </prop>
+        <prop name="deleted" displayName="逻辑删除" queryable="true" sortable="true" insertable="false" updatable="true"
+              internal="true" ext:show="X">
+            <schema domain="delFlag" type="java.lang.Boolean"/>
+        </prop>
+    </props>
 </meta>

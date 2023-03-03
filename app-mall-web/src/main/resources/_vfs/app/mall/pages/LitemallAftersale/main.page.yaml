@@ -1,4 +1,3 @@
 
-xui:js: '@include:LitemallAftersale.action.js'
 x:gen-extends: |
     <web:GenPage view="LitemallAftersale.view.xml" page="main" xpl:lib="/nop/web/xlib/web.xlib" />
