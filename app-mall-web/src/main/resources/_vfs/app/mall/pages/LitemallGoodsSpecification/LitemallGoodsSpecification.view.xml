@@ -5,6 +5,19 @@
     <grids>
         <grid id="list"/>
         <grid id="pick-list"/>
+
+        <grid id="ref-list">
+            <cols>
+                <!--商品规格名称-->
+                <col id="specification" mandatory="true"/>
+
+                <!--商品规格值-->
+                <col id="value" mandatory="true"/>
+
+                <!--商品规格图片-->
+                <col id="picUrl" mandatory="true"/>
+            </cols>
+        </grid>
     </grids>
 
     <forms>

@@ -27204,6 +27204,13 @@
         ]
       },
       {
+        "name": "mergeMap",
+        "parameterTypes": [
+          "java.util.Map",
+          "java.util.Map"
+        ]
+      },
+      {
         "name": "min",
         "parameterTypes": [
           "java.util.Collection"
@@ -46434,6 +46441,75 @@
     "allDeclaredMethods": true,
     "allPublicConstructors": true,
     "allPublicMethods": true,
+    "fields": [],
+    "methods": [
+      {
+        "name": "addClassName",
+        "parameterTypes": [
+          "java.util.Map",
+          "java.lang.String",
+          "java.lang.String"
+        ]
+      },
+      {
+        "name": "checkJsFile",
+        "parameterTypes": [
+          "java.lang.String"
+        ]
+      },
+      {
+        "name": "checkPageFile",
+        "parameterTypes": [
+          "java.lang.String"
+        ]
+      },
+      {
+        "name": "escapeGraphQL",
+        "parameterTypes": [
+          "java.lang.String"
+        ]
+      },
+      {
+        "name": "fixPage",
+        "parameterTypes": [
+          "java.lang.Object",
+          "java.lang.String",
+          "boolean"
+        ]
+      },
+      {
+        "name": "internalLoadPage",
+        "parameterTypes": [
+          "java.lang.String"
+        ]
+      },
+      {
+        "name": "removeGeneratedId",
+        "parameterTypes": [
+          "java.lang.Object"
+        ]
+      },
+      {
+        "name": "removeNullEntry",
+        "parameterTypes": [
+          "java.lang.Object"
+        ]
+      },
+      {
+        "name": "unfixPage",
+        "parameterTypes": [
+          "java.util.Map"
+        ]
+      }
+    ],
+    "name": "io.nop.web.page.WebPageHelper",
+    "unsafeAllocated": false
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicMethods": true,
     "fields": [
       {
         "allowUnsafeAccess": false,
@@ -48280,6 +48356,10 @@
         "parameterTypes": []
       },
       {
+        "name": "getObjMeta",
+        "parameterTypes": []
+      },
+      {
         "name": "getPropId",
         "parameterTypes": []
       },
@@ -48487,6 +48567,12 @@
       },
       {
         "name": "setName",
+        "parameterTypes": [
+          "java.lang.String"
+        ]
+      },
+      {
+        "name": "setObjMeta",
         "parameterTypes": [
           "java.lang.String"
         ]
@@ -50320,6 +50406,10 @@
         "parameterTypes": []
       },
       {
+        "name": "loadObjMeta",
+        "parameterTypes": []
+      },
+      {
         "name": "validate",
         "parameterTypes": [
           "io.nop.xlang.xmeta.IObjMeta"
@@ -50351,6 +50441,10 @@
         "parameterTypes": []
       },
       {
+        "name": "loadObjMeta",
+        "parameterTypes": []
+      },
+      {
         "name": "validate",
         "parameterTypes": [
           "io.nop.xlang.xmeta.IObjMeta"
@@ -50358,6 +50452,25 @@
       }
     ],
     "name": "io.nop.xui.model.UiGridModel",
+    "unsafeAllocated": false
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [
+      {
+        "name": "init",
+        "parameterTypes": []
+      },
+      {
+        "name": "validate",
+        "parameterTypes": []
+      }
+    ],
+    "name": "io.nop.xui.model.UiRefViewModel",
     "unsafeAllocated": false
   },
   {
@@ -50984,6 +51097,10 @@
         "parameterTypes": []
       },
       {
+        "name": "getPanelClassName",
+        "parameterTypes": []
+      },
+      {
         "name": "getPersistData",
         "parameterTypes": []
       },
@@ -51249,6 +51366,12 @@
       },
       {
         "name": "setObjMeta",
+        "parameterTypes": [
+          "java.lang.String"
+        ]
+      },
+      {
+        "name": "setPanelClassName",
         "parameterTypes": [
           "java.lang.String"
         ]
@@ -51857,6 +51980,79 @@
       }
     ],
     "name": "io.nop.xui.model._gen._UiGridModel",
+    "unsafeAllocated": false
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [
+      {
+        "name": "freeze",
+        "parameterTypes": [
+          "boolean"
+        ]
+      },
+      {
+        "name": "getButtonLabel",
+        "parameterTypes": []
+      },
+      {
+        "name": "getForm",
+        "parameterTypes": []
+      },
+      {
+        "name": "getGrid",
+        "parameterTypes": []
+      },
+      {
+        "name": "getPage",
+        "parameterTypes": []
+      },
+      {
+        "name": "getPath",
+        "parameterTypes": []
+      },
+      {
+        "name": "outputJson",
+        "parameterTypes": [
+          "io.nop.core.lang.json.IJsonHandler"
+        ]
+      },
+      {
+        "name": "setButtonLabel",
+        "parameterTypes": [
+          "java.lang.String"
+        ]
+      },
+      {
+        "name": "setForm",
+        "parameterTypes": [
+          "java.lang.String"
+        ]
+      },
+      {
+        "name": "setGrid",
+        "parameterTypes": [
+          "java.lang.String"
+        ]
+      },
+      {
+        "name": "setPage",
+        "parameterTypes": [
+          "java.lang.String"
+        ]
+      },
+      {
+        "name": "setPath",
+        "parameterTypes": [
+          "java.lang.String"
+        ]
+      }
+    ],
+    "name": "io.nop.xui.model._gen._UiRefViewModel",
     "unsafeAllocated": false
   },
   {

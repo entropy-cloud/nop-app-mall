@@ -63,6 +63,9 @@
 
                 <!--详情-->
                 <col id="detail" sortable="true"/>
+
+                <!--关键字-->
+                <col id="keywordsList"/>
             </cols>
         </grid>
         <grid id="pick-list" x:prototype="list" x:abstract="true"/>
@@ -80,6 +83,7 @@
  isNew[是否新品] isHot[是否热品]
  unit[商品单位] counterPrice[市场售价]
  retailPrice[当前价格] detail[详情]
+ keywordsList[关键字] 
 </layout>
         </form>
         <form id="add" editMode="add" title="新增-商品基本信息" i18n-en:title="Add " x:prototype="edit"/>
@@ -94,6 +98,7 @@
  isNew[是否新品] isHot[是否热品]
  unit[商品单位] counterPrice[市场售价]
  retailPrice[当前价格] detail[详情]
+ keywordsList[关键字] 
 </layout>
         </form>
         <form id="query" editMode="query" title="查询条件" i18n-en:title="Query Condition" x:abstract="true">

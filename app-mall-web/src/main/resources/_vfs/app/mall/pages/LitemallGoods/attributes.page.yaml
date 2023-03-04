@@ -1,0 +1,15 @@
+type: input-table
+addable: true
+editable: true
+removable: true
+needConfirm: false
+columns:
+  - type: input-text
+    name: specifications
+    label: 规格名
+  - type: input-text
+    name: value
+    label: 规格值
+  - type: input-text
+    name: picUrl
+    label: 图片

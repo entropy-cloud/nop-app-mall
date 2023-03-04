@@ -96,9 +96,8 @@
                         <input-table addable="@:true" editable="@:true"
                                      removable="@:true" needConfirm="@:false">
                             <columns j:list="true">
-                                <input-text name="specification" label="规格名" />
-                                <input-text name="value" label="规格值">
-
+                                <input-text name="specification" label="规格名" required="true" />
+                                <input-text name="value" label="规格值" required="true">
                                 </input-text>
                                 <input-text name="picUrl" label="图片" />
                             </columns>
@@ -106,22 +105,15 @@
                     </gen-control>
                 </cell>
 
-                <cell id="attributes">
-                    <gen-control>
-                        <input-table addable="@:true" editable="@:true"
-                                     removable="@:true" needConfirm="@:false">
-                            <columns j:list="true">
-                                <input-text name="name" label="属性名" required="true" />
-                                <input-text name="value" label="属性值">
-
-                                </input-text>
-                            </columns>
-                        </input-table>
-
-                        <web:GenInputTable objMeta="${}" grid="value"
-                                           addable="true" editable="true" removeable="true" />
-                    </gen-control>
+                <cell id="products">
+                    <view path="/app/mall/pages/LitemallGoodsProduct/LitemallGoodsProduct.view.xml"
+                          grid="ref-list"/>
                 </cell>
+
+                <cell id="attributes">
+                    <view path="/app/mall/pages/LitemallGoods/attributes.page.yaml"/>
+                </cell>
+
             </cells>
         </form>
 
@@ -148,7 +140,7 @@
         <simple name="add" useFormActions="true" panelClassName="no-heading no-border actions-center">
             <actions>
                 <action id="cancel" label="取消" actionType="cancel"/>
-                <action id="confirm" label="上架" actionType="submit" />
+                <action id="confirm" label="上架" actionType="submit"/>
             </actions>
         </simple>
         <picker name="picker"/>

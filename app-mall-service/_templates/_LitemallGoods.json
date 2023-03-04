@@ -25,5 +25,8 @@
   "category.name": "",
   "brand": null,
   "brand.name": "",
-  "products": null
+  "attributes": null,
+  "products": null,
+  "specifications": null,
+  "keywordsList": null
 }

@@ -247,7 +247,10 @@ prop:
       category.name: Category
       brand: Brand
       brand.name: Brand
+      attributes: Goods Attributes
       products: Products
+      specifications: Specifications
+      keywordsList: null
     LitemallGoodsAttribute:
       id: null
       goodsId: null
@@ -256,6 +259,8 @@ prop:
       addTime: null
       updateTime: null
       deleted: null
+      goods: Goods
+      goods.name: Goods
     LitemallGoodsProduct:
       id: null
       goodsId: null

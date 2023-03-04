@@ -1,4 +1,5 @@
 /_delta/default/nop/web/xlib/control.xlib
+/_delta/default/nop/web/xlib/web.xlib
 /app/mall/_module
 /app/mall/auth/_app-mall.action-auth.xml
 /app/mall/auth/app-mall.action-auth.xml
@@ -213,6 +214,7 @@
 /app/mall/pages/LitemallGoods/LitemallGoods.view.xml
 /app/mall/pages/LitemallGoods/_gen/_LitemallGoods.view.xml
 /app/mall/pages/LitemallGoods/add.page.yaml
+/app/mall/pages/LitemallGoods/attributes.page.yaml
 /app/mall/pages/LitemallGoods/main.page.yaml
 /app/mall/pages/LitemallGoods/picker.page.yaml
 /app/mall/pages/LitemallGoodsAttribute/LitemallGoodsAttribute.lib.xjs
@@ -696,6 +698,7 @@
 /nop/web/xlib/web/impl_GenForm.xpl
 /nop/web/xlib/web/impl_GenGrid.xpl
 /nop/web/xlib/web/impl_GenPage.xpl
+/nop/web/xlib/web/init_grid_gen_scope.xpl
 /nop/web/xlib/web/page_crud.xpl
 /nop/web/xlib/web/page_picker.xpl
 /nop/web/xlib/web/page_simple.xpl

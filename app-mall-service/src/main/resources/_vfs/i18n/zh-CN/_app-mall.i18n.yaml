@@ -222,6 +222,7 @@ prop:
       userId: 用户表的用户ID
     LitemallGoods:
       addTime: 创建时间
+      attributes: 商品参数
       brand: 商品品牌
       brand.name: 商品品牌
       brandId: 品牌ID
@@ -240,18 +241,22 @@ prop:
       isNew: 是否新品
       isOnSale: 是否在售
       keywords: 商品关键字
+      keywordsList: 关键字
       name: 商品名称
       picUrl: 商品图片
       products: 包含产品
       retailPrice: 当前价格
       shareUrl: 商品分享海报
       sortOrder: 排序顺序
+      specifications: 商品规格
       unit: 商品单位
       updateTime: 更新时间
     LitemallGoodsAttribute:
       addTime: 创建时间
       attribute: 商品参数名称
       deleted: 逻辑删除
+      goods: 商品
+      goods.name: 商品
       goodsId: 商品ID
       id: Id
       updateTime: 更新时间
@@ -271,8 +276,8 @@ prop:
     LitemallGoodsSpecification:
       addTime: 创建时间
       deleted: 逻辑删除
-      goods: 订单
-      goods.name: 订单
+      goods: 商品
+      goods.name: 商品
       goodsId: 商品ID
       id: Id
       picUrl: 商品规格图片
