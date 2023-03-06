@@ -34,8 +34,7 @@
         <prop name="status" displayName="操作状态" queryable="true" sortable="true" insertable="true" updatable="true">
             <schema type="java.lang.Boolean"/>
         </prop>
-        <prop name="result" displayName="操作结果，或者成功消息，或者失败消息" queryable="true" sortable="true" insertable="true"
-              updatable="true">
+        <prop name="result" displayName="操作结果/消息" queryable="true" sortable="true" insertable="true" updatable="true">
             <schema type="java.lang.String" precision="127"/>
         </prop>
         <prop name="comment" displayName="补充信息" queryable="true" sortable="true" insertable="true" updatable="true">

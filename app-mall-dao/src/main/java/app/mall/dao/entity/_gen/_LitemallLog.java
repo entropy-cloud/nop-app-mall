@@ -44,7 +44,7 @@ public class _LitemallLog extends DynamicOrmEntity{
     public static final String PROP_NAME_status = "status";
     public static final int PROP_ID_status = 6;
     
-    /* 操作结果，或者成功消息，或者失败消息: RESULT VARCHAR */
+    /* 操作结果/消息: RESULT VARCHAR */
     public static final String PROP_NAME_result = "result";
     public static final int PROP_ID_result = 7;
     
@@ -130,7 +130,7 @@ public class _LitemallLog extends DynamicOrmEntity{
     /* 操作状态: STATUS */
     private java.lang.Boolean _status;
     
-    /* 操作结果，或者成功消息，或者失败消息: RESULT */
+    /* 操作结果/消息: RESULT */
     private java.lang.String _result;
     
     /* 补充信息: COMMENT */
@@ -576,7 +576,7 @@ public class _LitemallLog extends DynamicOrmEntity{
     }
     
     /**
-     * 操作结果，或者成功消息，或者失败消息: RESULT
+     * 操作结果/消息: RESULT
      */
     public java.lang.String getResult(){
          onPropGet(PROP_ID_result);
@@ -584,7 +584,7 @@ public class _LitemallLog extends DynamicOrmEntity{
     }
 
     /**
-     * 操作结果，或者成功消息，或者失败消息: RESULT
+     * 操作结果/消息: RESULT
      */
     public void setResult(java.lang.String value){
         if(onPropSet(PROP_ID_result,value)){

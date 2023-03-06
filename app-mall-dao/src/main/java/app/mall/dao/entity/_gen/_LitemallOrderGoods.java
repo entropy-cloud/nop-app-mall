@@ -40,23 +40,23 @@ public class _LitemallOrderGoods extends DynamicOrmEntity{
     public static final String PROP_NAME_goodsSn = "goodsSn";
     public static final int PROP_ID_goodsSn = 5;
     
-    /* 商品货品表的货品ID: PRODUCT_ID INTEGER */
+    /* 货品ID: PRODUCT_ID INTEGER */
     public static final String PROP_NAME_productId = "productId";
     public static final int PROP_ID_productId = 6;
     
-    /* 商品货品的购买数量: NUMBER SMALLINT */
+    /* 购买数量: NUMBER SMALLINT */
     public static final String PROP_NAME_number = "number";
     public static final int PROP_ID_number = 7;
     
-    /* 商品货品的售价: PRICE DECIMAL */
+    /* 售价: PRICE DECIMAL */
     public static final String PROP_NAME_price = "price";
     public static final int PROP_ID_price = 8;
     
-    /* 商品货品的规格列表: SPECIFICATIONS VARCHAR */
+    /* 规格列表: SPECIFICATIONS VARCHAR */
     public static final String PROP_NAME_specifications = "specifications";
     public static final int PROP_ID_specifications = 9;
     
-    /* 商品货品图片或者商品图片: PIC_URL VARCHAR */
+    /* 商品/货品图片: PIC_URL VARCHAR */
     public static final String PROP_NAME_picUrl = "picUrl";
     public static final int PROP_ID_picUrl = 10;
     
@@ -148,19 +148,19 @@ public class _LitemallOrderGoods extends DynamicOrmEntity{
     /* 商品编号: GOODS_SN */
     private java.lang.String _goodsSn;
     
-    /* 商品货品表的货品ID: PRODUCT_ID */
+    /* 货品ID: PRODUCT_ID */
     private java.lang.Integer _productId;
     
-    /* 商品货品的购买数量: NUMBER */
+    /* 购买数量: NUMBER */
     private java.lang.Short _number;
     
-    /* 商品货品的售价: PRICE */
+    /* 售价: PRICE */
     private java.math.BigDecimal _price;
     
-    /* 商品货品的规格列表: SPECIFICATIONS */
+    /* 规格列表: SPECIFICATIONS */
     private java.lang.String _specifications;
     
-    /* 商品货品图片或者商品图片: PIC_URL */
+    /* 商品/货品图片: PIC_URL */
     private java.lang.String _picUrl;
     
     /* 订单商品评论，如果是-1，则超期不能评价；如果是0，则可以评价；如果其他值，则是comment表里面的评论ID。: COMMENT */
@@ -647,7 +647,7 @@ public class _LitemallOrderGoods extends DynamicOrmEntity{
     }
     
     /**
-     * 商品货品表的货品ID: PRODUCT_ID
+     * 货品ID: PRODUCT_ID
      */
     public java.lang.Integer getProductId(){
          onPropGet(PROP_ID_productId);
@@ -655,7 +655,7 @@ public class _LitemallOrderGoods extends DynamicOrmEntity{
     }
 
     /**
-     * 商品货品表的货品ID: PRODUCT_ID
+     * 货品ID: PRODUCT_ID
      */
     public void setProductId(java.lang.Integer value){
         if(onPropSet(PROP_ID_productId,value)){
@@ -666,7 +666,7 @@ public class _LitemallOrderGoods extends DynamicOrmEntity{
     }
     
     /**
-     * 商品货品的购买数量: NUMBER
+     * 购买数量: NUMBER
      */
     public java.lang.Short getNumber(){
          onPropGet(PROP_ID_number);
@@ -674,7 +674,7 @@ public class _LitemallOrderGoods extends DynamicOrmEntity{
     }
 
     /**
-     * 商品货品的购买数量: NUMBER
+     * 购买数量: NUMBER
      */
     public void setNumber(java.lang.Short value){
         if(onPropSet(PROP_ID_number,value)){
@@ -685,7 +685,7 @@ public class _LitemallOrderGoods extends DynamicOrmEntity{
     }
     
     /**
-     * 商品货品的售价: PRICE
+     * 售价: PRICE
      */
     public java.math.BigDecimal getPrice(){
          onPropGet(PROP_ID_price);
@@ -693,7 +693,7 @@ public class _LitemallOrderGoods extends DynamicOrmEntity{
     }
 
     /**
-     * 商品货品的售价: PRICE
+     * 售价: PRICE
      */
     public void setPrice(java.math.BigDecimal value){
         if(onPropSet(PROP_ID_price,value)){
@@ -704,7 +704,7 @@ public class _LitemallOrderGoods extends DynamicOrmEntity{
     }
     
     /**
-     * 商品货品的规格列表: SPECIFICATIONS
+     * 规格列表: SPECIFICATIONS
      */
     public java.lang.String getSpecifications(){
          onPropGet(PROP_ID_specifications);
@@ -712,7 +712,7 @@ public class _LitemallOrderGoods extends DynamicOrmEntity{
     }
 
     /**
-     * 商品货品的规格列表: SPECIFICATIONS
+     * 规格列表: SPECIFICATIONS
      */
     public void setSpecifications(java.lang.String value){
         if(onPropSet(PROP_ID_specifications,value)){
@@ -723,7 +723,7 @@ public class _LitemallOrderGoods extends DynamicOrmEntity{
     }
     
     /**
-     * 商品货品图片或者商品图片: PIC_URL
+     * 商品/货品图片: PIC_URL
      */
     public java.lang.String getPicUrl(){
          onPropGet(PROP_ID_picUrl);
@@ -731,7 +731,7 @@ public class _LitemallOrderGoods extends DynamicOrmEntity{
     }
 
     /**
-     * 商品货品图片或者商品图片: PIC_URL
+     * 商品/货品图片: PIC_URL
      */
     public void setPicUrl(java.lang.String value){
         if(onPropSet(PROP_ID_picUrl,value)){

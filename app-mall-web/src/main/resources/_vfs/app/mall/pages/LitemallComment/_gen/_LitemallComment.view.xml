@@ -16,7 +16,7 @@
                 <!--如果type=0，则是商品评论；如果是type=1，则是专题评论。-->
                 <col id="valueId" mandatory="true" sortable="true"/>
 
-                <!--评论类型，如果type=0，则是商品评论；如果是type=1，则是专题评论；-->
+                <!--评论类型-->
                 <col id="type" mandatory="true" sortable="true"/>
 
                 <!--评论内容-->
@@ -46,7 +46,7 @@
             <layout>
  id[Id]
  valueId[如果type=0，则是商品评论；如果是type=1，则是专题评论。]
- type[评论类型，如果type=0，则是商品评论；如果是type=1，则是专题评论；]
+ type[评论类型]
  content[评论内容]
  adminContent[管理员回复内容]
  userId[用户表的用户ID]
@@ -60,7 +60,7 @@
             <layout>
  id[Id]
  valueId[如果type=0，则是商品评论；如果是type=1，则是专题评论。]
- type[评论类型，如果type=0，则是商品评论；如果是type=1，则是专题评论；]
+ type[评论类型]
  content[评论内容]
  adminContent[管理员回复内容]
  userId[用户表的用户ID]
@@ -97,6 +97,13 @@
             <rowActions>
                 <action id="row-view-button" level="primary" label="@i18n:common.view">
                     <dialog page="view"/>
+                </action>
+                <action id="row-update-button" level="primary" label="@i18n:common.edit" x:abstract="true">
+                    <dialog page="update"/>
+                </action>
+                <action id="row-delete-button" level="danger" label="@i18n:common.delete" x:abstract="true">
+                    <api url="@mutation:LitemallComment__delete?id=$id"/>
+                    <confirmText>@i18n:common.confirmDelete</confirmText>
                 </action>
                 <actionGroup id="row-more-button" label="@i18n:common.more" level="primary">
                     <action id="row-update-button" level="primary" label="@i18n:common.edit">

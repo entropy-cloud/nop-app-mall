@@ -32,6 +32,57 @@
             }
         ]]></source>
         </view-tag-list>
+
+        <view-image>
+            <attr name="dispMeta"/>
+            <attr name="propMeta"/>
+            <attr name="editMode"/>
+            <attr name="objMeta" mandatory="true"/>
+            <attr name="bizObjName" mandatory="true"/>
+
+            <source><![CDATA[
+                return {
+                  type: 'static-image',
+                  enlargeAble: true,
+                }
+            ]]></source>
+        </view-image>
+
+        <list-view-image>
+            <source><![CDATA[
+                return {
+                  type: 'static-image',
+                  enlargeAble: true,
+                  width: 40,
+                  height: 40
+                }
+            ]]></source>
+        </list-view-image>
+
+        <edit-image>
+            <attr name="dispMeta"/>
+            <attr name="propMeta"/>
+
+            <source><![CDATA[
+                return {
+                    "type": "input-text",
+                    "placeholder": "输入图片链接"
+                }
+            ]]></source>
+        </edit-image>
+
+        <view-images>
+            <attr name="dispMeta"/>
+            <attr name="propMeta"/>
+
+            <source><![CDATA[
+                return {
+                    "type": "static-images",
+                    "name": propMeta ? propMeta.name + 'Component' : (dispMeta.id || propMeta.name),
+                    "enlargeAble": true
+                }
+            ]]></source>
+        </view-images>
     </tags>
 
 </lib>

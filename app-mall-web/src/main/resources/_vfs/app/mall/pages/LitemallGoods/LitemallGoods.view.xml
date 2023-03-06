@@ -18,7 +18,19 @@
                 <!--商品分享海报-->
                 <col id="shareUrl"/>
 
-                <col id="detail" label="详情"/>
+                <col id="detail" label="详情">
+                    <gen-control>
+                        <button label="查看" actionType="dialog" level="primary">
+                            <dialog title="商品详情" size="md">
+                                <body>
+                                    <!-- gen-control中的内容是在服务端动态生成控件内容，因此${}表示的是服务端表达式，
+                                    而不是前端AMIS表达式。 ${'$'}{detail|raw}生成到前端成为 ${detail|raw} -->
+                                    <tpl tpl="${'$'}{detail|raw}"/>
+                                </body>
+                            </dialog>
+                        </button>
+                    </gen-control>
+                </col>
 
                 <!--专柜价格-->
                 <col id="counterPrice"/>
@@ -37,13 +49,13 @@
 
                 <col id="goodsSn" breakpoint="*"/>
 
-                <col id="gallery" breakpoint="*"/>
+                <col id="galleryComponent" breakpoint="*"/>
 
                 <col id="brief" breakpoint="*"/>
 
                 <col id="unit" breakpoint="*"/>
 
-                <col id="keywordsList" breakpoint="*"/>
+                <col id="keywords" breakpoint="*"/>
 
                 <col id="categoryId" breakpoint="*"/>
 
@@ -61,7 +73,7 @@
             </layout>
         </form>
         <form id="view"/>
-        <form id="edit">
+        <form id="edit" size="lg">
             <layout>
                 ========== intro[商品介绍] ================
                 goodsSn[商品编号] name[商品名称]
@@ -71,7 +83,7 @@
                 picUrl[商品页面商品图片]
                 gallery[商品宣传图片列表，采用JSON数组格式]
                 unit[商品单位，例如件、盒]
-                keywordsList[商品关键字，采用逗号间隔]
+                keywords[商品关键字，采用逗号间隔]
                 categoryId[商品所属类目ID] brandId[Brandid]
                 brief[商品简介]
                 detail[商品详细介绍，是富文本格式]
@@ -96,22 +108,28 @@
                         <input-table addable="@:true" editable="@:true"
                                      removable="@:true" needConfirm="@:false">
                             <columns j:list="true">
-                                <input-text name="specification" label="规格名" required="true" />
+                                <input-text name="specification" label="规格名" required="true"/>
                                 <input-text name="value" label="规格值" required="true">
                                 </input-text>
-                                <input-text name="picUrl" label="图片" />
+                                <input-text name="picUrl" label="图片"/>
                             </columns>
                         </input-table>
                     </gen-control>
+                    <selection>id,specification,value,picUrl</selection>
                 </cell>
 
                 <cell id="products">
+                    <!-- 可以引用外部view模型中的grid来显示子表 -->
                     <view path="/app/mall/pages/LitemallGoodsProduct/LitemallGoodsProduct.view.xml"
-                          grid="ref-list"/>
+                          grid="ref-edit"/>
                 </cell>
 
                 <cell id="attributes">
+                    <!-- 可以直接引用外部的页面文件来显示子表。但是这种情况下系统无法自动推导出编辑子表时需要获取的字段，
+                        因此需要通过selection来控制。
+                    -->
                     <view path="/app/mall/pages/LitemallGoods/attributes.page.yaml"/>
+                    <selection>id, name, value</selection>
                 </cell>
 
             </cells>
@@ -135,12 +153,26 @@
 
                 </action>
             </listActions>
+
+            <!-- bounded-merge表示合并结果在当前模型范围内。基础模型中有，当前模型中没有的子节点，会被自动删除。
+                 缺省生成的代码中已经定义了row-update-button和row-delete-button，只是配置了x:abstract=true，
+                 因此这里只要声明id，表示启用继承的按钮即可，可以避免编写重复的代码。
+             -->
+            <rowActions x:override="bounded-merge">
+                <!--
+                    使用drawer而不是对话框来显示编辑表单
+                -->
+                <action id="row-update-button" actionType="drawer"/>
+
+                <action id="row-delete-button"/>
+
+            </rowActions>
         </crud>
 
         <simple name="add" useFormActions="true" panelClassName="no-heading no-border actions-center">
             <actions>
                 <action id="cancel" label="取消" actionType="cancel"/>
-                <action id="confirm" label="上架" actionType="submit"/>
+                <action id="confirm" label="上架" actionType="submit" level="primary"/>
             </actions>
         </simple>
         <picker name="picker"/>

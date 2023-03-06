@@ -42,8 +42,8 @@
             <schema type="java.lang.Integer" dict="obj/LitemallBrand"/>
         </prop>
         <prop name="gallery" displayName="商品宣传图片列表" i18n-en:displayName="Gallery" queryable="true" sortable="true"
-              insertable="true" updatable="true">
-            <schema type="java.lang.String" precision="1023"/>
+              insertable="true" updatable="true" graphql:jsonComponentProp="galleryComponent">
+            <schema stdDomain="json" domain="images" type="java.lang.String" precision="1023"/>
         </prop>
         <prop name="keywords" displayName="商品关键字" i18n-en:displayName="Keywords" queryable="true" sortable="true"
               insertable="true" updatable="true">
@@ -63,11 +63,11 @@
         </prop>
         <prop name="picUrl" displayName="商品图片" i18n-en:displayName="Picture Url" queryable="true" sortable="true"
               insertable="true" updatable="true">
-            <schema type="java.lang.String" precision="255"/>
+            <schema domain="image" type="java.lang.String" precision="255"/>
         </prop>
         <prop name="shareUrl" displayName="商品分享海报" i18n-en:displayName="Share Url" queryable="true" sortable="true"
               insertable="true" updatable="true">
-            <schema type="java.lang.String" precision="255"/>
+            <schema domain="image" type="java.lang.String" precision="255"/>
         </prop>
         <prop name="isNew" displayName="是否新品" i18n-en:displayName="Is New" queryable="true" sortable="true"
               insertable="true" updatable="true">
@@ -140,6 +140,10 @@
               ext:joinRightDisplayProp="specification" insertable="false" updatable="false" mandatory="true" lazy="true">
             <schema type="io.nop.orm.IOrmEntitySet&lt;app.mall.dao.entity.LitemallGoodsSpecification&gt;"
                     bizObjName="LitemallGoodsSpecification"/>
+        </prop>
+        <prop name="galleryComponent" ext:kind="component" internal="true" insertable="true" updatable="true"
+              lazy="true" published="false">
+            <schema type="io.nop.orm.support.JsonOrmComponent"/>
         </prop>
     </props>
 </meta>

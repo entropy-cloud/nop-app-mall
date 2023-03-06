@@ -54,15 +54,20 @@
             <option code="CONFIRM" label="已收货" value="401"/>
             <option code="AUTO_CONFIRM" label="已收货(系统)" value="402"/>
         </dict>
-        <dict label="商品类目级别" name="mall/category-level" valueType="int" i18n-en:label="Goods Category Level">
-            <option label="一级类目" value="1"/>
-            <option label="二级类目" value="2"/>
+        <dict label="商品类目级别" name="mall/category-level" i18n-en:label="Goods Category Level">
+            <option code="L1" label="一级类目" value="L1"/>
+            <option code="L2" label="二级类目" value="L2"/>
+        </dict>
+        <dict label="行政区划类型" name="mall/region-type" valueType="int" i18n-en:label="Region Type">
+            <option label="省" value="1"/>
+            <option label="市" value="2"/>
+            <option label="区县" value="3"/>
         </dict>
     </dicts>
 
     <domains>
         <domain name="userName" precision="50" stdSqlType="VARCHAR"/>
-        <domain name="image" precision="100" stdSqlType="VARCHAR"/>
+        <domain name="image" precision="255" stdSqlType="VARCHAR"/>
         <domain name="email" precision="100" stdSqlType="VARCHAR"/>
         <domain name="phone" precision="100" stdSqlType="VARCHAR"/>
         <domain name="roleId" precision="100" stdSqlType="VARCHAR"/>
@@ -78,6 +83,7 @@
         <domain name="updatedBy" precision="50" stdSqlType="VARCHAR"/>
         <domain name="delFlag" stdSqlType="BOOLEAN"/>
         <domain name="html-64k" precision="65535" stdSqlType="VARCHAR"/>
+        <domain name="images" precision="1023" stdDomain="json" stdSqlType="VARCHAR"/>
     </domains>
 
     <entities>
@@ -91,8 +97,8 @@
                         stdDataType="string" stdSqlType="VARCHAR" tagSet="disp"/>
                 <column code="LINK" displayName="所广告的商品页面或者活动页面链接地址" mandatory="true" name="link" precision="255"
                         propId="3" stdDataType="string" stdSqlType="VARCHAR"/>
-                <column code="URL" displayName="广告宣传图片" mandatory="true" name="url" precision="255" propId="4"
-                        stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="URL" displayName="广告宣传图片" domain="image" mandatory="true" name="url" precision="255"
+                        propId="4" stdDataType="string" stdSqlType="VARCHAR"/>
                 <column code="POSITION" displayName="广告位置：1则是首页" name="position" propId="5" stdDataType="byte"
                         stdSqlType="TINYINT"/>
                 <column code="CONTENT" displayName="活动内容" name="content" precision="255" propId="6" stdDataType="string"
@@ -189,8 +195,8 @@
                         stdSqlType="VARCHAR"/>
                 <column code="AMOUNT" displayName="退款金额" name="amount" precision="10" propId="7" scale="2"
                         stdDataType="decimal" stdSqlType="DECIMAL"/>
-                <column code="PICTURES" displayName="退款凭证图片链接数组" name="pictures" precision="1023" propId="8"
-                        stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="PICTURES" displayName="退款凭证图片链接数组" domain="images" name="pictures" precision="1023"
+                        propId="8" stdDataType="string" stdDomain="json" stdSqlType="VARCHAR"/>
                 <column code="COMMENT" displayName="退款说明" name="comment" precision="511" propId="9" stdDataType="string"
                         stdSqlType="VARCHAR"/>
                 <column code="STATUS" displayName="售后状态" name="status" propId="10" stdDataType="short"
@@ -221,8 +227,8 @@
                         stdDataType="int" stdSqlType="INTEGER" tagSet="seq" ext:show="R"/>
                 <column code="NAME" displayName="品牌商名称" mandatory="true" name="name" precision="255" propId="2"
                         stdDataType="string" stdSqlType="VARCHAR" tagSet="disp"/>
-                <column code="PIC_URL" displayName="品牌商图片" mandatory="true" name="picUrl" precision="255" propId="3"
-                        stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="PIC_URL" displayName="品牌商图片" domain="image" mandatory="true" name="picUrl" precision="255"
+                        propId="3" stdDataType="string" stdSqlType="VARCHAR"/>
                 <column code="DESC" displayName="品牌商简介" mandatory="true" name="desc" precision="255" propId="4"
                         stdDataType="string" stdSqlType="VARCHAR"/>
                 <column code="SORT_ORDER" displayName="排序" name="sortOrder" propId="5" stdDataType="byte"
@@ -261,8 +267,8 @@
                         stdDataType="string" stdSqlType="VARCHAR"/>
                 <column code="CHECKED" displayName="购物车中商品是否选择状态" name="checked" propId="10" stdDataType="boolean"
                         stdSqlType="BOOLEAN"/>
-                <column code="PIC_URL" displayName="商品图片或者商品货品图片" name="picUrl" precision="255" propId="11"
-                        stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="PIC_URL" displayName="商品图片或者商品货品图片" domain="image" name="picUrl" precision="255"
+                        propId="11" stdDataType="string" stdSqlType="VARCHAR"/>
                 <column code="ADD_TIME" displayName="创建时间" domain="createTime" name="addTime" propId="12"
                         stdDataType="datetime" stdSqlType="DATETIME" ext:show="X"/>
                 <column code="UPDATE_TIME" displayName="更新时间" domain="updateTime" name="updateTime" propId="13"
@@ -287,10 +293,10 @@
                         stdDataType="int" stdSqlType="INTEGER" tagSet="seq"/>
                 <column code="NAME" displayName="类目名称" mandatory="true" name="name" precision="63" propId="2"
                         stdDataType="string" stdSqlType="VARCHAR" tagSet="disp"/>
-                <column code="ICON_URL" displayName="类目图标" name="iconUrl" precision="255" propId="3"
+                <column code="ICON_URL" displayName="类目图标" domain="image" name="iconUrl" precision="255" propId="3"
                         stdDataType="string" stdSqlType="VARCHAR"/>
-                <column code="PIC_URL" displayName="类目图片" name="picUrl" precision="255" propId="4" stdDataType="string"
-                        stdSqlType="VARCHAR"/>
+                <column code="PIC_URL" displayName="类目图片" domain="image" name="picUrl" precision="255" propId="4"
+                        stdDataType="string" stdSqlType="VARCHAR"/>
                 <column code="KEYWORDS" comment="JSON数组格式" displayName="类目关键字" mandatory="true" name="keywords"
                         precision="1023" propId="5" stdDataType="string" stdSqlType="VARCHAR"/>
                 <column code="DESC" displayName="简介" name="desc" precision="255" propId="6" stdDataType="string"
@@ -334,8 +340,8 @@
                         stdSqlType="INTEGER"/>
                 <column code="VALUE_ID" displayName="如果type=0，则是商品ID；如果type=1，则是专题ID" mandatory="true" name="valueId"
                         propId="3" stdDataType="int" stdSqlType="INTEGER"/>
-                <column code="TYPE" displayName="收藏类型，如果type=0，则是商品ID；如果type=1，则是专题ID" mandatory="true" name="type"
-                        propId="4" stdDataType="byte" stdSqlType="TINYINT"/>
+                <column code="TYPE" comment="如果type=0，则是商品ID；如果type=1，则是专题ID" displayName="收藏类型" mandatory="true"
+                        name="type" propId="4" stdDataType="byte" stdSqlType="TINYINT"/>
                 <column code="ADD_TIME" displayName="创建时间" domain="createTime" name="addTime" propId="5"
                         stdDataType="datetime" stdSqlType="DATETIME" ext:show="X"/>
                 <column code="UPDATE_TIME" displayName="更新时间" domain="updateTime" name="updateTime" propId="6"
@@ -352,8 +358,8 @@
                         stdDataType="int" stdSqlType="INTEGER" tagSet="seq"/>
                 <column code="VALUE_ID" displayName="如果type=0，则是商品评论；如果是type=1，则是专题评论。" mandatory="true" name="valueId"
                         propId="2" stdDataType="int" stdSqlType="INTEGER"/>
-                <column code="TYPE" displayName="评论类型，如果type=0，则是商品评论；如果是type=1，则是专题评论；" mandatory="true" name="type"
-                        propId="3" stdDataType="byte" stdSqlType="TINYINT"/>
+                <column code="TYPE" comment="如果type=0，则是商品评论；如果是type=1，则是专题评论；" displayName="评论类型" mandatory="true"
+                        name="type" propId="3" stdDataType="byte" stdSqlType="TINYINT"/>
                 <column code="CONTENT" displayName="评论内容" name="content" precision="1023" propId="4"
                         stdDataType="string" stdSqlType="VARCHAR"/>
                 <column code="ADMIN_CONTENT" displayName="管理员回复内容" name="adminContent" precision="511" propId="5"
@@ -362,8 +368,8 @@
                         stdDataType="int" stdSqlType="INTEGER"/>
                 <column code="HAS_PICTURE" displayName="是否含有图片" name="hasPicture" propId="7" stdDataType="boolean"
                         stdSqlType="BOOLEAN"/>
-                <column code="PIC_URLS" displayName="图片地址列表，采用JSON数组格式" name="picUrls" precision="1023" propId="8"
-                        stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="PIC_URLS" displayName="图片地址列表，采用JSON数组格式" domain="images" name="picUrls" precision="1023"
+                        propId="8" stdDataType="string" stdDomain="json" stdSqlType="VARCHAR"/>
                 <column code="STAR" displayName="评分， 1-5" name="star" propId="9" stdDataType="short"
                         stdSqlType="SMALLINT"/>
                 <column code="ADD_TIME" displayName="创建时间" domain="createTime" name="addTime" propId="10"
@@ -476,8 +482,8 @@
                         stdSqlType="INTEGER"/>
                 <column code="HAS_PICTURE" displayName="是否含有图片" name="hasPicture" propId="8" stdDataType="boolean"
                         stdSqlType="BOOLEAN"/>
-                <column code="PIC_URLS" displayName="图片地址列表，采用JSON数组格式" name="picUrls" precision="1023" propId="9"
-                        stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="PIC_URLS" displayName="图片地址列表，采用JSON数组格式" domain="images" name="picUrls" precision="1023"
+                        propId="9" stdDataType="string" stdDomain="json" stdSqlType="VARCHAR"/>
                 <column code="ADD_TIME" displayName="创建时间" domain="createTime" name="addTime" propId="10"
                         stdDataType="datetime" stdSqlType="DATETIME" ext:show="X"/>
                 <column code="UPDATE_TIME" displayName="更新时间" domain="updateTime" name="updateTime" propId="11"
@@ -526,8 +532,8 @@
                         stdSqlType="INTEGER" i18n-en:displayName="Category"/>
                 <column code="BRAND_ID" displayName="品牌ID" name="brandId" propId="5" stdDataType="int"
                         stdSqlType="INTEGER" i18n-en:displayName="Brand" ext:dict="obj/LitemallBrand"/>
-                <column code="GALLERY" displayName="商品宣传图片列表" name="gallery" precision="1023" propId="6"
-                        stdDataType="string" stdSqlType="VARCHAR" i18n-en:displayName="Gallery"/>
+                <column code="GALLERY" displayName="商品宣传图片列表" domain="images" name="gallery" precision="1023" propId="6"
+                        stdDataType="string" stdDomain="json" stdSqlType="VARCHAR" i18n-en:displayName="Gallery"/>
                 <column code="KEYWORDS" displayName="商品关键字" name="keywords" precision="255" propId="7"
                         stdDataType="string" stdSqlType="VARCHAR" i18n-en:displayName="Keywords"/>
                 <column code="BRIEF" displayName="商品简介" name="brief" precision="255" propId="8" stdDataType="string"
@@ -536,9 +542,9 @@
                         stdSqlType="BOOLEAN" i18n-en:displayName="Is On Sale"/>
                 <column code="SORT_ORDER" displayName="排序顺序" name="sortOrder" propId="10" stdDataType="short"
                         stdSqlType="SMALLINT" i18n-en:displayName="Sort Order"/>
-                <column code="PIC_URL" displayName="商品图片" name="picUrl" precision="255" propId="11" stdDataType="string"
-                        stdSqlType="VARCHAR" i18n-en:displayName="Picture Url"/>
-                <column code="SHARE_URL" displayName="商品分享海报" name="shareUrl" precision="255" propId="12"
+                <column code="PIC_URL" displayName="商品图片" domain="image" name="picUrl" precision="255" propId="11"
+                        stdDataType="string" stdSqlType="VARCHAR" i18n-en:displayName="Picture Url"/>
+                <column code="SHARE_URL" displayName="商品分享海报" domain="image" name="shareUrl" precision="255" propId="12"
                         stdDataType="string" stdSqlType="VARCHAR" i18n-en:displayName="Share Url"/>
                 <column code="IS_NEW" displayName="是否新品" name="isNew" propId="13" stdDataType="boolean"
                         stdSqlType="BOOLEAN" i18n-en:displayName="Is New"/>
@@ -640,8 +646,8 @@
                         scale="2" stdDataType="decimal" stdSqlType="DECIMAL"/>
                 <column code="NUMBER" displayName="商品货品数量" mandatory="true" name="number" propId="5" stdDataType="int"
                         stdSqlType="INTEGER"/>
-                <column code="URL" displayName="商品货品图片" name="url" precision="125" propId="6" stdDataType="string"
-                        stdSqlType="VARCHAR"/>
+                <column code="URL" displayName="商品货品图片" domain="image" name="url" precision="255" propId="6"
+                        stdDataType="string" stdSqlType="VARCHAR"/>
                 <column code="ADD_TIME" displayName="创建时间" domain="createTime" name="addTime" propId="7"
                         stdDataType="datetime" stdSqlType="DATETIME" ext:show="X"/>
                 <column code="UPDATE_TIME" displayName="更新时间" domain="updateTime" name="updateTime" propId="8"
@@ -672,8 +678,8 @@
                         propId="3" stdDataType="string" stdSqlType="VARCHAR" tagSet="disp"/>
                 <column code="VALUE" displayName="商品规格值" mandatory="true" name="value" precision="255" propId="4"
                         stdDataType="string" stdSqlType="VARCHAR"/>
-                <column code="PIC_URL" displayName="商品规格图片" mandatory="true" name="picUrl" precision="255" propId="5"
-                        stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="PIC_URL" displayName="商品规格图片" domain="image" mandatory="true" name="picUrl"
+                        precision="255" propId="5" stdDataType="string" stdSqlType="VARCHAR"/>
                 <column code="ADD_TIME" displayName="创建时间" domain="createTime" name="addTime" propId="6"
                         stdDataType="datetime" stdSqlType="DATETIME" ext:show="X"/>
                 <column code="UPDATE_TIME" displayName="更新时间" domain="updateTime" name="updateTime" propId="7"
@@ -706,8 +712,8 @@
                         name="rulesId" propId="4" stdDataType="int" stdSqlType="INTEGER"/>
                 <column code="USER_ID" displayName="用户ID" mandatory="true" name="userId" propId="5" stdDataType="int"
                         stdSqlType="INTEGER"/>
-                <column code="SHARE_URL" displayName="团购分享图片地址" name="shareUrl" precision="255" propId="6"
-                        stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="SHARE_URL" displayName="团购分享图片地址" domain="image" name="shareUrl" precision="255"
+                        propId="6" stdDataType="string" stdSqlType="VARCHAR"/>
                 <column code="CREATOR_USER_ID" displayName="开团用户ID" mandatory="true" name="creatorUserId" propId="7"
                         stdDataType="int" stdSqlType="INTEGER"/>
                 <column code="CREATOR_USER_TIME" displayName="开团时间" name="creatorUserTime" propId="8"
@@ -740,7 +746,7 @@
                         stdSqlType="INTEGER"/>
                 <column code="GOODS_NAME" displayName="商品名称" mandatory="true" name="goodsName" precision="127"
                         propId="3" stdDataType="string" stdSqlType="VARCHAR"/>
-                <column code="PIC_URL" displayName="商品图片或者商品货品图片" name="picUrl" precision="255" propId="4"
+                <column code="PIC_URL" displayName="商品/货品图片" domain="image" name="picUrl" precision="255" propId="4"
                         stdDataType="string" stdSqlType="VARCHAR"/>
                 <column code="DISCOUNT" displayName="优惠金额" mandatory="true" name="discount" precision="63" propId="5"
                         scale="0" stdDataType="decimal" stdSqlType="DECIMAL"/>
@@ -823,7 +829,7 @@
                         stdSqlType="VARCHAR"/>
                 <column code="STATUS" displayName="操作状态" name="status" propId="6" stdDataType="boolean"
                         stdSqlType="BOOLEAN"/>
-                <column code="RESULT" displayName="操作结果，或者成功消息，或者失败消息" name="result" precision="127" propId="7"
+                <column code="RESULT" displayName="操作结果/消息" name="result" precision="127" propId="7"
                         stdDataType="string" stdSqlType="VARCHAR"/>
                 <column code="COMMENT" displayName="补充信息" name="comment" precision="255" propId="8" stdDataType="string"
                         stdSqlType="VARCHAR"/>
@@ -843,10 +849,10 @@
                         stdDataType="int" stdSqlType="INTEGER" tagSet="seq"/>
                 <column code="TITLE" displayName="通知标题" name="title" precision="63" propId="2" stdDataType="string"
                         stdSqlType="VARCHAR" tagSet="disp"/>
-                <column code="CONTENT" displayName="通知内容" name="content" precision="511" propId="3" stdDataType="string"
-                        stdSqlType="VARCHAR"/>
-                <column code="ADMIN_ID" displayName="创建通知的管理员ID，如果是系统内置通知则是0." name="adminId" propId="4"
-                        stdDataType="int" stdSqlType="INTEGER"/>
+                <column code="CONTENT" comment="如果是系统内置通知则是0." displayName="通知内容" name="content" precision="511"
+                        propId="3" stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="ADMIN_ID" displayName="创建通知的管理员ID" name="adminId" propId="4" stdDataType="int"
+                        stdSqlType="INTEGER"/>
                 <column code="ADD_TIME" displayName="创建时间" domain="createTime" name="addTime" propId="5"
                         stdDataType="datetime" stdSqlType="DATETIME" ext:show="X"/>
                 <column code="UPDATE_TIME" displayName="更新时间" domain="updateTime" name="updateTime" propId="6"
@@ -867,7 +873,7 @@
                         stdDataType="string" stdSqlType="VARCHAR"/>
                 <column code="ADMIN_ID" displayName="接收通知的管理员ID" name="adminId" propId="4" stdDataType="int"
                         stdSqlType="INTEGER"/>
-                <column code="READ_TIME" displayName="阅读时间，如果是NULL则是未读状态" name="readTime" propId="5"
+                <column code="READ_TIME" comment="如果是NULL则是未读状态" displayName="阅读时间" name="readTime" propId="5"
                         stdDataType="datetime" stdSqlType="DATETIME"/>
                 <column code="ADD_TIME" displayName="创建时间" domain="createTime" name="addTime" propId="6"
                         stdDataType="datetime" stdSqlType="DATETIME" ext:show="X"/>
@@ -961,16 +967,16 @@
                         propId="4" stdDataType="string" stdSqlType="VARCHAR"/>
                 <column code="GOODS_SN" displayName="商品编号" mandatory="true" name="goodsSn" precision="63" propId="5"
                         stdDataType="string" stdSqlType="VARCHAR"/>
-                <column code="PRODUCT_ID" displayName="商品货品表的货品ID" mandatory="true" name="productId" propId="6"
+                <column code="PRODUCT_ID" displayName="货品ID" mandatory="true" name="productId" propId="6"
                         stdDataType="int" stdSqlType="INTEGER"/>
-                <column code="NUMBER" displayName="商品货品的购买数量" mandatory="true" name="number" propId="7"
-                        stdDataType="short" stdSqlType="SMALLINT"/>
-                <column code="PRICE" displayName="商品货品的售价" mandatory="true" name="price" precision="10" propId="8"
-                        scale="2" stdDataType="decimal" stdSqlType="DECIMAL"/>
-                <column code="SPECIFICATIONS" displayName="商品货品的规格列表" mandatory="true" name="specifications"
-                        precision="1023" propId="9" stdDataType="string" stdSqlType="VARCHAR"/>
-                <column code="PIC_URL" displayName="商品货品图片或者商品图片" mandatory="true" name="picUrl" precision="255"
-                        propId="10" stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="NUMBER" displayName="购买数量" mandatory="true" name="number" propId="7" stdDataType="short"
+                        stdSqlType="SMALLINT"/>
+                <column code="PRICE" displayName="售价" mandatory="true" name="price" precision="10" propId="8" scale="2"
+                        stdDataType="decimal" stdSqlType="DECIMAL"/>
+                <column code="SPECIFICATIONS" displayName="规格列表" mandatory="true" name="specifications" precision="1023"
+                        propId="9" stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="PIC_URL" displayName="商品/货品图片" domain="image" mandatory="true" name="picUrl"
+                        precision="255" propId="10" stdDataType="string" stdSqlType="VARCHAR"/>
                 <column code="COMMENT" displayName="订单商品评论，如果是-1，则超期不能评价；如果是0，则可以评价；如果其他值，则是comment表里面的评论ID。"
                         name="comment" propId="11" stdDataType="int" stdSqlType="INTEGER"/>
                 <column code="ADD_TIME" displayName="创建时间" domain="createTime" name="addTime" propId="12"
@@ -1004,12 +1010,12 @@
             <columns>
                 <column code="ID" displayName="Id" mandatory="true" name="id" primary="true" propId="1"
                         stdDataType="int" stdSqlType="INTEGER"/>
-                <column code="PID" displayName="行政区域父ID，例如区县的pid指向市，市的pid指向省，省的pid则是0" mandatory="true" name="pid"
-                        propId="2" stdDataType="int" stdSqlType="INTEGER"/>
+                <column code="PID" comment="例如区县的pid指向市，市的pid指向省，省的pid则是0" displayName="行政区域父ID" mandatory="true"
+                        name="pid" propId="2" stdDataType="int" stdSqlType="INTEGER"/>
                 <column code="NAME" displayName="行政区域名称" mandatory="true" name="name" precision="120" propId="3"
                         stdDataType="string" stdSqlType="VARCHAR"/>
-                <column code="TYPE" displayName="行政区域类型，如如1则是省， 如果是2则是市，如果是3则是区县" mandatory="true" name="type"
-                        propId="4" stdDataType="byte" stdSqlType="TINYINT"/>
+                <column code="TYPE" comment="如果是1则是省， 如果是2则是市，如果是3则是区县" displayName="行政区域类型" mandatory="true"
+                        name="type" propId="4" stdDataType="byte" stdSqlType="TINYINT" ext:dict="mall/region-type"/>
                 <column code="CODE" displayName="行政区域编码" mandatory="true" name="code" propId="5" stdDataType="int"
                         stdSqlType="INTEGER"/>
             </columns>

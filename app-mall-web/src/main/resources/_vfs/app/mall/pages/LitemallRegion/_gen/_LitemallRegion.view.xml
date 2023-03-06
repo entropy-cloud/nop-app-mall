@@ -13,13 +13,13 @@
                 <!--Id-->
                 <col id="id" mandatory="true" sortable="true"/>
 
-                <!--行政区域父ID，例如区县的pid指向市，市的pid指向省，省的pid则是0-->
+                <!--行政区域父ID-->
                 <col id="pid" mandatory="true" sortable="true"/>
 
                 <!--行政区域名称-->
                 <col id="name" mandatory="true" sortable="true"/>
 
-                <!--行政区域类型，如如1则是省， 如果是2则是市，如果是3则是区县-->
+                <!--行政区域类型-->
                 <col id="type" mandatory="true" sortable="true"/>
 
                 <!--行政区域编码-->
@@ -33,9 +33,9 @@
         <form id="view" editMode="view" title="查看-行政区域表" i18n-en:title="View ">
             <layout>
  id[Id]
- pid[行政区域父ID，例如区县的pid指向市，市的pid指向省，省的pid则是0]
+ pid[行政区域父ID]
  name[行政区域名称]
- type[行政区域类型，如如1则是省， 如果是2则是市，如果是3则是区县]
+ type[行政区域类型]
  code[行政区域编码]
 </layout>
         </form>
@@ -43,9 +43,9 @@
         <form id="edit" editMode="update" title="编辑-行政区域表" i18n-en:title="Edit ">
             <layout>
  id[Id]
- pid[行政区域父ID，例如区县的pid指向市，市的pid指向省，省的pid则是0]
+ pid[行政区域父ID]
  name[行政区域名称]
- type[行政区域类型，如如1则是省， 如果是2则是市，如果是3则是区县]
+ type[行政区域类型]
  code[行政区域编码]
 </layout>
         </form>
@@ -77,6 +77,13 @@
             <rowActions>
                 <action id="row-view-button" level="primary" label="@i18n:common.view">
                     <dialog page="view"/>
+                </action>
+                <action id="row-update-button" level="primary" label="@i18n:common.edit" x:abstract="true">
+                    <dialog page="update"/>
+                </action>
+                <action id="row-delete-button" level="danger" label="@i18n:common.delete" x:abstract="true">
+                    <api url="@mutation:LitemallRegion__delete?id=$id"/>
+                    <confirmText>@i18n:common.confirmDelete</confirmText>
                 </action>
                 <actionGroup id="row-more-button" label="@i18n:common.more" level="primary">
                     <action id="row-update-button" level="primary" label="@i18n:common.edit">

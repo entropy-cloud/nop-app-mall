@@ -94,6 +94,7 @@ prop:
       deleted: null
       order: Order
       order.orderSn: Order
+      picturesComponent: null
     LitemallBrand:
       id: null
       name: null
@@ -159,6 +160,7 @@ prop:
       addTime: null
       updateTime: null
       deleted: null
+      picUrlsComponent: null
     LitemallCoupon:
       id: null
       name: null
@@ -211,6 +213,7 @@ prop:
       addTime: null
       updateTime: null
       deleted: null
+      picUrlsComponent: null
     LitemallFootprint:
       id: null
       userId: null
@@ -250,7 +253,7 @@ prop:
       attributes: Goods Attributes
       products: Products
       specifications: Specifications
-      keywordsList: null
+      galleryComponent: null
     LitemallGoodsAttribute:
       id: null
       goodsId: null
@@ -420,6 +423,7 @@ prop:
       pid: null
       name: null
       type: null
+      type_label: null
       code: null
     LitemallRole:
       id: null

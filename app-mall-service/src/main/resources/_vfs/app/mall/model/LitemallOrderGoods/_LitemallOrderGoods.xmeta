@@ -35,25 +35,25 @@
               updatable="true">
             <schema type="java.lang.String" precision="63"/>
         </prop>
-        <prop name="productId" displayName="商品货品表的货品ID" mandatory="true" queryable="true" sortable="true"
-              insertable="true" updatable="true">
+        <prop name="productId" displayName="货品ID" mandatory="true" queryable="true" sortable="true" insertable="true"
+              updatable="true">
             <schema type="java.lang.Integer"/>
         </prop>
-        <prop name="number" displayName="商品货品的购买数量" mandatory="true" queryable="true" sortable="true" insertable="true"
+        <prop name="number" displayName="购买数量" mandatory="true" queryable="true" sortable="true" insertable="true"
               updatable="true">
             <schema type="java.lang.Short"/>
         </prop>
-        <prop name="price" displayName="商品货品的售价" mandatory="true" queryable="true" sortable="true" insertable="true"
+        <prop name="price" displayName="售价" mandatory="true" queryable="true" sortable="true" insertable="true"
               updatable="true">
             <schema type="java.math.BigDecimal" precision="10" scale="2"/>
         </prop>
-        <prop name="specifications" displayName="商品货品的规格列表" mandatory="true" queryable="true" sortable="true"
+        <prop name="specifications" displayName="规格列表" mandatory="true" queryable="true" sortable="true"
               insertable="true" updatable="true">
             <schema type="java.lang.String" precision="1023"/>
         </prop>
-        <prop name="picUrl" displayName="商品货品图片或者商品图片" mandatory="true" queryable="true" sortable="true"
-              insertable="true" updatable="true">
-            <schema type="java.lang.String" precision="255"/>
+        <prop name="picUrl" displayName="商品/货品图片" mandatory="true" queryable="true" sortable="true" insertable="true"
+              updatable="true">
+            <schema domain="image" type="java.lang.String" precision="255"/>
         </prop>
         <prop name="comment" displayName="订单商品评论，如果是-1，则超期不能评价；如果是0，则可以评价；如果其他值，则是comment表里面的评论ID。" queryable="true"
               sortable="true" insertable="true" updatable="true">

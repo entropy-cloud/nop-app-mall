@@ -19,7 +19,7 @@
                 <!--如果type=0，则是商品ID；如果type=1，则是专题ID-->
                 <col id="valueId" mandatory="true" sortable="true"/>
 
-                <!--收藏类型，如果type=0，则是商品ID；如果type=1，则是专题ID-->
+                <!--收藏类型-->
                 <col id="type" mandatory="true" sortable="true"/>
             </cols>
         </grid>
@@ -32,7 +32,7 @@
  id[Id]
  userId[用户ID]
  valueId[如果type=0，则是商品ID；如果type=1，则是专题ID]
- type[收藏类型，如果type=0，则是商品ID；如果type=1，则是专题ID]
+ type[收藏类型]
 </layout>
         </form>
         <form id="add" editMode="add" title="新增-收藏表" i18n-en:title="Add " x:prototype="edit"/>
@@ -41,7 +41,7 @@
  id[Id]
  userId[用户ID]
  valueId[如果type=0，则是商品ID；如果type=1，则是专题ID]
- type[收藏类型，如果type=0，则是商品ID；如果type=1，则是专题ID]
+ type[收藏类型]
 </layout>
         </form>
         <form id="query" editMode="query" title="查询条件" i18n-en:title="Query Condition" x:abstract="true">
@@ -72,6 +72,13 @@
             <rowActions>
                 <action id="row-view-button" level="primary" label="@i18n:common.view">
                     <dialog page="view"/>
+                </action>
+                <action id="row-update-button" level="primary" label="@i18n:common.edit" x:abstract="true">
+                    <dialog page="update"/>
+                </action>
+                <action id="row-delete-button" level="danger" label="@i18n:common.delete" x:abstract="true">
+                    <api url="@mutation:LitemallCollect__delete?id=$id"/>
+                    <confirmText>@i18n:common.confirmDelete</confirmText>
                 </action>
                 <actionGroup id="row-more-button" label="@i18n:common.more" level="primary">
                     <action id="row-update-button" level="primary" label="@i18n:common.edit">

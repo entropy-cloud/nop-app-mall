@@ -19,7 +19,7 @@
                 <!--商品名称-->
                 <col id="goodsName" mandatory="true" sortable="true"/>
 
-                <!--商品图片或者商品货品图片-->
+                <!--商品/货品图片-->
                 <col id="picUrl" sortable="true"/>
 
                 <!--优惠金额-->
@@ -44,7 +44,7 @@
  id[Id]
  goodsId[商品ID]
  goodsName[商品名称]
- picUrl[商品图片或者商品货品图片]
+ picUrl[商品/货品图片]
  discount[优惠金额]
  discountMember[达到优惠条件的人数]
  expireTime[团购过期时间]
@@ -57,7 +57,7 @@
  id[Id]
  goodsId[商品ID]
  goodsName[商品名称]
- picUrl[商品图片或者商品货品图片]
+ picUrl[商品/货品图片]
  discount[优惠金额]
  discountMember[达到优惠条件的人数]
  expireTime[团购过期时间]
@@ -92,6 +92,13 @@
             <rowActions>
                 <action id="row-view-button" level="primary" label="@i18n:common.view">
                     <dialog page="view"/>
+                </action>
+                <action id="row-update-button" level="primary" label="@i18n:common.edit" x:abstract="true">
+                    <dialog page="update"/>
+                </action>
+                <action id="row-delete-button" level="danger" label="@i18n:common.delete" x:abstract="true">
+                    <api url="@mutation:LitemallGrouponRules__delete?id=$id"/>
+                    <confirmText>@i18n:common.confirmDelete</confirmText>
                 </action>
                 <actionGroup id="row-more-button" label="@i18n:common.more" level="primary">
                     <action id="row-update-button" level="primary" label="@i18n:common.edit">

@@ -340,6 +340,7 @@
 /dict/mall/coupon-time-type.dict.yaml
 /dict/mall/coupon-type.dict.yaml
 /dict/mall/order-status.dict.yaml
+/dict/mall/region-type.dict.yaml
 /i18n/en/_app-mall-web.i18n.yaml
 /i18n/en/_app-mall.i18n.yaml
 /i18n/en/_nop-auth-web.i18n.yaml

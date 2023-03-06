@@ -26,10 +26,10 @@
             <schema type="java.lang.String" precision="63"/>
         </prop>
         <prop name="iconUrl" displayName="类目图标" queryable="true" sortable="true" insertable="true" updatable="true">
-            <schema type="java.lang.String" precision="255"/>
+            <schema domain="image" type="java.lang.String" precision="255"/>
         </prop>
         <prop name="picUrl" displayName="类目图片" queryable="true" sortable="true" insertable="true" updatable="true">
-            <schema type="java.lang.String" precision="255"/>
+            <schema domain="image" type="java.lang.String" precision="255"/>
         </prop>
         <prop name="keywords" displayName="类目关键字" mandatory="true" queryable="true" sortable="true" insertable="true"
               updatable="true">

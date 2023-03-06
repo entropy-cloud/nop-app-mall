@@ -32,7 +32,7 @@ public class _LitemallNotice extends DynamicOrmEntity{
     public static final String PROP_NAME_content = "content";
     public static final int PROP_ID_content = 3;
     
-    /* 创建通知的管理员ID，如果是系统内置通知则是0.: ADMIN_ID INTEGER */
+    /* 创建通知的管理员ID: ADMIN_ID INTEGER */
     public static final String PROP_NAME_adminId = "adminId";
     public static final int PROP_ID_adminId = 4;
     
@@ -93,7 +93,7 @@ public class _LitemallNotice extends DynamicOrmEntity{
     /* 通知内容: CONTENT */
     private java.lang.String _content;
     
-    /* 创建通知的管理员ID，如果是系统内置通知则是0.: ADMIN_ID */
+    /* 创建通知的管理员ID: ADMIN_ID */
     private java.lang.Integer _adminId;
     
     /* 创建时间: ADD_TIME */
@@ -399,7 +399,7 @@ public class _LitemallNotice extends DynamicOrmEntity{
     }
     
     /**
-     * 创建通知的管理员ID，如果是系统内置通知则是0.: ADMIN_ID
+     * 创建通知的管理员ID: ADMIN_ID
      */
     public java.lang.Integer getAdminId(){
          onPropGet(PROP_ID_adminId);
@@ -407,7 +407,7 @@ public class _LitemallNotice extends DynamicOrmEntity{
     }
 
     /**
-     * 创建通知的管理员ID，如果是系统内置通知则是0.: ADMIN_ID
+     * 创建通知的管理员ID: ADMIN_ID
      */
     public void setAdminId(java.lang.Integer value){
         if(onPropSet(PROP_ID_adminId,value)){

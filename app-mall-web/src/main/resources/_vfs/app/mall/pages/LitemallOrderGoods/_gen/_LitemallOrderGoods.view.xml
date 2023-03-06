@@ -25,19 +25,19 @@
                 <!--商品编号-->
                 <col id="goodsSn" mandatory="true" sortable="true"/>
 
-                <!--商品货品表的货品ID-->
+                <!--货品ID-->
                 <col id="productId" mandatory="true" sortable="true"/>
 
-                <!--商品货品的购买数量-->
+                <!--购买数量-->
                 <col id="number" mandatory="true" sortable="true"/>
 
-                <!--商品货品的售价-->
+                <!--售价-->
                 <col id="price" mandatory="true" sortable="true"/>
 
-                <!--商品货品的规格列表-->
+                <!--规格列表-->
                 <col id="specifications" mandatory="true" sortable="true"/>
 
-                <!--商品货品图片或者商品图片-->
+                <!--商品/货品图片-->
                 <col id="picUrl" mandatory="true" sortable="true"/>
 
                 <!--订单商品评论，如果是-1，则超期不能评价；如果是0，则可以评价；如果其他值，则是comment表里面的评论ID。-->
@@ -52,9 +52,9 @@
             <layout>
  id[Id] orderId[订单ID]
  goodsId[商品ID] goodsName[商品名称]
- goodsSn[商品编号] productId[商品货品表的货品ID]
- number[商品货品的购买数量] price[商品货品的售价]
- specifications[商品货品的规格列表] picUrl[商品货品图片或者商品图片]
+ goodsSn[商品编号] productId[货品ID]
+ number[购买数量] price[售价]
+ specifications[规格列表] picUrl[商品/货品图片]
  comment[订单商品评论，如果是-1，则超期不能评价；如果是0，则可以评价；如果其他值，则是comment表里面的评论ID。] 
 </layout>
         </form>
@@ -63,9 +63,9 @@
             <layout>
  id[Id] orderId[订单ID]
  goodsId[商品ID] goodsName[商品名称]
- goodsSn[商品编号] productId[商品货品表的货品ID]
- number[商品货品的购买数量] price[商品货品的售价]
- specifications[商品货品的规格列表] picUrl[商品货品图片或者商品图片]
+ goodsSn[商品编号] productId[货品ID]
+ number[购买数量] price[售价]
+ specifications[规格列表] picUrl[商品/货品图片]
  comment[订单商品评论，如果是-1，则超期不能评价；如果是0，则可以评价；如果其他值，则是comment表里面的评论ID。] 
 </layout>
         </form>
@@ -97,6 +97,13 @@
             <rowActions>
                 <action id="row-view-button" level="primary" label="@i18n:common.view">
                     <dialog page="view"/>
+                </action>
+                <action id="row-update-button" level="primary" label="@i18n:common.edit" x:abstract="true">
+                    <dialog page="update"/>
+                </action>
+                <action id="row-delete-button" level="danger" label="@i18n:common.delete" x:abstract="true">
+                    <api url="@mutation:LitemallOrderGoods__delete?id=$id"/>
+                    <confirmText>@i18n:common.confirmDelete</confirmText>
                 </action>
                 <actionGroup id="row-more-button" label="@i18n:common.more" level="primary">
                     <action id="row-update-button" level="primary" label="@i18n:common.edit">

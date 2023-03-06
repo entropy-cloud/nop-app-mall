@@ -87,6 +87,7 @@ prop:
       order.orderSn: 订单
       orderId: 订单ID
       pictures: 退款凭证图片链接数组
+      picturesComponent: null
       reason: 退款原因
       status: 售后状态
       status_label: 售后状态
@@ -142,7 +143,7 @@ prop:
       addTime: 创建时间
       deleted: 逻辑删除
       id: Id
-      type: 收藏类型，如果type=0，则是商品ID；如果type=1，则是专题ID
+      type: 收藏类型
       updateTime: 更新时间
       userId: 用户ID
       valueId: 如果type=0，则是商品ID；如果type=1，则是专题ID
@@ -154,8 +155,9 @@ prop:
       hasPicture: 是否含有图片
       id: Id
       picUrls: 图片地址列表，采用JSON数组格式
+      picUrlsComponent: null
       star: 评分， 1-5
-      type: 评论类型，如果type=0，则是商品评论；如果是type=1，则是专题评论；
+      type: 评论类型
       updateTime: 更新时间
       userId: 用户表的用户ID
       valueId: 如果type=0，则是商品评论；如果是type=1，则是专题评论。
@@ -207,6 +209,7 @@ prop:
       id: Id
       mobile: 手机号
       picUrls: 图片地址列表，采用JSON数组格式
+      picUrlsComponent: null
       status: 状态
       updateTime: 更新时间
       userId: 用户表的用户ID
@@ -235,13 +238,13 @@ prop:
       deleted: 逻辑删除
       detail: 详情
       gallery: 商品宣传图片列表
+      galleryComponent: null
       goodsSn: 商品编号
       id: Id
       isHot: 是否热品
       isNew: 是否新品
       isOnSale: 是否在售
       keywords: 商品关键字
-      keywordsList: 关键字
       name: 商品名称
       picUrl: 商品图片
       products: 包含产品
@@ -310,7 +313,7 @@ prop:
       goodsId: 商品ID
       goodsName: 商品名称
       id: Id
-      picUrl: 商品图片或者商品货品图片
+      picUrl: 商品/货品图片
       status: 团购规则状态，正常上线则0，到期自动下线则1，管理手动下线则2
       updateTime: 更新时间
     LitemallIssue:
@@ -338,13 +341,13 @@ prop:
       deleted: 逻辑删除
       id: Id
       ip: 管理员地址
-      result: 操作结果，或者成功消息，或者失败消息
+      result: 操作结果/消息
       status: 操作状态
       type: 操作分类
       updateTime: 更新时间
     LitemallNotice:
       addTime: 创建时间
-      adminId: 创建通知的管理员ID，如果是系统内置通知则是0.
+      adminId: 创建通知的管理员ID
       content: 通知内容
       deleted: 逻辑删除
       id: Id
@@ -357,7 +360,7 @@ prop:
       id: Id
       noticeId: 通知ID
       noticeTitle: 通知标题
-      readTime: 阅读时间，如果是NULL则是未读状态
+      readTime: 阅读时间
       updateTime: 更新时间
     LitemallOrder:
       actualPrice: 实付费用
@@ -401,12 +404,12 @@ prop:
       goodsName: 商品名称
       goodsSn: 商品编号
       id: Id
-      number: 商品货品的购买数量
+      number: 购买数量
       orderId: 订单ID
-      picUrl: 商品货品图片或者商品图片
-      price: 商品货品的售价
-      productId: 商品货品表的货品ID
-      specifications: 商品货品的规格列表
+      picUrl: 商品/货品图片
+      price: 售价
+      productId: 货品ID
+      specifications: 规格列表
       updateTime: 更新时间
     LitemallPermission:
       addTime: 创建时间
@@ -419,8 +422,9 @@ prop:
       code: 行政区域编码
       id: Id
       name: 行政区域名称
-      pid: 行政区域父ID，例如区县的pid指向市，市的pid指向省，省的pid则是0
-      type: 行政区域类型，如如1则是省， 如果是2则是市，如果是3则是区县
+      pid: 行政区域父ID
+      type: 行政区域类型
+      type_label: 行政区域类型
     LitemallRole:
       addTime: 创建时间
       deleted: 逻辑删除

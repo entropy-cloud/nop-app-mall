@@ -36,7 +36,7 @@
             <schema type="java.lang.Integer"/>
         </prop>
         <prop name="shareUrl" displayName="团购分享图片地址" queryable="true" sortable="true" insertable="true" updatable="true">
-            <schema type="java.lang.String" precision="255"/>
+            <schema domain="image" type="java.lang.String" precision="255"/>
         </prop>
         <prop name="creatorUserId" displayName="开团用户ID" mandatory="true" queryable="true" sortable="true"
               insertable="true" updatable="true">

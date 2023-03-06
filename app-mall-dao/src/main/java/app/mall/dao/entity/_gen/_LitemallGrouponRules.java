@@ -32,7 +32,7 @@ public class _LitemallGrouponRules extends DynamicOrmEntity{
     public static final String PROP_NAME_goodsName = "goodsName";
     public static final int PROP_ID_goodsName = 3;
     
-    /* 商品图片或者商品货品图片: PIC_URL VARCHAR */
+    /* 商品/货品图片: PIC_URL VARCHAR */
     public static final String PROP_NAME_picUrl = "picUrl";
     public static final int PROP_ID_picUrl = 4;
     
@@ -124,7 +124,7 @@ public class _LitemallGrouponRules extends DynamicOrmEntity{
     /* 商品名称: GOODS_NAME */
     private java.lang.String _goodsName;
     
-    /* 商品图片或者商品货品图片: PIC_URL */
+    /* 商品/货品图片: PIC_URL */
     private java.lang.String _picUrl;
     
     /* 优惠金额: DISCOUNT */
@@ -522,7 +522,7 @@ public class _LitemallGrouponRules extends DynamicOrmEntity{
     }
     
     /**
-     * 商品图片或者商品货品图片: PIC_URL
+     * 商品/货品图片: PIC_URL
      */
     public java.lang.String getPicUrl(){
          onPropGet(PROP_ID_picUrl);
@@ -530,7 +530,7 @@ public class _LitemallGrouponRules extends DynamicOrmEntity{
     }
 
     /**
-     * 商品图片或者商品货品图片: PIC_URL
+     * 商品/货品图片: PIC_URL
      */
     public void setPicUrl(java.lang.String value){
         if(onPropSet(PROP_ID_picUrl,value)){

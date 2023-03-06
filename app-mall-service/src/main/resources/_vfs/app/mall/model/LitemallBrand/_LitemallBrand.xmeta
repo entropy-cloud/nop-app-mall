@@ -25,7 +25,7 @@
         </prop>
         <prop name="picUrl" displayName="品牌商图片" mandatory="true" queryable="true" sortable="true" insertable="true"
               updatable="true">
-            <schema type="java.lang.String" precision="255"/>
+            <schema domain="image" type="java.lang.String" precision="255"/>
         </prop>
         <prop name="desc" displayName="品牌商简介" mandatory="true" queryable="true" sortable="true" insertable="true"
               updatable="true">

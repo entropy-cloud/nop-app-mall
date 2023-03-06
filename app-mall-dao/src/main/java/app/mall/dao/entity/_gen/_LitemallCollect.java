@@ -32,7 +32,7 @@ public class _LitemallCollect extends DynamicOrmEntity{
     public static final String PROP_NAME_valueId = "valueId";
     public static final int PROP_ID_valueId = 3;
     
-    /* 收藏类型，如果type=0，则是商品ID；如果type=1，则是专题ID: TYPE TINYINT */
+    /* 收藏类型: TYPE TINYINT */
     public static final String PROP_NAME_type = "type";
     public static final int PROP_ID_type = 4;
     
@@ -93,7 +93,7 @@ public class _LitemallCollect extends DynamicOrmEntity{
     /* 如果type=0，则是商品ID；如果type=1，则是专题ID: VALUE_ID */
     private java.lang.Integer _valueId;
     
-    /* 收藏类型，如果type=0，则是商品ID；如果type=1，则是专题ID: TYPE */
+    /* 收藏类型: TYPE */
     private java.lang.Byte _type;
     
     /* 创建时间: ADD_TIME */
@@ -399,7 +399,7 @@ public class _LitemallCollect extends DynamicOrmEntity{
     }
     
     /**
-     * 收藏类型，如果type=0，则是商品ID；如果type=1，则是专题ID: TYPE
+     * 收藏类型: TYPE
      */
     public java.lang.Byte getType(){
          onPropGet(PROP_ID_type);
@@ -407,7 +407,7 @@ public class _LitemallCollect extends DynamicOrmEntity{
     }
 
     /**
-     * 收藏类型，如果type=0，则是商品ID；如果type=1，则是专题ID: TYPE
+     * 收藏类型: TYPE
      */
     public void setType(java.lang.Byte value){
         if(onPropSet(PROP_ID_type,value)){

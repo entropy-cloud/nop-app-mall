@@ -22,7 +22,7 @@
                 <!--接收通知的管理员ID-->
                 <col id="adminId" sortable="true"/>
 
-                <!--阅读时间，如果是NULL则是未读状态-->
+                <!--阅读时间-->
                 <col id="readTime" sortable="true"/>
             </cols>
         </grid>
@@ -36,7 +36,7 @@
  noticeId[通知ID]
  noticeTitle[通知标题]
  adminId[接收通知的管理员ID]
- readTime[阅读时间，如果是NULL则是未读状态]
+ readTime[阅读时间]
 </layout>
         </form>
         <form id="add" editMode="add" title="新增-通知管理员表" i18n-en:title="Add " x:prototype="edit"/>
@@ -46,7 +46,7 @@
  noticeId[通知ID]
  noticeTitle[通知标题]
  adminId[接收通知的管理员ID]
- readTime[阅读时间，如果是NULL则是未读状态]
+ readTime[阅读时间]
 </layout>
         </form>
         <form id="query" editMode="query" title="查询条件" i18n-en:title="Query Condition" x:abstract="true">
@@ -77,6 +77,13 @@
             <rowActions>
                 <action id="row-view-button" level="primary" label="@i18n:common.view">
                     <dialog page="view"/>
+                </action>
+                <action id="row-update-button" level="primary" label="@i18n:common.edit" x:abstract="true">
+                    <dialog page="update"/>
+                </action>
+                <action id="row-delete-button" level="danger" label="@i18n:common.delete" x:abstract="true">
+                    <api url="@mutation:LitemallNoticeAdmin__delete?id=$id"/>
+                    <confirmText>@i18n:common.confirmDelete</confirmText>
                 </action>
                 <actionGroup id="row-more-button" label="@i18n:common.more" level="primary">
                     <action id="row-update-button" level="primary" label="@i18n:common.edit">

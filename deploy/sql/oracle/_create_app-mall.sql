@@ -168,7 +168,7 @@ CREATE TABLE litemall_goods_product(
   SPECIFICATIONS VARCHAR2(1023) NOT NULL ,
   PRICE NUMBER(10,2) NOT NULL ,
   "NUMBER" INTEGER NOT NULL ,
-  URL VARCHAR2(125)  ,
+  URL VARCHAR2(255)  ,
   ADD_TIME DATE  ,
   UPDATE_TIME DATE  ,
   DELETED CHAR(1)  ,
@@ -658,7 +658,7 @@ CREATE TABLE litemall_brand(
                     
       COMMENT ON COLUMN litemall_collect.VALUE_ID IS '如果type=0，则是商品ID；如果type=1，则是专题ID';
                     
-      COMMENT ON COLUMN litemall_collect.TYPE IS '收藏类型，如果type=0，则是商品ID；如果type=1，则是专题ID';
+      COMMENT ON COLUMN litemall_collect.TYPE IS '收藏类型';
                     
       COMMENT ON COLUMN litemall_collect.ADD_TIME IS '创建时间';
                     
@@ -672,7 +672,7 @@ CREATE TABLE litemall_brand(
                     
       COMMENT ON COLUMN litemall_comment.VALUE_ID IS '如果type=0，则是商品评论；如果是type=1，则是专题评论。';
                     
-      COMMENT ON COLUMN litemall_comment.TYPE IS '评论类型，如果type=0，则是商品评论；如果是type=1，则是专题评论；';
+      COMMENT ON COLUMN litemall_comment.TYPE IS '评论类型';
                     
       COMMENT ON COLUMN litemall_comment.CONTENT IS '评论内容';
                     
@@ -844,7 +844,7 @@ CREATE TABLE litemall_brand(
                     
       COMMENT ON COLUMN litemall_groupon_rules.GOODS_NAME IS '商品名称';
                     
-      COMMENT ON COLUMN litemall_groupon_rules.PIC_URL IS '商品图片或者商品货品图片';
+      COMMENT ON COLUMN litemall_groupon_rules.PIC_URL IS '商品/货品图片';
                     
       COMMENT ON COLUMN litemall_groupon_rules.DISCOUNT IS '优惠金额';
                     
@@ -908,7 +908,7 @@ CREATE TABLE litemall_brand(
                     
       COMMENT ON COLUMN litemall_log.STATUS IS '操作状态';
                     
-      COMMENT ON COLUMN litemall_log.RESULT IS '操作结果，或者成功消息，或者失败消息';
+      COMMENT ON COLUMN litemall_log.RESULT IS '操作结果/消息';
                     
       COMMENT ON COLUMN litemall_log."COMMENT" IS '补充信息';
                     
@@ -926,7 +926,7 @@ CREATE TABLE litemall_brand(
                     
       COMMENT ON COLUMN litemall_notice.CONTENT IS '通知内容';
                     
-      COMMENT ON COLUMN litemall_notice.ADMIN_ID IS '创建通知的管理员ID，如果是系统内置通知则是0.';
+      COMMENT ON COLUMN litemall_notice.ADMIN_ID IS '创建通知的管理员ID';
                     
       COMMENT ON COLUMN litemall_notice.ADD_TIME IS '创建时间';
                     
@@ -944,7 +944,7 @@ CREATE TABLE litemall_brand(
                     
       COMMENT ON COLUMN litemall_notice_admin.ADMIN_ID IS '接收通知的管理员ID';
                     
-      COMMENT ON COLUMN litemall_notice_admin.READ_TIME IS '阅读时间，如果是NULL则是未读状态';
+      COMMENT ON COLUMN litemall_notice_admin.READ_TIME IS '阅读时间';
                     
       COMMENT ON COLUMN litemall_notice_admin.ADD_TIME IS '创建时间';
                     
@@ -964,15 +964,15 @@ CREATE TABLE litemall_brand(
                     
       COMMENT ON COLUMN litemall_order_goods.GOODS_SN IS '商品编号';
                     
-      COMMENT ON COLUMN litemall_order_goods.PRODUCT_ID IS '商品货品表的货品ID';
+      COMMENT ON COLUMN litemall_order_goods.PRODUCT_ID IS '货品ID';
                     
-      COMMENT ON COLUMN litemall_order_goods."NUMBER" IS '商品货品的购买数量';
+      COMMENT ON COLUMN litemall_order_goods."NUMBER" IS '购买数量';
                     
-      COMMENT ON COLUMN litemall_order_goods.PRICE IS '商品货品的售价';
+      COMMENT ON COLUMN litemall_order_goods.PRICE IS '售价';
                     
-      COMMENT ON COLUMN litemall_order_goods.SPECIFICATIONS IS '商品货品的规格列表';
+      COMMENT ON COLUMN litemall_order_goods.SPECIFICATIONS IS '规格列表';
                     
-      COMMENT ON COLUMN litemall_order_goods.PIC_URL IS '商品货品图片或者商品图片';
+      COMMENT ON COLUMN litemall_order_goods.PIC_URL IS '商品/货品图片';
                     
       COMMENT ON COLUMN litemall_order_goods."COMMENT" IS '订单商品评论，如果是-1，则超期不能评价；如果是0，则可以评价；如果其他值，则是comment表里面的评论ID。';
                     
@@ -1000,11 +1000,11 @@ CREATE TABLE litemall_brand(
                 
       COMMENT ON COLUMN litemall_region.ID IS 'Id';
                     
-      COMMENT ON COLUMN litemall_region.PID IS '行政区域父ID，例如区县的pid指向市，市的pid指向省，省的pid则是0';
+      COMMENT ON COLUMN litemall_region.PID IS '行政区域父ID';
                     
       COMMENT ON COLUMN litemall_region.NAME IS '行政区域名称';
                     
-      COMMENT ON COLUMN litemall_region.TYPE IS '行政区域类型，如如1则是省， 如果是2则是市，如果是3则是区县';
+      COMMENT ON COLUMN litemall_region.TYPE IS '行政区域类型';
                     
       COMMENT ON COLUMN litemall_region.CODE IS '行政区域编码';
                     

@@ -28,7 +28,7 @@
                 <!--操作状态-->
                 <col id="status" sortable="true"/>
 
-                <!--操作结果，或者成功消息，或者失败消息-->
+                <!--操作结果/消息-->
                 <col id="result" sortable="true"/>
 
                 <!--补充信息-->
@@ -47,7 +47,7 @@
  type[操作分类]
  action[操作动作]
  status[操作状态]
- result[操作结果，或者成功消息，或者失败消息]
+ result[操作结果/消息]
  comment[补充信息]
 </layout>
         </form>
@@ -60,7 +60,7 @@
  type[操作分类]
  action[操作动作]
  status[操作状态]
- result[操作结果，或者成功消息，或者失败消息]
+ result[操作结果/消息]
  comment[补充信息]
 </layout>
         </form>
@@ -92,6 +92,13 @@
             <rowActions>
                 <action id="row-view-button" level="primary" label="@i18n:common.view">
                     <dialog page="view"/>
+                </action>
+                <action id="row-update-button" level="primary" label="@i18n:common.edit" x:abstract="true">
+                    <dialog page="update"/>
+                </action>
+                <action id="row-delete-button" level="danger" label="@i18n:common.delete" x:abstract="true">
+                    <api url="@mutation:LitemallLog__delete?id=$id"/>
+                    <confirmText>@i18n:common.confirmDelete</confirmText>
                 </action>
                 <actionGroup id="row-more-button" label="@i18n:common.more" level="primary">
                     <action id="row-update-button" level="primary" label="@i18n:common.edit">

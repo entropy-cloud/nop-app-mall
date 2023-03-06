@@ -38233,6 +38233,12 @@
         ]
       },
       {
+        "name": "getComponent",
+        "parameterTypes": [
+          "java.lang.String"
+        ]
+      },
+      {
         "name": "getComponents",
         "parameterTypes": []
       },
@@ -39724,6 +39730,10 @@
         "parameterTypes": []
       },
       {
+        "name": "getTagSet",
+        "parameterTypes": []
+      },
+      {
         "name": "hasProp",
         "parameterTypes": [
           "java.lang.String"
@@ -39785,6 +39795,12 @@
         "name": "setProps",
         "parameterTypes": [
           "java.util.List"
+        ]
+      },
+      {
+        "name": "setTagSet",
+        "parameterTypes": [
+          "java.util.Set"
         ]
       }
     ],

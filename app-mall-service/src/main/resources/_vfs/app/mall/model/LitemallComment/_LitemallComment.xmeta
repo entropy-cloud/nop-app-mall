@@ -23,8 +23,8 @@
               sortable="true" insertable="true" updatable="true">
             <schema type="java.lang.Integer"/>
         </prop>
-        <prop name="type" displayName="评论类型，如果type=0，则是商品评论；如果是type=1，则是专题评论；" mandatory="true" queryable="true"
-              sortable="true" insertable="true" updatable="true">
+        <prop name="type" displayName="评论类型" mandatory="true" queryable="true" sortable="true" insertable="true"
+              updatable="true">
             <schema type="java.lang.Byte"/>
         </prop>
         <prop name="content" displayName="评论内容" queryable="true" sortable="true" insertable="true" updatable="true">
@@ -42,8 +42,8 @@
             <schema type="java.lang.Boolean"/>
         </prop>
         <prop name="picUrls" displayName="图片地址列表，采用JSON数组格式" queryable="true" sortable="true" insertable="true"
-              updatable="true">
-            <schema type="java.lang.String" precision="1023"/>
+              updatable="true" graphql:jsonComponentProp="picUrlsComponent">
+            <schema stdDomain="json" domain="images" type="java.lang.String" precision="1023"/>
         </prop>
         <prop name="star" displayName="评分， 1-5" queryable="true" sortable="true" insertable="true" updatable="true">
             <schema type="java.lang.Short"/>
@@ -59,6 +59,10 @@
         <prop name="deleted" displayName="逻辑删除" queryable="true" sortable="true" insertable="false" updatable="true"
               internal="true" ext:show="X">
             <schema domain="delFlag" type="java.lang.Boolean"/>
+        </prop>
+        <prop name="picUrlsComponent" ext:kind="component" internal="true" insertable="true" updatable="true"
+              lazy="true" published="false">
+            <schema type="io.nop.orm.support.JsonOrmComponent"/>
         </prop>
     </props>
 </meta>

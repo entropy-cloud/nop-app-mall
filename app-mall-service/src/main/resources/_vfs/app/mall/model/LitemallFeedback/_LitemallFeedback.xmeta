@@ -47,8 +47,8 @@
             <schema type="java.lang.Boolean"/>
         </prop>
         <prop name="picUrls" displayName="图片地址列表，采用JSON数组格式" queryable="true" sortable="true" insertable="true"
-              updatable="true">
-            <schema type="java.lang.String" precision="1023"/>
+              updatable="true" graphql:jsonComponentProp="picUrlsComponent">
+            <schema stdDomain="json" domain="images" type="java.lang.String" precision="1023"/>
         </prop>
         <prop name="addTime" displayName="创建时间" queryable="true" sortable="true" insertable="false" updatable="false"
               internal="true" ext:show="X">
@@ -61,6 +61,10 @@
         <prop name="deleted" displayName="逻辑删除" queryable="true" sortable="true" insertable="false" updatable="true"
               internal="true" ext:show="X">
             <schema domain="delFlag" type="java.lang.Boolean"/>
+        </prop>
+        <prop name="picUrlsComponent" ext:kind="component" internal="true" insertable="true" updatable="true"
+              lazy="true" published="false">
+            <schema type="io.nop.orm.support.JsonOrmComponent"/>
         </prop>
     </props>
 </meta>

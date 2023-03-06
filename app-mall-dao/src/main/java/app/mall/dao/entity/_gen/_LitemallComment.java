@@ -28,7 +28,7 @@ public class _LitemallComment extends DynamicOrmEntity{
     public static final String PROP_NAME_valueId = "valueId";
     public static final int PROP_ID_valueId = 2;
     
-    /* 评论类型，如果type=0，则是商品评论；如果是type=1，则是专题评论；: TYPE TINYINT */
+    /* 评论类型: TYPE TINYINT */
     public static final String PROP_NAME_type = "type";
     public static final int PROP_ID_type = 3;
     
@@ -125,7 +125,7 @@ public class _LitemallComment extends DynamicOrmEntity{
     /* 如果type=0，则是商品评论；如果是type=1，则是专题评论。: VALUE_ID */
     private java.lang.Integer _valueId;
     
-    /* 评论类型，如果type=0，则是商品评论；如果是type=1，则是专题评论；: TYPE */
+    /* 评论类型: TYPE */
     private java.lang.Byte _type;
     
     /* 评论内容: CONTENT */
@@ -530,7 +530,7 @@ public class _LitemallComment extends DynamicOrmEntity{
     }
     
     /**
-     * 评论类型，如果type=0，则是商品评论；如果是type=1，则是专题评论；: TYPE
+     * 评论类型: TYPE
      */
     public java.lang.Byte getType(){
          onPropGet(PROP_ID_type);
@@ -538,7 +538,7 @@ public class _LitemallComment extends DynamicOrmEntity{
     }
 
     /**
-     * 评论类型，如果type=0，则是商品评论；如果是type=1，则是专题评论；: TYPE
+     * 评论类型: TYPE
      */
     public void setType(java.lang.Byte value){
         if(onPropSet(PROP_ID_type,value)){

@@ -52,4 +52,14 @@ public interface _AppMallDaoConstants {
      */
     int ORDER_STATUS_AUTO_CONFIRM = 402;
                     
+    /**
+     * 商品类目级别: 一级类目 
+     */
+    String CATEGORY_LEVEL_L1 = "L1";
+                    
+    /**
+     * 商品类目级别: 二级类目 
+     */
+    String CATEGORY_LEVEL_L2 = "L2";
+                    
 }

@@ -1,15 +1,15 @@
 # __XGEN_FORCE_OVERRIDE__
 label: 商品类目级别
 locale: zh-CN
-valueType: int
+valueType: 
 description: 
 options:
 
   - label: 一级类目
-    value: 1
+    value: L1
     description: 
   
   - label: 二级类目
-    value: 2
+    value: L2
     description: 
   

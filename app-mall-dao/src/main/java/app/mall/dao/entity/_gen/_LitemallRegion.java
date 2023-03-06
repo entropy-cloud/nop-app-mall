@@ -24,7 +24,7 @@ public class _LitemallRegion extends DynamicOrmEntity{
     public static final String PROP_NAME_id = "id";
     public static final int PROP_ID_id = 1;
     
-    /* 行政区域父ID，例如区县的pid指向市，市的pid指向省，省的pid则是0: PID INTEGER */
+    /* 行政区域父ID: PID INTEGER */
     public static final String PROP_NAME_pid = "pid";
     public static final int PROP_ID_pid = 2;
     
@@ -32,7 +32,7 @@ public class _LitemallRegion extends DynamicOrmEntity{
     public static final String PROP_NAME_name = "name";
     public static final int PROP_ID_name = 3;
     
-    /* 行政区域类型，如如1则是省， 如果是2则是市，如果是3则是区县: TYPE TINYINT */
+    /* 行政区域类型: TYPE TINYINT */
     public static final String PROP_NAME_type = "type";
     public static final int PROP_ID_type = 4;
     
@@ -73,13 +73,13 @@ public class _LitemallRegion extends DynamicOrmEntity{
     /* Id: ID */
     private java.lang.Integer _id;
     
-    /* 行政区域父ID，例如区县的pid指向市，市的pid指向省，省的pid则是0: PID */
+    /* 行政区域父ID: PID */
     private java.lang.Integer _pid;
     
     /* 行政区域名称: NAME */
     private java.lang.String _name;
     
-    /* 行政区域类型，如如1则是省， 如果是2则是市，如果是3则是区县: TYPE */
+    /* 行政区域类型: TYPE */
     private java.lang.Byte _type;
     
     /* 行政区域编码: CODE */
@@ -301,7 +301,7 @@ public class _LitemallRegion extends DynamicOrmEntity{
     }
     
     /**
-     * 行政区域父ID，例如区县的pid指向市，市的pid指向省，省的pid则是0: PID
+     * 行政区域父ID: PID
      */
     public java.lang.Integer getPid(){
          onPropGet(PROP_ID_pid);
@@ -309,7 +309,7 @@ public class _LitemallRegion extends DynamicOrmEntity{
     }
 
     /**
-     * 行政区域父ID，例如区县的pid指向市，市的pid指向省，省的pid则是0: PID
+     * 行政区域父ID: PID
      */
     public void setPid(java.lang.Integer value){
         if(onPropSet(PROP_ID_pid,value)){
@@ -339,7 +339,7 @@ public class _LitemallRegion extends DynamicOrmEntity{
     }
     
     /**
-     * 行政区域类型，如如1则是省， 如果是2则是市，如果是3则是区县: TYPE
+     * 行政区域类型: TYPE
      */
     public java.lang.Byte getType(){
          onPropGet(PROP_ID_type);
@@ -347,7 +347,7 @@ public class _LitemallRegion extends DynamicOrmEntity{
     }
 
     /**
-     * 行政区域类型，如如1则是省， 如果是2则是市，如果是3则是区县: TYPE
+     * 行政区域类型: TYPE
      */
     public void setType(java.lang.Byte value){
         if(onPropSet(PROP_ID_type,value)){

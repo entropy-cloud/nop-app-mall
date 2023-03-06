@@ -6,7 +6,7 @@
         <grid id="list"/>
         <grid id="pick-list"/>
 
-        <grid id="ref-list">
+        <grid id="ref-edit" editMode="edit">
             <cols>
                 <col id="id" hidden="true"/>
 
