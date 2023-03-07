@@ -23,7 +23,7 @@
                 <col id="picUrl" sortable="true"/>
 
                 <!--类目关键字-->
-                <col id="keywords" mandatory="true" sortable="true"/>
+                <col id="keywords" sortable="true"/>
 
                 <!--简介-->
                 <col id="desc" sortable="true"/>

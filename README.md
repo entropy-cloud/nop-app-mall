@@ -3,6 +3,8 @@
 #### 介绍
 用于演示Nop平台基本开发流程的示例工程。功能设计与数据结构设计来自于开源项目[litemall](https://github.com/linlinjava/litemall)。
 
+开发说明文档:[tutorial.md](https://gitee.com/canonical-entropy/nop-entropy/blob/master/docs/tutorial/tutorial.md)
+
 #### 软件架构
 软件架构说明
 1. model/app-mall.orm.xlsx Excel格式的数据模型
@@ -12,7 +14,8 @@
 5. app-mall-service  后台服务的实现代码
 6. app-mall-web 前端页面对应的JSON和JS代码
 7. deploy 根据数据模型自动生成的数据库建表语句
-8. nop-cli.jar 代码生成工具
+8. db 测试使用的h2数据库，第一次启动时会自动生成
+9. nop-cli.jar 代码生成工具
 
 
 #### 安装教程
@@ -33,3 +36,4 @@ java -Dfile.encoding=UTF8 -Dquarkus.profile=dev -jar app-mall-app/target/app-mal
 服务链接http://localhost:8080，用户名nop，密码123
 
 
+第一次启动时会根据ORM模型自动创建数据库表结构，插入初始用户nop
