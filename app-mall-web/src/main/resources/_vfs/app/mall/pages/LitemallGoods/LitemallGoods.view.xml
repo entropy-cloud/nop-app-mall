@@ -20,15 +20,22 @@
 
                 <col id="detail" label="详情">
                     <gen-control>
-                        <button label="查看" actionType="dialog" level="primary">
-                            <dialog title="商品详情" size="md">
-                                <body>
-                                    <!-- gen-control中的内容是在服务端动态生成控件内容，因此${}表示的是服务端表达式，
-                                    而不是前端AMIS表达式。 ${'$'}{detail|raw}生成到前端成为 ${detail|raw} -->
-                                    <tpl tpl="${'$'}{detail|raw}"/>
-                                </body>
-                            </dialog>
-                        </button>
+                        <!-- button的label与column的label相冲突，所以这里用wrapper包裹一下。
+                            否则column上设置的label将会被button的label所覆盖。
+                        -->
+                        <wrapper>
+                            <body>
+                                <button label="查看" actionType="dialog" level="primary">
+                                    <dialog title="商品详情" size="md">
+                                        <body>
+                                            <!-- gen-control中的内容是在服务端动态生成控件内容，因此${}表示的是服务端表达式，
+                                            而不是前端AMIS表达式。 ${'$'}{detail|raw}生成到前端成为 ${detail|raw} -->
+                                            <tpl tpl="${'$'}{detail|raw}"/>
+                                        </body>
+                                    </dialog>
+                                </button>
+                            </body>
+                        </wrapper>
                     </gen-control>
                 </col>
 
@@ -49,7 +56,11 @@
 
                 <col id="goodsSn" breakpoint="*"/>
 
-                <col id="galleryComponent" breakpoint="*"/>
+                <!--
+                gallery的domain为images，它使用galleryComponent返回的json数据来显示。但是在配置时我们仍然使用gallery字段。
+                control.xlib在生成AMIS代码时会自动替换。
+                -->
+                <col id="gallery" breakpoint="*"/>
 
                 <col id="brief" breakpoint="*"/>
 
@@ -111,7 +122,7 @@
                                 <input-text name="specification" label="规格名" required="true"/>
                                 <input-text name="value" label="规格值" required="true">
                                 </input-text>
-                                <input-text name="picUrl" label="图片"/>
+                                <input-text name="picUrl" label="图片" required="true"/>
                             </columns>
                         </input-table>
                     </gen-control>
@@ -129,7 +140,7 @@
                         因此需要通过selection来控制。
                     -->
                     <view path="/app/mall/pages/LitemallGoods/attributes.page.yaml"/>
-                    <selection>id, name, value</selection>
+                    <selection>id, attribute, value</selection>
                 </cell>
 
             </cells>
@@ -169,10 +180,16 @@
             </rowActions>
         </crud>
 
-        <simple name="add" useFormActions="true" panelClassName="no-heading no-border actions-center">
+        <simple name="add" useFormActions="true" panelClassName="no-heading no-border actions-center"
+                redirect="/mall-goods-list"
+        >
             <actions>
                 <action id="cancel" label="取消" actionType="cancel"/>
-                <action id="confirm" label="上架" actionType="submit" level="primary"/>
+                <action id="confirm" label="上架" actionType="submit" level="primary">
+                    <messages>
+                        <success>提交成功</success>
+                    </messages>
+                </action>
             </actions>
         </simple>
         <picker name="picker"/>

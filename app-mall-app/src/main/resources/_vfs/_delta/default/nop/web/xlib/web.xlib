@@ -1,63 +1,6 @@
 <lib x:extends="super" x:schema="/nop/schema/xlib.xdef" xmlns:x="/nop/schema/xdsl.xdef">
 
     <tags>
-        <GenDispView x:override="merge">
-            <source>
-                <c:script>
-                    import io.nop.web.page.WebPageHelper;
 
-                    let refView = dispMeta.view;
-                    refView.validate();
-                </c:script>
-                <c:choose>
-                    <when test="${refView.path.endsWith('.view.xml')}">
-                        <c:choose>
-                            <when test="${refView.page}">
-                                <c:collect outputMode="xjson" xpl:return="genPage">
-                                    <thisLib:GenPage view="${refView.path}" page="${refView.page}"/>
-                                </c:collect>
-                                <c:script>
-                                    return genPage;
-                                </c:script>
-                            </when>
-                            <when test="${refView.grid}">
-                                <thisLib:GenInputTable view="${refView.path}" grid="${refView.grid}"
-                                                       xpl:return="genPage"/>
-                                <c:script>
-                                    return genPage;
-                                </c:script>
-                            </when>
-                            <when test="${refView.form}">
-                                <c:throw errorCode="nop.err.not-impl"/>
-                            </when>
-                            <otherwise>
-                                <c:throw errorCode="nop.err.invalid-ref-view-config"/>
-                            </otherwise>
-                        </c:choose>
-                    </when>
-                    <otherwise>
-                        <c:script>
-                            return WebPageHelper.internalLoadPage(refView.path);
-                        </c:script>
-                    </otherwise>
-                </c:choose>
-            </source>
-        </GenDispView>
-
-        <GenInputTable>
-            <attr name="view" mandatory="true"/>
-            <attr name="grid" mandatory="true"/>
-
-            <source>
-                <c:include src="/nop/web/xlib/web/init_grid_gen_scope.xpl"/>
-                <c:collect outputMode="xjson">
-                    <input-table removable="@:true" addable="@:true" editable="@:true" needConfirm="@:false">
-                        <columns j:list="true">
-                            <thisLib:GenGridCols gridModel="${gridModel}" objMeta="${objMeta}"/>
-                        </columns>
-                    </input-table>
-                </c:collect>
-            </source>
-        </GenInputTable>
     </tags>
 </lib>

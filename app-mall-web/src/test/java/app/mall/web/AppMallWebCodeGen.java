@@ -15,6 +15,8 @@ public class AppMallWebCodeGen {
         AppConfig.getConfigProvider().updateConfigValue(CoreConfigs.CFG_CORE_MAX_INITIALIZE_LEVEL,
                 CoreConstants.INITIALIZER_PRIORITY_ANALYZE);
 
+        // AppConfig.getConfigProvider().updateConfigValue(ApiConfigs.CFG_DEBUG,true);
+
         CoreInitialization.initialize();
         try {
             File projectDir = MavenDirHelper.projectDir(AppMallWebCodeGen.class);

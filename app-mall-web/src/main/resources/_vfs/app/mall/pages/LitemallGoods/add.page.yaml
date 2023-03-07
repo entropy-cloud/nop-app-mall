@@ -1,3 +1,3 @@
-
 x:gen-extends: |
-    <web:GenPage view="LitemallGoods.view.xml" page="add" xpl:lib="/nop/web/xlib/web.xlib" />
+  <web:GenPage view="LitemallGoods.view.xml" page="add" xpl:lib="/nop/web/xlib/web.xlib" />
+title: '@i18n:LitemallGoods.forms.add.$title|新增-商品'

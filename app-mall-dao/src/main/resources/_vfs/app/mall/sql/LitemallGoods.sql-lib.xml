@@ -9,7 +9,7 @@
                 update LitemallCart o
                 set o.price = ${product.price},
                   o.goodsName = ${product.goods.name},
-                  o.url = ${product.url},
+                  o.picUrl = ${product.url},
                   o.goodsSn = ${product.goods.goodsSn}
                 where o.productId = ${product.id}
             </source>

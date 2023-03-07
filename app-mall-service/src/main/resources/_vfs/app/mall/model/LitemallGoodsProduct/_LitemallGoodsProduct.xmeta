@@ -24,8 +24,8 @@
             <schema type="java.lang.Integer"/>
         </prop>
         <prop name="specifications" displayName="商品规格值" mandatory="true" queryable="true" sortable="true"
-              insertable="true" updatable="true">
-            <schema type="java.lang.String" precision="1023"/>
+              insertable="true" updatable="true" graphql:jsonComponentProp="specificationsComponent">
+            <schema stdDomain="json" domain="string-array" type="java.lang.String" precision="1023"/>
         </prop>
         <prop name="price" displayName="商品货品价格" mandatory="true" queryable="true" sortable="true" insertable="true"
               updatable="true">
@@ -58,6 +58,10 @@
         <prop name="goods.name" displayName="所属商品" i18n-en:displayName="Goods" internal="true" queryable="true"
               sortable="true" lazy="true">
             <schema type="String"/>
+        </prop>
+        <prop name="specificationsComponent" tagSet="json,pub" ext:kind="component" internal="true" insertable="true"
+              updatable="true" mandatory="true" lazy="true">
+            <schema type="io.nop.orm.support.JsonOrmComponent"/>
         </prop>
     </props>
 </meta>

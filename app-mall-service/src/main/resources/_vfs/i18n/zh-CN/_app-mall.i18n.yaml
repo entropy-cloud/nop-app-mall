@@ -274,6 +274,7 @@ prop:
       number: 商品货品数量
       price: 商品货品价格
       specifications: 商品规格值
+      specificationsComponent: null
       updateTime: 更新时间
       url: 商品货品图片
     LitemallGoodsSpecification:

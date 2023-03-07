@@ -17,8 +17,10 @@ public class LitemallGoods extends _LitemallGoods {
      */
     public void syncRetailPrice() {
         LitemallGoodsProduct minProduct = Underscore.min(getProducts(), LitemallGoodsProduct::getPrice);
-        BigDecimal retailPrice = minProduct == null ? minProduct.getPrice() : new BigDecimal(Integer.MAX_VALUE);
-        setRetailPrice(retailPrice);
+        if(minProduct != null) {
+            BigDecimal retailPrice = minProduct != null ? minProduct.getPrice() : null;
+            setRetailPrice(retailPrice);
+        }
     }
 
 //    public List<String> getKeywordsList() {

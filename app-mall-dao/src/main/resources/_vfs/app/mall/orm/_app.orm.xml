@@ -84,6 +84,7 @@
         <domain name="delFlag" stdSqlType="BOOLEAN"/>
         <domain name="html-64k" precision="65535" stdSqlType="VARCHAR"/>
         <domain name="images" precision="1023" stdDomain="json" stdSqlType="VARCHAR"/>
+        <domain name="string-array" precision="1023" stdDomain="json" stdSqlType="VARCHAR"/>
     </domains>
 
     <entities>
@@ -640,8 +641,9 @@
                         stdDataType="int" stdSqlType="INTEGER" tagSet="seq"/>
                 <column code="GOODS_ID" displayName="商品ID" mandatory="true" name="goodsId" propId="2" stdDataType="int"
                         stdSqlType="INTEGER"/>
-                <column code="SPECIFICATIONS" comment="采用JSON数组格式" displayName="商品规格值" mandatory="true"
-                        name="specifications" precision="1023" propId="3" stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="SPECIFICATIONS" comment="采用JSON数组格式" displayName="商品规格值" domain="string-array"
+                        mandatory="true" name="specifications" precision="1023" propId="3" stdDataType="string"
+                        stdDomain="json" stdSqlType="VARCHAR"/>
                 <column code="PRICE" displayName="商品货品价格" mandatory="true" name="price" precision="10" propId="4"
                         scale="2" stdDataType="decimal" stdSqlType="DECIMAL"/>
                 <column code="NUMBER" displayName="商品货品数量" mandatory="true" name="number" propId="5" stdDataType="int"

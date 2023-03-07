@@ -83,6 +83,42 @@
                 }
             ]]></source>
         </view-images>
+
+        <edit-images>
+            <attr name="dispMeta"/>
+            <attr name="propMeta"/>
+
+            <source><![CDATA[
+                return {
+                    type: 'input-array',
+                    "name": propMeta ? propMeta.name + 'Component' : (dispMeta.id || propMeta.name),
+                    items:{
+                       type: 'input-text',
+                       required:true,
+                       placeholder: '输入图片地址'
+                    }
+                }
+            ]]></source>
+        </edit-images>
+
+        <edit-string-array>
+            <attr name="dispMeta"/>
+            <attr name="propMeta"/>
+
+            <source><![CDATA[
+                return {
+                    type: 'input-array',
+                    "name": propMeta ? propMeta.name + 'Component' : (dispMeta.id || propMeta.name),
+                    items:{
+                       type: 'input-text',
+                       required:true,
+                       validations:{
+                         maxLength: ((dispMeta?.maxLength ?? propMeta?.schema?.precision)/2).$toInt()
+                       }
+                    }
+                }
+            ]]></source>
+        </edit-string-array>
     </tags>
 
 </lib>

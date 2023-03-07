@@ -73,7 +73,7 @@
         </prop>
         <prop name="children" displayName="子类目" i18n-en:displayName="Children" tagSet="pub" ext:kind="to-many"
               internal="true" ext:joinLeftProp="id" ext:joinRightProp="pid" ext:joinRightDisplayProp="name"
-              insertable="false" updatable="false" mandatory="true" lazy="true">
+              insertable="false" updatable="false" lazy="true">
             <schema type="io.nop.orm.IOrmEntitySet&lt;app.mall.dao.entity.LitemallCategory&gt;"
                     bizObjName="LitemallCategory"/>
         </prop>

@@ -2,5 +2,8 @@
 <meta x:schema="/nop/schema/xmeta.xdef" xmlns:x="/nop/schema/xdsl.xdef" x:extends="_LitemallGoods.xmeta">
 
     <props>
+        <prop name="attributes" insertable="true" updatable="true"></prop>
+        <prop name="products" insertable="true" updatable="true" />
+        <prop name="specifications" insertable="true" updatable="true" />
     </props>
 </meta>

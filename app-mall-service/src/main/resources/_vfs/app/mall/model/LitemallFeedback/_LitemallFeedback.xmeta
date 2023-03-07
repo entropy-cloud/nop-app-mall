@@ -62,8 +62,8 @@
               internal="true" ext:show="X">
             <schema domain="delFlag" type="java.lang.Boolean"/>
         </prop>
-        <prop name="picUrlsComponent" ext:kind="component" internal="true" insertable="true" updatable="true"
-              lazy="true" published="false">
+        <prop name="picUrlsComponent" tagSet="json,pub" ext:kind="component" internal="true" insertable="true"
+              updatable="true" lazy="true">
             <schema type="io.nop.orm.support.JsonOrmComponent"/>
         </prop>
     </props>

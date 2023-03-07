@@ -276,6 +276,7 @@ prop:
       deleted: null
       goods: Goods
       goods.name: Goods
+      specificationsComponent: null
     LitemallGoodsSpecification:
       id: null
       goodsId: null

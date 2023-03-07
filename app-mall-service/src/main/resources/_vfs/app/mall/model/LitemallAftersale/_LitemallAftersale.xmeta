@@ -75,8 +75,8 @@
               sortable="true" lazy="true">
             <schema type="String"/>
         </prop>
-        <prop name="picturesComponent" ext:kind="component" internal="true" insertable="true" updatable="true"
-              lazy="true" published="false">
+        <prop name="picturesComponent" tagSet="json,pub" ext:kind="component" internal="true" insertable="true"
+              updatable="true" lazy="true">
             <schema type="io.nop.orm.support.JsonOrmComponent"/>
         </prop>
     </props>

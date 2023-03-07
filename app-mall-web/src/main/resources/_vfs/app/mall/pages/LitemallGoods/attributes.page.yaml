@@ -5,7 +5,7 @@ removable: true
 needConfirm: false
 columns:
   - type: input-text
-    name: name
+    name: attribute
     label: 参数名
   - type: input-text
     name: value
