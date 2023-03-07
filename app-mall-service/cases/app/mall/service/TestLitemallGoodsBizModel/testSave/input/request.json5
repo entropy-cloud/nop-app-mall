@@ -1,35 +1,37 @@
 {
   data: {
-    "goodsSn": "test-02",
-    "name": "测试商品2",
-    "counterPrice": 33,
-    "isNew": 1,
-    "picUrl": "http://yanxuan.nosdn.127.net/8ab2d3287af0cefa2cc539e40600621d.png",
-    "unit": "个",
-    "categoryId": "1005000",
-    "brandId": "1001000",
-    "specifications": [
-      {
-        "specification": "规格",
-        "value": "其他",
-        "picUrl": "http://yanxuan.nosdn.127.net/8ab2d3287af0cefa2cc539e40600621d.png"
-      }
-    ],
-    "attributes": [
-      {
-        "attribute": "长度",
-        "value": "33"
-      }
-    ],
-    "products": [
-      {
-        "specificationsComponent": [
-          "其他"
-        ],
-        "price": 25,
-        "number": "30",
-        "url": "http://yanxuan.nosdn.127.net/8ab2d3287af0cefa2cc539e40600621d.png"
-      }
-    ]
+    data: {
+      "goodsSn": "test-02",
+      "name": "测试商品2",
+      "counterPrice": 33,
+      "isNew": 1,
+      "picUrl": "http://yanxuan.nosdn.127.net/8ab2d3287af0cefa2cc539e40600621d.png",
+      "unit": "个",
+      "categoryId": "1005000",
+      "brandId": "1001000",
+      "specifications": [
+        {
+          "specification": "规格",
+          "value": "其他",
+          "picUrl": "http://yanxuan.nosdn.127.net/8ab2d3287af0cefa2cc539e40600621d.png"
+        }
+      ],
+      "attributes": [
+        {
+          "attribute": "长度",
+          "value": "33"
+        }
+      ],
+      "products": [
+        {
+          "specificationsComponent": [
+            "其他"
+          ],
+          "price": 25,
+          "number": "30",
+          "url": "http://yanxuan.nosdn.127.net/8ab2d3287af0cefa2cc539e40600621d.png"
+        }
+      ]
+    },
   }
 }

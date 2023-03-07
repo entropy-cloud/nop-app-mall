@@ -298,8 +298,8 @@
                         stdDataType="string" stdSqlType="VARCHAR"/>
                 <column code="PIC_URL" displayName="类目图片" domain="image" name="picUrl" precision="255" propId="4"
                         stdDataType="string" stdSqlType="VARCHAR"/>
-                <column code="KEYWORDS" comment="JSON数组格式" displayName="类目关键字" mandatory="true" name="keywords"
-                        precision="1023" propId="5" stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="KEYWORDS" comment="JSON数组格式" displayName="类目关键字" name="keywords" precision="1023"
+                        propId="5" stdDataType="string" stdSqlType="VARCHAR"/>
                 <column code="DESC" displayName="简介" name="desc" precision="255" propId="6" stdDataType="string"
                         stdSqlType="VARCHAR"/>
                 <column code="LEVEL" displayName="级别" mandatory="true" name="level" precision="255" propId="7"

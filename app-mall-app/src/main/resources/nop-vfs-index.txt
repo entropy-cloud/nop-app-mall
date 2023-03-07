@@ -214,6 +214,7 @@
 /app/mall/pages/LitemallGoods/LitemallGoods.view.xml
 /app/mall/pages/LitemallGoods/_gen/_LitemallGoods.view.xml
 /app/mall/pages/LitemallGoods/add.page.yaml
+/app/mall/pages/LitemallGoods/add.page.yaml.bak
 /app/mall/pages/LitemallGoods/attributes.page.yaml
 /app/mall/pages/LitemallGoods/main.page.yaml
 /app/mall/pages/LitemallGoods/picker.page.yaml

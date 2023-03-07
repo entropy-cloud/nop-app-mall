@@ -46575,6 +46575,13 @@
           "io.nop.core.resource.IResource",
           "java.lang.Runnable"
         ]
+      },
+      {
+        "name": "withHistorySupport",
+        "parameterTypes": [
+          "io.nop.core.resource.IResource",
+          "java.util.function.Function"
+        ]
       }
     ],
     "name": "io.nop.web.page.ResourceWithHistoryProvider",
@@ -51322,6 +51329,10 @@
         "parameterTypes": []
       },
       {
+        "name": "getRedirect",
+        "parameterTypes": []
+      },
+      {
         "name": "getReload",
         "parameterTypes": []
       },
@@ -51603,6 +51614,12 @@
         "name": "setPromptPageLeave",
         "parameterTypes": [
           "java.lang.Boolean"
+        ]
+      },
+      {
+        "name": "setRedirect",
+        "parameterTypes": [
+          "java.lang.String"
         ]
       },
       {
