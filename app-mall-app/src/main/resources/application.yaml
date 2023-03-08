@@ -34,6 +34,32 @@ nop:
     schema-introspection:
       enabled: true
 
+
+# 开发模式配置
+"%dev":
+  nop:
+    debug: true
+    auth:
+      login:
+        allow-create-default-user: true # 如果用户表为空，则自动创建缺省账户nop, 密码nop-test
+    datasource:
+      driver-class-name: org.h2.Driver
+      jdbc-url: jdbc:h2:./db/test
+      username: sa
+      password:
+
+    web:
+      validate-page-model: true
+
+    orm:
+      init-database-schema: true
+
+    # 支持graphql __schema查询，
+    graphql:
+      schema-introspection:
+        enabled: true
+
+
 # devservices 会启用testcontainers来管理测试数据库
 quarkus:
   devservices:
