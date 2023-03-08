@@ -72,6 +72,6 @@ quarkus:
   log:
     level: INFO
 
-    category:
-      "io.nop":
-        level: DEBUG
+#    category:
+#      "io.nop":
+#        level: DEBUG

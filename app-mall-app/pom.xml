@@ -16,7 +16,14 @@
         <dependency>
             <groupId>io.nop</groupId>
             <artifactId>nop-quarkus-web-starter</artifactId>
+            <exclusions>
+                <exclusion>
+                    <artifactId>graphql-java</artifactId>
+                    <groupId>com.graphql-java</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
+
         <dependency>
             <artifactId>app-mall-service</artifactId>
             <groupId>io.nop.app</groupId>
@@ -51,7 +58,9 @@
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-jdbc-h2</artifactId>
         </dependency>
+
     </dependencies>
+
 
     <build>
         <plugins>
@@ -81,6 +90,8 @@
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
             </plugin>
+
+
         </plugins>
     </build>
 
