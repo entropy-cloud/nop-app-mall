@@ -16,11 +16,11 @@
 
     <dependencies>
         <dependency>
-            <groupId>io.nop</groupId>
+            <groupId>io.github.entropy-cloud</groupId>
             <artifactId>nop-ooxml-xlsx</artifactId>
         </dependency>
         <dependency>
-            <groupId>io.nop</groupId>
+            <groupId>io.github.entropy-cloud</groupId>
             <artifactId>nop-orm</artifactId>
         </dependency>
     </dependencies>
