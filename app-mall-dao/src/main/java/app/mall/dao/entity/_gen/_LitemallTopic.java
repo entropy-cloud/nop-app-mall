@@ -32,7 +32,7 @@ public class _LitemallTopic extends DynamicOrmEntity{
     public static final String PROP_NAME_subtitle = "subtitle";
     public static final int PROP_ID_subtitle = 3;
     
-    /* 专题内容，富文本格式: CONTENT VARCHAR */
+    /* 专题内容: CONTENT VARCHAR */
     public static final String PROP_NAME_content = "content";
     public static final int PROP_ID_content = 4;
     
@@ -52,7 +52,7 @@ public class _LitemallTopic extends DynamicOrmEntity{
     public static final String PROP_NAME_sortOrder = "sortOrder";
     public static final int PROP_ID_sortOrder = 8;
     
-    /* 专题相关商品，采用JSON数组格式: GOODS VARCHAR */
+    /* 专题相关商品: GOODS VARCHAR */
     public static final String PROP_NAME_goods = "goods";
     public static final int PROP_ID_goods = 9;
     
@@ -128,7 +128,7 @@ public class _LitemallTopic extends DynamicOrmEntity{
     /* 专题子标题: SUBTITLE */
     private java.lang.String _subtitle;
     
-    /* 专题内容，富文本格式: CONTENT */
+    /* 专题内容: CONTENT */
     private java.lang.String _content;
     
     /* 专题相关商品最低价: PRICE */
@@ -143,7 +143,7 @@ public class _LitemallTopic extends DynamicOrmEntity{
     /* 排序: SORT_ORDER */
     private java.lang.Integer _sortOrder;
     
-    /* 专题相关商品，采用JSON数组格式: GOODS */
+    /* 专题相关商品: GOODS */
     private java.lang.String _goods;
     
     /* 创建时间: ADD_TIME */
@@ -549,7 +549,7 @@ public class _LitemallTopic extends DynamicOrmEntity{
     }
     
     /**
-     * 专题内容，富文本格式: CONTENT
+     * 专题内容: CONTENT
      */
     public java.lang.String getContent(){
          onPropGet(PROP_ID_content);
@@ -557,7 +557,7 @@ public class _LitemallTopic extends DynamicOrmEntity{
     }
 
     /**
-     * 专题内容，富文本格式: CONTENT
+     * 专题内容: CONTENT
      */
     public void setContent(java.lang.String value){
         if(onPropSet(PROP_ID_content,value)){
@@ -644,7 +644,7 @@ public class _LitemallTopic extends DynamicOrmEntity{
     }
     
     /**
-     * 专题相关商品，采用JSON数组格式: GOODS
+     * 专题相关商品: GOODS
      */
     public java.lang.String getGoods(){
          onPropGet(PROP_ID_goods);
@@ -652,7 +652,7 @@ public class _LitemallTopic extends DynamicOrmEntity{
     }
 
     /**
-     * 专题相关商品，采用JSON数组格式: GOODS
+     * 专题相关商品: GOODS
      */
     public void setGoods(java.lang.String value){
         if(onPropSet(PROP_ID_goods,value)){

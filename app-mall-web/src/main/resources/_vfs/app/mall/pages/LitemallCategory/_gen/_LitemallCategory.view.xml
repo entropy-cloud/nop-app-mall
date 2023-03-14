@@ -57,7 +57,6 @@
         <form id="add" editMode="add" title="新增-类目表" i18n-en:title="Add " x:prototype="edit"/>
         <form id="edit" editMode="update" title="编辑-类目表" i18n-en:title="Edit ">
             <layout>
- id[Id]
  name[类目名称]
  iconUrl[类目图标]
  picUrl[类目图片]

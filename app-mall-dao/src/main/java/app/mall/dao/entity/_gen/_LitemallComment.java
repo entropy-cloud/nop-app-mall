@@ -40,7 +40,7 @@ public class _LitemallComment extends DynamicOrmEntity{
     public static final String PROP_NAME_adminContent = "adminContent";
     public static final int PROP_ID_adminContent = 5;
     
-    /* 用户表的用户ID: USER_ID INTEGER */
+    /* 用户ID: USER_ID INTEGER */
     public static final String PROP_NAME_userId = "userId";
     public static final int PROP_ID_userId = 6;
     
@@ -71,6 +71,9 @@ public class _LitemallComment extends DynamicOrmEntity{
 
     private static int _PROP_ID_BOUND = 13;
 
+    
+    /* relation: 客户 */
+    public static final String PROP_NAME_user = "user";
     
 
     public static final List<String> PK_PROP_NAMES = Arrays.asList(PROP_NAME_id);
@@ -134,7 +137,7 @@ public class _LitemallComment extends DynamicOrmEntity{
     /* 管理员回复内容: ADMIN_CONTENT */
     private java.lang.String _adminContent;
     
-    /* 用户表的用户ID: USER_ID */
+    /* 用户ID: USER_ID */
     private java.lang.Integer _userId;
     
     /* 是否含有图片: HAS_PICTURE */
@@ -587,7 +590,7 @@ public class _LitemallComment extends DynamicOrmEntity{
     }
     
     /**
-     * 用户表的用户ID: USER_ID
+     * 用户ID: USER_ID
      */
     public java.lang.Integer getUserId(){
          onPropGet(PROP_ID_userId);
@@ -595,7 +598,7 @@ public class _LitemallComment extends DynamicOrmEntity{
     }
 
     /**
-     * 用户表的用户ID: USER_ID
+     * 用户ID: USER_ID
      */
     public void setUserId(java.lang.Integer value){
         if(onPropSet(PROP_ID_userId,value)){
@@ -719,5 +722,26 @@ public class _LitemallComment extends DynamicOrmEntity{
         }
     }
     
+    /**
+     * 客户
+     */
+    public app.mall.dao.entity.LitemallUser getUser(){
+       return (app.mall.dao.entity.LitemallUser)internalGetRefEntity(PROP_NAME_user);
+    }
+
+    public void setUser(app.mall.dao.entity.LitemallUser refEntity){
+       if(refEntity == null){
+         
+         this.setUserId(null);
+         
+       }else{
+          internalSetRefEntity(PROP_NAME_user, refEntity,()->{
+             
+                    this.setUserId(refEntity.getId());
+                 
+          });
+       }
+    }
+       
 }
 // resume CPD analysis - CPD-ON

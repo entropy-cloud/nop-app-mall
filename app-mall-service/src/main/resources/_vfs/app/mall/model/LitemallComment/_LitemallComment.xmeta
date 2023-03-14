@@ -16,7 +16,7 @@
 
     <props>
         <prop name="id" displayName="Id" tagSet="seq" mandatory="true" queryable="true" sortable="true"
-              insertable="true" updatable="false">
+              insertable="false" updatable="false" ext:show="R">
             <schema type="java.lang.Integer"/>
         </prop>
         <prop name="valueId" displayName="如果type=0，则是商品评论；如果是type=1，则是专题评论。" mandatory="true" queryable="true"
@@ -34,8 +34,8 @@
               updatable="true">
             <schema type="java.lang.String" precision="511"/>
         </prop>
-        <prop name="userId" displayName="用户表的用户ID" mandatory="true" queryable="true" sortable="true" insertable="true"
-              updatable="true">
+        <prop name="userId" displayName="用户ID" mandatory="true" queryable="true" sortable="true" insertable="true"
+              updatable="true" ext:relation="user">
             <schema type="java.lang.Integer"/>
         </prop>
         <prop name="hasPicture" displayName="是否含有图片" queryable="true" sortable="true" insertable="true" updatable="true">
@@ -59,6 +59,15 @@
         <prop name="deleted" displayName="逻辑删除" queryable="true" sortable="true" insertable="false" updatable="true"
               internal="true" ext:show="X">
             <schema domain="delFlag" type="java.lang.Boolean"/>
+        </prop>
+        <prop name="user" displayName="客户" i18n-en:displayName="User" tagSet="pub,ref-pub" ext:kind="to-one"
+              internal="true" queryable="true" ext:joinLeftProp="userId" ext:joinRightProp="id"
+              ext:joinRightDisplayProp="username" insertable="false" updatable="false" mandatory="true" lazy="true">
+            <schema type="app.mall.dao.entity.LitemallUser" bizObjName="LitemallUser"/>
+        </prop>
+        <prop name="user.username" displayName="客户" i18n-en:displayName="User" internal="true" queryable="true"
+              sortable="true" lazy="true">
+            <schema type="String"/>
         </prop>
         <prop name="picUrlsComponent" tagSet="json,pub" ext:kind="component" internal="true" insertable="true"
               updatable="true" lazy="true">

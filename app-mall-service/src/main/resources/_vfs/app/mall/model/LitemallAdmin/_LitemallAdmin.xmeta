@@ -6,7 +6,7 @@
 
     <primaryKey>id</primaryKey>
 
-    <displayProp/>
+    <displayProp>username</displayProp>
 
     <x:post-extends>
         <biz-gen:DefaultMetaPostExtends xpl:lib="/nop/biz/xlib/biz-gen.xlib"/>
@@ -16,15 +16,15 @@
 
     <props>
         <prop name="id" displayName="Id" tagSet="seq" mandatory="true" queryable="true" sortable="true"
-              insertable="true" updatable="false">
+              insertable="false" updatable="false" ext:show="R">
             <schema type="java.lang.Integer"/>
         </prop>
-        <prop name="username" displayName="管理员名称" mandatory="true" queryable="true" sortable="true" insertable="true"
-              updatable="true">
+        <prop name="username" displayName="管理员名称" tagSet="disp" mandatory="true" queryable="true" sortable="true"
+              insertable="true" updatable="true">
             <schema type="java.lang.String" precision="63"/>
         </prop>
-        <prop name="password" displayName="管理员密码" mandatory="true" queryable="true" sortable="true" insertable="true"
-              updatable="true">
+        <prop name="password" displayName="管理员密码" tagSet="masked" mandatory="true" queryable="true" sortable="true"
+              insertable="true" updatable="false" ext:show="C">
             <schema type="java.lang.String" precision="63"/>
         </prop>
         <prop name="lastLoginIp" displayName="最近一次登录IP地址" queryable="true" sortable="true" insertable="true"

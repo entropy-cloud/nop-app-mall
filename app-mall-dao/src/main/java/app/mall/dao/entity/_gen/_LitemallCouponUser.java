@@ -32,7 +32,7 @@ public class _LitemallCouponUser extends DynamicOrmEntity{
     public static final String PROP_NAME_couponId = "couponId";
     public static final int PROP_ID_couponId = 3;
     
-    /* 使用状态, 如果是0则未使用；如果是1则已使用；如果是2则已过期；如果是3则已经下架；: STATUS SMALLINT */
+    /* 使用状态: STATUS SMALLINT */
     public static final String PROP_NAME_status = "status";
     public static final int PROP_ID_status = 4;
     
@@ -70,6 +70,9 @@ public class _LitemallCouponUser extends DynamicOrmEntity{
     
     /* relation: 优惠券 */
     public static final String PROP_NAME_coupon = "coupon";
+    
+    /* relation: 客户 */
+    public static final String PROP_NAME_user = "user";
     
 
     public static final List<String> PK_PROP_NAMES = Arrays.asList(PROP_NAME_id);
@@ -124,7 +127,7 @@ public class _LitemallCouponUser extends DynamicOrmEntity{
     /* 优惠券ID: COUPON_ID */
     private java.lang.Integer _couponId;
     
-    /* 使用状态, 如果是0则未使用；如果是1则已使用；如果是2则已过期；如果是3则已经下架；: STATUS */
+    /* 使用状态: STATUS */
     private java.lang.Short _status;
     
     /* 使用时间: USED_TIME */
@@ -522,7 +525,7 @@ public class _LitemallCouponUser extends DynamicOrmEntity{
     }
     
     /**
-     * 使用状态, 如果是0则未使用；如果是1则已使用；如果是2则已过期；如果是3则已经下架；: STATUS
+     * 使用状态: STATUS
      */
     public java.lang.Short getStatus(){
          onPropGet(PROP_ID_status);
@@ -530,7 +533,7 @@ public class _LitemallCouponUser extends DynamicOrmEntity{
     }
 
     /**
-     * 使用状态, 如果是0则未使用；如果是1则已使用；如果是2则已过期；如果是3则已经下架；: STATUS
+     * 使用状态: STATUS
      */
     public void setStatus(java.lang.Short value){
         if(onPropSet(PROP_ID_status,value)){
@@ -689,6 +692,27 @@ public class _LitemallCouponUser extends DynamicOrmEntity{
           internalSetRefEntity(PROP_NAME_coupon, refEntity,()->{
              
                     this.setCouponId(refEntity.getId());
+                 
+          });
+       }
+    }
+       
+    /**
+     * 客户
+     */
+    public app.mall.dao.entity.LitemallUser getUser(){
+       return (app.mall.dao.entity.LitemallUser)internalGetRefEntity(PROP_NAME_user);
+    }
+
+    public void setUser(app.mall.dao.entity.LitemallUser refEntity){
+       if(refEntity == null){
+         
+         this.setUserId(null);
+         
+       }else{
+          internalSetRefEntity(PROP_NAME_user, refEntity,()->{
+             
+                    this.setUserId(refEntity.getId());
                  
           });
        }

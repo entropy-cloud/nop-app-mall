@@ -22,7 +22,7 @@
 
     <props>
         <prop name="id" displayName="Id" i18n-en:displayName="ID" tagSet="seq" mandatory="true" queryable="true"
-              sortable="true" insertable="true" updatable="false">
+              sortable="true" insertable="false" updatable="false" ext:show="R">
             <schema type="java.lang.Integer"/>
         </prop>
         <prop name="goodsSn" displayName="商品编号" i18n-en:displayName="Goods SN" mandatory="true" queryable="true"

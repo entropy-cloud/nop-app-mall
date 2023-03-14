@@ -16,7 +16,7 @@
 
     <props>
         <prop name="id" displayName="Id" tagSet="seq" mandatory="true" queryable="true" sortable="true"
-              insertable="true" updatable="false">
+              insertable="false" updatable="false" ext:show="R">
             <schema type="java.lang.Integer"/>
         </prop>
         <prop name="noticeId" displayName="通知ID" queryable="true" sortable="true" insertable="true" updatable="true">
@@ -25,8 +25,7 @@
         <prop name="noticeTitle" displayName="通知标题" queryable="true" sortable="true" insertable="true" updatable="true">
             <schema type="java.lang.String" precision="63"/>
         </prop>
-        <prop name="adminId" displayName="接收通知的管理员ID" queryable="true" sortable="true" insertable="true"
-              updatable="true">
+        <prop name="adminId" displayName="管理员ID" queryable="true" sortable="true" insertable="true" updatable="true">
             <schema type="java.lang.Integer"/>
         </prop>
         <prop name="readTime" displayName="阅读时间" queryable="true" sortable="true" insertable="true" updatable="true">

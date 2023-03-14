@@ -16,7 +16,7 @@
                 <!--收货人名称-->
                 <col id="name" mandatory="true" sortable="true"/>
 
-                <!--用户表的用户ID-->
+                <!--用户ID-->
                 <col id="userId" mandatory="true" sortable="true"/>
 
                 <!--行政区域表的省ID-->
@@ -51,7 +51,7 @@
         <form id="view" editMode="view" title="查看-收货地址表" i18n-en:title="View ">
             <layout>
  id[Id] name[收货人名称]
- userId[用户表的用户ID] province[行政区域表的省ID]
+ userId[用户ID] province[行政区域表的省ID]
  city[行政区域表的市ID] county[行政区域表的区县ID]
  addressDetail[详细收货地址] areaCode[地区编码]
  postalCode[邮政编码] tel[手机号码]
@@ -61,12 +61,11 @@
         <form id="add" editMode="add" title="新增-收货地址表" i18n-en:title="Add " x:prototype="edit"/>
         <form id="edit" editMode="update" title="编辑-收货地址表" i18n-en:title="Edit ">
             <layout>
- id[Id] name[收货人名称]
- userId[用户表的用户ID] province[行政区域表的省ID]
- city[行政区域表的市ID] county[行政区域表的区县ID]
- addressDetail[详细收货地址] areaCode[地区编码]
- postalCode[邮政编码] tel[手机号码]
- isDefault[是否默认地址] 
+ name[收货人名称] userId[用户ID]
+ province[行政区域表的省ID] city[行政区域表的市ID]
+ county[行政区域表的区县ID] addressDetail[详细收货地址]
+ areaCode[地区编码] postalCode[邮政编码]
+ tel[手机号码] isDefault[是否默认地址]
 </layout>
         </form>
         <form id="query" editMode="query" title="查询条件" i18n-en:title="Query Condition" x:abstract="true">

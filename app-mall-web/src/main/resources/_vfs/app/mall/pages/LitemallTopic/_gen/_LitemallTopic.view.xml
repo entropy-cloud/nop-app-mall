@@ -19,7 +19,7 @@
                 <!--专题子标题-->
                 <col id="subtitle" sortable="true"/>
 
-                <!--专题内容，富文本格式-->
+                <!--专题内容-->
                 <col id="content" sortable="true"/>
 
                 <!--专题相关商品最低价-->
@@ -34,7 +34,7 @@
                 <!--排序-->
                 <col id="sortOrder" sortable="true"/>
 
-                <!--专题相关商品，采用JSON数组格式-->
+                <!--专题相关商品-->
                 <col id="goods" sortable="true"/>
             </cols>
         </grid>
@@ -47,26 +47,25 @@
  id[Id]
  title[专题标题]
  subtitle[专题子标题]
- content[专题内容，富文本格式]
+ content[专题内容]
  price[专题相关商品最低价]
  readCount[专题阅读量]
  picUrl[专题图片]
  sortOrder[排序]
- goods[专题相关商品，采用JSON数组格式]
+ goods[专题相关商品]
 </layout>
         </form>
         <form id="add" editMode="add" title="新增-专题表" i18n-en:title="Add " x:prototype="edit"/>
         <form id="edit" editMode="update" title="编辑-专题表" i18n-en:title="Edit ">
             <layout>
- id[Id]
  title[专题标题]
  subtitle[专题子标题]
- content[专题内容，富文本格式]
+ content[专题内容]
  price[专题相关商品最低价]
  readCount[专题阅读量]
  picUrl[专题图片]
  sortOrder[排序]
- goods[专题相关商品，采用JSON数组格式]
+ goods[专题相关商品]
 </layout>
         </form>
         <form id="query" editMode="query" title="查询条件" i18n-en:title="Query Condition" x:abstract="true">

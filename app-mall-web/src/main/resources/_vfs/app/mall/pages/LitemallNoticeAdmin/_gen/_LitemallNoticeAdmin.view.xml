@@ -19,7 +19,7 @@
                 <!--通知标题-->
                 <col id="noticeTitle" sortable="true"/>
 
-                <!--接收通知的管理员ID-->
+                <!--管理员ID-->
                 <col id="adminId" sortable="true"/>
 
                 <!--阅读时间-->
@@ -35,17 +35,16 @@
  id[Id]
  noticeId[通知ID]
  noticeTitle[通知标题]
- adminId[接收通知的管理员ID]
+ adminId[管理员ID]
  readTime[阅读时间]
 </layout>
         </form>
         <form id="add" editMode="add" title="新增-通知管理员表" i18n-en:title="Add " x:prototype="edit"/>
         <form id="edit" editMode="update" title="编辑-通知管理员表" i18n-en:title="Edit ">
             <layout>
- id[Id]
  noticeId[通知ID]
  noticeTitle[通知标题]
- adminId[接收通知的管理员ID]
+ adminId[管理员ID]
  readTime[阅读时间]
 </layout>
         </form>

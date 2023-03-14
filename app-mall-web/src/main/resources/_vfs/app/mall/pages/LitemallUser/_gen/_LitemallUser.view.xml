@@ -19,7 +19,7 @@
                 <!--用户密码-->
                 <col id="password" mandatory="true" sortable="true"/>
 
-                <!--性别：0 未知， 1男， 1 女-->
+                <!--性别-->
                 <col id="gender" mandatory="true" sortable="true"/>
 
                 <!--生日-->
@@ -31,7 +31,7 @@
                 <!--最近一次登录IP地址-->
                 <col id="lastLoginIp" mandatory="true" sortable="true"/>
 
-                <!--0 普通用户，1 VIP用户，2 高级VIP用户-->
+                <!--用户等级-->
                 <col id="userLevel" sortable="true"/>
 
                 <!--用户昵称或网络名称-->
@@ -49,7 +49,7 @@
                 <!--微信登录会话KEY-->
                 <col id="sessionKey" mandatory="true" sortable="true"/>
 
-                <!--0 可用, 1 禁用, 2 注销-->
+                <!--用户状态-->
                 <col id="status" mandatory="true" sortable="true"/>
             </cols>
         </grid>
@@ -60,24 +60,24 @@
         <form id="view" editMode="view" title="查看-用户表" i18n-en:title="View ">
             <layout>
  id[Id] username[用户名称]
- password[用户密码] gender[性别：0 未知， 1男， 1 女]
+ password[用户密码] gender[性别]
  birthday[生日] lastLoginTime[最近一次登录时间]
- lastLoginIp[最近一次登录IP地址] userLevel[0 普通用户，1 VIP用户，2 高级VIP用户]
+ lastLoginIp[最近一次登录IP地址] userLevel[用户等级]
  nickname[用户昵称或网络名称] mobile[用户手机号码]
  avatar[用户头像图片] weixinOpenid[微信登录openid]
- sessionKey[微信登录会话KEY] status[0 可用, 1 禁用, 2 注销]
+ sessionKey[微信登录会话KEY] status[用户状态]
 </layout>
         </form>
         <form id="add" editMode="add" title="新增-用户表" i18n-en:title="Add " x:prototype="edit"/>
         <form id="edit" editMode="update" title="编辑-用户表" i18n-en:title="Edit ">
             <layout>
- id[Id] username[用户名称]
- password[用户密码] gender[性别：0 未知， 1男， 1 女]
- birthday[生日] lastLoginTime[最近一次登录时间]
- lastLoginIp[最近一次登录IP地址] userLevel[0 普通用户，1 VIP用户，2 高级VIP用户]
- nickname[用户昵称或网络名称] mobile[用户手机号码]
- avatar[用户头像图片] weixinOpenid[微信登录openid]
- sessionKey[微信登录会话KEY] status[0 可用, 1 禁用, 2 注销]
+ username[用户名称] password[用户密码]
+ gender[性别] birthday[生日]
+ lastLoginTime[最近一次登录时间] lastLoginIp[最近一次登录IP地址]
+ userLevel[用户等级] nickname[用户昵称或网络名称]
+ mobile[用户手机号码] avatar[用户头像图片]
+ weixinOpenid[微信登录openid] sessionKey[微信登录会话KEY]
+ status[用户状态] 
 </layout>
         </form>
         <form id="query" editMode="query" title="查询条件" i18n-en:title="Query Condition" x:abstract="true">

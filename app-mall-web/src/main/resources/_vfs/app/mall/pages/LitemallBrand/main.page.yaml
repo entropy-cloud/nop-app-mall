@@ -1,3 +1,5 @@
-
 x:gen-extends: |
-    <web:GenPage view="LitemallBrand.view.xml" page="main" xpl:lib="/nop/web/xlib/web.xlib" />
+  <web:GenPage view="LitemallBrand.view.xml" page="main" xpl:lib="/nop/web/xlib/web.xlib" />
+asideResizor: false
+style:
+  boxShadow: ' 0px 0px 0px 0px transparent'

@@ -31254,6 +31254,18 @@
         ]
       },
       {
+        "name": "findModelTypeFromPath",
+        "parameterTypes": [
+          "java.lang.String"
+        ]
+      },
+      {
+        "name": "getComponentModelLoader",
+        "parameterTypes": [
+          "java.lang.String"
+        ]
+      },
+      {
         "name": "getComponentModelLoader",
         "parameterTypes": [
           "java.lang.String",

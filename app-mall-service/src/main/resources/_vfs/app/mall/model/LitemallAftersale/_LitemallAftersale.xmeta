@@ -16,7 +16,7 @@
 
     <props>
         <prop name="id" displayName="Id" tagSet="seq" mandatory="true" queryable="true" sortable="true"
-              insertable="true" updatable="false">
+              insertable="false" updatable="false" ext:show="R">
             <schema type="java.lang.Integer"/>
         </prop>
         <prop name="aftersaleSn" displayName="售后编号" tagSet="disp" queryable="true" sortable="true" insertable="true"
@@ -28,7 +28,7 @@
             <schema type="java.lang.Integer"/>
         </prop>
         <prop name="userId" displayName="用户ID" mandatory="true" queryable="true" sortable="true" insertable="true"
-              updatable="true">
+              updatable="true" ext:relation="user">
             <schema type="java.lang.Integer"/>
         </prop>
         <prop name="type" displayName="售后类型" queryable="true" sortable="true" insertable="true" updatable="true">
@@ -72,6 +72,15 @@
             <schema type="app.mall.dao.entity.LitemallOrder" bizObjName="LitemallOrder"/>
         </prop>
         <prop name="order.orderSn" displayName="订单" i18n-en:displayName="Order" internal="true" queryable="true"
+              sortable="true" lazy="true">
+            <schema type="String"/>
+        </prop>
+        <prop name="user" displayName="客户" i18n-en:displayName="User" tagSet="pub,ref-pub" ext:kind="to-one"
+              internal="true" queryable="true" ext:joinLeftProp="userId" ext:joinRightProp="id"
+              ext:joinRightDisplayProp="username" insertable="false" updatable="false" mandatory="true" lazy="true">
+            <schema type="app.mall.dao.entity.LitemallUser" bizObjName="LitemallUser"/>
+        </prop>
+        <prop name="user.username" displayName="客户" i18n-en:displayName="User" internal="true" queryable="true"
               sortable="true" lazy="true">
             <schema type="String"/>
         </prop>

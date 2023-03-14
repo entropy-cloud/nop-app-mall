@@ -13,7 +13,7 @@
                 <!--Id-->
                 <col id="id" mandatory="true" sortable="true"/>
 
-                <!--用户表的用户ID-->
+                <!--用户ID-->
                 <col id="userId" mandatory="true" sortable="true"/>
 
                 <!--浏览商品ID-->
@@ -27,15 +27,14 @@
         <form id="view" editMode="view" title="查看-用户浏览足迹表" i18n-en:title="View ">
             <layout>
  id[Id]
- userId[用户表的用户ID]
+ userId[用户ID]
  goodsId[浏览商品ID]
 </layout>
         </form>
         <form id="add" editMode="add" title="新增-用户浏览足迹表" i18n-en:title="Add " x:prototype="edit"/>
         <form id="edit" editMode="update" title="编辑-用户浏览足迹表" i18n-en:title="Edit ">
             <layout>
- id[Id]
- userId[用户表的用户ID]
+ userId[用户ID]
  goodsId[浏览商品ID]
 </layout>
         </form>

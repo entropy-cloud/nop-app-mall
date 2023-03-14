@@ -377,27 +377,6 @@ CREATE TABLE litemall_topic(
   constraint PK_litemall_topic primary key (ID)
 );
 
-CREATE TABLE litemall_user(
-  ID INT4 NOT NULL ,
-  USERNAME VARCHAR(63) NOT NULL ,
-  PASSWORD VARCHAR(63) NOT NULL ,
-  GENDER INT4 NOT NULL ,
-  BIRTHDAY DATE  ,
-  LAST_LOGIN_TIME TIMESTAMP  ,
-  LAST_LOGIN_IP VARCHAR(63) NOT NULL ,
-  USER_LEVEL INT4  ,
-  NICKNAME VARCHAR(63) NOT NULL ,
-  MOBILE VARCHAR(20) NOT NULL ,
-  AVATAR VARCHAR(255) NOT NULL ,
-  WEIXIN_OPENID VARCHAR(63) NOT NULL ,
-  SESSION_KEY VARCHAR(100) NOT NULL ,
-  STATUS INT4 NOT NULL ,
-  ADD_TIME TIMESTAMP  ,
-  UPDATE_TIME TIMESTAMP  ,
-  DELETED BOOLEAN  ,
-  constraint PK_litemall_user primary key (ID)
-);
-
 CREATE TABLE litemall_coupon(
   ID INT4 NOT NULL ,
   NAME VARCHAR(63) NOT NULL ,
@@ -482,6 +461,27 @@ CREATE TABLE litemall_goods(
   constraint PK_litemall_goods primary key (ID)
 );
 
+CREATE TABLE litemall_user(
+  ID INT4 NOT NULL ,
+  USERNAME VARCHAR(63) NOT NULL ,
+  PASSWORD VARCHAR(63) NOT NULL ,
+  GENDER INT4 NOT NULL ,
+  BIRTHDAY DATE  ,
+  LAST_LOGIN_TIME TIMESTAMP  ,
+  LAST_LOGIN_IP VARCHAR(63) NOT NULL ,
+  USER_LEVEL INT4  ,
+  NICKNAME VARCHAR(63) NOT NULL ,
+  MOBILE VARCHAR(20) NOT NULL ,
+  AVATAR VARCHAR(255) NOT NULL ,
+  WEIXIN_OPENID VARCHAR(63) NOT NULL ,
+  SESSION_KEY VARCHAR(100) NOT NULL ,
+  STATUS INT4 NOT NULL ,
+  ADD_TIME TIMESTAMP  ,
+  UPDATE_TIME TIMESTAMP  ,
+  DELETED BOOLEAN  ,
+  constraint PK_litemall_user primary key (ID)
+);
+
 CREATE TABLE litemall_category(
   ID INT4 NOT NULL ,
   NAME VARCHAR(63) NOT NULL ,
@@ -544,7 +544,7 @@ CREATE TABLE litemall_brand(
                     
       COMMENT ON COLUMN litemall_address.NAME IS '收货人名称';
                     
-      COMMENT ON COLUMN litemall_address.USER_ID IS '用户表的用户ID';
+      COMMENT ON COLUMN litemall_address.USER_ID IS '用户ID';
                     
       COMMENT ON COLUMN litemall_address.PROVINCE IS '行政区域表的省ID';
                     
@@ -678,7 +678,7 @@ CREATE TABLE litemall_brand(
                     
       COMMENT ON COLUMN litemall_comment.ADMIN_CONTENT IS '管理员回复内容';
                     
-      COMMENT ON COLUMN litemall_comment.USER_ID IS '用户表的用户ID';
+      COMMENT ON COLUMN litemall_comment.USER_ID IS '用户ID';
                     
       COMMENT ON COLUMN litemall_comment.HAS_PICTURE IS '是否含有图片';
                     
@@ -700,7 +700,7 @@ CREATE TABLE litemall_brand(
                     
       COMMENT ON COLUMN litemall_coupon_user.COUPON_ID IS '优惠券ID';
                     
-      COMMENT ON COLUMN litemall_coupon_user.STATUS IS '使用状态, 如果是0则未使用；如果是1则已使用；如果是2则已过期；如果是3则已经下架；';
+      COMMENT ON COLUMN litemall_coupon_user.STATUS IS '使用状态';
                     
       COMMENT ON COLUMN litemall_coupon_user.USED_TIME IS '使用时间';
                     
@@ -720,7 +720,7 @@ CREATE TABLE litemall_brand(
                 
       COMMENT ON COLUMN litemall_feedback.ID IS 'Id';
                     
-      COMMENT ON COLUMN litemall_feedback.USER_ID IS '用户表的用户ID';
+      COMMENT ON COLUMN litemall_feedback.USER_ID IS '用户ID';
                     
       COMMENT ON COLUMN litemall_feedback.USERNAME IS '用户名称';
                     
@@ -746,7 +746,7 @@ CREATE TABLE litemall_brand(
                 
       COMMENT ON COLUMN litemall_footprint.ID IS 'Id';
                     
-      COMMENT ON COLUMN litemall_footprint.USER_ID IS '用户表的用户ID';
+      COMMENT ON COLUMN litemall_footprint.USER_ID IS '用户ID';
                     
       COMMENT ON COLUMN litemall_footprint.GOODS_ID IS '浏览商品ID';
                     
@@ -942,7 +942,7 @@ CREATE TABLE litemall_brand(
                     
       COMMENT ON COLUMN litemall_notice_admin.NOTICE_TITLE IS '通知标题';
                     
-      COMMENT ON COLUMN litemall_notice_admin.ADMIN_ID IS '接收通知的管理员ID';
+      COMMENT ON COLUMN litemall_notice_admin.ADMIN_ID IS '管理员ID';
                     
       COMMENT ON COLUMN litemall_notice_admin.READ_TIME IS '阅读时间';
                     
@@ -1028,11 +1028,11 @@ CREATE TABLE litemall_brand(
                 
       COMMENT ON COLUMN litemall_search_history.ID IS 'Id';
                     
-      COMMENT ON COLUMN litemall_search_history.USER_ID IS '用户表的用户ID';
+      COMMENT ON COLUMN litemall_search_history.USER_ID IS '用户ID';
                     
       COMMENT ON COLUMN litemall_search_history.KEYWORD IS '搜索关键字';
                     
-      COMMENT ON COLUMN litemall_search_history."FROM" IS '搜索来源，如pc、wx、app';
+      COMMENT ON COLUMN litemall_search_history."FROM" IS '搜索来源';
                     
       COMMENT ON COLUMN litemall_search_history.ADD_TIME IS '创建时间';
                     
@@ -1082,7 +1082,7 @@ CREATE TABLE litemall_brand(
                     
       COMMENT ON COLUMN litemall_topic.SUBTITLE IS '专题子标题';
                     
-      COMMENT ON COLUMN litemall_topic.CONTENT IS '专题内容，富文本格式';
+      COMMENT ON COLUMN litemall_topic.CONTENT IS '专题内容';
                     
       COMMENT ON COLUMN litemall_topic.PRICE IS '专题相关商品最低价';
                     
@@ -1092,49 +1092,13 @@ CREATE TABLE litemall_brand(
                     
       COMMENT ON COLUMN litemall_topic.SORT_ORDER IS '排序';
                     
-      COMMENT ON COLUMN litemall_topic.GOODS IS '专题相关商品，采用JSON数组格式';
+      COMMENT ON COLUMN litemall_topic.GOODS IS '专题相关商品';
                     
       COMMENT ON COLUMN litemall_topic.ADD_TIME IS '创建时间';
                     
       COMMENT ON COLUMN litemall_topic.UPDATE_TIME IS '更新时间';
                     
       COMMENT ON COLUMN litemall_topic.DELETED IS '逻辑删除';
-                    
-      COMMENT ON TABLE litemall_user IS '用户表';
-                
-      COMMENT ON COLUMN litemall_user.ID IS 'Id';
-                    
-      COMMENT ON COLUMN litemall_user.USERNAME IS '用户名称';
-                    
-      COMMENT ON COLUMN litemall_user.PASSWORD IS '用户密码';
-                    
-      COMMENT ON COLUMN litemall_user.GENDER IS '性别：0 未知， 1男， 1 女';
-                    
-      COMMENT ON COLUMN litemall_user.BIRTHDAY IS '生日';
-                    
-      COMMENT ON COLUMN litemall_user.LAST_LOGIN_TIME IS '最近一次登录时间';
-                    
-      COMMENT ON COLUMN litemall_user.LAST_LOGIN_IP IS '最近一次登录IP地址';
-                    
-      COMMENT ON COLUMN litemall_user.USER_LEVEL IS '0 普通用户，1 VIP用户，2 高级VIP用户';
-                    
-      COMMENT ON COLUMN litemall_user.NICKNAME IS '用户昵称或网络名称';
-                    
-      COMMENT ON COLUMN litemall_user.MOBILE IS '用户手机号码';
-                    
-      COMMENT ON COLUMN litemall_user.AVATAR IS '用户头像图片';
-                    
-      COMMENT ON COLUMN litemall_user.WEIXIN_OPENID IS '微信登录openid';
-                    
-      COMMENT ON COLUMN litemall_user.SESSION_KEY IS '微信登录会话KEY';
-                    
-      COMMENT ON COLUMN litemall_user.STATUS IS '0 可用, 1 禁用, 2 注销';
-                    
-      COMMENT ON COLUMN litemall_user.ADD_TIME IS '创建时间';
-                    
-      COMMENT ON COLUMN litemall_user.UPDATE_TIME IS '更新时间';
-                    
-      COMMENT ON COLUMN litemall_user.DELETED IS '逻辑删除';
                     
       COMMENT ON TABLE litemall_coupon IS '优惠券信息及规则表';
                 
@@ -1182,7 +1146,7 @@ CREATE TABLE litemall_brand(
                 
       COMMENT ON COLUMN litemall_order.ID IS 'Id';
                     
-      COMMENT ON COLUMN litemall_order.USER_ID IS '用户表的用户ID';
+      COMMENT ON COLUMN litemall_order.USER_ID IS '用户ID';
                     
       COMMENT ON COLUMN litemall_order.ORDER_SN IS '订单编号';
                     
@@ -1285,6 +1249,42 @@ CREATE TABLE litemall_brand(
       COMMENT ON COLUMN litemall_goods.UPDATE_TIME IS '更新时间';
                     
       COMMENT ON COLUMN litemall_goods.DELETED IS '逻辑删除';
+                    
+      COMMENT ON TABLE litemall_user IS '用户表';
+                
+      COMMENT ON COLUMN litemall_user.ID IS 'Id';
+                    
+      COMMENT ON COLUMN litemall_user.USERNAME IS '用户名称';
+                    
+      COMMENT ON COLUMN litemall_user.PASSWORD IS '用户密码';
+                    
+      COMMENT ON COLUMN litemall_user.GENDER IS '性别';
+                    
+      COMMENT ON COLUMN litemall_user.BIRTHDAY IS '生日';
+                    
+      COMMENT ON COLUMN litemall_user.LAST_LOGIN_TIME IS '最近一次登录时间';
+                    
+      COMMENT ON COLUMN litemall_user.LAST_LOGIN_IP IS '最近一次登录IP地址';
+                    
+      COMMENT ON COLUMN litemall_user.USER_LEVEL IS '用户等级';
+                    
+      COMMENT ON COLUMN litemall_user.NICKNAME IS '用户昵称或网络名称';
+                    
+      COMMENT ON COLUMN litemall_user.MOBILE IS '用户手机号码';
+                    
+      COMMENT ON COLUMN litemall_user.AVATAR IS '用户头像图片';
+                    
+      COMMENT ON COLUMN litemall_user.WEIXIN_OPENID IS '微信登录openid';
+                    
+      COMMENT ON COLUMN litemall_user.SESSION_KEY IS '微信登录会话KEY';
+                    
+      COMMENT ON COLUMN litemall_user.STATUS IS '用户状态';
+                    
+      COMMENT ON COLUMN litemall_user.ADD_TIME IS '创建时间';
+                    
+      COMMENT ON COLUMN litemall_user.UPDATE_TIME IS '更新时间';
+                    
+      COMMENT ON COLUMN litemall_user.DELETED IS '逻辑删除';
                     
       COMMENT ON TABLE litemall_category IS '类目表';
                 

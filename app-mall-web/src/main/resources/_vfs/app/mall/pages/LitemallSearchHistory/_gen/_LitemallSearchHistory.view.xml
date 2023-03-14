@@ -13,13 +13,13 @@
                 <!--Id-->
                 <col id="id" mandatory="true" sortable="true"/>
 
-                <!--用户表的用户ID-->
+                <!--用户ID-->
                 <col id="userId" mandatory="true" sortable="true"/>
 
                 <!--搜索关键字-->
                 <col id="keyword" mandatory="true" sortable="true"/>
 
-                <!--搜索来源，如pc、wx、app-->
+                <!--搜索来源-->
                 <col id="from" mandatory="true" sortable="true"/>
             </cols>
         </grid>
@@ -30,18 +30,17 @@
         <form id="view" editMode="view" title="查看-搜索历史表" i18n-en:title="View ">
             <layout>
  id[Id]
- userId[用户表的用户ID]
+ userId[用户ID]
  keyword[搜索关键字]
- from[搜索来源，如pc、wx、app]
+ from[搜索来源]
 </layout>
         </form>
         <form id="add" editMode="add" title="新增-搜索历史表" i18n-en:title="Add " x:prototype="edit"/>
         <form id="edit" editMode="update" title="编辑-搜索历史表" i18n-en:title="Edit ">
             <layout>
- id[Id]
- userId[用户表的用户ID]
+ userId[用户ID]
  keyword[搜索关键字]
- from[搜索来源，如pc、wx、app]
+ from[搜索来源]
 </layout>
         </form>
         <form id="query" editMode="query" title="查询条件" i18n-en:title="Query Condition" x:abstract="true">

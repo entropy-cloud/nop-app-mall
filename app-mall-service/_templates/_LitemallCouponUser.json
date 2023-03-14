@@ -3,6 +3,7 @@
   "userId": 0,
   "couponId": 0,
   "status": 0,
+  "status_label": "",
   "usedTime": "2000-01-01 14:00:00",
   "startTime": "2000-01-01 14:00:00",
   "endTime": "2000-01-01 14:00:00",
@@ -11,5 +12,7 @@
   "updateTime": "2000-01-01 14:00:00",
   "deleted": false,
   "coupon": null,
-  "coupon.name": ""
+  "coupon.name": "",
+  "user": null,
+  "user.username": ""
 }

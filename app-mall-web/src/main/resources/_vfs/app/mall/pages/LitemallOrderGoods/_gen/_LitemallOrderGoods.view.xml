@@ -61,12 +61,11 @@
         <form id="add" editMode="add" title="新增-订单商品表" i18n-en:title="Add " x:prototype="edit"/>
         <form id="edit" editMode="update" title="编辑-订单商品表" i18n-en:title="Edit ">
             <layout>
- id[Id] orderId[订单ID]
- goodsId[商品ID] goodsName[商品名称]
- goodsSn[商品编号] productId[货品ID]
- number[购买数量] price[售价]
- specifications[规格列表] picUrl[商品/货品图片]
- comment[订单商品评论，如果是-1，则超期不能评价；如果是0，则可以评价；如果其他值，则是comment表里面的评论ID。] 
+ orderId[订单ID] goodsId[商品ID]
+ goodsName[商品名称] goodsSn[商品编号]
+ productId[货品ID] number[购买数量]
+ price[售价] specifications[规格列表]
+ picUrl[商品/货品图片] comment[订单商品评论，如果是-1，则超期不能评价；如果是0，则可以评价；如果其他值，则是comment表里面的评论ID。]
 </layout>
         </form>
         <form id="query" editMode="query" title="查询条件" i18n-en:title="Query Condition" x:abstract="true">

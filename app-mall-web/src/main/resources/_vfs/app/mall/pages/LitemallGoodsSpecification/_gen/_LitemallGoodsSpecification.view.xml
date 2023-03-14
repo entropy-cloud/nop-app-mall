@@ -42,7 +42,6 @@
         <form id="add" editMode="add" title="新增-商品规格表" i18n-en:title="Add " x:prototype="edit"/>
         <form id="edit" editMode="update" title="编辑-商品规格表" i18n-en:title="Edit ">
             <layout>
- id[Id]
  goodsId[商品ID]
  specification[商品规格名称]
  value[商品规格值]

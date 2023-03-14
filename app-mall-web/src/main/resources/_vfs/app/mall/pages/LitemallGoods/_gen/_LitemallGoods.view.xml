@@ -85,15 +85,15 @@
         <form id="add" editMode="add" title="新增-商品基本信息" i18n-en:title="Add " x:prototype="edit"/>
         <form id="edit" editMode="update" title="编辑-商品基本信息" i18n-en:title="Edit ">
             <layout>
- id[Id] goodsSn[商品编号]
- name[商品名称] categoryId[商品所属类目ID]
- brandId[品牌ID] gallery[商品宣传图片列表]
- keywords[商品关键字] brief[商品简介]
- isOnSale[是否在售] sortOrder[排序顺序]
- picUrl[商品图片] shareUrl[商品分享海报]
- isNew[是否新品] isHot[是否热品]
- unit[商品单位] counterPrice[市场售价]
- retailPrice[当前价格] detail[详情]
+ goodsSn[商品编号] name[商品名称]
+ categoryId[商品所属类目ID] brandId[品牌ID]
+ gallery[商品宣传图片列表] keywords[商品关键字]
+ brief[商品简介] isOnSale[是否在售]
+ sortOrder[排序顺序] picUrl[商品图片]
+ shareUrl[商品分享海报] isNew[是否新品]
+ isHot[是否热品] unit[商品单位]
+ counterPrice[市场售价] retailPrice[当前价格]
+ detail[详情] 
 </layout>
         </form>
         <form id="query" editMode="query" title="查询条件" i18n-en:title="Query Condition" x:abstract="true">

@@ -58,7 +58,6 @@
         <form id="add" editMode="add" title="新增-团购活动表" i18n-en:title="Add " x:prototype="edit"/>
         <form id="edit" editMode="update" title="编辑-团购活动表" i18n-en:title="Edit ">
             <layout>
- id[Id]
  orderId[订单ID]
  grouponId[如果是开团用户，则groupon_id是0；如果是参团用户，则groupon_id是团购活动ID]
  rulesId[团购规则ID]

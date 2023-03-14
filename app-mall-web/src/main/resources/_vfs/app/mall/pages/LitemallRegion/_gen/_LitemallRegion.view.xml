@@ -26,6 +26,9 @@
                 <col id="code" mandatory="true" sortable="true"/>
             </cols>
         </grid>
+        <grid id="tree-list" x:prototype="list">
+            <selection>children @TreeChildren(max:5)</selection>
+        </grid>
         <grid id="pick-list" x:prototype="list" x:abstract="true"/>
     </grids>
 
@@ -42,7 +45,6 @@
         <form id="add" editMode="add" title="新增-行政区域表" i18n-en:title="Add " x:prototype="edit"/>
         <form id="edit" editMode="update" title="编辑-行政区域表" i18n-en:title="Edit ">
             <layout>
- id[Id]
  pid[行政区域父ID]
  name[行政区域名称]
  type[行政区域类型]
@@ -61,9 +63,9 @@
     </forms>
 
     <pages>
-        <crud name="main" grid="list" asideFilterForm="asideFilter" filterForm="query" x:abstract="true">
-            <table autoFillHeight="true">
-                <api url="@query:LitemallRegion__findPage/{@pageSelection}"/>
+        <crud name="main" grid="tree-list" asideFilterForm="asideFilter" filterForm="query" x:abstract="true">
+            <table loadDataOnce="true" sortable="false" pager="none">
+                <api url="@query:LitemallRegion__findList/{@listSelection}?filter_pid=__null"/>
             </table>
             <listActions>
                 <action id="batch-delete-button" label="@i18n:common.batchDelete" batch="true">
@@ -89,6 +91,9 @@
                     <action id="row-update-button" level="primary" label="@i18n:common.edit">
                         <dialog page="update"/>
                     </action>
+                    <action id="row-add-child-button" label="@i18n:common.addChild">
+                        <dialog page="add-child"/>
+                    </action>
                     <action id="row-delete-button" level="danger" label="@i18n:common.delete">
                         <api url="@mutation:LitemallRegion__delete?id=$id"/>
                         <confirmText>@i18n:common.confirmDelete</confirmText>
@@ -110,6 +115,12 @@
         <simple name="update" form="edit">
             <initApi url="@query:LitemallRegion__get/{@formSelection}?id=$id"/>
             <api url="@mutation:LitemallRegion__update/id?id=$id" withFormData="true"/>
+        </simple>
+        <simple name="add-child" form="add">
+            <api url="@mutation:LitemallRegion__save/id" withFormData="true"/>
+            <data>
+                <_ j:key="pid">$id</_>
+            </data>
         </simple>
     </pages>
 </view>

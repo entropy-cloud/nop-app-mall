@@ -27,10 +27,10 @@ drop table  if exists  litemall_search_history;
 drop table  if exists  litemall_storage;
 drop table  if exists  litemall_system;
 drop table  if exists  litemall_topic;
-drop table  if exists  litemall_user;
 drop table  if exists  litemall_coupon;
 drop table  if exists  litemall_order;
 drop table  if exists  litemall_goods;
+drop table  if exists  litemall_user;
 drop table  if exists  litemall_category;
 drop table  if exists  litemall_brand;
 

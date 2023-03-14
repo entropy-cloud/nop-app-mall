@@ -27,10 +27,10 @@ drop table litemall_search_history;
 drop table litemall_storage;
 drop table litemall_system;
 drop table litemall_topic;
-drop table litemall_user;
 drop table litemall_coupon;
 drop table litemall_order;
 drop table litemall_goods;
+drop table litemall_user;
 drop table litemall_category;
 drop table litemall_brand;
 

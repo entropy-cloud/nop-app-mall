@@ -61,12 +61,11 @@
         <form id="add" editMode="add" title="新增-购物车商品表" i18n-en:title="Add " x:prototype="edit"/>
         <form id="edit" editMode="update" title="编辑-购物车商品表" i18n-en:title="Edit ">
             <layout>
- id[Id] userId[用户ID]
- goodsId[商品ID] goodsSn[商品编号]
- goodsName[商品名称] productId[商品货品表的货品ID]
- price[商品货品的价格] number[商品货品的数量]
- specifications[商品规格值列表] checked[购物车中商品是否选择状态]
- picUrl[商品图片或者商品货品图片] 
+ userId[用户ID] goodsId[商品ID]
+ goodsSn[商品编号] goodsName[商品名称]
+ productId[商品货品表的货品ID] price[商品货品的价格]
+ number[商品货品的数量] specifications[商品规格值列表]
+ checked[购物车中商品是否选择状态] picUrl[商品图片或者商品货品图片]
 </layout>
         </form>
         <form id="query" editMode="query" title="查询条件" i18n-en:title="Query Condition" x:abstract="true">

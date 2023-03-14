@@ -18,7 +18,7 @@ CREATE TABLE litemall_ad(
 CREATE TABLE litemall_address(
   ID INTEGER NOT NULL    COMMENT 'Id',
   NAME VARCHAR(63) NOT NULL    COMMENT '收货人名称',
-  USER_ID INTEGER NOT NULL    COMMENT '用户表的用户ID',
+  USER_ID INTEGER NOT NULL    COMMENT '用户ID',
   PROVINCE VARCHAR(63) NOT NULL    COMMENT '行政区域表的省ID',
   CITY VARCHAR(63) NOT NULL    COMMENT '行政区域表的市ID',
   COUNTY VARCHAR(63) NOT NULL    COMMENT '行政区域表的区县ID',
@@ -100,7 +100,7 @@ CREATE TABLE litemall_comment(
   TYPE TINYINT NOT NULL    COMMENT '评论类型',
   CONTENT VARCHAR(1023)     COMMENT '评论内容',
   ADMIN_CONTENT VARCHAR(511)     COMMENT '管理员回复内容',
-  USER_ID INTEGER NOT NULL    COMMENT '用户表的用户ID',
+  USER_ID INTEGER NOT NULL    COMMENT '用户ID',
   HAS_PICTURE BOOLEAN     COMMENT '是否含有图片',
   PIC_URLS VARCHAR(1023)     COMMENT '图片地址列表，采用JSON数组格式',
   STAR SMALLINT     COMMENT '评分， 1-5',
@@ -114,7 +114,7 @@ CREATE TABLE litemall_coupon_user(
   ID INTEGER NOT NULL    COMMENT 'Id',
   USER_ID INTEGER NOT NULL    COMMENT '用户ID',
   COUPON_ID INTEGER NOT NULL    COMMENT '优惠券ID',
-  STATUS SMALLINT     COMMENT '使用状态, 如果是0则未使用；如果是1则已使用；如果是2则已过期；如果是3则已经下架；',
+  STATUS SMALLINT     COMMENT '使用状态',
   USED_TIME DATETIME     COMMENT '使用时间',
   START_TIME DATETIME     COMMENT '有效期开始时间',
   END_TIME DATETIME     COMMENT '有效期截至时间',
@@ -127,7 +127,7 @@ CREATE TABLE litemall_coupon_user(
 
 CREATE TABLE litemall_feedback(
   ID INTEGER NOT NULL    COMMENT 'Id',
-  USER_ID INTEGER NOT NULL    COMMENT '用户表的用户ID',
+  USER_ID INTEGER NOT NULL    COMMENT '用户ID',
   USERNAME VARCHAR(63) NOT NULL    COMMENT '用户名称',
   MOBILE VARCHAR(20) NOT NULL    COMMENT '手机号',
   FEED_TYPE VARCHAR(63) NOT NULL    COMMENT '反馈类型',
@@ -143,7 +143,7 @@ CREATE TABLE litemall_feedback(
 
 CREATE TABLE litemall_footprint(
   ID INTEGER NOT NULL    COMMENT 'Id',
-  USER_ID INTEGER NOT NULL    COMMENT '用户表的用户ID',
+  USER_ID INTEGER NOT NULL    COMMENT '用户ID',
   GOODS_ID INTEGER NOT NULL    COMMENT '浏览商品ID',
   ADD_TIME DATETIME     COMMENT '创建时间',
   UPDATE_TIME DATETIME     COMMENT '更新时间',
@@ -271,7 +271,7 @@ CREATE TABLE litemall_notice_admin(
   ID INTEGER NOT NULL    COMMENT 'Id',
   NOTICE_ID INTEGER     COMMENT '通知ID',
   NOTICE_TITLE VARCHAR(63)     COMMENT '通知标题',
-  ADMIN_ID INTEGER     COMMENT '接收通知的管理员ID',
+  ADMIN_ID INTEGER     COMMENT '管理员ID',
   READ_TIME DATETIME     COMMENT '阅读时间',
   ADD_TIME DATETIME     COMMENT '创建时间',
   UPDATE_TIME DATETIME     COMMENT '更新时间',
@@ -329,9 +329,9 @@ CREATE TABLE litemall_role(
 
 CREATE TABLE litemall_search_history(
   ID INTEGER NOT NULL    COMMENT 'Id',
-  USER_ID INTEGER NOT NULL    COMMENT '用户表的用户ID',
+  USER_ID INTEGER NOT NULL    COMMENT '用户ID',
   KEYWORD VARCHAR(63) NOT NULL    COMMENT '搜索关键字',
-  `FROM` VARCHAR(63) NOT NULL    COMMENT '搜索来源，如pc、wx、app',
+  `FROM` VARCHAR(63) NOT NULL    COMMENT '搜索来源',
   ADD_TIME DATETIME     COMMENT '创建时间',
   UPDATE_TIME DATETIME     COMMENT '更新时间',
   DELETED BOOLEAN     COMMENT '逻辑删除',
@@ -365,37 +365,16 @@ CREATE TABLE litemall_topic(
   ID INTEGER NOT NULL    COMMENT 'Id',
   TITLE VARCHAR(255) NOT NULL    COMMENT '专题标题',
   SUBTITLE VARCHAR(255)     COMMENT '专题子标题',
-  CONTENT TEXT     COMMENT '专题内容，富文本格式',
+  CONTENT TEXT     COMMENT '专题内容',
   PRICE DECIMAL(10,2)     COMMENT '专题相关商品最低价',
   READ_COUNT VARCHAR(255)     COMMENT '专题阅读量',
   PIC_URL VARCHAR(255)     COMMENT '专题图片',
   SORT_ORDER INTEGER     COMMENT '排序',
-  GOODS VARCHAR(1023)     COMMENT '专题相关商品，采用JSON数组格式',
+  GOODS VARCHAR(1023)     COMMENT '专题相关商品',
   ADD_TIME DATETIME     COMMENT '创建时间',
   UPDATE_TIME DATETIME     COMMENT '更新时间',
   DELETED BOOLEAN     COMMENT '逻辑删除',
   constraint PK_litemall_topic primary key (ID)
-);
-
-CREATE TABLE litemall_user(
-  ID INTEGER NOT NULL    COMMENT 'Id',
-  USERNAME VARCHAR(63) NOT NULL    COMMENT '用户名称',
-  PASSWORD VARCHAR(63) NOT NULL    COMMENT '用户密码',
-  GENDER TINYINT NOT NULL    COMMENT '性别：0 未知， 1男， 1 女',
-  BIRTHDAY DATE     COMMENT '生日',
-  LAST_LOGIN_TIME DATETIME     COMMENT '最近一次登录时间',
-  LAST_LOGIN_IP VARCHAR(63) NOT NULL    COMMENT '最近一次登录IP地址',
-  USER_LEVEL TINYINT     COMMENT '0 普通用户，1 VIP用户，2 高级VIP用户',
-  NICKNAME VARCHAR(63) NOT NULL    COMMENT '用户昵称或网络名称',
-  MOBILE VARCHAR(20) NOT NULL    COMMENT '用户手机号码',
-  AVATAR VARCHAR(255) NOT NULL    COMMENT '用户头像图片',
-  WEIXIN_OPENID VARCHAR(63) NOT NULL    COMMENT '微信登录openid',
-  SESSION_KEY VARCHAR(100) NOT NULL    COMMENT '微信登录会话KEY',
-  STATUS TINYINT NOT NULL    COMMENT '0 可用, 1 禁用, 2 注销',
-  ADD_TIME DATETIME     COMMENT '创建时间',
-  UPDATE_TIME DATETIME     COMMENT '更新时间',
-  DELETED BOOLEAN     COMMENT '逻辑删除',
-  constraint PK_litemall_user primary key (ID)
 );
 
 CREATE TABLE litemall_coupon(
@@ -424,7 +403,7 @@ CREATE TABLE litemall_coupon(
 
 CREATE TABLE litemall_order(
   ID INTEGER NOT NULL    COMMENT 'Id',
-  USER_ID INTEGER NOT NULL    COMMENT '用户表的用户ID',
+  USER_ID INTEGER NOT NULL    COMMENT '用户ID',
   ORDER_SN VARCHAR(63) NOT NULL    COMMENT '订单编号',
   ORDER_STATUS SMALLINT NOT NULL    COMMENT '订单状态',
   AFTERSALE_STATUS SMALLINT     COMMENT '售后状态',
@@ -480,6 +459,27 @@ CREATE TABLE litemall_goods(
   UPDATE_TIME DATETIME     COMMENT '更新时间',
   DELETED BOOLEAN     COMMENT '逻辑删除',
   constraint PK_litemall_goods primary key (ID)
+);
+
+CREATE TABLE litemall_user(
+  ID INTEGER NOT NULL    COMMENT 'Id',
+  USERNAME VARCHAR(63) NOT NULL    COMMENT '用户名称',
+  PASSWORD VARCHAR(63) NOT NULL    COMMENT '用户密码',
+  GENDER TINYINT NOT NULL    COMMENT '性别',
+  BIRTHDAY DATE     COMMENT '生日',
+  LAST_LOGIN_TIME DATETIME     COMMENT '最近一次登录时间',
+  LAST_LOGIN_IP VARCHAR(63) NOT NULL    COMMENT '最近一次登录IP地址',
+  USER_LEVEL TINYINT     COMMENT '用户等级',
+  NICKNAME VARCHAR(63) NOT NULL    COMMENT '用户昵称或网络名称',
+  MOBILE VARCHAR(20) NOT NULL    COMMENT '用户手机号码',
+  AVATAR VARCHAR(255) NOT NULL    COMMENT '用户头像图片',
+  WEIXIN_OPENID VARCHAR(63) NOT NULL    COMMENT '微信登录openid',
+  SESSION_KEY VARCHAR(100) NOT NULL    COMMENT '微信登录会话KEY',
+  STATUS TINYINT NOT NULL    COMMENT '用户状态',
+  ADD_TIME DATETIME     COMMENT '创建时间',
+  UPDATE_TIME DATETIME     COMMENT '更新时间',
+  DELETED BOOLEAN     COMMENT '逻辑删除',
+  constraint PK_litemall_user primary key (ID)
 );
 
 CREATE TABLE litemall_category(
@@ -568,13 +568,13 @@ CREATE TABLE litemall_brand(
                 
    ALTER TABLE litemall_topic COMMENT '专题表';
                 
-   ALTER TABLE litemall_user COMMENT '用户表';
-                
    ALTER TABLE litemall_coupon COMMENT '优惠券信息及规则表';
                 
    ALTER TABLE litemall_order COMMENT '订单表';
                 
    ALTER TABLE litemall_goods COMMENT '商品基本信息';
+                
+   ALTER TABLE litemall_user COMMENT '用户表';
                 
    ALTER TABLE litemall_category COMMENT '类目表';
                 

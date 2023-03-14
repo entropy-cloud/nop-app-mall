@@ -32,7 +32,7 @@ public class _LitemallUser extends DynamicOrmEntity{
     public static final String PROP_NAME_password = "password";
     public static final int PROP_ID_password = 3;
     
-    /* 性别：0 未知， 1男， 1 女: GENDER TINYINT */
+    /* 性别: GENDER TINYINT */
     public static final String PROP_NAME_gender = "gender";
     public static final int PROP_ID_gender = 4;
     
@@ -48,7 +48,7 @@ public class _LitemallUser extends DynamicOrmEntity{
     public static final String PROP_NAME_lastLoginIp = "lastLoginIp";
     public static final int PROP_ID_lastLoginIp = 7;
     
-    /* 0 普通用户，1 VIP用户，2 高级VIP用户: USER_LEVEL TINYINT */
+    /* 用户等级: USER_LEVEL TINYINT */
     public static final String PROP_NAME_userLevel = "userLevel";
     public static final int PROP_ID_userLevel = 8;
     
@@ -72,7 +72,7 @@ public class _LitemallUser extends DynamicOrmEntity{
     public static final String PROP_NAME_sessionKey = "sessionKey";
     public static final int PROP_ID_sessionKey = 13;
     
-    /* 0 可用, 1 禁用, 2 注销: STATUS TINYINT */
+    /* 用户状态: STATUS TINYINT */
     public static final String PROP_NAME_status = "status";
     public static final int PROP_ID_status = 14;
     
@@ -163,7 +163,7 @@ public class _LitemallUser extends DynamicOrmEntity{
     /* 用户密码: PASSWORD */
     private java.lang.String _password;
     
-    /* 性别：0 未知， 1男， 1 女: GENDER */
+    /* 性别: GENDER */
     private java.lang.Byte _gender;
     
     /* 生日: BIRTHDAY */
@@ -175,7 +175,7 @@ public class _LitemallUser extends DynamicOrmEntity{
     /* 最近一次登录IP地址: LAST_LOGIN_IP */
     private java.lang.String _lastLoginIp;
     
-    /* 0 普通用户，1 VIP用户，2 高级VIP用户: USER_LEVEL */
+    /* 用户等级: USER_LEVEL */
     private java.lang.Byte _userLevel;
     
     /* 用户昵称或网络名称: NICKNAME */
@@ -193,7 +193,7 @@ public class _LitemallUser extends DynamicOrmEntity{
     /* 微信登录会话KEY: SESSION_KEY */
     private java.lang.String _sessionKey;
     
-    /* 0 可用, 1 禁用, 2 注销: STATUS */
+    /* 用户状态: STATUS */
     private java.lang.Byte _status;
     
     /* 创建时间: ADD_TIME */
@@ -699,7 +699,7 @@ public class _LitemallUser extends DynamicOrmEntity{
     }
     
     /**
-     * 性别：0 未知， 1男， 1 女: GENDER
+     * 性别: GENDER
      */
     public java.lang.Byte getGender(){
          onPropGet(PROP_ID_gender);
@@ -707,7 +707,7 @@ public class _LitemallUser extends DynamicOrmEntity{
     }
 
     /**
-     * 性别：0 未知， 1男， 1 女: GENDER
+     * 性别: GENDER
      */
     public void setGender(java.lang.Byte value){
         if(onPropSet(PROP_ID_gender,value)){
@@ -775,7 +775,7 @@ public class _LitemallUser extends DynamicOrmEntity{
     }
     
     /**
-     * 0 普通用户，1 VIP用户，2 高级VIP用户: USER_LEVEL
+     * 用户等级: USER_LEVEL
      */
     public java.lang.Byte getUserLevel(){
          onPropGet(PROP_ID_userLevel);
@@ -783,7 +783,7 @@ public class _LitemallUser extends DynamicOrmEntity{
     }
 
     /**
-     * 0 普通用户，1 VIP用户，2 高级VIP用户: USER_LEVEL
+     * 用户等级: USER_LEVEL
      */
     public void setUserLevel(java.lang.Byte value){
         if(onPropSet(PROP_ID_userLevel,value)){
@@ -889,7 +889,7 @@ public class _LitemallUser extends DynamicOrmEntity{
     }
     
     /**
-     * 0 可用, 1 禁用, 2 注销: STATUS
+     * 用户状态: STATUS
      */
     public java.lang.Byte getStatus(){
          onPropGet(PROP_ID_status);
@@ -897,7 +897,7 @@ public class _LitemallUser extends DynamicOrmEntity{
     }
 
     /**
-     * 0 可用, 1 禁用, 2 注销: STATUS
+     * 用户状态: STATUS
      */
     public void setStatus(java.lang.Byte value){
         if(onPropSet(PROP_ID_status,value)){

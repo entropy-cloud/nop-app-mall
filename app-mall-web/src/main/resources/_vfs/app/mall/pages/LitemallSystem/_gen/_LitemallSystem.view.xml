@@ -34,7 +34,6 @@
         <form id="add" editMode="add" title="新增-系统配置表" i18n-en:title="Add " x:prototype="edit"/>
         <form id="edit" editMode="update" title="编辑-系统配置表" i18n-en:title="Edit ">
             <layout>
- id[Id]
  keyName[系统配置名]
  keyValue[系统配置值]
 </layout>

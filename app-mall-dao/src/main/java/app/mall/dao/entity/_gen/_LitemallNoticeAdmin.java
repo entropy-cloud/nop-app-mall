@@ -32,7 +32,7 @@ public class _LitemallNoticeAdmin extends DynamicOrmEntity{
     public static final String PROP_NAME_noticeTitle = "noticeTitle";
     public static final int PROP_ID_noticeTitle = 3;
     
-    /* 接收通知的管理员ID: ADMIN_ID INTEGER */
+    /* 管理员ID: ADMIN_ID INTEGER */
     public static final String PROP_NAME_adminId = "adminId";
     public static final int PROP_ID_adminId = 4;
     
@@ -100,7 +100,7 @@ public class _LitemallNoticeAdmin extends DynamicOrmEntity{
     /* 通知标题: NOTICE_TITLE */
     private java.lang.String _noticeTitle;
     
-    /* 接收通知的管理员ID: ADMIN_ID */
+    /* 管理员ID: ADMIN_ID */
     private java.lang.Integer _adminId;
     
     /* 阅读时间: READ_TIME */
@@ -429,7 +429,7 @@ public class _LitemallNoticeAdmin extends DynamicOrmEntity{
     }
     
     /**
-     * 接收通知的管理员ID: ADMIN_ID
+     * 管理员ID: ADMIN_ID
      */
     public java.lang.Integer getAdminId(){
          onPropGet(PROP_ID_adminId);
@@ -437,7 +437,7 @@ public class _LitemallNoticeAdmin extends DynamicOrmEntity{
     }
 
     /**
-     * 接收通知的管理员ID: ADMIN_ID
+     * 管理员ID: ADMIN_ID
      */
     public void setAdminId(java.lang.Integer value){
         if(onPropSet(PROP_ID_adminId,value)){

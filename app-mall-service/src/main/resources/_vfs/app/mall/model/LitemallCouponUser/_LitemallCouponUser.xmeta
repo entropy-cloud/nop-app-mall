@@ -16,20 +16,19 @@
 
     <props>
         <prop name="id" displayName="Id" tagSet="seq" mandatory="true" queryable="true" sortable="true"
-              insertable="true" updatable="false">
+              insertable="false" updatable="false" ext:show="R">
             <schema type="java.lang.Integer"/>
         </prop>
         <prop name="userId" displayName="用户ID" mandatory="true" queryable="true" sortable="true" insertable="true"
-              updatable="true">
+              updatable="true" ext:relation="user">
             <schema type="java.lang.Integer"/>
         </prop>
         <prop name="couponId" displayName="优惠券ID" mandatory="true" queryable="true" sortable="true" insertable="true"
               updatable="true" ext:relation="coupon">
             <schema type="java.lang.Integer"/>
         </prop>
-        <prop name="status" displayName="使用状态, 如果是0则未使用；如果是1则已使用；如果是2则已过期；如果是3则已经下架；" queryable="true" sortable="true"
-              insertable="true" updatable="true">
-            <schema type="java.lang.Short"/>
+        <prop name="status" displayName="使用状态" queryable="true" sortable="true" insertable="true" updatable="true">
+            <schema type="java.lang.Short" dict="mall/coupon-use-status"/>
         </prop>
         <prop name="usedTime" displayName="使用时间" queryable="true" sortable="true" insertable="true" updatable="true">
             <schema type="java.time.LocalDateTime"/>
@@ -61,6 +60,15 @@
             <schema type="app.mall.dao.entity.LitemallCoupon" bizObjName="LitemallCoupon"/>
         </prop>
         <prop name="coupon.name" displayName="优惠券" i18n-en:displayName="Coupon" internal="true" queryable="true"
+              sortable="true" lazy="true">
+            <schema type="String"/>
+        </prop>
+        <prop name="user" displayName="客户" i18n-en:displayName="User" tagSet="pub,ref-pub" ext:kind="to-one"
+              internal="true" queryable="true" ext:joinLeftProp="userId" ext:joinRightProp="id"
+              ext:joinRightDisplayProp="username" insertable="false" updatable="false" mandatory="true" lazy="true">
+            <schema type="app.mall.dao.entity.LitemallUser" bizObjName="LitemallUser"/>
+        </prop>
+        <prop name="user.username" displayName="客户" i18n-en:displayName="User" internal="true" queryable="true"
               sortable="true" lazy="true">
             <schema type="String"/>
         </prop>

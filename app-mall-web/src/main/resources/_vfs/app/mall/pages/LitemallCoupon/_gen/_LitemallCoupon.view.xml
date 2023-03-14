@@ -82,15 +82,14 @@
         <form id="add" editMode="add" title="新增-优惠券信息及规则表" i18n-en:title="Add " x:prototype="edit"/>
         <form id="edit" editMode="update" title="编辑-优惠券信息及规则表" i18n-en:title="Edit ">
             <layout>
- id[Id] name[优惠券名称]
- desc[优惠券介绍] tag[优惠券标签]
- total[优惠券数量] discount[优惠金额，]
- min[最少消费金额] limit[用户领券限制数量]
- type[优惠券赠送类型] status[优惠券状态]
- goodsType[商品限制类型] goodsValue[商品限制值]
- code[优惠券兑换码] timeType[有效时间限制]
- days[基于领取时间的有效天数days。] startTime[使用券开始时间]
- endTime[使用券截至时间] 
+ name[优惠券名称] desc[优惠券介绍]
+ tag[优惠券标签] total[优惠券数量]
+ discount[优惠金额，] min[最少消费金额]
+ limit[用户领券限制数量] type[优惠券赠送类型]
+ status[优惠券状态] goodsType[商品限制类型]
+ goodsValue[商品限制值] code[优惠券兑换码]
+ timeType[有效时间限制] days[基于领取时间的有效天数days。]
+ startTime[使用券开始时间] endTime[使用券截至时间]
 </layout>
         </form>
         <form id="query" editMode="query" title="查询条件" i18n-en:title="Query Condition" x:abstract="true">

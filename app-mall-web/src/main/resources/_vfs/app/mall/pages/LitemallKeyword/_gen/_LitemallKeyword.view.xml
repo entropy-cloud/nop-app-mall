@@ -46,7 +46,6 @@
         <form id="add" editMode="add" title="新增-关键字表" i18n-en:title="Add " x:prototype="edit"/>
         <form id="edit" editMode="update" title="编辑-关键字表" i18n-en:title="Edit ">
             <layout>
- id[Id]
  keyword[关键字]
  url[关键字的跳转链接]
  isHot[是否是热门关键字]

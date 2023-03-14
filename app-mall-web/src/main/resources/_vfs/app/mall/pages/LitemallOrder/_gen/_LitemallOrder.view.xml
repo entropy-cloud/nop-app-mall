@@ -13,7 +13,7 @@
                 <!--Id-->
                 <col id="id" mandatory="true" sortable="true"/>
 
-                <!--用户表的用户ID-->
+                <!--用户ID-->
                 <col id="userId" mandatory="true" sortable="true"/>
 
                 <!--订单编号-->
@@ -101,7 +101,7 @@
     <forms>
         <form id="view" editMode="view" title="查看-订单表" i18n-en:title="View ">
             <layout>
- id[Id] userId[用户表的用户ID]
+ id[Id] userId[用户ID]
  orderSn[订单编号] orderStatus[订单状态]
  aftersaleStatus[售后状态] consignee[收货人名称]
  mobile[收货人手机号] address[收货具体地址]
@@ -120,20 +120,20 @@
         <form id="add" editMode="add" title="新增-订单表" i18n-en:title="Add " x:prototype="edit"/>
         <form id="edit" editMode="update" title="编辑-订单表" i18n-en:title="Edit ">
             <layout>
- id[Id] userId[用户表的用户ID]
- orderSn[订单编号] orderStatus[订单状态]
- aftersaleStatus[售后状态] consignee[收货人名称]
- mobile[收货人手机号] address[收货具体地址]
- message[用户订单留言] goodsPrice[商品总费用]
- freightPrice[配送费用] couponPrice[优惠券减免]
- integralPrice[用户积分减免] grouponPrice[团购优惠价减免]
- orderPrice[订单费用] actualPrice[实付费用]
- payId[微信付款编号] payTime[微信付款时间]
- shipSn[发货编号] shipChannel[发货快递公司]
- shipTime[发货开始时间] refundAmount[实际退款金额]
- refundType[退款方式] refundContent[退款备注]
- refundTime[退款时间] confirmTime[用户确认收货时间]
- comments[待评价订单商品数量] endTime[订单关闭时间]
+ userId[用户ID] orderSn[订单编号]
+ orderStatus[订单状态] aftersaleStatus[售后状态]
+ consignee[收货人名称] mobile[收货人手机号]
+ address[收货具体地址] message[用户订单留言]
+ goodsPrice[商品总费用] freightPrice[配送费用]
+ couponPrice[优惠券减免] integralPrice[用户积分减免]
+ grouponPrice[团购优惠价减免] orderPrice[订单费用]
+ actualPrice[实付费用] payId[微信付款编号]
+ payTime[微信付款时间] shipSn[发货编号]
+ shipChannel[发货快递公司] shipTime[发货开始时间]
+ refundAmount[实际退款金额] refundType[退款方式]
+ refundContent[退款备注] refundTime[退款时间]
+ confirmTime[用户确认收货时间] comments[待评价订单商品数量]
+ endTime[订单关闭时间] 
 </layout>
         </form>
         <form id="query" editMode="query" title="查询条件" i18n-en:title="Query Condition" x:abstract="true">

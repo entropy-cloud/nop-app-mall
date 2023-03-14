@@ -16,7 +16,7 @@
 
     <props>
         <prop name="id" displayName="Id" tagSet="seq" mandatory="true" queryable="true" sortable="true"
-              insertable="true" updatable="false">
+              insertable="false" updatable="false" ext:show="R">
             <schema type="java.lang.Integer"/>
         </prop>
         <prop name="name" displayName="优惠券名称" tagSet="disp" mandatory="true" queryable="true" sortable="true"

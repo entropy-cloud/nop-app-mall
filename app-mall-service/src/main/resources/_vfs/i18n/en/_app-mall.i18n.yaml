@@ -64,6 +64,8 @@ prop:
       addTime: null
       updateTime: null
       deleted: null
+      user: User
+      user.username: User
     LitemallAdmin:
       id: null
       username: null
@@ -94,6 +96,8 @@ prop:
       deleted: null
       order: Order
       order.orderSn: Order
+      user: User
+      user.username: User
       picturesComponent: null
     LitemallBrand:
       id: null
@@ -122,6 +126,8 @@ prop:
       deleted: null
       goods: Goods
       goods.name: Goods
+      user: User
+      user.username: User
     LitemallCategory:
       id: null
       name: null
@@ -147,6 +153,8 @@ prop:
       addTime: null
       updateTime: null
       deleted: null
+      user: User
+      user.username: User
     LitemallComment:
       id: null
       valueId: null
@@ -160,6 +168,8 @@ prop:
       addTime: null
       updateTime: null
       deleted: null
+      user: User
+      user.username: User
       picUrlsComponent: null
     LitemallCoupon:
       id: null
@@ -191,6 +201,7 @@ prop:
       userId: null
       couponId: null
       status: null
+      status_label: null
       usedTime: null
       startTime: null
       endTime: null
@@ -200,6 +211,8 @@ prop:
       deleted: null
       coupon: Coupon
       coupon.name: Coupon
+      user: User
+      user.username: User
     LitemallFeedback:
       id: null
       userId: null
@@ -213,6 +226,8 @@ prop:
       addTime: null
       updateTime: null
       deleted: null
+      user: User
+      user.username: User
       picUrlsComponent: null
     LitemallFootprint:
       id: null
@@ -223,6 +238,8 @@ prop:
       deleted: null
       goods: Goods
       goods.name: Goods
+      user: User
+      user.username: User
     LitemallGoods:
       id: ID
       goodsSn: Goods SN
@@ -397,6 +414,8 @@ prop:
       addTime: null
       updateTime: null
       deleted: null
+      user: User
+      user.username: User
     LitemallOrderGoods:
       id: null
       orderId: null
@@ -426,6 +445,8 @@ prop:
       type: null
       type_label: null
       code: null
+      parent: Parent
+      children: Children
     LitemallRole:
       id: null
       name: null
@@ -442,6 +463,8 @@ prop:
       addTime: null
       updateTime: null
       deleted: null
+      user: User
+      user.username: User
     LitemallStorage:
       id: null
       key: null
@@ -472,21 +495,25 @@ prop:
       addTime: null
       updateTime: null
       deleted: null
+      goodsComponent: null
     LitemallUser:
       id: null
       username: null
       password: null
       gender: null
+      gender_label: null
       birthday: null
       lastLoginTime: null
       lastLoginIp: null
       userLevel: null
+      userLevel_label: null
       nickname: null
       mobile: null
       avatar: null
       weixinOpenid: null
       sessionKey: null
       status: null
+      status_label: null
       addTime: null
       updateTime: null
       deleted: null

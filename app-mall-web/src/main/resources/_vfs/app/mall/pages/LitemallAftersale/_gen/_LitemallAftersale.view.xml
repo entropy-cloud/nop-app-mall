@@ -61,12 +61,11 @@
         <form id="add" editMode="add" title="新增-售后表" i18n-en:title="Add " x:prototype="edit"/>
         <form id="edit" editMode="update" title="编辑-售后表" i18n-en:title="Edit ">
             <layout>
- id[Id] aftersaleSn[售后编号]
- orderId[订单ID] userId[用户ID]
- type[售后类型] reason[退款原因]
- amount[退款金额] pictures[退款凭证图片链接数组]
- comment[退款说明] status[售后状态]
- handleTime[管理员操作时间] 
+ aftersaleSn[售后编号] orderId[订单ID]
+ userId[用户ID] type[售后类型]
+ reason[退款原因] amount[退款金额]
+ pictures[退款凭证图片链接数组] comment[退款说明]
+ status[售后状态] handleTime[管理员操作时间]
 </layout>
         </form>
         <form id="query" editMode="query" title="查询条件" i18n-en:title="Query Condition" x:abstract="true">

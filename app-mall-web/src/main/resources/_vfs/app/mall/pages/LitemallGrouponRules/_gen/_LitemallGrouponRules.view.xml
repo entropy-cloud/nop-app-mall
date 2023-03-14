@@ -54,7 +54,6 @@
         <form id="add" editMode="add" title="新增-团购规则表" i18n-en:title="Add " x:prototype="edit"/>
         <form id="edit" editMode="update" title="编辑-团购规则表" i18n-en:title="Edit ">
             <layout>
- id[Id]
  goodsId[商品ID]
  goodsName[商品名称]
  picUrl[商品/货品图片]

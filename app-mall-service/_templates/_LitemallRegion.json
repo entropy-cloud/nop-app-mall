@@ -4,5 +4,7 @@
   "name": "",
   "type": 0,
   "type_label": "",
-  "code": 0
+  "code": 0,
+  "parent": null,
+  "children": null
 }

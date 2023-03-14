@@ -63,7 +63,9 @@ prop:
       province: 行政区域表的省ID
       tel: 手机号码
       updateTime: 更新时间
-      userId: 用户表的用户ID
+      user: 客户
+      user.username: 客户
+      userId: 用户ID
     LitemallAdmin:
       addTime: 创建时间
       avatar: 头像图片
@@ -94,6 +96,8 @@ prop:
       type: 售后类型
       type_label: 售后类型
       updateTime: 更新时间
+      user: 客户
+      user.username: 客户
       userId: 用户ID
     LitemallBrand:
       addTime: 创建时间
@@ -121,6 +125,8 @@ prop:
       productId: 商品货品表的货品ID
       specifications: 商品规格值列表
       updateTime: 更新时间
+      user: 客户
+      user.username: 客户
       userId: 用户ID
     LitemallCategory:
       addTime: 创建时间
@@ -145,6 +151,8 @@ prop:
       id: Id
       type: 收藏类型
       updateTime: 更新时间
+      user: 客户
+      user.username: 客户
       userId: 用户ID
       valueId: 如果type=0，则是商品ID；如果type=1，则是专题ID
     LitemallComment:
@@ -159,7 +167,9 @@ prop:
       star: 评分， 1-5
       type: 评论类型
       updateTime: 更新时间
-      userId: 用户表的用户ID
+      user: 客户
+      user.username: 客户
+      userId: 用户ID
       valueId: 如果type=0，则是商品评论；如果是type=1，则是专题评论。
     LitemallCoupon:
       addTime: 创建时间
@@ -196,9 +206,12 @@ prop:
       id: Id
       orderId: 订单ID
       startTime: 有效期开始时间
-      status: 使用状态, 如果是0则未使用；如果是1则已使用；如果是2则已过期；如果是3则已经下架；
+      status: 使用状态
+      status_label: 使用状态
       updateTime: 更新时间
       usedTime: 使用时间
+      user: 客户
+      user.username: 客户
       userId: 用户ID
     LitemallFeedback:
       addTime: 创建时间
@@ -212,7 +225,9 @@ prop:
       picUrlsComponent: null
       status: 状态
       updateTime: 更新时间
-      userId: 用户表的用户ID
+      user: 客户
+      user.username: 客户
+      userId: 用户ID
       username: 用户名称
     LitemallFootprint:
       addTime: 创建时间
@@ -222,7 +237,9 @@ prop:
       goodsId: 浏览商品ID
       id: Id
       updateTime: 更新时间
-      userId: 用户表的用户ID
+      user: 客户
+      user.username: 客户
+      userId: 用户ID
     LitemallGoods:
       addTime: 创建时间
       attributes: 商品参数
@@ -356,7 +373,7 @@ prop:
       updateTime: 更新时间
     LitemallNoticeAdmin:
       addTime: 创建时间
-      adminId: 接收通知的管理员ID
+      adminId: 管理员ID
       deleted: 逻辑删除
       id: Id
       noticeId: 通知ID
@@ -396,7 +413,9 @@ prop:
       shipSn: 发货编号
       shipTime: 发货开始时间
       updateTime: 更新时间
-      userId: 用户表的用户ID
+      user: 客户
+      user.username: 客户
+      userId: 用户ID
     LitemallOrderGoods:
       addTime: 创建时间
       comment: 订单商品评论，如果是-1，则超期不能评价；如果是0，则可以评价；如果其他值，则是comment表里面的评论ID。
@@ -420,9 +439,11 @@ prop:
       roleId: 角色ID
       updateTime: 更新时间
     LitemallRegion:
+      children: 子区域
       code: 行政区域编码
       id: Id
       name: 行政区域名称
+      parent: 父区域
       pid: 行政区域父ID
       type: 行政区域类型
       type_label: 行政区域类型
@@ -437,11 +458,13 @@ prop:
     LitemallSearchHistory:
       addTime: 创建时间
       deleted: 逻辑删除
-      from: 搜索来源，如pc、wx、app
+      from: 搜索来源
       id: Id
       keyword: 搜索关键字
       updateTime: 更新时间
-      userId: 用户表的用户ID
+      user: 客户
+      user.username: 客户
+      userId: 用户ID
     LitemallStorage:
       addTime: 创建时间
       deleted: 逻辑删除
@@ -461,9 +484,10 @@ prop:
       updateTime: 更新时间
     LitemallTopic:
       addTime: 创建时间
-      content: 专题内容，富文本格式
+      content: 专题内容
       deleted: 逻辑删除
-      goods: 专题相关商品，采用JSON数组格式
+      goods: 专题相关商品
+      goodsComponent: null
       id: Id
       picUrl: 专题图片
       price: 专题相关商品最低价
@@ -477,7 +501,8 @@ prop:
       avatar: 用户头像图片
       birthday: 生日
       deleted: 逻辑删除
-      gender: 性别：0 未知， 1男， 1 女
+      gender: 性别
+      gender_label: 性别
       id: Id
       lastLoginIp: 最近一次登录IP地址
       lastLoginTime: 最近一次登录时间
@@ -485,8 +510,10 @@ prop:
       nickname: 用户昵称或网络名称
       password: 用户密码
       sessionKey: 微信登录会话KEY
-      status: 0 可用, 1 禁用, 2 注销
+      status: 用户状态
+      status_label: 用户状态
       updateTime: 更新时间
-      userLevel: 0 普通用户，1 VIP用户，2 高级VIP用户
+      userLevel: 用户等级
+      userLevel_label: 用户等级
       username: 用户名称
       weixinOpenid: 微信登录openid

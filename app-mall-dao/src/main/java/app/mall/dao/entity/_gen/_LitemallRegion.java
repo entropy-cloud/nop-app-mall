@@ -44,6 +44,12 @@ public class _LitemallRegion extends DynamicOrmEntity{
     private static int _PROP_ID_BOUND = 6;
 
     
+    /* relation: 父区域 */
+    public static final String PROP_NAME_parent = "parent";
+    
+    /* relation: 子区域 */
+    public static final String PROP_NAME_children = "children";
+    
 
     public static final List<String> PK_PROP_NAMES = Arrays.asList(PROP_NAME_id);
     public static final int[] PK_PROP_IDS = new int[]{PROP_ID_id};
@@ -376,5 +382,36 @@ public class _LitemallRegion extends DynamicOrmEntity{
         }
     }
     
+    /**
+     * 父区域
+     */
+    public app.mall.dao.entity.LitemallRegion getParent(){
+       return (app.mall.dao.entity.LitemallRegion)internalGetRefEntity(PROP_NAME_parent);
+    }
+
+    public void setParent(app.mall.dao.entity.LitemallRegion refEntity){
+       if(refEntity == null){
+         
+         this.setPid(null);
+         
+       }else{
+          internalSetRefEntity(PROP_NAME_parent, refEntity,()->{
+             
+                    this.setPid(refEntity.getId());
+                 
+          });
+       }
+    }
+       
+    private final OrmEntitySet<app.mall.dao.entity.LitemallRegion> _children = new OrmEntitySet<>(this, PROP_NAME_children,
+        app.mall.dao.entity.LitemallRegion.PROP_NAME_parent, null,app.mall.dao.entity.LitemallRegion.class);
+
+    /**
+     * 子区域。 refPropName: parent, keyProp: {rel.keyProp}
+     */
+    public IOrmEntitySet<app.mall.dao.entity.LitemallRegion> getChildren(){
+       return _children;
+    }
+       
 }
 // resume CPD analysis - CPD-ON
