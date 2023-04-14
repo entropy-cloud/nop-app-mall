@@ -100,7 +100,7 @@
             <api url="@mutation:LitemallRole__save/id"/>
         </simple>
         <simple name="view" form="view">
-            <api url="@query:LitemallRole__get/{@formSelection}?id=$id"/>
+            <initApi url="@query:LitemallRole__get/{@formSelection}?id=$id"/>
         </simple>
         <simple name="update" form="edit">
             <initApi url="@query:LitemallRole__get/{@formSelection}?id=$id"/>

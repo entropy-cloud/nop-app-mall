@@ -8,7 +8,16 @@
 
     <forms>
         <form id="view"/>
-        <form id="edit"/>
+        <form id="edit">
+            <layout>
+                id[Id]
+                name[角色名称]
+                relatedUserIdList
+                desc[角色描述]
+                enabled[是否启用]
+            </layout>
+        </form>
+
         <form id="add"/>
     </forms>
 

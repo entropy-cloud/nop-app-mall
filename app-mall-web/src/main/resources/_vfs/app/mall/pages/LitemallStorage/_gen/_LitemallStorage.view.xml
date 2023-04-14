@@ -109,7 +109,7 @@
             <api url="@mutation:LitemallStorage__save/id"/>
         </simple>
         <simple name="view" form="view">
-            <api url="@query:LitemallStorage__get/{@formSelection}?id=$id"/>
+            <initApi url="@query:LitemallStorage__get/{@formSelection}?id=$id"/>
         </simple>
         <simple name="update" form="edit">
             <initApi url="@query:LitemallStorage__get/{@formSelection}?id=$id"/>

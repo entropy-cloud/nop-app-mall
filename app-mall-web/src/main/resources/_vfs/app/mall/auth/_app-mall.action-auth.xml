@@ -6,94 +6,458 @@
                   orderNo="10000" routePath="/test-orm-app-mall" component="layouts/default/index">
             <children>
                 <resource id="LitemallAd-main" displayName="广告表" orderNo="10001" icon="ant-design:appstore-twotone"
-                          component="AMIS" resourceType="SUBM" url="/app/mall/pages/LitemallAd/main.page.yaml"/>
-                <resource id="LitemallAddress-main" displayName="收货地址表" orderNo="10002"
+                          component="AMIS" resourceType="SUBM" url="/app/mall/pages/LitemallAd/main.page.yaml">
+                    <children>
+                        <resource id="FNPT:LitemallAd:query" displayName="查询广告表" orderNo="10002" resourceType="FNPT">
+                            <permissions>LitemallAd:query</permissions>
+                        </resource>
+                        <resource id="FNPT:LitemallAd:mutation" displayName="修改广告表" orderNo="10003" resourceType="FNPT">
+                            <permissions>LitemallAd:mutation</permissions>
+                        </resource>
+                    </children>
+                </resource>
+                <resource id="LitemallAddress-main" displayName="收货地址表" orderNo="10004"
                           icon="ant-design:appstore-twotone" component="AMIS" resourceType="SUBM"
-                          url="/app/mall/pages/LitemallAddress/main.page.yaml"/>
-                <resource id="LitemallAdmin-main" displayName="管理员表" orderNo="10003" icon="ant-design:appstore-twotone"
-                          component="AMIS" resourceType="SUBM" url="/app/mall/pages/LitemallAdmin/main.page.yaml"/>
-                <resource id="LitemallAftersale-main" displayName="售后表" orderNo="10004"
+                          url="/app/mall/pages/LitemallAddress/main.page.yaml">
+                    <children>
+                        <resource id="FNPT:LitemallAddress:query" displayName="查询收货地址表" orderNo="10005"
+                                  resourceType="FNPT">
+                            <permissions>LitemallAddress:query</permissions>
+                        </resource>
+                        <resource id="FNPT:LitemallAddress:mutation" displayName="修改收货地址表" orderNo="10006"
+                                  resourceType="FNPT">
+                            <permissions>LitemallAddress:mutation</permissions>
+                        </resource>
+                    </children>
+                </resource>
+                <resource id="LitemallAdmin-main" displayName="管理员表" orderNo="10007" icon="ant-design:appstore-twotone"
+                          component="AMIS" resourceType="SUBM" url="/app/mall/pages/LitemallAdmin/main.page.yaml">
+                    <children>
+                        <resource id="FNPT:LitemallAdmin:query" displayName="查询管理员表" orderNo="10008" resourceType="FNPT">
+                            <permissions>LitemallAdmin:query</permissions>
+                        </resource>
+                        <resource id="FNPT:LitemallAdmin:mutation" displayName="修改管理员表" orderNo="10009"
+                                  resourceType="FNPT">
+                            <permissions>LitemallAdmin:mutation</permissions>
+                        </resource>
+                    </children>
+                </resource>
+                <resource id="LitemallAftersale-main" displayName="售后表" orderNo="10010"
                           icon="ant-design:appstore-twotone" component="AMIS" resourceType="SUBM"
-                          url="/app/mall/pages/LitemallAftersale/main.page.yaml"/>
-                <resource id="LitemallBrand-main" displayName="品牌商表" orderNo="10005" icon="ant-design:appstore-twotone"
-                          component="AMIS" resourceType="SUBM" url="/app/mall/pages/LitemallBrand/main.page.yaml"/>
-                <resource id="LitemallCart-main" displayName="购物车商品表" orderNo="10006" icon="ant-design:appstore-twotone"
-                          component="AMIS" resourceType="SUBM" url="/app/mall/pages/LitemallCart/main.page.yaml"/>
-                <resource id="LitemallCategory-main" displayName="类目表" orderNo="10007"
+                          url="/app/mall/pages/LitemallAftersale/main.page.yaml">
+                    <children>
+                        <resource id="FNPT:LitemallAftersale:query" displayName="查询售后表" orderNo="10011"
+                                  resourceType="FNPT">
+                            <permissions>LitemallAftersale:query</permissions>
+                        </resource>
+                        <resource id="FNPT:LitemallAftersale:mutation" displayName="修改售后表" orderNo="10012"
+                                  resourceType="FNPT">
+                            <permissions>LitemallAftersale:mutation</permissions>
+                        </resource>
+                    </children>
+                </resource>
+                <resource id="LitemallBrand-main" displayName="品牌商表" orderNo="10013" icon="ant-design:appstore-twotone"
+                          component="AMIS" resourceType="SUBM" url="/app/mall/pages/LitemallBrand/main.page.yaml">
+                    <children>
+                        <resource id="FNPT:LitemallBrand:query" displayName="查询品牌商表" orderNo="10014" resourceType="FNPT">
+                            <permissions>LitemallBrand:query</permissions>
+                        </resource>
+                        <resource id="FNPT:LitemallBrand:mutation" displayName="修改品牌商表" orderNo="10015"
+                                  resourceType="FNPT">
+                            <permissions>LitemallBrand:mutation</permissions>
+                        </resource>
+                    </children>
+                </resource>
+                <resource id="LitemallCart-main" displayName="购物车商品表" orderNo="10016" icon="ant-design:appstore-twotone"
+                          component="AMIS" resourceType="SUBM" url="/app/mall/pages/LitemallCart/main.page.yaml">
+                    <children>
+                        <resource id="FNPT:LitemallCart:query" displayName="查询购物车商品表" orderNo="10017"
+                                  resourceType="FNPT">
+                            <permissions>LitemallCart:query</permissions>
+                        </resource>
+                        <resource id="FNPT:LitemallCart:mutation" displayName="修改购物车商品表" orderNo="10018"
+                                  resourceType="FNPT">
+                            <permissions>LitemallCart:mutation</permissions>
+                        </resource>
+                    </children>
+                </resource>
+                <resource id="LitemallCategory-main" displayName="类目表" orderNo="10019"
                           icon="ant-design:appstore-twotone" component="AMIS" resourceType="SUBM"
-                          url="/app/mall/pages/LitemallCategory/main.page.yaml"/>
-                <resource id="LitemallCollect-main" displayName="收藏表" orderNo="10008" icon="ant-design:appstore-twotone"
-                          component="AMIS" resourceType="SUBM" url="/app/mall/pages/LitemallCollect/main.page.yaml"/>
-                <resource id="LitemallComment-main" displayName="评论表" orderNo="10009" icon="ant-design:appstore-twotone"
-                          component="AMIS" resourceType="SUBM" url="/app/mall/pages/LitemallComment/main.page.yaml"/>
-                <resource id="LitemallCoupon-main" displayName="优惠券信息及规则表" orderNo="10010"
+                          url="/app/mall/pages/LitemallCategory/main.page.yaml">
+                    <children>
+                        <resource id="FNPT:LitemallCategory:query" displayName="查询类目表" orderNo="10020"
+                                  resourceType="FNPT">
+                            <permissions>LitemallCategory:query</permissions>
+                        </resource>
+                        <resource id="FNPT:LitemallCategory:mutation" displayName="修改类目表" orderNo="10021"
+                                  resourceType="FNPT">
+                            <permissions>LitemallCategory:mutation</permissions>
+                        </resource>
+                    </children>
+                </resource>
+                <resource id="LitemallCollect-main" displayName="收藏表" orderNo="10022" icon="ant-design:appstore-twotone"
+                          component="AMIS" resourceType="SUBM" url="/app/mall/pages/LitemallCollect/main.page.yaml">
+                    <children>
+                        <resource id="FNPT:LitemallCollect:query" displayName="查询收藏表" orderNo="10023"
+                                  resourceType="FNPT">
+                            <permissions>LitemallCollect:query</permissions>
+                        </resource>
+                        <resource id="FNPT:LitemallCollect:mutation" displayName="修改收藏表" orderNo="10024"
+                                  resourceType="FNPT">
+                            <permissions>LitemallCollect:mutation</permissions>
+                        </resource>
+                    </children>
+                </resource>
+                <resource id="LitemallComment-main" displayName="评论表" orderNo="10025" icon="ant-design:appstore-twotone"
+                          component="AMIS" resourceType="SUBM" url="/app/mall/pages/LitemallComment/main.page.yaml">
+                    <children>
+                        <resource id="FNPT:LitemallComment:query" displayName="查询评论表" orderNo="10026"
+                                  resourceType="FNPT">
+                            <permissions>LitemallComment:query</permissions>
+                        </resource>
+                        <resource id="FNPT:LitemallComment:mutation" displayName="修改评论表" orderNo="10027"
+                                  resourceType="FNPT">
+                            <permissions>LitemallComment:mutation</permissions>
+                        </resource>
+                    </children>
+                </resource>
+                <resource id="LitemallCoupon-main" displayName="优惠券信息及规则表" orderNo="10028"
                           icon="ant-design:appstore-twotone" component="AMIS" resourceType="SUBM"
-                          url="/app/mall/pages/LitemallCoupon/main.page.yaml"/>
-                <resource id="LitemallCouponUser-main" displayName="优惠券用户使用表" orderNo="10011"
+                          url="/app/mall/pages/LitemallCoupon/main.page.yaml">
+                    <children>
+                        <resource id="FNPT:LitemallCoupon:query" displayName="查询优惠券信息及规则表" orderNo="10029"
+                                  resourceType="FNPT">
+                            <permissions>LitemallCoupon:query</permissions>
+                        </resource>
+                        <resource id="FNPT:LitemallCoupon:mutation" displayName="修改优惠券信息及规则表" orderNo="10030"
+                                  resourceType="FNPT">
+                            <permissions>LitemallCoupon:mutation</permissions>
+                        </resource>
+                    </children>
+                </resource>
+                <resource id="LitemallCouponUser-main" displayName="优惠券用户使用表" orderNo="10031"
                           icon="ant-design:appstore-twotone" component="AMIS" resourceType="SUBM"
-                          url="/app/mall/pages/LitemallCouponUser/main.page.yaml"/>
-                <resource id="LitemallFeedback-main" displayName="意见反馈表" orderNo="10012"
+                          url="/app/mall/pages/LitemallCouponUser/main.page.yaml">
+                    <children>
+                        <resource id="FNPT:LitemallCouponUser:query" displayName="查询优惠券用户使用表" orderNo="10032"
+                                  resourceType="FNPT">
+                            <permissions>LitemallCouponUser:query</permissions>
+                        </resource>
+                        <resource id="FNPT:LitemallCouponUser:mutation" displayName="修改优惠券用户使用表" orderNo="10033"
+                                  resourceType="FNPT">
+                            <permissions>LitemallCouponUser:mutation</permissions>
+                        </resource>
+                    </children>
+                </resource>
+                <resource id="LitemallFeedback-main" displayName="意见反馈表" orderNo="10034"
                           icon="ant-design:appstore-twotone" component="AMIS" resourceType="SUBM"
-                          url="/app/mall/pages/LitemallFeedback/main.page.yaml"/>
-                <resource id="LitemallFootprint-main" displayName="用户浏览足迹表" orderNo="10013"
+                          url="/app/mall/pages/LitemallFeedback/main.page.yaml">
+                    <children>
+                        <resource id="FNPT:LitemallFeedback:query" displayName="查询意见反馈表" orderNo="10035"
+                                  resourceType="FNPT">
+                            <permissions>LitemallFeedback:query</permissions>
+                        </resource>
+                        <resource id="FNPT:LitemallFeedback:mutation" displayName="修改意见反馈表" orderNo="10036"
+                                  resourceType="FNPT">
+                            <permissions>LitemallFeedback:mutation</permissions>
+                        </resource>
+                    </children>
+                </resource>
+                <resource id="LitemallFootprint-main" displayName="用户浏览足迹表" orderNo="10037"
                           icon="ant-design:appstore-twotone" component="AMIS" resourceType="SUBM"
-                          url="/app/mall/pages/LitemallFootprint/main.page.yaml"/>
-                <resource id="LitemallGoods-main" displayName="商品基本信息" orderNo="10014"
+                          url="/app/mall/pages/LitemallFootprint/main.page.yaml">
+                    <children>
+                        <resource id="FNPT:LitemallFootprint:query" displayName="查询用户浏览足迹表" orderNo="10038"
+                                  resourceType="FNPT">
+                            <permissions>LitemallFootprint:query</permissions>
+                        </resource>
+                        <resource id="FNPT:LitemallFootprint:mutation" displayName="修改用户浏览足迹表" orderNo="10039"
+                                  resourceType="FNPT">
+                            <permissions>LitemallFootprint:mutation</permissions>
+                        </resource>
+                    </children>
+                </resource>
+                <resource id="LitemallGoods-main" displayName="商品基本信息" orderNo="10040"
                           icon="ant-design:appstore-twotone" component="AMIS" resourceType="SUBM"
-                          url="/app/mall/pages/LitemallGoods/main.page.yaml"/>
-                <resource id="LitemallGoodsAttribute-main" displayName="商品参数表" orderNo="10015"
+                          url="/app/mall/pages/LitemallGoods/main.page.yaml">
+                    <children>
+                        <resource id="FNPT:LitemallGoods:query" displayName="查询商品基本信息" orderNo="10041"
+                                  resourceType="FNPT">
+                            <permissions>LitemallGoods:query</permissions>
+                        </resource>
+                        <resource id="FNPT:LitemallGoods:mutation" displayName="修改商品基本信息" orderNo="10042"
+                                  resourceType="FNPT">
+                            <permissions>LitemallGoods:mutation</permissions>
+                        </resource>
+                    </children>
+                </resource>
+                <resource id="LitemallGoodsAttribute-main" displayName="商品参数表" orderNo="10043"
                           icon="ant-design:appstore-twotone" component="AMIS" resourceType="SUBM"
-                          url="/app/mall/pages/LitemallGoodsAttribute/main.page.yaml"/>
-                <resource id="LitemallGoodsProduct-main" displayName="商品货品表" orderNo="10016"
+                          url="/app/mall/pages/LitemallGoodsAttribute/main.page.yaml">
+                    <children>
+                        <resource id="FNPT:LitemallGoodsAttribute:query" displayName="查询商品参数表" orderNo="10044"
+                                  resourceType="FNPT">
+                            <permissions>LitemallGoodsAttribute:query</permissions>
+                        </resource>
+                        <resource id="FNPT:LitemallGoodsAttribute:mutation" displayName="修改商品参数表" orderNo="10045"
+                                  resourceType="FNPT">
+                            <permissions>LitemallGoodsAttribute:mutation</permissions>
+                        </resource>
+                    </children>
+                </resource>
+                <resource id="LitemallGoodsProduct-main" displayName="商品货品表" orderNo="10046"
                           icon="ant-design:appstore-twotone" component="AMIS" resourceType="SUBM"
-                          url="/app/mall/pages/LitemallGoodsProduct/main.page.yaml"/>
-                <resource id="LitemallGoodsSpecification-main" displayName="商品规格表" orderNo="10017"
+                          url="/app/mall/pages/LitemallGoodsProduct/main.page.yaml">
+                    <children>
+                        <resource id="FNPT:LitemallGoodsProduct:query" displayName="查询商品货品表" orderNo="10047"
+                                  resourceType="FNPT">
+                            <permissions>LitemallGoodsProduct:query</permissions>
+                        </resource>
+                        <resource id="FNPT:LitemallGoodsProduct:mutation" displayName="修改商品货品表" orderNo="10048"
+                                  resourceType="FNPT">
+                            <permissions>LitemallGoodsProduct:mutation</permissions>
+                        </resource>
+                    </children>
+                </resource>
+                <resource id="LitemallGoodsSpecification-main" displayName="商品规格表" orderNo="10049"
                           icon="ant-design:appstore-twotone" component="AMIS" resourceType="SUBM"
-                          url="/app/mall/pages/LitemallGoodsSpecification/main.page.yaml"/>
-                <resource id="LitemallGroupon-main" displayName="团购活动表" orderNo="10018"
+                          url="/app/mall/pages/LitemallGoodsSpecification/main.page.yaml">
+                    <children>
+                        <resource id="FNPT:LitemallGoodsSpecification:query" displayName="查询商品规格表" orderNo="10050"
+                                  resourceType="FNPT">
+                            <permissions>LitemallGoodsSpecification:query</permissions>
+                        </resource>
+                        <resource id="FNPT:LitemallGoodsSpecification:mutation" displayName="修改商品规格表" orderNo="10051"
+                                  resourceType="FNPT">
+                            <permissions>LitemallGoodsSpecification:mutation</permissions>
+                        </resource>
+                    </children>
+                </resource>
+                <resource id="LitemallGroupon-main" displayName="团购活动表" orderNo="10052"
                           icon="ant-design:appstore-twotone" component="AMIS" resourceType="SUBM"
-                          url="/app/mall/pages/LitemallGroupon/main.page.yaml"/>
-                <resource id="LitemallGrouponRules-main" displayName="团购规则表" orderNo="10019"
+                          url="/app/mall/pages/LitemallGroupon/main.page.yaml">
+                    <children>
+                        <resource id="FNPT:LitemallGroupon:query" displayName="查询团购活动表" orderNo="10053"
+                                  resourceType="FNPT">
+                            <permissions>LitemallGroupon:query</permissions>
+                        </resource>
+                        <resource id="FNPT:LitemallGroupon:mutation" displayName="修改团购活动表" orderNo="10054"
+                                  resourceType="FNPT">
+                            <permissions>LitemallGroupon:mutation</permissions>
+                        </resource>
+                    </children>
+                </resource>
+                <resource id="LitemallGrouponRules-main" displayName="团购规则表" orderNo="10055"
                           icon="ant-design:appstore-twotone" component="AMIS" resourceType="SUBM"
-                          url="/app/mall/pages/LitemallGrouponRules/main.page.yaml"/>
-                <resource id="LitemallIssue-main" displayName="常见问题表" orderNo="10020" icon="ant-design:appstore-twotone"
-                          component="AMIS" resourceType="SUBM" url="/app/mall/pages/LitemallIssue/main.page.yaml"/>
-                <resource id="LitemallKeyword-main" displayName="关键字表" orderNo="10021"
+                          url="/app/mall/pages/LitemallGrouponRules/main.page.yaml">
+                    <children>
+                        <resource id="FNPT:LitemallGrouponRules:query" displayName="查询团购规则表" orderNo="10056"
+                                  resourceType="FNPT">
+                            <permissions>LitemallGrouponRules:query</permissions>
+                        </resource>
+                        <resource id="FNPT:LitemallGrouponRules:mutation" displayName="修改团购规则表" orderNo="10057"
+                                  resourceType="FNPT">
+                            <permissions>LitemallGrouponRules:mutation</permissions>
+                        </resource>
+                    </children>
+                </resource>
+                <resource id="LitemallIssue-main" displayName="常见问题表" orderNo="10058" icon="ant-design:appstore-twotone"
+                          component="AMIS" resourceType="SUBM" url="/app/mall/pages/LitemallIssue/main.page.yaml">
+                    <children>
+                        <resource id="FNPT:LitemallIssue:query" displayName="查询常见问题表" orderNo="10059"
+                                  resourceType="FNPT">
+                            <permissions>LitemallIssue:query</permissions>
+                        </resource>
+                        <resource id="FNPT:LitemallIssue:mutation" displayName="修改常见问题表" orderNo="10060"
+                                  resourceType="FNPT">
+                            <permissions>LitemallIssue:mutation</permissions>
+                        </resource>
+                    </children>
+                </resource>
+                <resource id="LitemallKeyword-main" displayName="关键字表" orderNo="10061"
                           icon="ant-design:appstore-twotone" component="AMIS" resourceType="SUBM"
-                          url="/app/mall/pages/LitemallKeyword/main.page.yaml"/>
-                <resource id="LitemallLog-main" displayName="操作日志表" orderNo="10022" icon="ant-design:appstore-twotone"
-                          component="AMIS" resourceType="SUBM" url="/app/mall/pages/LitemallLog/main.page.yaml"/>
-                <resource id="LitemallNotice-main" displayName="通知表" orderNo="10023" icon="ant-design:appstore-twotone"
-                          component="AMIS" resourceType="SUBM" url="/app/mall/pages/LitemallNotice/main.page.yaml"/>
-                <resource id="LitemallNoticeAdmin-main" displayName="通知管理员表" orderNo="10024"
+                          url="/app/mall/pages/LitemallKeyword/main.page.yaml">
+                    <children>
+                        <resource id="FNPT:LitemallKeyword:query" displayName="查询关键字表" orderNo="10062"
+                                  resourceType="FNPT">
+                            <permissions>LitemallKeyword:query</permissions>
+                        </resource>
+                        <resource id="FNPT:LitemallKeyword:mutation" displayName="修改关键字表" orderNo="10063"
+                                  resourceType="FNPT">
+                            <permissions>LitemallKeyword:mutation</permissions>
+                        </resource>
+                    </children>
+                </resource>
+                <resource id="LitemallLog-main" displayName="操作日志表" orderNo="10064" icon="ant-design:appstore-twotone"
+                          component="AMIS" resourceType="SUBM" url="/app/mall/pages/LitemallLog/main.page.yaml">
+                    <children>
+                        <resource id="FNPT:LitemallLog:query" displayName="查询操作日志表" orderNo="10065" resourceType="FNPT">
+                            <permissions>LitemallLog:query</permissions>
+                        </resource>
+                        <resource id="FNPT:LitemallLog:mutation" displayName="修改操作日志表" orderNo="10066"
+                                  resourceType="FNPT">
+                            <permissions>LitemallLog:mutation</permissions>
+                        </resource>
+                    </children>
+                </resource>
+                <resource id="LitemallNotice-main" displayName="通知表" orderNo="10067" icon="ant-design:appstore-twotone"
+                          component="AMIS" resourceType="SUBM" url="/app/mall/pages/LitemallNotice/main.page.yaml">
+                    <children>
+                        <resource id="FNPT:LitemallNotice:query" displayName="查询通知表" orderNo="10068" resourceType="FNPT">
+                            <permissions>LitemallNotice:query</permissions>
+                        </resource>
+                        <resource id="FNPT:LitemallNotice:mutation" displayName="修改通知表" orderNo="10069"
+                                  resourceType="FNPT">
+                            <permissions>LitemallNotice:mutation</permissions>
+                        </resource>
+                    </children>
+                </resource>
+                <resource id="LitemallNoticeAdmin-main" displayName="通知管理员表" orderNo="10070"
                           icon="ant-design:appstore-twotone" component="AMIS" resourceType="SUBM"
-                          url="/app/mall/pages/LitemallNoticeAdmin/main.page.yaml"/>
-                <resource id="LitemallOrder-main" displayName="订单表" orderNo="10025" icon="ant-design:appstore-twotone"
-                          component="AMIS" resourceType="SUBM" url="/app/mall/pages/LitemallOrder/main.page.yaml"/>
-                <resource id="LitemallOrderGoods-main" displayName="订单商品表" orderNo="10026"
+                          url="/app/mall/pages/LitemallNoticeAdmin/main.page.yaml">
+                    <children>
+                        <resource id="FNPT:LitemallNoticeAdmin:query" displayName="查询通知管理员表" orderNo="10071"
+                                  resourceType="FNPT">
+                            <permissions>LitemallNoticeAdmin:query</permissions>
+                        </resource>
+                        <resource id="FNPT:LitemallNoticeAdmin:mutation" displayName="修改通知管理员表" orderNo="10072"
+                                  resourceType="FNPT">
+                            <permissions>LitemallNoticeAdmin:mutation</permissions>
+                        </resource>
+                    </children>
+                </resource>
+                <resource id="LitemallOrder-main" displayName="订单表" orderNo="10073" icon="ant-design:appstore-twotone"
+                          component="AMIS" resourceType="SUBM" url="/app/mall/pages/LitemallOrder/main.page.yaml">
+                    <children>
+                        <resource id="FNPT:LitemallOrder:query" displayName="查询订单表" orderNo="10074" resourceType="FNPT">
+                            <permissions>LitemallOrder:query</permissions>
+                        </resource>
+                        <resource id="FNPT:LitemallOrder:mutation" displayName="修改订单表" orderNo="10075"
+                                  resourceType="FNPT">
+                            <permissions>LitemallOrder:mutation</permissions>
+                        </resource>
+                    </children>
+                </resource>
+                <resource id="LitemallOrderGoods-main" displayName="订单商品表" orderNo="10076"
                           icon="ant-design:appstore-twotone" component="AMIS" resourceType="SUBM"
-                          url="/app/mall/pages/LitemallOrderGoods/main.page.yaml"/>
-                <resource id="LitemallPermission-main" displayName="权限表" orderNo="10027"
+                          url="/app/mall/pages/LitemallOrderGoods/main.page.yaml">
+                    <children>
+                        <resource id="FNPT:LitemallOrderGoods:query" displayName="查询订单商品表" orderNo="10077"
+                                  resourceType="FNPT">
+                            <permissions>LitemallOrderGoods:query</permissions>
+                        </resource>
+                        <resource id="FNPT:LitemallOrderGoods:mutation" displayName="修改订单商品表" orderNo="10078"
+                                  resourceType="FNPT">
+                            <permissions>LitemallOrderGoods:mutation</permissions>
+                        </resource>
+                    </children>
+                </resource>
+                <resource id="LitemallPermission-main" displayName="权限表" orderNo="10079"
                           icon="ant-design:appstore-twotone" component="AMIS" resourceType="SUBM"
-                          url="/app/mall/pages/LitemallPermission/main.page.yaml"/>
-                <resource id="LitemallRegion-main" displayName="行政区域表" orderNo="10028"
+                          url="/app/mall/pages/LitemallPermission/main.page.yaml">
+                    <children>
+                        <resource id="FNPT:LitemallPermission:query" displayName="查询权限表" orderNo="10080"
+                                  resourceType="FNPT">
+                            <permissions>LitemallPermission:query</permissions>
+                        </resource>
+                        <resource id="FNPT:LitemallPermission:mutation" displayName="修改权限表" orderNo="10081"
+                                  resourceType="FNPT">
+                            <permissions>LitemallPermission:mutation</permissions>
+                        </resource>
+                    </children>
+                </resource>
+                <resource id="LitemallRegion-main" displayName="行政区域表" orderNo="10082"
                           icon="ant-design:appstore-twotone" component="AMIS" resourceType="SUBM"
-                          url="/app/mall/pages/LitemallRegion/main.page.yaml"/>
-                <resource id="LitemallRole-main" displayName="角色表" orderNo="10029" icon="ant-design:appstore-twotone"
-                          component="AMIS" resourceType="SUBM" url="/app/mall/pages/LitemallRole/main.page.yaml"/>
-                <resource id="LitemallSearchHistory-main" displayName="搜索历史表" orderNo="10030"
+                          url="/app/mall/pages/LitemallRegion/main.page.yaml">
+                    <children>
+                        <resource id="FNPT:LitemallRegion:query" displayName="查询行政区域表" orderNo="10083"
+                                  resourceType="FNPT">
+                            <permissions>LitemallRegion:query</permissions>
+                        </resource>
+                        <resource id="FNPT:LitemallRegion:mutation" displayName="修改行政区域表" orderNo="10084"
+                                  resourceType="FNPT">
+                            <permissions>LitemallRegion:mutation</permissions>
+                        </resource>
+                    </children>
+                </resource>
+                <resource id="LitemallRole-main" displayName="角色表" orderNo="10085" icon="ant-design:appstore-twotone"
+                          component="AMIS" resourceType="SUBM" url="/app/mall/pages/LitemallRole/main.page.yaml">
+                    <children>
+                        <resource id="FNPT:LitemallRole:query" displayName="查询角色表" orderNo="10086" resourceType="FNPT">
+                            <permissions>LitemallRole:query</permissions>
+                        </resource>
+                        <resource id="FNPT:LitemallRole:mutation" displayName="修改角色表" orderNo="10087"
+                                  resourceType="FNPT">
+                            <permissions>LitemallRole:mutation</permissions>
+                        </resource>
+                    </children>
+                </resource>
+                <resource id="LitemallSearchHistory-main" displayName="搜索历史表" orderNo="10088"
                           icon="ant-design:appstore-twotone" component="AMIS" resourceType="SUBM"
-                          url="/app/mall/pages/LitemallSearchHistory/main.page.yaml"/>
-                <resource id="LitemallStorage-main" displayName="文件存储表" orderNo="10031"
+                          url="/app/mall/pages/LitemallSearchHistory/main.page.yaml">
+                    <children>
+                        <resource id="FNPT:LitemallSearchHistory:query" displayName="查询搜索历史表" orderNo="10089"
+                                  resourceType="FNPT">
+                            <permissions>LitemallSearchHistory:query</permissions>
+                        </resource>
+                        <resource id="FNPT:LitemallSearchHistory:mutation" displayName="修改搜索历史表" orderNo="10090"
+                                  resourceType="FNPT">
+                            <permissions>LitemallSearchHistory:mutation</permissions>
+                        </resource>
+                    </children>
+                </resource>
+                <resource id="LitemallStorage-main" displayName="文件存储表" orderNo="10091"
                           icon="ant-design:appstore-twotone" component="AMIS" resourceType="SUBM"
-                          url="/app/mall/pages/LitemallStorage/main.page.yaml"/>
-                <resource id="LitemallSystem-main" displayName="系统配置表" orderNo="10032"
+                          url="/app/mall/pages/LitemallStorage/main.page.yaml">
+                    <children>
+                        <resource id="FNPT:LitemallStorage:query" displayName="查询文件存储表" orderNo="10092"
+                                  resourceType="FNPT">
+                            <permissions>LitemallStorage:query</permissions>
+                        </resource>
+                        <resource id="FNPT:LitemallStorage:mutation" displayName="修改文件存储表" orderNo="10093"
+                                  resourceType="FNPT">
+                            <permissions>LitemallStorage:mutation</permissions>
+                        </resource>
+                    </children>
+                </resource>
+                <resource id="LitemallSystem-main" displayName="系统配置表" orderNo="10094"
                           icon="ant-design:appstore-twotone" component="AMIS" resourceType="SUBM"
-                          url="/app/mall/pages/LitemallSystem/main.page.yaml"/>
-                <resource id="LitemallTopic-main" displayName="专题表" orderNo="10033" icon="ant-design:appstore-twotone"
-                          component="AMIS" resourceType="SUBM" url="/app/mall/pages/LitemallTopic/main.page.yaml"/>
-                <resource id="LitemallUser-main" displayName="用户表" orderNo="10034" icon="ant-design:appstore-twotone"
-                          component="AMIS" resourceType="SUBM" url="/app/mall/pages/LitemallUser/main.page.yaml"/>
+                          url="/app/mall/pages/LitemallSystem/main.page.yaml">
+                    <children>
+                        <resource id="FNPT:LitemallSystem:query" displayName="查询系统配置表" orderNo="10095"
+                                  resourceType="FNPT">
+                            <permissions>LitemallSystem:query</permissions>
+                        </resource>
+                        <resource id="FNPT:LitemallSystem:mutation" displayName="修改系统配置表" orderNo="10096"
+                                  resourceType="FNPT">
+                            <permissions>LitemallSystem:mutation</permissions>
+                        </resource>
+                    </children>
+                </resource>
+                <resource id="LitemallTopic-main" displayName="专题表" orderNo="10097" icon="ant-design:appstore-twotone"
+                          component="AMIS" resourceType="SUBM" url="/app/mall/pages/LitemallTopic/main.page.yaml">
+                    <children>
+                        <resource id="FNPT:LitemallTopic:query" displayName="查询专题表" orderNo="10098" resourceType="FNPT">
+                            <permissions>LitemallTopic:query</permissions>
+                        </resource>
+                        <resource id="FNPT:LitemallTopic:mutation" displayName="修改专题表" orderNo="10099"
+                                  resourceType="FNPT">
+                            <permissions>LitemallTopic:mutation</permissions>
+                        </resource>
+                    </children>
+                </resource>
+                <resource id="LitemallUser-main" displayName="用户表" orderNo="10100" icon="ant-design:appstore-twotone"
+                          component="AMIS" resourceType="SUBM" url="/app/mall/pages/LitemallUser/main.page.yaml">
+                    <children>
+                        <resource id="FNPT:LitemallUser:query" displayName="查询用户表" orderNo="10101" resourceType="FNPT">
+                            <permissions>LitemallUser:query</permissions>
+                        </resource>
+                        <resource id="FNPT:LitemallUser:mutation" displayName="修改用户表" orderNo="10102"
+                                  resourceType="FNPT">
+                            <permissions>LitemallUser:mutation</permissions>
+                        </resource>
+                    </children>
+                </resource>
             </children>
         </resource>
     </site>

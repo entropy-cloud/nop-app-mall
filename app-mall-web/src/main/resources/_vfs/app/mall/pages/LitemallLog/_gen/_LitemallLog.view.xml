@@ -98,7 +98,7 @@
             </table>
         </picker>
         <simple name="view" form="view">
-            <api url="@query:LitemallLog__get/{@formSelection}?id=$id"/>
+            <initApi url="@query:LitemallLog__get/{@formSelection}?id=$id"/>
         </simple>
     </pages>
 </view>

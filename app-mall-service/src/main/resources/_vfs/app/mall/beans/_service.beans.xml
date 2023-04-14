@@ -71,4 +71,6 @@
     <bean id="app.mall.service.entity.LitemallTopicBizModel" ioc:type="@bean:id" ioc:tags="impl"/>
 
     <bean id="app.mall.service.entity.LitemallUserBizModel" ioc:type="@bean:id" ioc:tags="impl"/>
+
+    <bean id="app.mall.service.entity.LitemallUserRoleBizModel" ioc:type="@bean:id" ioc:tags="impl"/>
 </beans>

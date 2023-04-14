@@ -5,5 +5,9 @@
   "enabled": false,
   "addTime": "2000-01-01 14:00:00",
   "updateTime": "2000-01-01 14:00:00",
-  "deleted": false
+  "deleted": false,
+  "userMappings": null,
+  "relatedUserList": null,
+  "relatedUserIdList": null,
+  "relatedUserList_label": ""
 }

@@ -143,6 +143,10 @@
 /app/mall/model/LitemallUser/LitemallUser.xmeta
 /app/mall/model/LitemallUser/_LitemallUser.xbiz
 /app/mall/model/LitemallUser/_LitemallUser.xmeta
+/app/mall/model/LitemallUserRole/LitemallUserRole.xbiz
+/app/mall/model/LitemallUserRole/LitemallUserRole.xmeta
+/app/mall/model/LitemallUserRole/_LitemallUserRole.xbiz
+/app/mall/model/LitemallUserRole/_LitemallUserRole.xmeta
 /app/mall/orm/_app.orm.xml
 /app/mall/orm/app.orm.xml
 /app/mall/pages/LitemallAd/LitemallAd.lib.xjs
@@ -169,6 +173,7 @@
 /app/mall/pages/LitemallBrand/LitemallBrand.view.xml
 /app/mall/pages/LitemallBrand/_gen/_LitemallBrand.view.xml
 /app/mall/pages/LitemallBrand/main.page.yaml
+/app/mall/pages/LitemallBrand/main.page.yaml.bak
 /app/mall/pages/LitemallBrand/picker.page.yaml
 /app/mall/pages/LitemallCart/LitemallCart.lib.xjs
 /app/mall/pages/LitemallCart/LitemallCart.view.xml
@@ -332,6 +337,7 @@
 /dict/core/active-status.dict.yaml
 /dict/core/bool-flag.dict.yaml
 /dict/core/entity-relation-type.dict.yaml
+/dict/core/log-level.dict.yaml
 /dict/core/std-domain.dict.yaml
 /dict/mall/aftersale-status.dict.yaml
 /dict/mall/aftersale-type.dict.yaml
@@ -340,8 +346,12 @@
 /dict/mall/coupon-status.dict.yaml
 /dict/mall/coupon-time-type.dict.yaml
 /dict/mall/coupon-type.dict.yaml
+/dict/mall/coupon-use-status.dict.yaml
+/dict/mall/gender.dict.yaml
 /dict/mall/order-status.dict.yaml
 /dict/mall/region-type.dict.yaml
+/dict/mall/user-level.dict.yaml
+/dict/mall/user-status.dict.yaml
 /i18n/en/_app-mall-web.i18n.yaml
 /i18n/en/_app-mall.i18n.yaml
 /i18n/en/_nop-auth-web.i18n.yaml
@@ -569,6 +579,7 @@
 /nop/schema/schema/obj-schema.xdef
 /nop/schema/schema/schema-node.xdef
 /nop/schema/schema/schema.xdef
+/nop/schema/schema/var-define.xdef
 /nop/schema/site.xdef
 /nop/schema/task/batch.xdef
 /nop/schema/task/task.xdef

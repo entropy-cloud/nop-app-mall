@@ -1140,6 +1140,14 @@
                 <column code="DELETED" displayName="逻辑删除" name="deleted" propId="7" stdDataType="boolean"
                         stdSqlType="BOOLEAN" ext:show="X"/>
             </columns>
+            <relations>
+                <to-many name="userMappings" refEntityName="app.mall.dao.entity.LitemallUserRole" refPropName="role"
+                         tagSet="pub,cascade-delete,insertable,updatable">
+                    <join>
+                        <on leftProp="id" rightProp="roleId"/>
+                    </join>
+                </to-many>
+            </relations>
         </entity>
         <entity className="app.mall.dao.entity.LitemallSearchHistory" createTimeProp="addTime" deleteFlagProp="deleted"
                 displayName="搜索历史表" name="app.mall.dao.entity.LitemallSearchHistory" registerShortName="true"
@@ -1279,6 +1287,57 @@
                 <column code="DELETED" displayName="逻辑删除" domain="delFlag" name="deleted" propId="17"
                         stdDataType="boolean" stdSqlType="BOOLEAN" ext:show="X"/>
             </columns>
+            <relations>
+                <to-many displayName="角色映射" name="roleMappings" refEntityName="app.mall.dao.entity.LitemallUserRole"
+                         refPropName="user" tagSet="pub,cascade-delete,insertable,updatable"
+                         i18n-en:displayName="RoleMappings">
+                    <join>
+                        <on leftProp="id" rightProp="userId"/>
+                    </join>
+                </to-many>
+            </relations>
+        </entity>
+        <entity className="app.mall.dao.entity.LitemallUserRole" createTimeProp="createTime" createrProp="createdBy"
+                displayName="用户角色" name="app.mall.dao.entity.LitemallUserRole" registerShortName="true"
+                tableName="litemall_user_role" tagSet="no-web,many-to-many" updateTimeProp="updateTime"
+                updaterProp="updatedBy" versionProp="version" i18n-en:displayName="User Role">
+            <columns>
+                <column code="USER_ID" displayName="用户ID" domain="userId" mandatory="true" name="userId" precision="32"
+                        primary="true" propId="1" stdDataType="string" stdSqlType="VARCHAR"
+                        i18n-en:displayName="User ID"/>
+                <column code="ROLE_ID" displayName="角色ID" mandatory="true" name="roleId" precision="50" primary="true"
+                        propId="2" stdDataType="string" stdSqlType="VARCHAR" i18n-en:displayName="Role ID"/>
+                <column code="VERSION" displayName="数据版本" domain="version" mandatory="true" name="version" propId="3"
+                        stdDataType="int" stdSqlType="INTEGER" i18n-en:displayName="Version" ext:show="X"/>
+                <column code="CREATED_BY" displayName="创建人" domain="createdBy" mandatory="true" name="createdBy"
+                        precision="50" propId="4" stdDataType="string" stdSqlType="VARCHAR"
+                        i18n-en:displayName="Created By"/>
+                <column code="CREATE_TIME" displayName="创建时间" domain="createTime" mandatory="true" name="createTime"
+                        propId="5" stdDataType="datetime" stdSqlType="DATETIME" i18n-en:displayName="Create Time"/>
+                <column code="UPDATED_BY" displayName="修改人" domain="updatedBy" mandatory="true" name="updatedBy"
+                        precision="50" propId="6" stdDataType="string" stdSqlType="VARCHAR"
+                        i18n-en:displayName="Updated By"/>
+                <column code="UPDATE_TIME" displayName="修改时间" domain="updateTime" mandatory="true" name="updateTime"
+                        propId="7" stdDataType="datetime" stdSqlType="DATETIME" i18n-en:displayName="Update Time"/>
+                <column code="REMARK" displayName="备注" domain="remark" name="remark" precision="200" propId="8"
+                        stdDataType="string" stdSqlType="VARCHAR" i18n-en:displayName="Remark" ext:show="S"/>
+            </columns>
+            <relations>
+                <to-one displayName="用户" name="user" refEntityName="app.mall.dao.entity.LitemallUser"
+                        refPropName="roleMappings" tagSet="pub,ref-pub,ref-cascade-delete,ref-insertable,ref-updatable"
+                        i18n-en:displayName="User" ref-i18n-en:displayName="RoleMappings">
+                    <join>
+                        <on leftProp="userId" rightProp="id"/>
+                    </join>
+                </to-one>
+                <to-one displayName="角色" name="role" refEntityName="app.mall.dao.entity.LitemallRole"
+                        refPropName="userMappings" tagSet="pub,ref-pub,ref-cascade-delete,ref-insertable,ref-updatable"
+                        i18n-en:displayName="Role">
+                    <join>
+                        <on leftProp="roleId" rightProp="id"/>
+                    </join>
+                </to-one>
+            </relations>
         </entity>
     </entities>
 </orm>

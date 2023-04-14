@@ -34,6 +34,7 @@ entity:
     LitemallSystem: 系统配置表
     LitemallTopic: 专题表
     LitemallUser: 用户表
+    LitemallUserRole: 用户角色
 prop:
   label:
     LitemallAd:
@@ -454,7 +455,11 @@ prop:
       enabled: 是否启用
       id: Id
       name: 角色名称
+      relatedUserIdList: 用户列表
+      relatedUserList: 用户列表
+      relatedUserList_label: 用户列表
       updateTime: 更新时间
+      userMappings: null
     LitemallSearchHistory:
       addTime: 创建时间
       deleted: 逻辑删除
@@ -509,6 +514,10 @@ prop:
       mobile: 用户手机号码
       nickname: 用户昵称或网络名称
       password: 用户密码
+      relatedRoleIdList: 角色列表
+      relatedRoleList: 角色列表
+      relatedRoleList_label: 角色列表
+      roleMappings: 角色映射
       sessionKey: 微信登录会话KEY
       status: 用户状态
       status_label: 用户状态
@@ -517,3 +526,15 @@ prop:
       userLevel_label: 用户等级
       username: 用户名称
       weixinOpenid: 微信登录openid
+    LitemallUserRole:
+      createTime: 创建时间
+      createdBy: 创建人
+      remark: 备注
+      role: 角色
+      roleId: 角色ID
+      updateTime: 修改时间
+      updatedBy: 修改人
+      user: 用户
+      user.username: 用户
+      userId: 用户ID
+      version: 数据版本

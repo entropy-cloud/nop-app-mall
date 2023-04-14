@@ -94,7 +94,7 @@
             <api url="@mutation:LitemallPermission__save/id"/>
         </simple>
         <simple name="view" form="view">
-            <api url="@query:LitemallPermission__get/{@formSelection}?id=$id"/>
+            <initApi url="@query:LitemallPermission__get/{@formSelection}?id=$id"/>
         </simple>
         <simple name="update" form="edit">
             <initApi url="@query:LitemallPermission__get/{@formSelection}?id=$id"/>

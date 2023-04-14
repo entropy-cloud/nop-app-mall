@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <meta x:schema="/nop/schema/xmeta.xdef" xmlns:x="/nop/schema/xdsl.xdef" xmlns:i18n-en="i18n-en" xmlns:ext="ext"
-      xmlns:xpl="xpl" xmlns:biz-gen="biz-gen" ext:model="orm" xmlns:c="c" displayName="用户表">
+      xmlns:xpl="xpl" xmlns:biz-gen="biz-gen" ext:model="orm" xmlns:c="c" xmlns:graphql="graphql" displayName="用户表">
 
     <entityName>app.mall.dao.entity.LitemallUser</entityName>
 
@@ -80,6 +80,25 @@
         <prop name="deleted" displayName="逻辑删除" queryable="true" sortable="true" insertable="false" updatable="true"
               internal="true" ext:show="X">
             <schema domain="delFlag" type="java.lang.Boolean"/>
+        </prop>
+        <prop name="roleMappings" displayName="角色映射" i18n-en:displayName="RoleMappings"
+              tagSet="pub,cascade-delete,insertable,updatable" ext:kind="to-many" internal="true" ext:joinLeftProp="id"
+              ext:joinRightProp="userId" insertable="true" updatable="true" lazy="true">
+            <schema type="io.nop.orm.IOrmEntitySet&lt;app.mall.dao.entity.LitemallUserRole&gt;"
+                    bizObjName="LitemallUserRole"/>
+        </prop>
+        <prop name="relatedRoleList" displayName="角色列表" i18n-en:displayName="Role List" ext:kind="to-many"
+              internal="true">
+            <schema type="List&lt;app.mall.dao.entity.LitemallRole&gt;">
+                <item bizObjName="LitemallRole"/>
+            </schema>
+        </prop>
+        <prop name="relatedRoleIdList" displayName="角色列表" i18n-en:displayName="Role List" insertable="true"
+              updatable="true" ext:relation="relatedRoleList" graphql:labelProp="relatedRoleList_label" internal="true">
+            <schema type="List&lt;java.lang.String&gt;"/>
+        </prop>
+        <prop name="relatedRoleList_label" displayName="角色列表" i18n-en:displayName="Role List" internal="true">
+            <schema type="String"/>
         </prop>
     </props>
 </meta>

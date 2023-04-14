@@ -34,6 +34,7 @@ entity:
     LitemallSystem: null
     LitemallTopic: null
     LitemallUser: null
+    LitemallUserRole: User Role
 prop:
   label:
     LitemallAd:
@@ -455,6 +456,10 @@ prop:
       addTime: null
       updateTime: null
       deleted: null
+      userMappings: null
+      relatedUserList: User List
+      relatedUserIdList: User List
+      relatedUserList_label: User List
     LitemallSearchHistory:
       id: null
       userId: null
@@ -517,3 +522,19 @@ prop:
       addTime: null
       updateTime: null
       deleted: null
+      roleMappings: RoleMappings
+      relatedRoleList: Role List
+      relatedRoleIdList: Role List
+      relatedRoleList_label: Role List
+    LitemallUserRole:
+      userId: User ID
+      roleId: Role ID
+      version: Version
+      createdBy: Created By
+      createTime: Create Time
+      updatedBy: Updated By
+      updateTime: Update Time
+      remark: Remark
+      user: User
+      user.username: User
+      role: Role
