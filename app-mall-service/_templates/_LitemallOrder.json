@@ -33,5 +33,9 @@
   "updateTime": "2000-01-01 14:00:00",
   "deleted": false,
   "user": null,
-  "user.username": ""
+  "user.username": "",
+  "orderGoods": null,
+  "relatedProductList": null,
+  "relatedProductIdList": null,
+  "relatedProductList_label": ""
 }

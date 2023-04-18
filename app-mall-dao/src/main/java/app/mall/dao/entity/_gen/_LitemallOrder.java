@@ -151,6 +151,9 @@ public class _LitemallOrder extends DynamicOrmEntity{
     /* relation: 客户 */
     public static final String PROP_NAME_user = "user";
     
+    /* relation: 订单商品 */
+    public static final String PROP_NAME_orderGoods = "orderGoods";
+    
 
     public static final List<String> PK_PROP_NAMES = Arrays.asList(PROP_NAME_id);
     public static final int[] PK_PROP_IDS = new int[]{PROP_ID_id};
@@ -1674,5 +1677,27 @@ public class _LitemallOrder extends DynamicOrmEntity{
        }
     }
        
+    private final OrmEntitySet<app.mall.dao.entity.LitemallOrderGoods> _orderGoods = new OrmEntitySet<>(this, PROP_NAME_orderGoods,
+        app.mall.dao.entity.LitemallOrderGoods.PROP_NAME_order, null,app.mall.dao.entity.LitemallOrderGoods.class);
+
+    /**
+     * 订单商品。 refPropName: order, keyProp: {rel.keyProp}
+     */
+    public IOrmEntitySet<app.mall.dao.entity.LitemallOrderGoods> getOrderGoods(){
+       return _orderGoods;
+    }
+       
+        public List<app.mall.dao.entity.LitemallGoodsProduct> getRelatedProductList(){
+            return (List<app.mall.dao.entity.LitemallGoodsProduct>)io.nop.orm.support.OrmEntityHelper.getRefProps(getOrderGoods(),app.mall.dao.entity.LitemallOrderGoods.PROP_NAME_product);
+        }
+    
+        public List<java.lang.Integer> getRelatedProductIdList(){
+        return (List<java.lang.Integer>)io.nop.orm.support.OrmEntityHelper.getRefProps(getOrderGoods(),app.mall.dao.entity.LitemallOrderGoods.PROP_NAME_productId);
+        }
+
+        public void setRelatedProductIdList(List<java.lang.Integer> value){
+        io.nop.orm.support.OrmEntityHelper.setRefProps(getOrderGoods(),app.mall.dao.entity.LitemallOrderGoods.PROP_NAME_productId,value);
+        }
+    
 }
 // resume CPD analysis - CPD-ON

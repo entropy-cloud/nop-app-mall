@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<data-auth x:schema="/nop/schema/data-auth.xdef" xmlns:x="/nop/schema/xdsl.xdef"
+    x:extends="/nop/sys/auth/nop-sys.data-auth.xml"
+>
+
+    <objs>
+<!--        <obj name="LitemallUser">-->
+<!--            <role-auths>-->
+<!--                <role-auth roleId="user">-->
+<!--                    <filter>-->
+<!--                        <eq name="status" value="1"/>-->
+<!--                    </filter>-->
+<!--                </role-auth>-->
+<!--            </role-auths>-->
+<!--        </obj>-->
+    </objs>
+</data-auth>

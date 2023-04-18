@@ -264,8 +264,12 @@ prop:
       isOnSale: 是否在售
       keywords: 商品关键字
       name: 商品名称
+      orderGoods: 订单商品
       picUrl: 商品图片
       products: 包含产品
+      relatedProductIdList: 订单产品列表
+      relatedProductList: 订单产品列表
+      relatedProductList_label: 订单产品列表
       retailPrice: 当前价格
       shareUrl: 商品分享海报
       sortOrder: 排序顺序
@@ -400,6 +404,7 @@ prop:
       integralPrice: 用户积分减免
       message: 用户订单留言
       mobile: 收货人手机号
+      orderGoods: 订单商品
       orderPrice: 订单费用
       orderSn: 订单编号
       orderStatus: 订单状态
@@ -410,6 +415,9 @@ prop:
       refundContent: 退款备注
       refundTime: 退款时间
       refundType: 退款方式
+      relatedProductIdList: 订单产品列表
+      relatedProductList: 订单产品列表
+      relatedProductList_label: 订单产品列表
       shipChannel: 发货快递公司
       shipSn: 发货编号
       shipTime: 发货开始时间
@@ -421,14 +429,19 @@ prop:
       addTime: 创建时间
       comment: 订单商品评论，如果是-1，则超期不能评价；如果是0，则可以评价；如果其他值，则是comment表里面的评论ID。
       deleted: 逻辑删除
+      goods: 订单商品
+      goods.name: 订单商品
       goodsId: 商品ID
       goodsName: 商品名称
       goodsSn: 商品编号
       id: Id
       number: 购买数量
+      order: 订单
+      order.orderSn: 订单
       orderId: 订单ID
       picUrl: 商品/货品图片
       price: 售价
+      product: 订单产品
       productId: 货品ID
       specifications: 规格列表
       updateTime: 更新时间

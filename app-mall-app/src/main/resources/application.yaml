@@ -10,6 +10,8 @@ nop:
       cache-timeout: 1s
       support-debug: true
 
+    data-auth-config-path: /app/mall/auth/app.data-auth.xml
+
   web:
     validate-page-model: true
 
@@ -72,6 +74,6 @@ quarkus:
   log:
     level: INFO
 
-#    category:
-#      "io.nop":
-#        level: DEBUG
+    category:
+      "io.nop":
+        level: DEBUG

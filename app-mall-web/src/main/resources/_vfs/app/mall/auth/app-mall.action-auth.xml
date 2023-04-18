@@ -2,7 +2,6 @@
 <auth x:extends="_app-mall.action-auth.xml" x:schema="/nop/schema/action-auth.xdef" xmlns:x="/nop/schema/xdsl.xdef">
 
     <site id="main">
-     <!--
         <resource id="mall-user-manage" displayName="用户管理" icon="ion:grid-outline" resourceType="TOPM"
                   routePath="/mall-user-manage" component="layouts/default/index" orderNo="100">
             <children>
@@ -32,7 +31,6 @@
 
             </children>
         </resource>
-  -->
 
         <resource id="mall-manage" displayName="商场管理" icon="ion:grid-outline" resourceType="TOPM"
                   routePath="/mall-manage" component="layouts/default/index" orderNo="200">
@@ -49,13 +47,13 @@
                           icon="ant-design:appstore-twotone" component="AMIS"
                           resourceType="SUBM" url="/app/mall/pages/LitemallCategory/main.page.yaml"/>
 
-<!--                <resource id="mall-order-manage" displayName="订单管理" orderNo="204"-->
-<!--                          icon="ant-design:appstore-twotone" component="AMIS"-->
-<!--                          resourceType="SUBM" url="/app/mall/pages/LitemallOrder/main.page.yaml"/>-->
+                <resource id="mall-order-manage" displayName="订单管理" orderNo="204"
+                          icon="ant-design:appstore-twotone" component="AMIS"
+                          resourceType="SUBM" url="/app/mall/pages/LitemallOrder/main.page.yaml"/>
 
-<!--                <resource id="mall-aftersales-manage" displayName="售后管理" orderNo="205"-->
-<!--                          icon="ant-design:appstore-twotone" component="AMIS"-->
-<!--                          resourceType="SUBM" url="/app/mall/pages/LitemallAftersale/main.page.yaml"/>-->
+                <resource id="mall-aftersales-manage" displayName="售后管理" orderNo="205"
+                          icon="ant-design:appstore-twotone" component="AMIS"
+                          resourceType="SUBM" url="/app/mall/pages/LitemallAftersale/all.page.yaml"/>
 
 <!--                <resource id="mall-issue-manage" displayName="通用问题" orderNo="206"-->
 <!--                          icon="ant-design:appstore-twotone" component="AMIS"-->

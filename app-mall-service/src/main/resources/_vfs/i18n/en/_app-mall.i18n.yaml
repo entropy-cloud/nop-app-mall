@@ -271,7 +271,11 @@ prop:
       attributes: Goods Attributes
       products: Products
       specifications: Specifications
+      orderGoods: Order Goods
       galleryComponent: null
+      relatedProductList: Order Product List
+      relatedProductIdList: Order Product List
+      relatedProductList_label: Order Product List
     LitemallGoodsAttribute:
       id: null
       goodsId: null
@@ -417,6 +421,10 @@ prop:
       deleted: null
       user: User
       user.username: User
+      orderGoods: Order Goods
+      relatedProductList: Order Product List
+      relatedProductIdList: Order Product List
+      relatedProductList_label: Order Product List
     LitemallOrderGoods:
       id: null
       orderId: null
@@ -432,6 +440,11 @@ prop:
       addTime: null
       updateTime: null
       deleted: null
+      order: Order
+      order.orderSn: Order
+      goods: Order Goods
+      goods.name: Order Goods
+      product: Order Product
     LitemallPermission:
       id: null
       roleId: null

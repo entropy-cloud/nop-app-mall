@@ -28,5 +28,9 @@
   "attributes": null,
   "products": null,
   "specifications": null,
-  "galleryComponent": null
+  "orderGoods": null,
+  "galleryComponent": null,
+  "relatedProductList": null,
+  "relatedProductIdList": null,
+  "relatedProductList_label": ""
 }

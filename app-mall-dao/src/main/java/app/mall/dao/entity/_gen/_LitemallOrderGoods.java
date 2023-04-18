@@ -80,6 +80,15 @@ public class _LitemallOrderGoods extends DynamicOrmEntity{
     private static int _PROP_ID_BOUND = 15;
 
     
+    /* relation: 订单 */
+    public static final String PROP_NAME_order = "order";
+    
+    /* relation: 订单商品 */
+    public static final String PROP_NAME_goods = "goods";
+    
+    /* relation: 订单产品 */
+    public static final String PROP_NAME_product = "product";
+    
 
     public static final List<String> PK_PROP_NAMES = Arrays.asList(PROP_NAME_id);
     public static final int[] PK_PROP_IDS = new int[]{PROP_ID_id};
@@ -817,5 +826,68 @@ public class _LitemallOrderGoods extends DynamicOrmEntity{
         }
     }
     
+    /**
+     * 订单
+     */
+    public app.mall.dao.entity.LitemallOrder getOrder(){
+       return (app.mall.dao.entity.LitemallOrder)internalGetRefEntity(PROP_NAME_order);
+    }
+
+    public void setOrder(app.mall.dao.entity.LitemallOrder refEntity){
+       if(refEntity == null){
+         
+         this.setOrderId(null);
+         
+       }else{
+          internalSetRefEntity(PROP_NAME_order, refEntity,()->{
+             
+                    this.setOrderId(refEntity.getId());
+                 
+          });
+       }
+    }
+       
+    /**
+     * 订单商品
+     */
+    public app.mall.dao.entity.LitemallGoods getGoods(){
+       return (app.mall.dao.entity.LitemallGoods)internalGetRefEntity(PROP_NAME_goods);
+    }
+
+    public void setGoods(app.mall.dao.entity.LitemallGoods refEntity){
+       if(refEntity == null){
+         
+         this.setGoodsId(null);
+         
+       }else{
+          internalSetRefEntity(PROP_NAME_goods, refEntity,()->{
+             
+                    this.setGoodsId(refEntity.getId());
+                 
+          });
+       }
+    }
+       
+    /**
+     * 订单产品
+     */
+    public app.mall.dao.entity.LitemallGoodsProduct getProduct(){
+       return (app.mall.dao.entity.LitemallGoodsProduct)internalGetRefEntity(PROP_NAME_product);
+    }
+
+    public void setProduct(app.mall.dao.entity.LitemallGoodsProduct refEntity){
+       if(refEntity == null){
+         
+         this.setProductId(null);
+         
+       }else{
+          internalSetRefEntity(PROP_NAME_product, refEntity,()->{
+             
+                    this.setProductId(refEntity.getId());
+                 
+          });
+       }
+    }
+       
 }
 // resume CPD analysis - CPD-ON

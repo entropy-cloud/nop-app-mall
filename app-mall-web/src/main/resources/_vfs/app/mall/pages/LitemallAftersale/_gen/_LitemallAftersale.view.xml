@@ -32,7 +32,7 @@
                 <col id="amount" sortable="true"/>
 
                 <!--退款凭证图片链接数组-->
-                <col id="pictures" sortable="true"/>
+                <col id="pictures" sortable="true" x:abstract="true"/>
 
                 <!--退款说明-->
                 <col id="comment" sortable="true"/>

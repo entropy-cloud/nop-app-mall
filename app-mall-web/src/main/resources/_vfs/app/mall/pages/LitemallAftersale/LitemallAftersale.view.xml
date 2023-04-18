@@ -1,19 +1,88 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<view x:extends="_gen/_LitemallAftersale.view.xml" x:schema="/nop/schema/xui/xview.xdef" xmlns:x="/nop/schema/xdsl.xdef">
+<view x:extends="_gen/_LitemallAftersale.view.xml" x:schema="/nop/schema/xui/xview.xdef"
+      xmlns:x="/nop/schema/xdsl.xdef">
+
+    <x:config>
+        <c:import class="app.mall.dao.AppMallDaoConstants" />
+    </x:config>
 
     <grids>
         <grid id="list"/>
         <grid id="pick-list"/>
+
+        <grid id="wait-approve-list" x:prototype="list">
+            <filter>
+                <eq name="status" value="#{AppMallDaoConstants.AFTERSALE_STATUS_REQUEST}"/>
+            </filter>
+        </grid>
+
+        <grid id="wait-refund-list" x:prototype="list">
+            <filter>
+                <eq name="status" value="#{AppMallDaoConstants.AFTERSALE_STATUS_APPROVED}"/>
+            </filter>
+        </grid>
     </grids>
 
     <forms>
         <form id="view"/>
         <form id="edit"/>
         <form id="add"/>
+        <form id="query" layoutMode="horizontal">
+            <layout>
+                aftersaleSn orderId
+            </layout>
+        </form>
     </forms>
 
     <pages>
-        <crud name="main"/>
+        <crud name="main">
+        </crud>
+
         <picker name="picker"/>
+
+        <crud name="wait-approve" x:prototype="main" grid="wait-approve-list">
+            <listActions x:prototype-override="bounded-merge">
+                <action id="batch-approve-button" label="批准" batch="true" level="primary">
+                    <api url="@mutation:LitemallAftersale__batchApprove">
+                        <data>
+                            <ids>$ids</ids>
+                        </data>
+                    </api>
+                </action>
+
+                <action id="batch-reject-button" label="拒绝" batch="true" level="danger">
+                    <api url="@mutation:LitemallAftersale__batchReject">
+                        <data>
+                            <ids>$ids</ids>
+                        </data>
+                    </api>
+                </action>
+            </listActions>
+
+            <rowActions x:prototype-override="bounded-merge">
+                <action id="row-view-button" />
+            </rowActions>
+        </crud>
+
+        <crud name="wait-refund" x:prototype="main" grid="wait-refund-list">
+            <listActions x:prototype-override="remove" />
+            <rowActions x:prototype-override="bounded-merge">
+                <action id="row-view-button" />
+                <action id="refund-button" label="退款" batch="true" level="primary">
+                    <api url="@mutation:LitemallAftersale__refund">
+                        <data>
+                            <id>$id</id>
+                        </data>
+                    </api>
+                    <confirmText>确认退款吗？</confirmText>
+                </action>
+            </rowActions>
+        </crud>
+
+        <tabs name="all" mountOnEnter="true" unmountOnExit="true" >
+            <tab name="main" title="全部"/>
+            <tab name="wait-approve" title="待审批"/>
+            <tab name="wait-refund" title="待退款" />
+        </tabs>
     </pages>
 </view>

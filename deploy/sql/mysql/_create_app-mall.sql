@@ -162,19 +162,6 @@ CREATE TABLE litemall_goods_attribute(
   constraint PK_litemall_goods_attribute primary key (ID)
 );
 
-CREATE TABLE litemall_goods_product(
-  ID INTEGER NOT NULL    COMMENT 'Id',
-  GOODS_ID INTEGER NOT NULL    COMMENT '商品ID',
-  SPECIFICATIONS VARCHAR(1023) NOT NULL    COMMENT '商品规格值',
-  PRICE DECIMAL(10,2) NOT NULL    COMMENT '商品货品价格',
-  NUMBER INTEGER NOT NULL    COMMENT '商品货品数量',
-  URL VARCHAR(255) NULL    COMMENT '商品货品图片',
-  ADD_TIME DATETIME NULL    COMMENT '创建时间',
-  UPDATE_TIME DATETIME NULL    COMMENT '更新时间',
-  DELETED BOOLEAN NULL    COMMENT '逻辑删除',
-  constraint PK_litemall_goods_product primary key (ID)
-);
-
 CREATE TABLE litemall_goods_specification(
   ID INTEGER NOT NULL    COMMENT 'Id',
   GOODS_ID INTEGER NOT NULL    COMMENT '商品ID',
@@ -437,29 +424,17 @@ CREATE TABLE litemall_order(
   constraint PK_litemall_order primary key (ID)
 );
 
-CREATE TABLE litemall_goods(
+CREATE TABLE litemall_goods_product(
   ID INTEGER NOT NULL    COMMENT 'Id',
-  GOODS_SN VARCHAR(63) NOT NULL    COMMENT '商品编号',
-  NAME VARCHAR(127) NOT NULL    COMMENT '商品名称',
-  CATEGORY_ID INTEGER NULL    COMMENT '商品所属类目ID',
-  BRAND_ID INTEGER NULL    COMMENT '品牌ID',
-  GALLERY VARCHAR(1023) NULL    COMMENT '商品宣传图片列表',
-  KEYWORDS VARCHAR(255) NULL    COMMENT '商品关键字',
-  BRIEF VARCHAR(255) NULL    COMMENT '商品简介',
-  IS_ON_SALE BOOLEAN NULL    COMMENT '是否在售',
-  SORT_ORDER SMALLINT NULL    COMMENT '排序顺序',
-  PIC_URL VARCHAR(255) NULL    COMMENT '商品图片',
-  SHARE_URL VARCHAR(255) NULL    COMMENT '商品分享海报',
-  IS_NEW BOOLEAN NULL    COMMENT '是否新品',
-  IS_HOT BOOLEAN NULL    COMMENT '是否热品',
-  UNIT VARCHAR(31) NULL    COMMENT '商品单位',
-  COUNTER_PRICE DECIMAL(10,2) NULL    COMMENT '市场售价',
-  RETAIL_PRICE DECIMAL(10,2) NULL    COMMENT '当前价格',
-  DETAIL TEXT NULL    COMMENT '详情',
+  GOODS_ID INTEGER NOT NULL    COMMENT '商品ID',
+  SPECIFICATIONS VARCHAR(1023) NOT NULL    COMMENT '商品规格值',
+  PRICE DECIMAL(10,2) NOT NULL    COMMENT '商品货品价格',
+  NUMBER INTEGER NOT NULL    COMMENT '商品货品数量',
+  URL VARCHAR(255) NULL    COMMENT '商品货品图片',
   ADD_TIME DATETIME NULL    COMMENT '创建时间',
   UPDATE_TIME DATETIME NULL    COMMENT '更新时间',
   DELETED BOOLEAN NULL    COMMENT '逻辑删除',
-  constraint PK_litemall_goods primary key (ID)
+  constraint PK_litemall_goods_product primary key (ID)
 );
 
 CREATE TABLE litemall_role(
@@ -492,6 +467,31 @@ CREATE TABLE litemall_user(
   UPDATE_TIME DATETIME NULL    COMMENT '更新时间',
   DELETED BOOLEAN NULL    COMMENT '逻辑删除',
   constraint PK_litemall_user primary key (ID)
+);
+
+CREATE TABLE litemall_goods(
+  ID INTEGER NOT NULL    COMMENT 'Id',
+  GOODS_SN VARCHAR(63) NOT NULL    COMMENT '商品编号',
+  NAME VARCHAR(127) NOT NULL    COMMENT '商品名称',
+  CATEGORY_ID INTEGER NULL    COMMENT '商品所属类目ID',
+  BRAND_ID INTEGER NULL    COMMENT '品牌ID',
+  GALLERY VARCHAR(1023) NULL    COMMENT '商品宣传图片列表',
+  KEYWORDS VARCHAR(255) NULL    COMMENT '商品关键字',
+  BRIEF VARCHAR(255) NULL    COMMENT '商品简介',
+  IS_ON_SALE BOOLEAN NULL    COMMENT '是否在售',
+  SORT_ORDER SMALLINT NULL    COMMENT '排序顺序',
+  PIC_URL VARCHAR(255) NULL    COMMENT '商品图片',
+  SHARE_URL VARCHAR(255) NULL    COMMENT '商品分享海报',
+  IS_NEW BOOLEAN NULL    COMMENT '是否新品',
+  IS_HOT BOOLEAN NULL    COMMENT '是否热品',
+  UNIT VARCHAR(31) NULL    COMMENT '商品单位',
+  COUNTER_PRICE DECIMAL(10,2) NULL    COMMENT '市场售价',
+  RETAIL_PRICE DECIMAL(10,2) NULL    COMMENT '当前价格',
+  DETAIL TEXT NULL    COMMENT '详情',
+  ADD_TIME DATETIME NULL    COMMENT '创建时间',
+  UPDATE_TIME DATETIME NULL    COMMENT '更新时间',
+  DELETED BOOLEAN NULL    COMMENT '逻辑删除',
+  constraint PK_litemall_goods primary key (ID)
 );
 
 CREATE TABLE litemall_category(
@@ -546,8 +546,6 @@ CREATE TABLE litemall_brand(
                 
    ALTER TABLE litemall_goods_attribute COMMENT '商品参数表';
                 
-   ALTER TABLE litemall_goods_product COMMENT '商品货品表';
-                
    ALTER TABLE litemall_goods_specification COMMENT '商品规格表';
                 
    ALTER TABLE litemall_groupon COMMENT '团购活动表';
@@ -584,11 +582,13 @@ CREATE TABLE litemall_brand(
                 
    ALTER TABLE litemall_order COMMENT '订单表';
                 
-   ALTER TABLE litemall_goods COMMENT '商品基本信息';
+   ALTER TABLE litemall_goods_product COMMENT '商品货品表';
                 
    ALTER TABLE litemall_role COMMENT '角色表';
                 
    ALTER TABLE litemall_user COMMENT '用户表';
+                
+   ALTER TABLE litemall_goods COMMENT '商品基本信息';
                 
    ALTER TABLE litemall_category COMMENT '类目表';
                 

@@ -23,8 +23,8 @@
               insertable="true" updatable="true">
             <schema type="java.lang.String" precision="63"/>
         </prop>
-        <prop name="password" displayName="用户密码" mandatory="true" queryable="true" sortable="true" insertable="true"
-              updatable="true">
+        <prop name="password" displayName="用户密码" tagSet="masked,var,no-pub" mandatory="true" queryable="true"
+              sortable="true" insertable="true" updatable="true">
             <schema type="java.lang.String" precision="63"/>
         </prop>
         <prop name="gender" displayName="性别" mandatory="true" queryable="true" sortable="true" insertable="true"
@@ -55,7 +55,7 @@
         </prop>
         <prop name="avatar" displayName="用户头像图片" mandatory="true" queryable="true" sortable="true" insertable="true"
               updatable="true">
-            <schema type="java.lang.String" precision="255"/>
+            <schema domain="image" type="java.lang.String" precision="255"/>
         </prop>
         <prop name="weixinOpenid" displayName="微信登录openid" mandatory="true" queryable="true" sortable="true"
               insertable="true" updatable="true">

@@ -25,5 +25,6 @@
         <module>app-mall-service</module>
         <module>app-mall-web</module>
         <module>app-mall-app</module>
+        <module>app-mall-wx</module>
     </modules>
 </project>

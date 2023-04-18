@@ -11,17 +11,17 @@
 
     <dicts>
         <dict label="售后状态" name="mall/aftersale-status" valueType="int" i18n-en:label="AfterSale Status">
-            <option label="可申请" value="0"/>
-            <option label="用户已申请" value="1"/>
-            <option label="管理员审核通过" value="2"/>
-            <option label="管理员退款成功" value="3"/>
-            <option label="管理员审核拒绝" value="4"/>
-            <option label="用户已取消" value="5"/>
+            <option code="INIT" label="可申请" value="0"/>
+            <option code="REQUEST" label="用户已申请" value="1"/>
+            <option code="APPROVED" label="管理员审核通过" value="2"/>
+            <option code="REFUND" label="管理员退款成功" value="3"/>
+            <option code="REJECT" label="管理员审核拒绝" value="4"/>
+            <option code="CANCELLED" label="用户已取消" value="5"/>
         </dict>
         <dict label="售后类型" name="mall/aftersale-type" valueType="int" i18n-en:label="Aftersale Type">
-            <option label="未收货退款" value="0"/>
-            <option label="已收货（无需退货）退款" value="1"/>
-            <option label="用户退货退款" value="2"/>
+            <option code="GOODS_MISS" label="未收货退款" value="0"/>
+            <option code="GOODS_NEEDLESS" label="已收货（无需退货）退款" value="1"/>
+            <option code="GOODS_REQUIRED" label="用户退货退款" value="2"/>
         </dict>
         <dict label="优惠券赠送类型" name="mall/coupon-type" valueType="int">
             <option label="通用券，用户领取" value="0"/>
@@ -226,7 +226,7 @@
                 <column code="AMOUNT" displayName="退款金额" name="amount" precision="10" propId="7" scale="2"
                         stdDataType="decimal" stdSqlType="DECIMAL"/>
                 <column code="PICTURES" displayName="退款凭证图片链接数组" domain="images" name="pictures" precision="1023"
-                        propId="8" stdDataType="string" stdDomain="json" stdSqlType="VARCHAR"/>
+                        propId="8" stdDataType="string" stdDomain="json" stdSqlType="VARCHAR" ext:show="L"/>
                 <column code="COMMENT" displayName="退款说明" name="comment" precision="511" propId="9" stdDataType="string"
                         stdSqlType="VARCHAR"/>
                 <column code="STATUS" displayName="售后状态" name="status" propId="10" stdDataType="short"
@@ -676,6 +676,13 @@
                         <on leftProp="id" rightProp="goodsId"/>
                     </join>
                 </to-many>
+                <to-many displayName="订单商品" name="orderGoods" refEntityName="app.mall.dao.entity.LitemallOrderGoods"
+                         refPropName="goods" tagSet="pub,cascade-delete,updatable,insertable"
+                         i18n-en:displayName="Order Goods">
+                    <join>
+                        <on leftProp="id" rightProp="goodsId"/>
+                    </join>
+                </to-many>
             </relations>
             <unique-keys>
                 <unique-key columns="name" name="goodsNameKey"/>
@@ -712,7 +719,7 @@
         </entity>
         <entity className="app.mall.dao.entity.LitemallGoodsProduct" createTimeProp="addTime" deleteFlagProp="deleted"
                 displayName="商品货品表" name="app.mall.dao.entity.LitemallGoodsProduct" registerShortName="true"
-                tableName="litemall_goods_product" updateTimeProp="updateTime" useLogicalDelete="true">
+                tableName="litemall_goods_product" tagSet="mapper" updateTimeProp="updateTime" useLogicalDelete="true">
             <columns>
                 <column code="ID" displayName="Id" mandatory="true" name="id" primary="true" propId="1"
                         stdDataType="int" stdSqlType="INTEGER" tagSet="seq" ext:show="R"/>
@@ -1038,11 +1045,19 @@
                         <on leftProp="userId" rightProp="id"/>
                     </join>
                 </to-one>
+                <to-many displayName="订单商品" name="orderGoods" refEntityName="app.mall.dao.entity.LitemallOrderGoods"
+                         refPropName="order" tagSet="pub,cascade-delete,updatable,insertable"
+                         i18n-en:displayName="Order Goods">
+                    <join>
+                        <on leftProp="id" rightProp="orderId"/>
+                    </join>
+                </to-many>
             </relations>
         </entity>
         <entity className="app.mall.dao.entity.LitemallOrderGoods" createTimeProp="addTime" deleteFlagProp="deleted"
                 displayName="订单商品表" name="app.mall.dao.entity.LitemallOrderGoods" registerShortName="true"
-                tableName="litemall_order_goods" updateTimeProp="updateTime" useLogicalDelete="true">
+                tableName="litemall_order_goods" tagSet="many-to-many" updateTimeProp="updateTime"
+                useLogicalDelete="true">
             <columns>
                 <column code="ID" displayName="Id" mandatory="true" name="id" primary="true" propId="1"
                         stdDataType="int" stdSqlType="INTEGER" tagSet="seq" ext:show="R"/>
@@ -1073,6 +1088,28 @@
                 <column code="DELETED" displayName="逻辑删除" domain="delFlag" name="deleted" propId="14"
                         stdDataType="boolean" stdSqlType="BOOLEAN" ext:show="X"/>
             </columns>
+            <relations>
+                <to-one displayName="订单" name="order" refEntityName="app.mall.dao.entity.LitemallOrder"
+                        refPropName="orderGoods" tagSet="pub,ref-pub,ref-cascade-delete,ref-updatable,ref-insertable"
+                        i18n-en:displayName="Order" ref-i18n-en:displayName="Order Goods">
+                    <join>
+                        <on leftProp="orderId" rightProp="id"/>
+                    </join>
+                </to-one>
+                <to-one displayName="订单商品" name="goods" refEntityName="app.mall.dao.entity.LitemallGoods"
+                        refPropName="orderGoods" tagSet="pub,ref-pub,ref-cascade-delete,ref-updatable,ref-insertable"
+                        i18n-en:displayName="Order Goods" ref-i18n-en:displayName="Order Goods">
+                    <join>
+                        <on leftProp="goodsId" rightProp="id"/>
+                    </join>
+                </to-one>
+                <to-one displayName="订单产品" name="product" refEntityName="app.mall.dao.entity.LitemallGoodsProduct"
+                        tagSet="pub" i18n-en:displayName="Order Product">
+                    <join>
+                        <on leftProp="productId" rightProp="id"/>
+                    </join>
+                </to-one>
+            </relations>
         </entity>
         <entity className="app.mall.dao.entity.LitemallPermission" createTimeProp="addTime" deleteFlagProp="deleted"
                 displayName="权限表" name="app.mall.dao.entity.LitemallPermission" registerShortName="true"
@@ -1151,7 +1188,7 @@
         </entity>
         <entity className="app.mall.dao.entity.LitemallSearchHistory" createTimeProp="addTime" deleteFlagProp="deleted"
                 displayName="搜索历史表" name="app.mall.dao.entity.LitemallSearchHistory" registerShortName="true"
-                tableName="litemall_search_history" updateTimeProp="updateTime" useLogicalDelete="true">
+                tableName="litemall_search_history" tagSet="log" updateTimeProp="updateTime" useLogicalDelete="true">
             <columns>
                 <column code="ID" displayName="Id" mandatory="true" name="id" primary="true" propId="1"
                         stdDataType="int" stdSqlType="INTEGER" tagSet="seq" ext:show="R"/>
@@ -1258,7 +1295,7 @@
                 <column code="USERNAME" displayName="用户名称" mandatory="true" name="username" precision="63" propId="2"
                         stdDataType="string" stdSqlType="VARCHAR" tagSet="disp"/>
                 <column code="PASSWORD" displayName="用户密码" mandatory="true" name="password" precision="63" propId="3"
-                        stdDataType="string" stdSqlType="VARCHAR"/>
+                        stdDataType="string" stdSqlType="VARCHAR" tagSet="masked,var,no-pub"/>
                 <column code="GENDER" comment="0 未知， 1男， 1 女" displayName="性别" mandatory="true" name="gender" propId="4"
                         stdDataType="byte" stdSqlType="TINYINT" ext:dict="mall/gender"/>
                 <column code="BIRTHDAY" displayName="生日" name="birthday" propId="5" stdDataType="date" stdSqlType="DATE"/>
@@ -1272,8 +1309,8 @@
                         propId="9" stdDataType="string" stdSqlType="VARCHAR"/>
                 <column code="MOBILE" displayName="用户手机号码" mandatory="true" name="mobile" precision="20" propId="10"
                         stdDataType="string" stdSqlType="VARCHAR"/>
-                <column code="AVATAR" displayName="用户头像图片" mandatory="true" name="avatar" precision="255" propId="11"
-                        stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="AVATAR" displayName="用户头像图片" domain="image" mandatory="true" name="avatar" precision="255"
+                        propId="11" stdDataType="string" stdSqlType="VARCHAR"/>
                 <column code="WEIXIN_OPENID" displayName="微信登录openid" mandatory="true" name="weixinOpenid"
                         precision="63" propId="12" stdDataType="string" stdSqlType="VARCHAR"/>
                 <column code="SESSION_KEY" displayName="微信登录会话KEY" mandatory="true" name="sessionKey" precision="100"

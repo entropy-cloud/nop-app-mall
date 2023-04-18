@@ -3,6 +3,51 @@ package app.mall.dao;
 public interface _AppMallDaoConstants {
     
     /**
+     * 售后状态: 可申请 
+     */
+    int AFTERSALE_STATUS_INIT = 0;
+                    
+    /**
+     * 售后状态: 用户已申请 
+     */
+    int AFTERSALE_STATUS_REQUEST = 1;
+                    
+    /**
+     * 售后状态: 管理员审核通过 
+     */
+    int AFTERSALE_STATUS_APPROVED = 2;
+                    
+    /**
+     * 售后状态: 管理员退款成功 
+     */
+    int AFTERSALE_STATUS_REFUND = 3;
+                    
+    /**
+     * 售后状态: 管理员审核拒绝 
+     */
+    int AFTERSALE_STATUS_REJECT = 4;
+                    
+    /**
+     * 售后状态: 用户已取消 
+     */
+    int AFTERSALE_STATUS_CANCELLED = 5;
+                    
+    /**
+     * 售后类型: 未收货退款 
+     */
+    int AFTERSALE_TYPE_GOODS_MISS = 0;
+                    
+    /**
+     * 售后类型: 已收货（无需退货）退款 
+     */
+    int AFTERSALE_TYPE_GOODS_NEEDLESS = 1;
+                    
+    /**
+     * 售后类型: 用户退货退款 
+     */
+    int AFTERSALE_TYPE_GOODS_REQUIRED = 2;
+                    
+    /**
      * 订单状态: 未付款 
      */
     int ORDER_STATUS_CREATED = 101;
