@@ -275,7 +275,6 @@ prop:
       galleryComponent: null
       relatedProductList: Order Product List
       relatedProductIdList: Order Product List
-      relatedProductList_label: Order Product List
     LitemallGoodsAttribute:
       id: null
       goodsId: null
@@ -424,7 +423,6 @@ prop:
       orderGoods: Order Goods
       relatedProductList: Order Product List
       relatedProductIdList: Order Product List
-      relatedProductList_label: Order Product List
     LitemallOrderGoods:
       id: null
       orderId: null
@@ -538,7 +536,6 @@ prop:
       roleMappings: RoleMappings
       relatedRoleList: Role List
       relatedRoleIdList: Role List
-      relatedRoleList_label: Role List
     LitemallUserRole:
       userId: User ID
       roleId: Role ID

@@ -36,6 +36,5 @@
   "user.username": "",
   "orderGoods": null,
   "relatedProductList": null,
-  "relatedProductIdList": null,
-  "relatedProductList_label": ""
+  "relatedProductIdList": null
 }

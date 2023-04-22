@@ -66,7 +66,7 @@
             </table>
             <listActions>
                 <action id="batch-delete-button" label="@i18n:common.batchDelete" batch="true">
-                    <api url="@mutation:LitemallLog__delete?ids=$ids"/>
+                    <api url="@mutation:LitemallLog__batchDelete?ids=$ids"/>
                     <confirmText>@i18n:common.confirmBatchDelete</confirmText>
                 </action>
             </listActions>

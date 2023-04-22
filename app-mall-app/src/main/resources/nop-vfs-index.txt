@@ -342,8 +342,10 @@
 /dict/biz/biz-var.dict.yaml
 /dict/core/active-status.dict.yaml
 /dict/core/bool-flag.dict.yaml
+/dict/core/enabled-locale.dict.yaml
 /dict/core/entity-relation-type.dict.yaml
 /dict/core/log-level.dict.yaml
+/dict/core/simple-data-type.dict.yaml
 /dict/core/std-domain.dict.yaml
 /dict/mall/aftersale-status.dict.yaml
 /dict/mall/aftersale-type.dict.yaml
@@ -554,7 +556,6 @@
 /nop/dao/dialect/selector/mysql.selector.yaml
 /nop/dao/dialect/selector/oracle.selector.yaml
 /nop/dao/dialect/selector/postgresql.selector.yaml
-/nop/dict/biz/auth-var.dict.yaml
 /nop/graphql/base.graphql
 /nop/graphql/default.graphql
 /nop/graphql/imp/api.imp.xml
@@ -693,6 +694,7 @@
 /nop/sys/pages/NopSysDictOption/NopSysDictOption.lib.xjs
 /nop/sys/pages/NopSysDictOption/NopSysDictOption.view.xml
 /nop/sys/pages/NopSysDictOption/_gen/_NopSysDictOption.view.xml
+/nop/sys/pages/NopSysDictOption/dict-ref.page.yaml
 /nop/sys/pages/NopSysDictOption/main.page.yaml
 /nop/sys/pages/NopSysDictOption/picker.page.yaml
 /nop/sys/pages/NopSysExtField/NopSysExtField.lib.xjs
@@ -788,6 +790,7 @@
 /nop/templates/orm/{appName}-app/src/main/resources/META-INF/native-image/{mavenGroupId}/{mavenArtifactId}-app/native-image.properties
 /nop/templates/orm/{appName}-app/src/main/resources/META-INF/native-image/{mavenGroupId}/{mavenArtifactId}-app/resource-config.json
 /nop/templates/orm/{appName}-app/src/main/resources/_vfs/{moduleId}/auth/app.action-auth.xml.xgen
+/nop/templates/orm/{appName}-app/src/main/resources/_vfs/{moduleId}/auth/app.data-auth.xml.xgen
 /nop/templates/orm/{appName}-app/src/main/resources/application.yaml.xgen
 /nop/templates/orm/{appName}-app/src/main/resources/bootstrap.yaml
 /nop/templates/orm/{appName}-codegen/pom.xml.xgen

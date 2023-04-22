@@ -153,19 +153,14 @@
             <schema type="io.nop.orm.support.JsonOrmComponent"/>
         </prop>
         <prop name="relatedProductList" displayName="订单产品列表" i18n-en:displayName="Order Product List" ext:kind="to-many"
-              internal="true">
+              internal="true" lazy="true">
             <schema type="List&lt;app.mall.dao.entity.LitemallGoodsProduct&gt;">
                 <item bizObjName="LitemallGoodsProduct"/>
             </schema>
         </prop>
         <prop name="relatedProductIdList" displayName="订单产品列表" i18n-en:displayName="Order Product List"
-              insertable="true" updatable="true" ext:relation="relatedProductList"
-              graphql:labelProp="relatedProductList_label" internal="true">
+              insertable="true" updatable="true" ext:relation="relatedProductList" lazy="true" internal="true">
             <schema type="List&lt;java.lang.Integer&gt;"/>
-        </prop>
-        <prop name="relatedProductList_label" displayName="订单产品列表" i18n-en:displayName="Order Product List"
-              internal="true">
-            <schema type="String"/>
         </prop>
     </props>
 </meta>

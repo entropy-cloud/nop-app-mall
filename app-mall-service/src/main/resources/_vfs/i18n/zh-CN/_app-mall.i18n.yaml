@@ -269,7 +269,6 @@ prop:
       products: 包含产品
       relatedProductIdList: 订单产品列表
       relatedProductList: 订单产品列表
-      relatedProductList_label: 订单产品列表
       retailPrice: 当前价格
       shareUrl: 商品分享海报
       sortOrder: 排序顺序
@@ -417,7 +416,6 @@ prop:
       refundType: 退款方式
       relatedProductIdList: 订单产品列表
       relatedProductList: 订单产品列表
-      relatedProductList_label: 订单产品列表
       shipChannel: 发货快递公司
       shipSn: 发货编号
       shipTime: 发货开始时间
@@ -529,7 +527,6 @@ prop:
       password: 用户密码
       relatedRoleIdList: 角色列表
       relatedRoleList: 角色列表
-      relatedRoleList_label: 角色列表
       roleMappings: 角色映射
       sessionKey: 微信登录会话KEY
       status: 用户状态
