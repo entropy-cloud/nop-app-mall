@@ -20,6 +20,13 @@
         </dependency>
 
         <dependency>
+            <artifactId>app-mall-codegen</artifactId>
+            <groupId>io.nop.app</groupId>
+            <version>1.0-SNAPSHOT</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
             <artifactId>app-mall-wx</artifactId>
             <groupId>io.nop.app</groupId>
             <version>1.0-SNAPSHOT</version>

@@ -20,8 +20,9 @@ public class AppMallWebCodeGen {
         CoreInitialization.initialize();
         try {
             File projectDir = MavenDirHelper.projectDir(AppMallWebCodeGen.class);
-            XCodeGenerator.runPrecompile(new File(projectDir, "../app-mall-codegen"), "/", false);
+            XCodeGenerator.runPostcompile(new File(projectDir, "../app-mall-codegen"), "/", false);
             XCodeGenerator.runPrecompile(new File(projectDir, "../app-mall-service"), "/", false);
+            XCodeGenerator.runPostcompile(new File(projectDir, "../app-mall-service"), "/", false);
             XCodeGenerator.runPrecompile(projectDir, "/", false);
         } finally {
             CoreInitialization.destroy();
