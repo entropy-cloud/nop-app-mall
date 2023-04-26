@@ -126,6 +126,9 @@ public class _LitemallGoods extends DynamicOrmEntity{
     /* relation: 订单商品 */
     public static final String PROP_NAME_orderGoods = "orderGoods";
     
+    /* component:  */
+    public static final String PROP_NAME_galleryComponent = "galleryComponent";
+    
 
     public static final List<String> PK_PROP_NAMES = Arrays.asList(PROP_NAME_id);
     public static final int[] PK_PROP_IDS = new int[]{PROP_ID_id};
@@ -1260,6 +1263,23 @@ public class _LitemallGoods extends DynamicOrmEntity{
        return _orderGoods;
     }
        
+   private io.nop.orm.support.JsonOrmComponent _galleryComponent;
+
+   private static Map<String,Integer> COMPONENT_PROP_ID_MAP_galleryComponent = new HashMap<>();
+   static{
+      
+         COMPONENT_PROP_ID_MAP_galleryComponent.put(io.nop.orm.support.JsonOrmComponent.PROP_NAME__jsonText,PROP_ID_gallery);
+      
+   }
+
+   public io.nop.orm.support.JsonOrmComponent getGalleryComponent(){
+      if(_galleryComponent == null){
+          _galleryComponent = new io.nop.orm.support.JsonOrmComponent();
+          _galleryComponent.bindToEntity(this, COMPONENT_PROP_ID_MAP_galleryComponent);
+      }
+      return _galleryComponent;
+   }
+
         public List<app.mall.dao.entity.LitemallGoodsProduct> getRelatedProductList(){
             return (List<app.mall.dao.entity.LitemallGoodsProduct>)io.nop.orm.support.OrmEntityHelper.getRefProps(getOrderGoods(),app.mall.dao.entity.LitemallOrderGoods.PROP_NAME_product);
         }

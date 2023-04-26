@@ -63,6 +63,9 @@ public class _LitemallGoodsProduct extends DynamicOrmEntity{
     /* relation: 所属商品 */
     public static final String PROP_NAME_goods = "goods";
     
+    /* component:  */
+    public static final String PROP_NAME_specificationsComponent = "specificationsComponent";
+    
 
     public static final List<String> PK_PROP_NAMES = Arrays.asList(PROP_NAME_id);
     public static final int[] PK_PROP_IDS = new int[]{PROP_ID_id};
@@ -596,5 +599,22 @@ public class _LitemallGoodsProduct extends DynamicOrmEntity{
        }
     }
        
+   private io.nop.orm.support.JsonOrmComponent _specificationsComponent;
+
+   private static Map<String,Integer> COMPONENT_PROP_ID_MAP_specificationsComponent = new HashMap<>();
+   static{
+      
+         COMPONENT_PROP_ID_MAP_specificationsComponent.put(io.nop.orm.support.JsonOrmComponent.PROP_NAME__jsonText,PROP_ID_specifications);
+      
+   }
+
+   public io.nop.orm.support.JsonOrmComponent getSpecificationsComponent(){
+      if(_specificationsComponent == null){
+          _specificationsComponent = new io.nop.orm.support.JsonOrmComponent();
+          _specificationsComponent.bindToEntity(this, COMPONENT_PROP_ID_MAP_specificationsComponent);
+      }
+      return _specificationsComponent;
+   }
+
 }
 // resume CPD analysis - CPD-ON
