@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<orm ext:mavenArtifactId="app-mall" ext:entityPackageName="app.mall.delta.dao.entity" ext:registerShortName="true"
+     ext:deltaDir="default" ext:mavenGroupId="io.nop.app" ext:basePackageName="app.mall.delta" ext:appName="nop-auth"
+     ext:platformVersion="2.0.0-SNAPSHOT" ext:dialect="mysql,oracle,postgresql" ext:mavenVersion="1.0.0-SNAPSHOT"
+     x:schema="/nop/schema/orm/orm.xdef" xmlns:x="/nop/schema/xdsl.xdef" x:extends="super" xmlns:i18n-en="i18n-en"
+     xmlns:ref-i18n-en="ref-i18n-en" xmlns:ext="ext" xmlns:orm-gen="orm-gen" xmlns:xpl="xpl">
+
+    <x:post-extends x:override="replace">
+        <orm-gen:DefaultPostExtends xpl:lib="/nop/orm/xlib/orm-gen.xlib"/>
+    </x:post-extends>
+
+    <domains>
+        <domain name="userName" precision="50" stdSqlType="VARCHAR"/>
+        <domain name="image" precision="100" stdSqlType="VARCHAR"/>
+        <domain name="email" precision="100" stdSqlType="VARCHAR"/>
+        <domain name="phone" precision="100" stdSqlType="VARCHAR"/>
+        <domain name="roleId" precision="100" stdSqlType="VARCHAR"/>
+        <domain name="userId" precision="50" stdSqlType="VARCHAR"/>
+        <domain name="deptId" precision="50" stdSqlType="VARCHAR"/>
+        <domain name="boolFlag" stdSqlType="TINYINT"/>
+        <domain name="xml-4k" precision="4000" stdSqlType="VARCHAR"/>
+        <domain name="json-1000" precision="1000" stdDomain="json" stdSqlType="VARCHAR"/>
+        <domain name="remark" precision="1000" stdSqlType="VARCHAR"/>
+        <domain name="version" stdSqlType="INTEGER"/>
+        <domain name="createTime" stdSqlType="TIMESTAMP"/>
+        <domain name="createdBy" precision="50" stdSqlType="VARCHAR"/>
+        <domain name="updateTime" stdSqlType="TIMESTAMP"/>
+        <domain name="updatedBy" precision="50" stdSqlType="VARCHAR"/>
+        <domain name="delFlag" stdDomain="boolFlag" stdSqlType="TINYINT"/>
+    </domains>
+
+    <entities>
+        <entity className="app.mall.delta.dao.entity.NopAuthUserEx" displayName="用户"
+                name="io.nop.auth.dao.entity.NopAuthUser" registerShortName="true" tableName="nop_auth_user"
+                i18n-en:displayName="User" ext:baseClass="io.nop.auth.dao.entity.NopAuthUser">
+            <columns>
+                <column code="USER_ID" displayName="用户ID" domain="userId" mandatory="true" name="userId"
+                        notGenCode="true" precision="50" primary="true" propId="1" stdDataType="string"
+                        stdSqlType="VARCHAR" tagSet="not-gen" i18n-en:displayName="User ID" ext:show="X"/>
+                <column code="MALL_USER_ID" displayName="关联用户ID" name="mallUserId" propId="100" stdDataType="int"
+                        stdSqlType="INTEGER" i18n-en:displayName="Mall User ID"/>
+            </columns>
+            <relations>
+                <to-one displayName="关联用户" name="mallUser" refEntityName="app.mall.dao.entity.LitemallUser"
+                        tagSet="pub,ref-pub" i18n-en:displayName="Mall User">
+                    <join>
+                        <on leftProp="mallUserId" rightProp="id"/>
+                    </join>
+                </to-one>
+            </relations>
+        </entity>
+        <entity className="app.mall.dao.entity.LitemallUser" displayName="用户" name="app.mall.dao.entity.LitemallUser"
+                notGenCode="true" registerShortName="true" tableName="litemall_user" tagSet="not-gen"
+                i18n-en:displayName="User">
+            <columns>
+                <column code="ID" displayName="用户ID" domain="userId" mandatory="true" name="id" notGenCode="true"
+                        precision="50" primary="true" propId="1" stdDataType="string" stdSqlType="VARCHAR"
+                        tagSet="not-gen" i18n-en:displayName="ID" ext:show="X"/>
+            </columns>
+        </entity>
+    </entities>
+</orm>

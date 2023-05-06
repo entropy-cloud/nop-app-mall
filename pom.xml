@@ -26,5 +26,6 @@
         <module>app-mall-web</module>
         <module>app-mall-app</module>
         <module>app-mall-wx</module>
+        <module>app-mall-delta</module>
     </modules>
 </project>

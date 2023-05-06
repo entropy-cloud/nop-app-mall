@@ -5,7 +5,7 @@
      x:schema="/nop/schema/orm/orm.xdef" xmlns:x="/nop/schema/xdsl.xdef" xmlns:i18n-en="i18n-en"
      xmlns:ref-i18n-en="ref-i18n-en" xmlns:ext="ext" xmlns:orm-gen="orm-gen" xmlns:xpl="xpl">
 
-    <x:post-extends>
+    <x:post-extends x:override="replace">
         <orm-gen:DefaultPostExtends xpl:lib="/nop/orm/xlib/orm-gen.xlib"/>
     </x:post-extends>
 
@@ -88,7 +88,6 @@
 
     <domains>
         <domain name="userName" precision="50" stdSqlType="VARCHAR"/>
-        <domain name="image" precision="255" stdSqlType="VARCHAR"/>
         <domain name="email" precision="100" stdSqlType="VARCHAR"/>
         <domain name="phone" precision="100" stdSqlType="VARCHAR"/>
         <domain name="roleId" precision="100" stdSqlType="VARCHAR"/>
@@ -104,6 +103,7 @@
         <domain name="updatedBy" precision="50" stdSqlType="VARCHAR"/>
         <domain name="delFlag" stdSqlType="BOOLEAN"/>
         <domain name="html-64k" precision="65535" stdSqlType="VARCHAR"/>
+        <domain name="image" precision="255" stdSqlType="VARCHAR"/>
         <domain name="images" precision="1023" stdDomain="json" stdSqlType="VARCHAR"/>
         <domain name="string-array" precision="1023" stdDomain="json" stdSqlType="VARCHAR"/>
     </domains>
@@ -658,20 +658,22 @@
                     </join>
                 </to-one>
                 <to-many displayName="商品参数" name="attributes" refEntityName="app.mall.dao.entity.LitemallGoodsAttribute"
-                         refPropName="goods" tagSet="pub,cascade-delete" i18n-en:displayName="Goods Attributes">
+                         refPropName="goods" tagSet="pub,cascade-delete,insertable,updatable,grid"
+                         i18n-en:displayName="Goods Attributes">
                     <join>
                         <on leftProp="id" rightProp="goodsId"/>
                     </join>
                 </to-many>
                 <to-many displayName="包含产品" name="products" refEntityName="app.mall.dao.entity.LitemallGoodsProduct"
-                         refPropName="goods" tagSet="pub,cascade-delete" i18n-en:displayName="Products">
+                         refPropName="goods" tagSet="pub,cascade-delete,insertable,updatable,grid"
+                         i18n-en:displayName="Products">
                     <join>
                         <on leftProp="id" rightProp="goodsId"/>
                     </join>
                 </to-many>
                 <to-many displayName="商品规格" name="specifications"
                          refEntityName="app.mall.dao.entity.LitemallGoodsSpecification" refPropName="goods"
-                         tagSet="pub,cascade-delete" i18n-en:displayName="Specifications">
+                         tagSet="pub,cascade-delete,insertable,updatable,grid" i18n-en:displayName="Specifications">
                     <join>
                         <on leftProp="id" rightProp="goodsId"/>
                     </join>
@@ -709,8 +711,9 @@
             </columns>
             <relations>
                 <to-one displayName="商品" name="goods" refEntityName="app.mall.dao.entity.LitemallGoods"
-                        refPropName="attributes" tagSet="pub,ref-pub,ref-cascade-delete" i18n-en:displayName="Goods"
-                        ref-i18n-en:displayName="Goods Attributes">
+                        refPropName="attributes"
+                        tagSet="pub,ref-pub,ref-cascade-delete,ref-insertable,ref-updatable,ref-grid"
+                        i18n-en:displayName="Goods" ref-i18n-en:displayName="Goods Attributes">
                     <join>
                         <on leftProp="goodsId" rightProp="id"/>
                     </join>
@@ -743,8 +746,9 @@
             </columns>
             <relations>
                 <to-one displayName="所属商品" name="goods" refEntityName="app.mall.dao.entity.LitemallGoods"
-                        refPropName="products" tagSet="pub,ref-pub,ref-cascade-delete" i18n-en:displayName="Goods"
-                        ref-i18n-en:displayName="Products">
+                        refPropName="products"
+                        tagSet="pub,ref-pub,ref-cascade-delete,ref-insertable,ref-updatable,ref-grid"
+                        i18n-en:displayName="Goods" ref-i18n-en:displayName="Products">
                     <join>
                         <on leftProp="goodsId" rightProp="id"/>
                     </join>
@@ -775,8 +779,9 @@
             </columns>
             <relations>
                 <to-one displayName="商品" name="goods" refEntityName="app.mall.dao.entity.LitemallGoods"
-                        refPropName="specifications" tagSet="pub,ref-pub,ref-cascade-delete" i18n-en:displayName="Goods"
-                        ref-i18n-en:displayName="Specifications">
+                        refPropName="specifications"
+                        tagSet="pub,ref-pub,ref-cascade-delete,ref-insertable,ref-updatable,ref-grid"
+                        i18n-en:displayName="Goods" ref-i18n-en:displayName="Specifications">
                     <join>
                         <on leftProp="goodsId" rightProp="id"/>
                     </join>
