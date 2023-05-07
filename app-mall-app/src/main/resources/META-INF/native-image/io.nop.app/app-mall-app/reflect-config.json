@@ -25420,6 +25420,14 @@
         "parameterTypes": []
       },
       {
+        "name": "getDisabledActions",
+        "parameterTypes": []
+      },
+      {
+        "name": "getInheritActions",
+        "parameterTypes": []
+      },
+      {
         "name": "getLoader",
         "parameterTypes": [
           "java.lang.String"
@@ -25503,6 +25511,18 @@
         "name": "setActions",
         "parameterTypes": [
           "java.util.List"
+        ]
+      },
+      {
+        "name": "setDisabledActions",
+        "parameterTypes": [
+          "java.util.Set"
+        ]
+      },
+      {
+        "name": "setInheritActions",
+        "parameterTypes": [
+          "java.util.Set"
         ]
       },
       {

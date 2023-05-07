@@ -1,5 +1,7 @@
 /_delta/default/nop/auth/_module
 /_delta/default/nop/auth/beans/_dao.beans.xml
+/_delta/default/nop/auth/model/NopAuthUser/NopAuthUser.xmeta
+/_delta/default/nop/auth/model/NopAuthUser/_NopAuthUser.xmeta
 /_delta/default/nop/auth/orm/_app.orm.xml
 /_delta/default/nop/auth/orm/app.orm.xml
 /_delta/default/nop/web/xlib/control.xlib

@@ -6,4 +6,5 @@ codeGenerator.withTargetDir("../app-mall-dao/src/main/java").renderModel('../../
 '/nop/templates/orm-entity','/',$scope);
 
 codeGenerator.withTargetDir("../app-mall-delta").renderModel('../../model/nop-auth-delta.orm.xlsx','/nop/templates/orm-delta', '/',$scope);
+codeGenerator.withTargetDir("../app-mall-delta").renderModel('../../model/nop-auth-delta.orm.xlsx','/nop/templates/meta-delta', '/',$scope);
 ]]></c:script>
