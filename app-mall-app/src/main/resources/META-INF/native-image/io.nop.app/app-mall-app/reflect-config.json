@@ -11727,6 +11727,51 @@
     "allPublicConstructors": true,
     "allPublicMethods": true,
     "fields": [],
+    "methods": [
+      {
+        "name": "extAction2",
+        "parameterTypes": []
+      }
+    ],
+    "name": "app.mall.delta.biz.NopAuthUserEx2BizModel",
+    "unsafeAllocated": false
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicMethods": true,
+    "fields": [
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
+        "name": "LOG"
+      }
+    ],
+    "methods": [
+      {
+        "name": "defaultPrepareUpdate",
+        "parameterTypes": [
+          "io.nop.biz.crud.EntityData",
+          "io.nop.core.context.IServiceContext"
+        ]
+      },
+      {
+        "name": "extAction1",
+        "parameterTypes": [
+          "java.lang.String"
+        ]
+      }
+    ],
+    "name": "app.mall.delta.biz.NopAuthUserExBizModel",
+    "unsafeAllocated": false
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicMethods": true,
+    "fields": [],
     "methods": [],
     "name": "app.mall.delta.dao.entity.NopAuthUserEx",
     "unsafeAllocated": false
@@ -11750,7 +11795,17 @@
       {
         "allowUnsafeAccess": false,
         "allowWrite": false,
+        "name": "PROP_ID_clientId"
+      },
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
         "name": "PROP_ID_mallUserId"
+      },
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
+        "name": "PROP_NAME_clientId"
       },
       {
         "allowUnsafeAccess": false,
@@ -11766,6 +11821,10 @@
     "methods": [
       {
         "name": "cloneInstance",
+        "parameterTypes": []
+      },
+      {
+        "name": "getClientId",
         "parameterTypes": []
       },
       {
@@ -11828,6 +11887,12 @@
         "parameterTypes": [
           "int",
           "java.lang.Object"
+        ]
+      },
+      {
+        "name": "setClientId",
+        "parameterTypes": [
+          "java.lang.String"
         ]
       },
       {
@@ -30283,6 +30348,13 @@
         ]
       },
       {
+        "name": "addAttrCsvSet",
+        "parameterTypes": [
+          "java.lang.String",
+          "java.lang.String"
+        ]
+      },
+      {
         "name": "addChild",
         "parameterTypes": [
           "java.lang.String"
@@ -31209,6 +31281,13 @@
       {
         "name": "removeAttr",
         "parameterTypes": [
+          "java.lang.String"
+        ]
+      },
+      {
+        "name": "removeAttrCsvSet",
+        "parameterTypes": [
+          "java.lang.String",
           "java.lang.String"
         ]
       },
@@ -34358,6 +34437,13 @@
         "parameterTypes": [
           "java.lang.String",
           "java.lang.String"
+        ]
+      },
+      {
+        "name": "runWhenDependsChanged",
+        "parameterTypes": [
+          "java.lang.String",
+          "java.util.function.Supplier"
         ]
       },
       {

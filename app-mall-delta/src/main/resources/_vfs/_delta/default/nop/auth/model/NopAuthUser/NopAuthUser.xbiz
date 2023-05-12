@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<biz x:schema="/nop/schema/biz/xbiz.xdef" xmlns:x="/nop/schema/xdsl.xdef" x:extends="super">
+
+    <actions>
+        <query name="extAction3" displayName="定义在biz文件中的测试函数3">
+            <source>
+                return "result3"
+            </source>
+        </query>
+    </actions>
+</biz>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <meta x:schema="/nop/schema/xmeta.xdef" xmlns:x="/nop/schema/xdsl.xdef" xmlns:i18n-en="i18n-en" xmlns:ext="ext"
-      xmlns:xpl="xpl" xmlns:biz-gen="biz-gen" ext:model="orm" xmlns:c="c" xmlns:graphql="graphql" x:extends="super"
-      displayName="用户" i18n-en:displayName="User">
+      xmlns:xpl="xpl" xmlns:biz-gen="biz-gen" ext:model="orm" xmlns:c="c" xmlns:graphql="graphql" displayName="用户"
+      i18n-en:displayName="User">
 
     <entityName>io.nop.auth.dao.entity.NopAuthUser</entityName>
 
@@ -14,6 +14,14 @@
     <keys/>
 
     <props>
+        <prop name="userId" displayName="用户ID" i18n-en:displayName="User ID" tagSet="seq,not-gen" mandatory="true"
+              queryable="true" sortable="true" insertable="true" updatable="false" internal="true" ext:show="X">
+            <schema domain="userId" type="java.lang.String" precision="50"/>
+        </prop>
+        <prop name="clientId" displayName="设备ID" i18n-en:displayName="Client Id" tagSet="del" queryable="true"
+              sortable="true" insertable="true" updatable="true" internal="true" ext:show="X" x:override="remove">
+            <schema type="java.lang.String" precision="100"/>
+        </prop>
         <prop name="mallUserId" displayName="关联用户ID" i18n-en:displayName="Mall User ID" queryable="true" sortable="true"
               insertable="true" updatable="true" ext:relation="mallUser">
             <schema type="java.lang.Integer"/>

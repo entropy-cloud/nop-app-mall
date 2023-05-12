@@ -1,9 +1,12 @@
 /_delta/default/nop/auth/_module
 /_delta/default/nop/auth/beans/_dao.beans.xml
+/_delta/default/nop/auth/beans/auth-service.beans.xml
+/_delta/default/nop/auth/model/NopAuthUser/NopAuthUser.xbiz
 /_delta/default/nop/auth/model/NopAuthUser/NopAuthUser.xmeta
-/_delta/default/nop/auth/model/NopAuthUser/_NopAuthUser.xmeta
-/_delta/default/nop/auth/orm/_app.orm.xml
+/_delta/default/nop/auth/model/NopAuthUser/default/_NopAuthUser.xmeta
 /_delta/default/nop/auth/orm/app.orm.xml
+/_delta/default/nop/auth/orm/default/_app.orm.xml
+/_delta/default/nop/auth/pages/NopAuthUser/NopAuthUser.view.xml
 /_delta/default/nop/web/xlib/control.xlib
 /_delta/default/nop/web/xlib/web.xlib
 /app/mall/_module
@@ -634,6 +637,7 @@
 /nop/schema/xdsl.xdef
 /nop/schema/xjson.xdef
 /nop/schema/xlib.xdef
+/nop/schema/xmeta-ext.xdef
 /nop/schema/xmeta.xdef
 /nop/schema/xpl.xdef
 /nop/schema/xt.xdef
@@ -781,9 +785,11 @@
 /nop/templates/i18n/src/main/resources/_vfs/i18n/{defaultLocale}/{moduleName}.i18n.yaml.xgen
 /nop/templates/i18n/src/main/resources/_vfs/i18n/{enableEn}en/_{moduleName}.i18n.yaml.xgen
 /nop/templates/i18n/src/main/resources/_vfs/i18n/{enableEn}en/{moduleName}.i18n.yaml.xgen
+/nop/templates/meta-delta/@init.xrun
+/nop/templates/meta-delta/src/main/resources/_vfs/_delta/{deltaDir}/gen-meta.xrun
 /nop/templates/meta/@init.xrun
-/nop/templates/meta/src/main/resources/_vfs/{moduleId}/model/{entityModel.shortName}/_{entityModel.shortName}.xmeta.xgen
-/nop/templates/meta/src/main/resources/_vfs/{moduleId}/model/{entityModel.shortName}/{entityModel.shortName}.xmeta.xgen
+/nop/templates/meta/src/main/resources/_vfs/{moduleId}/model/{!entityModel.notGenCode}{entityModel.shortName}/{deltaDir}/_{entityModel.shortName}.xmeta.xgen
+/nop/templates/meta/src/main/resources/_vfs/{moduleId}/model/{!entityModel.notGenCode}{entityModel.shortName}/{entityModel.shortName}.xmeta.xgen
 /nop/templates/orm-delta/@init.xrun
 /nop/templates/orm-delta/src/main/java/impl.xrun
 /nop/templates/orm-delta/src/main/resources/_vfs/_delta/{deltaDir}/impl.xrun
@@ -824,8 +830,8 @@
 /nop/templates/orm/{appName}-dao/src/main/resources/_vfs/dict/{dict.name}.dict.yaml.xgen
 /nop/templates/orm/{appName}-dao/src/main/resources/_vfs/{moduleId}/_module
 /nop/templates/orm/{appName}-dao/src/main/resources/_vfs/{moduleId}/beans/_dao.beans.xml.xgen
-/nop/templates/orm/{appName}-dao/src/main/resources/_vfs/{moduleId}/orm/_app.orm.xml.xgen
 /nop/templates/orm/{appName}-dao/src/main/resources/_vfs/{moduleId}/orm/app.orm.xml.xgen
+/nop/templates/orm/{appName}-dao/src/main/resources/_vfs/{moduleId}/orm/{deltaDir}/_app.orm.xml.xgen
 /nop/templates/orm/{appName}-dao/src/main/resources/_vfs/{moduleId}/sql/{!!entityModel.tagSet.@mapper}{entityModel.shortName}.sql-lib.xml.xgen
 /nop/templates/orm/{appName}-service/impl.xrun
 /nop/templates/orm/{appName}-service/pom.xml.xgen

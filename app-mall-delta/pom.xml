@@ -18,6 +18,11 @@
         </dependency>
 
         <dependency>
+            <groupId>io.github.entropy-cloud</groupId>
+            <artifactId>nop-auth-service</artifactId>
+        </dependency>
+
+        <dependency>
             <artifactId>app-mall-dao</artifactId>
             <groupId>io.nop.app</groupId>
             <version>1.0-SNAPSHOT</version>

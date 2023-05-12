@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<view x:extends="super" x:schema="/nop/schema/xui/xview.xdef" xmlns:x="/nop/schema/xdsl.xdef" xmlns:feature="feature">
+
+    <forms>
+        <form id="view" feature:on="!nop.auth.use-ext-info">
+            <layout>
+                ===========>baseInfo[基本信息]======
+                userName status[用户状态]
+                nickName[昵称] deptId[部门]
+                userType[用户类型] gender[性别]
+                email[邮件] phone[电话]
+                expireAt[用户过期时间] changePwdAtLogin[登陆后立刻修改密码]
+            </layout>
+        </form>
+
+        <form id="view" feature:on="nop.auth.use-ext-info">
+            <layout>
+                ===========>baseInfo[基本信息]======
+                userName status[用户状态]
+                nickName[昵称] deptId[部门]
+                userType[用户类型] gender[性别]
+                email[邮件] phone[电话]
+                expireAt[用户过期时间] changePwdAtLogin[登陆后立刻修改密码]
+
+                ===========>extInfo[扩展信息]=========
+                idType[证件类型] idNbr[证件号]
+                birthday[生日] workNo[工号]
+                positionId[职务] telephone[座机]
+                remark[备注]
+                createdBy[创建人] createTime[创建时间]
+                updatedBy[修改人] updateTime[修改时间]
+            </layout>
+        </form>
+    </forms>
+
+</view>

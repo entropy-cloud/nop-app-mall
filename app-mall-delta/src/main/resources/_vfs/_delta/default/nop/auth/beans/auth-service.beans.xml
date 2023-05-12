@@ -1,0 +1,18 @@
+<beans x:schema="/nop/schema/beans.xdef" xmlns:x="/nop/schema/xdsl.xdef"
+       x:extends="super">
+
+    <bean id="nopAuthFilterConfig">
+        <property name="authPaths">
+            <list x:override="append">
+                <value>/mall*</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="io.nop.auth.service.entity.NopAuthUserBizModel"
+          class="app.mall.delta.biz.NopAuthUserExBizModel"/>
+
+    <bean id="nopAuthUserExt2BizModel"
+          class="app.mall.delta.biz.NopAuthUserEx2BizModel"/>
+
+</beans>
