@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<meta x:schema="/nop/schema/xmeta.xdef" xmlns:x="/nop/schema/xdsl.xdef" xmlns:i18n-en="i18n-en" xmlns:ext="ext"
+      xmlns:xpl="xpl" xmlns:biz-gen="biz-gen" ext:model="orm" xmlns:c="c" xmlns:graphql="graphql" displayName="类目表">
+
+    <entityName>app.mall.dao.entity.LitemallCategory</entityName>
+
+    <primaryKey>id</primaryKey>
+
+    <displayProp>name</displayProp>
+
+    <x:post-extends>
+        <biz-gen:DefaultMetaPostExtends xpl:lib="/nop/biz/xlib/biz-gen.xlib"/>
+    </x:post-extends>
+
+    <keys/>
+
+    <tree parentProp="pid" childrenProp="children"/>
+
+    <props>
+        <prop name="id" displayName="Id" tagSet="seq" mandatory="true" queryable="true" sortable="true"
+              insertable="false" updatable="false" ext:show="R">
+            <schema type="java.lang.Integer"/>
+        </prop>
+        <prop name="name" displayName="类目名称" tagSet="disp" mandatory="true" queryable="true" sortable="true"
+              insertable="true" updatable="true">
+            <schema type="java.lang.String" precision="63"/>
+        </prop>
+        <prop name="iconUrl" displayName="类目图标" queryable="true" sortable="true" insertable="true" updatable="true">
+            <schema domain="image" type="java.lang.String" precision="255"/>
+        </prop>
+        <prop name="picUrl" displayName="类目图片" queryable="true" sortable="true" insertable="true" updatable="true">
+            <schema domain="image" type="java.lang.String" precision="255"/>
+        </prop>
+        <prop name="keywords" displayName="类目关键字" queryable="true" sortable="true" insertable="true" updatable="true">
+            <schema type="java.lang.String" precision="1023"/>
+        </prop>
+        <prop name="desc" displayName="简介" queryable="true" sortable="true" insertable="true" updatable="true">
+            <schema type="java.lang.String" precision="255"/>
+        </prop>
+        <prop name="level" displayName="级别" tagSet="layerLevel" mandatory="true" queryable="true" sortable="true"
+              insertable="true" updatable="true">
+            <schema type="java.lang.String" precision="255" dict="mall/category-level"/>
+        </prop>
+        <prop name="pid" displayName="父类目ID" tagSet="parent" queryable="true" sortable="true" insertable="true"
+              updatable="true" ext:show="L" ext:control="tree-parent" ext:relation="parent">
+            <schema type="java.lang.Integer"/>
+        </prop>
+        <prop name="sortOrder" displayName="排序" queryable="true" sortable="true" insertable="true" updatable="true"
+              internal="true" ext:show="X">
+            <schema type="java.lang.Byte"/>
+        </prop>
+        <prop name="addTime" displayName="创建时间" queryable="true" sortable="true" insertable="false" updatable="false"
+              internal="true" ext:show="X">
+            <schema domain="createTime" type="java.time.LocalDateTime"/>
+        </prop>
+        <prop name="updateTime" displayName="更新时间" queryable="true" sortable="true" insertable="false" updatable="false"
+              internal="true" ext:show="X">
+            <schema domain="updateTime" type="java.time.LocalDateTime"/>
+        </prop>
+        <prop name="deleted" displayName="逻辑删除" queryable="true" sortable="true" insertable="false" updatable="true"
+              internal="true" ext:show="X">
+            <schema domain="delFlag" type="java.lang.Boolean"/>
+        </prop>
+        <prop name="parent" displayName="父类目" i18n-en:displayName="Parent" tagSet="pub,ref-pub" ext:kind="to-one"
+              internal="true" queryable="true" ext:joinLeftProp="pid" ext:joinRightProp="id"
+              ext:joinRightDisplayProp="name" insertable="false" updatable="false" lazy="true">
+            <schema type="app.mall.dao.entity.LitemallCategory" bizObjName="LitemallCategory"/>
+        </prop>
+        <prop name="parent.name" displayName="父类目" i18n-en:displayName="Parent" internal="true" queryable="true"
+              sortable="true" lazy="true">
+            <schema type="String"/>
+        </prop>
+        <prop name="children" displayName="子类目" i18n-en:displayName="Children" tagSet="pub" ext:kind="to-many"
+              internal="true" ext:joinLeftProp="id" ext:joinRightProp="pid" ext:joinRightDisplayProp="name"
+              insertable="false" updatable="false" lazy="true">
+            <schema type="io.nop.orm.IOrmEntitySet&lt;app.mall.dao.entity.LitemallCategory&gt;"
+                    bizObjName="LitemallCategory"/>
+        </prop>
+    </props>
+</meta>

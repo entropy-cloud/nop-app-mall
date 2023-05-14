@@ -20,10 +20,6 @@ import app.mall.delta.dao.entity.NopAuthUserEx;
         "PMD.UnnecessaryFullyQualifiedName","PMD.EmptyControlStatement"})
 public class _NopAuthUserEx extends io.nop.auth.dao.entity.NopAuthUser{
     
-    /* 设备ID: CLIENT_ID VARCHAR */
-    public static final String PROP_NAME_clientId = "clientId";
-    public static final int PROP_ID_clientId = 26;
-    
     /* 关联用户ID: MALL_USER_ID INTEGER */
     public static final String PROP_NAME_mallUserId = "mallUserId";
     public static final int PROP_ID_mallUserId = 100;
@@ -43,17 +39,11 @@ public class _NopAuthUserEx extends io.nop.auth.dao.entity.NopAuthUser{
     private static final Map<String,Integer> PROP_NAME_TO_ID = new HashMap<>();
     static{
       
-          PROP_ID_TO_NAME[PROP_ID_clientId] = PROP_NAME_clientId;
-          PROP_NAME_TO_ID.put(PROP_NAME_clientId, PROP_ID_clientId);
-      
           PROP_ID_TO_NAME[PROP_ID_mallUserId] = PROP_NAME_mallUserId;
           PROP_NAME_TO_ID.put(PROP_NAME_mallUserId, PROP_ID_mallUserId);
       
     }
 
-    
-    /* 设备ID: CLIENT_ID */
-    private java.lang.String _clientId;
     
     /* 关联用户ID: MALL_USER_ID */
     private java.lang.Integer _mallUserId;
@@ -128,9 +118,6 @@ public class _NopAuthUserEx extends io.nop.auth.dao.entity.NopAuthUser{
     public Object orm_propValue(int propId) {
         switch(propId){
         
-            case PROP_ID_clientId:
-               return getClientId();
-        
             case PROP_ID_mallUserId:
                return getMallUserId();
         
@@ -144,16 +131,6 @@ public class _NopAuthUserEx extends io.nop.auth.dao.entity.NopAuthUser{
     @Override
     public void orm_propValue(int propId, Object value){
         switch(propId){
-        
-            case PROP_ID_clientId:{
-               java.lang.String typedValue = null;
-               if(value != null){
-                   typedValue = ConvertHelper.toString(value,
-                       err-> newTypeConversionError(PROP_NAME_clientId));
-               }
-               setClientId(typedValue);
-               break;
-            }
         
             case PROP_ID_mallUserId:{
                java.lang.Integer typedValue = null;
@@ -174,13 +151,6 @@ public class _NopAuthUserEx extends io.nop.auth.dao.entity.NopAuthUser{
     public void orm_internalSet(int propId, Object value) {
         switch(propId){
         
-            case PROP_ID_clientId:{
-               onInitProp(propId);
-               this._clientId = (java.lang.String)value;
-               
-               break;
-            }
-        
             case PROP_ID_mallUserId:{
                onInitProp(propId);
                this._mallUserId = (java.lang.Integer)value;
@@ -193,25 +163,6 @@ public class _NopAuthUserEx extends io.nop.auth.dao.entity.NopAuthUser{
         }
     }
 
-    
-    /**
-     * 设备ID: CLIENT_ID
-     */
-    public java.lang.String getClientId(){
-         onPropGet(PROP_ID_clientId);
-         return _clientId;
-    }
-
-    /**
-     * 设备ID: CLIENT_ID
-     */
-    public void setClientId(java.lang.String value){
-        if(onPropSet(PROP_ID_clientId,value)){
-            this._clientId = value;
-            internalClearRefs(PROP_ID_clientId);
-            
-        }
-    }
     
     /**
      * 关联用户ID: MALL_USER_ID

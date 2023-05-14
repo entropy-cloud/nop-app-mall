@@ -37,9 +37,9 @@
                 <column code="USER_ID" displayName="用户ID" domain="userId" mandatory="true" name="userId"
                         notGenCode="true" precision="50" primary="true" propId="1" stdDataType="string"
                         stdSqlType="VARCHAR" tagSet="seq,not-gen" i18n-en:displayName="User ID" ext:show="X"/>
-                <column code="CLIENT_ID" displayName="设备ID" name="clientId" precision="100" stdDataType="string"
-                        stdSqlType="VARCHAR" tagSet="del" i18n-en:displayName="Client Id" ext:show="X"
-                        x:override="remove"/>
+                <column code="CLIENT_ID" displayName="设备ID" name="clientId" notGenCode="true" precision="100"
+                        stdDataType="string" stdSqlType="VARCHAR" tagSet="del" i18n-en:displayName="Client Id"
+                        ext:show="X" x:override="remove"/>
                 <column code="MALL_USER_ID" displayName="关联用户ID" name="mallUserId" propId="100" stdDataType="int"
                         stdSqlType="INTEGER" i18n-en:displayName="Mall User ID"/>
             </columns>
