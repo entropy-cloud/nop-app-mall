@@ -22,6 +22,16 @@
 
 环境准备： JDK 11+、Maven 3.6+、Git
 
+**编译app-mall项目之前需要先编译[nop-entropy](https://gitee.com/canonical-entropy/nop-entropy)项目。**
+
+```shell
+git clone https://gitee.com/canonical-entropy/nop-entropy.git
+cd nop-entropy
+mvn -T 2C clean install -DskipTests -Dquarkus.package.type=uber-jar
+```
+
+安装nop-entropy成功之后，再编译app-mall
+
 ```shell
 git clone https://gitee.com/canonical-entropy/app-mall.git
 cd app-mall

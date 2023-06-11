@@ -537,6 +537,7 @@
 /nop/autoconfig/nop-auth-core.beans
 /nop/autoconfig/nop-biz.beans
 /nop/autoconfig/nop-dao.beans
+/nop/autoconfig/nop-http-client-jdk.beans
 /nop/autoconfig/nop-orm.beans
 /nop/autoconfig/nop-quarkus-web-starter.beans
 /nop/autoconfig/nop-web.beans
@@ -574,10 +575,12 @@
 /nop/dao/dialect/selector/mysql.selector.yaml
 /nop/dao/dialect/selector/oracle.selector.yaml
 /nop/dao/dialect/selector/postgresql.selector.yaml
+/nop/dao/dialect/tdengine.dialect.xml
 /nop/graphql/base.graphql
 /nop/graphql/default.graphql
 /nop/graphql/imp/api.imp.xml
 /nop/graphql/introspection.graphql
+/nop/http/beans/http-client-jdk.beans.xml
 /nop/js/libs/nop-server-tool.mjs
 /nop/orm/beans/orm-defaults.beans.xml
 /nop/orm/imp/orm.imp.xml
@@ -606,6 +609,7 @@
 /nop/schema/excel/anchor.xdef
 /nop/schema/excel/imp.xdef
 /nop/schema/excel/workbook.xdef
+/nop/schema/gateway.xdef
 /nop/schema/message.xdef
 /nop/schema/orm/dialect.xdef
 /nop/schema/orm/dict.xdef
