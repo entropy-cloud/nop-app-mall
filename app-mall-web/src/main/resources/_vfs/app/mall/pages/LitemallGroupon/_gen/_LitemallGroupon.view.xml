@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <view x:schema="/nop/schema/xui/xview.xdef" bizObjName="LitemallGroupon" xmlns:i18n-en="i18n-en"
-      xmlns:x="/nop/schema/xdsl.xdef" xmlns:j="j">
+      xmlns:x="/nop/schema/xdsl.xdef" xmlns:j="j" xmlns:gql="gql">
 
     <objMeta>/app/mall/model/LitemallGroupon/LitemallGroupon.xmeta</objMeta>
 
@@ -82,7 +82,7 @@
     <pages>
         <crud name="main" grid="list" asideFilterForm="asideFilter" filterForm="query" x:abstract="true">
             <table autoFillHeight="true">
-                <api url="@query:LitemallGroupon__findPage/{@pageSelection}"/>
+                <api url="@query:LitemallGroupon__findPage" gql:selection="{@pageSelection}"/>
             </table>
             <listActions>
                 <action id="batch-delete-button" label="@i18n:common.batchDelete" batch="true">
@@ -117,17 +117,17 @@
         </crud>
         <picker name="picker" grid="pick-list" asideFilterForm="asideFilter" filterForm="query" x:abstract="true">
             <table>
-                <api url="@query:LitemallGroupon__findPage/{@pageSelection}"/>
+                <api url="@query:LitemallGroupon__findPage" gql:selection="{@pageSelection}"/>
             </table>
         </picker>
         <simple name="add" form="add">
             <api url="@mutation:LitemallGroupon__save/id"/>
         </simple>
         <simple name="view" form="view">
-            <initApi url="@query:LitemallGroupon__get/{@formSelection}?id=$id"/>
+            <initApi url="@query:LitemallGroupon__get?id=$id" gql:selection="{@formSelection}"/>
         </simple>
         <simple name="update" form="edit">
-            <initApi url="@query:LitemallGroupon__get/{@formSelection}?id=$id"/>
+            <initApi url="@query:LitemallGroupon__get?id=$id" gql:selection="{@formSelection}"/>
             <api url="@mutation:LitemallGroupon__update/id?id=$id" withFormData="true"/>
         </simple>
     </pages>

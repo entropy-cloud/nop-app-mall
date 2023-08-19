@@ -95,6 +95,9 @@ public class _LitemallUser extends DynamicOrmEntity{
     /* relation: 角色映射 */
     public static final String PROP_NAME_roleMappings = "roleMappings";
     
+    /* component:  */
+    public static final String PROP_NAME_avatarComponent = "avatarComponent";
+    
 
     public static final List<String> PK_PROP_NAMES = Arrays.asList(PROP_NAME_id);
     public static final int[] PK_PROP_IDS = new int[]{PROP_ID_id};
@@ -977,6 +980,23 @@ public class _LitemallUser extends DynamicOrmEntity{
        return _roleMappings;
     }
        
+   private io.nop.orm.support.OrmFileComponent _avatarComponent;
+
+   private static Map<String,Integer> COMPONENT_PROP_ID_MAP_avatarComponent = new HashMap<>();
+   static{
+      
+         COMPONENT_PROP_ID_MAP_avatarComponent.put(io.nop.orm.support.OrmFileComponent.PROP_NAME_filePath,PROP_ID_avatar);
+      
+   }
+
+   public io.nop.orm.support.OrmFileComponent getAvatarComponent(){
+      if(_avatarComponent == null){
+          _avatarComponent = new io.nop.orm.support.OrmFileComponent();
+          _avatarComponent.bindToEntity(this, COMPONENT_PROP_ID_MAP_avatarComponent);
+      }
+      return _avatarComponent;
+   }
+
         public List<app.mall.dao.entity.LitemallRole> getRelatedRoleList(){
             return (List<app.mall.dao.entity.LitemallRole>)io.nop.orm.support.OrmEntityHelper.getRefProps(getRoleMappings(),app.mall.dao.entity.LitemallUserRole.PROP_NAME_role);
         }

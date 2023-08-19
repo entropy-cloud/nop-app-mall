@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <view x:schema="/nop/schema/xui/xview.xdef" bizObjName="LitemallAftersale" xmlns:i18n-en="i18n-en"
-      xmlns:x="/nop/schema/xdsl.xdef" xmlns:j="j">
+      xmlns:x="/nop/schema/xdsl.xdef" xmlns:j="j" xmlns:gql="gql">
 
     <objMeta>/app/mall/model/LitemallAftersale/LitemallAftersale.xmeta</objMeta>
 
@@ -82,7 +82,7 @@
     <pages>
         <crud name="main" grid="list" asideFilterForm="asideFilter" filterForm="query" x:abstract="true">
             <table autoFillHeight="true">
-                <api url="@query:LitemallAftersale__findPage/{@pageSelection}"/>
+                <api url="@query:LitemallAftersale__findPage" gql:selection="{@pageSelection}"/>
             </table>
             <listActions>
                 <action id="batch-delete-button" label="@i18n:common.batchDelete" batch="true">
@@ -117,17 +117,17 @@
         </crud>
         <picker name="picker" grid="pick-list" asideFilterForm="asideFilter" filterForm="query" x:abstract="true">
             <table>
-                <api url="@query:LitemallAftersale__findPage/{@pageSelection}"/>
+                <api url="@query:LitemallAftersale__findPage" gql:selection="{@pageSelection}"/>
             </table>
         </picker>
         <simple name="add" form="add">
             <api url="@mutation:LitemallAftersale__save/id"/>
         </simple>
         <simple name="view" form="view">
-            <initApi url="@query:LitemallAftersale__get/{@formSelection}?id=$id"/>
+            <initApi url="@query:LitemallAftersale__get?id=$id" gql:selection="{@formSelection}"/>
         </simple>
         <simple name="update" form="edit">
-            <initApi url="@query:LitemallAftersale__get/{@formSelection}?id=$id"/>
+            <initApi url="@query:LitemallAftersale__get?id=$id" gql:selection="{@formSelection}"/>
             <api url="@mutation:LitemallAftersale__update/id?id=$id" withFormData="true"/>
         </simple>
     </pages>

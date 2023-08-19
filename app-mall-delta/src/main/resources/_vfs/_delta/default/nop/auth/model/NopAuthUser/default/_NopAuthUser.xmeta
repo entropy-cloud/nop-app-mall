@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <meta x:schema="/nop/schema/xmeta.xdef" xmlns:x="/nop/schema/xdsl.xdef" xmlns:i18n-en="i18n-en" xmlns:ext="ext"
-      xmlns:xpl="xpl" xmlns:biz-gen="biz-gen" ext:model="orm" xmlns:c="c" xmlns:graphql="graphql" displayName="用户"
-      i18n-en:displayName="User">
+      xmlns:xpl="xpl" xmlns:biz-gen="biz-gen" ext:model="orm" xmlns:c="c" xmlns:graphql="graphql" xmlns:biz="biz"
+      displayName="用户" i18n-en:displayName="User">
 
     <entityName>io.nop.auth.dao.entity.NopAuthUser</entityName>
 
     <primaryKey>userId</primaryKey>
 
     <x:post-extends>
-        <biz-gen:DefaultMetaPostExtends xpl:lib="/nop/biz/xlib/biz-gen.xlib"/>
+        <biz-gen:DefaultMetaPostExtends xpl:lib="/nop/core/xlib/biz-gen.xlib"/>
     </x:post-extends>
 
     <keys/>
@@ -29,7 +29,7 @@
         <prop name="mallUser" displayName="关联用户" i18n-en:displayName="Mall User" tagSet="pub,ref-pub" ext:kind="to-one"
               internal="true" queryable="true" ext:joinLeftProp="mallUserId" ext:joinRightProp="id" insertable="false"
               updatable="false" lazy="true">
-            <schema type="app.mall.dao.entity.LitemallUser" bizObjName="LitemallUser"/>
+            <schema bizObjName="LitemallUser"/>
         </prop>
     </props>
 </meta>

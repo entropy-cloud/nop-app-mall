@@ -1,0 +1,19 @@
+# __XGEN_FORCE_OVERRIDE__
+label: 用户等级
+locale: zh-CN
+valueType: int
+description: 
+options:
+
+  - label: 普通用户
+    value: 0
+    description: 
+  
+  - label: VIP用户
+    value: 1
+    description: 
+  
+  - label: 高级VIP用户
+    value: 2
+    description: 
+  

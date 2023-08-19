@@ -1,0 +1,47 @@
+# __XGEN_FORCE_OVERRIDE__
+label: 订单状态
+locale: zh-CN
+valueType: int
+description: 
+options:
+
+  - label: 未付款
+    value: 101
+    description: 
+  
+  - label: 已取消
+    value: 102
+    description: 
+  
+  - label: 已取消（系统）
+    value: 103
+    description: 
+  
+  - label: 已付款
+    value: 201
+    description: 
+  
+  - label: 订单取消，退款中
+    value: 202
+    description: 
+  
+  - label: 已退款
+    value: 203
+    description: 
+  
+  - label: 已超时团购
+    value: 204
+    description: 
+  
+  - label: 已发货
+    value: 301
+    description: 
+  
+  - label: 已收货
+    value: 401
+    description: 
+  
+  - label: 已收货(系统)
+    value: 402
+    description: 
+  

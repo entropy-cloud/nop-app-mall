@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<meta x:schema="/nop/schema/xmeta.xdef" xmlns:x="/nop/schema/xdsl.xdef" xmlns:i18n-en="i18n-en" xmlns:ext="ext"
+      xmlns:xpl="xpl" xmlns:biz-gen="biz-gen" ext:model="orm" xmlns:c="c" xmlns:graphql="graphql" xmlns:biz="biz"
+      displayName="商品货品表" tagSet="mapper">
+
+    <entityName>app.mall.dao.entity.LitemallGoodsProduct</entityName>
+
+    <primaryKey>id</primaryKey>
+
+    <x:post-extends>
+        <biz-gen:DefaultMetaPostExtends xpl:lib="/nop/core/xlib/biz-gen.xlib"/>
+    </x:post-extends>
+
+    <keys/>
+
+    <props>
+        <prop name="id" displayName="Id" tagSet="seq" mandatory="true" queryable="true" sortable="true"
+              insertable="false" updatable="false" ext:show="R">
+            <schema type="java.lang.Integer"/>
+        </prop>
+        <prop name="goodsId" displayName="商品ID" mandatory="true" queryable="true" sortable="true" insertable="true"
+              updatable="true" ext:relation="goods">
+            <schema type="java.lang.Integer"/>
+        </prop>
+        <prop name="specifications" displayName="商品规格值" mandatory="true" queryable="true" sortable="true"
+              insertable="true" updatable="true" graphql:jsonComponentProp="specificationsComponent">
+            <schema stdDomain="json" domain="string-array" type="java.lang.String" precision="1023"/>
+        </prop>
+        <prop name="price" displayName="商品货品价格" mandatory="true" queryable="true" sortable="true" insertable="true"
+              updatable="true">
+            <schema type="java.math.BigDecimal" precision="10" scale="2"/>
+        </prop>
+        <prop name="number" displayName="商品货品数量" mandatory="true" queryable="true" sortable="true" insertable="true"
+              updatable="true">
+            <schema type="java.lang.Integer"/>
+        </prop>
+        <prop name="url" displayName="商品货品图片" queryable="true" sortable="true" insertable="true" updatable="true">
+            <schema stdDomain="file" domain="image" type="java.lang.String" precision="255"/>
+        </prop>
+        <prop name="addTime" displayName="创建时间" queryable="true" sortable="true" insertable="false" updatable="false"
+              internal="true" ext:show="X">
+            <schema domain="createTime" type="java.time.LocalDateTime"/>
+        </prop>
+        <prop name="updateTime" displayName="更新时间" queryable="true" sortable="true" insertable="false" updatable="false"
+              internal="true" ext:show="X">
+            <schema domain="updateTime" type="java.time.LocalDateTime"/>
+        </prop>
+        <prop name="deleted" displayName="逻辑删除" queryable="true" sortable="true" insertable="false" updatable="true"
+              internal="true" ext:show="X">
+            <schema domain="delFlag" type="java.lang.Boolean"/>
+        </prop>
+        <prop name="goods" displayName="所属商品" i18n-en:displayName="Goods"
+              tagSet="pub,ref-pub,ref-cascade-delete,ref-insertable,ref-updatable,ref-grid" ext:kind="to-one"
+              internal="true" queryable="true" ext:joinLeftProp="goodsId" ext:joinRightProp="id"
+              ext:joinRightDisplayProp="name" insertable="false" updatable="false" mandatory="true" lazy="true">
+            <schema bizObjName="LitemallGoods"/>
+        </prop>
+        <prop name="goods.name" displayName="所属商品" i18n-en:displayName="Goods" internal="true" queryable="true"
+              sortable="true" lazy="true">
+            <schema type="String"/>
+        </prop>
+        <prop name="specificationsComponent" tagSet="json,pub" ext:kind="component" internal="true" insertable="true"
+              updatable="true" mandatory="true" lazy="true">
+            <schema type="io.nop.orm.support.JsonOrmComponent"/>
+        </prop>
+        <prop name="urlComponent" ext:kind="component" internal="true" insertable="true" updatable="true" lazy="true"
+              published="false">
+            <schema type="io.nop.orm.support.OrmFileComponent"/>
+        </prop>
+    </props>
+</meta>

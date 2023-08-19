@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<meta x:schema="/nop/schema/xmeta.xdef" xmlns:x="/nop/schema/xdsl.xdef" xmlns:i18n-en="i18n-en" xmlns:ext="ext"
+      xmlns:xpl="xpl" xmlns:biz-gen="biz-gen" ext:model="orm" xmlns:c="c" xmlns:graphql="graphql" xmlns:biz="biz"
+      displayName="行政区域表">
+
+    <entityName>app.mall.dao.entity.LitemallRegion</entityName>
+
+    <primaryKey>id</primaryKey>
+
+    <x:post-extends>
+        <biz-gen:DefaultMetaPostExtends xpl:lib="/nop/core/xlib/biz-gen.xlib"/>
+    </x:post-extends>
+
+    <keys/>
+
+    <tree parentProp="pid" childrenProp="children"/>
+
+    <props>
+        <prop name="id" displayName="Id" tagSet="seq" mandatory="true" queryable="true" sortable="true"
+              insertable="false" updatable="false" ext:show="R">
+            <schema type="java.lang.Integer"/>
+        </prop>
+        <prop name="pid" displayName="行政区域父ID" tagSet="parent" mandatory="true" queryable="true" sortable="true"
+              insertable="true" updatable="true" ext:control="tree-parent" ext:relation="parent">
+            <schema type="java.lang.Integer"/>
+        </prop>
+        <prop name="name" displayName="行政区域名称" mandatory="true" queryable="true" sortable="true" insertable="true"
+              updatable="true">
+            <schema type="java.lang.String" precision="120"/>
+        </prop>
+        <prop name="type" displayName="行政区域类型" mandatory="true" queryable="true" sortable="true" insertable="true"
+              updatable="true">
+            <schema type="java.lang.Byte" dict="mall/region-type"/>
+        </prop>
+        <prop name="code" displayName="行政区域编码" mandatory="true" queryable="true" sortable="true" insertable="true"
+              updatable="true">
+            <schema type="java.lang.Integer"/>
+        </prop>
+        <prop name="parent" displayName="父区域" i18n-en:displayName="Parent" tagSet="pub,ref-pub" ext:kind="to-one"
+              internal="true" queryable="true" ext:joinLeftProp="pid" ext:joinRightProp="id" insertable="false"
+              updatable="false" mandatory="true" lazy="true">
+            <schema bizObjName="LitemallRegion"/>
+        </prop>
+        <prop name="children" displayName="子区域" i18n-en:displayName="Children" tagSet="pub" ext:kind="to-many"
+              internal="true" ext:joinLeftProp="id" ext:joinRightProp="pid" insertable="false" updatable="false"
+              lazy="true">
+            <schema>
+                <item bizObjName="LitemallRegion"/>
+            </schema>
+        </prop>
+    </props>
+</meta>

@@ -1,0 +1,19 @@
+# __XGEN_FORCE_OVERRIDE__
+label: 性别
+locale: zh-CN
+valueType: int
+description: 
+options:
+
+  - label: 未知
+    value: 0
+    description: 
+  
+  - label: 男
+    value: 1
+    description: 
+  
+  - label: 女
+    value: 2
+    description: 
+  

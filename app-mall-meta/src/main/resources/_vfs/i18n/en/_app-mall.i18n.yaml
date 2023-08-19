@@ -1,0 +1,559 @@
+entity:
+  label:
+    LitemallAd: null
+    LitemallAddress: null
+    LitemallAdmin: null
+    LitemallAftersale: null
+    LitemallBrand: null
+    LitemallCart: null
+    LitemallCategory: null
+    LitemallCollect: null
+    LitemallComment: null
+    LitemallCoupon: null
+    LitemallCouponUser: null
+    LitemallFeedback: null
+    LitemallFootprint: null
+    LitemallGoods: null
+    LitemallGoodsAttribute: null
+    LitemallGoodsProduct: null
+    LitemallGoodsSpecification: null
+    LitemallGroupon: null
+    LitemallGrouponRules: null
+    LitemallIssue: null
+    LitemallKeyword: null
+    LitemallLog: null
+    LitemallNotice: null
+    LitemallNoticeAdmin: null
+    LitemallOrder: null
+    LitemallOrderGoods: null
+    LitemallPermission: null
+    LitemallRegion: null
+    LitemallRole: null
+    LitemallSearchHistory: null
+    LitemallStorage: null
+    LitemallSystem: null
+    LitemallTopic: null
+    LitemallUser: null
+    LitemallUserRole: User Role
+prop:
+  label:
+    LitemallAd:
+      id: null
+      name: null
+      link: null
+      url: null
+      position: null
+      content: null
+      startTime: null
+      endTime: null
+      enabled: null
+      addTime: null
+      updateTime: null
+      deleted: null
+      urlComponent: null
+    LitemallAddress:
+      id: null
+      name: null
+      userId: null
+      province: null
+      city: null
+      county: null
+      addressDetail: null
+      areaCode: null
+      postalCode: null
+      tel: null
+      isDefault: null
+      addTime: null
+      updateTime: null
+      deleted: null
+      user: User
+      user.username: User
+    LitemallAdmin:
+      id: null
+      username: null
+      password: null
+      lastLoginIp: null
+      lastLoginTime: null
+      avatar: null
+      addTime: null
+      updateTime: null
+      deleted: null
+      roleIds: null
+    LitemallAftersale:
+      id: null
+      aftersaleSn: null
+      orderId: null
+      userId: null
+      type: null
+      type_label: null
+      reason: null
+      amount: null
+      pictures: null
+      comment: null
+      status: null
+      status_label: null
+      handleTime: null
+      addTime: null
+      updateTime: null
+      deleted: null
+      order: Order
+      order.orderSn: Order
+      user: User
+      user.username: User
+    LitemallBrand:
+      id: null
+      name: null
+      picUrl: null
+      desc: null
+      sortOrder: null
+      floorPrice: null
+      addTime: null
+      updateTime: null
+      deleted: null
+      picUrlComponent: null
+    LitemallCart:
+      id: null
+      userId: null
+      goodsId: null
+      goodsSn: null
+      goodsName: null
+      productId: null
+      price: null
+      number: null
+      specifications: null
+      checked: null
+      picUrl: null
+      addTime: null
+      updateTime: null
+      deleted: null
+      goods: Goods
+      goods.name: Goods
+      user: User
+      user.username: User
+      picUrlComponent: null
+    LitemallCategory:
+      id: null
+      name: null
+      iconUrl: null
+      picUrl: null
+      keywords: null
+      desc: null
+      level: null
+      level_label: null
+      pid: null
+      sortOrder: null
+      addTime: null
+      updateTime: null
+      deleted: null
+      parent: Parent
+      parent.name: Parent
+      children: Children
+      iconUrlComponent: null
+      picUrlComponent: null
+    LitemallCollect:
+      id: null
+      userId: null
+      valueId: null
+      type: null
+      addTime: null
+      updateTime: null
+      deleted: null
+      user: User
+      user.username: User
+    LitemallComment:
+      id: null
+      valueId: null
+      type: null
+      content: null
+      adminContent: null
+      userId: null
+      hasPicture: null
+      picUrls: null
+      star: null
+      addTime: null
+      updateTime: null
+      deleted: null
+      user: User
+      user.username: User
+    LitemallCoupon:
+      id: null
+      name: null
+      desc: null
+      tag: null
+      total: null
+      discount: null
+      min: null
+      limit: null
+      type: null
+      type_label: null
+      status: null
+      status_label: null
+      goodsType: null
+      goodsType_label: null
+      goodsValue: null
+      code: null
+      timeType: null
+      timeType_label: null
+      days: null
+      startTime: null
+      endTime: null
+      addTime: null
+      updateTime: null
+      deleted: null
+    LitemallCouponUser:
+      id: null
+      userId: null
+      couponId: null
+      status: null
+      status_label: null
+      usedTime: null
+      startTime: null
+      endTime: null
+      orderId: null
+      addTime: null
+      updateTime: null
+      deleted: null
+      coupon: Coupon
+      coupon.name: Coupon
+      user: User
+      user.username: User
+    LitemallFeedback:
+      id: null
+      userId: null
+      username: null
+      mobile: null
+      feedType: null
+      content: null
+      status: null
+      hasPicture: null
+      picUrls: null
+      addTime: null
+      updateTime: null
+      deleted: null
+      user: User
+      user.username: User
+    LitemallFootprint:
+      id: null
+      userId: null
+      goodsId: null
+      addTime: null
+      updateTime: null
+      deleted: null
+      goods: Goods
+      goods.name: Goods
+      user: User
+      user.username: User
+    LitemallGoods:
+      id: ID
+      goodsSn: Goods SN
+      name: Name
+      categoryId: Category
+      brandId: Brand
+      brandId_label: null
+      gallery: Gallery
+      keywords: Keywords
+      brief: Brief
+      isOnSale: Is On Sale
+      sortOrder: Sort Order
+      picUrl: Picture Url
+      shareUrl: Share Url
+      isNew: Is New
+      isHot: Is Hot
+      unit: Unit
+      counterPrice: Counter Price
+      retailPrice: Retail Price
+      detail: Detail
+      addTime: Add Time
+      updateTime: Update Time
+      deleted: Deleted
+      category: Category
+      category.name: Category
+      brand: Brand
+      brand.name: Brand
+      attributes: Goods Attributes
+      products: Products
+      specifications: Specifications
+      orderGoods: Order Goods
+      picUrlComponent: null
+      shareUrlComponent: null
+      relatedProductList: Order Product List
+      relatedProductIdList: Order Product List
+    LitemallGoodsAttribute:
+      id: null
+      goodsId: null
+      attribute: null
+      value: null
+      addTime: null
+      updateTime: null
+      deleted: null
+      goods: Goods
+      goods.name: Goods
+    LitemallGoodsProduct:
+      id: null
+      goodsId: null
+      specifications: null
+      price: null
+      number: null
+      url: null
+      addTime: null
+      updateTime: null
+      deleted: null
+      goods: Goods
+      goods.name: Goods
+      specificationsComponent: null
+      urlComponent: null
+    LitemallGoodsSpecification:
+      id: null
+      goodsId: null
+      specification: null
+      value: null
+      picUrl: null
+      addTime: null
+      updateTime: null
+      deleted: null
+      goods: Goods
+      goods.name: Goods
+      picUrlComponent: null
+    LitemallGroupon:
+      id: null
+      orderId: null
+      grouponId: null
+      rulesId: null
+      userId: null
+      shareUrl: null
+      creatorUserId: null
+      creatorUserTime: null
+      status: null
+      addTime: null
+      updateTime: null
+      deleted: null
+      order: Order
+      order.orderSn: Order
+      shareUrlComponent: null
+    LitemallGrouponRules:
+      id: null
+      goodsId: null
+      goodsName: null
+      picUrl: null
+      discount: null
+      discountMember: null
+      expireTime: null
+      status: null
+      addTime: null
+      updateTime: null
+      deleted: null
+      goods: Goods
+      goods.name: Goods
+      picUrlComponent: null
+    LitemallIssue:
+      id: null
+      question: null
+      answer: null
+      addTime: null
+      updateTime: null
+      deleted: null
+    LitemallKeyword:
+      id: null
+      keyword: null
+      url: null
+      isHot: null
+      isDefault: null
+      sortOrder: null
+      addTime: null
+      updateTime: null
+      deleted: null
+    LitemallLog:
+      id: null
+      admin: null
+      ip: null
+      type: null
+      action: null
+      status: null
+      result: null
+      comment: null
+      addTime: null
+      updateTime: null
+      deleted: null
+    LitemallNotice:
+      id: null
+      title: null
+      content: null
+      adminId: null
+      addTime: null
+      updateTime: null
+      deleted: null
+    LitemallNoticeAdmin:
+      id: null
+      noticeId: null
+      noticeTitle: null
+      adminId: null
+      readTime: null
+      addTime: null
+      updateTime: null
+      deleted: null
+    LitemallOrder:
+      id: null
+      userId: null
+      orderSn: null
+      orderStatus: null
+      orderStatus_label: null
+      aftersaleStatus: null
+      aftersaleStatus_label: null
+      consignee: null
+      mobile: null
+      address: null
+      message: null
+      goodsPrice: null
+      freightPrice: null
+      couponPrice: null
+      integralPrice: null
+      grouponPrice: null
+      orderPrice: null
+      actualPrice: null
+      payId: null
+      payTime: null
+      shipSn: null
+      shipChannel: null
+      shipTime: null
+      refundAmount: null
+      refundType: null
+      refundContent: null
+      refundTime: null
+      confirmTime: null
+      comments: null
+      endTime: null
+      addTime: null
+      updateTime: null
+      deleted: null
+      user: User
+      user.username: User
+      orderGoods: Order Goods
+      relatedProductList: Order Product List
+      relatedProductIdList: Order Product List
+    LitemallOrderGoods:
+      id: null
+      orderId: null
+      goodsId: null
+      goodsName: null
+      goodsSn: null
+      productId: null
+      number: null
+      price: null
+      specifications: null
+      picUrl: null
+      comment: null
+      addTime: null
+      updateTime: null
+      deleted: null
+      order: Order
+      order.orderSn: Order
+      goods: Order Goods
+      goods.name: Order Goods
+      product: Order Product
+      picUrlComponent: null
+    LitemallPermission:
+      id: null
+      roleId: null
+      permission: null
+      addTime: null
+      updateTime: null
+      deleted: null
+    LitemallRegion:
+      id: null
+      pid: null
+      name: null
+      type: null
+      type_label: null
+      code: null
+      parent: Parent
+      children: Children
+    LitemallRole:
+      id: null
+      name: null
+      desc: null
+      enabled: null
+      addTime: null
+      updateTime: null
+      deleted: null
+      userMappings: null
+      relatedUserList: User List
+      relatedUserIdList: User List
+      relatedUserList_label: User List
+    LitemallSearchHistory:
+      id: null
+      userId: null
+      keyword: null
+      from: null
+      addTime: null
+      updateTime: null
+      deleted: null
+      user: User
+      user.username: User
+    LitemallStorage:
+      id: null
+      key: null
+      name: null
+      type: null
+      size: null
+      url: null
+      addTime: null
+      updateTime: null
+      deleted: null
+    LitemallSystem:
+      id: null
+      keyName: null
+      keyValue: null
+      addTime: null
+      updateTime: null
+      deleted: null
+    LitemallTopic:
+      id: null
+      title: null
+      subtitle: null
+      content: null
+      price: null
+      readCount: null
+      picUrl: null
+      sortOrder: null
+      goods: null
+      addTime: null
+      updateTime: null
+      deleted: null
+      goodsComponent: null
+    LitemallUser:
+      id: null
+      username: null
+      password: null
+      gender: null
+      gender_label: null
+      birthday: null
+      lastLoginTime: null
+      lastLoginIp: null
+      userLevel: null
+      userLevel_label: null
+      nickname: null
+      mobile: null
+      avatar: null
+      weixinOpenid: null
+      sessionKey: null
+      status: null
+      status_label: null
+      addTime: null
+      updateTime: null
+      deleted: null
+      roleMappings: RoleMappings
+      avatarComponent: null
+      relatedRoleList: Role List
+      relatedRoleIdList: Role List
+    LitemallUserRole:
+      userId: User ID
+      roleId: Role ID
+      version: Version
+      createdBy: Created By
+      createTime: Create Time
+      updatedBy: Updated By
+      updateTime: Update Time
+      remark: Remark
+      user: User
+      user.username: User
+      role: Role
