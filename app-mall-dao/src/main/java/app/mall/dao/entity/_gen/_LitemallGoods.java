@@ -126,12 +126,6 @@ public class _LitemallGoods extends DynamicOrmEntity{
     /* relation: 订单商品 */
     public static final String PROP_NAME_orderGoods = "orderGoods";
     
-    /* component:  */
-    public static final String PROP_NAME_picUrlComponent = "picUrlComponent";
-    
-    /* component:  */
-    public static final String PROP_NAME_shareUrlComponent = "shareUrlComponent";
-    
 
     public static final List<String> PK_PROP_NAMES = Arrays.asList(PROP_NAME_id);
     public static final int[] PK_PROP_IDS = new int[]{PROP_ID_id};
@@ -1266,40 +1260,6 @@ public class _LitemallGoods extends DynamicOrmEntity{
        return _orderGoods;
     }
        
-   private io.nop.orm.support.OrmFileComponent _picUrlComponent;
-
-   private static Map<String,Integer> COMPONENT_PROP_ID_MAP_picUrlComponent = new HashMap<>();
-   static{
-      
-         COMPONENT_PROP_ID_MAP_picUrlComponent.put(io.nop.orm.support.OrmFileComponent.PROP_NAME_filePath,PROP_ID_picUrl);
-      
-   }
-
-   public io.nop.orm.support.OrmFileComponent getPicUrlComponent(){
-      if(_picUrlComponent == null){
-          _picUrlComponent = new io.nop.orm.support.OrmFileComponent();
-          _picUrlComponent.bindToEntity(this, COMPONENT_PROP_ID_MAP_picUrlComponent);
-      }
-      return _picUrlComponent;
-   }
-
-   private io.nop.orm.support.OrmFileComponent _shareUrlComponent;
-
-   private static Map<String,Integer> COMPONENT_PROP_ID_MAP_shareUrlComponent = new HashMap<>();
-   static{
-      
-         COMPONENT_PROP_ID_MAP_shareUrlComponent.put(io.nop.orm.support.OrmFileComponent.PROP_NAME_filePath,PROP_ID_shareUrl);
-      
-   }
-
-   public io.nop.orm.support.OrmFileComponent getShareUrlComponent(){
-      if(_shareUrlComponent == null){
-          _shareUrlComponent = new io.nop.orm.support.OrmFileComponent();
-          _shareUrlComponent.bindToEntity(this, COMPONENT_PROP_ID_MAP_shareUrlComponent);
-      }
-      return _shareUrlComponent;
-   }
-
         public List<app.mall.dao.entity.LitemallGoodsProduct> getRelatedProductList(){
             return (List<app.mall.dao.entity.LitemallGoodsProduct>)io.nop.orm.support.OrmEntityHelper.getRefProps(getOrderGoods(),app.mall.dao.entity.LitemallOrderGoods.PROP_NAME_product);
         }

@@ -75,9 +75,6 @@ public class _LitemallGroupon extends DynamicOrmEntity{
     /* relation: 订单 */
     public static final String PROP_NAME_order = "order";
     
-    /* component:  */
-    public static final String PROP_NAME_shareUrlComponent = "shareUrlComponent";
-    
 
     public static final List<String> PK_PROP_NAMES = Arrays.asList(PROP_NAME_id);
     public static final int[] PK_PROP_IDS = new int[]{PROP_ID_id};
@@ -746,22 +743,5 @@ public class _LitemallGroupon extends DynamicOrmEntity{
        }
     }
        
-   private io.nop.orm.support.OrmFileComponent _shareUrlComponent;
-
-   private static Map<String,Integer> COMPONENT_PROP_ID_MAP_shareUrlComponent = new HashMap<>();
-   static{
-      
-         COMPONENT_PROP_ID_MAP_shareUrlComponent.put(io.nop.orm.support.OrmFileComponent.PROP_NAME_filePath,PROP_ID_shareUrl);
-      
-   }
-
-   public io.nop.orm.support.OrmFileComponent getShareUrlComponent(){
-      if(_shareUrlComponent == null){
-          _shareUrlComponent = new io.nop.orm.support.OrmFileComponent();
-          _shareUrlComponent.bindToEntity(this, COMPONENT_PROP_ID_MAP_shareUrlComponent);
-      }
-      return _shareUrlComponent;
-   }
-
 }
 // resume CPD analysis - CPD-ON
