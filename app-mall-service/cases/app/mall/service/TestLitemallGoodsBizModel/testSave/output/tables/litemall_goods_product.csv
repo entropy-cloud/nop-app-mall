@@ -1,2 +1,0 @@
-_chgType,ID,GOODS_ID,SPECIFICATIONS,PRICE,NUMBER,URL,ADD_TIME,UPDATE_TIME,DELETED
-A,@var:LitemallGoodsProduct@id,@var:LitemallGoods@id,"[""其他""]",25,30,http://yanxuan.nosdn.127.net/8ab2d3287af0cefa2cc539e40600621d.png,*,*,false

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <meta x:schema="/nop/schema/xmeta.xdef" xmlns:x="/nop/schema/xdsl.xdef" xmlns:i18n-en="i18n-en" xmlns:ext="ext"
       xmlns:xpl="xpl" ext:model="orm" xmlns:c="c" xmlns:graphql="graphql" xmlns:meta-gen="meta-gen" xmlns:biz="biz"
-      displayName="类目表">
+      displayName="类目表" xmlns:ui="ui">
 
     <entityName>app.mall.dao.entity.LitemallCategory</entityName>
 
@@ -23,7 +23,7 @@
 
     <props>
         <prop name="id" displayName="Id" tagSet="seq" mandatory="true" queryable="true" sortable="true"
-              insertable="false" updatable="false" ext:show="R">
+              insertable="false" updatable="false" ui:show="R">
             <schema type="java.lang.Integer"/>
         </prop>
         <prop name="name" displayName="类目名称" tagSet="disp" mandatory="true" queryable="true" sortable="true"
@@ -47,23 +47,23 @@
             <schema type="java.lang.String" precision="255" dict="mall/category-level"/>
         </prop>
         <prop name="pid" displayName="父类目ID" tagSet="parent" queryable="true" sortable="true" insertable="true"
-              updatable="true" ext:show="L" ext:control="tree-parent" ext:relation="parent">
+              updatable="true" ui:show="L" ext:control="tree-parent" ext:relation="parent">
             <schema type="java.lang.Integer"/>
         </prop>
         <prop name="sortOrder" displayName="排序" queryable="true" sortable="true" insertable="true" updatable="true"
-              internal="true" ext:show="X">
+              internal="true" ui:show="X">
             <schema type="java.lang.Byte"/>
         </prop>
         <prop name="addTime" displayName="创建时间" queryable="true" sortable="true" insertable="false" updatable="false"
-              internal="true" ext:show="X">
+              internal="true" ui:show="X">
             <schema domain="createTime" type="java.time.LocalDateTime"/>
         </prop>
         <prop name="updateTime" displayName="更新时间" queryable="true" sortable="true" insertable="false" updatable="false"
-              internal="true" ext:show="X">
+              internal="true" ui:show="X">
             <schema domain="updateTime" type="java.time.LocalDateTime"/>
         </prop>
         <prop name="deleted" displayName="逻辑删除" queryable="true" sortable="true" insertable="false" updatable="true"
-              internal="true" ext:show="X">
+              internal="true" ui:show="X">
             <schema domain="delFlag" type="java.lang.Boolean"/>
         </prop>
         <prop name="parent" displayName="父类目" i18n-en:displayName="Parent" tagSet="pub,ref-pub" ext:kind="to-one"
@@ -84,11 +84,11 @@
         </prop>
         <prop name="iconUrlComponent" ext:kind="component" internal="true" insertable="true" updatable="true"
               lazy="true" published="false">
-            <schema type="io.nop.orm.support.OrmFileComponent"/>
+            <schema type="io.nop.orm.component.OrmFileComponent"/>
         </prop>
         <prop name="picUrlComponent" ext:kind="component" internal="true" insertable="true" updatable="true" lazy="true"
               published="false">
-            <schema type="io.nop.orm.support.OrmFileComponent"/>
+            <schema type="io.nop.orm.component.OrmFileComponent"/>
         </prop>
     </props>
 </meta>

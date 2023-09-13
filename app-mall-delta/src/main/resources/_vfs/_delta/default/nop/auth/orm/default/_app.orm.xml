@@ -3,7 +3,7 @@
      ext:deltaDir="default" ext:mavenGroupId="io.nop.app" ext:basePackageName="app.mall.delta" ext:appName="nop-auth"
      ext:platformVersion="2.0.0-SNAPSHOT" ext:dialect="mysql,oracle,postgresql" ext:mavenVersion="1.0.0-SNAPSHOT"
      x:schema="/nop/schema/orm/orm.xdef" xmlns:x="/nop/schema/xdsl.xdef" xmlns:i18n-en="i18n-en"
-     xmlns:ref-i18n-en="ref-i18n-en" xmlns:ext="ext" xmlns:orm-gen="orm-gen" xmlns:xpl="xpl">
+     xmlns:ref-i18n-en="ref-i18n-en" xmlns:ext="ext" xmlns:orm-gen="orm-gen" xmlns:xpl="xpl" xmlns:ui="ui">
 
     <x:post-extends x:override="replace">
         <orm-gen:DefaultPostExtends xpl:lib="/nop/orm/xlib/orm-gen.xlib"/>
@@ -36,10 +36,10 @@
             <columns>
                 <column code="USER_ID" displayName="用户ID" domain="userId" mandatory="true" name="userId"
                         notGenCode="true" precision="50" primary="true" propId="1" stdDataType="string"
-                        stdSqlType="VARCHAR" tagSet="seq,not-gen" i18n-en:displayName="User ID" ext:show="X"/>
+                        stdSqlType="VARCHAR" tagSet="seq,not-gen" i18n-en:displayName="User ID" ui:show="X"/>
                 <column code="CLIENT_ID" displayName="设备ID" name="clientId" notGenCode="true" precision="100"
                         stdDataType="string" stdSqlType="VARCHAR" tagSet="del" i18n-en:displayName="Client Id"
-                        ext:show="X" x:override="remove"/>
+                        ui:show="X" x:override="remove"/>
                 <column code="MALL_USER_ID" displayName="关联用户ID" name="mallUserId" propId="100" stdDataType="int"
                         stdSqlType="INTEGER" i18n-en:displayName="Mall User ID"/>
             </columns>
@@ -49,6 +49,7 @@
                     <join>
                         <on leftProp="mallUserId" rightProp="id"/>
                     </join>
+                    <ref-set/>
                 </to-one>
             </relations>
         </entity>
@@ -58,7 +59,7 @@
             <columns>
                 <column code="ID" displayName="用户ID" domain="userId" mandatory="true" name="id" notGenCode="true"
                         precision="50" primary="true" propId="1" stdDataType="string" stdSqlType="VARCHAR"
-                        tagSet="not-gen" i18n-en:displayName="ID" ext:show="X"/>
+                        tagSet="not-gen" i18n-en:displayName="ID" ui:show="X"/>
             </columns>
         </entity>
     </entities>

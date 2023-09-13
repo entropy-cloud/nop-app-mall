@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <meta x:schema="/nop/schema/xmeta.xdef" xmlns:x="/nop/schema/xdsl.xdef" xmlns:i18n-en="i18n-en" xmlns:ext="ext"
       xmlns:xpl="xpl" ext:model="orm" xmlns:c="c" xmlns:graphql="graphql" xmlns:meta-gen="meta-gen" xmlns:biz="biz"
-      displayName="用户浏览足迹表">
+      displayName="用户浏览足迹表" xmlns:ui="ui">
 
     <entityName>app.mall.dao.entity.LitemallFootprint</entityName>
 
@@ -19,7 +19,7 @@
 
     <props>
         <prop name="id" displayName="Id" tagSet="seq" mandatory="true" queryable="true" sortable="true"
-              insertable="false" updatable="false" ext:show="R">
+              insertable="false" updatable="false" ui:show="R">
             <schema type="java.lang.Integer"/>
         </prop>
         <prop name="userId" displayName="用户ID" mandatory="true" queryable="true" sortable="true" insertable="true"
@@ -31,15 +31,15 @@
             <schema type="java.lang.Integer"/>
         </prop>
         <prop name="addTime" displayName="创建时间" queryable="true" sortable="true" insertable="false" updatable="false"
-              internal="true" ext:show="X">
+              internal="true" ui:show="X">
             <schema domain="createTime" type="java.time.LocalDateTime"/>
         </prop>
         <prop name="updateTime" displayName="更新时间" queryable="true" sortable="true" insertable="false" updatable="false"
-              internal="true" ext:show="X">
+              internal="true" ui:show="X">
             <schema domain="updateTime" type="java.time.LocalDateTime"/>
         </prop>
         <prop name="deleted" displayName="逻辑删除" queryable="true" sortable="true" insertable="false" updatable="true"
-              internal="true" ext:show="X">
+              internal="true" ui:show="X">
             <schema domain="delFlag" type="java.lang.Boolean"/>
         </prop>
         <prop name="goods" displayName="订单" i18n-en:displayName="Goods" tagSet="pub,ref-pub" ext:kind="to-one"

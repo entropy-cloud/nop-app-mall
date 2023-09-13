@@ -78,6 +78,12 @@ public class _LitemallCategory extends DynamicOrmEntity{
     /* relation: 子类目 */
     public static final String PROP_NAME_children = "children";
     
+    /* component:  */
+    public static final String PROP_NAME_iconUrlComponent = "iconUrlComponent";
+    
+    /* component:  */
+    public static final String PROP_NAME_picUrlComponent = "picUrlComponent";
+    
 
     public static final List<String> PK_PROP_NAMES = Arrays.asList(PROP_NAME_id);
     public static final int[] PK_PROP_IDS = new int[]{PROP_ID_id};
@@ -756,5 +762,39 @@ public class _LitemallCategory extends DynamicOrmEntity{
        return _children;
     }
        
+   private io.nop.orm.component.OrmFileComponent _iconUrlComponent;
+
+   private static Map<String,Integer> COMPONENT_PROP_ID_MAP_iconUrlComponent = new HashMap<>();
+   static{
+      
+         COMPONENT_PROP_ID_MAP_iconUrlComponent.put(io.nop.orm.component.OrmFileComponent.PROP_NAME_filePath,PROP_ID_iconUrl);
+      
+   }
+
+   public io.nop.orm.component.OrmFileComponent getIconUrlComponent(){
+      if(_iconUrlComponent == null){
+          _iconUrlComponent = new io.nop.orm.component.OrmFileComponent();
+          _iconUrlComponent.bindToEntity(this, COMPONENT_PROP_ID_MAP_iconUrlComponent);
+      }
+      return _iconUrlComponent;
+   }
+
+   private io.nop.orm.component.OrmFileComponent _picUrlComponent;
+
+   private static Map<String,Integer> COMPONENT_PROP_ID_MAP_picUrlComponent = new HashMap<>();
+   static{
+      
+         COMPONENT_PROP_ID_MAP_picUrlComponent.put(io.nop.orm.component.OrmFileComponent.PROP_NAME_filePath,PROP_ID_picUrl);
+      
+   }
+
+   public io.nop.orm.component.OrmFileComponent getPicUrlComponent(){
+      if(_picUrlComponent == null){
+          _picUrlComponent = new io.nop.orm.component.OrmFileComponent();
+          _picUrlComponent.bindToEntity(this, COMPONENT_PROP_ID_MAP_picUrlComponent);
+      }
+      return _picUrlComponent;
+   }
+
 }
 // resume CPD analysis - CPD-ON

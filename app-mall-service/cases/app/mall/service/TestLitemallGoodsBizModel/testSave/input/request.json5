@@ -1,8 +1,8 @@
 {
   data: {
     data: {
-      "goodsSn": "test-04",
-      "name": "测试商品4",
+      "goodsSn": "test-05",
+      "name": "测试商品5",
       "counterPrice": 33,
       "isNew": 1,
       "picUrl": "http://yanxuan.nosdn.127.net/8ab2d3287af0cefa2cc539e40600621d.png",

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <meta x:schema="/nop/schema/xmeta.xdef" xmlns:x="/nop/schema/xdsl.xdef" xmlns:i18n-en="i18n-en" xmlns:ext="ext"
       xmlns:xpl="xpl" ext:model="orm" xmlns:c="c" xmlns:graphql="graphql" xmlns:meta-gen="meta-gen" xmlns:biz="biz"
-      displayName="行政区域表">
+      displayName="行政区域表" xmlns:ui="ui">
 
     <entityName>app.mall.dao.entity.LitemallRegion</entityName>
 
@@ -21,7 +21,7 @@
 
     <props>
         <prop name="id" displayName="Id" tagSet="seq" mandatory="true" queryable="true" sortable="true"
-              insertable="false" updatable="false" ext:show="R">
+              insertable="false" updatable="false" ui:show="R">
             <schema type="java.lang.Integer"/>
         </prop>
         <prop name="pid" displayName="行政区域父ID" tagSet="parent" mandatory="true" queryable="true" sortable="true"

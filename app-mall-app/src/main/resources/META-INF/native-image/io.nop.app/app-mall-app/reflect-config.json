@@ -630,6 +630,11 @@
         "allowUnsafeAccess": false,
         "allowWrite": false,
         "name": "PROP_NAME_url"
+      },
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
+        "name": "PROP_NAME_urlComponent"
       }
     ],
     "methods": [
@@ -683,6 +688,10 @@
       },
       {
         "name": "getUrl",
+        "parameterTypes": []
+      },
+      {
+        "name": "getUrlComponent",
         "parameterTypes": []
       },
       {
@@ -1968,6 +1977,11 @@
       {
         "allowUnsafeAccess": false,
         "allowWrite": false,
+        "name": "PROP_NAME_picUrlComponent"
+      },
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
         "name": "PROP_NAME_sortOrder"
       },
       {
@@ -2007,6 +2021,10 @@
       },
       {
         "name": "getPicUrl",
+        "parameterTypes": []
+      },
+      {
+        "name": "getPicUrlComponent",
         "parameterTypes": []
       },
       {
@@ -2268,6 +2286,11 @@
       {
         "allowUnsafeAccess": false,
         "allowWrite": false,
+        "name": "PROP_NAME_picUrlComponent"
+      },
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
         "name": "PROP_NAME_price"
       },
       {
@@ -2339,6 +2362,10 @@
       },
       {
         "name": "getPicUrl",
+        "parameterTypes": []
+      },
+      {
+        "name": "getPicUrlComponent",
         "parameterTypes": []
       },
       {
@@ -2623,6 +2650,11 @@
       {
         "allowUnsafeAccess": false,
         "allowWrite": false,
+        "name": "PROP_NAME_iconUrlComponent"
+      },
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
         "name": "PROP_NAME_id"
       },
       {
@@ -2649,6 +2681,11 @@
         "allowUnsafeAccess": false,
         "allowWrite": false,
         "name": "PROP_NAME_picUrl"
+      },
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
+        "name": "PROP_NAME_picUrlComponent"
       },
       {
         "allowUnsafeAccess": false,
@@ -2692,6 +2729,10 @@
         "parameterTypes": []
       },
       {
+        "name": "getIconUrlComponent",
+        "parameterTypes": []
+      },
+      {
         "name": "getId",
         "parameterTypes": []
       },
@@ -2713,6 +2754,10 @@
       },
       {
         "name": "getPicUrl",
+        "parameterTypes": []
+      },
+      {
+        "name": "getPicUrlComponent",
         "parameterTypes": []
       },
       {
@@ -5055,6 +5100,11 @@
       {
         "allowUnsafeAccess": false,
         "allowWrite": false,
+        "name": "PROP_NAME_picUrlComponent"
+      },
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
         "name": "PROP_NAME_products"
       },
       {
@@ -5066,6 +5116,11 @@
         "allowUnsafeAccess": false,
         "allowWrite": false,
         "name": "PROP_NAME_shareUrl"
+      },
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
+        "name": "PROP_NAME_shareUrlComponent"
       },
       {
         "allowUnsafeAccess": false,
@@ -5178,6 +5233,10 @@
         "parameterTypes": []
       },
       {
+        "name": "getPicUrlComponent",
+        "parameterTypes": []
+      },
+      {
         "name": "getProducts",
         "parameterTypes": []
       },
@@ -5195,6 +5254,10 @@
       },
       {
         "name": "getShareUrl",
+        "parameterTypes": []
+      },
+      {
+        "name": "getShareUrlComponent",
         "parameterTypes": []
       },
       {
@@ -5765,6 +5828,11 @@
         "allowUnsafeAccess": false,
         "allowWrite": false,
         "name": "PROP_NAME_url"
+      },
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
+        "name": "PROP_NAME_urlComponent"
       }
     ],
     "methods": [
@@ -5814,6 +5882,10 @@
       },
       {
         "name": "getUrl",
+        "parameterTypes": []
+      },
+      {
+        "name": "getUrlComponent",
         "parameterTypes": []
       },
       {
@@ -6023,6 +6095,11 @@
       {
         "allowUnsafeAccess": false,
         "allowWrite": false,
+        "name": "PROP_NAME_picUrlComponent"
+      },
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
         "name": "PROP_NAME_specification"
       },
       {
@@ -6063,6 +6140,10 @@
       },
       {
         "name": "getPicUrl",
+        "parameterTypes": []
+      },
+      {
+        "name": "getPicUrlComponent",
         "parameterTypes": []
       },
       {
@@ -6318,6 +6399,11 @@
       {
         "allowUnsafeAccess": false,
         "allowWrite": false,
+        "name": "PROP_NAME_shareUrlComponent"
+      },
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
         "name": "PROP_NAME_status"
       },
       {
@@ -6374,6 +6460,10 @@
       },
       {
         "name": "getShareUrl",
+        "parameterTypes": []
+      },
+      {
+        "name": "getShareUrlComponent",
         "parameterTypes": []
       },
       {
@@ -6648,6 +6738,11 @@
       {
         "allowUnsafeAccess": false,
         "allowWrite": false,
+        "name": "PROP_NAME_picUrlComponent"
+      },
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
         "name": "PROP_NAME_status"
       },
       {
@@ -6699,6 +6794,10 @@
       },
       {
         "name": "getPicUrl",
+        "parameterTypes": []
+      },
+      {
+        "name": "getPicUrlComponent",
         "parameterTypes": []
       },
       {
@@ -8946,6 +9045,11 @@
       {
         "allowUnsafeAccess": false,
         "allowWrite": false,
+        "name": "PROP_NAME_picUrlComponent"
+      },
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
         "name": "PROP_NAME_price"
       },
       {
@@ -9020,6 +9124,10 @@
       },
       {
         "name": "getPicUrl",
+        "parameterTypes": []
+      },
+      {
+        "name": "getPicUrlComponent",
         "parameterTypes": []
       },
       {
@@ -10991,6 +11099,11 @@
       {
         "allowUnsafeAccess": false,
         "allowWrite": false,
+        "name": "PROP_NAME_avatarComponent"
+      },
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
         "name": "PROP_NAME_birthday"
       },
       {
@@ -11080,6 +11193,10 @@
       },
       {
         "name": "getAvatar",
+        "parameterTypes": []
+      },
+      {
+        "name": "getAvatarComponent",
         "parameterTypes": []
       },
       {
@@ -13194,6 +13311,58 @@
     "allDeclaredMethods": true,
     "allPublicConstructors": true,
     "allPublicMethods": true,
+    "fields": [
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
+        "name": "Cache"
+      },
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
+        "name": "ContextRoot"
+      },
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
+        "name": "ContextSource"
+      },
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
+        "name": "FieldSelection"
+      },
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
+        "name": "RequestBean"
+      },
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
+        "name": "ServiceContext"
+      }
+    ],
+    "methods": [
+      {
+        "name": "valueOf",
+        "parameterTypes": [
+          "java.lang.String"
+        ]
+      },
+      {
+        "name": "values",
+        "parameterTypes": []
+      }
+    ],
+    "name": "io.nop.api.core.annotations.biz.BizActionArgKind",
+    "unsafeAllocated": false
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicMethods": true,
     "fields": [],
     "methods": [
       {
@@ -13221,6 +13390,25 @@
       }
     ],
     "name": "io.nop.api.core.annotations.txn.Transactional",
+    "unsafeAllocated": false
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [
+      {
+        "name": "getEvalScope",
+        "parameterTypes": []
+      },
+      {
+        "name": "getUserContext",
+        "parameterTypes": []
+      }
+    ],
+    "name": "io.nop.api.core.auth.ISecurityContext",
     "unsafeAllocated": false
   },
   {
@@ -13555,6 +13743,12 @@
         "name": "setWrapper",
         "parameterTypes": [
           "boolean"
+        ]
+      },
+      {
+        "name": "wrap",
+        "parameterTypes": [
+          "java.lang.Object"
         ]
       }
     ],
@@ -14201,6 +14395,11 @@
       {
         "allowUnsafeAccess": false,
         "allowWrite": false,
+        "name": "DUMMY_TAG_NAME"
+      },
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
         "name": "FILTER_ATTR_EXCLUDE_MAX"
       },
       {
@@ -14452,6 +14651,11 @@
         "allowUnsafeAccess": false,
         "allowWrite": false,
         "name": "FILTER_OP_STARTS_WITH"
+      },
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
+        "name": "FILTER_TAG_NAME"
       }
     ],
     "methods": [],
@@ -15410,6 +15614,12 @@
         ]
       },
       {
+        "name": "fromTreeBean",
+        "parameterTypes": [
+          "io.nop.api.core.beans.ITreeBean"
+        ]
+      },
+      {
         "name": "getName",
         "parameterTypes": []
       },
@@ -15504,6 +15714,18 @@
         "name": "addOrderBy",
         "parameterTypes": [
           "java.util.List"
+        ]
+      },
+      {
+        "name": "addOrderByNode",
+        "parameterTypes": [
+          "io.nop.api.core.beans.ITreeBean"
+        ]
+      },
+      {
+        "name": "addOrderField",
+        "parameterTypes": [
+          "io.nop.api.core.beans.query.OrderFieldBean"
         ]
       },
       {
@@ -15839,6 +16061,89 @@
     "fields": [],
     "methods": [
       {
+        "name": "activeProfile",
+        "parameterTypes": []
+      },
+      {
+        "name": "appLocale",
+        "parameterTypes": []
+      },
+      {
+        "name": "appName",
+        "parameterTypes": []
+      },
+      {
+        "name": "appTimezone",
+        "parameterTypes": []
+      },
+      {
+        "name": "appVersion",
+        "parameterTypes": []
+      },
+      {
+        "name": "defaultLocale",
+        "parameterTypes": []
+      },
+      {
+        "name": "getConfigProvider",
+        "parameterTypes": []
+      },
+      {
+        "name": "hostId",
+        "parameterTypes": []
+      },
+      {
+        "name": "isDebugMode",
+        "parameterTypes": []
+      },
+      {
+        "name": "registerConfigProvider",
+        "parameterTypes": [
+          "io.nop.api.core.config.IConfigProvider"
+        ]
+      },
+      {
+        "name": "var",
+        "parameterTypes": [
+          "java.lang.String"
+        ]
+      },
+      {
+        "name": "var",
+        "parameterTypes": [
+          "java.lang.String",
+          "java.lang.Object"
+        ]
+      },
+      {
+        "name": "varRef",
+        "parameterTypes": [
+          "io.nop.api.core.util.SourceLocation",
+          "java.lang.String",
+          "java.lang.Class",
+          "java.lang.Object"
+        ]
+      },
+      {
+        "name": "withOverride",
+        "parameterTypes": [
+          "io.nop.api.core.util.SourceLocation",
+          "io.nop.api.core.config.IConfigReference",
+          "java.lang.String"
+        ]
+      }
+    ],
+    "name": "io.nop.api.core.config.AppConfig",
+    "unsafeAllocated": false
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [
+      {
         "name": "fillInStackTrace",
         "parameterTypes": []
       }
@@ -16091,6 +16396,47 @@
       }
     ],
     "name": "io.nop.api.core.resource.IResourceReference",
+    "unsafeAllocated": false
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicMethods": true,
+    "fields": [
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": true,
+        "name": "INSTANCE"
+      }
+    ],
+    "methods": [
+      {
+        "name": "getSysDate",
+        "parameterTypes": []
+      },
+      {
+        "name": "getSysDateTime",
+        "parameterTypes": []
+      },
+      {
+        "name": "instance",
+        "parameterTypes": []
+      },
+      {
+        "name": "isWorkDay",
+        "parameterTypes": [
+          "java.time.LocalDate"
+        ]
+      },
+      {
+        "name": "nextWorkDay",
+        "parameterTypes": [
+          "java.time.LocalDate"
+        ]
+      }
+    ],
+    "name": "io.nop.api.core.time.DefaultSysCalendar",
     "unsafeAllocated": false
   },
   {
@@ -16412,6 +16758,78 @@
     "fields": [],
     "methods": [
       {
+        "name": "appendOnCancel",
+        "parameterTypes": [
+          "java.util.function.Consumer"
+        ]
+      },
+      {
+        "name": "getCancelReason",
+        "parameterTypes": []
+      },
+      {
+        "name": "isCancelled",
+        "parameterTypes": []
+      },
+      {
+        "name": "removeOnCancel",
+        "parameterTypes": [
+          "java.util.function.Consumer"
+        ]
+      }
+    ],
+    "name": "io.nop.api.core.util.ICancelToken",
+    "unsafeAllocated": false
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicMethods": true,
+    "fields": [
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
+        "name": "CANCEL_REASON_KILL"
+      },
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
+        "name": "CANCEL_REASON_STOP"
+      },
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
+        "name": "CANCEL_REASON_TIMEOUT"
+      }
+    ],
+    "methods": [
+      {
+        "name": "cancel",
+        "parameterTypes": [
+          "java.lang.String"
+        ]
+      },
+      {
+        "name": "getCancelReason",
+        "parameterTypes": []
+      },
+      {
+        "name": "isCancelled",
+        "parameterTypes": []
+      }
+    ],
+    "name": "io.nop.api.core.util.ICancellable",
+    "unsafeAllocated": false
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [
+      {
         "name": "cloneInstance",
         "parameterTypes": []
       }
@@ -16495,6 +16913,147 @@
       }
     ],
     "name": "io.nop.api.core.util.IWithIdentifier",
+    "unsafeAllocated": false
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicMethods": true,
+    "fields": [
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
+        "name": "JWT_CLAIMS_REALM_ACCESS"
+      },
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
+        "name": "JWT_CLAIMS_ROLES"
+      },
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
+        "name": "JWT_CLAIMS_SID"
+      },
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
+        "name": "JWT_CLAIMS_USERNAME"
+      },
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
+        "name": "LOGIN_TYPE_EMAIL_PASSWORD"
+      },
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
+        "name": "LOGIN_TYPE_PHONE_PASSWORD"
+      },
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
+        "name": "LOGIN_TYPE_SSO"
+      },
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
+        "name": "LOGIN_TYPE_USERNAME_PASSWORD"
+      },
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
+        "name": "LOGOUT_TYPE_EXPIRE"
+      },
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
+        "name": "LOGOUT_TYPE_KILL"
+      },
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
+        "name": "LOGOUT_TYPE_MANUAL"
+      },
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
+        "name": "LOGOUT_TYPE_NONE"
+      },
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
+        "name": "LOGOUT_TYPE_RELOGIN"
+      },
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
+        "name": "LOGOUT_TYPE_SSO_CALLBACK"
+      },
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
+        "name": "RESOURCE_STATUS_ACTIVE"
+      },
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
+        "name": "RESOURCE_STATUS_DISABLED"
+      },
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
+        "name": "RESOURCE_TYPE_FUNCTION_POINT"
+      },
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
+        "name": "RESOURCE_TYPE_SUB_MENU"
+      },
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
+        "name": "RESOURCE_TYPE_TOP_MENU"
+      },
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
+        "name": "SITE_MAIN"
+      },
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
+        "name": "USER_GENDER_DEFAULT"
+      },
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
+        "name": "USER_STATUS_ABANDONED"
+      },
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
+        "name": "USER_STATUS_ACTIVE"
+      },
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
+        "name": "USER_STATUS_DISABLED"
+      },
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
+        "name": "USER_STATUS_SUSPENDED"
+      },
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
+        "name": "USER_TYPE_DEFAULT"
+      }
+    ],
+    "methods": [],
+    "name": "io.nop.auth.api.AuthApiConstants",
     "unsafeAllocated": false
   },
   {
@@ -23408,6 +23967,11 @@
       {
         "allowUnsafeAccess": false,
         "allowWrite": false,
+        "name": "PROP_NAME_avatarComponent"
+      },
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
         "name": "PROP_NAME_birthday"
       },
       {
@@ -23593,6 +24157,10 @@
       },
       {
         "name": "getAvatar",
+        "parameterTypes": []
+      },
+      {
+        "name": "getAvatarComponent",
         "parameterTypes": []
       },
       {
@@ -25511,6 +26079,56 @@
     "allDeclaredMethods": true,
     "allPublicConstructors": true,
     "allPublicMethods": true,
+    "fields": [],
+    "methods": [
+      {
+        "name": "getAction",
+        "parameterTypes": [
+          "java.lang.String"
+        ]
+      },
+      {
+        "name": "getBizModel",
+        "parameterTypes": []
+      },
+      {
+        "name": "getBizObjName",
+        "parameterTypes": []
+      },
+      {
+        "name": "getObjMeta",
+        "parameterTypes": []
+      },
+      {
+        "name": "getObjectDefinition",
+        "parameterTypes": []
+      },
+      {
+        "name": "getOperationDefinition",
+        "parameterTypes": [
+          "io.nop.graphql.core.ast.GraphQLOperationType",
+          "java.lang.String"
+        ]
+      },
+      {
+        "name": "getOperationDefinitions",
+        "parameterTypes": [
+          "io.nop.graphql.core.ast.GraphQLOperationType"
+        ]
+      },
+      {
+        "name": "getStateMachine",
+        "parameterTypes": []
+      }
+    ],
+    "name": "io.nop.biz.api.IBizObject",
+    "unsafeAllocated": false
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicMethods": true,
     "fields": [
       {
         "allowUnsafeAccess": false,
@@ -25605,6 +26223,13 @@
         "name": "checkDataAuth",
         "parameterTypes": [
           "java.lang.String",
+          "io.nop.orm.IOrmEntity",
+          "io.nop.core.context.IServiceContext"
+        ]
+      },
+      {
+        "name": "checkDataAuthAfterUpdate",
+        "parameterTypes": [
           "io.nop.orm.IOrmEntity",
           "io.nop.core.context.IServiceContext"
         ]
@@ -25710,6 +26335,14 @@
         ]
       },
       {
+        "name": "doCopyForNew",
+        "parameterTypes": [
+          "java.util.Map",
+          "java.lang.String",
+          "io.nop.core.context.IServiceContext"
+        ]
+      },
+      {
         "name": "doDelete",
         "parameterTypes": [
           "java.lang.String",
@@ -25730,6 +26363,24 @@
           "io.nop.api.core.beans.query.QueryBean",
           "io.nop.api.core.beans.FieldSelectionBean",
           "java.util.function.BiConsumer",
+          "io.nop.core.context.IServiceContext"
+        ]
+      },
+      {
+        "name": "doFindFirst",
+        "parameterTypes": [
+          "io.nop.api.core.beans.query.QueryBean",
+          "java.util.function.BiConsumer",
+          "io.nop.api.core.beans.FieldSelectionBean",
+          "io.nop.core.context.IServiceContext"
+        ]
+      },
+      {
+        "name": "doFindList",
+        "parameterTypes": [
+          "io.nop.api.core.beans.query.QueryBean",
+          "java.util.function.BiConsumer",
+          "io.nop.api.core.beans.FieldSelectionBean",
           "io.nop.core.context.IServiceContext"
         ]
       },
@@ -25762,6 +26413,15 @@
         "name": "doUpdate",
         "parameterTypes": [
           "java.util.Map",
+          "io.nop.api.core.beans.FieldSelectionBean",
+          "java.util.function.BiConsumer",
+          "io.nop.core.context.IServiceContext"
+        ]
+      },
+      {
+        "name": "doUpdate",
+        "parameterTypes": [
+          "java.util.Map",
           "java.util.function.BiConsumer",
           "io.nop.api.core.beans.FieldSelectionBean",
           "io.nop.core.context.IServiceContext"
@@ -25776,6 +26436,14 @@
       },
       {
         "name": "findFirst",
+        "parameterTypes": [
+          "io.nop.api.core.beans.query.QueryBean",
+          "io.nop.api.core.beans.FieldSelectionBean",
+          "io.nop.core.context.IServiceContext"
+        ]
+      },
+      {
+        "name": "findList",
         "parameterTypes": [
           "io.nop.api.core.beans.query.QueryBean",
           "io.nop.api.core.beans.FieldSelectionBean",
@@ -25886,6 +26554,13 @@
       },
       {
         "name": "save",
+        "parameterTypes": [
+          "java.util.Map",
+          "io.nop.core.context.IServiceContext"
+        ]
+      },
+      {
+        "name": "save_update",
         "parameterTypes": [
           "java.util.Map",
           "io.nop.core.context.IServiceContext"
@@ -26538,6 +27213,47 @@
     "fields": [],
     "methods": [
       {
+        "name": "checkAuth",
+        "parameterTypes": [
+          "java.lang.String",
+          "java.lang.String",
+          "java.lang.String",
+          "io.nop.api.core.auth.ISecurityContext"
+        ]
+      },
+      {
+        "name": "setBizObjectManager",
+        "parameterTypes": [
+          "io.nop.biz.api.IBizObjectManager"
+        ]
+      }
+    ],
+    "name": "io.nop.biz.impl.DefaultBizAuthChecker",
+    "unsafeAllocated": false
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [
+      {
+        "name": "init",
+        "parameterTypes": []
+      }
+    ],
+    "name": "io.nop.biz.model.BizActionArgModel",
+    "unsafeAllocated": false
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [
+      {
         "name": "getExecutable",
         "parameterTypes": []
       },
@@ -26547,6 +27263,10 @@
       },
       {
         "name": "getReturnType",
+        "parameterTypes": []
+      },
+      {
+        "name": "init",
         "parameterTypes": []
       },
       {
@@ -26576,6 +27296,124 @@
       }
     ],
     "name": "io.nop.biz.model.BizModel",
+    "unsafeAllocated": false
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [
+      {
+        "name": "init",
+        "parameterTypes": []
+      }
+    ],
+    "name": "io.nop.biz.model.BizReturnModel",
+    "unsafeAllocated": false
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [
+      {
+        "name": "freeze",
+        "parameterTypes": [
+          "boolean"
+        ]
+      },
+      {
+        "name": "getDefaultExpr",
+        "parameterTypes": []
+      },
+      {
+        "name": "getDescription",
+        "parameterTypes": []
+      },
+      {
+        "name": "getDisplayName",
+        "parameterTypes": []
+      },
+      {
+        "name": "getKind",
+        "parameterTypes": []
+      },
+      {
+        "name": "getName",
+        "parameterTypes": []
+      },
+      {
+        "name": "getSchema",
+        "parameterTypes": []
+      },
+      {
+        "name": "getType",
+        "parameterTypes": []
+      },
+      {
+        "name": "isMandatory",
+        "parameterTypes": []
+      },
+      {
+        "name": "outputJson",
+        "parameterTypes": [
+          "io.nop.core.lang.json.IJsonHandler"
+        ]
+      },
+      {
+        "name": "setDefaultExpr",
+        "parameterTypes": [
+          "io.nop.core.lang.eval.IEvalAction"
+        ]
+      },
+      {
+        "name": "setDescription",
+        "parameterTypes": [
+          "java.lang.String"
+        ]
+      },
+      {
+        "name": "setDisplayName",
+        "parameterTypes": [
+          "java.lang.String"
+        ]
+      },
+      {
+        "name": "setKind",
+        "parameterTypes": [
+          "io.nop.api.core.annotations.biz.BizActionArgKind"
+        ]
+      },
+      {
+        "name": "setMandatory",
+        "parameterTypes": [
+          "boolean"
+        ]
+      },
+      {
+        "name": "setName",
+        "parameterTypes": [
+          "java.lang.String"
+        ]
+      },
+      {
+        "name": "setSchema",
+        "parameterTypes": [
+          "io.nop.xlang.xmeta.ISchema"
+        ]
+      },
+      {
+        "name": "setType",
+        "parameterTypes": [
+          "io.nop.core.type.IGenericType"
+        ]
+      }
+    ],
+    "name": "io.nop.biz.model._gen._BizActionArgModel",
     "unsafeAllocated": false
   },
   {
@@ -26976,6 +27814,69 @@
       }
     ],
     "name": "io.nop.biz.model._gen._BizModel",
+    "unsafeAllocated": false
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [
+      {
+        "name": "freeze",
+        "parameterTypes": [
+          "boolean"
+        ]
+      },
+      {
+        "name": "getName",
+        "parameterTypes": []
+      },
+      {
+        "name": "getSchema",
+        "parameterTypes": []
+      },
+      {
+        "name": "getType",
+        "parameterTypes": []
+      },
+      {
+        "name": "isMandatory",
+        "parameterTypes": []
+      },
+      {
+        "name": "outputJson",
+        "parameterTypes": [
+          "io.nop.core.lang.json.IJsonHandler"
+        ]
+      },
+      {
+        "name": "setMandatory",
+        "parameterTypes": [
+          "boolean"
+        ]
+      },
+      {
+        "name": "setName",
+        "parameterTypes": [
+          "java.lang.String"
+        ]
+      },
+      {
+        "name": "setSchema",
+        "parameterTypes": [
+          "io.nop.xlang.xmeta.ISchema"
+        ]
+      },
+      {
+        "name": "setType",
+        "parameterTypes": [
+          "io.nop.core.type.IGenericType"
+        ]
+      }
+    ],
+    "name": "io.nop.biz.model._gen._BizReturnModel",
     "unsafeAllocated": false
   },
   {
@@ -27791,6 +28692,28 @@
     "fields": [],
     "methods": [
       {
+        "name": "getAttributes",
+        "parameterTypes": []
+      },
+      {
+        "name": "setAttribute",
+        "parameterTypes": [
+          "java.lang.String",
+          "java.lang.Object"
+        ]
+      }
+    ],
+    "name": "io.nop.commons.lang.IAttributeSet",
+    "unsafeAllocated": false
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [
+      {
         "name": "getTagSet",
         "parameterTypes": []
       }
@@ -28196,6 +29119,10 @@
       },
       {
         "name": "getJavaTypeName",
+        "parameterTypes": []
+      },
+      {
+        "name": "getJsonType",
         "parameterTypes": []
       },
       {
@@ -31004,6 +31931,231 @@
     "fields": [],
     "methods": [
       {
+        "name": "getEvalScope",
+        "parameterTypes": []
+      }
+    ],
+    "name": "io.nop.core.context.IEvalContext",
+    "unsafeAllocated": false
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [
+      {
+        "name": "addAfterComplete",
+        "parameterTypes": [
+          "java.util.function.Consumer"
+        ]
+      },
+      {
+        "name": "addBeforeComplete",
+        "parameterTypes": [
+          "java.util.function.Consumer"
+        ]
+      },
+      {
+        "name": "addErrorBean",
+        "parameterTypes": [
+          "io.nop.api.core.beans.ErrorBean"
+        ]
+      },
+      {
+        "name": "awaitAsyncResults",
+        "parameterTypes": []
+      },
+      {
+        "name": "cancelAsyncResults",
+        "parameterTypes": []
+      },
+      {
+        "name": "complete",
+        "parameterTypes": []
+      },
+      {
+        "name": "completeExceptionally",
+        "parameterTypes": [
+          "java.lang.Throwable"
+        ]
+      },
+      {
+        "name": "fireBeforeComplete",
+        "parameterTypes": [
+          "java.lang.Throwable"
+        ]
+      },
+      {
+        "name": "getError",
+        "parameterTypes": []
+      },
+      {
+        "name": "getErrorBeans",
+        "parameterTypes": []
+      },
+      {
+        "name": "getExecutionId",
+        "parameterTypes": []
+      },
+      {
+        "name": "getMostSevereErrorBean",
+        "parameterTypes": []
+      },
+      {
+        "name": "hasAsyncResult",
+        "parameterTypes": []
+      },
+      {
+        "name": "isDone",
+        "parameterTypes": []
+      },
+      {
+        "name": "registerAsyncResult",
+        "parameterTypes": [
+          "java.util.concurrent.Future"
+        ]
+      },
+      {
+        "name": "setError",
+        "parameterTypes": [
+          "java.lang.Throwable"
+        ]
+      },
+      {
+        "name": "setEvalScope",
+        "parameterTypes": [
+          "io.nop.core.lang.eval.IEvalScope"
+        ]
+      }
+    ],
+    "name": "io.nop.core.context.IExecutionContext",
+    "unsafeAllocated": false
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [
+      {
+        "name": "fromEvalContext",
+        "parameterTypes": [
+          "io.nop.core.context.IEvalContext"
+        ]
+      },
+      {
+        "name": "getActionAuthChecker",
+        "parameterTypes": []
+      },
+      {
+        "name": "getCache",
+        "parameterTypes": []
+      },
+      {
+        "name": "getContext",
+        "parameterTypes": []
+      },
+      {
+        "name": "getDataAuthChecker",
+        "parameterTypes": []
+      },
+      {
+        "name": "getParentContext",
+        "parameterTypes": []
+      },
+      {
+        "name": "getRequest",
+        "parameterTypes": []
+      },
+      {
+        "name": "getRequestHeaders",
+        "parameterTypes": []
+      },
+      {
+        "name": "getResponse",
+        "parameterTypes": []
+      },
+      {
+        "name": "getResponseHeaders",
+        "parameterTypes": []
+      },
+      {
+        "name": "getUserContext",
+        "parameterTypes": []
+      },
+      {
+        "name": "newChildContext",
+        "parameterTypes": []
+      },
+      {
+        "name": "setActionAuthChecker",
+        "parameterTypes": [
+          "io.nop.api.core.auth.IActionAuthChecker"
+        ]
+      },
+      {
+        "name": "setCache",
+        "parameterTypes": [
+          "io.nop.commons.cache.ICache"
+        ]
+      },
+      {
+        "name": "setContext",
+        "parameterTypes": [
+          "io.nop.api.core.context.IContext"
+        ]
+      },
+      {
+        "name": "setDataAuthChecker",
+        "parameterTypes": [
+          "io.nop.api.core.auth.IDataAuthChecker"
+        ]
+      },
+      {
+        "name": "setRequest",
+        "parameterTypes": [
+          "java.lang.Object"
+        ]
+      },
+      {
+        "name": "setRequestHeaders",
+        "parameterTypes": [
+          "java.util.Map"
+        ]
+      },
+      {
+        "name": "setResponse",
+        "parameterTypes": [
+          "java.lang.Object"
+        ]
+      },
+      {
+        "name": "setResponseHeaders",
+        "parameterTypes": [
+          "java.util.Map"
+        ]
+      },
+      {
+        "name": "setUserContext",
+        "parameterTypes": [
+          "io.nop.api.core.auth.IUserContext"
+        ]
+      }
+    ],
+    "name": "io.nop.core.context.IServiceContext",
+    "unsafeAllocated": false
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [
+      {
         "name": "clearResponseHeaders",
         "parameterTypes": []
       },
@@ -31640,6 +32792,13 @@
         ]
       },
       {
+        "name": "toKeyedList",
+        "parameterTypes": [
+          "java.util.Collection",
+          "java.lang.String"
+        ]
+      },
+      {
         "name": "unique",
         "parameterTypes": [
           "java.util.Collection"
@@ -31924,6 +33083,12 @@
       {
         "name": "bodyFullXml",
         "parameterTypes": []
+      },
+      {
+        "name": "bodyFullXml",
+        "parameterTypes": [
+          "java.lang.String"
+        ]
       },
       {
         "name": "bodyToXJson",
@@ -35176,6 +36341,12 @@
         ]
       },
       {
+        "name": "isTextResource",
+        "parameterTypes": [
+          "java.lang.String"
+        ]
+      },
+      {
         "name": "isValidModuleId",
         "parameterTypes": [
           "java.lang.String"
@@ -35198,6 +36369,10 @@
         "parameterTypes": [
           "io.nop.core.resource.IResource"
         ]
+      },
+      {
+        "name": "newDynamicPath",
+        "parameterTypes": []
       },
       {
         "name": "normalizePath",
@@ -35500,6 +36675,13 @@
           "io.nop.core.resource.IResource",
           "io.nop.commons.io.serialize.IStateSerializable",
           "io.nop.commons.io.serialize.IStreamSerializer"
+        ]
+      },
+      {
+        "name": "writeStream",
+        "parameterTypes": [
+          "io.nop.core.resource.IResource",
+          "java.io.InputStream"
         ]
       },
       {
@@ -39962,6 +41144,802 @@
     "allDeclaredMethods": true,
     "allPublicConstructors": true,
     "allPublicMethods": true,
+    "fields": [
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
+        "name": "IGNORE_HEADERS"
+      }
+    ],
+    "methods": [
+      {
+        "name": "downloadAsync",
+        "parameterTypes": [
+          "io.nop.api.core.beans.ApiRequest"
+        ]
+      },
+      {
+        "name": "getGraphQLEngine",
+        "parameterTypes": []
+      },
+      {
+        "name": "shouldIgnoreHeader",
+        "parameterTypes": [
+          "java.lang.String"
+        ]
+      },
+      {
+        "name": "uploadAsync",
+        "parameterTypes": [
+          "io.nop.api.core.beans.ApiRequest"
+        ]
+      }
+    ],
+    "name": "io.nop.file.core.AbstractGraphQLFileService",
+    "unsafeAllocated": false
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicMethods": true,
+    "fields": [
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": true,
+        "name": "fileStore"
+      },
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": true,
+        "name": "maxFileSize"
+      }
+    ],
+    "methods": [
+      {
+        "name": "checkBizObjName",
+        "parameterTypes": [
+          "java.lang.String"
+        ]
+      },
+      {
+        "name": "checkFileExt",
+        "parameterTypes": [
+          "java.lang.String"
+        ]
+      },
+      {
+        "name": "checkMaxSize",
+        "parameterTypes": [
+          "long"
+        ]
+      },
+      {
+        "name": "download",
+        "parameterTypes": [
+          "java.lang.String",
+          "java.lang.String",
+          "io.nop.core.context.IServiceContext"
+        ]
+      },
+      {
+        "name": "loadFileRecord",
+        "parameterTypes": [
+          "java.lang.String",
+          "io.nop.core.context.IServiceContext"
+        ]
+      },
+      {
+        "name": "setAllowedFileExts",
+        "parameterTypes": [
+          "java.util.Set"
+        ]
+      },
+      {
+        "name": "setBizAuthChecker",
+        "parameterTypes": [
+          "io.nop.api.core.auth.IBizAuthChecker"
+        ]
+      },
+      {
+        "name": "setFileStore",
+        "parameterTypes": [
+          "io.nop.file.core.IFileStore"
+        ]
+      },
+      {
+        "name": "setMaxFileSize",
+        "parameterTypes": [
+          "long"
+        ]
+      },
+      {
+        "name": "upload",
+        "parameterTypes": [
+          "io.nop.file.core.UploadRequestBean",
+          "io.nop.core.context.IServiceContext"
+        ]
+      }
+    ],
+    "name": "io.nop.file.core.NopFileStoreBizModel",
+    "unsafeAllocated": false
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [
+      {
+        "name": "getBizObjName",
+        "parameterTypes": []
+      },
+      {
+        "name": "getFieldName",
+        "parameterTypes": []
+      },
+      {
+        "name": "getFileExt",
+        "parameterTypes": []
+      },
+      {
+        "name": "getFileName",
+        "parameterTypes": []
+      },
+      {
+        "name": "getInputStream",
+        "parameterTypes": []
+      },
+      {
+        "name": "getLastModified",
+        "parameterTypes": []
+      },
+      {
+        "name": "getLength",
+        "parameterTypes": []
+      },
+      {
+        "name": "getMimeType",
+        "parameterTypes": []
+      },
+      {
+        "name": "setBizObjName",
+        "parameterTypes": [
+          "java.lang.String"
+        ]
+      },
+      {
+        "name": "setFieldName",
+        "parameterTypes": [
+          "java.lang.String"
+        ]
+      },
+      {
+        "name": "setFileName",
+        "parameterTypes": [
+          "java.lang.String"
+        ]
+      },
+      {
+        "name": "setInputStream",
+        "parameterTypes": [
+          "java.io.InputStream"
+        ]
+      },
+      {
+        "name": "setLastModified",
+        "parameterTypes": [
+          "long"
+        ]
+      },
+      {
+        "name": "setLength",
+        "parameterTypes": [
+          "long"
+        ]
+      },
+      {
+        "name": "setMimeType",
+        "parameterTypes": [
+          "java.lang.String"
+        ]
+      }
+    ],
+    "name": "io.nop.file.core.UploadRequestBean",
+    "unsafeAllocated": false
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [
+      {
+        "name": "getFilename",
+        "parameterTypes": []
+      },
+      {
+        "name": "getUrl",
+        "parameterTypes": []
+      },
+      {
+        "name": "getValue",
+        "parameterTypes": []
+      },
+      {
+        "name": "setFilename",
+        "parameterTypes": [
+          "java.lang.String"
+        ]
+      },
+      {
+        "name": "setUrl",
+        "parameterTypes": [
+          "java.lang.String"
+        ]
+      },
+      {
+        "name": "setValue",
+        "parameterTypes": [
+          "java.lang.String"
+        ]
+      }
+    ],
+    "name": "io.nop.file.core.UploadResponseBean",
+    "unsafeAllocated": false
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [],
+    "name": "io.nop.file.dao.entity.NopFileRecord",
+    "unsafeAllocated": false
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicMethods": true,
+    "fields": [
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
+        "name": "PK_PROP_IDS"
+      },
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
+        "name": "PK_PROP_NAMES"
+      },
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
+        "name": "PROP_ID_bizObjId"
+      },
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
+        "name": "PROP_ID_bizObjName"
+      },
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
+        "name": "PROP_ID_createTime"
+      },
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
+        "name": "PROP_ID_createdBy"
+      },
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
+        "name": "PROP_ID_delFlag"
+      },
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
+        "name": "PROP_ID_fieldName"
+      },
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
+        "name": "PROP_ID_fileExt"
+      },
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
+        "name": "PROP_ID_fileHash"
+      },
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
+        "name": "PROP_ID_fileId"
+      },
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
+        "name": "PROP_ID_fileLastModified"
+      },
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
+        "name": "PROP_ID_fileLength"
+      },
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
+        "name": "PROP_ID_fileName"
+      },
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
+        "name": "PROP_ID_filePath"
+      },
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
+        "name": "PROP_ID_mimeType"
+      },
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
+        "name": "PROP_ID_remark"
+      },
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
+        "name": "PROP_NAME_bizObjId"
+      },
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
+        "name": "PROP_NAME_bizObjName"
+      },
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
+        "name": "PROP_NAME_createTime"
+      },
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
+        "name": "PROP_NAME_createdBy"
+      },
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
+        "name": "PROP_NAME_delFlag"
+      },
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
+        "name": "PROP_NAME_fieldName"
+      },
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
+        "name": "PROP_NAME_fileExt"
+      },
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
+        "name": "PROP_NAME_fileHash"
+      },
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
+        "name": "PROP_NAME_fileId"
+      },
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
+        "name": "PROP_NAME_fileLastModified"
+      },
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
+        "name": "PROP_NAME_fileLength"
+      },
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
+        "name": "PROP_NAME_fileName"
+      },
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
+        "name": "PROP_NAME_filePath"
+      },
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
+        "name": "PROP_NAME_mimeType"
+      },
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
+        "name": "PROP_NAME_remark"
+      }
+    ],
+    "methods": [
+      {
+        "name": "cloneInstance",
+        "parameterTypes": []
+      },
+      {
+        "name": "getBizObjId",
+        "parameterTypes": []
+      },
+      {
+        "name": "getBizObjName",
+        "parameterTypes": []
+      },
+      {
+        "name": "getCreateTime",
+        "parameterTypes": []
+      },
+      {
+        "name": "getCreatedBy",
+        "parameterTypes": []
+      },
+      {
+        "name": "getDelFlag",
+        "parameterTypes": []
+      },
+      {
+        "name": "getFieldName",
+        "parameterTypes": []
+      },
+      {
+        "name": "getFileExt",
+        "parameterTypes": []
+      },
+      {
+        "name": "getFileHash",
+        "parameterTypes": []
+      },
+      {
+        "name": "getFileId",
+        "parameterTypes": []
+      },
+      {
+        "name": "getFileLastModified",
+        "parameterTypes": []
+      },
+      {
+        "name": "getFileLength",
+        "parameterTypes": []
+      },
+      {
+        "name": "getFileName",
+        "parameterTypes": []
+      },
+      {
+        "name": "getFilePath",
+        "parameterTypes": []
+      },
+      {
+        "name": "getMimeType",
+        "parameterTypes": []
+      },
+      {
+        "name": "getRemark",
+        "parameterTypes": []
+      },
+      {
+        "name": "newInstance",
+        "parameterTypes": []
+      },
+      {
+        "name": "orm_entityName",
+        "parameterTypes": []
+      },
+      {
+        "name": "orm_id",
+        "parameterTypes": []
+      },
+      {
+        "name": "orm_internalSet",
+        "parameterTypes": [
+          "int",
+          "java.lang.Object"
+        ]
+      },
+      {
+        "name": "orm_isPrimary",
+        "parameterTypes": [
+          "int"
+        ]
+      },
+      {
+        "name": "orm_propId",
+        "parameterTypes": [
+          "java.lang.String"
+        ]
+      },
+      {
+        "name": "orm_propIdBound",
+        "parameterTypes": []
+      },
+      {
+        "name": "orm_propName",
+        "parameterTypes": [
+          "int"
+        ]
+      },
+      {
+        "name": "orm_propValue",
+        "parameterTypes": [
+          "int"
+        ]
+      },
+      {
+        "name": "orm_propValue",
+        "parameterTypes": [
+          "int",
+          "java.lang.Object"
+        ]
+      },
+      {
+        "name": "setBizObjId",
+        "parameterTypes": [
+          "java.lang.String"
+        ]
+      },
+      {
+        "name": "setBizObjName",
+        "parameterTypes": [
+          "java.lang.String"
+        ]
+      },
+      {
+        "name": "setCreateTime",
+        "parameterTypes": [
+          "java.sql.Timestamp"
+        ]
+      },
+      {
+        "name": "setCreatedBy",
+        "parameterTypes": [
+          "java.lang.String"
+        ]
+      },
+      {
+        "name": "setDelFlag",
+        "parameterTypes": [
+          "java.lang.Byte"
+        ]
+      },
+      {
+        "name": "setFieldName",
+        "parameterTypes": [
+          "java.lang.String"
+        ]
+      },
+      {
+        "name": "setFileExt",
+        "parameterTypes": [
+          "java.lang.String"
+        ]
+      },
+      {
+        "name": "setFileHash",
+        "parameterTypes": [
+          "java.lang.String"
+        ]
+      },
+      {
+        "name": "setFileId",
+        "parameterTypes": [
+          "java.lang.String"
+        ]
+      },
+      {
+        "name": "setFileLastModified",
+        "parameterTypes": [
+          "java.sql.Timestamp"
+        ]
+      },
+      {
+        "name": "setFileLength",
+        "parameterTypes": [
+          "java.lang.Long"
+        ]
+      },
+      {
+        "name": "setFileName",
+        "parameterTypes": [
+          "java.lang.String"
+        ]
+      },
+      {
+        "name": "setFilePath",
+        "parameterTypes": [
+          "java.lang.String"
+        ]
+      },
+      {
+        "name": "setMimeType",
+        "parameterTypes": [
+          "java.lang.String"
+        ]
+      },
+      {
+        "name": "setRemark",
+        "parameterTypes": [
+          "java.lang.String"
+        ]
+      }
+    ],
+    "name": "io.nop.file.dao.entity._gen._NopFileRecord",
+    "unsafeAllocated": false
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicMethods": true,
+    "fields": [
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
+        "name": "LOG"
+      }
+    ],
+    "methods": [
+      {
+        "name": "attachFile",
+        "parameterTypes": [
+          "java.lang.String",
+          "java.lang.String",
+          "java.lang.String",
+          "java.lang.String"
+        ]
+      },
+      {
+        "name": "checkMaxSize",
+        "parameterTypes": [
+          "long",
+          "long"
+        ]
+      },
+      {
+        "name": "decodeFileId",
+        "parameterTypes": [
+          "java.lang.String"
+        ]
+      },
+      {
+        "name": "detachFile",
+        "parameterTypes": [
+          "java.lang.String",
+          "java.lang.String",
+          "java.lang.String",
+          "java.lang.String"
+        ]
+      },
+      {
+        "name": "getFile",
+        "parameterTypes": [
+          "java.lang.String"
+        ]
+      },
+      {
+        "name": "getFileLink",
+        "parameterTypes": [
+          "java.lang.String"
+        ]
+      },
+      {
+        "name": "getFileResource",
+        "parameterTypes": [
+          "java.lang.String",
+          "java.lang.String",
+          "java.lang.String",
+          "java.lang.String"
+        ]
+      },
+      {
+        "name": "init",
+        "parameterTypes": []
+      },
+      {
+        "name": "newFileId",
+        "parameterTypes": []
+      },
+      {
+        "name": "newPath",
+        "parameterTypes": [
+          "java.lang.String",
+          "java.lang.String",
+          "java.lang.String"
+        ]
+      },
+      {
+        "name": "removeTempFileByOwner",
+        "parameterTypes": [
+          "java.lang.String"
+        ]
+      },
+      {
+        "name": "saveFile",
+        "parameterTypes": [
+          "io.nop.file.core.UploadRequestBean",
+          "long"
+        ]
+      },
+      {
+        "name": "setDaoProvider",
+        "parameterTypes": [
+          "io.nop.dao.api.IDaoProvider"
+        ]
+      },
+      {
+        "name": "setKeepFileExt",
+        "parameterTypes": [
+          "boolean"
+        ]
+      },
+      {
+        "name": "setLocalDir",
+        "parameterTypes": [
+          "java.io.File"
+        ]
+      },
+      {
+        "name": "setResourceStore",
+        "parameterTypes": [
+          "io.nop.core.resource.IResourceStore"
+        ]
+      }
+    ],
+    "name": "io.nop.file.dao.store.DaoResourceFileStore",
+    "unsafeAllocated": false
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [
+      {
+        "name": "buildRequest",
+        "parameterTypes": [
+          "io.vertx.core.http.HttpServerRequest",
+          "java.lang.Object"
+        ]
+      },
+      {
+        "name": "download",
+        "parameterTypes": [
+          "java.lang.String",
+          "java.lang.String",
+          "io.vertx.core.http.HttpServerRequest"
+        ]
+      },
+      {
+        "name": "uploadFileAsync",
+        "parameterTypes": [
+          "org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput",
+          "io.vertx.core.http.HttpServerRequest"
+        ]
+      }
+    ],
+    "name": "io.nop.file.quarkus.web.QuarkusFileService",
+    "unsafeAllocated": false
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicMethods": true,
     "fields": [],
     "methods": [
       {
@@ -40104,6 +42082,12 @@
         ]
       },
       {
+        "name": "makeRpcProxy",
+        "parameterTypes": [
+          "java.lang.Class"
+        ]
+      },
+      {
         "name": "newGraphQLContext",
         "parameterTypes": []
       },
@@ -40201,6 +42185,12 @@
         "name": "setSchemaLoader",
         "parameterTypes": [
           "io.nop.graphql.core.schema.IGraphQLSchemaLoader"
+        ]
+      },
+      {
+        "name": "subscribeGraphQL",
+        "parameterTypes": [
+          "io.nop.graphql.core.IGraphQLExecutionContext"
         ]
       }
     ],
@@ -41085,6 +43075,16 @@
     "allPublicConstructors": true,
     "allPublicMethods": true,
     "fields": [],
+    "methods": [],
+    "name": "io.nop.ioc.model.BeanAliasModel",
+    "unsafeAllocated": false
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicMethods": true,
+    "fields": [],
     "methods": [
       {
         "name": "getBeanValueType",
@@ -41370,6 +43370,49 @@
       }
     ],
     "name": "io.nop.ioc.model.IBeanPropValue",
+    "unsafeAllocated": false
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [
+      {
+        "name": "freeze",
+        "parameterTypes": [
+          "boolean"
+        ]
+      },
+      {
+        "name": "getAlias",
+        "parameterTypes": []
+      },
+      {
+        "name": "getName",
+        "parameterTypes": []
+      },
+      {
+        "name": "outputJson",
+        "parameterTypes": [
+          "io.nop.core.lang.json.IJsonHandler"
+        ]
+      },
+      {
+        "name": "setAlias",
+        "parameterTypes": [
+          "java.util.Set"
+        ]
+      },
+      {
+        "name": "setName",
+        "parameterTypes": [
+          "java.lang.String"
+        ]
+      }
+    ],
+    "name": "io.nop.ioc.model._gen._BeanAliasModel",
     "unsafeAllocated": false
   },
   {
@@ -43808,6 +45851,10 @@
       {
         "name": "getEntityNames",
         "parameterTypes": []
+      },
+      {
+        "name": "register",
+        "parameterTypes": []
       }
     ],
     "name": "io.nop.orm.dao.OrmDaoProvider",
@@ -44389,6 +46436,12 @@
       {
         "name": "getCacheProvider",
         "parameterTypes": []
+      },
+      {
+        "name": "getDbEstimatedClock",
+        "parameterTypes": [
+          "java.lang.String"
+        ]
       },
       {
         "name": "getDefaultRowMapper",
@@ -45749,6 +47802,16 @@
       }
     ],
     "name": "io.nop.orm.model.OrmModel",
+    "unsafeAllocated": false
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [],
+    "name": "io.nop.orm.model.OrmRefSetModel",
     "unsafeAllocated": false
   },
   {
@@ -47421,6 +49484,75 @@
     "fields": [],
     "methods": [
       {
+        "name": "addField",
+        "parameterTypes": [
+          "io.nop.api.core.beans.query.OrderFieldBean"
+        ]
+      },
+      {
+        "name": "freeze",
+        "parameterTypes": [
+          "boolean"
+        ]
+      },
+      {
+        "name": "getField",
+        "parameterTypes": [
+          "java.lang.String"
+        ]
+      },
+      {
+        "name": "getKeyProp",
+        "parameterTypes": []
+      },
+      {
+        "name": "getSort",
+        "parameterTypes": []
+      },
+      {
+        "name": "hasField",
+        "parameterTypes": [
+          "java.lang.String"
+        ]
+      },
+      {
+        "name": "hasSort",
+        "parameterTypes": []
+      },
+      {
+        "name": "keySet_sort",
+        "parameterTypes": []
+      },
+      {
+        "name": "outputJson",
+        "parameterTypes": [
+          "io.nop.core.lang.json.IJsonHandler"
+        ]
+      },
+      {
+        "name": "setKeyProp",
+        "parameterTypes": [
+          "java.lang.String"
+        ]
+      },
+      {
+        "name": "setSort",
+        "parameterTypes": [
+          "java.util.List"
+        ]
+      }
+    ],
+    "name": "io.nop.orm.model._gen._OrmRefSetModel",
+    "unsafeAllocated": false
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [
+      {
         "name": "freeze",
         "parameterTypes": [
           "boolean"
@@ -48102,6 +50234,36 @@
       }
     ],
     "name": "io.nop.orm.pdm.PdmModelParser",
+    "unsafeAllocated": false
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [
+      {
+        "name": "getNamespace",
+        "parameterTypes": []
+      },
+      {
+        "name": "getResource",
+        "parameterTypes": [
+          "java.lang.String",
+          "io.nop.core.resource.IResourceStore"
+        ]
+      },
+      {
+        "name": "register",
+        "parameterTypes": []
+      },
+      {
+        "name": "unregister",
+        "parameterTypes": []
+      }
+    ],
+    "name": "io.nop.orm.resource.DaoResourceNamespaceHandler",
     "unsafeAllocated": false
   },
   {
@@ -49672,6 +51834,13 @@
         ]
       },
       {
+        "name": "newOrmEntity",
+        "parameterTypes": [
+          "java.lang.Class",
+          "boolean"
+        ]
+      },
+      {
         "name": "newTypeConversionError",
         "parameterTypes": [
           "java.lang.String"
@@ -49828,6 +51997,12 @@
       {
         "name": "orm_fullyLoaded",
         "parameterTypes": []
+      },
+      {
+        "name": "orm_getBean",
+        "parameterTypes": [
+          "java.lang.String"
+        ]
       },
       {
         "name": "orm_inited",
@@ -50097,11 +52272,19 @@
         "parameterTypes": []
       },
       {
+        "name": "getConnectionTimeout",
+        "parameterTypes": []
+      },
+      {
         "name": "getDriverClassName",
         "parameterTypes": []
       },
       {
         "name": "getIdleRemovalInterval",
+        "parameterTypes": []
+      },
+      {
+        "name": "getIdleTimeout",
         "parameterTypes": []
       },
       {
@@ -50157,6 +52340,12 @@
         ]
       },
       {
+        "name": "setConnectionTimeout",
+        "parameterTypes": [
+          "java.time.Duration"
+        ]
+      },
+      {
         "name": "setDriverClassName",
         "parameterTypes": [
           "java.lang.String"
@@ -50164,6 +52353,12 @@
       },
       {
         "name": "setIdleRemovalInterval",
+        "parameterTypes": [
+          "java.time.Duration"
+        ]
+      },
+      {
+        "name": "setIdleTimeout",
         "parameterTypes": [
           "java.time.Duration"
         ]
@@ -50240,6 +52435,122 @@
     "fields": [
       {
         "allowUnsafeAccess": false,
+        "allowWrite": false,
+        "name": "MAX_COUNT"
+      }
+    ],
+    "methods": [
+      {
+        "name": "addVariable",
+        "parameterTypes": [
+          "java.lang.String",
+          "io.nop.dao.coderule.ICodeRuleVariable"
+        ]
+      },
+      {
+        "name": "generate",
+        "parameterTypes": [
+          "java.lang.String",
+          "java.time.LocalDateTime",
+          "java.util.function.LongSupplier",
+          "java.lang.Object"
+        ]
+      },
+      {
+        "name": "generateFromProp",
+        "parameterTypes": [
+          "java.lang.String",
+          "io.nop.dao.coderule.CodeRuleParams"
+        ]
+      },
+      {
+        "name": "generateRand",
+        "parameterTypes": [
+          "java.lang.String",
+          "io.nop.dao.coderule.CodeRuleParams"
+        ]
+      },
+      {
+        "name": "generateSeq",
+        "parameterTypes": [
+          "java.lang.String",
+          "io.nop.dao.coderule.CodeRuleParams"
+        ]
+      },
+      {
+        "name": "pad",
+        "parameterTypes": [
+          "int",
+          "int"
+        ]
+      },
+      {
+        "name": "removeVariable",
+        "parameterTypes": [
+          "java.lang.String",
+          "io.nop.dao.coderule.ICodeRuleVariable"
+        ]
+      },
+      {
+        "name": "setVariables",
+        "parameterTypes": [
+          "java.util.Map"
+        ]
+      }
+    ],
+    "name": "io.nop.sys.dao.coderule.DefaultCodeRule",
+    "unsafeAllocated": false
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicMethods": true,
+    "fields": [
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": true,
+        "name": "daoProvider"
+      }
+    ],
+    "methods": [
+      {
+        "name": "generate",
+        "parameterTypes": [
+          "java.lang.String",
+          "java.lang.Object"
+        ]
+      },
+      {
+        "name": "setCodeRule",
+        "parameterTypes": [
+          "io.nop.dao.coderule.ICodeRule"
+        ]
+      },
+      {
+        "name": "setSequenceGenerator",
+        "parameterTypes": [
+          "io.nop.dao.seq.ISequenceGenerator"
+        ]
+      },
+      {
+        "name": "setSysCalendar",
+        "parameterTypes": [
+          "io.nop.api.core.time.ISysCalendar"
+        ]
+      }
+    ],
+    "name": "io.nop.sys.dao.coderule.SysCodeRuleGenerator",
+    "unsafeAllocated": false
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicMethods": true,
+    "fields": [
+      {
+        "allowUnsafeAccess": false,
         "allowWrite": true,
         "name": "daoProvider"
       }
@@ -50282,6 +52593,16 @@
       }
     ],
     "name": "io.nop.sys.dao.dict.SysDictLoader",
+    "unsafeAllocated": false
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [],
+    "name": "io.nop.sys.dao.entity.NopSysClusterLeader",
     "unsafeAllocated": false
   },
   {
@@ -50350,6 +52671,21 @@
     "allPublicConstructors": true,
     "allPublicMethods": true,
     "fields": [],
+    "methods": [
+      {
+        "name": "newPk",
+        "parameterTypes": []
+      }
+    ],
+    "name": "io.nop.sys.dao.entity.NopSysLock",
+    "unsafeAllocated": false
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicMethods": true,
+    "fields": [],
     "methods": [],
     "name": "io.nop.sys.dao.entity.NopSysMakerCheckerRecord",
     "unsafeAllocated": false
@@ -50401,6 +52737,226 @@
     "fields": [],
     "methods": [],
     "name": "io.nop.sys.dao.entity.NopSysVariable",
+    "unsafeAllocated": false
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicMethods": true,
+    "fields": [
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
+        "name": "PK_PROP_IDS"
+      },
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
+        "name": "PK_PROP_NAMES"
+      },
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
+        "name": "PROP_ID_appId"
+      },
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
+        "name": "PROP_ID_clusterId"
+      },
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
+        "name": "PROP_ID_electTime"
+      },
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
+        "name": "PROP_ID_expireAt"
+      },
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
+        "name": "PROP_ID_leaderAdder"
+      },
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
+        "name": "PROP_ID_leaderEpoch"
+      },
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
+        "name": "PROP_ID_leaderId"
+      },
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
+        "name": "PROP_NAME_appId"
+      },
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
+        "name": "PROP_NAME_clusterId"
+      },
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
+        "name": "PROP_NAME_electTime"
+      },
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
+        "name": "PROP_NAME_expireAt"
+      },
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
+        "name": "PROP_NAME_leaderAdder"
+      },
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
+        "name": "PROP_NAME_leaderEpoch"
+      },
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
+        "name": "PROP_NAME_leaderId"
+      }
+    ],
+    "methods": [
+      {
+        "name": "cloneInstance",
+        "parameterTypes": []
+      },
+      {
+        "name": "getAppId",
+        "parameterTypes": []
+      },
+      {
+        "name": "getClusterId",
+        "parameterTypes": []
+      },
+      {
+        "name": "getElectTime",
+        "parameterTypes": []
+      },
+      {
+        "name": "getExpireAt",
+        "parameterTypes": []
+      },
+      {
+        "name": "getLeaderAdder",
+        "parameterTypes": []
+      },
+      {
+        "name": "getLeaderEpoch",
+        "parameterTypes": []
+      },
+      {
+        "name": "getLeaderId",
+        "parameterTypes": []
+      },
+      {
+        "name": "newInstance",
+        "parameterTypes": []
+      },
+      {
+        "name": "orm_entityName",
+        "parameterTypes": []
+      },
+      {
+        "name": "orm_id",
+        "parameterTypes": []
+      },
+      {
+        "name": "orm_internalSet",
+        "parameterTypes": [
+          "int",
+          "java.lang.Object"
+        ]
+      },
+      {
+        "name": "orm_isPrimary",
+        "parameterTypes": [
+          "int"
+        ]
+      },
+      {
+        "name": "orm_propId",
+        "parameterTypes": [
+          "java.lang.String"
+        ]
+      },
+      {
+        "name": "orm_propIdBound",
+        "parameterTypes": []
+      },
+      {
+        "name": "orm_propName",
+        "parameterTypes": [
+          "int"
+        ]
+      },
+      {
+        "name": "orm_propValue",
+        "parameterTypes": [
+          "int"
+        ]
+      },
+      {
+        "name": "orm_propValue",
+        "parameterTypes": [
+          "int",
+          "java.lang.Object"
+        ]
+      },
+      {
+        "name": "setAppId",
+        "parameterTypes": [
+          "java.lang.String"
+        ]
+      },
+      {
+        "name": "setClusterId",
+        "parameterTypes": [
+          "java.lang.String"
+        ]
+      },
+      {
+        "name": "setElectTime",
+        "parameterTypes": [
+          "java.sql.Timestamp"
+        ]
+      },
+      {
+        "name": "setExpireAt",
+        "parameterTypes": [
+          "java.sql.Timestamp"
+        ]
+      },
+      {
+        "name": "setLeaderAdder",
+        "parameterTypes": [
+          "java.lang.String"
+        ]
+      },
+      {
+        "name": "setLeaderEpoch",
+        "parameterTypes": [
+          "java.lang.Long"
+        ]
+      },
+      {
+        "name": "setLeaderId",
+        "parameterTypes": [
+          "java.lang.String"
+        ]
+      }
+    ],
+    "name": "io.nop.sys.dao.entity._gen._NopSysClusterLeader",
     "unsafeAllocated": false
   },
   {
@@ -52045,6 +54601,246 @@
       }
     ],
     "name": "io.nop.sys.dao.entity._gen._NopSysI18n",
+    "unsafeAllocated": false
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicMethods": true,
+    "fields": [
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
+        "name": "PK_PROP_IDS"
+      },
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
+        "name": "PK_PROP_NAMES"
+      },
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
+        "name": "PROP_ID_appId"
+      },
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
+        "name": "PROP_ID_expireAt"
+      },
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
+        "name": "PROP_ID_holderAdder"
+      },
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
+        "name": "PROP_ID_holderId"
+      },
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
+        "name": "PROP_ID_lockGroup"
+      },
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
+        "name": "PROP_ID_lockName"
+      },
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
+        "name": "PROP_ID_lockReason"
+      },
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
+        "name": "PROP_ID_lockTime"
+      },
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
+        "name": "PROP_NAME_appId"
+      },
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
+        "name": "PROP_NAME_expireAt"
+      },
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
+        "name": "PROP_NAME_holderAdder"
+      },
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
+        "name": "PROP_NAME_holderId"
+      },
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
+        "name": "PROP_NAME_lockGroup"
+      },
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
+        "name": "PROP_NAME_lockName"
+      },
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
+        "name": "PROP_NAME_lockReason"
+      },
+      {
+        "allowUnsafeAccess": false,
+        "allowWrite": false,
+        "name": "PROP_NAME_lockTime"
+      }
+    ],
+    "methods": [
+      {
+        "name": "cloneInstance",
+        "parameterTypes": []
+      },
+      {
+        "name": "getAppId",
+        "parameterTypes": []
+      },
+      {
+        "name": "getExpireAt",
+        "parameterTypes": []
+      },
+      {
+        "name": "getHolderAdder",
+        "parameterTypes": []
+      },
+      {
+        "name": "getHolderId",
+        "parameterTypes": []
+      },
+      {
+        "name": "getLockGroup",
+        "parameterTypes": []
+      },
+      {
+        "name": "getLockName",
+        "parameterTypes": []
+      },
+      {
+        "name": "getLockReason",
+        "parameterTypes": []
+      },
+      {
+        "name": "getLockTime",
+        "parameterTypes": []
+      },
+      {
+        "name": "newInstance",
+        "parameterTypes": []
+      },
+      {
+        "name": "orm_entityName",
+        "parameterTypes": []
+      },
+      {
+        "name": "orm_id",
+        "parameterTypes": []
+      },
+      {
+        "name": "orm_internalSet",
+        "parameterTypes": [
+          "int",
+          "java.lang.Object"
+        ]
+      },
+      {
+        "name": "orm_isPrimary",
+        "parameterTypes": [
+          "int"
+        ]
+      },
+      {
+        "name": "orm_propId",
+        "parameterTypes": [
+          "java.lang.String"
+        ]
+      },
+      {
+        "name": "orm_propIdBound",
+        "parameterTypes": []
+      },
+      {
+        "name": "orm_propName",
+        "parameterTypes": [
+          "int"
+        ]
+      },
+      {
+        "name": "orm_propValue",
+        "parameterTypes": [
+          "int"
+        ]
+      },
+      {
+        "name": "orm_propValue",
+        "parameterTypes": [
+          "int",
+          "java.lang.Object"
+        ]
+      },
+      {
+        "name": "setAppId",
+        "parameterTypes": [
+          "java.lang.String"
+        ]
+      },
+      {
+        "name": "setExpireAt",
+        "parameterTypes": [
+          "java.sql.Timestamp"
+        ]
+      },
+      {
+        "name": "setHolderAdder",
+        "parameterTypes": [
+          "java.lang.String"
+        ]
+      },
+      {
+        "name": "setHolderId",
+        "parameterTypes": [
+          "java.lang.String"
+        ]
+      },
+      {
+        "name": "setLockGroup",
+        "parameterTypes": [
+          "java.lang.String"
+        ]
+      },
+      {
+        "name": "setLockName",
+        "parameterTypes": [
+          "java.lang.String"
+        ]
+      },
+      {
+        "name": "setLockReason",
+        "parameterTypes": [
+          "java.lang.String"
+        ]
+      },
+      {
+        "name": "setLockTime",
+        "parameterTypes": [
+          "java.sql.Timestamp"
+        ]
+      }
+    ],
+    "name": "io.nop.sys.dao.entity._gen._NopSysLock",
     "unsafeAllocated": false
   },
   {
@@ -54261,6 +57057,13 @@
         "parameterTypes": []
       },
       {
+        "name": "getObjMeta",
+        "parameterTypes": [
+          "java.lang.String",
+          "io.nop.xlang.xmeta.IObjMeta"
+        ]
+      },
+      {
         "name": "getPage",
         "parameterTypes": [
           "java.lang.String",
@@ -54666,6 +57469,13 @@
         ]
       },
       {
+        "name": "functional",
+        "parameterTypes": [
+          "io.nop.core.lang.eval.IEvalScope",
+          "io.nop.core.lang.eval.IEvalFunction"
+        ]
+      },
+      {
         "name": "g_current_locale",
         "parameterTypes": []
       },
@@ -54739,6 +57549,13 @@
       },
       {
         "name": "selection",
+        "parameterTypes": [
+          "io.nop.xlang.api.IXLangCompileScope",
+          "io.nop.xlang.ast.CallExpression"
+        ]
+      },
+      {
+        "name": "sql",
         "parameterTypes": [
           "io.nop.xlang.api.IXLangCompileScope",
           "io.nop.xlang.ast.CallExpression"
@@ -55387,6 +58204,10 @@
     "fields": [],
     "methods": [
       {
+        "name": "getBizObjName",
+        "parameterTypes": []
+      },
+      {
         "name": "getDefinedObjSchemas",
         "parameterTypes": []
       },
@@ -55555,8 +58376,18 @@
         "parameterTypes": []
       },
       {
+        "name": "getType",
+        "parameterTypes": []
+      },
+      {
         "name": "getWriteAuth",
         "parameterTypes": []
+      },
+      {
+        "name": "setType",
+        "parameterTypes": [
+          "io.nop.core.type.IGenericType"
+        ]
       },
       {
         "name": "toNode",
@@ -56566,6 +59397,10 @@
         "parameterTypes": []
       },
       {
+        "name": "getType",
+        "parameterTypes": []
+      },
+      {
         "name": "getXmlName",
         "parameterTypes": []
       },
@@ -56855,6 +59690,12 @@
         "name": "setTransformOut",
         "parameterTypes": [
           "io.nop.core.lang.eval.IEvalAction"
+        ]
+      },
+      {
+        "name": "setType",
+        "parameterTypes": [
+          "io.nop.core.type.IGenericType"
         ]
       },
       {
@@ -58854,7 +61695,12 @@
     "allPublicConstructors": true,
     "allPublicMethods": true,
     "fields": [],
-    "methods": [],
+    "methods": [
+      {
+        "name": "validate",
+        "parameterTypes": []
+      }
+    ],
     "name": "io.nop.xui.model.UiFormCellModel",
     "unsafeAllocated": false
   },
@@ -58893,7 +61739,12 @@
     "allPublicConstructors": true,
     "allPublicMethods": true,
     "fields": [],
-    "methods": [],
+    "methods": [
+      {
+        "name": "validate",
+        "parameterTypes": []
+      }
+    ],
     "name": "io.nop.xui.model.UiGridColModel",
     "unsafeAllocated": false
   },
@@ -59048,6 +61899,10 @@
       },
       {
         "name": "getMaxLength",
+        "parameterTypes": []
+      },
+      {
+        "name": "getMaxUploadSize",
         "parameterTypes": []
       },
       {
@@ -59286,6 +62141,12 @@
         "name": "setMaxLength",
         "parameterTypes": [
           "java.lang.Integer"
+        ]
+      },
+      {
+        "name": "setMaxUploadSize",
+        "parameterTypes": [
+          "java.lang.Long"
         ]
       },
       {
@@ -59599,6 +62460,10 @@
         "parameterTypes": []
       },
       {
+        "name": "getMessages",
+        "parameterTypes": []
+      },
+      {
         "name": "getObjMeta",
         "parameterTypes": []
       },
@@ -59716,6 +62581,10 @@
       },
       {
         "name": "hasInitAsyncApi",
+        "parameterTypes": []
+      },
+      {
+        "name": "hasMessages",
         "parameterTypes": []
       },
       {
@@ -59884,6 +62753,12 @@
         "name": "setLayoutMode",
         "parameterTypes": [
           "java.lang.String"
+        ]
+      },
+      {
+        "name": "setMessages",
+        "parameterTypes": [
+          "java.util.Map"
         ]
       },
       {
@@ -60623,6 +63498,13 @@
     ],
     "methods": [
       {
+        "name": "appendFilterProps",
+        "parameterTypes": [
+          "java.lang.String",
+          "java.lang.Object"
+        ]
+      },
+      {
         "name": "getControlTag",
         "parameterTypes": [
           "io.nop.xlang.xpl.IXplTagLib",
@@ -60666,6 +63548,13 @@
         ]
       },
       {
+        "name": "getMaxUploadSize",
+        "parameterTypes": [
+          "io.nop.xlang.xmeta.IObjPropMeta",
+          "io.nop.xui.model.IUiDisplayMeta"
+        ]
+      },
+      {
         "name": "getRefBizObjName",
         "parameterTypes": [
           "io.nop.xlang.xmeta.IObjPropMeta"
@@ -60679,7 +63568,22 @@
         ]
       },
       {
+        "name": "getRelationPickerUrl",
+        "parameterTypes": [
+          "io.nop.xui.model.IUiDisplayMeta",
+          "io.nop.xlang.xmeta.IObjPropMeta",
+          "io.nop.xlang.xmeta.IObjMeta"
+        ]
+      },
+      {
         "name": "getRelationProp",
+        "parameterTypes": [
+          "io.nop.xlang.xmeta.IObjPropMeta",
+          "io.nop.xlang.xmeta.IObjMeta"
+        ]
+      },
+      {
+        "name": "getRelationViewUrl",
         "parameterTypes": [
           "io.nop.xlang.xmeta.IObjPropMeta",
           "io.nop.xlang.xmeta.IObjMeta"

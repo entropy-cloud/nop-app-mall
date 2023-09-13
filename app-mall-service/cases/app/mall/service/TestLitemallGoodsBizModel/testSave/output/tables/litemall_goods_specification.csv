@@ -1,2 +1,0 @@
-_chgType,ID,GOODS_ID,SPECIFICATION,VALUE,PIC_URL,ADD_TIME,UPDATE_TIME,DELETED
-A,@var:LitemallGoodsSpecification@id,@var:LitemallGoods@id,规格,其他,http://yanxuan.nosdn.127.net/8ab2d3287af0cefa2cc539e40600621d.png,*,*,false

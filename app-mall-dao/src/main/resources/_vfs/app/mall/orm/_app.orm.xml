@@ -178,6 +178,7 @@
                     <join>
                         <on leftProp="userId" rightProp="id"/>
                     </join>
+                    <ref-set/>
                 </to-one>
             </relations>
         </entity>
@@ -246,12 +247,14 @@
                     <join>
                         <on leftProp="orderId" rightProp="id"/>
                     </join>
+                    <ref-set/>
                 </to-one>
                 <to-one displayName="客户" name="user" refEntityName="app.mall.dao.entity.LitemallUser"
                         tagSet="pub,ref-pub" i18n-en:displayName="User">
                     <join>
                         <on leftProp="userId" rightProp="id"/>
                     </join>
+                    <ref-set/>
                 </to-one>
             </relations>
         </entity>
@@ -318,12 +321,14 @@
                     <join>
                         <on leftProp="goodsId" rightProp="id"/>
                     </join>
+                    <ref-set/>
                 </to-one>
                 <to-one displayName="客户" name="user" refEntityName="app.mall.dao.entity.LitemallUser"
                         tagSet="pub,ref-pub" i18n-en:displayName="User">
                     <join>
                         <on leftProp="userId" rightProp="id"/>
                     </join>
+                    <ref-set/>
                 </to-one>
             </relations>
         </entity>
@@ -363,6 +368,7 @@
                     <join>
                         <on leftProp="pid" rightProp="id"/>
                     </join>
+                    <ref-set/>
                 </to-one>
                 <to-many displayName="子类目" name="children" refEntityName="app.mall.dao.entity.LitemallCategory"
                          refPropName="parent" tagSet="pub" i18n-en:displayName="Children">
@@ -397,6 +403,7 @@
                     <join>
                         <on leftProp="userId" rightProp="id"/>
                     </join>
+                    <ref-set/>
                 </to-one>
             </relations>
         </entity>
@@ -435,6 +442,7 @@
                     <join>
                         <on leftProp="userId" rightProp="id"/>
                     </join>
+                    <ref-set/>
                 </to-one>
             </relations>
         </entity>
@@ -517,12 +525,14 @@
                     <join>
                         <on leftProp="couponId" rightProp="id"/>
                     </join>
+                    <ref-set/>
                 </to-one>
                 <to-one displayName="客户" name="user" refEntityName="app.mall.dao.entity.LitemallUser"
                         tagSet="pub,ref-pub" i18n-en:displayName="User">
                     <join>
                         <on leftProp="userId" rightProp="id"/>
                     </join>
+                    <ref-set/>
                 </to-one>
             </relations>
         </entity>
@@ -561,6 +571,7 @@
                     <join>
                         <on leftProp="userId" rightProp="id"/>
                     </join>
+                    <ref-set/>
                 </to-one>
             </relations>
         </entity>
@@ -587,12 +598,14 @@
                     <join>
                         <on leftProp="goodsId" rightProp="id"/>
                     </join>
+                    <ref-set/>
                 </to-one>
                 <to-one displayName="客户" name="user" refEntityName="app.mall.dao.entity.LitemallUser"
                         tagSet="pub,ref-pub" i18n-en:displayName="User">
                     <join>
                         <on leftProp="userId" rightProp="id"/>
                     </join>
+                    <ref-set/>
                 </to-one>
             </relations>
         </entity>
@@ -650,12 +663,14 @@
                     <join>
                         <on leftProp="categoryId" rightProp="id"/>
                     </join>
+                    <ref-set/>
                 </to-one>
                 <to-one displayName="商品品牌" name="brand" refEntityName="app.mall.dao.entity.LitemallBrand"
                         tagSet="pub,ref-pub" i18n-en:displayName="Brand">
                     <join>
                         <on leftProp="brandId" rightProp="id"/>
                     </join>
+                    <ref-set/>
                 </to-one>
                 <to-many displayName="商品参数" name="attributes" refEntityName="app.mall.dao.entity.LitemallGoodsAttribute"
                          refPropName="goods" tagSet="pub,cascade-delete,insertable,updatable,grid"
@@ -717,6 +732,7 @@
                     <join>
                         <on leftProp="goodsId" rightProp="id"/>
                     </join>
+                    <ref-set/>
                 </to-one>
             </relations>
         </entity>
@@ -752,6 +768,7 @@
                     <join>
                         <on leftProp="goodsId" rightProp="id"/>
                     </join>
+                    <ref-set/>
                 </to-one>
             </relations>
         </entity>
@@ -785,6 +802,7 @@
                     <join>
                         <on leftProp="goodsId" rightProp="id"/>
                     </join>
+                    <ref-set/>
                 </to-one>
             </relations>
         </entity>
@@ -824,6 +842,7 @@
                     <join>
                         <on leftProp="orderId" rightProp="id"/>
                     </join>
+                    <ref-set/>
                 </to-one>
             </relations>
         </entity>
@@ -860,6 +879,7 @@
                     <join>
                         <on leftProp="goodsId" rightProp="id"/>
                     </join>
+                    <ref-set/>
                 </to-one>
             </relations>
         </entity>
@@ -1049,6 +1069,7 @@
                     <join>
                         <on leftProp="userId" rightProp="id"/>
                     </join>
+                    <ref-set/>
                 </to-one>
                 <to-many displayName="订单商品" name="orderGoods" refEntityName="app.mall.dao.entity.LitemallOrderGoods"
                          refPropName="order" tagSet="pub,cascade-delete,updatable,insertable"
@@ -1100,6 +1121,7 @@
                     <join>
                         <on leftProp="orderId" rightProp="id"/>
                     </join>
+                    <ref-set/>
                 </to-one>
                 <to-one displayName="订单商品" name="goods" refEntityName="app.mall.dao.entity.LitemallGoods"
                         refPropName="orderGoods" tagSet="pub,ref-pub,ref-cascade-delete,ref-updatable,ref-insertable"
@@ -1107,12 +1129,14 @@
                     <join>
                         <on leftProp="goodsId" rightProp="id"/>
                     </join>
+                    <ref-set/>
                 </to-one>
                 <to-one displayName="订单产品" name="product" refEntityName="app.mall.dao.entity.LitemallGoodsProduct"
                         tagSet="pub" i18n-en:displayName="Order Product">
                     <join>
                         <on leftProp="productId" rightProp="id"/>
                     </join>
+                    <ref-set/>
                 </to-one>
             </relations>
         </entity>
@@ -1155,6 +1179,7 @@
                     <join>
                         <on leftProp="pid" rightProp="id"/>
                     </join>
+                    <ref-set/>
                 </to-one>
                 <to-many displayName="子区域" name="children" refEntityName="app.mall.dao.entity.LitemallRegion"
                          refPropName="parent" tagSet="pub" i18n-en:displayName="Children">
@@ -1216,6 +1241,7 @@
                     <join>
                         <on leftProp="userId" rightProp="id"/>
                     </join>
+                    <ref-set/>
                 </to-one>
             </relations>
         </entity>
@@ -1371,6 +1397,7 @@
                     <join>
                         <on leftProp="userId" rightProp="id"/>
                     </join>
+                    <ref-set/>
                 </to-one>
                 <to-one displayName="角色" name="role" refEntityName="app.mall.dao.entity.LitemallRole"
                         refPropName="userMappings" tagSet="pub,ref-pub,ref-cascade-delete,ref-insertable,ref-updatable"
@@ -1378,6 +1405,7 @@
                     <join>
                         <on leftProp="roleId" rightProp="id"/>
                     </join>
+                    <ref-set/>
                 </to-one>
             </relations>
         </entity>
