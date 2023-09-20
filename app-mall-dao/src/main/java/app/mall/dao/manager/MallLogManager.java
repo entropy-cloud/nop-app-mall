@@ -7,7 +7,7 @@ import io.nop.api.core.context.IContext;
 import io.nop.dao.api.IDaoProvider;
 import io.nop.dao.api.IEntityDao;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 public class MallLogManager {
     public static final Integer LOG_TYPE_GENERAL = 0;

@@ -1,0 +1,2 @@
+_chgType,ID,GOODS_ID,ATTRIBUTE,VALUE,ADD_TIME,UPDATE_TIME,DELETED
+A,@var:LitemallGoodsAttribute@id,@var:LitemallGoods@id,长度,33,*,*,false

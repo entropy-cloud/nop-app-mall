@@ -10,7 +10,7 @@ import io.nop.graphql.core.ast.GraphQLOperationType;
 import io.nop.graphql.core.engine.IGraphQLEngine;
 import org.junit.jupiter.api.Test;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 public class TestLitemallGoodsBizModel extends JunitAutoTestCase {
 
