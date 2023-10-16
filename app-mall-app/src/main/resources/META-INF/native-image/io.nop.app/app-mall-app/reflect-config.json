@@ -47416,6 +47416,10 @@
         ]
       },
       {
+        "name": "reloadModel",
+        "parameterTypes": []
+      },
+      {
         "name": "requireSession",
         "parameterTypes": []
       },
@@ -62609,6 +62613,10 @@
     "fields": [],
     "methods": [
       {
+        "name": "init",
+        "parameterTypes": []
+      },
+      {
         "name": "validate",
         "parameterTypes": []
       }
@@ -62629,6 +62637,10 @@
       },
       {
         "name": "getTables",
+        "parameterTypes": []
+      },
+      {
+        "name": "init",
         "parameterTypes": []
       },
       {
@@ -62653,6 +62665,10 @@
     "fields": [],
     "methods": [
       {
+        "name": "init",
+        "parameterTypes": []
+      },
+      {
         "name": "validate",
         "parameterTypes": []
       }
@@ -62669,6 +62685,10 @@
     "methods": [
       {
         "name": "containsBreakpoint",
+        "parameterTypes": []
+      },
+      {
+        "name": "init",
         "parameterTypes": []
       },
       {
