@@ -672,30 +672,30 @@
                     </join>
                     <ref-set/>
                 </to-one>
-                <to-many displayName="商品参数" name="attributes" refEntityName="app.mall.dao.entity.LitemallGoodsAttribute"
-                         refPropName="goods" tagSet="pub,cascade-delete,insertable,updatable,grid"
-                         i18n-en:displayName="Goods Attributes">
+                <to-many cascadeDelete="true" displayName="商品参数" name="attributes"
+                         refEntityName="app.mall.dao.entity.LitemallGoodsAttribute" refPropName="goods"
+                         tagSet="pub,cascade-delete,insertable,updatable,grid" i18n-en:displayName="Goods Attributes">
                     <join>
                         <on leftProp="id" rightProp="goodsId"/>
                     </join>
                 </to-many>
-                <to-many displayName="包含产品" name="products" refEntityName="app.mall.dao.entity.LitemallGoodsProduct"
-                         refPropName="goods" tagSet="pub,cascade-delete,insertable,updatable,grid"
-                         i18n-en:displayName="Products">
+                <to-many cascadeDelete="true" displayName="包含产品" name="products"
+                         refEntityName="app.mall.dao.entity.LitemallGoodsProduct" refPropName="goods"
+                         tagSet="pub,cascade-delete,insertable,updatable,grid" i18n-en:displayName="Products">
                     <join>
                         <on leftProp="id" rightProp="goodsId"/>
                     </join>
                 </to-many>
-                <to-many displayName="商品规格" name="specifications"
+                <to-many cascadeDelete="true" displayName="商品规格" name="specifications"
                          refEntityName="app.mall.dao.entity.LitemallGoodsSpecification" refPropName="goods"
                          tagSet="pub,cascade-delete,insertable,updatable,grid" i18n-en:displayName="Specifications">
                     <join>
                         <on leftProp="id" rightProp="goodsId"/>
                     </join>
                 </to-many>
-                <to-many displayName="订单商品" name="orderGoods" refEntityName="app.mall.dao.entity.LitemallOrderGoods"
-                         refPropName="goods" tagSet="pub,cascade-delete,updatable,insertable"
-                         i18n-en:displayName="Order Goods">
+                <to-many cascadeDelete="true" displayName="订单商品" name="orderGoods"
+                         refEntityName="app.mall.dao.entity.LitemallOrderGoods" refPropName="goods"
+                         tagSet="pub,cascade-delete,updatable,insertable" i18n-en:displayName="Order Goods">
                     <join>
                         <on leftProp="id" rightProp="goodsId"/>
                     </join>
@@ -1071,9 +1071,9 @@
                     </join>
                     <ref-set/>
                 </to-one>
-                <to-many displayName="订单商品" name="orderGoods" refEntityName="app.mall.dao.entity.LitemallOrderGoods"
-                         refPropName="order" tagSet="pub,cascade-delete,updatable,insertable"
-                         i18n-en:displayName="Order Goods">
+                <to-many cascadeDelete="true" displayName="订单商品" name="orderGoods"
+                         refEntityName="app.mall.dao.entity.LitemallOrderGoods" refPropName="order"
+                         tagSet="pub,cascade-delete,updatable,insertable" i18n-en:displayName="Order Goods">
                     <join>
                         <on leftProp="id" rightProp="orderId"/>
                     </join>
@@ -1208,8 +1208,8 @@
                         stdSqlType="BOOLEAN" ui:show="X"/>
             </columns>
             <relations>
-                <to-many name="userMappings" refEntityName="app.mall.dao.entity.LitemallUserRole" refPropName="role"
-                         tagSet="pub,cascade-delete,insertable,updatable">
+                <to-many cascadeDelete="true" name="userMappings" refEntityName="app.mall.dao.entity.LitemallUserRole"
+                         refPropName="role" tagSet="pub,cascade-delete,insertable,updatable">
                     <join>
                         <on leftProp="id" rightProp="roleId"/>
                     </join>
@@ -1356,9 +1356,9 @@
                         stdDataType="boolean" stdSqlType="BOOLEAN" ui:show="X"/>
             </columns>
             <relations>
-                <to-many displayName="角色映射" name="roleMappings" refEntityName="app.mall.dao.entity.LitemallUserRole"
-                         refPropName="user" tagSet="pub,cascade-delete,insertable,updatable"
-                         i18n-en:displayName="RoleMappings">
+                <to-many cascadeDelete="true" displayName="角色映射" name="roleMappings"
+                         refEntityName="app.mall.dao.entity.LitemallUserRole" refPropName="user"
+                         tagSet="pub,cascade-delete,insertable,updatable" i18n-en:displayName="RoleMappings">
                     <join>
                         <on leftProp="id" rightProp="userId"/>
                     </join>

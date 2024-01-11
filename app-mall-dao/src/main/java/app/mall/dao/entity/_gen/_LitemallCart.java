@@ -16,8 +16,8 @@ import app.mall.dao.entity.LitemallCart;
 /**
  *  购物车商品表: litemall_cart
  */
-@SuppressWarnings({"PMD.UselessOverridingMethod","PMD.UnusedLocalVariable",
-        "PMD.UnnecessaryFullyQualifiedName","PMD.EmptyControlStatement"})
+@SuppressWarnings({"PMD.UselessOverridingMethod","PMD.UnusedLocalVariable","java:S3008","java:S1602","java:S1128","java:S1161",
+        "PMD.UnnecessaryFullyQualifiedName","PMD.EmptyControlStatement","java:S116","java:S115","java:S101","java:S3776"})
 public class _LitemallCart extends DynamicOrmEntity{
     
     /* Id: ID INTEGER */
@@ -90,8 +90,8 @@ public class _LitemallCart extends DynamicOrmEntity{
     public static final String PROP_NAME_picUrlComponent = "picUrlComponent";
     
 
-    public static final List<String> PK_PROP_NAMES = Arrays.asList(PROP_NAME_id);
-    public static final int[] PK_PROP_IDS = new int[]{PROP_ID_id};
+    protected static final List<String> PK_PROP_NAMES = Arrays.asList(PROP_NAME_id);
+    protected static final int[] PK_PROP_IDS = new int[]{PROP_ID_id};
 
     private static final String[] PROP_ID_TO_NAME = new String[15];
     private static final Map<String,Integer> PROP_NAME_TO_ID = new HashMap<>();
@@ -186,6 +186,7 @@ public class _LitemallCart extends DynamicOrmEntity{
     
 
     public _LitemallCart(){
+        // for debug
     }
 
     protected LitemallCart newInstance(){
@@ -834,17 +835,19 @@ public class _LitemallCart extends DynamicOrmEntity{
     }
 
     public void setGoods(app.mall.dao.entity.LitemallGoods refEntity){
-       if(refEntity == null){
-         
-         this.setGoodsId(null);
-         
-       }else{
-          internalSetRefEntity(PROP_NAME_goods, refEntity,()->{
-             
-                    this.setGoodsId(refEntity.getId());
-                 
-          });
-       }
+   
+           if(refEntity == null){
+           
+                   this.setGoodsId(null);
+               
+           }else{
+           internalSetRefEntity(PROP_NAME_goods, refEntity,()->{
+           
+                           this.setGoodsId(refEntity.getId());
+                       
+           });
+           }
+       
     }
        
     /**
@@ -855,17 +858,19 @@ public class _LitemallCart extends DynamicOrmEntity{
     }
 
     public void setUser(app.mall.dao.entity.LitemallUser refEntity){
-       if(refEntity == null){
-         
-         this.setUserId(null);
-         
-       }else{
-          internalSetRefEntity(PROP_NAME_user, refEntity,()->{
-             
-                    this.setUserId(refEntity.getId());
-                 
-          });
-       }
+   
+           if(refEntity == null){
+           
+                   this.setUserId(null);
+               
+           }else{
+           internalSetRefEntity(PROP_NAME_user, refEntity,()->{
+           
+                           this.setUserId(refEntity.getId());
+                       
+           });
+           }
+       
     }
        
    private io.nop.orm.component.OrmFileComponent _picUrlComponent;

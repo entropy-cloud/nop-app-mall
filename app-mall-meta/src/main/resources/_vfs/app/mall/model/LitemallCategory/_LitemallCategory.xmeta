@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <meta x:schema="/nop/schema/xmeta.xdef" xmlns:x="/nop/schema/xdsl.xdef" xmlns:i18n-en="i18n-en" xmlns:ext="ext"
       xmlns:xpl="xpl" ext:model="orm" xmlns:c="c" xmlns:graphql="graphql" xmlns:meta-gen="meta-gen" xmlns:biz="biz"
-      displayName="类目表" xmlns:ui="ui">
+      displayName="类目表" xmlns:ui="ui" xmlns:orm="orm">
 
     <entityName>app.mall.dao.entity.LitemallCategory</entityName>
 
@@ -47,7 +47,7 @@
             <schema type="java.lang.String" precision="255" dict="mall/category-level"/>
         </prop>
         <prop name="pid" displayName="父类目ID" tagSet="parent" queryable="true" sortable="true" insertable="true"
-              updatable="true" ui:show="L" ext:control="tree-parent" ext:relation="parent">
+              updatable="true" ui:show="L" ui:control="tree-parent" ext:relation="parent">
             <schema type="java.lang.Integer"/>
         </prop>
         <prop name="sortOrder" displayName="排序" queryable="true" sortable="true" insertable="true" updatable="true"

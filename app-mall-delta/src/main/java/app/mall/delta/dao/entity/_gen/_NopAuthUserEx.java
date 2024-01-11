@@ -16,8 +16,8 @@ import app.mall.delta.dao.entity.NopAuthUserEx;
 /**
  *  用户: nop_auth_user
  */
-@SuppressWarnings({"PMD.UselessOverridingMethod","PMD.UnusedLocalVariable",
-        "PMD.UnnecessaryFullyQualifiedName","PMD.EmptyControlStatement"})
+@SuppressWarnings({"PMD.UselessOverridingMethod","PMD.UnusedLocalVariable","java:S3008","java:S1602","java:S1128","java:S1161",
+        "PMD.UnnecessaryFullyQualifiedName","PMD.EmptyControlStatement","java:S116","java:S115","java:S101","java:S3776"})
 public class _NopAuthUserEx extends io.nop.auth.dao.entity.NopAuthUser{
     
     /* 关联用户ID: MALL_USER_ID INTEGER */
@@ -32,8 +32,8 @@ public class _NopAuthUserEx extends io.nop.auth.dao.entity.NopAuthUser{
     public static final String PROP_NAME_mallUser = "mallUser";
     
 
-    public static final List<String> PK_PROP_NAMES = Arrays.asList(PROP_NAME_userId);
-    public static final int[] PK_PROP_IDS = new int[]{PROP_ID_userId};
+    protected static final List<String> PK_PROP_NAMES = Arrays.asList(PROP_NAME_userId);
+    protected static final int[] PK_PROP_IDS = new int[]{PROP_ID_userId};
 
     private static final String[] PROP_ID_TO_NAME = new String[101];
     private static final Map<String,Integer> PROP_NAME_TO_ID = new HashMap<>();
@@ -50,6 +50,7 @@ public class _NopAuthUserEx extends io.nop.auth.dao.entity.NopAuthUser{
     
 
     public _NopAuthUserEx(){
+        // for debug
     }
 
     protected NopAuthUserEx newInstance(){
@@ -191,18 +192,20 @@ public class _NopAuthUserEx extends io.nop.auth.dao.entity.NopAuthUser{
     }
 
     public void setMallUser(app.mall.dao.entity.LitemallUser refEntity){
-       if(refEntity == null){
-         
-         this.setMallUserId(null);
-         
-       }else{
-          internalSetRefEntity(PROP_NAME_mallUser, refEntity,()->{
-             
-              this.orm_propValue(PROP_ID_mallUserId,
-                refEntity.getId());
-                
-          });
-       }
+   
+           if(refEntity == null){
+           
+                   this.setMallUserId(null);
+               
+           }else{
+           internalSetRefEntity(PROP_NAME_mallUser, refEntity,()->{
+           
+                           this.orm_propValue(PROP_ID_mallUserId,
+                           refEntity.getId());
+                       
+           });
+           }
+       
     }
        
 }

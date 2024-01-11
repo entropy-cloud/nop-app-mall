@@ -16,8 +16,8 @@ import app.mall.dao.entity.LitemallCouponUser;
 /**
  *  优惠券用户使用表: litemall_coupon_user
  */
-@SuppressWarnings({"PMD.UselessOverridingMethod","PMD.UnusedLocalVariable",
-        "PMD.UnnecessaryFullyQualifiedName","PMD.EmptyControlStatement"})
+@SuppressWarnings({"PMD.UselessOverridingMethod","PMD.UnusedLocalVariable","java:S3008","java:S1602","java:S1128","java:S1161",
+        "PMD.UnnecessaryFullyQualifiedName","PMD.EmptyControlStatement","java:S116","java:S115","java:S101","java:S3776"})
 public class _LitemallCouponUser extends DynamicOrmEntity{
     
     /* Id: ID INTEGER */
@@ -75,8 +75,8 @@ public class _LitemallCouponUser extends DynamicOrmEntity{
     public static final String PROP_NAME_user = "user";
     
 
-    public static final List<String> PK_PROP_NAMES = Arrays.asList(PROP_NAME_id);
-    public static final int[] PK_PROP_IDS = new int[]{PROP_ID_id};
+    protected static final List<String> PK_PROP_NAMES = Arrays.asList(PROP_NAME_id);
+    protected static final int[] PK_PROP_IDS = new int[]{PROP_ID_id};
 
     private static final String[] PROP_ID_TO_NAME = new String[12];
     private static final Map<String,Integer> PROP_NAME_TO_ID = new HashMap<>();
@@ -153,6 +153,7 @@ public class _LitemallCouponUser extends DynamicOrmEntity{
     
 
     public _LitemallCouponUser(){
+        // for debug
     }
 
     protected LitemallCouponUser newInstance(){
@@ -684,17 +685,19 @@ public class _LitemallCouponUser extends DynamicOrmEntity{
     }
 
     public void setCoupon(app.mall.dao.entity.LitemallCoupon refEntity){
-       if(refEntity == null){
-         
-         this.setCouponId(null);
-         
-       }else{
-          internalSetRefEntity(PROP_NAME_coupon, refEntity,()->{
-             
-                    this.setCouponId(refEntity.getId());
-                 
-          });
-       }
+   
+           if(refEntity == null){
+           
+                   this.setCouponId(null);
+               
+           }else{
+           internalSetRefEntity(PROP_NAME_coupon, refEntity,()->{
+           
+                           this.setCouponId(refEntity.getId());
+                       
+           });
+           }
+       
     }
        
     /**
@@ -705,17 +708,19 @@ public class _LitemallCouponUser extends DynamicOrmEntity{
     }
 
     public void setUser(app.mall.dao.entity.LitemallUser refEntity){
-       if(refEntity == null){
-         
-         this.setUserId(null);
-         
-       }else{
-          internalSetRefEntity(PROP_NAME_user, refEntity,()->{
-             
-                    this.setUserId(refEntity.getId());
-                 
-          });
-       }
+   
+           if(refEntity == null){
+           
+                   this.setUserId(null);
+               
+           }else{
+           internalSetRefEntity(PROP_NAME_user, refEntity,()->{
+           
+                           this.setUserId(refEntity.getId());
+                       
+           });
+           }
+       
     }
        
 }
