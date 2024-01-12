@@ -1,6 +1,6 @@
 {
   "data": {
-    "id": "100033",
+    "id": "@var:LitemallGoods@id",
     "goodsSn": "test-05",
     "name": "测试商品5",
     "categoryId": 1005000,
@@ -11,8 +11,8 @@
     "unit": "个",
     "counterPrice": 33.0,
     "retailPrice": 25.0,
-    "addTime": "@var:LitemallGoods@addTime",
-    "updateTime": "@var:LitemallGoods@updateTime",
+    "addTime": "@var:LitemallGoodsSpecification@addTime",
+    "updateTime": "@var:LitemallGoodsSpecification@addTime",
     "deleted": false,
     "gallery": null,
     "keywords": null,
