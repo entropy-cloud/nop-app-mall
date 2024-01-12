@@ -20,7 +20,7 @@
 
 #### 安装教程
 
-环境准备： JDK 11+、Maven 3.6+、Git
+环境准备： JDK 17+、Maven 3.9.3+、Git
 
 **编译app-mall项目之前需要先编译[nop-entropy](https://gitee.com/canonical-entropy/nop-entropy)项目。**
 
