@@ -18,16 +18,18 @@
     <keys/>
 
     <props>
-        <prop name="userId" displayName="用户ID" i18n-en:displayName="User ID" tagSet="seq,not-gen" mandatory="true"
-              queryable="true" sortable="true" insertable="true" updatable="false" internal="true" ui:show="X">
+        <prop name="userId" displayName="用户ID" propId="1" i18n-en:displayName="User ID" tagSet="seq,not-gen"
+              mandatory="true" queryable="true" sortable="true" insertable="true" updatable="false" internal="true"
+              ui:show="X">
             <schema domain="userId" type="java.lang.String" precision="50"/>
         </prop>
-        <prop name="clientId" displayName="设备ID" i18n-en:displayName="Client Id" tagSet="del" queryable="true"
-              sortable="true" insertable="true" updatable="true" internal="true" ui:show="X" x:override="remove">
+        <prop name="clientId" displayName="设备ID" propId="26" i18n-en:displayName="Client Id" tagSet="del"
+              queryable="true" sortable="true" insertable="true" updatable="true" internal="true" ui:show="X"
+              x:override="remove">
             <schema type="java.lang.String" precision="100"/>
         </prop>
-        <prop name="mallUserId" displayName="关联用户ID" i18n-en:displayName="Mall User ID" queryable="true" sortable="true"
-              insertable="true" updatable="true" ext:relation="mallUser">
+        <prop name="mallUserId" displayName="关联用户ID" propId="100" i18n-en:displayName="Mall User ID" queryable="true"
+              sortable="true" insertable="true" updatable="true" ext:relation="mallUser">
             <schema type="java.lang.Integer"/>
         </prop>
         <prop name="mallUser" displayName="关联用户" i18n-en:displayName="Mall User" tagSet="pub,ref-pub" ext:kind="to-one"

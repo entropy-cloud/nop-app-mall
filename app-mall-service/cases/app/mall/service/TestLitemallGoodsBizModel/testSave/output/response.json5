@@ -12,7 +12,7 @@
     "counterPrice": 33.0,
     "retailPrice": 25.0,
     "addTime": "@var:LitemallGoodsSpecification@addTime",
-    "updateTime": "@var:LitemallGoodsSpecification@addTime",
+    "updateTime": "@var:LitemallGoodsSpecification@updateTime",
     "deleted": false,
     "gallery": null,
     "keywords": null,

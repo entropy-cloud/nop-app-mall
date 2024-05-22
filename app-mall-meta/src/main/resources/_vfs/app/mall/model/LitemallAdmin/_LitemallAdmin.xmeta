@@ -20,42 +20,44 @@
     <keys/>
 
     <props>
-        <prop name="id" displayName="Id" tagSet="seq" mandatory="true" queryable="true" sortable="true"
+        <prop name="id" displayName="Id" propId="1" tagSet="seq" mandatory="true" queryable="true" sortable="true"
               insertable="false" updatable="false" ui:show="R">
             <schema type="java.lang.Integer"/>
         </prop>
-        <prop name="username" displayName="管理员名称" tagSet="disp" mandatory="true" queryable="true" sortable="true"
-              insertable="true" updatable="true">
+        <prop name="username" displayName="管理员名称" propId="2" tagSet="disp" mandatory="true" queryable="true"
+              sortable="true" insertable="true" updatable="true">
             <schema type="java.lang.String" precision="63"/>
         </prop>
-        <prop name="password" displayName="管理员密码" tagSet="masked" mandatory="true" queryable="true" sortable="true"
-              insertable="true" updatable="false" ui:show="C">
+        <prop name="password" displayName="管理员密码" propId="3" tagSet="masked" mandatory="true" queryable="true"
+              sortable="true" insertable="true" updatable="false" ui:show="C">
             <schema type="java.lang.String" precision="63"/>
         </prop>
-        <prop name="lastLoginIp" displayName="最近一次登录IP地址" queryable="true" sortable="true" insertable="true"
+        <prop name="lastLoginIp" displayName="最近一次登录IP地址" propId="4" queryable="true" sortable="true" insertable="true"
               updatable="true">
             <schema type="java.lang.String" precision="63"/>
         </prop>
-        <prop name="lastLoginTime" displayName="最近一次登录时间" queryable="true" sortable="true" insertable="true"
+        <prop name="lastLoginTime" displayName="最近一次登录时间" propId="5" queryable="true" sortable="true" insertable="true"
               updatable="true">
             <schema type="java.time.LocalDateTime"/>
         </prop>
-        <prop name="avatar" displayName="头像图片" queryable="true" sortable="true" insertable="true" updatable="true">
+        <prop name="avatar" displayName="头像图片" propId="6" queryable="true" sortable="true" insertable="true"
+              updatable="true">
             <schema type="java.lang.String" precision="255"/>
         </prop>
-        <prop name="addTime" displayName="创建时间" queryable="true" sortable="true" insertable="false" updatable="false"
-              internal="true" ui:show="X">
+        <prop name="addTime" displayName="创建时间" propId="7" queryable="true" sortable="true" insertable="false"
+              updatable="false" internal="true" ui:show="X">
             <schema domain="createTime" type="java.time.LocalDateTime"/>
         </prop>
-        <prop name="updateTime" displayName="更新时间" queryable="true" sortable="true" insertable="false" updatable="false"
-              internal="true" ui:show="X">
+        <prop name="updateTime" displayName="更新时间" propId="8" queryable="true" sortable="true" insertable="false"
+              updatable="false" internal="true" ui:show="X">
             <schema domain="updateTime" type="java.time.LocalDateTime"/>
         </prop>
-        <prop name="deleted" displayName="逻辑删除" queryable="true" sortable="true" insertable="false" updatable="true"
-              internal="true" ui:show="X">
+        <prop name="deleted" displayName="逻辑删除" propId="9" queryable="true" sortable="true" insertable="false"
+              updatable="true" internal="true" ui:show="X">
             <schema domain="delFlag" type="java.lang.Boolean"/>
         </prop>
-        <prop name="roleIds" displayName="角色列表" queryable="true" sortable="true" insertable="true" updatable="true">
+        <prop name="roleIds" displayName="角色列表" propId="10" queryable="true" sortable="true" insertable="true"
+              updatable="true">
             <schema type="java.lang.String" precision="127"/>
         </prop>
     </props>

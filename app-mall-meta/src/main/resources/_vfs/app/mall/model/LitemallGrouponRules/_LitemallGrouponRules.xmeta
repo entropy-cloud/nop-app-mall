@@ -18,46 +18,48 @@
     <keys/>
 
     <props>
-        <prop name="id" displayName="Id" tagSet="seq" mandatory="true" queryable="true" sortable="true"
+        <prop name="id" displayName="Id" propId="1" tagSet="seq" mandatory="true" queryable="true" sortable="true"
               insertable="false" updatable="false" ui:show="R">
             <schema type="java.lang.Integer"/>
         </prop>
-        <prop name="goodsId" displayName="商品ID" mandatory="true" queryable="true" sortable="true" insertable="true"
-              updatable="true" ext:relation="goods">
+        <prop name="goodsId" displayName="商品ID" propId="2" mandatory="true" queryable="true" sortable="true"
+              insertable="true" updatable="true" ext:relation="goods">
             <schema type="java.lang.Integer"/>
         </prop>
-        <prop name="goodsName" displayName="商品名称" mandatory="true" queryable="true" sortable="true" insertable="true"
-              updatable="true">
+        <prop name="goodsName" displayName="商品名称" propId="3" mandatory="true" queryable="true" sortable="true"
+              insertable="true" updatable="true">
             <schema type="java.lang.String" precision="127"/>
         </prop>
-        <prop name="picUrl" displayName="商品/货品图片" queryable="true" sortable="true" insertable="true" updatable="true">
+        <prop name="picUrl" displayName="商品/货品图片" propId="4" queryable="true" sortable="true" insertable="true"
+              updatable="true">
             <schema stdDomain="file" domain="image" type="java.lang.String" precision="255"/>
         </prop>
-        <prop name="discount" displayName="优惠金额" mandatory="true" queryable="true" sortable="true" insertable="true"
-              updatable="true">
+        <prop name="discount" displayName="优惠金额" propId="5" mandatory="true" queryable="true" sortable="true"
+              insertable="true" updatable="true">
             <schema type="java.math.BigDecimal" precision="63" scale="0"/>
         </prop>
-        <prop name="discountMember" displayName="达到优惠条件的人数" mandatory="true" queryable="true" sortable="true"
+        <prop name="discountMember" displayName="达到优惠条件的人数" propId="6" mandatory="true" queryable="true" sortable="true"
               insertable="true" updatable="true">
             <schema type="java.lang.Integer"/>
         </prop>
-        <prop name="expireTime" displayName="团购过期时间" queryable="true" sortable="true" insertable="true" updatable="true">
+        <prop name="expireTime" displayName="团购过期时间" propId="7" queryable="true" sortable="true" insertable="true"
+              updatable="true">
             <schema type="java.time.LocalDateTime"/>
         </prop>
-        <prop name="status" displayName="团购规则状态，正常上线则0，到期自动下线则1，管理手动下线则2" queryable="true" sortable="true"
+        <prop name="status" displayName="团购规则状态，正常上线则0，到期自动下线则1，管理手动下线则2" propId="8" queryable="true" sortable="true"
               insertable="true" updatable="true">
             <schema type="java.lang.Short"/>
         </prop>
-        <prop name="addTime" displayName="创建时间" mandatory="true" queryable="true" sortable="true" insertable="false"
-              updatable="false" internal="true" ui:show="X">
+        <prop name="addTime" displayName="创建时间" propId="9" mandatory="true" queryable="true" sortable="true"
+              insertable="false" updatable="false" internal="true" ui:show="X">
             <schema domain="createTime" type="java.time.LocalDateTime"/>
         </prop>
-        <prop name="updateTime" displayName="更新时间" queryable="true" sortable="true" insertable="false" updatable="false"
-              internal="true" ui:show="X">
+        <prop name="updateTime" displayName="更新时间" propId="10" queryable="true" sortable="true" insertable="false"
+              updatable="false" internal="true" ui:show="X">
             <schema domain="updateTime" type="java.time.LocalDateTime"/>
         </prop>
-        <prop name="deleted" displayName="逻辑删除" queryable="true" sortable="true" insertable="false" updatable="true"
-              internal="true" ui:show="X">
+        <prop name="deleted" displayName="逻辑删除" propId="11" queryable="true" sortable="true" insertable="false"
+              updatable="true" internal="true" ui:show="X">
             <schema domain="delFlag" type="java.lang.Boolean"/>
         </prop>
         <prop name="goods" displayName="订单" i18n-en:displayName="Goods" tagSet="pub,ref-pub" ext:kind="to-one"

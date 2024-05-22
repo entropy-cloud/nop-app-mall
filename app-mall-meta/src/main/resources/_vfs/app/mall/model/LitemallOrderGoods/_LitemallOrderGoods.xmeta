@@ -18,60 +18,60 @@
     <keys/>
 
     <props>
-        <prop name="id" displayName="Id" tagSet="seq" mandatory="true" queryable="true" sortable="true"
+        <prop name="id" displayName="Id" propId="1" tagSet="seq" mandatory="true" queryable="true" sortable="true"
               insertable="false" updatable="false" ui:show="R">
             <schema type="java.lang.Integer"/>
         </prop>
-        <prop name="orderId" displayName="订单ID" mandatory="true" queryable="true" sortable="true" insertable="true"
-              updatable="true" ext:relation="order">
+        <prop name="orderId" displayName="订单ID" propId="2" mandatory="true" queryable="true" sortable="true"
+              insertable="true" updatable="true" ext:relation="order">
             <schema type="java.lang.Integer"/>
         </prop>
-        <prop name="goodsId" displayName="商品ID" mandatory="true" queryable="true" sortable="true" insertable="true"
-              updatable="true" ext:relation="goods">
+        <prop name="goodsId" displayName="商品ID" propId="3" mandatory="true" queryable="true" sortable="true"
+              insertable="true" updatable="true" ext:relation="goods">
             <schema type="java.lang.Integer"/>
         </prop>
-        <prop name="goodsName" displayName="商品名称" mandatory="true" queryable="true" sortable="true" insertable="true"
-              updatable="true">
+        <prop name="goodsName" displayName="商品名称" propId="4" mandatory="true" queryable="true" sortable="true"
+              insertable="true" updatable="true">
             <schema type="java.lang.String" precision="127"/>
         </prop>
-        <prop name="goodsSn" displayName="商品编号" mandatory="true" queryable="true" sortable="true" insertable="true"
-              updatable="true">
+        <prop name="goodsSn" displayName="商品编号" propId="5" mandatory="true" queryable="true" sortable="true"
+              insertable="true" updatable="true">
             <schema type="java.lang.String" precision="63"/>
         </prop>
-        <prop name="productId" displayName="货品ID" mandatory="true" queryable="true" sortable="true" insertable="true"
-              updatable="true" ext:relation="product">
+        <prop name="productId" displayName="货品ID" propId="6" mandatory="true" queryable="true" sortable="true"
+              insertable="true" updatable="true" ext:relation="product">
             <schema type="java.lang.Integer"/>
         </prop>
-        <prop name="number" displayName="购买数量" mandatory="true" queryable="true" sortable="true" insertable="true"
-              updatable="true">
+        <prop name="number" displayName="购买数量" propId="7" mandatory="true" queryable="true" sortable="true"
+              insertable="true" updatable="true">
             <schema type="java.lang.Short"/>
         </prop>
-        <prop name="price" displayName="售价" mandatory="true" queryable="true" sortable="true" insertable="true"
-              updatable="true">
+        <prop name="price" displayName="售价" propId="8" mandatory="true" queryable="true" sortable="true"
+              insertable="true" updatable="true">
             <schema type="java.math.BigDecimal" precision="10" scale="2"/>
         </prop>
-        <prop name="specifications" displayName="规格列表" mandatory="true" queryable="true" sortable="true"
+        <prop name="specifications" displayName="规格列表" propId="9" mandatory="true" queryable="true" sortable="true"
               insertable="true" updatable="true">
             <schema type="java.lang.String" precision="1023"/>
         </prop>
-        <prop name="picUrl" displayName="商品/货品图片" mandatory="true" queryable="true" sortable="true" insertable="true"
-              updatable="true">
+        <prop name="picUrl" displayName="商品/货品图片" propId="10" mandatory="true" queryable="true" sortable="true"
+              insertable="true" updatable="true">
             <schema stdDomain="file" domain="image" type="java.lang.String" precision="255"/>
         </prop>
-        <prop name="comment" displayName="订单商品评论，如果是-1，则超期不能评价；如果是0，则可以评价；如果其他值，则是comment表里面的评论ID。" queryable="true"
-              sortable="true" insertable="true" updatable="true">
+        <prop name="comment" displayName="订单商品评论，如果是-1，则超期不能评价；如果是0，则可以评价；如果其他值，则是comment表里面的评论ID。" propId="11"
+              queryable="true" sortable="true" insertable="true" updatable="true">
             <schema type="java.lang.Integer"/>
         </prop>
-        <prop name="addTime" displayName="创建时间" queryable="true" sortable="true" insertable="false" updatable="false"
-              internal="true" ui:show="X">
+        <prop name="addTime" displayName="创建时间" propId="12" queryable="true" sortable="true" insertable="false"
+              updatable="false" internal="true" ui:show="X">
             <schema domain="createTime" type="java.time.LocalDateTime"/>
         </prop>
-        <prop name="updateTime" displayName="更新时间" queryable="true" sortable="true" insertable="false" updatable="false"
-              internal="true" ui:show="X">
+        <prop name="updateTime" displayName="更新时间" propId="13" queryable="true" sortable="true" insertable="false"
+              updatable="false" internal="true" ui:show="X">
             <schema domain="updateTime" type="java.time.LocalDateTime"/>
         </prop>
-        <prop name="deleted" displayName="逻辑删除" queryable="true" sortable="true" insertable="false" updatable="true"
-              internal="true" ui:show="X">
+        <prop name="deleted" displayName="逻辑删除" propId="14" queryable="true" sortable="true" insertable="false"
+              updatable="true" internal="true" ui:show="X">
             <schema domain="delFlag" type="java.lang.Boolean"/>
         </prop>
         <prop name="order" displayName="订单" i18n-en:displayName="Order"

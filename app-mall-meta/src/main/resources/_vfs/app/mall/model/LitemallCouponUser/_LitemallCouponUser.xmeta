@@ -18,43 +18,48 @@
     <keys/>
 
     <props>
-        <prop name="id" displayName="Id" tagSet="seq" mandatory="true" queryable="true" sortable="true"
+        <prop name="id" displayName="Id" propId="1" tagSet="seq" mandatory="true" queryable="true" sortable="true"
               insertable="false" updatable="false" ui:show="R">
             <schema type="java.lang.Integer"/>
         </prop>
-        <prop name="userId" displayName="用户ID" mandatory="true" queryable="true" sortable="true" insertable="true"
-              updatable="true" ext:relation="user">
+        <prop name="userId" displayName="用户ID" propId="2" mandatory="true" queryable="true" sortable="true"
+              insertable="true" updatable="true" ext:relation="user">
             <schema type="java.lang.Integer"/>
         </prop>
-        <prop name="couponId" displayName="优惠券ID" mandatory="true" queryable="true" sortable="true" insertable="true"
-              updatable="true" ext:relation="coupon">
+        <prop name="couponId" displayName="优惠券ID" propId="3" mandatory="true" queryable="true" sortable="true"
+              insertable="true" updatable="true" ext:relation="coupon">
             <schema type="java.lang.Integer"/>
         </prop>
-        <prop name="status" displayName="使用状态" queryable="true" sortable="true" insertable="true" updatable="true">
+        <prop name="status" displayName="使用状态" propId="4" queryable="true" sortable="true" insertable="true"
+              updatable="true">
             <schema type="java.lang.Short" dict="mall/coupon-use-status"/>
         </prop>
-        <prop name="usedTime" displayName="使用时间" queryable="true" sortable="true" insertable="true" updatable="true">
+        <prop name="usedTime" displayName="使用时间" propId="5" queryable="true" sortable="true" insertable="true"
+              updatable="true">
             <schema type="java.time.LocalDateTime"/>
         </prop>
-        <prop name="startTime" displayName="有效期开始时间" queryable="true" sortable="true" insertable="true" updatable="true">
+        <prop name="startTime" displayName="有效期开始时间" propId="6" queryable="true" sortable="true" insertable="true"
+              updatable="true">
             <schema type="java.time.LocalDateTime"/>
         </prop>
-        <prop name="endTime" displayName="有效期截至时间" queryable="true" sortable="true" insertable="true" updatable="true">
+        <prop name="endTime" displayName="有效期截至时间" propId="7" queryable="true" sortable="true" insertable="true"
+              updatable="true">
             <schema type="java.time.LocalDateTime"/>
         </prop>
-        <prop name="orderId" displayName="订单ID" queryable="true" sortable="true" insertable="true" updatable="true">
+        <prop name="orderId" displayName="订单ID" propId="8" queryable="true" sortable="true" insertable="true"
+              updatable="true">
             <schema type="java.lang.Integer"/>
         </prop>
-        <prop name="addTime" displayName="创建时间" queryable="true" sortable="true" insertable="false" updatable="false"
-              internal="true" ui:show="X">
+        <prop name="addTime" displayName="创建时间" propId="9" queryable="true" sortable="true" insertable="false"
+              updatable="false" internal="true" ui:show="X">
             <schema domain="createTime" type="java.time.LocalDateTime"/>
         </prop>
-        <prop name="updateTime" displayName="更新时间" queryable="true" sortable="true" insertable="false" updatable="false"
-              internal="true" ui:show="X">
+        <prop name="updateTime" displayName="更新时间" propId="10" queryable="true" sortable="true" insertable="false"
+              updatable="false" internal="true" ui:show="X">
             <schema domain="updateTime" type="java.time.LocalDateTime"/>
         </prop>
-        <prop name="deleted" displayName="逻辑删除" queryable="true" sortable="true" insertable="false" updatable="true"
-              internal="true" ui:show="X">
+        <prop name="deleted" displayName="逻辑删除" propId="11" queryable="true" sortable="true" insertable="false"
+              updatable="true" internal="true" ui:show="X">
             <schema domain="delFlag" type="java.lang.Boolean"/>
         </prop>
         <prop name="coupon" displayName="优惠券" i18n-en:displayName="Coupon" tagSet="pub,ref-pub" ext:kind="to-one"

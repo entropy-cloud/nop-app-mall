@@ -20,48 +20,52 @@
     <keys/>
 
     <props>
-        <prop name="id" displayName="Id" tagSet="seq" mandatory="true" queryable="true" sortable="true"
+        <prop name="id" displayName="Id" propId="1" tagSet="seq" mandatory="true" queryable="true" sortable="true"
               insertable="false" updatable="false" ui:show="R">
             <schema type="java.lang.Integer"/>
         </prop>
-        <prop name="name" displayName="广告标题" tagSet="disp" mandatory="true" queryable="true" sortable="true"
+        <prop name="name" displayName="广告标题" propId="2" tagSet="disp" mandatory="true" queryable="true" sortable="true"
               insertable="true" updatable="true">
             <schema type="java.lang.String" precision="63"/>
         </prop>
-        <prop name="link" displayName="所广告的商品页面或者活动页面链接地址" mandatory="true" queryable="true" sortable="true"
+        <prop name="link" displayName="所广告的商品页面或者活动页面链接地址" propId="3" mandatory="true" queryable="true" sortable="true"
               insertable="true" updatable="true">
             <schema type="java.lang.String" precision="255"/>
         </prop>
-        <prop name="url" displayName="广告宣传图片" mandatory="true" queryable="true" sortable="true" insertable="true"
-              updatable="true">
+        <prop name="url" displayName="广告宣传图片" propId="4" mandatory="true" queryable="true" sortable="true"
+              insertable="true" updatable="true">
             <schema stdDomain="file" domain="image" type="java.lang.String" precision="255"/>
         </prop>
-        <prop name="position" displayName="广告位置：1则是首页" queryable="true" sortable="true" insertable="true"
+        <prop name="position" displayName="广告位置：1则是首页" propId="5" queryable="true" sortable="true" insertable="true"
               updatable="true">
             <schema type="java.lang.Byte"/>
         </prop>
-        <prop name="content" displayName="活动内容" queryable="true" sortable="true" insertable="true" updatable="true">
+        <prop name="content" displayName="活动内容" propId="6" queryable="true" sortable="true" insertable="true"
+              updatable="true">
             <schema type="java.lang.String" precision="255"/>
         </prop>
-        <prop name="startTime" displayName="广告开始时间" queryable="true" sortable="true" insertable="true" updatable="true">
+        <prop name="startTime" displayName="广告开始时间" propId="7" queryable="true" sortable="true" insertable="true"
+              updatable="true">
             <schema type="java.time.LocalDateTime"/>
         </prop>
-        <prop name="endTime" displayName="广告结束时间" queryable="true" sortable="true" insertable="true" updatable="true">
+        <prop name="endTime" displayName="广告结束时间" propId="8" queryable="true" sortable="true" insertable="true"
+              updatable="true">
             <schema type="java.time.LocalDateTime"/>
         </prop>
-        <prop name="enabled" displayName="是否启动" queryable="true" sortable="true" insertable="true" updatable="true">
+        <prop name="enabled" displayName="是否启动" propId="9" queryable="true" sortable="true" insertable="true"
+              updatable="true">
             <schema type="java.lang.Boolean"/>
         </prop>
-        <prop name="addTime" displayName="创建时间" queryable="true" sortable="true" insertable="false" updatable="false"
-              internal="true" ui:show="X">
+        <prop name="addTime" displayName="创建时间" propId="10" queryable="true" sortable="true" insertable="false"
+              updatable="false" internal="true" ui:show="X">
             <schema domain="createTime" type="java.time.LocalDateTime"/>
         </prop>
-        <prop name="updateTime" displayName="更新时间" queryable="true" sortable="true" insertable="false" updatable="false"
-              internal="true" ui:show="X">
+        <prop name="updateTime" displayName="更新时间" propId="11" queryable="true" sortable="true" insertable="false"
+              updatable="false" internal="true" ui:show="X">
             <schema domain="updateTime" type="java.time.LocalDateTime"/>
         </prop>
-        <prop name="deleted" displayName="逻辑删除" queryable="true" sortable="true" insertable="false" updatable="true"
-              internal="true" ui:show="X">
+        <prop name="deleted" displayName="逻辑删除" propId="12" queryable="true" sortable="true" insertable="false"
+              updatable="true" internal="true" ui:show="X">
             <schema domain="delFlag" type="java.lang.Boolean"/>
         </prop>
         <prop name="urlComponent" ext:kind="component" internal="true" insertable="true" updatable="true"

@@ -20,71 +20,84 @@
     <keys/>
 
     <props>
-        <prop name="id" displayName="Id" tagSet="seq" mandatory="true" queryable="true" sortable="true"
+        <prop name="id" displayName="Id" propId="1" tagSet="seq" mandatory="true" queryable="true" sortable="true"
               insertable="false" updatable="false" ui:show="R">
             <schema type="java.lang.Integer"/>
         </prop>
-        <prop name="name" displayName="优惠券名称" tagSet="disp" mandatory="true" queryable="true" sortable="true"
+        <prop name="name" displayName="优惠券名称" propId="2" tagSet="disp" mandatory="true" queryable="true" sortable="true"
               insertable="true" updatable="true">
             <schema type="java.lang.String" precision="63"/>
         </prop>
-        <prop name="desc" displayName="优惠券介绍" queryable="true" sortable="true" insertable="true" updatable="true">
+        <prop name="desc" displayName="优惠券介绍" propId="3" queryable="true" sortable="true" insertable="true"
+              updatable="true">
             <schema type="java.lang.String" precision="127"/>
         </prop>
-        <prop name="tag" displayName="优惠券标签" queryable="true" sortable="true" insertable="true" updatable="true">
+        <prop name="tag" displayName="优惠券标签" propId="4" queryable="true" sortable="true" insertable="true"
+              updatable="true">
             <schema type="java.lang.String" precision="63"/>
         </prop>
-        <prop name="total" displayName="优惠券数量" mandatory="true" queryable="true" sortable="true" insertable="true"
-              updatable="true">
+        <prop name="total" displayName="优惠券数量" propId="5" mandatory="true" queryable="true" sortable="true"
+              insertable="true" updatable="true">
             <schema type="java.lang.Integer"/>
         </prop>
-        <prop name="discount" displayName="优惠金额，" queryable="true" sortable="true" insertable="true" updatable="true">
+        <prop name="discount" displayName="优惠金额，" propId="6" queryable="true" sortable="true" insertable="true"
+              updatable="true">
             <schema type="java.math.BigDecimal" precision="10" scale="2"/>
         </prop>
-        <prop name="min" displayName="最少消费金额" queryable="true" sortable="true" insertable="true" updatable="true">
+        <prop name="min" displayName="最少消费金额" propId="7" queryable="true" sortable="true" insertable="true"
+              updatable="true">
             <schema type="java.math.BigDecimal" precision="10" scale="2"/>
         </prop>
-        <prop name="limit" displayName="用户领券限制数量" queryable="true" sortable="true" insertable="true" updatable="true">
-            <schema type="java.lang.Short"/>
-        </prop>
-        <prop name="type" displayName="优惠券赠送类型" queryable="true" sortable="true" insertable="true" updatable="true">
-            <schema type="java.lang.Short" dict="mall/coupon-type"/>
-        </prop>
-        <prop name="status" displayName="优惠券状态" queryable="true" sortable="true" insertable="true" updatable="true">
-            <schema type="java.lang.Short" dict="mall/coupon-status"/>
-        </prop>
-        <prop name="goodsType" displayName="商品限制类型" queryable="true" sortable="true" insertable="true" updatable="true">
-            <schema type="java.lang.Short" dict="mall/coupon-goods-type"/>
-        </prop>
-        <prop name="goodsValue" displayName="商品限制值" queryable="true" sortable="true" insertable="true" updatable="true">
-            <schema type="java.lang.String" precision="1023"/>
-        </prop>
-        <prop name="code" displayName="优惠券兑换码" queryable="true" sortable="true" insertable="true" updatable="true">
-            <schema type="java.lang.String" precision="63"/>
-        </prop>
-        <prop name="timeType" displayName="有效时间限制" queryable="true" sortable="true" insertable="true" updatable="true">
-            <schema type="java.lang.Short" dict="mall/coupon-time-type"/>
-        </prop>
-        <prop name="days" displayName="基于领取时间的有效天数days。" queryable="true" sortable="true" insertable="true"
+        <prop name="limit" displayName="用户领券限制数量" propId="8" queryable="true" sortable="true" insertable="true"
               updatable="true">
             <schema type="java.lang.Short"/>
         </prop>
-        <prop name="startTime" displayName="使用券开始时间" queryable="true" sortable="true" insertable="true" updatable="true">
+        <prop name="type" displayName="优惠券赠送类型" propId="9" queryable="true" sortable="true" insertable="true"
+              updatable="true">
+            <schema type="java.lang.Short" dict="mall/coupon-type"/>
+        </prop>
+        <prop name="status" displayName="优惠券状态" propId="10" queryable="true" sortable="true" insertable="true"
+              updatable="true">
+            <schema type="java.lang.Short" dict="mall/coupon-status"/>
+        </prop>
+        <prop name="goodsType" displayName="商品限制类型" propId="11" queryable="true" sortable="true" insertable="true"
+              updatable="true">
+            <schema type="java.lang.Short" dict="mall/coupon-goods-type"/>
+        </prop>
+        <prop name="goodsValue" displayName="商品限制值" propId="12" queryable="true" sortable="true" insertable="true"
+              updatable="true">
+            <schema type="java.lang.String" precision="1023"/>
+        </prop>
+        <prop name="code" displayName="优惠券兑换码" propId="13" queryable="true" sortable="true" insertable="true"
+              updatable="true">
+            <schema type="java.lang.String" precision="63"/>
+        </prop>
+        <prop name="timeType" displayName="有效时间限制" propId="14" queryable="true" sortable="true" insertable="true"
+              updatable="true">
+            <schema type="java.lang.Short" dict="mall/coupon-time-type"/>
+        </prop>
+        <prop name="days" displayName="基于领取时间的有效天数days。" propId="15" queryable="true" sortable="true" insertable="true"
+              updatable="true">
+            <schema type="java.lang.Short"/>
+        </prop>
+        <prop name="startTime" displayName="使用券开始时间" propId="16" queryable="true" sortable="true" insertable="true"
+              updatable="true">
             <schema type="java.time.LocalDateTime"/>
         </prop>
-        <prop name="endTime" displayName="使用券截至时间" queryable="true" sortable="true" insertable="true" updatable="true">
+        <prop name="endTime" displayName="使用券截至时间" propId="17" queryable="true" sortable="true" insertable="true"
+              updatable="true">
             <schema type="java.time.LocalDateTime"/>
         </prop>
-        <prop name="addTime" displayName="创建时间" queryable="true" sortable="true" insertable="false" updatable="false"
-              internal="true" ui:show="X">
+        <prop name="addTime" displayName="创建时间" propId="18" queryable="true" sortable="true" insertable="false"
+              updatable="false" internal="true" ui:show="X">
             <schema domain="createTime" type="java.time.LocalDateTime"/>
         </prop>
-        <prop name="updateTime" displayName="更新时间" queryable="true" sortable="true" insertable="false" updatable="false"
-              internal="true" ui:show="X">
+        <prop name="updateTime" displayName="更新时间" propId="19" queryable="true" sortable="true" insertable="false"
+              updatable="false" internal="true" ui:show="X">
             <schema domain="updateTime" type="java.time.LocalDateTime"/>
         </prop>
-        <prop name="deleted" displayName="逻辑删除" queryable="true" sortable="true" insertable="false" updatable="true"
-              internal="true" ui:show="X">
+        <prop name="deleted" displayName="逻辑删除" propId="20" queryable="true" sortable="true" insertable="false"
+              updatable="true" internal="true" ui:show="X">
             <schema domain="delFlag" type="java.lang.Boolean"/>
         </prop>
     </props>

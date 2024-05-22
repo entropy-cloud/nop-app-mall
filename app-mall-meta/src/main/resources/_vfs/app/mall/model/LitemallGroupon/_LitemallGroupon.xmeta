@@ -18,51 +18,52 @@
     <keys/>
 
     <props>
-        <prop name="id" displayName="Id" tagSet="seq" mandatory="true" queryable="true" sortable="true"
+        <prop name="id" displayName="Id" propId="1" tagSet="seq" mandatory="true" queryable="true" sortable="true"
               insertable="false" updatable="false" ui:show="R">
             <schema type="java.lang.Integer"/>
         </prop>
-        <prop name="orderId" displayName="订单ID" mandatory="true" queryable="true" sortable="true" insertable="true"
-              updatable="true" ext:relation="order">
+        <prop name="orderId" displayName="订单ID" propId="2" mandatory="true" queryable="true" sortable="true"
+              insertable="true" updatable="true" ext:relation="order">
             <schema type="java.lang.Integer"/>
         </prop>
-        <prop name="grouponId" displayName="如果是开团用户，则groupon_id是0；如果是参团用户，则groupon_id是团购活动ID" queryable="true"
-              sortable="true" insertable="true" updatable="true">
+        <prop name="grouponId" displayName="如果是开团用户，则groupon_id是0；如果是参团用户，则groupon_id是团购活动ID" propId="3"
+              queryable="true" sortable="true" insertable="true" updatable="true">
             <schema type="java.lang.Integer"/>
         </prop>
-        <prop name="rulesId" displayName="团购规则ID" mandatory="true" queryable="true" sortable="true" insertable="true"
-              updatable="true">
-            <schema type="java.lang.Integer"/>
-        </prop>
-        <prop name="userId" displayName="用户ID" mandatory="true" queryable="true" sortable="true" insertable="true"
-              updatable="true">
-            <schema type="java.lang.Integer"/>
-        </prop>
-        <prop name="shareUrl" displayName="团购分享图片地址" queryable="true" sortable="true" insertable="true" updatable="true">
-            <schema stdDomain="file" domain="image" type="java.lang.String" precision="255"/>
-        </prop>
-        <prop name="creatorUserId" displayName="开团用户ID" mandatory="true" queryable="true" sortable="true"
+        <prop name="rulesId" displayName="团购规则ID" propId="4" mandatory="true" queryable="true" sortable="true"
               insertable="true" updatable="true">
             <schema type="java.lang.Integer"/>
         </prop>
-        <prop name="creatorUserTime" displayName="开团时间" queryable="true" sortable="true" insertable="true"
+        <prop name="userId" displayName="用户ID" propId="5" mandatory="true" queryable="true" sortable="true"
+              insertable="true" updatable="true">
+            <schema type="java.lang.Integer"/>
+        </prop>
+        <prop name="shareUrl" displayName="团购分享图片地址" propId="6" queryable="true" sortable="true" insertable="true"
+              updatable="true">
+            <schema stdDomain="file" domain="image" type="java.lang.String" precision="255"/>
+        </prop>
+        <prop name="creatorUserId" displayName="开团用户ID" propId="7" mandatory="true" queryable="true" sortable="true"
+              insertable="true" updatable="true">
+            <schema type="java.lang.Integer"/>
+        </prop>
+        <prop name="creatorUserTime" displayName="开团时间" propId="8" queryable="true" sortable="true" insertable="true"
               updatable="true">
             <schema type="java.time.LocalDateTime"/>
         </prop>
-        <prop name="status" displayName="团购活动状态，开团未支付则0，开团中则1，开团失败则2" queryable="true" sortable="true" insertable="true"
-              updatable="true">
+        <prop name="status" displayName="团购活动状态，开团未支付则0，开团中则1，开团失败则2" propId="9" queryable="true" sortable="true"
+              insertable="true" updatable="true">
             <schema type="java.lang.Short"/>
         </prop>
-        <prop name="addTime" displayName="创建时间" mandatory="true" queryable="true" sortable="true" insertable="false"
-              updatable="false" internal="true" ui:show="X">
+        <prop name="addTime" displayName="创建时间" propId="10" mandatory="true" queryable="true" sortable="true"
+              insertable="false" updatable="false" internal="true" ui:show="X">
             <schema domain="createTime" type="java.time.LocalDateTime"/>
         </prop>
-        <prop name="updateTime" displayName="更新时间" queryable="true" sortable="true" insertable="false" updatable="false"
-              internal="true" ui:show="X">
+        <prop name="updateTime" displayName="更新时间" propId="11" queryable="true" sortable="true" insertable="false"
+              updatable="false" internal="true" ui:show="X">
             <schema domain="updateTime" type="java.time.LocalDateTime"/>
         </prop>
-        <prop name="deleted" displayName="逻辑删除" queryable="true" sortable="true" insertable="false" updatable="true"
-              internal="true" ui:show="X">
+        <prop name="deleted" displayName="逻辑删除" propId="12" queryable="true" sortable="true" insertable="false"
+              updatable="true" internal="true" ui:show="X">
             <schema domain="delFlag" type="java.lang.Boolean"/>
         </prop>
         <prop name="order" displayName="订单" i18n-en:displayName="Order" tagSet="pub,ref-pub" ext:kind="to-one"

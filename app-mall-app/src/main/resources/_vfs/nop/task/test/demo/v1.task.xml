@@ -1,0 +1,16 @@
+<task x:schema="/nop/schema/task/task.xdef" xmlns:x="/nop/schema/xdsl.xdef" allowStartIfComplete="true">
+    <steps>
+        <call-step>
+
+        </call-step>
+
+        <call-task executor="aaa">
+
+        </call-task>
+
+        <loop itemsExpr="[1,2,3]">
+            
+        </loop>
+    </steps>
+
+</task>

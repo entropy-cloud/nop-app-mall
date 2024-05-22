@@ -18,39 +18,40 @@
     <keys/>
 
     <props>
-        <prop name="id" displayName="Id" tagSet="seq" mandatory="true" queryable="true" sortable="true"
+        <prop name="id" displayName="Id" propId="1" tagSet="seq" mandatory="true" queryable="true" sortable="true"
               insertable="false" updatable="false" ui:show="R">
             <schema type="java.lang.Integer"/>
         </prop>
-        <prop name="goodsId" displayName="商品ID" mandatory="true" queryable="true" sortable="true" insertable="true"
-              updatable="true" ext:relation="goods">
+        <prop name="goodsId" displayName="商品ID" propId="2" mandatory="true" queryable="true" sortable="true"
+              insertable="true" updatable="true" ext:relation="goods">
             <schema type="java.lang.Integer"/>
         </prop>
-        <prop name="specifications" displayName="商品规格值" mandatory="true" queryable="true" sortable="true"
+        <prop name="specifications" displayName="商品规格值" propId="3" mandatory="true" queryable="true" sortable="true"
               insertable="true" updatable="true" graphql:jsonComponentProp="specificationsComponent">
             <schema stdDomain="json" domain="string-array" type="java.lang.String" precision="1023"/>
         </prop>
-        <prop name="price" displayName="商品货品价格" mandatory="true" queryable="true" sortable="true" insertable="true"
-              updatable="true">
+        <prop name="price" displayName="商品货品价格" propId="4" mandatory="true" queryable="true" sortable="true"
+              insertable="true" updatable="true">
             <schema type="java.math.BigDecimal" precision="10" scale="2"/>
         </prop>
-        <prop name="number" displayName="商品货品数量" mandatory="true" queryable="true" sortable="true" insertable="true"
-              updatable="true">
+        <prop name="number" displayName="商品货品数量" propId="5" mandatory="true" queryable="true" sortable="true"
+              insertable="true" updatable="true">
             <schema type="java.lang.Integer"/>
         </prop>
-        <prop name="url" displayName="商品货品图片" queryable="true" sortable="true" insertable="true" updatable="true">
+        <prop name="url" displayName="商品货品图片" propId="6" queryable="true" sortable="true" insertable="true"
+              updatable="true">
             <schema stdDomain="file" domain="image" type="java.lang.String" precision="255"/>
         </prop>
-        <prop name="addTime" displayName="创建时间" queryable="true" sortable="true" insertable="false" updatable="false"
-              internal="true" ui:show="X">
+        <prop name="addTime" displayName="创建时间" propId="7" queryable="true" sortable="true" insertable="false"
+              updatable="false" internal="true" ui:show="X">
             <schema domain="createTime" type="java.time.LocalDateTime"/>
         </prop>
-        <prop name="updateTime" displayName="更新时间" queryable="true" sortable="true" insertable="false" updatable="false"
-              internal="true" ui:show="X">
+        <prop name="updateTime" displayName="更新时间" propId="8" queryable="true" sortable="true" insertable="false"
+              updatable="false" internal="true" ui:show="X">
             <schema domain="updateTime" type="java.time.LocalDateTime"/>
         </prop>
-        <prop name="deleted" displayName="逻辑删除" queryable="true" sortable="true" insertable="false" updatable="true"
-              internal="true" ui:show="X">
+        <prop name="deleted" displayName="逻辑删除" propId="9" queryable="true" sortable="true" insertable="false"
+              updatable="true" internal="true" ui:show="X">
             <schema domain="delFlag" type="java.lang.Boolean"/>
         </prop>
         <prop name="goods" displayName="所属商品" i18n-en:displayName="Goods"

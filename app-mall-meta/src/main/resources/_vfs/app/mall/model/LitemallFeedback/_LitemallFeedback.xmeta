@@ -18,51 +18,52 @@
     <keys/>
 
     <props>
-        <prop name="id" displayName="Id" tagSet="seq" mandatory="true" queryable="true" sortable="true"
+        <prop name="id" displayName="Id" propId="1" tagSet="seq" mandatory="true" queryable="true" sortable="true"
               insertable="false" updatable="false" ui:show="R">
             <schema type="java.lang.Integer"/>
         </prop>
-        <prop name="userId" displayName="用户ID" mandatory="true" queryable="true" sortable="true" insertable="true"
-              updatable="true" ext:relation="user">
+        <prop name="userId" displayName="用户ID" propId="2" mandatory="true" queryable="true" sortable="true"
+              insertable="true" updatable="true" ext:relation="user">
             <schema type="java.lang.Integer"/>
         </prop>
-        <prop name="username" displayName="用户名称" mandatory="true" queryable="true" sortable="true" insertable="true"
-              updatable="true">
+        <prop name="username" displayName="用户名称" propId="3" mandatory="true" queryable="true" sortable="true"
+              insertable="true" updatable="true">
             <schema type="java.lang.String" precision="63"/>
         </prop>
-        <prop name="mobile" displayName="手机号" mandatory="true" queryable="true" sortable="true" insertable="true"
-              updatable="true">
+        <prop name="mobile" displayName="手机号" propId="4" mandatory="true" queryable="true" sortable="true"
+              insertable="true" updatable="true">
             <schema type="java.lang.String" precision="20"/>
         </prop>
-        <prop name="feedType" displayName="反馈类型" mandatory="true" queryable="true" sortable="true" insertable="true"
-              updatable="true">
+        <prop name="feedType" displayName="反馈类型" propId="5" mandatory="true" queryable="true" sortable="true"
+              insertable="true" updatable="true">
             <schema type="java.lang.String" precision="63"/>
         </prop>
-        <prop name="content" displayName="反馈内容" mandatory="true" queryable="true" sortable="true" insertable="true"
-              updatable="true">
+        <prop name="content" displayName="反馈内容" propId="6" mandatory="true" queryable="true" sortable="true"
+              insertable="true" updatable="true">
             <schema type="java.lang.String" precision="1023"/>
         </prop>
-        <prop name="status" displayName="状态" mandatory="true" queryable="true" sortable="true" insertable="true"
-              updatable="true">
+        <prop name="status" displayName="状态" propId="7" mandatory="true" queryable="true" sortable="true"
+              insertable="true" updatable="true">
             <schema type="java.lang.Integer"/>
         </prop>
-        <prop name="hasPicture" displayName="是否含有图片" queryable="true" sortable="true" insertable="true" updatable="true">
+        <prop name="hasPicture" displayName="是否含有图片" propId="8" queryable="true" sortable="true" insertable="true"
+              updatable="true">
             <schema type="java.lang.Boolean"/>
         </prop>
-        <prop name="picUrls" displayName="图片地址列表，采用JSON数组格式" queryable="true" sortable="true" insertable="true"
-              updatable="true">
+        <prop name="picUrls" displayName="图片地址列表，采用JSON数组格式" propId="9" queryable="true" sortable="true"
+              insertable="true" updatable="true">
             <schema stdDomain="file-list" domain="images" type="java.lang.String" precision="1023"/>
         </prop>
-        <prop name="addTime" displayName="创建时间" queryable="true" sortable="true" insertable="false" updatable="false"
-              internal="true" ui:show="X">
+        <prop name="addTime" displayName="创建时间" propId="10" queryable="true" sortable="true" insertable="false"
+              updatable="false" internal="true" ui:show="X">
             <schema domain="createTime" type="java.time.LocalDateTime"/>
         </prop>
-        <prop name="updateTime" displayName="更新时间" queryable="true" sortable="true" insertable="false" updatable="false"
-              internal="true" ui:show="X">
+        <prop name="updateTime" displayName="更新时间" propId="11" queryable="true" sortable="true" insertable="false"
+              updatable="false" internal="true" ui:show="X">
             <schema domain="updateTime" type="java.time.LocalDateTime"/>
         </prop>
-        <prop name="deleted" displayName="逻辑删除" queryable="true" sortable="true" insertable="false" updatable="true"
-              internal="true" ui:show="X">
+        <prop name="deleted" displayName="逻辑删除" propId="12" queryable="true" sortable="true" insertable="false"
+              updatable="true" internal="true" ui:show="X">
             <schema domain="delFlag" type="java.lang.Boolean"/>
         </prop>
         <prop name="user" displayName="客户" i18n-en:displayName="User" tagSet="pub,ref-pub" ext:kind="to-one"
