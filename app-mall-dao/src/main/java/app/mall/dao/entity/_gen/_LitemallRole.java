@@ -114,14 +114,17 @@ public class _LitemallRole extends DynamicOrmEntity{
     }
 
     protected LitemallRole newInstance(){
-       return new LitemallRole();
+        LitemallRole entity = new LitemallRole();
+        entity.orm_attach(orm_enhancer());
+        entity.orm_entityModel(orm_entityModel());
+        return entity;
     }
 
     @Override
     public LitemallRole cloneInstance() {
         LitemallRole entity = newInstance();
         orm_forEachInitedProp((value, propId) -> {
-            entity.onInitProp(propId);
+            entity.orm_propValue(propId,value);
         });
         return entity;
     }

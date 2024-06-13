@@ -127,14 +127,17 @@ public class _LitemallGoodsSpecification extends DynamicOrmEntity{
     }
 
     protected LitemallGoodsSpecification newInstance(){
-       return new LitemallGoodsSpecification();
+        LitemallGoodsSpecification entity = new LitemallGoodsSpecification();
+        entity.orm_attach(orm_enhancer());
+        entity.orm_entityModel(orm_entityModel());
+        return entity;
     }
 
     @Override
     public LitemallGoodsSpecification cloneInstance() {
         LitemallGoodsSpecification entity = newInstance();
         orm_forEachInitedProp((value, propId) -> {
-            entity.onInitProp(propId);
+            entity.orm_propValue(propId,value);
         });
         return entity;
     }

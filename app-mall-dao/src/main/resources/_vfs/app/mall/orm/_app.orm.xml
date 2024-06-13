@@ -362,9 +362,9 @@
                         stdDataType="boolean" stdSqlType="BOOLEAN" ui:show="X"/>
             </columns>
             <relations>
-                <to-one displayName="父类目" name="parent" refEntityName="app.mall.dao.entity.LitemallCategory"
-                        refPropName="children" tagSet="pub,ref-pub" i18n-en:displayName="Parent"
-                        ref-i18n-en:displayName="Children">
+                <to-one displayName="父类目" name="parent" refDisplayName="子类目"
+                        refEntityName="app.mall.dao.entity.LitemallCategory" refPropName="children" tagSet="pub,ref-pub"
+                        i18n-en:displayName="Parent" ref-i18n-en:displayName="Children">
                     <join>
                         <on leftProp="pid" rightProp="id"/>
                     </join>
@@ -725,8 +725,8 @@
                         stdDataType="boolean" stdSqlType="BOOLEAN" ui:show="X"/>
             </columns>
             <relations>
-                <to-one displayName="商品" name="goods" refEntityName="app.mall.dao.entity.LitemallGoods"
-                        refPropName="attributes"
+                <to-one displayName="商品" name="goods" refDisplayName="商品参数"
+                        refEntityName="app.mall.dao.entity.LitemallGoods" refPropName="attributes"
                         tagSet="pub,ref-pub,ref-cascade-delete,ref-insertable,ref-updatable,ref-grid"
                         i18n-en:displayName="Goods" ref-i18n-en:displayName="Goods Attributes">
                     <join>
@@ -761,8 +761,8 @@
                         stdDataType="boolean" stdSqlType="BOOLEAN" ui:show="X"/>
             </columns>
             <relations>
-                <to-one displayName="所属商品" name="goods" refEntityName="app.mall.dao.entity.LitemallGoods"
-                        refPropName="products"
+                <to-one displayName="所属商品" name="goods" refDisplayName="包含产品"
+                        refEntityName="app.mall.dao.entity.LitemallGoods" refPropName="products"
                         tagSet="pub,ref-pub,ref-cascade-delete,ref-insertable,ref-updatable,ref-grid"
                         i18n-en:displayName="Goods" ref-i18n-en:displayName="Products">
                     <join>
@@ -795,8 +795,8 @@
                         stdDataType="boolean" stdSqlType="BOOLEAN" ui:show="X"/>
             </columns>
             <relations>
-                <to-one displayName="商品" name="goods" refEntityName="app.mall.dao.entity.LitemallGoods"
-                        refPropName="specifications"
+                <to-one displayName="商品" name="goods" refDisplayName="商品规格"
+                        refEntityName="app.mall.dao.entity.LitemallGoods" refPropName="specifications"
                         tagSet="pub,ref-pub,ref-cascade-delete,ref-insertable,ref-updatable,ref-grid"
                         i18n-en:displayName="Goods" ref-i18n-en:displayName="Specifications">
                     <join>
@@ -1115,16 +1115,18 @@
                         stdDataType="boolean" stdSqlType="BOOLEAN" ui:show="X"/>
             </columns>
             <relations>
-                <to-one displayName="订单" name="order" refEntityName="app.mall.dao.entity.LitemallOrder"
-                        refPropName="orderGoods" tagSet="pub,ref-pub,ref-cascade-delete,ref-updatable,ref-insertable"
-                        i18n-en:displayName="Order" ref-i18n-en:displayName="Order Goods">
+                <to-one displayName="订单" name="order" refDisplayName="订单商品"
+                        refEntityName="app.mall.dao.entity.LitemallOrder" refPropName="orderGoods"
+                        tagSet="pub,ref-pub,ref-cascade-delete,ref-updatable,ref-insertable" i18n-en:displayName="Order"
+                        ref-i18n-en:displayName="Order Goods">
                     <join>
                         <on leftProp="orderId" rightProp="id"/>
                     </join>
                     <ref-set/>
                 </to-one>
-                <to-one displayName="订单商品" name="goods" refEntityName="app.mall.dao.entity.LitemallGoods"
-                        refPropName="orderGoods" tagSet="pub,ref-pub,ref-cascade-delete,ref-updatable,ref-insertable"
+                <to-one displayName="订单商品" name="goods" refDisplayName="订单商品"
+                        refEntityName="app.mall.dao.entity.LitemallGoods" refPropName="orderGoods"
+                        tagSet="pub,ref-pub,ref-cascade-delete,ref-updatable,ref-insertable"
                         i18n-en:displayName="Order Goods" ref-i18n-en:displayName="Order Goods">
                     <join>
                         <on leftProp="goodsId" rightProp="id"/>
@@ -1173,9 +1175,9 @@
                         stdSqlType="INTEGER"/>
             </columns>
             <relations>
-                <to-one displayName="父区域" name="parent" refEntityName="app.mall.dao.entity.LitemallRegion"
-                        refPropName="children" tagSet="pub,ref-pub" i18n-en:displayName="Parent"
-                        ref-i18n-en:displayName="Children">
+                <to-one displayName="父区域" name="parent" refDisplayName="子区域"
+                        refEntityName="app.mall.dao.entity.LitemallRegion" refPropName="children" tagSet="pub,ref-pub"
+                        i18n-en:displayName="Parent" ref-i18n-en:displayName="Children">
                     <join>
                         <on leftProp="pid" rightProp="id"/>
                     </join>
@@ -1326,7 +1328,7 @@
                 <column code="USERNAME" displayName="用户名称" mandatory="true" name="username" precision="63" propId="2"
                         stdDataType="string" stdSqlType="VARCHAR" tagSet="disp"/>
                 <column code="PASSWORD" displayName="用户密码" mandatory="true" name="password" precision="63" propId="3"
-                        stdDataType="string" stdSqlType="VARCHAR" tagSet="masked,var,no-pub"/>
+                        stdDataType="string" stdSqlType="VARCHAR" tagSet="masked,var,not-pub"/>
                 <column code="GENDER" comment="0 未知， 1男， 1 女" displayName="性别" mandatory="true" name="gender" propId="4"
                         stdDataType="byte" stdSqlType="TINYINT" ext:dict="mall/gender"/>
                 <column code="BIRTHDAY" displayName="生日" name="birthday" propId="5" stdDataType="date" stdSqlType="DATE"/>
@@ -1391,9 +1393,10 @@
                         stdDataType="string" stdSqlType="VARCHAR" i18n-en:displayName="Remark" ui:show="S"/>
             </columns>
             <relations>
-                <to-one displayName="用户" name="user" refEntityName="app.mall.dao.entity.LitemallUser"
-                        refPropName="roleMappings" tagSet="pub,ref-pub,ref-cascade-delete,ref-insertable,ref-updatable"
-                        i18n-en:displayName="User" ref-i18n-en:displayName="RoleMappings">
+                <to-one displayName="用户" name="user" refDisplayName="角色映射"
+                        refEntityName="app.mall.dao.entity.LitemallUser" refPropName="roleMappings"
+                        tagSet="pub,ref-pub,ref-cascade-delete,ref-insertable,ref-updatable" i18n-en:displayName="User"
+                        ref-i18n-en:displayName="RoleMappings">
                     <join>
                         <on leftProp="userId" rightProp="id"/>
                     </join>

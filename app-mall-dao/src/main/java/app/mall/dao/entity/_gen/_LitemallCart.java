@@ -190,14 +190,17 @@ public class _LitemallCart extends DynamicOrmEntity{
     }
 
     protected LitemallCart newInstance(){
-       return new LitemallCart();
+        LitemallCart entity = new LitemallCart();
+        entity.orm_attach(orm_enhancer());
+        entity.orm_entityModel(orm_entityModel());
+        return entity;
     }
 
     @Override
     public LitemallCart cloneInstance() {
         LitemallCart entity = newInstance();
         orm_forEachInitedProp((value, propId) -> {
-            entity.onInitProp(propId);
+            entity.orm_propValue(propId,value);
         });
         return entity;
     }

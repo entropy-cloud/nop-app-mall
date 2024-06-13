@@ -173,14 +173,17 @@ public class _LitemallCategory extends DynamicOrmEntity{
     }
 
     protected LitemallCategory newInstance(){
-       return new LitemallCategory();
+        LitemallCategory entity = new LitemallCategory();
+        entity.orm_attach(orm_enhancer());
+        entity.orm_entityModel(orm_entityModel());
+        return entity;
     }
 
     @Override
     public LitemallCategory cloneInstance() {
         LitemallCategory entity = newInstance();
         orm_forEachInitedProp((value, propId) -> {
-            entity.onInitProp(propId);
+            entity.orm_propValue(propId,value);
         });
         return entity;
     }

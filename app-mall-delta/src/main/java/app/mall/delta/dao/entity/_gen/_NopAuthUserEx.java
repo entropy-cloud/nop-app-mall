@@ -54,14 +54,17 @@ public class _NopAuthUserEx extends io.nop.auth.dao.entity.NopAuthUser{
     }
 
     protected NopAuthUserEx newInstance(){
-       return new NopAuthUserEx();
+        NopAuthUserEx entity = new NopAuthUserEx();
+        entity.orm_attach(orm_enhancer());
+        entity.orm_entityModel(orm_entityModel());
+        return entity;
     }
 
     @Override
     public NopAuthUserEx cloneInstance() {
         NopAuthUserEx entity = newInstance();
         orm_forEachInitedProp((value, propId) -> {
-            entity.onInitProp(propId);
+            entity.orm_propValue(propId,value);
         });
         return entity;
     }

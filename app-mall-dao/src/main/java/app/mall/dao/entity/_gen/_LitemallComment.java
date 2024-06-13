@@ -164,14 +164,17 @@ public class _LitemallComment extends DynamicOrmEntity{
     }
 
     protected LitemallComment newInstance(){
-       return new LitemallComment();
+        LitemallComment entity = new LitemallComment();
+        entity.orm_attach(orm_enhancer());
+        entity.orm_entityModel(orm_entityModel());
+        return entity;
     }
 
     @Override
     public LitemallComment cloneInstance() {
         LitemallComment entity = newInstance();
         orm_forEachInitedProp((value, propId) -> {
-            entity.onInitProp(propId);
+            entity.orm_propValue(propId,value);
         });
         return entity;
     }

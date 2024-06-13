@@ -167,14 +167,17 @@ public class _LitemallGroupon extends DynamicOrmEntity{
     }
 
     protected LitemallGroupon newInstance(){
-       return new LitemallGroupon();
+        LitemallGroupon entity = new LitemallGroupon();
+        entity.orm_attach(orm_enhancer());
+        entity.orm_entityModel(orm_entityModel());
+        return entity;
     }
 
     @Override
     public LitemallGroupon cloneInstance() {
         LitemallGroupon entity = newInstance();
         orm_forEachInitedProp((value, propId) -> {
-            entity.onInitProp(propId);
+            entity.orm_propValue(propId,value);
         });
         return entity;
     }

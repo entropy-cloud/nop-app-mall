@@ -141,14 +141,17 @@ public class _LitemallAdmin extends DynamicOrmEntity{
     }
 
     protected LitemallAdmin newInstance(){
-       return new LitemallAdmin();
+        LitemallAdmin entity = new LitemallAdmin();
+        entity.orm_attach(orm_enhancer());
+        entity.orm_entityModel(orm_entityModel());
+        return entity;
     }
 
     @Override
     public LitemallAdmin cloneInstance() {
         LitemallAdmin entity = newInstance();
         orm_forEachInitedProp((value, propId) -> {
-            entity.onInitProp(propId);
+            entity.orm_propValue(propId,value);
         });
         return entity;
     }

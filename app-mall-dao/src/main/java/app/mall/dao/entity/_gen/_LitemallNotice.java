@@ -111,14 +111,17 @@ public class _LitemallNotice extends DynamicOrmEntity{
     }
 
     protected LitemallNotice newInstance(){
-       return new LitemallNotice();
+        LitemallNotice entity = new LitemallNotice();
+        entity.orm_attach(orm_enhancer());
+        entity.orm_entityModel(orm_entityModel());
+        return entity;
     }
 
     @Override
     public LitemallNotice cloneInstance() {
         LitemallNotice entity = newInstance();
         orm_forEachInitedProp((value, propId) -> {
-            entity.onInitProp(propId);
+            entity.orm_propValue(propId,value);
         });
         return entity;
     }

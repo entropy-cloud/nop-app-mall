@@ -101,14 +101,17 @@ public class _LitemallSystem extends DynamicOrmEntity{
     }
 
     protected LitemallSystem newInstance(){
-       return new LitemallSystem();
+        LitemallSystem entity = new LitemallSystem();
+        entity.orm_attach(orm_enhancer());
+        entity.orm_entityModel(orm_entityModel());
+        return entity;
     }
 
     @Override
     public LitemallSystem cloneInstance() {
         LitemallSystem entity = newInstance();
         orm_forEachInitedProp((value, propId) -> {
-            entity.onInitProp(propId);
+            entity.orm_propValue(propId,value);
         });
         return entity;
     }

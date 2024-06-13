@@ -107,14 +107,17 @@ public class _LitemallFootprint extends DynamicOrmEntity{
     }
 
     protected LitemallFootprint newInstance(){
-       return new LitemallFootprint();
+        LitemallFootprint entity = new LitemallFootprint();
+        entity.orm_attach(orm_enhancer());
+        entity.orm_entityModel(orm_entityModel());
+        return entity;
     }
 
     @Override
     public LitemallFootprint cloneInstance() {
         LitemallFootprint entity = newInstance();
         orm_forEachInitedProp((value, propId) -> {
-            entity.onInitProp(propId);
+            entity.orm_propValue(propId,value);
         });
         return entity;
     }

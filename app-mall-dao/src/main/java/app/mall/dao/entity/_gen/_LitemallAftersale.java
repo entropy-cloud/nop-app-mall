@@ -187,14 +187,17 @@ public class _LitemallAftersale extends DynamicOrmEntity{
     }
 
     protected LitemallAftersale newInstance(){
-       return new LitemallAftersale();
+        LitemallAftersale entity = new LitemallAftersale();
+        entity.orm_attach(orm_enhancer());
+        entity.orm_entityModel(orm_entityModel());
+        return entity;
     }
 
     @Override
     public LitemallAftersale cloneInstance() {
         LitemallAftersale entity = newInstance();
         orm_forEachInitedProp((value, propId) -> {
-            entity.onInitProp(propId);
+            entity.orm_propValue(propId,value);
         });
         return entity;
     }

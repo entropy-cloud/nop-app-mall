@@ -157,14 +157,17 @@ public class _LitemallCouponUser extends DynamicOrmEntity{
     }
 
     protected LitemallCouponUser newInstance(){
-       return new LitemallCouponUser();
+        LitemallCouponUser entity = new LitemallCouponUser();
+        entity.orm_attach(orm_enhancer());
+        entity.orm_entityModel(orm_entityModel());
+        return entity;
     }
 
     @Override
     public LitemallCouponUser cloneInstance() {
         LitemallCouponUser entity = newInstance();
         orm_forEachInitedProp((value, propId) -> {
-            entity.onInitProp(propId);
+            entity.orm_propValue(propId,value);
         });
         return entity;
     }

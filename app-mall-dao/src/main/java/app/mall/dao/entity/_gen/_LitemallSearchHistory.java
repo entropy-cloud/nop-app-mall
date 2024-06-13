@@ -114,14 +114,17 @@ public class _LitemallSearchHistory extends DynamicOrmEntity{
     }
 
     protected LitemallSearchHistory newInstance(){
-       return new LitemallSearchHistory();
+        LitemallSearchHistory entity = new LitemallSearchHistory();
+        entity.orm_attach(orm_enhancer());
+        entity.orm_entityModel(orm_entityModel());
+        return entity;
     }
 
     @Override
     public LitemallSearchHistory cloneInstance() {
         LitemallSearchHistory entity = newInstance();
         orm_forEachInitedProp((value, propId) -> {
-            entity.onInitProp(propId);
+            entity.orm_propValue(propId,value);
         });
         return entity;
     }

@@ -164,14 +164,17 @@ public class _LitemallTopic extends DynamicOrmEntity{
     }
 
     protected LitemallTopic newInstance(){
-       return new LitemallTopic();
+        LitemallTopic entity = new LitemallTopic();
+        entity.orm_attach(orm_enhancer());
+        entity.orm_entityModel(orm_entityModel());
+        return entity;
     }
 
     @Override
     public LitemallTopic cloneInstance() {
         LitemallTopic entity = newInstance();
         orm_forEachInitedProp((value, propId) -> {
-            entity.onInitProp(propId);
+            entity.orm_propValue(propId,value);
         });
         return entity;
     }

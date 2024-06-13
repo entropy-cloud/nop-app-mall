@@ -217,14 +217,17 @@ public class _LitemallUser extends DynamicOrmEntity{
     }
 
     protected LitemallUser newInstance(){
-       return new LitemallUser();
+        LitemallUser entity = new LitemallUser();
+        entity.orm_attach(orm_enhancer());
+        entity.orm_entityModel(orm_entityModel());
+        return entity;
     }
 
     @Override
     public LitemallUser cloneInstance() {
         LitemallUser entity = newInstance();
         orm_forEachInitedProp((value, propId) -> {
-            entity.onInitProp(propId);
+            entity.orm_propValue(propId,value);
         });
         return entity;
     }

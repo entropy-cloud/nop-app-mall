@@ -140,14 +140,17 @@ public class _LitemallGoodsProduct extends DynamicOrmEntity{
     }
 
     protected LitemallGoodsProduct newInstance(){
-       return new LitemallGoodsProduct();
+        LitemallGoodsProduct entity = new LitemallGoodsProduct();
+        entity.orm_attach(orm_enhancer());
+        entity.orm_entityModel(orm_entityModel());
+        return entity;
     }
 
     @Override
     public LitemallGoodsProduct cloneInstance() {
         LitemallGoodsProduct entity = newInstance();
         orm_forEachInitedProp((value, propId) -> {
-            entity.onInitProp(propId);
+            entity.orm_propValue(propId,value);
         });
         return entity;
     }

@@ -131,14 +131,17 @@ public class _LitemallKeyword extends DynamicOrmEntity{
     }
 
     protected LitemallKeyword newInstance(){
-       return new LitemallKeyword();
+        LitemallKeyword entity = new LitemallKeyword();
+        entity.orm_attach(orm_enhancer());
+        entity.orm_entityModel(orm_entityModel());
+        return entity;
     }
 
     @Override
     public LitemallKeyword cloneInstance() {
         LitemallKeyword entity = newInstance();
         orm_forEachInitedProp((value, propId) -> {
-            entity.onInitProp(propId);
+            entity.orm_propValue(propId,value);
         });
         return entity;
     }
