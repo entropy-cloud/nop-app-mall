@@ -1,10 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <view x:schema="/nop/schema/xui/xview.xdef" bizObjName="LitemallUser" xmlns:i18n-en="i18n-en"
-      xmlns:x="/nop/schema/xdsl.xdef" xmlns:j="j" xmlns:gql="gql">
+      xmlns:x="/nop/schema/xdsl.xdef" xmlns:j="j" xmlns:c="c" xmlns:gql="gql" xmlns:view-gen="view-gen" xmlns:xpl="xpl">
 
     <objMeta>/app/mall/model/LitemallUser/LitemallUser.xmeta</objMeta>
 
     <controlLib>/nop/web/xlib/control.xlib</controlLib>
+
+    <x:gen-extends>
+        <view-gen:DefaultViewGenExtends xpl:lib="/nop/web/xlib/view-gen.xlib"/>
+    </x:gen-extends>
+
+    <x:post-extends>
+        <view-gen:DefaultViewPostExtends xpl:lib="/nop/web/xlib/view-gen.xlib"/>
+    </x:post-extends>
 
     <grids>
         <grid id="list" x:abstract="true">
@@ -15,9 +23,6 @@
 
                 <!--用户名称-->
                 <col id="username" mandatory="true" sortable="true"/>
-
-                <!--用户密码-->
-                <col id="password" mandatory="true" sortable="true"/>
 
                 <!--性别-->
                 <col id="gender" mandatory="true" sortable="true"/>
@@ -60,24 +65,23 @@
         <form id="view" editMode="view" title="查看-用户表" i18n-en:title="View ">
             <layout>
  id[Id] username[用户名称]
- password[用户密码] gender[性别]
- birthday[生日] lastLoginTime[最近一次登录时间]
- lastLoginIp[最近一次登录IP地址] userLevel[用户等级]
- nickname[用户昵称或网络名称] mobile[用户手机号码]
- avatar[用户头像图片] weixinOpenid[微信登录openid]
- sessionKey[微信登录会话KEY] status[用户状态]
-</layout>
-        </form>
-        <form id="add" editMode="add" title="新增-用户表" i18n-en:title="Add " x:prototype="edit"/>
-        <form id="edit" editMode="edit" title="编辑-用户表" i18n-en:title="Edit ">
-            <layout>
- username[用户名称] password[用户密码]
  gender[性别] birthday[生日]
  lastLoginTime[最近一次登录时间] lastLoginIp[最近一次登录IP地址]
  userLevel[用户等级] nickname[用户昵称或网络名称]
  mobile[用户手机号码] avatar[用户头像图片]
  weixinOpenid[微信登录openid] sessionKey[微信登录会话KEY]
  status[用户状态] 
+</layout>
+        </form>
+        <form id="add" editMode="add" title="新增-用户表" i18n-en:title="Add " x:prototype="edit"/>
+        <form id="edit" editMode="edit" title="编辑-用户表" i18n-en:title="Edit ">
+            <layout>
+ username[用户名称] gender[性别]
+ birthday[生日] lastLoginTime[最近一次登录时间]
+ lastLoginIp[最近一次登录IP地址] userLevel[用户等级]
+ nickname[用户昵称或网络名称] mobile[用户手机号码]
+ avatar[用户头像图片] weixinOpenid[微信登录openid]
+ sessionKey[微信登录会话KEY] status[用户状态]
 </layout>
         </form>
         <form id="query" editMode="query" title="查询条件" i18n-en:title="Query Condition" x:abstract="true">

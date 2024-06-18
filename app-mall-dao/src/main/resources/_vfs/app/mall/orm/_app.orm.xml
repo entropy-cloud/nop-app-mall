@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <orm ext:mavenArtifactId="app-mall" ext:entityPackageName="app.mall.dao.entity" ext:registerShortName="true"
-     ext:mavenGroupId="io.nop.app" ext:basePackageName="app.mall" ext:appName="app-mall"
+     ext:allowIdAsColName="true" ext:mavenGroupId="io.nop.app" ext:basePackageName="app.mall" ext:appName="app-mall"
      ext:platformVersion="2.0.0-SNAPSHOT" ext:dialect="mysql,oracle,postgresql" ext:mavenVersion="1.0-SNAPSHOT"
      x:schema="/nop/schema/orm/orm.xdef" xmlns:x="/nop/schema/xdsl.xdef" xmlns:i18n-en="i18n-en"
      xmlns:ref-i18n-en="ref-i18n-en" xmlns:ext="ext" xmlns:orm-gen="orm-gen" xmlns:xpl="xpl" xmlns:ui="ui">
