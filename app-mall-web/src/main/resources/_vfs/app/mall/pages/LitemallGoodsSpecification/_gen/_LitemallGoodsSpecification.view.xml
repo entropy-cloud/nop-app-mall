@@ -67,18 +67,17 @@
  picUrl[商品规格图片]
 </layout>
         </form>
-        <form id="query" editMode="query" title="查询条件" i18n-en:title="Query Condition" x:abstract="true">
-            <layout/>
-        </form>
-        <form id="asideFilter" editMode="query" x:abstract="true" submitOnChange="true">
-            <layout/>
-        </form>
-        <form id="batchUpdate" editMode="edit" x:abstract="true" title="修改-商品规格表" i18n-en:title="Update ">
-            <layout/>
-        </form>
+        <form id="query" editMode="query" title="查询条件" i18n-en:title="Query Condition" x:abstract="true"/>
+        <form id="asideFilter" editMode="query" x:abstract="true" submitOnChange="true"/>
+        <form id="batchUpdate" editMode="edit" x:abstract="true" title="修改-商品规格表" i18n-en:title="Update "/>
     </forms>
 
     <pages>
+        <crud name="view-list" grid="list" asideFilterForm="asideFilter" filterForm="query" x:abstract="true">
+            <table autoFillHeight="true">
+                <api url="@query:LitemallGoodsSpecification__findPage" gql:selection="{@pageSelection}"/>
+            </table>
+        </crud>
         <crud name="main" grid="list" asideFilterForm="asideFilter" filterForm="query" x:abstract="true">
             <table autoFillHeight="true">
                 <api url="@query:LitemallGoodsSpecification__findPage" gql:selection="{@pageSelection}"/>

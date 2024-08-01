@@ -43,15 +43,16 @@
  from[搜索来源]
 </layout>
         </form>
-        <form id="query" editMode="query" title="查询条件" i18n-en:title="Query Condition" x:abstract="true">
-            <layout/>
-        </form>
-        <form id="asideFilter" editMode="query" x:abstract="true" submitOnChange="true">
-            <layout/>
-        </form>
+        <form id="query" editMode="query" title="查询条件" i18n-en:title="Query Condition" x:abstract="true"/>
+        <form id="asideFilter" editMode="query" x:abstract="true" submitOnChange="true"/>
     </forms>
 
     <pages>
+        <crud name="view-list" grid="list" asideFilterForm="asideFilter" filterForm="query" x:abstract="true">
+            <table autoFillHeight="true">
+                <api url="@query:LitemallSearchHistory__findPage" gql:selection="{@pageSelection}"/>
+            </table>
+        </crud>
         <crud name="main" grid="list" asideFilterForm="asideFilter" filterForm="query" x:abstract="true">
             <table autoFillHeight="true">
                 <api url="@query:LitemallSearchHistory__findPage" gql:selection="{@pageSelection}"/>

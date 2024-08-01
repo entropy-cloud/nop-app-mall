@@ -66,8 +66,8 @@
               updatable="true" internal="true" ui:show="X">
             <schema domain="delFlag" type="java.lang.Boolean"/>
         </prop>
-        <prop name="goodsComponent" tagSet="json,pub" ext:kind="component" internal="true" insertable="false"
-              updatable="false" lazy="true">
+        <prop name="goodsComponent" tagSet="json,pub,edit" ext:kind="component" internal="true" insertable="true"
+              updatable="true" lazy="true">
             <schema type="io.nop.orm.component.JsonOrmComponent"/>
         </prop>
     </props>
