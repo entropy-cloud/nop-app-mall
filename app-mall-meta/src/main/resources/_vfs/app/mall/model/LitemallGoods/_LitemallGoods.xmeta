@@ -159,16 +159,18 @@
                 <item bizObjName="LitemallOrderGoods"/>
             </schema>
         </prop>
-        <prop name="picUrlComponent" ext:kind="component" internal="true" insertable="true" updatable="true" lazy="true"
-              published="false">
-            <schema type="io.nop.orm.component.OrmFileComponent"/>
+        <prop name="galleryComponentFileStatusList" mapToProp="galleryComponent.fileStatusList" internal="true"
+              lazy="true">
+            <schema type="List&lt;io.nop.api.core.beans.file.FileStatusBean&gt;"/>
         </prop>
-        <prop name="shareUrlComponent" ext:kind="component" internal="true" insertable="true" updatable="true"
-              lazy="true" published="false">
-            <schema type="io.nop.orm.component.OrmFileComponent"/>
+        <prop name="picUrlComponentFileStatus" mapToProp="picUrlComponent.fileStatus" internal="true" lazy="true">
+            <schema type="io.nop.api.core.beans.file.FileStatusBean"/>
+        </prop>
+        <prop name="shareUrlComponentFileStatus" mapToProp="shareUrlComponent.fileStatus" internal="true" lazy="true">
+            <schema type="io.nop.api.core.beans.file.FileStatusBean"/>
         </prop>
         <prop name="relatedProductList" displayName="订单产品列表" i18n-en:displayName="Order Product List" ext:kind="to-many"
-              internal="true" lazy="true">
+              insertable="true" updatable="true" internal="true" lazy="true">
             <schema>
                 <item bizObjName="LitemallGoodsProduct"/>
             </schema>

@@ -20,7 +20,7 @@
   "updateTime": "2000-01-01 14:00:00",
   "deleted": false,
   "roleMappings": null,
-  "avatarComponent": null,
+  "avatarComponentFileStatus": null,
   "relatedRoleList": null,
   "relatedRoleIdList": null
 }

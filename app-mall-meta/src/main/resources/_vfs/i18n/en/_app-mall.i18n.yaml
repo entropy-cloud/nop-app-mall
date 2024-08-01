@@ -50,7 +50,7 @@ prop:
       addTime: null
       updateTime: null
       deleted: null
-      urlComponent: null
+      urlComponentFileStatus: null
     LitemallAddress:
       id: null
       name: null
@@ -100,6 +100,7 @@ prop:
       order.orderSn: Order
       user: User
       user.username: User
+      picturesComponentFileStatusList: null
     LitemallBrand:
       id: null
       name: null
@@ -110,7 +111,7 @@ prop:
       addTime: null
       updateTime: null
       deleted: null
-      picUrlComponent: null
+      picUrlComponentFileStatus: null
     LitemallCart:
       id: null
       userId: null
@@ -130,7 +131,7 @@ prop:
       goods.name: Goods
       user: User
       user.username: User
-      picUrlComponent: null
+      picUrlComponentFileStatus: null
     LitemallCategory:
       id: null
       name: null
@@ -148,8 +149,8 @@ prop:
       parent: Parent
       parent.name: Parent
       children: Children
-      iconUrlComponent: null
-      picUrlComponent: null
+      iconUrlComponentFileStatus: null
+      picUrlComponentFileStatus: null
     LitemallCollect:
       id: null
       userId: null
@@ -175,6 +176,7 @@ prop:
       deleted: null
       user: User
       user.username: User
+      picUrlsComponentFileStatusList: null
     LitemallCoupon:
       id: null
       name: null
@@ -232,6 +234,7 @@ prop:
       deleted: null
       user: User
       user.username: User
+      picUrlsComponentFileStatusList: null
     LitemallFootprint:
       id: null
       userId: null
@@ -274,8 +277,9 @@ prop:
       products: Products
       specifications: Specifications
       orderGoods: Order Goods
-      picUrlComponent: null
-      shareUrlComponent: null
+      galleryComponentFileStatusList: null
+      picUrlComponentFileStatus: null
+      shareUrlComponentFileStatus: null
       relatedProductList: Order Product List
       relatedProductIdList: Order Product List
     LitemallGoodsAttribute:
@@ -301,7 +305,7 @@ prop:
       goods: Goods
       goods.name: Goods
       specificationsComponent: null
-      urlComponent: null
+      urlComponentFileStatus: null
     LitemallGoodsSpecification:
       id: null
       goodsId: null
@@ -313,7 +317,7 @@ prop:
       deleted: null
       goods: Goods
       goods.name: Goods
-      picUrlComponent: null
+      picUrlComponentFileStatus: null
     LitemallGroupon:
       id: null
       orderId: null
@@ -329,7 +333,7 @@ prop:
       deleted: null
       order: Order
       order.orderSn: Order
-      shareUrlComponent: null
+      shareUrlComponentFileStatus: null
     LitemallGrouponRules:
       id: null
       goodsId: null
@@ -344,7 +348,7 @@ prop:
       deleted: null
       goods: Goods
       goods.name: Goods
-      picUrlComponent: null
+      picUrlComponentFileStatus: null
     LitemallIssue:
       id: null
       question: null
@@ -450,7 +454,7 @@ prop:
       goods: Order Goods
       goods.name: Order Goods
       product: Order Product
-      picUrlComponent: null
+      picUrlComponentFileStatus: null
     LitemallPermission:
       id: null
       roleId: null
@@ -542,7 +546,7 @@ prop:
       updateTime: null
       deleted: null
       roleMappings: RoleMappings
-      avatarComponent: null
+      avatarComponentFileStatus: null
       relatedRoleList: Role List
       relatedRoleIdList: Role List
     LitemallUserRole:

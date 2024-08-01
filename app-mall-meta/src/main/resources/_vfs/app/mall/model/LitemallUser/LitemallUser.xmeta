@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <meta x:schema="/nop/schema/xmeta.xdef" xmlns:x="/nop/schema/xdsl.xdef" x:extends="_LitemallUser.xmeta">
     <props>
-        <prop name="password" readable="false">
+        <prop name="password" published="false">
             <schema type="String" domain="password"/>
         </prop>
     </props>

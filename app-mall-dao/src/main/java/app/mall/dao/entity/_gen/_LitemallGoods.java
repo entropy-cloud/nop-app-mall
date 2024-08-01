@@ -127,6 +127,9 @@ public class _LitemallGoods extends DynamicOrmEntity{
     public static final String PROP_NAME_orderGoods = "orderGoods";
     
     /* component:  */
+    public static final String PROP_NAME_galleryComponent = "galleryComponent";
+    
+    /* component:  */
     public static final String PROP_NAME_picUrlComponent = "picUrlComponent";
     
     /* component:  */
@@ -1274,6 +1277,23 @@ public class _LitemallGoods extends DynamicOrmEntity{
        return _orderGoods;
     }
        
+   private io.nop.orm.component.OrmFileListComponent _galleryComponent;
+
+   private static Map<String,Integer> COMPONENT_PROP_ID_MAP_galleryComponent = new HashMap<>();
+   static{
+      
+         COMPONENT_PROP_ID_MAP_galleryComponent.put(io.nop.orm.component.OrmFileListComponent.PROP_NAME_filePath,PROP_ID_gallery);
+      
+   }
+
+   public io.nop.orm.component.OrmFileListComponent getGalleryComponent(){
+      if(_galleryComponent == null){
+          _galleryComponent = new io.nop.orm.component.OrmFileListComponent();
+          _galleryComponent.bindToEntity(this, COMPONENT_PROP_ID_MAP_galleryComponent);
+      }
+      return _galleryComponent;
+   }
+
    private io.nop.orm.component.OrmFileComponent _picUrlComponent;
 
    private static Map<String,Integer> COMPONENT_PROP_ID_MAP_picUrlComponent = new HashMap<>();

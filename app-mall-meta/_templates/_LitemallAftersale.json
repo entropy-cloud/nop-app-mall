@@ -18,5 +18,6 @@
   "order": null,
   "order.orderSn": "",
   "user": null,
-  "user.username": ""
+  "user.username": "",
+  "picturesComponentFileStatusList": null
 }

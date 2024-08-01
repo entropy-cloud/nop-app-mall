@@ -62,9 +62,8 @@
               sortable="true" lazy="true">
             <schema type="String"/>
         </prop>
-        <prop name="picUrlComponent" ext:kind="component" internal="true" insertable="true" updatable="true"
-              mandatory="true" lazy="true" published="false">
-            <schema type="io.nop.orm.component.OrmFileComponent"/>
+        <prop name="picUrlComponentFileStatus" mapToProp="picUrlComponent.fileStatus" internal="true" lazy="true">
+            <schema type="io.nop.api.core.beans.file.FileStatusBean"/>
         </prop>
     </props>
 </meta>

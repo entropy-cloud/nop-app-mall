@@ -161,7 +161,7 @@
             </schema>
         </prop>
         <prop name="relatedProductList" displayName="订单产品列表" i18n-en:displayName="Order Product List" ext:kind="to-many"
-              internal="true" lazy="true">
+              insertable="true" updatable="true" internal="true" lazy="true">
             <schema>
                 <item bizObjName="LitemallGoodsProduct"/>
             </schema>

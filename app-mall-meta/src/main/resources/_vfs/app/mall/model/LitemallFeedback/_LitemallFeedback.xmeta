@@ -75,5 +75,9 @@
               sortable="true" lazy="true">
             <schema type="String"/>
         </prop>
+        <prop name="picUrlsComponentFileStatusList" mapToProp="picUrlsComponent.fileStatusList" internal="true"
+              lazy="true">
+            <schema type="List&lt;io.nop.api.core.beans.file.FileStatusBean&gt;"/>
+        </prop>
     </props>
 </meta>

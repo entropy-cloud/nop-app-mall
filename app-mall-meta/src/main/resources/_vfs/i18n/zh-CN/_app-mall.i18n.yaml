@@ -50,7 +50,7 @@ prop:
       startTime: 广告开始时间
       updateTime: 更新时间
       url: 广告宣传图片
-      urlComponent: null
+      urlComponentFileStatus: null
     LitemallAddress:
       addTime: 创建时间
       addressDetail: 详细收货地址
@@ -91,6 +91,7 @@ prop:
       order.orderSn: 订单
       orderId: 订单ID
       pictures: 退款凭证图片链接数组
+      picturesComponentFileStatusList: null
       reason: 退款原因
       status: 售后状态
       status_label: 售后状态
@@ -108,7 +109,7 @@ prop:
       id: Id
       name: 品牌商名称
       picUrl: 品牌商图片
-      picUrlComponent: null
+      picUrlComponentFileStatus: null
       sortOrder: 排序
       updateTime: 更新时间
     LitemallCart:
@@ -123,7 +124,7 @@ prop:
       id: Id
       number: 商品货品的数量
       picUrl: 商品图片或者商品货品图片
-      picUrlComponent: null
+      picUrlComponentFileStatus: null
       price: 商品货品的价格
       productId: 商品货品表的货品ID
       specifications: 商品规格值列表
@@ -137,7 +138,7 @@ prop:
       deleted: 逻辑删除
       desc: 简介
       iconUrl: 类目图标
-      iconUrlComponent: null
+      iconUrlComponentFileStatus: null
       id: Id
       keywords: 类目关键字
       level: 级别
@@ -146,7 +147,7 @@ prop:
       parent: 父类目
       parent.name: 父类目
       picUrl: 类目图片
-      picUrlComponent: null
+      picUrlComponentFileStatus: null
       pid: 父类目ID
       sortOrder: 排序
       updateTime: 更新时间
@@ -168,6 +169,7 @@ prop:
       hasPicture: 是否含有图片
       id: Id
       picUrls: 图片地址列表，采用JSON数组格式
+      picUrlsComponentFileStatusList: null
       star: 评分， 1-5
       type: 评论类型
       updateTime: 更新时间
@@ -226,6 +228,7 @@ prop:
       id: Id
       mobile: 手机号
       picUrls: 图片地址列表，采用JSON数组格式
+      picUrlsComponentFileStatusList: null
       status: 状态
       updateTime: 更新时间
       user: 客户
@@ -258,6 +261,7 @@ prop:
       deleted: 逻辑删除
       detail: 详情
       gallery: 商品宣传图片列表
+      galleryComponentFileStatusList: null
       goodsSn: 商品编号
       id: Id
       isHot: 是否热品
@@ -267,13 +271,13 @@ prop:
       name: 商品名称
       orderGoods: 订单商品
       picUrl: 商品图片
-      picUrlComponent: null
+      picUrlComponentFileStatus: null
       products: 包含产品
       relatedProductIdList: 订单产品列表
       relatedProductList: 订单产品列表
       retailPrice: 当前价格
       shareUrl: 商品分享海报
-      shareUrlComponent: null
+      shareUrlComponentFileStatus: null
       sortOrder: 排序顺序
       specifications: 商品规格
       unit: 商品单位
@@ -301,7 +305,7 @@ prop:
       specificationsComponent: null
       updateTime: 更新时间
       url: 商品货品图片
-      urlComponent: null
+      urlComponentFileStatus: null
     LitemallGoodsSpecification:
       addTime: 创建时间
       deleted: 逻辑删除
@@ -310,7 +314,7 @@ prop:
       goodsId: 商品ID
       id: Id
       picUrl: 商品规格图片
-      picUrlComponent: null
+      picUrlComponentFileStatus: null
       specification: 商品规格名称
       updateTime: 更新时间
       value: 商品规格值
@@ -326,7 +330,7 @@ prop:
       orderId: 订单ID
       rulesId: 团购规则ID
       shareUrl: 团购分享图片地址
-      shareUrlComponent: null
+      shareUrlComponentFileStatus: null
       status: 团购活动状态，开团未支付则0，开团中则1，开团失败则2
       updateTime: 更新时间
       userId: 用户ID
@@ -342,7 +346,7 @@ prop:
       goodsName: 商品名称
       id: Id
       picUrl: 商品/货品图片
-      picUrlComponent: null
+      picUrlComponentFileStatus: null
       status: 团购规则状态，正常上线则0，到期自动下线则1，管理手动下线则2
       updateTime: 更新时间
     LitemallIssue:
@@ -445,7 +449,7 @@ prop:
       order.orderSn: 订单
       orderId: 订单ID
       picUrl: 商品/货品图片
-      picUrlComponent: null
+      picUrlComponentFileStatus: null
       price: 售价
       product: 订单产品
       productId: 货品ID
@@ -523,7 +527,7 @@ prop:
     LitemallUser:
       addTime: 创建时间
       avatar: 用户头像图片
-      avatarComponent: null
+      avatarComponentFileStatus: null
       birthday: 生日
       deleted: 逻辑删除
       gender: 性别

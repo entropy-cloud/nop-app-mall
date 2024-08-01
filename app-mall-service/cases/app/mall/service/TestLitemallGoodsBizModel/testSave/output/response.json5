@@ -1,27 +1,6 @@
 {
-  "data": {
-    "id": "@var:LitemallGoods@id",
-    "goodsSn": "test-05",
-    "name": "测试商品5",
-    "categoryId": 1005000,
-    "brandId": 1001000,
-    "brandId_label": "MUJI制造商",
-    "picUrl": "http://yanxuan.nosdn.127.net/8ab2d3287af0cefa2cc539e40600621d.png",
-    "isNew": true,
-    "unit": "个",
-    "counterPrice": 33.0,
-    "retailPrice": 25.0,
-    "addTime": "@var:LitemallGoodsSpecification@addTime",
-    "updateTime": "@var:LitemallGoodsSpecification@updateTime",
-    "deleted": false,
-    "gallery": null,
-    "keywords": null,
-    "brief": null,
-    "isOnSale": null,
-    "sortOrder": null,
-    "shareUrl": null,
-    "isHot": null,
-    "detail": null
-  },
-  "status": 0
+  "bizFatal": false,
+  "code": "nop.err.orm.mandatory-prop-is-null",
+  "msg": "实体对象[商品货品表:1430477825]的非空属性[商品规格值(specifications)]为null",
+  "status": -1
 }

@@ -53,7 +53,7 @@ public class LitemallAftersaleBizModel extends CrudBizModel<LitemallAftersale> {
 
     @BizMutation
     public void batchApprove(@Name("ids") Set<String> ids, IServiceContext context) {
-        List<LitemallAftersale> list = batchGet(ids, context);
+        List<LitemallAftersale> list = batchGet(ids, false, context);
 
         for (LitemallAftersale entity : list) {
             int status = entity.getStatus();
@@ -70,7 +70,7 @@ public class LitemallAftersaleBizModel extends CrudBizModel<LitemallAftersale> {
 
     @BizMutation
     public void batchReject(@Name("ids") Set<String> ids, IServiceContext context) {
-        List<LitemallAftersale> list = batchGet(ids, context);
+        List<LitemallAftersale> list = batchGet(ids, false, context);
 
         for (LitemallAftersale entity : list) {
             int status = entity.getStatus();

@@ -29,8 +29,9 @@
   "products": null,
   "specifications": null,
   "orderGoods": null,
-  "picUrlComponent": null,
-  "shareUrlComponent": null,
+  "galleryComponentFileStatusList": null,
+  "picUrlComponentFileStatus": null,
+  "shareUrlComponentFileStatus": null,
   "relatedProductList": null,
   "relatedProductIdList": null
 }

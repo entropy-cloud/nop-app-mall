@@ -68,9 +68,8 @@
               updatable="true" internal="true" ui:show="X">
             <schema domain="delFlag" type="java.lang.Boolean"/>
         </prop>
-        <prop name="urlComponent" ext:kind="component" internal="true" insertable="true" updatable="true"
-              mandatory="true" lazy="true" published="false">
-            <schema type="io.nop.orm.component.OrmFileComponent"/>
+        <prop name="urlComponentFileStatus" mapToProp="urlComponent.fileStatus" internal="true" lazy="true">
+            <schema type="io.nop.api.core.beans.file.FileStatusBean"/>
         </prop>
     </props>
 </meta>

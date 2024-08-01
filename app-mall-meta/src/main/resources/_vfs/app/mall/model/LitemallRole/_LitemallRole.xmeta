@@ -54,7 +54,7 @@
             </schema>
         </prop>
         <prop name="relatedUserList" displayName="用户列表" i18n-en:displayName="User List" ext:kind="to-many"
-              internal="true" lazy="true">
+              insertable="true" updatable="true" internal="true" lazy="true">
             <schema>
                 <item bizObjName="LitemallUser"/>
             </schema>
