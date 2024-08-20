@@ -374,6 +374,7 @@
 /dict/mall/region-type.dict.yaml
 /dict/mall/user-level.dict.yaml
 /dict/mall/user-status.dict.yaml
+/dict/orm/sql-kind.dict.yaml
 /dict/web/page-schema-type.dict.yaml
 /i18n/en/_app-mall-web.i18n.yaml
 /i18n/en/_app-mall.i18n.yaml
@@ -438,9 +439,7 @@
 /nop/auth/model/NopAuthPosition/_NopAuthPosition.xmeta
 /nop/auth/model/NopAuthResource/NopAuthResource.xbiz
 /nop/auth/model/NopAuthResource/NopAuthResource.xmeta
-/nop/auth/model/NopAuthResource/NopAuthResource_main.xbiz
 /nop/auth/model/NopAuthResource/NopAuthResource_main.xmeta
-/nop/auth/model/NopAuthResource/NopAuthSite_main.xmeta
 /nop/auth/model/NopAuthResource/_NopAuthResource.xbiz
 /nop/auth/model/NopAuthResource/_NopAuthResource.xmeta
 /nop/auth/model/NopAuthRole/NopAuthRole.xbiz
@@ -607,6 +606,7 @@
 /nop/codegen/xlib/web-gen.xlib
 /nop/core/_module
 /nop/core/app.module.yaml
+/nop/core/model/DictProvider/DictProvider.xbiz
 /nop/core/registry/api.register-model.xml
 /nop/core/registry/dialect.register-model.xml
 /nop/core/registry/dict.register-model.xml
@@ -621,11 +621,13 @@
 /nop/core/xlib/biz!check.xlib
 /nop/core/xlib/biz!filter.xlib
 /nop/core/xlib/biz!value.xlib
+/nop/core/xlib/biz!when.xlib
 /nop/core/xlib/biz-gen.xlib
 /nop/core/xlib/biz.xlib
 /nop/core/xlib/file.xlib
 /nop/core/xlib/filter.xlib
 /nop/core/xlib/meta-gen.xlib
+/nop/core/xlib/meta-prop.xlib
 /nop/dao/beans/dao-defaults.beans.xml
 /nop/dao/dialect/db2.dialect.xml
 /nop/dao/dialect/default.dialect.xml
@@ -636,6 +638,7 @@
 /nop/dao/dialect/mariadb.dialect.xml
 /nop/dao/dialect/mssql.dialect.xml
 /nop/dao/dialect/mysql.dialect.xml
+/nop/dao/dialect/mysql5.7.dialect.xml
 /nop/dao/dialect/oracle.dialect.xml
 /nop/dao/dialect/postgis.dialect.xml
 /nop/dao/dialect/postgresql.dialect.xml
@@ -661,6 +664,8 @@
 /nop/graphql/introspection.graphql
 /nop/http/beans/http-client-jdk.beans.xml
 /nop/orm/beans/orm-defaults.beans.xml
+/nop/orm/defaults/default.orm.xml
+/nop/orm/defaults/dsl-default.orm.xml
 /nop/orm/imp/orm.imp.xml
 /nop/orm/imp/template.orm.xlsx
 /nop/orm/xlib/dao.xlib
@@ -678,6 +683,7 @@
 /nop/orm/xlib/sql.xlib
 /nop/quarkus/beans/quarkus-defaults.beans.xml
 /nop/rpc/imp/api.imp.xml
+/nop/rpc/imp/api.imp.xml.rej
 /nop/rpc/imp/template.api.xlsx
 /nop/schema/action-auth.xdef
 /nop/schema/api.xdef
@@ -1001,6 +1007,7 @@
 /nop/web/xlib/view-gen.xlib
 /nop/web/xlib/view-gen/impl_GenFromMeta.xpl
 /nop/web/xlib/web.xlib
+/nop/web/xlib/web.xlib.rej
 /nop/web/xlib/web/grid_crud.xpl
 /nop/web/xlib/web/impl_GenForm.xpl
 /nop/web/xlib/web/impl_GenGrid.xpl

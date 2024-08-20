@@ -12,7 +12,7 @@
             <layout>
                 id[Id]
                 name[角色名称]
-                relatedUserIdList
+                relatedUserList_ids
                 desc[角色描述]
                 enabled[是否启用]
             </layout>
