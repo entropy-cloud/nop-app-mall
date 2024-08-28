@@ -1329,16 +1329,22 @@ public class _LitemallGoods extends DynamicOrmEntity{
    }
 
         public List<app.mall.dao.entity.LitemallGoodsProduct> getRelatedProductList(){
-            return (List<app.mall.dao.entity.LitemallGoodsProduct>)io.nop.orm.support.OrmEntityHelper.getRefProps(getOrderGoods(),app.mall.dao.entity.LitemallOrderGoods.PROP_NAME_product);
-        }
-    
-        public List<java.lang.Integer> getRelatedProductIdList(){
-        return (List<java.lang.Integer>)io.nop.orm.support.OrmEntityHelper.getRefProps(getOrderGoods(),app.mall.dao.entity.LitemallOrderGoods.PROP_NAME_productId);
+            return (List<app.mall.dao.entity.LitemallGoodsProduct>)io.nop.orm.support.OrmEntityHelper.getRefProps(getOrderGoods(),"product");
         }
 
-        public void setRelatedProductIdList(List<java.lang.Integer> value){
-        io.nop.orm.support.OrmEntityHelper.setRefProps(getOrderGoods(),app.mall.dao.entity.LitemallOrderGoods.PROP_NAME_productId,value);
+        public List<String> getRelatedProductList_ids(){
+            return io.nop.orm.support.OrmEntityHelper.getRefIds(getOrderGoods(),"product");
+        }
+
+        public void setRelatedProductList_ids(List<String> value){
+            io.nop.orm.support.OrmEntityHelper.setRefIds(getOrderGoods(),"product",value);
         }
     
+
+    public String getRelatedProductList_label(){
+        return io.nop.orm.support.OrmEntityHelper.getLabelForRefProps(getOrderGoods(),"product");
+    }
+
+
 }
 // resume CPD analysis - CPD-ON

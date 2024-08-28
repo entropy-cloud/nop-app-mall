@@ -492,20 +492,22 @@ public class _LitemallRole extends DynamicOrmEntity{
     }
        
         public List<app.mall.dao.entity.LitemallUser> getRelatedUserList(){
-            return (List<app.mall.dao.entity.LitemallUser>)io.nop.orm.support.OrmEntityHelper.getRefProps(getUserMappings(),app.mall.dao.entity.LitemallUserRole.PROP_NAME_user);
-        }
-    
-        public String getRelatedUserList_label(){
-        return io.nop.core.lang.utils.Underscore.pluckThenJoin(getRelatedUserList(),app.mall.dao.entity.LitemallUser.PROP_NAME_username);
-        }
-    
-        public List<java.lang.String> getRelatedUserIdList(){
-        return (List<java.lang.String>)io.nop.orm.support.OrmEntityHelper.getRefProps(getUserMappings(),app.mall.dao.entity.LitemallUserRole.PROP_NAME_userId);
+            return (List<app.mall.dao.entity.LitemallUser>)io.nop.orm.support.OrmEntityHelper.getRefProps(getUserMappings(),"user");
         }
 
-        public void setRelatedUserIdList(List<java.lang.String> value){
-        io.nop.orm.support.OrmEntityHelper.setRefProps(getUserMappings(),app.mall.dao.entity.LitemallUserRole.PROP_NAME_userId,value);
+        public List<String> getRelatedUserList_ids(){
+            return io.nop.orm.support.OrmEntityHelper.getRefIds(getUserMappings(),"user");
+        }
+
+        public void setRelatedUserList_ids(List<String> value){
+            io.nop.orm.support.OrmEntityHelper.setRefIds(getUserMappings(),"user",value);
         }
     
+
+    public String getRelatedUserList_label(){
+        return io.nop.orm.support.OrmEntityHelper.getLabelForRefProps(getUserMappings(),"user");
+    }
+
+
 }
 // resume CPD analysis - CPD-ON

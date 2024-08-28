@@ -22,5 +22,6 @@
   "roleMappings": null,
   "avatarComponentFileStatus": null,
   "relatedRoleList": null,
-  "relatedRoleIdList": null
+  "relatedRoleList_ids": null,
+  "relatedRoleList_label": ""
 }

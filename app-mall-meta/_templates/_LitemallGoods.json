@@ -5,7 +5,7 @@
   "categoryId": 0,
   "brandId": 0,
   "brandId_label": "",
-  "gallery": "",
+  "gallery": null,
   "keywords": "",
   "brief": "",
   "isOnSale": false,
@@ -33,5 +33,6 @@
   "picUrlComponentFileStatus": null,
   "shareUrlComponentFileStatus": null,
   "relatedProductList": null,
-  "relatedProductIdList": null
+  "relatedProductList_ids": null,
+  "relatedProductList_label": ""
 }

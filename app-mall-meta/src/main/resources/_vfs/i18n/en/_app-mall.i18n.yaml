@@ -280,8 +280,9 @@ prop:
       galleryComponentFileStatusList: null
       picUrlComponentFileStatus: null
       shareUrlComponentFileStatus: null
-      relatedProductList: Order Product List
-      relatedProductIdList: Order Product List
+      relatedProductList: null
+      relatedProductList_ids: null
+      relatedProductList_label: null
     LitemallGoodsAttribute:
       id: null
       goodsId: null
@@ -432,8 +433,9 @@ prop:
       user: User
       user.username: User
       orderGoods: Order Goods
-      relatedProductList: Order Product List
-      relatedProductIdList: Order Product List
+      relatedProductList: null
+      relatedProductList_ids: null
+      relatedProductList_label: null
     LitemallOrderGoods:
       id: null
       orderId: null
@@ -480,9 +482,9 @@ prop:
       updateTime: null
       deleted: null
       userMappings: null
-      relatedUserList: User List
-      relatedUserIdList: User List
-      relatedUserList_label: User List
+      relatedUserList: null
+      relatedUserList_ids: null
+      relatedUserList_label: null
     LitemallSearchHistory:
       id: null
       userId: null
@@ -547,8 +549,9 @@ prop:
       deleted: null
       roleMappings: RoleMappings
       avatarComponentFileStatus: null
-      relatedRoleList: Role List
-      relatedRoleIdList: Role List
+      relatedRoleList: null
+      relatedRoleList_ids: null
+      relatedRoleList_label: null
     LitemallUserRole:
       userId: User ID
       roleId: Role ID

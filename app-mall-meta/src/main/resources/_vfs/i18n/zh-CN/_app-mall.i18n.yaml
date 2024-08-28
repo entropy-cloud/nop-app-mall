@@ -273,8 +273,9 @@ prop:
       picUrl: 商品图片
       picUrlComponentFileStatus: null
       products: 包含产品
-      relatedProductIdList: 订单产品列表
-      relatedProductList: 订单产品列表
+      relatedProductList: relatedProductList
+      relatedProductList_ids: relatedProductList
+      relatedProductList_label: relatedProductList
       retailPrice: 当前价格
       shareUrl: 商品分享海报
       shareUrlComponentFileStatus: null
@@ -425,8 +426,9 @@ prop:
       refundContent: 退款备注
       refundTime: 退款时间
       refundType: 退款方式
-      relatedProductIdList: 订单产品列表
-      relatedProductList: 订单产品列表
+      relatedProductList: relatedProductList
+      relatedProductList_ids: relatedProductList
+      relatedProductList_label: relatedProductList
       shipChannel: 发货快递公司
       shipSn: 发货编号
       shipTime: 发货开始时间
@@ -478,9 +480,9 @@ prop:
       enabled: 是否启用
       id: Id
       name: 角色名称
-      relatedUserIdList: 用户列表
-      relatedUserList: 用户列表
-      relatedUserList_label: 用户列表
+      relatedUserList: relatedUserList
+      relatedUserList_ids: relatedUserList
+      relatedUserList_label: relatedUserList
       updateTime: 更新时间
       userMappings: null
     LitemallSearchHistory:
@@ -538,8 +540,9 @@ prop:
       mobile: 用户手机号码
       nickname: 用户昵称或网络名称
       password: 用户密码
-      relatedRoleIdList: 角色列表
-      relatedRoleList: 角色列表
+      relatedRoleList: relatedRoleList
+      relatedRoleList_ids: relatedRoleList
+      relatedRoleList_label: relatedRoleList
       roleMappings: 角色映射
       sessionKey: 微信登录会话KEY
       status: 用户状态

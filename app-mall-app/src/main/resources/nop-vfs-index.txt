@@ -7,6 +7,7 @@
 /_delta/default/nop/auth/orm/app.orm.xml
 /_delta/default/nop/auth/orm/default/_app.orm.xml
 /_delta/default/nop/auth/pages/NopAuthUser/NopAuthUser.view.xml
+/_delta/default/nop/core/xlib/meta-prop.xlib
 /_delta/default/nop/web/xlib/control.xlib
 /_delta/default/nop/web/xlib/web.xlib
 /app/mall/_module
@@ -683,7 +684,6 @@
 /nop/orm/xlib/sql.xlib
 /nop/quarkus/beans/quarkus-defaults.beans.xml
 /nop/rpc/imp/api.imp.xml
-/nop/rpc/imp/api.imp.xml.rej
 /nop/rpc/imp/template.api.xlsx
 /nop/schema/action-auth.xdef
 /nop/schema/api.xdef

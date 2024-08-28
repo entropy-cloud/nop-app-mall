@@ -160,15 +160,39 @@
                 <item bizObjName="LitemallOrderGoods"/>
             </schema>
         </prop>
-        <prop name="relatedProductList" displayName="订单产品列表" i18n-en:displayName="Order Product List" ext:kind="to-many"
-              insertable="true" updatable="true" internal="true" lazy="true">
+        <prop name="relatedProductList" displayName="relatedProductList" insertable="true" updatable="true"
+              depends="~orderGoods" internal="true" lazy="true">
             <schema>
                 <item bizObjName="LitemallGoodsProduct"/>
             </schema>
+            <getter>
+                            import io.nop.orm.support.OrmEntityHelper;
+                            return OrmEntityHelper.getRefProps(
+                                entity.getOrderGoods(), "product");
+                        </getter>
         </prop>
-        <prop name="relatedProductIdList" displayName="订单产品列表" i18n-en:displayName="Order Product List"
-              insertable="true" updatable="true" ext:relation="relatedProductList" lazy="true" internal="true">
-            <schema type="List&lt;java.lang.Integer&gt;"/>
+        <prop name="relatedProductList_ids" displayName="relatedProductList" insertable="true" updatable="true"
+              graphql:labelProp="relatedProductList_label" lazy="true" internal="true" depends="~orderGoods">
+            <schema type="List&lt;String&gt;"/>
+            <getter>
+                            import io.nop.orm.support.OrmEntityHelper;
+                            return OrmEntityHelper.getRefIds(
+                                entity.getOrderGoods(), "product");
+                        </getter>
+            <setter>
+                            import io.nop.orm.support.OrmEntityHelper;
+                            OrmEntityHelper.setRefIds(
+                                entity.getOrderGoods(), "product",value);
+                        </setter>
+        </prop>
+        <prop name="relatedProductList_label" displayName="relatedProductList" internal="true" depends="~orderGoods"
+              lazy="true">
+            <schema type="String"/>
+            <getter>
+                    import io.nop.orm.support.OrmEntityHelper;
+                    return OrmEntityHelper.getLabelForRefProps(
+                        entity.getOrderGoods(), "product");
+                </getter>
         </prop>
     </props>
 </meta>
