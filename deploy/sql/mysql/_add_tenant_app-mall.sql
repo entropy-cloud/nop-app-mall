@@ -1,73 +1,73 @@
 
-    alter table litemall_ad add column NOP_TENANT_ID VARCHAR(32) DEFAULT '0' NOT NULL;
+    alter table litemall_ad add NOP_TENANT_ID VARCHAR(32) DEFAULT '0' NOT NULL;
 
-alter table litemall_address add column NOP_TENANT_ID VARCHAR(32) DEFAULT '0' NOT NULL;
+alter table litemall_address add NOP_TENANT_ID VARCHAR(32) DEFAULT '0' NOT NULL;
 
-alter table litemall_admin add column NOP_TENANT_ID VARCHAR(32) DEFAULT '0' NOT NULL;
+alter table litemall_admin add NOP_TENANT_ID VARCHAR(32) DEFAULT '0' NOT NULL;
 
-alter table litemall_aftersale add column NOP_TENANT_ID VARCHAR(32) DEFAULT '0' NOT NULL;
+alter table litemall_aftersale add NOP_TENANT_ID VARCHAR(32) DEFAULT '0' NOT NULL;
 
-alter table litemall_brand add column NOP_TENANT_ID VARCHAR(32) DEFAULT '0' NOT NULL;
+alter table litemall_brand add NOP_TENANT_ID VARCHAR(32) DEFAULT '0' NOT NULL;
 
-alter table litemall_cart add column NOP_TENANT_ID VARCHAR(32) DEFAULT '0' NOT NULL;
+alter table litemall_cart add NOP_TENANT_ID VARCHAR(32) DEFAULT '0' NOT NULL;
 
-alter table litemall_category add column NOP_TENANT_ID VARCHAR(32) DEFAULT '0' NOT NULL;
+alter table litemall_category add NOP_TENANT_ID VARCHAR(32) DEFAULT '0' NOT NULL;
 
-alter table litemall_collect add column NOP_TENANT_ID VARCHAR(32) DEFAULT '0' NOT NULL;
+alter table litemall_collect add NOP_TENANT_ID VARCHAR(32) DEFAULT '0' NOT NULL;
 
-alter table litemall_comment add column NOP_TENANT_ID VARCHAR(32) DEFAULT '0' NOT NULL;
+alter table litemall_comment add NOP_TENANT_ID VARCHAR(32) DEFAULT '0' NOT NULL;
 
-alter table litemall_coupon add column NOP_TENANT_ID VARCHAR(32) DEFAULT '0' NOT NULL;
+alter table litemall_coupon add NOP_TENANT_ID VARCHAR(32) DEFAULT '0' NOT NULL;
 
-alter table litemall_coupon_user add column NOP_TENANT_ID VARCHAR(32) DEFAULT '0' NOT NULL;
+alter table litemall_coupon_user add NOP_TENANT_ID VARCHAR(32) DEFAULT '0' NOT NULL;
 
-alter table litemall_feedback add column NOP_TENANT_ID VARCHAR(32) DEFAULT '0' NOT NULL;
+alter table litemall_feedback add NOP_TENANT_ID VARCHAR(32) DEFAULT '0' NOT NULL;
 
-alter table litemall_footprint add column NOP_TENANT_ID VARCHAR(32) DEFAULT '0' NOT NULL;
+alter table litemall_footprint add NOP_TENANT_ID VARCHAR(32) DEFAULT '0' NOT NULL;
 
-alter table litemall_goods add column NOP_TENANT_ID VARCHAR(32) DEFAULT '0' NOT NULL;
+alter table litemall_goods add NOP_TENANT_ID VARCHAR(32) DEFAULT '0' NOT NULL;
 
-alter table litemall_goods_attribute add column NOP_TENANT_ID VARCHAR(32) DEFAULT '0' NOT NULL;
+alter table litemall_goods_attribute add NOP_TENANT_ID VARCHAR(32) DEFAULT '0' NOT NULL;
 
-alter table litemall_goods_product add column NOP_TENANT_ID VARCHAR(32) DEFAULT '0' NOT NULL;
+alter table litemall_goods_product add NOP_TENANT_ID VARCHAR(32) DEFAULT '0' NOT NULL;
 
-alter table litemall_goods_specification add column NOP_TENANT_ID VARCHAR(32) DEFAULT '0' NOT NULL;
+alter table litemall_goods_specification add NOP_TENANT_ID VARCHAR(32) DEFAULT '0' NOT NULL;
 
-alter table litemall_groupon add column NOP_TENANT_ID VARCHAR(32) DEFAULT '0' NOT NULL;
+alter table litemall_groupon add NOP_TENANT_ID VARCHAR(32) DEFAULT '0' NOT NULL;
 
-alter table litemall_groupon_rules add column NOP_TENANT_ID VARCHAR(32) DEFAULT '0' NOT NULL;
+alter table litemall_groupon_rules add NOP_TENANT_ID VARCHAR(32) DEFAULT '0' NOT NULL;
 
-alter table litemall_issue add column NOP_TENANT_ID VARCHAR(32) DEFAULT '0' NOT NULL;
+alter table litemall_issue add NOP_TENANT_ID VARCHAR(32) DEFAULT '0' NOT NULL;
 
-alter table litemall_keyword add column NOP_TENANT_ID VARCHAR(32) DEFAULT '0' NOT NULL;
+alter table litemall_keyword add NOP_TENANT_ID VARCHAR(32) DEFAULT '0' NOT NULL;
 
-alter table litemall_log add column NOP_TENANT_ID VARCHAR(32) DEFAULT '0' NOT NULL;
+alter table litemall_log add NOP_TENANT_ID VARCHAR(32) DEFAULT '0' NOT NULL;
 
-alter table litemall_notice add column NOP_TENANT_ID VARCHAR(32) DEFAULT '0' NOT NULL;
+alter table litemall_notice add NOP_TENANT_ID VARCHAR(32) DEFAULT '0' NOT NULL;
 
-alter table litemall_notice_admin add column NOP_TENANT_ID VARCHAR(32) DEFAULT '0' NOT NULL;
+alter table litemall_notice_admin add NOP_TENANT_ID VARCHAR(32) DEFAULT '0' NOT NULL;
 
-alter table litemall_order add column NOP_TENANT_ID VARCHAR(32) DEFAULT '0' NOT NULL;
+alter table litemall_order add NOP_TENANT_ID VARCHAR(32) DEFAULT '0' NOT NULL;
 
-alter table litemall_order_goods add column NOP_TENANT_ID VARCHAR(32) DEFAULT '0' NOT NULL;
+alter table litemall_order_goods add NOP_TENANT_ID VARCHAR(32) DEFAULT '0' NOT NULL;
 
-alter table litemall_permission add column NOP_TENANT_ID VARCHAR(32) DEFAULT '0' NOT NULL;
+alter table litemall_permission add NOP_TENANT_ID VARCHAR(32) DEFAULT '0' NOT NULL;
 
-alter table litemall_region add column NOP_TENANT_ID VARCHAR(32) DEFAULT '0' NOT NULL;
+alter table litemall_region add NOP_TENANT_ID VARCHAR(32) DEFAULT '0' NOT NULL;
 
-alter table litemall_role add column NOP_TENANT_ID VARCHAR(32) DEFAULT '0' NOT NULL;
+alter table litemall_role add NOP_TENANT_ID VARCHAR(32) DEFAULT '0' NOT NULL;
 
-alter table litemall_search_history add column NOP_TENANT_ID VARCHAR(32) DEFAULT '0' NOT NULL;
+alter table litemall_search_history add NOP_TENANT_ID VARCHAR(32) DEFAULT '0' NOT NULL;
 
-alter table litemall_storage add column NOP_TENANT_ID VARCHAR(32) DEFAULT '0' NOT NULL;
+alter table litemall_storage add NOP_TENANT_ID VARCHAR(32) DEFAULT '0' NOT NULL;
 
-alter table litemall_system add column NOP_TENANT_ID VARCHAR(32) DEFAULT '0' NOT NULL;
+alter table litemall_system add NOP_TENANT_ID VARCHAR(32) DEFAULT '0' NOT NULL;
 
-alter table litemall_topic add column NOP_TENANT_ID VARCHAR(32) DEFAULT '0' NOT NULL;
+alter table litemall_topic add NOP_TENANT_ID VARCHAR(32) DEFAULT '0' NOT NULL;
 
-alter table litemall_user add column NOP_TENANT_ID VARCHAR(32) DEFAULT '0' NOT NULL;
+alter table litemall_user add NOP_TENANT_ID VARCHAR(32) DEFAULT '0' NOT NULL;
 
-alter table litemall_user_role add column NOP_TENANT_ID VARCHAR(32) DEFAULT '0' NOT NULL;
+alter table litemall_user_role add NOP_TENANT_ID VARCHAR(32) DEFAULT '0' NOT NULL;
 
 alter table litemall_ad drop primary key;
 alter table litemall_ad add primary key (NOP_TENANT_ID, ID);

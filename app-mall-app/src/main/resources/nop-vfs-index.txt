@@ -693,6 +693,10 @@
 /nop/schema/conf.xdef
 /nop/schema/data-auth.xdef
 /nop/schema/datav/chart.xdef
+/nop/schema/db/export-db.xdef
+/nop/schema/db/import-db.xdef
+/nop/schema/db/jdbc-connection.xdef
+/nop/schema/db/table-field.xdef
 /nop/schema/designer/graph-designer.xdef
 /nop/schema/errors.xdef
 /nop/schema/excel/anchor.xdef
@@ -756,6 +760,8 @@
 /nop/sys/auth/nop-sys.action-auth.xml
 /nop/sys/beans/_dao.beans.xml
 /nop/sys/beans/app-dao.beans.xml
+/nop/sys/model/NopSysCheckerRecord/NopSysCheckerRecord.xmeta
+/nop/sys/model/NopSysCheckerRecord/_NopSysCheckerRecord.xmeta
 /nop/sys/model/NopSysClusterLeader/NopSysClusterLeader.xmeta
 /nop/sys/model/NopSysClusterLeader/_NopSysClusterLeader.xmeta
 /nop/sys/model/NopSysCodeRule/NopSysCodeRule.xmeta
@@ -782,6 +788,11 @@
 /nop/sys/model/NopSysVariable/_NopSysVariable.xmeta
 /nop/sys/orm/_app.orm.xml
 /nop/sys/orm/app.orm.xml
+/nop/sys/pages/NopSysCheckerRecord/NopSysCheckerRecord.lib.xjs
+/nop/sys/pages/NopSysCheckerRecord/NopSysCheckerRecord.view.xml
+/nop/sys/pages/NopSysCheckerRecord/_gen/_NopSysCheckerRecord.view.xml
+/nop/sys/pages/NopSysCheckerRecord/main.page.yaml
+/nop/sys/pages/NopSysCheckerRecord/picker.page.yaml
 /nop/sys/pages/NopSysClusterLeader/NopSysClusterLeader.lib.js
 /nop/sys/pages/NopSysClusterLeader/NopSysClusterLeader.lib.xjs
 /nop/sys/pages/NopSysClusterLeader/NopSysClusterLeader.view.xml
@@ -1007,7 +1018,6 @@
 /nop/web/xlib/view-gen.xlib
 /nop/web/xlib/view-gen/impl_GenFromMeta.xpl
 /nop/web/xlib/web.xlib
-/nop/web/xlib/web.xlib.rej
 /nop/web/xlib/web/grid_crud.xpl
 /nop/web/xlib/web/impl_GenForm.xpl
 /nop/web/xlib/web/impl_GenGrid.xpl
