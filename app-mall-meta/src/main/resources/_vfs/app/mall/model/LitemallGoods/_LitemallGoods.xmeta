@@ -181,8 +181,10 @@
                         </getter>
         </prop>
         <prop name="relatedProductList_ids" displayName="relatedProductList" insertable="true" updatable="true"
-              graphql:labelProp="relatedProductList_label" lazy="true" internal="true" depends="~orderGoods">
-            <schema type="List&lt;String&gt;"/>
+              graphql:labelProp="relatedProductList_label" lazy="true"
+              ui:pickerUrl="/app/mall/pages/LitemallGoodsProduct/picker.page.yaml" ui:refLabelProp="id" internal="true"
+              depends="~orderGoods">
+            <schema type="List&lt;String&gt;" domain="ref-ids"/>
             <getter>
                             import io.nop.orm.support.OrmEntityHelper;
                             return OrmEntityHelper.getRefIds(
