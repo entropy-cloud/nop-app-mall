@@ -19,7 +19,7 @@
             <cols>
 
                 <!--Id-->
-                <col id="id" mandatory="true" sortable="true"/>
+                <col id="id" mandatory="true" ui:number="true" sortable="true"/>
 
                 <!--类目名称-->
                 <col id="name" mandatory="true" sortable="true"/>
@@ -40,7 +40,7 @@
                 <col id="level" mandatory="true" sortable="true"/>
 
                 <!--父类目ID-->
-                <col id="pid" sortable="true" x:abstract="true"/>
+                <col id="pid" ui:number="true" sortable="true" x:abstract="true"/>
             </cols>
         </grid>
         <grid id="tree-list" x:prototype="list">

@@ -438,7 +438,7 @@ public class _LitemallAdmin extends DynamicOrmEntity{
     /**
      * Id: ID
      */
-    public java.lang.Integer getId(){
+    public final java.lang.Integer getId(){
          onPropGet(PROP_ID_id);
          return _id;
     }
@@ -446,7 +446,7 @@ public class _LitemallAdmin extends DynamicOrmEntity{
     /**
      * Id: ID
      */
-    public void setId(java.lang.Integer value){
+    public final void setId(java.lang.Integer value){
         if(onPropSet(PROP_ID_id,value)){
             this._id = value;
             internalClearRefs(PROP_ID_id);
@@ -457,7 +457,7 @@ public class _LitemallAdmin extends DynamicOrmEntity{
     /**
      * 管理员名称: USERNAME
      */
-    public java.lang.String getUsername(){
+    public final java.lang.String getUsername(){
          onPropGet(PROP_ID_username);
          return _username;
     }
@@ -465,7 +465,7 @@ public class _LitemallAdmin extends DynamicOrmEntity{
     /**
      * 管理员名称: USERNAME
      */
-    public void setUsername(java.lang.String value){
+    public final void setUsername(java.lang.String value){
         if(onPropSet(PROP_ID_username,value)){
             this._username = value;
             internalClearRefs(PROP_ID_username);
@@ -476,7 +476,7 @@ public class _LitemallAdmin extends DynamicOrmEntity{
     /**
      * 管理员密码: PASSWORD
      */
-    public java.lang.String getPassword(){
+    public final java.lang.String getPassword(){
          onPropGet(PROP_ID_password);
          return _password;
     }
@@ -484,7 +484,7 @@ public class _LitemallAdmin extends DynamicOrmEntity{
     /**
      * 管理员密码: PASSWORD
      */
-    public void setPassword(java.lang.String value){
+    public final void setPassword(java.lang.String value){
         if(onPropSet(PROP_ID_password,value)){
             this._password = value;
             internalClearRefs(PROP_ID_password);
@@ -495,7 +495,7 @@ public class _LitemallAdmin extends DynamicOrmEntity{
     /**
      * 最近一次登录IP地址: LAST_LOGIN_IP
      */
-    public java.lang.String getLastLoginIp(){
+    public final java.lang.String getLastLoginIp(){
          onPropGet(PROP_ID_lastLoginIp);
          return _lastLoginIp;
     }
@@ -503,7 +503,7 @@ public class _LitemallAdmin extends DynamicOrmEntity{
     /**
      * 最近一次登录IP地址: LAST_LOGIN_IP
      */
-    public void setLastLoginIp(java.lang.String value){
+    public final void setLastLoginIp(java.lang.String value){
         if(onPropSet(PROP_ID_lastLoginIp,value)){
             this._lastLoginIp = value;
             internalClearRefs(PROP_ID_lastLoginIp);
@@ -514,7 +514,7 @@ public class _LitemallAdmin extends DynamicOrmEntity{
     /**
      * 最近一次登录时间: LAST_LOGIN_TIME
      */
-    public java.time.LocalDateTime getLastLoginTime(){
+    public final java.time.LocalDateTime getLastLoginTime(){
          onPropGet(PROP_ID_lastLoginTime);
          return _lastLoginTime;
     }
@@ -522,7 +522,7 @@ public class _LitemallAdmin extends DynamicOrmEntity{
     /**
      * 最近一次登录时间: LAST_LOGIN_TIME
      */
-    public void setLastLoginTime(java.time.LocalDateTime value){
+    public final void setLastLoginTime(java.time.LocalDateTime value){
         if(onPropSet(PROP_ID_lastLoginTime,value)){
             this._lastLoginTime = value;
             internalClearRefs(PROP_ID_lastLoginTime);
@@ -533,7 +533,7 @@ public class _LitemallAdmin extends DynamicOrmEntity{
     /**
      * 头像图片: AVATAR
      */
-    public java.lang.String getAvatar(){
+    public final java.lang.String getAvatar(){
          onPropGet(PROP_ID_avatar);
          return _avatar;
     }
@@ -541,7 +541,7 @@ public class _LitemallAdmin extends DynamicOrmEntity{
     /**
      * 头像图片: AVATAR
      */
-    public void setAvatar(java.lang.String value){
+    public final void setAvatar(java.lang.String value){
         if(onPropSet(PROP_ID_avatar,value)){
             this._avatar = value;
             internalClearRefs(PROP_ID_avatar);
@@ -552,7 +552,7 @@ public class _LitemallAdmin extends DynamicOrmEntity{
     /**
      * 创建时间: ADD_TIME
      */
-    public java.time.LocalDateTime getAddTime(){
+    public final java.time.LocalDateTime getAddTime(){
          onPropGet(PROP_ID_addTime);
          return _addTime;
     }
@@ -560,7 +560,7 @@ public class _LitemallAdmin extends DynamicOrmEntity{
     /**
      * 创建时间: ADD_TIME
      */
-    public void setAddTime(java.time.LocalDateTime value){
+    public final void setAddTime(java.time.LocalDateTime value){
         if(onPropSet(PROP_ID_addTime,value)){
             this._addTime = value;
             internalClearRefs(PROP_ID_addTime);
@@ -571,7 +571,7 @@ public class _LitemallAdmin extends DynamicOrmEntity{
     /**
      * 更新时间: UPDATE_TIME
      */
-    public java.time.LocalDateTime getUpdateTime(){
+    public final java.time.LocalDateTime getUpdateTime(){
          onPropGet(PROP_ID_updateTime);
          return _updateTime;
     }
@@ -579,7 +579,7 @@ public class _LitemallAdmin extends DynamicOrmEntity{
     /**
      * 更新时间: UPDATE_TIME
      */
-    public void setUpdateTime(java.time.LocalDateTime value){
+    public final void setUpdateTime(java.time.LocalDateTime value){
         if(onPropSet(PROP_ID_updateTime,value)){
             this._updateTime = value;
             internalClearRefs(PROP_ID_updateTime);
@@ -590,7 +590,7 @@ public class _LitemallAdmin extends DynamicOrmEntity{
     /**
      * 逻辑删除: DELETED
      */
-    public java.lang.Boolean getDeleted(){
+    public final java.lang.Boolean getDeleted(){
          onPropGet(PROP_ID_deleted);
          return _deleted;
     }
@@ -598,7 +598,7 @@ public class _LitemallAdmin extends DynamicOrmEntity{
     /**
      * 逻辑删除: DELETED
      */
-    public void setDeleted(java.lang.Boolean value){
+    public final void setDeleted(java.lang.Boolean value){
         if(onPropSet(PROP_ID_deleted,value)){
             this._deleted = value;
             internalClearRefs(PROP_ID_deleted);
@@ -609,7 +609,7 @@ public class _LitemallAdmin extends DynamicOrmEntity{
     /**
      * 角色列表: ROLE_IDS
      */
-    public java.lang.String getRoleIds(){
+    public final java.lang.String getRoleIds(){
          onPropGet(PROP_ID_roleIds);
          return _roleIds;
     }
@@ -617,7 +617,7 @@ public class _LitemallAdmin extends DynamicOrmEntity{
     /**
      * 角色列表: ROLE_IDS
      */
-    public void setRoleIds(java.lang.String value){
+    public final void setRoleIds(java.lang.String value){
         if(onPropSet(PROP_ID_roleIds,value)){
             this._roleIds = value;
             internalClearRefs(PROP_ID_roleIds);

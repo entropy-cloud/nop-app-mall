@@ -348,7 +348,7 @@ public class _LitemallNotice extends DynamicOrmEntity{
     /**
      * Id: ID
      */
-    public java.lang.Integer getId(){
+    public final java.lang.Integer getId(){
          onPropGet(PROP_ID_id);
          return _id;
     }
@@ -356,7 +356,7 @@ public class _LitemallNotice extends DynamicOrmEntity{
     /**
      * Id: ID
      */
-    public void setId(java.lang.Integer value){
+    public final void setId(java.lang.Integer value){
         if(onPropSet(PROP_ID_id,value)){
             this._id = value;
             internalClearRefs(PROP_ID_id);
@@ -367,7 +367,7 @@ public class _LitemallNotice extends DynamicOrmEntity{
     /**
      * 通知标题: TITLE
      */
-    public java.lang.String getTitle(){
+    public final java.lang.String getTitle(){
          onPropGet(PROP_ID_title);
          return _title;
     }
@@ -375,7 +375,7 @@ public class _LitemallNotice extends DynamicOrmEntity{
     /**
      * 通知标题: TITLE
      */
-    public void setTitle(java.lang.String value){
+    public final void setTitle(java.lang.String value){
         if(onPropSet(PROP_ID_title,value)){
             this._title = value;
             internalClearRefs(PROP_ID_title);
@@ -386,7 +386,7 @@ public class _LitemallNotice extends DynamicOrmEntity{
     /**
      * 通知内容: CONTENT
      */
-    public java.lang.String getContent(){
+    public final java.lang.String getContent(){
          onPropGet(PROP_ID_content);
          return _content;
     }
@@ -394,7 +394,7 @@ public class _LitemallNotice extends DynamicOrmEntity{
     /**
      * 通知内容: CONTENT
      */
-    public void setContent(java.lang.String value){
+    public final void setContent(java.lang.String value){
         if(onPropSet(PROP_ID_content,value)){
             this._content = value;
             internalClearRefs(PROP_ID_content);
@@ -405,7 +405,7 @@ public class _LitemallNotice extends DynamicOrmEntity{
     /**
      * 创建通知的管理员ID: ADMIN_ID
      */
-    public java.lang.Integer getAdminId(){
+    public final java.lang.Integer getAdminId(){
          onPropGet(PROP_ID_adminId);
          return _adminId;
     }
@@ -413,7 +413,7 @@ public class _LitemallNotice extends DynamicOrmEntity{
     /**
      * 创建通知的管理员ID: ADMIN_ID
      */
-    public void setAdminId(java.lang.Integer value){
+    public final void setAdminId(java.lang.Integer value){
         if(onPropSet(PROP_ID_adminId,value)){
             this._adminId = value;
             internalClearRefs(PROP_ID_adminId);
@@ -424,7 +424,7 @@ public class _LitemallNotice extends DynamicOrmEntity{
     /**
      * 创建时间: ADD_TIME
      */
-    public java.time.LocalDateTime getAddTime(){
+    public final java.time.LocalDateTime getAddTime(){
          onPropGet(PROP_ID_addTime);
          return _addTime;
     }
@@ -432,7 +432,7 @@ public class _LitemallNotice extends DynamicOrmEntity{
     /**
      * 创建时间: ADD_TIME
      */
-    public void setAddTime(java.time.LocalDateTime value){
+    public final void setAddTime(java.time.LocalDateTime value){
         if(onPropSet(PROP_ID_addTime,value)){
             this._addTime = value;
             internalClearRefs(PROP_ID_addTime);
@@ -443,7 +443,7 @@ public class _LitemallNotice extends DynamicOrmEntity{
     /**
      * 更新时间: UPDATE_TIME
      */
-    public java.time.LocalDateTime getUpdateTime(){
+    public final java.time.LocalDateTime getUpdateTime(){
          onPropGet(PROP_ID_updateTime);
          return _updateTime;
     }
@@ -451,7 +451,7 @@ public class _LitemallNotice extends DynamicOrmEntity{
     /**
      * 更新时间: UPDATE_TIME
      */
-    public void setUpdateTime(java.time.LocalDateTime value){
+    public final void setUpdateTime(java.time.LocalDateTime value){
         if(onPropSet(PROP_ID_updateTime,value)){
             this._updateTime = value;
             internalClearRefs(PROP_ID_updateTime);
@@ -462,7 +462,7 @@ public class _LitemallNotice extends DynamicOrmEntity{
     /**
      * 逻辑删除: DELETED
      */
-    public java.lang.Boolean getDeleted(){
+    public final java.lang.Boolean getDeleted(){
          onPropGet(PROP_ID_deleted);
          return _deleted;
     }
@@ -470,7 +470,7 @@ public class _LitemallNotice extends DynamicOrmEntity{
     /**
      * 逻辑删除: DELETED
      */
-    public void setDeleted(java.lang.Boolean value){
+    public final void setDeleted(java.lang.Boolean value){
         if(onPropSet(PROP_ID_deleted,value)){
             this._deleted = value;
             internalClearRefs(PROP_ID_deleted);

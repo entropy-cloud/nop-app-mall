@@ -351,7 +351,7 @@ public class _LitemallRole extends DynamicOrmEntity{
     /**
      * Id: ID
      */
-    public java.lang.Integer getId(){
+    public final java.lang.Integer getId(){
          onPropGet(PROP_ID_id);
          return _id;
     }
@@ -359,7 +359,7 @@ public class _LitemallRole extends DynamicOrmEntity{
     /**
      * Id: ID
      */
-    public void setId(java.lang.Integer value){
+    public final void setId(java.lang.Integer value){
         if(onPropSet(PROP_ID_id,value)){
             this._id = value;
             internalClearRefs(PROP_ID_id);
@@ -370,7 +370,7 @@ public class _LitemallRole extends DynamicOrmEntity{
     /**
      * 角色名称: NAME
      */
-    public java.lang.String getName(){
+    public final java.lang.String getName(){
          onPropGet(PROP_ID_name);
          return _name;
     }
@@ -378,7 +378,7 @@ public class _LitemallRole extends DynamicOrmEntity{
     /**
      * 角色名称: NAME
      */
-    public void setName(java.lang.String value){
+    public final void setName(java.lang.String value){
         if(onPropSet(PROP_ID_name,value)){
             this._name = value;
             internalClearRefs(PROP_ID_name);
@@ -389,7 +389,7 @@ public class _LitemallRole extends DynamicOrmEntity{
     /**
      * 角色描述: DESC
      */
-    public java.lang.String getDesc(){
+    public final java.lang.String getDesc(){
          onPropGet(PROP_ID_desc);
          return _desc;
     }
@@ -397,7 +397,7 @@ public class _LitemallRole extends DynamicOrmEntity{
     /**
      * 角色描述: DESC
      */
-    public void setDesc(java.lang.String value){
+    public final void setDesc(java.lang.String value){
         if(onPropSet(PROP_ID_desc,value)){
             this._desc = value;
             internalClearRefs(PROP_ID_desc);
@@ -408,7 +408,7 @@ public class _LitemallRole extends DynamicOrmEntity{
     /**
      * 是否启用: ENABLED
      */
-    public java.lang.Boolean getEnabled(){
+    public final java.lang.Boolean getEnabled(){
          onPropGet(PROP_ID_enabled);
          return _enabled;
     }
@@ -416,7 +416,7 @@ public class _LitemallRole extends DynamicOrmEntity{
     /**
      * 是否启用: ENABLED
      */
-    public void setEnabled(java.lang.Boolean value){
+    public final void setEnabled(java.lang.Boolean value){
         if(onPropSet(PROP_ID_enabled,value)){
             this._enabled = value;
             internalClearRefs(PROP_ID_enabled);
@@ -427,7 +427,7 @@ public class _LitemallRole extends DynamicOrmEntity{
     /**
      * 创建时间: ADD_TIME
      */
-    public java.time.LocalDateTime getAddTime(){
+    public final java.time.LocalDateTime getAddTime(){
          onPropGet(PROP_ID_addTime);
          return _addTime;
     }
@@ -435,7 +435,7 @@ public class _LitemallRole extends DynamicOrmEntity{
     /**
      * 创建时间: ADD_TIME
      */
-    public void setAddTime(java.time.LocalDateTime value){
+    public final void setAddTime(java.time.LocalDateTime value){
         if(onPropSet(PROP_ID_addTime,value)){
             this._addTime = value;
             internalClearRefs(PROP_ID_addTime);
@@ -446,7 +446,7 @@ public class _LitemallRole extends DynamicOrmEntity{
     /**
      * 更新时间: UPDATE_TIME
      */
-    public java.time.LocalDateTime getUpdateTime(){
+    public final java.time.LocalDateTime getUpdateTime(){
          onPropGet(PROP_ID_updateTime);
          return _updateTime;
     }
@@ -454,7 +454,7 @@ public class _LitemallRole extends DynamicOrmEntity{
     /**
      * 更新时间: UPDATE_TIME
      */
-    public void setUpdateTime(java.time.LocalDateTime value){
+    public final void setUpdateTime(java.time.LocalDateTime value){
         if(onPropSet(PROP_ID_updateTime,value)){
             this._updateTime = value;
             internalClearRefs(PROP_ID_updateTime);
@@ -465,7 +465,7 @@ public class _LitemallRole extends DynamicOrmEntity{
     /**
      * 逻辑删除: DELETED
      */
-    public java.lang.Boolean getDeleted(){
+    public final java.lang.Boolean getDeleted(){
          onPropGet(PROP_ID_deleted);
          return _deleted;
     }
@@ -473,7 +473,7 @@ public class _LitemallRole extends DynamicOrmEntity{
     /**
      * 逻辑删除: DELETED
      */
-    public void setDeleted(java.lang.Boolean value){
+    public final void setDeleted(java.lang.Boolean value){
         if(onPropSet(PROP_ID_deleted,value)){
             this._deleted = value;
             internalClearRefs(PROP_ID_deleted);
@@ -487,15 +487,15 @@ public class _LitemallRole extends DynamicOrmEntity{
     /**
      * 。 refPropName: role, keyProp: {rel.keyProp}
      */
-    public IOrmEntitySet<app.mall.dao.entity.LitemallUserRole> getUserMappings(){
+    public final IOrmEntitySet<app.mall.dao.entity.LitemallUserRole> getUserMappings(){
        return _userMappings;
     }
        
-        public List<app.mall.dao.entity.LitemallUser> getRelatedUserList(){
+        public final List<app.mall.dao.entity.LitemallUser> getRelatedUserList(){
             return (List<app.mall.dao.entity.LitemallUser>)io.nop.orm.support.OrmEntityHelper.getRefProps(getUserMappings(),"user");
         }
 
-        public List<String> getRelatedUserList_ids(){
+        public final List<String> getRelatedUserList_ids(){
             return io.nop.orm.support.OrmEntityHelper.getRefIds(getUserMappings(),"user");
         }
 
@@ -504,7 +504,7 @@ public class _LitemallRole extends DynamicOrmEntity{
         }
     
 
-    public String getRelatedUserList_label(){
+    public final String getRelatedUserList_label(){
         return io.nop.orm.support.OrmEntityHelper.getLabelForRefProps(getUserMappings(),"user");
     }
 

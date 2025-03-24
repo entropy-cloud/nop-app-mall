@@ -171,7 +171,7 @@ public class _NopAuthUserEx extends io.nop.auth.dao.entity.NopAuthUser{
     /**
      * 关联用户ID: MALL_USER_ID
      */
-    public java.lang.Integer getMallUserId(){
+    public final java.lang.Integer getMallUserId(){
          onPropGet(PROP_ID_mallUserId);
          return _mallUserId;
     }
@@ -179,7 +179,7 @@ public class _NopAuthUserEx extends io.nop.auth.dao.entity.NopAuthUser{
     /**
      * 关联用户ID: MALL_USER_ID
      */
-    public void setMallUserId(java.lang.Integer value){
+    public final void setMallUserId(java.lang.Integer value){
         if(onPropSet(PROP_ID_mallUserId,value)){
             this._mallUserId = value;
             internalClearRefs(PROP_ID_mallUserId);
@@ -190,11 +190,11 @@ public class _NopAuthUserEx extends io.nop.auth.dao.entity.NopAuthUser{
     /**
      * 关联用户
      */
-    public app.mall.dao.entity.LitemallUser getMallUser(){
+    public final app.mall.dao.entity.LitemallUser getMallUser(){
        return (app.mall.dao.entity.LitemallUser)internalGetRefEntity(PROP_NAME_mallUser);
     }
 
-    public void setMallUser(app.mall.dao.entity.LitemallUser refEntity){
+    public final void setMallUser(app.mall.dao.entity.LitemallUser refEntity){
    
            if(refEntity == null){
            

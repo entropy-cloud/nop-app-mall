@@ -19,19 +19,19 @@
             <cols>
 
                 <!--Id-->
-                <col id="id" mandatory="true" sortable="true"/>
+                <col id="id" mandatory="true" ui:number="true" sortable="true"/>
 
                 <!--商品ID-->
-                <col id="goodsId" mandatory="true" sortable="true"/>
+                <col id="goodsId" mandatory="true" ui:number="true" sortable="true"/>
 
                 <!--商品规格值-->
                 <col id="specifications" mandatory="true" sortable="true"/>
 
                 <!--商品货品价格-->
-                <col id="price" mandatory="true" sortable="true"/>
+                <col id="price" mandatory="true" ui:number="true" sortable="true"/>
 
                 <!--商品货品数量-->
-                <col id="number" mandatory="true" sortable="true"/>
+                <col id="number" mandatory="true" ui:number="true" sortable="true"/>
 
                 <!--商品货品图片-->
                 <col id="url" sortable="true"/>

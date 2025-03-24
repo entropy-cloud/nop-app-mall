@@ -19,7 +19,7 @@
             <cols>
 
                 <!--Id-->
-                <col id="id" mandatory="true" sortable="true"/>
+                <col id="id" mandatory="true" ui:number="true" sortable="true"/>
 
                 <!--文件的唯一索引-->
                 <col id="key" mandatory="true" sortable="true"/>
@@ -31,7 +31,7 @@
                 <col id="type" mandatory="true" sortable="true"/>
 
                 <!--文件大小-->
-                <col id="size" mandatory="true" sortable="true"/>
+                <col id="size" mandatory="true" ui:number="true" sortable="true"/>
 
                 <!--文件访问链接-->
                 <col id="url" sortable="true"/>

@@ -19,7 +19,7 @@
             <cols>
 
                 <!--Id-->
-                <col id="id" mandatory="true" sortable="true"/>
+                <col id="id" mandatory="true" ui:number="true" sortable="true"/>
 
                 <!--专题标题-->
                 <col id="title" mandatory="true" sortable="true"/>
@@ -31,7 +31,7 @@
                 <col id="content" sortable="true"/>
 
                 <!--专题相关商品最低价-->
-                <col id="price" sortable="true"/>
+                <col id="price" ui:number="true" sortable="true"/>
 
                 <!--专题阅读量-->
                 <col id="readCount" sortable="true"/>
@@ -40,7 +40,7 @@
                 <col id="picUrl" sortable="true"/>
 
                 <!--排序-->
-                <col id="sortOrder" sortable="true"/>
+                <col id="sortOrder" ui:number="true" sortable="true"/>
 
                 <!--专题相关商品-->
                 <col id="goods" sortable="true"/>

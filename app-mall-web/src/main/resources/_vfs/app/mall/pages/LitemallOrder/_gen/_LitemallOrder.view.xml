@@ -19,19 +19,19 @@
             <cols>
 
                 <!--Id-->
-                <col id="id" mandatory="true" sortable="true"/>
+                <col id="id" mandatory="true" ui:number="true" sortable="true"/>
 
                 <!--用户ID-->
-                <col id="userId" mandatory="true" sortable="true"/>
+                <col id="userId" mandatory="true" ui:number="true" sortable="true"/>
 
                 <!--订单编号-->
                 <col id="orderSn" mandatory="true" sortable="true"/>
 
                 <!--订单状态-->
-                <col id="orderStatus" mandatory="true" sortable="true"/>
+                <col id="orderStatus" mandatory="true" ui:number="true" sortable="true"/>
 
                 <!--售后状态-->
-                <col id="aftersaleStatus" sortable="true"/>
+                <col id="aftersaleStatus" ui:number="true" sortable="true"/>
 
                 <!--收货人名称-->
                 <col id="consignee" mandatory="true" sortable="true"/>
@@ -46,25 +46,25 @@
                 <col id="message" mandatory="true" sortable="true"/>
 
                 <!--商品总费用-->
-                <col id="goodsPrice" mandatory="true" sortable="true"/>
+                <col id="goodsPrice" mandatory="true" ui:number="true" sortable="true"/>
 
                 <!--配送费用-->
-                <col id="freightPrice" mandatory="true" sortable="true"/>
+                <col id="freightPrice" mandatory="true" ui:number="true" sortable="true"/>
 
                 <!--优惠券减免-->
-                <col id="couponPrice" mandatory="true" sortable="true"/>
+                <col id="couponPrice" mandatory="true" ui:number="true" sortable="true"/>
 
                 <!--用户积分减免-->
-                <col id="integralPrice" mandatory="true" sortable="true"/>
+                <col id="integralPrice" mandatory="true" ui:number="true" sortable="true"/>
 
                 <!--团购优惠价减免-->
-                <col id="grouponPrice" mandatory="true" sortable="true"/>
+                <col id="grouponPrice" mandatory="true" ui:number="true" sortable="true"/>
 
                 <!--订单费用-->
-                <col id="orderPrice" mandatory="true" sortable="true"/>
+                <col id="orderPrice" mandatory="true" ui:number="true" sortable="true"/>
 
                 <!--实付费用-->
-                <col id="actualPrice" mandatory="true" sortable="true"/>
+                <col id="actualPrice" mandatory="true" ui:number="true" sortable="true"/>
 
                 <!--微信付款编号-->
                 <col id="payId" sortable="true"/>
@@ -82,7 +82,7 @@
                 <col id="shipTime" sortable="true"/>
 
                 <!--实际退款金额-->
-                <col id="refundAmount" sortable="true"/>
+                <col id="refundAmount" ui:number="true" sortable="true"/>
 
                 <!--退款方式-->
                 <col id="refundType" sortable="true"/>
@@ -97,7 +97,7 @@
                 <col id="confirmTime" sortable="true"/>
 
                 <!--待评价订单商品数量-->
-                <col id="comments" sortable="true"/>
+                <col id="comments" ui:number="true" sortable="true"/>
 
                 <!--订单关闭时间-->
                 <col id="endTime" sortable="true"/>

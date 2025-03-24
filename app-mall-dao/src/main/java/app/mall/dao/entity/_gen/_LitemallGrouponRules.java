@@ -474,7 +474,7 @@ public class _LitemallGrouponRules extends DynamicOrmEntity{
     /**
      * Id: ID
      */
-    public java.lang.Integer getId(){
+    public final java.lang.Integer getId(){
          onPropGet(PROP_ID_id);
          return _id;
     }
@@ -482,7 +482,7 @@ public class _LitemallGrouponRules extends DynamicOrmEntity{
     /**
      * Id: ID
      */
-    public void setId(java.lang.Integer value){
+    public final void setId(java.lang.Integer value){
         if(onPropSet(PROP_ID_id,value)){
             this._id = value;
             internalClearRefs(PROP_ID_id);
@@ -493,7 +493,7 @@ public class _LitemallGrouponRules extends DynamicOrmEntity{
     /**
      * 商品ID: GOODS_ID
      */
-    public java.lang.Integer getGoodsId(){
+    public final java.lang.Integer getGoodsId(){
          onPropGet(PROP_ID_goodsId);
          return _goodsId;
     }
@@ -501,7 +501,7 @@ public class _LitemallGrouponRules extends DynamicOrmEntity{
     /**
      * 商品ID: GOODS_ID
      */
-    public void setGoodsId(java.lang.Integer value){
+    public final void setGoodsId(java.lang.Integer value){
         if(onPropSet(PROP_ID_goodsId,value)){
             this._goodsId = value;
             internalClearRefs(PROP_ID_goodsId);
@@ -512,7 +512,7 @@ public class _LitemallGrouponRules extends DynamicOrmEntity{
     /**
      * 商品名称: GOODS_NAME
      */
-    public java.lang.String getGoodsName(){
+    public final java.lang.String getGoodsName(){
          onPropGet(PROP_ID_goodsName);
          return _goodsName;
     }
@@ -520,7 +520,7 @@ public class _LitemallGrouponRules extends DynamicOrmEntity{
     /**
      * 商品名称: GOODS_NAME
      */
-    public void setGoodsName(java.lang.String value){
+    public final void setGoodsName(java.lang.String value){
         if(onPropSet(PROP_ID_goodsName,value)){
             this._goodsName = value;
             internalClearRefs(PROP_ID_goodsName);
@@ -531,7 +531,7 @@ public class _LitemallGrouponRules extends DynamicOrmEntity{
     /**
      * 商品/货品图片: PIC_URL
      */
-    public java.lang.String getPicUrl(){
+    public final java.lang.String getPicUrl(){
          onPropGet(PROP_ID_picUrl);
          return _picUrl;
     }
@@ -539,7 +539,7 @@ public class _LitemallGrouponRules extends DynamicOrmEntity{
     /**
      * 商品/货品图片: PIC_URL
      */
-    public void setPicUrl(java.lang.String value){
+    public final void setPicUrl(java.lang.String value){
         if(onPropSet(PROP_ID_picUrl,value)){
             this._picUrl = value;
             internalClearRefs(PROP_ID_picUrl);
@@ -550,7 +550,7 @@ public class _LitemallGrouponRules extends DynamicOrmEntity{
     /**
      * 优惠金额: DISCOUNT
      */
-    public java.math.BigDecimal getDiscount(){
+    public final java.math.BigDecimal getDiscount(){
          onPropGet(PROP_ID_discount);
          return _discount;
     }
@@ -558,7 +558,7 @@ public class _LitemallGrouponRules extends DynamicOrmEntity{
     /**
      * 优惠金额: DISCOUNT
      */
-    public void setDiscount(java.math.BigDecimal value){
+    public final void setDiscount(java.math.BigDecimal value){
         if(onPropSet(PROP_ID_discount,value)){
             this._discount = value;
             internalClearRefs(PROP_ID_discount);
@@ -569,7 +569,7 @@ public class _LitemallGrouponRules extends DynamicOrmEntity{
     /**
      * 达到优惠条件的人数: DISCOUNT_MEMBER
      */
-    public java.lang.Integer getDiscountMember(){
+    public final java.lang.Integer getDiscountMember(){
          onPropGet(PROP_ID_discountMember);
          return _discountMember;
     }
@@ -577,7 +577,7 @@ public class _LitemallGrouponRules extends DynamicOrmEntity{
     /**
      * 达到优惠条件的人数: DISCOUNT_MEMBER
      */
-    public void setDiscountMember(java.lang.Integer value){
+    public final void setDiscountMember(java.lang.Integer value){
         if(onPropSet(PROP_ID_discountMember,value)){
             this._discountMember = value;
             internalClearRefs(PROP_ID_discountMember);
@@ -588,7 +588,7 @@ public class _LitemallGrouponRules extends DynamicOrmEntity{
     /**
      * 团购过期时间: EXPIRE_TIME
      */
-    public java.time.LocalDateTime getExpireTime(){
+    public final java.time.LocalDateTime getExpireTime(){
          onPropGet(PROP_ID_expireTime);
          return _expireTime;
     }
@@ -596,7 +596,7 @@ public class _LitemallGrouponRules extends DynamicOrmEntity{
     /**
      * 团购过期时间: EXPIRE_TIME
      */
-    public void setExpireTime(java.time.LocalDateTime value){
+    public final void setExpireTime(java.time.LocalDateTime value){
         if(onPropSet(PROP_ID_expireTime,value)){
             this._expireTime = value;
             internalClearRefs(PROP_ID_expireTime);
@@ -607,7 +607,7 @@ public class _LitemallGrouponRules extends DynamicOrmEntity{
     /**
      * 团购规则状态，正常上线则0，到期自动下线则1，管理手动下线则2: STATUS
      */
-    public java.lang.Short getStatus(){
+    public final java.lang.Short getStatus(){
          onPropGet(PROP_ID_status);
          return _status;
     }
@@ -615,7 +615,7 @@ public class _LitemallGrouponRules extends DynamicOrmEntity{
     /**
      * 团购规则状态，正常上线则0，到期自动下线则1，管理手动下线则2: STATUS
      */
-    public void setStatus(java.lang.Short value){
+    public final void setStatus(java.lang.Short value){
         if(onPropSet(PROP_ID_status,value)){
             this._status = value;
             internalClearRefs(PROP_ID_status);
@@ -626,7 +626,7 @@ public class _LitemallGrouponRules extends DynamicOrmEntity{
     /**
      * 创建时间: ADD_TIME
      */
-    public java.time.LocalDateTime getAddTime(){
+    public final java.time.LocalDateTime getAddTime(){
          onPropGet(PROP_ID_addTime);
          return _addTime;
     }
@@ -634,7 +634,7 @@ public class _LitemallGrouponRules extends DynamicOrmEntity{
     /**
      * 创建时间: ADD_TIME
      */
-    public void setAddTime(java.time.LocalDateTime value){
+    public final void setAddTime(java.time.LocalDateTime value){
         if(onPropSet(PROP_ID_addTime,value)){
             this._addTime = value;
             internalClearRefs(PROP_ID_addTime);
@@ -645,7 +645,7 @@ public class _LitemallGrouponRules extends DynamicOrmEntity{
     /**
      * 更新时间: UPDATE_TIME
      */
-    public java.time.LocalDateTime getUpdateTime(){
+    public final java.time.LocalDateTime getUpdateTime(){
          onPropGet(PROP_ID_updateTime);
          return _updateTime;
     }
@@ -653,7 +653,7 @@ public class _LitemallGrouponRules extends DynamicOrmEntity{
     /**
      * 更新时间: UPDATE_TIME
      */
-    public void setUpdateTime(java.time.LocalDateTime value){
+    public final void setUpdateTime(java.time.LocalDateTime value){
         if(onPropSet(PROP_ID_updateTime,value)){
             this._updateTime = value;
             internalClearRefs(PROP_ID_updateTime);
@@ -664,7 +664,7 @@ public class _LitemallGrouponRules extends DynamicOrmEntity{
     /**
      * 逻辑删除: DELETED
      */
-    public java.lang.Boolean getDeleted(){
+    public final java.lang.Boolean getDeleted(){
          onPropGet(PROP_ID_deleted);
          return _deleted;
     }
@@ -672,7 +672,7 @@ public class _LitemallGrouponRules extends DynamicOrmEntity{
     /**
      * 逻辑删除: DELETED
      */
-    public void setDeleted(java.lang.Boolean value){
+    public final void setDeleted(java.lang.Boolean value){
         if(onPropSet(PROP_ID_deleted,value)){
             this._deleted = value;
             internalClearRefs(PROP_ID_deleted);
@@ -683,11 +683,11 @@ public class _LitemallGrouponRules extends DynamicOrmEntity{
     /**
      * 订单
      */
-    public app.mall.dao.entity.LitemallGoods getGoods(){
+    public final app.mall.dao.entity.LitemallGoods getGoods(){
        return (app.mall.dao.entity.LitemallGoods)internalGetRefEntity(PROP_NAME_goods);
     }
 
-    public void setGoods(app.mall.dao.entity.LitemallGoods refEntity){
+    public final void setGoods(app.mall.dao.entity.LitemallGoods refEntity){
    
            if(refEntity == null){
            
@@ -712,7 +712,7 @@ public class _LitemallGrouponRules extends DynamicOrmEntity{
       
    }
 
-   public io.nop.orm.component.OrmFileComponent getPicUrlComponent(){
+   public final io.nop.orm.component.OrmFileComponent getPicUrlComponent(){
       if(_picUrlComponent == null){
           _picUrlComponent = new io.nop.orm.component.OrmFileComponent();
           _picUrlComponent.bindToEntity(this, COMPONENT_PROP_ID_MAP_picUrlComponent);

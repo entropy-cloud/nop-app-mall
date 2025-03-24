@@ -411,7 +411,7 @@ public class _LitemallBrand extends DynamicOrmEntity{
     /**
      * Id: ID
      */
-    public java.lang.Integer getId(){
+    public final java.lang.Integer getId(){
          onPropGet(PROP_ID_id);
          return _id;
     }
@@ -419,7 +419,7 @@ public class _LitemallBrand extends DynamicOrmEntity{
     /**
      * Id: ID
      */
-    public void setId(java.lang.Integer value){
+    public final void setId(java.lang.Integer value){
         if(onPropSet(PROP_ID_id,value)){
             this._id = value;
             internalClearRefs(PROP_ID_id);
@@ -430,7 +430,7 @@ public class _LitemallBrand extends DynamicOrmEntity{
     /**
      * 品牌商名称: NAME
      */
-    public java.lang.String getName(){
+    public final java.lang.String getName(){
          onPropGet(PROP_ID_name);
          return _name;
     }
@@ -438,7 +438,7 @@ public class _LitemallBrand extends DynamicOrmEntity{
     /**
      * 品牌商名称: NAME
      */
-    public void setName(java.lang.String value){
+    public final void setName(java.lang.String value){
         if(onPropSet(PROP_ID_name,value)){
             this._name = value;
             internalClearRefs(PROP_ID_name);
@@ -449,7 +449,7 @@ public class _LitemallBrand extends DynamicOrmEntity{
     /**
      * 品牌商图片: PIC_URL
      */
-    public java.lang.String getPicUrl(){
+    public final java.lang.String getPicUrl(){
          onPropGet(PROP_ID_picUrl);
          return _picUrl;
     }
@@ -457,7 +457,7 @@ public class _LitemallBrand extends DynamicOrmEntity{
     /**
      * 品牌商图片: PIC_URL
      */
-    public void setPicUrl(java.lang.String value){
+    public final void setPicUrl(java.lang.String value){
         if(onPropSet(PROP_ID_picUrl,value)){
             this._picUrl = value;
             internalClearRefs(PROP_ID_picUrl);
@@ -468,7 +468,7 @@ public class _LitemallBrand extends DynamicOrmEntity{
     /**
      * 品牌商简介: DESC
      */
-    public java.lang.String getDesc(){
+    public final java.lang.String getDesc(){
          onPropGet(PROP_ID_desc);
          return _desc;
     }
@@ -476,7 +476,7 @@ public class _LitemallBrand extends DynamicOrmEntity{
     /**
      * 品牌商简介: DESC
      */
-    public void setDesc(java.lang.String value){
+    public final void setDesc(java.lang.String value){
         if(onPropSet(PROP_ID_desc,value)){
             this._desc = value;
             internalClearRefs(PROP_ID_desc);
@@ -487,7 +487,7 @@ public class _LitemallBrand extends DynamicOrmEntity{
     /**
      * 排序: SORT_ORDER
      */
-    public java.lang.Byte getSortOrder(){
+    public final java.lang.Byte getSortOrder(){
          onPropGet(PROP_ID_sortOrder);
          return _sortOrder;
     }
@@ -495,7 +495,7 @@ public class _LitemallBrand extends DynamicOrmEntity{
     /**
      * 排序: SORT_ORDER
      */
-    public void setSortOrder(java.lang.Byte value){
+    public final void setSortOrder(java.lang.Byte value){
         if(onPropSet(PROP_ID_sortOrder,value)){
             this._sortOrder = value;
             internalClearRefs(PROP_ID_sortOrder);
@@ -506,7 +506,7 @@ public class _LitemallBrand extends DynamicOrmEntity{
     /**
      * 底价: FLOOR_PRICE
      */
-    public java.math.BigDecimal getFloorPrice(){
+    public final java.math.BigDecimal getFloorPrice(){
          onPropGet(PROP_ID_floorPrice);
          return _floorPrice;
     }
@@ -514,7 +514,7 @@ public class _LitemallBrand extends DynamicOrmEntity{
     /**
      * 底价: FLOOR_PRICE
      */
-    public void setFloorPrice(java.math.BigDecimal value){
+    public final void setFloorPrice(java.math.BigDecimal value){
         if(onPropSet(PROP_ID_floorPrice,value)){
             this._floorPrice = value;
             internalClearRefs(PROP_ID_floorPrice);
@@ -525,7 +525,7 @@ public class _LitemallBrand extends DynamicOrmEntity{
     /**
      * 创建时间: ADD_TIME
      */
-    public java.time.LocalDateTime getAddTime(){
+    public final java.time.LocalDateTime getAddTime(){
          onPropGet(PROP_ID_addTime);
          return _addTime;
     }
@@ -533,7 +533,7 @@ public class _LitemallBrand extends DynamicOrmEntity{
     /**
      * 创建时间: ADD_TIME
      */
-    public void setAddTime(java.time.LocalDateTime value){
+    public final void setAddTime(java.time.LocalDateTime value){
         if(onPropSet(PROP_ID_addTime,value)){
             this._addTime = value;
             internalClearRefs(PROP_ID_addTime);
@@ -544,7 +544,7 @@ public class _LitemallBrand extends DynamicOrmEntity{
     /**
      * 更新时间: UPDATE_TIME
      */
-    public java.time.LocalDateTime getUpdateTime(){
+    public final java.time.LocalDateTime getUpdateTime(){
          onPropGet(PROP_ID_updateTime);
          return _updateTime;
     }
@@ -552,7 +552,7 @@ public class _LitemallBrand extends DynamicOrmEntity{
     /**
      * 更新时间: UPDATE_TIME
      */
-    public void setUpdateTime(java.time.LocalDateTime value){
+    public final void setUpdateTime(java.time.LocalDateTime value){
         if(onPropSet(PROP_ID_updateTime,value)){
             this._updateTime = value;
             internalClearRefs(PROP_ID_updateTime);
@@ -563,7 +563,7 @@ public class _LitemallBrand extends DynamicOrmEntity{
     /**
      * 逻辑删除: DELETED
      */
-    public java.lang.Boolean getDeleted(){
+    public final java.lang.Boolean getDeleted(){
          onPropGet(PROP_ID_deleted);
          return _deleted;
     }
@@ -571,7 +571,7 @@ public class _LitemallBrand extends DynamicOrmEntity{
     /**
      * 逻辑删除: DELETED
      */
-    public void setDeleted(java.lang.Boolean value){
+    public final void setDeleted(java.lang.Boolean value){
         if(onPropSet(PROP_ID_deleted,value)){
             this._deleted = value;
             internalClearRefs(PROP_ID_deleted);
@@ -588,7 +588,7 @@ public class _LitemallBrand extends DynamicOrmEntity{
       
    }
 
-   public io.nop.orm.component.OrmFileComponent getPicUrlComponent(){
+   public final io.nop.orm.component.OrmFileComponent getPicUrlComponent(){
       if(_picUrlComponent == null){
           _picUrlComponent = new io.nop.orm.component.OrmFileComponent();
           _picUrlComponent.bindToEntity(this, COMPONENT_PROP_ID_MAP_picUrlComponent);

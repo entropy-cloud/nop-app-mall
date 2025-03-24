@@ -468,7 +468,7 @@ public class _LitemallLog extends DynamicOrmEntity{
     /**
      * Id: ID
      */
-    public java.lang.Integer getId(){
+    public final java.lang.Integer getId(){
          onPropGet(PROP_ID_id);
          return _id;
     }
@@ -476,7 +476,7 @@ public class _LitemallLog extends DynamicOrmEntity{
     /**
      * Id: ID
      */
-    public void setId(java.lang.Integer value){
+    public final void setId(java.lang.Integer value){
         if(onPropSet(PROP_ID_id,value)){
             this._id = value;
             internalClearRefs(PROP_ID_id);
@@ -487,7 +487,7 @@ public class _LitemallLog extends DynamicOrmEntity{
     /**
      * 管理员: ADMIN
      */
-    public java.lang.String getAdmin(){
+    public final java.lang.String getAdmin(){
          onPropGet(PROP_ID_admin);
          return _admin;
     }
@@ -495,7 +495,7 @@ public class _LitemallLog extends DynamicOrmEntity{
     /**
      * 管理员: ADMIN
      */
-    public void setAdmin(java.lang.String value){
+    public final void setAdmin(java.lang.String value){
         if(onPropSet(PROP_ID_admin,value)){
             this._admin = value;
             internalClearRefs(PROP_ID_admin);
@@ -506,7 +506,7 @@ public class _LitemallLog extends DynamicOrmEntity{
     /**
      * 管理员地址: IP
      */
-    public java.lang.String getIp(){
+    public final java.lang.String getIp(){
          onPropGet(PROP_ID_ip);
          return _ip;
     }
@@ -514,7 +514,7 @@ public class _LitemallLog extends DynamicOrmEntity{
     /**
      * 管理员地址: IP
      */
-    public void setIp(java.lang.String value){
+    public final void setIp(java.lang.String value){
         if(onPropSet(PROP_ID_ip,value)){
             this._ip = value;
             internalClearRefs(PROP_ID_ip);
@@ -525,7 +525,7 @@ public class _LitemallLog extends DynamicOrmEntity{
     /**
      * 操作分类: TYPE
      */
-    public java.lang.Integer getType(){
+    public final java.lang.Integer getType(){
          onPropGet(PROP_ID_type);
          return _type;
     }
@@ -533,7 +533,7 @@ public class _LitemallLog extends DynamicOrmEntity{
     /**
      * 操作分类: TYPE
      */
-    public void setType(java.lang.Integer value){
+    public final void setType(java.lang.Integer value){
         if(onPropSet(PROP_ID_type,value)){
             this._type = value;
             internalClearRefs(PROP_ID_type);
@@ -544,7 +544,7 @@ public class _LitemallLog extends DynamicOrmEntity{
     /**
      * 操作动作: ACTION
      */
-    public java.lang.String getAction(){
+    public final java.lang.String getAction(){
          onPropGet(PROP_ID_action);
          return _action;
     }
@@ -552,7 +552,7 @@ public class _LitemallLog extends DynamicOrmEntity{
     /**
      * 操作动作: ACTION
      */
-    public void setAction(java.lang.String value){
+    public final void setAction(java.lang.String value){
         if(onPropSet(PROP_ID_action,value)){
             this._action = value;
             internalClearRefs(PROP_ID_action);
@@ -563,7 +563,7 @@ public class _LitemallLog extends DynamicOrmEntity{
     /**
      * 操作状态: STATUS
      */
-    public java.lang.Boolean getStatus(){
+    public final java.lang.Boolean getStatus(){
          onPropGet(PROP_ID_status);
          return _status;
     }
@@ -571,7 +571,7 @@ public class _LitemallLog extends DynamicOrmEntity{
     /**
      * 操作状态: STATUS
      */
-    public void setStatus(java.lang.Boolean value){
+    public final void setStatus(java.lang.Boolean value){
         if(onPropSet(PROP_ID_status,value)){
             this._status = value;
             internalClearRefs(PROP_ID_status);
@@ -582,7 +582,7 @@ public class _LitemallLog extends DynamicOrmEntity{
     /**
      * 操作结果/消息: RESULT
      */
-    public java.lang.String getResult(){
+    public final java.lang.String getResult(){
          onPropGet(PROP_ID_result);
          return _result;
     }
@@ -590,7 +590,7 @@ public class _LitemallLog extends DynamicOrmEntity{
     /**
      * 操作结果/消息: RESULT
      */
-    public void setResult(java.lang.String value){
+    public final void setResult(java.lang.String value){
         if(onPropSet(PROP_ID_result,value)){
             this._result = value;
             internalClearRefs(PROP_ID_result);
@@ -601,7 +601,7 @@ public class _LitemallLog extends DynamicOrmEntity{
     /**
      * 补充信息: COMMENT
      */
-    public java.lang.String getComment(){
+    public final java.lang.String getComment(){
          onPropGet(PROP_ID_comment);
          return _comment;
     }
@@ -609,7 +609,7 @@ public class _LitemallLog extends DynamicOrmEntity{
     /**
      * 补充信息: COMMENT
      */
-    public void setComment(java.lang.String value){
+    public final void setComment(java.lang.String value){
         if(onPropSet(PROP_ID_comment,value)){
             this._comment = value;
             internalClearRefs(PROP_ID_comment);
@@ -620,7 +620,7 @@ public class _LitemallLog extends DynamicOrmEntity{
     /**
      * 创建时间: ADD_TIME
      */
-    public java.time.LocalDateTime getAddTime(){
+    public final java.time.LocalDateTime getAddTime(){
          onPropGet(PROP_ID_addTime);
          return _addTime;
     }
@@ -628,7 +628,7 @@ public class _LitemallLog extends DynamicOrmEntity{
     /**
      * 创建时间: ADD_TIME
      */
-    public void setAddTime(java.time.LocalDateTime value){
+    public final void setAddTime(java.time.LocalDateTime value){
         if(onPropSet(PROP_ID_addTime,value)){
             this._addTime = value;
             internalClearRefs(PROP_ID_addTime);
@@ -639,7 +639,7 @@ public class _LitemallLog extends DynamicOrmEntity{
     /**
      * 更新时间: UPDATE_TIME
      */
-    public java.time.LocalDateTime getUpdateTime(){
+    public final java.time.LocalDateTime getUpdateTime(){
          onPropGet(PROP_ID_updateTime);
          return _updateTime;
     }
@@ -647,7 +647,7 @@ public class _LitemallLog extends DynamicOrmEntity{
     /**
      * 更新时间: UPDATE_TIME
      */
-    public void setUpdateTime(java.time.LocalDateTime value){
+    public final void setUpdateTime(java.time.LocalDateTime value){
         if(onPropSet(PROP_ID_updateTime,value)){
             this._updateTime = value;
             internalClearRefs(PROP_ID_updateTime);
@@ -658,7 +658,7 @@ public class _LitemallLog extends DynamicOrmEntity{
     /**
      * 逻辑删除: DELETED
      */
-    public java.lang.Boolean getDeleted(){
+    public final java.lang.Boolean getDeleted(){
          onPropGet(PROP_ID_deleted);
          return _deleted;
     }
@@ -666,7 +666,7 @@ public class _LitemallLog extends DynamicOrmEntity{
     /**
      * 逻辑删除: DELETED
      */
-    public void setDeleted(java.lang.Boolean value){
+    public final void setDeleted(java.lang.Boolean value){
         if(onPropSet(PROP_ID_deleted,value)){
             this._deleted = value;
             internalClearRefs(PROP_ID_deleted);

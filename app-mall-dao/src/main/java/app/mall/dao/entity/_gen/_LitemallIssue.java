@@ -318,7 +318,7 @@ public class _LitemallIssue extends DynamicOrmEntity{
     /**
      * Id: ID
      */
-    public java.lang.Integer getId(){
+    public final java.lang.Integer getId(){
          onPropGet(PROP_ID_id);
          return _id;
     }
@@ -326,7 +326,7 @@ public class _LitemallIssue extends DynamicOrmEntity{
     /**
      * Id: ID
      */
-    public void setId(java.lang.Integer value){
+    public final void setId(java.lang.Integer value){
         if(onPropSet(PROP_ID_id,value)){
             this._id = value;
             internalClearRefs(PROP_ID_id);
@@ -337,7 +337,7 @@ public class _LitemallIssue extends DynamicOrmEntity{
     /**
      * 问题标题: QUESTION
      */
-    public java.lang.String getQuestion(){
+    public final java.lang.String getQuestion(){
          onPropGet(PROP_ID_question);
          return _question;
     }
@@ -345,7 +345,7 @@ public class _LitemallIssue extends DynamicOrmEntity{
     /**
      * 问题标题: QUESTION
      */
-    public void setQuestion(java.lang.String value){
+    public final void setQuestion(java.lang.String value){
         if(onPropSet(PROP_ID_question,value)){
             this._question = value;
             internalClearRefs(PROP_ID_question);
@@ -356,7 +356,7 @@ public class _LitemallIssue extends DynamicOrmEntity{
     /**
      * 问题答案: ANSWER
      */
-    public java.lang.String getAnswer(){
+    public final java.lang.String getAnswer(){
          onPropGet(PROP_ID_answer);
          return _answer;
     }
@@ -364,7 +364,7 @@ public class _LitemallIssue extends DynamicOrmEntity{
     /**
      * 问题答案: ANSWER
      */
-    public void setAnswer(java.lang.String value){
+    public final void setAnswer(java.lang.String value){
         if(onPropSet(PROP_ID_answer,value)){
             this._answer = value;
             internalClearRefs(PROP_ID_answer);
@@ -375,7 +375,7 @@ public class _LitemallIssue extends DynamicOrmEntity{
     /**
      * 创建时间: ADD_TIME
      */
-    public java.time.LocalDateTime getAddTime(){
+    public final java.time.LocalDateTime getAddTime(){
          onPropGet(PROP_ID_addTime);
          return _addTime;
     }
@@ -383,7 +383,7 @@ public class _LitemallIssue extends DynamicOrmEntity{
     /**
      * 创建时间: ADD_TIME
      */
-    public void setAddTime(java.time.LocalDateTime value){
+    public final void setAddTime(java.time.LocalDateTime value){
         if(onPropSet(PROP_ID_addTime,value)){
             this._addTime = value;
             internalClearRefs(PROP_ID_addTime);
@@ -394,7 +394,7 @@ public class _LitemallIssue extends DynamicOrmEntity{
     /**
      * 更新时间: UPDATE_TIME
      */
-    public java.time.LocalDateTime getUpdateTime(){
+    public final java.time.LocalDateTime getUpdateTime(){
          onPropGet(PROP_ID_updateTime);
          return _updateTime;
     }
@@ -402,7 +402,7 @@ public class _LitemallIssue extends DynamicOrmEntity{
     /**
      * 更新时间: UPDATE_TIME
      */
-    public void setUpdateTime(java.time.LocalDateTime value){
+    public final void setUpdateTime(java.time.LocalDateTime value){
         if(onPropSet(PROP_ID_updateTime,value)){
             this._updateTime = value;
             internalClearRefs(PROP_ID_updateTime);
@@ -413,7 +413,7 @@ public class _LitemallIssue extends DynamicOrmEntity{
     /**
      * 逻辑删除: DELETED
      */
-    public java.lang.Boolean getDeleted(){
+    public final java.lang.Boolean getDeleted(){
          onPropGet(PROP_ID_deleted);
          return _deleted;
     }
@@ -421,7 +421,7 @@ public class _LitemallIssue extends DynamicOrmEntity{
     /**
      * 逻辑删除: DELETED
      */
-    public void setDeleted(java.lang.Boolean value){
+    public final void setDeleted(java.lang.Boolean value){
         if(onPropSet(PROP_ID_deleted,value)){
             this._deleted = value;
             internalClearRefs(PROP_ID_deleted);

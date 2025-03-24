@@ -19,7 +19,7 @@
             <cols>
 
                 <!--Id-->
-                <col id="id" mandatory="true" sortable="true"/>
+                <col id="id" mandatory="true" ui:number="true" sortable="true"/>
 
                 <!--通知标题-->
                 <col id="title" sortable="true"/>
@@ -28,7 +28,7 @@
                 <col id="content" sortable="true"/>
 
                 <!--创建通知的管理员ID-->
-                <col id="adminId" sortable="true"/>
+                <col id="adminId" ui:number="true" sortable="true"/>
             </cols>
         </grid>
         <grid id="pick-list" x:prototype="list" x:abstract="true"/>

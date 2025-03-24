@@ -19,7 +19,7 @@
             <cols>
 
                 <!--Id-->
-                <col id="id" mandatory="true" sortable="true"/>
+                <col id="id" mandatory="true" ui:number="true" sortable="true"/>
 
                 <!--商品编号-->
                 <col id="goodsSn" mandatory="true" sortable="true" x:abstract="true"/>
@@ -28,10 +28,10 @@
                 <col id="name" mandatory="true" sortable="true"/>
 
                 <!--商品所属类目ID-->
-                <col id="categoryId" sortable="true"/>
+                <col id="categoryId" ui:number="true" sortable="true"/>
 
                 <!--品牌ID-->
-                <col id="brandId" sortable="true"/>
+                <col id="brandId" ui:number="true" sortable="true"/>
 
                 <!--商品宣传图片列表-->
                 <col id="gallery" sortable="true"/>
@@ -46,7 +46,7 @@
                 <col id="isOnSale" sortable="true"/>
 
                 <!--排序顺序-->
-                <col id="sortOrder" sortable="true"/>
+                <col id="sortOrder" ui:number="true" sortable="true"/>
 
                 <!--商品图片-->
                 <col id="picUrl" sortable="true"/>
@@ -64,10 +64,10 @@
                 <col id="unit" sortable="true"/>
 
                 <!--市场售价-->
-                <col id="counterPrice" sortable="true"/>
+                <col id="counterPrice" ui:number="true" sortable="true"/>
 
                 <!--当前价格-->
-                <col id="retailPrice" sortable="true"/>
+                <col id="retailPrice" ui:number="true" sortable="true"/>
 
                 <!--详情-->
                 <col id="detail" sortable="true"/>

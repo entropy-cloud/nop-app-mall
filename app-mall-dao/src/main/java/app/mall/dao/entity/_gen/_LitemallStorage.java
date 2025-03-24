@@ -408,7 +408,7 @@ public class _LitemallStorage extends DynamicOrmEntity{
     /**
      * Id: ID
      */
-    public java.lang.Integer getId(){
+    public final java.lang.Integer getId(){
          onPropGet(PROP_ID_id);
          return _id;
     }
@@ -416,7 +416,7 @@ public class _LitemallStorage extends DynamicOrmEntity{
     /**
      * Id: ID
      */
-    public void setId(java.lang.Integer value){
+    public final void setId(java.lang.Integer value){
         if(onPropSet(PROP_ID_id,value)){
             this._id = value;
             internalClearRefs(PROP_ID_id);
@@ -427,7 +427,7 @@ public class _LitemallStorage extends DynamicOrmEntity{
     /**
      * 文件的唯一索引: KEY
      */
-    public java.lang.String getKey(){
+    public final java.lang.String getKey(){
          onPropGet(PROP_ID_key);
          return _key;
     }
@@ -435,7 +435,7 @@ public class _LitemallStorage extends DynamicOrmEntity{
     /**
      * 文件的唯一索引: KEY
      */
-    public void setKey(java.lang.String value){
+    public final void setKey(java.lang.String value){
         if(onPropSet(PROP_ID_key,value)){
             this._key = value;
             internalClearRefs(PROP_ID_key);
@@ -446,7 +446,7 @@ public class _LitemallStorage extends DynamicOrmEntity{
     /**
      * 文件名: NAME
      */
-    public java.lang.String getName(){
+    public final java.lang.String getName(){
          onPropGet(PROP_ID_name);
          return _name;
     }
@@ -454,7 +454,7 @@ public class _LitemallStorage extends DynamicOrmEntity{
     /**
      * 文件名: NAME
      */
-    public void setName(java.lang.String value){
+    public final void setName(java.lang.String value){
         if(onPropSet(PROP_ID_name,value)){
             this._name = value;
             internalClearRefs(PROP_ID_name);
@@ -465,7 +465,7 @@ public class _LitemallStorage extends DynamicOrmEntity{
     /**
      * 文件类型: TYPE
      */
-    public java.lang.String getType(){
+    public final java.lang.String getType(){
          onPropGet(PROP_ID_type);
          return _type;
     }
@@ -473,7 +473,7 @@ public class _LitemallStorage extends DynamicOrmEntity{
     /**
      * 文件类型: TYPE
      */
-    public void setType(java.lang.String value){
+    public final void setType(java.lang.String value){
         if(onPropSet(PROP_ID_type,value)){
             this._type = value;
             internalClearRefs(PROP_ID_type);
@@ -484,7 +484,7 @@ public class _LitemallStorage extends DynamicOrmEntity{
     /**
      * 文件大小: SIZE
      */
-    public java.lang.Integer getSize(){
+    public final java.lang.Integer getSize(){
          onPropGet(PROP_ID_size);
          return _size;
     }
@@ -492,7 +492,7 @@ public class _LitemallStorage extends DynamicOrmEntity{
     /**
      * 文件大小: SIZE
      */
-    public void setSize(java.lang.Integer value){
+    public final void setSize(java.lang.Integer value){
         if(onPropSet(PROP_ID_size,value)){
             this._size = value;
             internalClearRefs(PROP_ID_size);
@@ -503,7 +503,7 @@ public class _LitemallStorage extends DynamicOrmEntity{
     /**
      * 文件访问链接: URL
      */
-    public java.lang.String getUrl(){
+    public final java.lang.String getUrl(){
          onPropGet(PROP_ID_url);
          return _url;
     }
@@ -511,7 +511,7 @@ public class _LitemallStorage extends DynamicOrmEntity{
     /**
      * 文件访问链接: URL
      */
-    public void setUrl(java.lang.String value){
+    public final void setUrl(java.lang.String value){
         if(onPropSet(PROP_ID_url,value)){
             this._url = value;
             internalClearRefs(PROP_ID_url);
@@ -522,7 +522,7 @@ public class _LitemallStorage extends DynamicOrmEntity{
     /**
      * 创建时间: ADD_TIME
      */
-    public java.time.LocalDateTime getAddTime(){
+    public final java.time.LocalDateTime getAddTime(){
          onPropGet(PROP_ID_addTime);
          return _addTime;
     }
@@ -530,7 +530,7 @@ public class _LitemallStorage extends DynamicOrmEntity{
     /**
      * 创建时间: ADD_TIME
      */
-    public void setAddTime(java.time.LocalDateTime value){
+    public final void setAddTime(java.time.LocalDateTime value){
         if(onPropSet(PROP_ID_addTime,value)){
             this._addTime = value;
             internalClearRefs(PROP_ID_addTime);
@@ -541,7 +541,7 @@ public class _LitemallStorage extends DynamicOrmEntity{
     /**
      * 更新时间: UPDATE_TIME
      */
-    public java.time.LocalDateTime getUpdateTime(){
+    public final java.time.LocalDateTime getUpdateTime(){
          onPropGet(PROP_ID_updateTime);
          return _updateTime;
     }
@@ -549,7 +549,7 @@ public class _LitemallStorage extends DynamicOrmEntity{
     /**
      * 更新时间: UPDATE_TIME
      */
-    public void setUpdateTime(java.time.LocalDateTime value){
+    public final void setUpdateTime(java.time.LocalDateTime value){
         if(onPropSet(PROP_ID_updateTime,value)){
             this._updateTime = value;
             internalClearRefs(PROP_ID_updateTime);
@@ -560,7 +560,7 @@ public class _LitemallStorage extends DynamicOrmEntity{
     /**
      * 逻辑删除: DELETED
      */
-    public java.lang.Boolean getDeleted(){
+    public final java.lang.Boolean getDeleted(){
          onPropGet(PROP_ID_deleted);
          return _deleted;
     }
@@ -568,7 +568,7 @@ public class _LitemallStorage extends DynamicOrmEntity{
     /**
      * 逻辑删除: DELETED
      */
-    public void setDeleted(java.lang.Boolean value){
+    public final void setDeleted(java.lang.Boolean value){
         if(onPropSet(PROP_ID_deleted,value)){
             this._deleted = value;
             internalClearRefs(PROP_ID_deleted);

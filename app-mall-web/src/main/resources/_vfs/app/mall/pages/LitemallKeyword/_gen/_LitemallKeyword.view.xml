@@ -19,7 +19,7 @@
             <cols>
 
                 <!--Id-->
-                <col id="id" mandatory="true" sortable="true"/>
+                <col id="id" mandatory="true" ui:number="true" sortable="true"/>
 
                 <!--关键字-->
                 <col id="keyword" mandatory="true" sortable="true"/>
@@ -34,7 +34,7 @@
                 <col id="isDefault" mandatory="true" sortable="true"/>
 
                 <!--排序-->
-                <col id="sortOrder" mandatory="true" sortable="true"/>
+                <col id="sortOrder" mandatory="true" ui:number="true" sortable="true"/>
             </cols>
         </grid>
         <grid id="pick-list" x:prototype="list" x:abstract="true"/>

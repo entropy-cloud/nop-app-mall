@@ -1074,7 +1074,7 @@ public class _LitemallOrder extends DynamicOrmEntity{
     /**
      * Id: ID
      */
-    public java.lang.Integer getId(){
+    public final java.lang.Integer getId(){
          onPropGet(PROP_ID_id);
          return _id;
     }
@@ -1082,7 +1082,7 @@ public class _LitemallOrder extends DynamicOrmEntity{
     /**
      * Id: ID
      */
-    public void setId(java.lang.Integer value){
+    public final void setId(java.lang.Integer value){
         if(onPropSet(PROP_ID_id,value)){
             this._id = value;
             internalClearRefs(PROP_ID_id);
@@ -1093,7 +1093,7 @@ public class _LitemallOrder extends DynamicOrmEntity{
     /**
      * 用户ID: USER_ID
      */
-    public java.lang.Integer getUserId(){
+    public final java.lang.Integer getUserId(){
          onPropGet(PROP_ID_userId);
          return _userId;
     }
@@ -1101,7 +1101,7 @@ public class _LitemallOrder extends DynamicOrmEntity{
     /**
      * 用户ID: USER_ID
      */
-    public void setUserId(java.lang.Integer value){
+    public final void setUserId(java.lang.Integer value){
         if(onPropSet(PROP_ID_userId,value)){
             this._userId = value;
             internalClearRefs(PROP_ID_userId);
@@ -1112,7 +1112,7 @@ public class _LitemallOrder extends DynamicOrmEntity{
     /**
      * 订单编号: ORDER_SN
      */
-    public java.lang.String getOrderSn(){
+    public final java.lang.String getOrderSn(){
          onPropGet(PROP_ID_orderSn);
          return _orderSn;
     }
@@ -1120,7 +1120,7 @@ public class _LitemallOrder extends DynamicOrmEntity{
     /**
      * 订单编号: ORDER_SN
      */
-    public void setOrderSn(java.lang.String value){
+    public final void setOrderSn(java.lang.String value){
         if(onPropSet(PROP_ID_orderSn,value)){
             this._orderSn = value;
             internalClearRefs(PROP_ID_orderSn);
@@ -1131,7 +1131,7 @@ public class _LitemallOrder extends DynamicOrmEntity{
     /**
      * 订单状态: ORDER_STATUS
      */
-    public java.lang.Short getOrderStatus(){
+    public final java.lang.Short getOrderStatus(){
          onPropGet(PROP_ID_orderStatus);
          return _orderStatus;
     }
@@ -1139,7 +1139,7 @@ public class _LitemallOrder extends DynamicOrmEntity{
     /**
      * 订单状态: ORDER_STATUS
      */
-    public void setOrderStatus(java.lang.Short value){
+    public final void setOrderStatus(java.lang.Short value){
         if(onPropSet(PROP_ID_orderStatus,value)){
             this._orderStatus = value;
             internalClearRefs(PROP_ID_orderStatus);
@@ -1150,7 +1150,7 @@ public class _LitemallOrder extends DynamicOrmEntity{
     /**
      * 售后状态: AFTERSALE_STATUS
      */
-    public java.lang.Short getAftersaleStatus(){
+    public final java.lang.Short getAftersaleStatus(){
          onPropGet(PROP_ID_aftersaleStatus);
          return _aftersaleStatus;
     }
@@ -1158,7 +1158,7 @@ public class _LitemallOrder extends DynamicOrmEntity{
     /**
      * 售后状态: AFTERSALE_STATUS
      */
-    public void setAftersaleStatus(java.lang.Short value){
+    public final void setAftersaleStatus(java.lang.Short value){
         if(onPropSet(PROP_ID_aftersaleStatus,value)){
             this._aftersaleStatus = value;
             internalClearRefs(PROP_ID_aftersaleStatus);
@@ -1169,7 +1169,7 @@ public class _LitemallOrder extends DynamicOrmEntity{
     /**
      * 收货人名称: CONSIGNEE
      */
-    public java.lang.String getConsignee(){
+    public final java.lang.String getConsignee(){
          onPropGet(PROP_ID_consignee);
          return _consignee;
     }
@@ -1177,7 +1177,7 @@ public class _LitemallOrder extends DynamicOrmEntity{
     /**
      * 收货人名称: CONSIGNEE
      */
-    public void setConsignee(java.lang.String value){
+    public final void setConsignee(java.lang.String value){
         if(onPropSet(PROP_ID_consignee,value)){
             this._consignee = value;
             internalClearRefs(PROP_ID_consignee);
@@ -1188,7 +1188,7 @@ public class _LitemallOrder extends DynamicOrmEntity{
     /**
      * 收货人手机号: MOBILE
      */
-    public java.lang.String getMobile(){
+    public final java.lang.String getMobile(){
          onPropGet(PROP_ID_mobile);
          return _mobile;
     }
@@ -1196,7 +1196,7 @@ public class _LitemallOrder extends DynamicOrmEntity{
     /**
      * 收货人手机号: MOBILE
      */
-    public void setMobile(java.lang.String value){
+    public final void setMobile(java.lang.String value){
         if(onPropSet(PROP_ID_mobile,value)){
             this._mobile = value;
             internalClearRefs(PROP_ID_mobile);
@@ -1207,7 +1207,7 @@ public class _LitemallOrder extends DynamicOrmEntity{
     /**
      * 收货具体地址: ADDRESS
      */
-    public java.lang.String getAddress(){
+    public final java.lang.String getAddress(){
          onPropGet(PROP_ID_address);
          return _address;
     }
@@ -1215,7 +1215,7 @@ public class _LitemallOrder extends DynamicOrmEntity{
     /**
      * 收货具体地址: ADDRESS
      */
-    public void setAddress(java.lang.String value){
+    public final void setAddress(java.lang.String value){
         if(onPropSet(PROP_ID_address,value)){
             this._address = value;
             internalClearRefs(PROP_ID_address);
@@ -1226,7 +1226,7 @@ public class _LitemallOrder extends DynamicOrmEntity{
     /**
      * 用户订单留言: MESSAGE
      */
-    public java.lang.String getMessage(){
+    public final java.lang.String getMessage(){
          onPropGet(PROP_ID_message);
          return _message;
     }
@@ -1234,7 +1234,7 @@ public class _LitemallOrder extends DynamicOrmEntity{
     /**
      * 用户订单留言: MESSAGE
      */
-    public void setMessage(java.lang.String value){
+    public final void setMessage(java.lang.String value){
         if(onPropSet(PROP_ID_message,value)){
             this._message = value;
             internalClearRefs(PROP_ID_message);
@@ -1245,7 +1245,7 @@ public class _LitemallOrder extends DynamicOrmEntity{
     /**
      * 商品总费用: GOODS_PRICE
      */
-    public java.math.BigDecimal getGoodsPrice(){
+    public final java.math.BigDecimal getGoodsPrice(){
          onPropGet(PROP_ID_goodsPrice);
          return _goodsPrice;
     }
@@ -1253,7 +1253,7 @@ public class _LitemallOrder extends DynamicOrmEntity{
     /**
      * 商品总费用: GOODS_PRICE
      */
-    public void setGoodsPrice(java.math.BigDecimal value){
+    public final void setGoodsPrice(java.math.BigDecimal value){
         if(onPropSet(PROP_ID_goodsPrice,value)){
             this._goodsPrice = value;
             internalClearRefs(PROP_ID_goodsPrice);
@@ -1264,7 +1264,7 @@ public class _LitemallOrder extends DynamicOrmEntity{
     /**
      * 配送费用: FREIGHT_PRICE
      */
-    public java.math.BigDecimal getFreightPrice(){
+    public final java.math.BigDecimal getFreightPrice(){
          onPropGet(PROP_ID_freightPrice);
          return _freightPrice;
     }
@@ -1272,7 +1272,7 @@ public class _LitemallOrder extends DynamicOrmEntity{
     /**
      * 配送费用: FREIGHT_PRICE
      */
-    public void setFreightPrice(java.math.BigDecimal value){
+    public final void setFreightPrice(java.math.BigDecimal value){
         if(onPropSet(PROP_ID_freightPrice,value)){
             this._freightPrice = value;
             internalClearRefs(PROP_ID_freightPrice);
@@ -1283,7 +1283,7 @@ public class _LitemallOrder extends DynamicOrmEntity{
     /**
      * 优惠券减免: COUPON_PRICE
      */
-    public java.math.BigDecimal getCouponPrice(){
+    public final java.math.BigDecimal getCouponPrice(){
          onPropGet(PROP_ID_couponPrice);
          return _couponPrice;
     }
@@ -1291,7 +1291,7 @@ public class _LitemallOrder extends DynamicOrmEntity{
     /**
      * 优惠券减免: COUPON_PRICE
      */
-    public void setCouponPrice(java.math.BigDecimal value){
+    public final void setCouponPrice(java.math.BigDecimal value){
         if(onPropSet(PROP_ID_couponPrice,value)){
             this._couponPrice = value;
             internalClearRefs(PROP_ID_couponPrice);
@@ -1302,7 +1302,7 @@ public class _LitemallOrder extends DynamicOrmEntity{
     /**
      * 用户积分减免: INTEGRAL_PRICE
      */
-    public java.math.BigDecimal getIntegralPrice(){
+    public final java.math.BigDecimal getIntegralPrice(){
          onPropGet(PROP_ID_integralPrice);
          return _integralPrice;
     }
@@ -1310,7 +1310,7 @@ public class _LitemallOrder extends DynamicOrmEntity{
     /**
      * 用户积分减免: INTEGRAL_PRICE
      */
-    public void setIntegralPrice(java.math.BigDecimal value){
+    public final void setIntegralPrice(java.math.BigDecimal value){
         if(onPropSet(PROP_ID_integralPrice,value)){
             this._integralPrice = value;
             internalClearRefs(PROP_ID_integralPrice);
@@ -1321,7 +1321,7 @@ public class _LitemallOrder extends DynamicOrmEntity{
     /**
      * 团购优惠价减免: GROUPON_PRICE
      */
-    public java.math.BigDecimal getGrouponPrice(){
+    public final java.math.BigDecimal getGrouponPrice(){
          onPropGet(PROP_ID_grouponPrice);
          return _grouponPrice;
     }
@@ -1329,7 +1329,7 @@ public class _LitemallOrder extends DynamicOrmEntity{
     /**
      * 团购优惠价减免: GROUPON_PRICE
      */
-    public void setGrouponPrice(java.math.BigDecimal value){
+    public final void setGrouponPrice(java.math.BigDecimal value){
         if(onPropSet(PROP_ID_grouponPrice,value)){
             this._grouponPrice = value;
             internalClearRefs(PROP_ID_grouponPrice);
@@ -1340,7 +1340,7 @@ public class _LitemallOrder extends DynamicOrmEntity{
     /**
      * 订单费用: ORDER_PRICE
      */
-    public java.math.BigDecimal getOrderPrice(){
+    public final java.math.BigDecimal getOrderPrice(){
          onPropGet(PROP_ID_orderPrice);
          return _orderPrice;
     }
@@ -1348,7 +1348,7 @@ public class _LitemallOrder extends DynamicOrmEntity{
     /**
      * 订单费用: ORDER_PRICE
      */
-    public void setOrderPrice(java.math.BigDecimal value){
+    public final void setOrderPrice(java.math.BigDecimal value){
         if(onPropSet(PROP_ID_orderPrice,value)){
             this._orderPrice = value;
             internalClearRefs(PROP_ID_orderPrice);
@@ -1359,7 +1359,7 @@ public class _LitemallOrder extends DynamicOrmEntity{
     /**
      * 实付费用: ACTUAL_PRICE
      */
-    public java.math.BigDecimal getActualPrice(){
+    public final java.math.BigDecimal getActualPrice(){
          onPropGet(PROP_ID_actualPrice);
          return _actualPrice;
     }
@@ -1367,7 +1367,7 @@ public class _LitemallOrder extends DynamicOrmEntity{
     /**
      * 实付费用: ACTUAL_PRICE
      */
-    public void setActualPrice(java.math.BigDecimal value){
+    public final void setActualPrice(java.math.BigDecimal value){
         if(onPropSet(PROP_ID_actualPrice,value)){
             this._actualPrice = value;
             internalClearRefs(PROP_ID_actualPrice);
@@ -1378,7 +1378,7 @@ public class _LitemallOrder extends DynamicOrmEntity{
     /**
      * 微信付款编号: PAY_ID
      */
-    public java.lang.String getPayId(){
+    public final java.lang.String getPayId(){
          onPropGet(PROP_ID_payId);
          return _payId;
     }
@@ -1386,7 +1386,7 @@ public class _LitemallOrder extends DynamicOrmEntity{
     /**
      * 微信付款编号: PAY_ID
      */
-    public void setPayId(java.lang.String value){
+    public final void setPayId(java.lang.String value){
         if(onPropSet(PROP_ID_payId,value)){
             this._payId = value;
             internalClearRefs(PROP_ID_payId);
@@ -1397,7 +1397,7 @@ public class _LitemallOrder extends DynamicOrmEntity{
     /**
      * 微信付款时间: PAY_TIME
      */
-    public java.time.LocalDateTime getPayTime(){
+    public final java.time.LocalDateTime getPayTime(){
          onPropGet(PROP_ID_payTime);
          return _payTime;
     }
@@ -1405,7 +1405,7 @@ public class _LitemallOrder extends DynamicOrmEntity{
     /**
      * 微信付款时间: PAY_TIME
      */
-    public void setPayTime(java.time.LocalDateTime value){
+    public final void setPayTime(java.time.LocalDateTime value){
         if(onPropSet(PROP_ID_payTime,value)){
             this._payTime = value;
             internalClearRefs(PROP_ID_payTime);
@@ -1416,7 +1416,7 @@ public class _LitemallOrder extends DynamicOrmEntity{
     /**
      * 发货编号: SHIP_SN
      */
-    public java.lang.String getShipSn(){
+    public final java.lang.String getShipSn(){
          onPropGet(PROP_ID_shipSn);
          return _shipSn;
     }
@@ -1424,7 +1424,7 @@ public class _LitemallOrder extends DynamicOrmEntity{
     /**
      * 发货编号: SHIP_SN
      */
-    public void setShipSn(java.lang.String value){
+    public final void setShipSn(java.lang.String value){
         if(onPropSet(PROP_ID_shipSn,value)){
             this._shipSn = value;
             internalClearRefs(PROP_ID_shipSn);
@@ -1435,7 +1435,7 @@ public class _LitemallOrder extends DynamicOrmEntity{
     /**
      * 发货快递公司: SHIP_CHANNEL
      */
-    public java.lang.String getShipChannel(){
+    public final java.lang.String getShipChannel(){
          onPropGet(PROP_ID_shipChannel);
          return _shipChannel;
     }
@@ -1443,7 +1443,7 @@ public class _LitemallOrder extends DynamicOrmEntity{
     /**
      * 发货快递公司: SHIP_CHANNEL
      */
-    public void setShipChannel(java.lang.String value){
+    public final void setShipChannel(java.lang.String value){
         if(onPropSet(PROP_ID_shipChannel,value)){
             this._shipChannel = value;
             internalClearRefs(PROP_ID_shipChannel);
@@ -1454,7 +1454,7 @@ public class _LitemallOrder extends DynamicOrmEntity{
     /**
      * 发货开始时间: SHIP_TIME
      */
-    public java.time.LocalDateTime getShipTime(){
+    public final java.time.LocalDateTime getShipTime(){
          onPropGet(PROP_ID_shipTime);
          return _shipTime;
     }
@@ -1462,7 +1462,7 @@ public class _LitemallOrder extends DynamicOrmEntity{
     /**
      * 发货开始时间: SHIP_TIME
      */
-    public void setShipTime(java.time.LocalDateTime value){
+    public final void setShipTime(java.time.LocalDateTime value){
         if(onPropSet(PROP_ID_shipTime,value)){
             this._shipTime = value;
             internalClearRefs(PROP_ID_shipTime);
@@ -1473,7 +1473,7 @@ public class _LitemallOrder extends DynamicOrmEntity{
     /**
      * 实际退款金额: REFUND_AMOUNT
      */
-    public java.math.BigDecimal getRefundAmount(){
+    public final java.math.BigDecimal getRefundAmount(){
          onPropGet(PROP_ID_refundAmount);
          return _refundAmount;
     }
@@ -1481,7 +1481,7 @@ public class _LitemallOrder extends DynamicOrmEntity{
     /**
      * 实际退款金额: REFUND_AMOUNT
      */
-    public void setRefundAmount(java.math.BigDecimal value){
+    public final void setRefundAmount(java.math.BigDecimal value){
         if(onPropSet(PROP_ID_refundAmount,value)){
             this._refundAmount = value;
             internalClearRefs(PROP_ID_refundAmount);
@@ -1492,7 +1492,7 @@ public class _LitemallOrder extends DynamicOrmEntity{
     /**
      * 退款方式: REFUND_TYPE
      */
-    public java.lang.String getRefundType(){
+    public final java.lang.String getRefundType(){
          onPropGet(PROP_ID_refundType);
          return _refundType;
     }
@@ -1500,7 +1500,7 @@ public class _LitemallOrder extends DynamicOrmEntity{
     /**
      * 退款方式: REFUND_TYPE
      */
-    public void setRefundType(java.lang.String value){
+    public final void setRefundType(java.lang.String value){
         if(onPropSet(PROP_ID_refundType,value)){
             this._refundType = value;
             internalClearRefs(PROP_ID_refundType);
@@ -1511,7 +1511,7 @@ public class _LitemallOrder extends DynamicOrmEntity{
     /**
      * 退款备注: REFUND_CONTENT
      */
-    public java.lang.String getRefundContent(){
+    public final java.lang.String getRefundContent(){
          onPropGet(PROP_ID_refundContent);
          return _refundContent;
     }
@@ -1519,7 +1519,7 @@ public class _LitemallOrder extends DynamicOrmEntity{
     /**
      * 退款备注: REFUND_CONTENT
      */
-    public void setRefundContent(java.lang.String value){
+    public final void setRefundContent(java.lang.String value){
         if(onPropSet(PROP_ID_refundContent,value)){
             this._refundContent = value;
             internalClearRefs(PROP_ID_refundContent);
@@ -1530,7 +1530,7 @@ public class _LitemallOrder extends DynamicOrmEntity{
     /**
      * 退款时间: REFUND_TIME
      */
-    public java.time.LocalDateTime getRefundTime(){
+    public final java.time.LocalDateTime getRefundTime(){
          onPropGet(PROP_ID_refundTime);
          return _refundTime;
     }
@@ -1538,7 +1538,7 @@ public class _LitemallOrder extends DynamicOrmEntity{
     /**
      * 退款时间: REFUND_TIME
      */
-    public void setRefundTime(java.time.LocalDateTime value){
+    public final void setRefundTime(java.time.LocalDateTime value){
         if(onPropSet(PROP_ID_refundTime,value)){
             this._refundTime = value;
             internalClearRefs(PROP_ID_refundTime);
@@ -1549,7 +1549,7 @@ public class _LitemallOrder extends DynamicOrmEntity{
     /**
      * 用户确认收货时间: CONFIRM_TIME
      */
-    public java.time.LocalDateTime getConfirmTime(){
+    public final java.time.LocalDateTime getConfirmTime(){
          onPropGet(PROP_ID_confirmTime);
          return _confirmTime;
     }
@@ -1557,7 +1557,7 @@ public class _LitemallOrder extends DynamicOrmEntity{
     /**
      * 用户确认收货时间: CONFIRM_TIME
      */
-    public void setConfirmTime(java.time.LocalDateTime value){
+    public final void setConfirmTime(java.time.LocalDateTime value){
         if(onPropSet(PROP_ID_confirmTime,value)){
             this._confirmTime = value;
             internalClearRefs(PROP_ID_confirmTime);
@@ -1568,7 +1568,7 @@ public class _LitemallOrder extends DynamicOrmEntity{
     /**
      * 待评价订单商品数量: COMMENTS
      */
-    public java.lang.Short getComments(){
+    public final java.lang.Short getComments(){
          onPropGet(PROP_ID_comments);
          return _comments;
     }
@@ -1576,7 +1576,7 @@ public class _LitemallOrder extends DynamicOrmEntity{
     /**
      * 待评价订单商品数量: COMMENTS
      */
-    public void setComments(java.lang.Short value){
+    public final void setComments(java.lang.Short value){
         if(onPropSet(PROP_ID_comments,value)){
             this._comments = value;
             internalClearRefs(PROP_ID_comments);
@@ -1587,7 +1587,7 @@ public class _LitemallOrder extends DynamicOrmEntity{
     /**
      * 订单关闭时间: END_TIME
      */
-    public java.time.LocalDateTime getEndTime(){
+    public final java.time.LocalDateTime getEndTime(){
          onPropGet(PROP_ID_endTime);
          return _endTime;
     }
@@ -1595,7 +1595,7 @@ public class _LitemallOrder extends DynamicOrmEntity{
     /**
      * 订单关闭时间: END_TIME
      */
-    public void setEndTime(java.time.LocalDateTime value){
+    public final void setEndTime(java.time.LocalDateTime value){
         if(onPropSet(PROP_ID_endTime,value)){
             this._endTime = value;
             internalClearRefs(PROP_ID_endTime);
@@ -1606,7 +1606,7 @@ public class _LitemallOrder extends DynamicOrmEntity{
     /**
      * 创建时间: ADD_TIME
      */
-    public java.time.LocalDateTime getAddTime(){
+    public final java.time.LocalDateTime getAddTime(){
          onPropGet(PROP_ID_addTime);
          return _addTime;
     }
@@ -1614,7 +1614,7 @@ public class _LitemallOrder extends DynamicOrmEntity{
     /**
      * 创建时间: ADD_TIME
      */
-    public void setAddTime(java.time.LocalDateTime value){
+    public final void setAddTime(java.time.LocalDateTime value){
         if(onPropSet(PROP_ID_addTime,value)){
             this._addTime = value;
             internalClearRefs(PROP_ID_addTime);
@@ -1625,7 +1625,7 @@ public class _LitemallOrder extends DynamicOrmEntity{
     /**
      * 更新时间: UPDATE_TIME
      */
-    public java.time.LocalDateTime getUpdateTime(){
+    public final java.time.LocalDateTime getUpdateTime(){
          onPropGet(PROP_ID_updateTime);
          return _updateTime;
     }
@@ -1633,7 +1633,7 @@ public class _LitemallOrder extends DynamicOrmEntity{
     /**
      * 更新时间: UPDATE_TIME
      */
-    public void setUpdateTime(java.time.LocalDateTime value){
+    public final void setUpdateTime(java.time.LocalDateTime value){
         if(onPropSet(PROP_ID_updateTime,value)){
             this._updateTime = value;
             internalClearRefs(PROP_ID_updateTime);
@@ -1644,7 +1644,7 @@ public class _LitemallOrder extends DynamicOrmEntity{
     /**
      * 逻辑删除: DELETED
      */
-    public java.lang.Boolean getDeleted(){
+    public final java.lang.Boolean getDeleted(){
          onPropGet(PROP_ID_deleted);
          return _deleted;
     }
@@ -1652,7 +1652,7 @@ public class _LitemallOrder extends DynamicOrmEntity{
     /**
      * 逻辑删除: DELETED
      */
-    public void setDeleted(java.lang.Boolean value){
+    public final void setDeleted(java.lang.Boolean value){
         if(onPropSet(PROP_ID_deleted,value)){
             this._deleted = value;
             internalClearRefs(PROP_ID_deleted);
@@ -1663,11 +1663,11 @@ public class _LitemallOrder extends DynamicOrmEntity{
     /**
      * 客户
      */
-    public app.mall.dao.entity.LitemallUser getUser(){
+    public final app.mall.dao.entity.LitemallUser getUser(){
        return (app.mall.dao.entity.LitemallUser)internalGetRefEntity(PROP_NAME_user);
     }
 
-    public void setUser(app.mall.dao.entity.LitemallUser refEntity){
+    public final void setUser(app.mall.dao.entity.LitemallUser refEntity){
    
            if(refEntity == null){
            
@@ -1689,15 +1689,15 @@ public class _LitemallOrder extends DynamicOrmEntity{
     /**
      * 订单商品。 refPropName: order, keyProp: {rel.keyProp}
      */
-    public IOrmEntitySet<app.mall.dao.entity.LitemallOrderGoods> getOrderGoods(){
+    public final IOrmEntitySet<app.mall.dao.entity.LitemallOrderGoods> getOrderGoods(){
        return _orderGoods;
     }
        
-        public List<app.mall.dao.entity.LitemallGoodsProduct> getRelatedProductList(){
+        public final List<app.mall.dao.entity.LitemallGoodsProduct> getRelatedProductList(){
             return (List<app.mall.dao.entity.LitemallGoodsProduct>)io.nop.orm.support.OrmEntityHelper.getRefProps(getOrderGoods(),"product");
         }
 
-        public List<String> getRelatedProductList_ids(){
+        public final List<String> getRelatedProductList_ids(){
             return io.nop.orm.support.OrmEntityHelper.getRefIds(getOrderGoods(),"product");
         }
 
@@ -1706,7 +1706,7 @@ public class _LitemallOrder extends DynamicOrmEntity{
         }
     
 
-    public String getRelatedProductList_label(){
+    public final String getRelatedProductList_label(){
         return io.nop.orm.support.OrmEntityHelper.getLabelForRefProps(getOrderGoods(),"product");
     }
 

@@ -161,14 +161,14 @@
             </schema>
         </prop>
         <prop name="relatedProductList" displayName="relatedProductList" insertable="true" updatable="true"
-              depends="~orderGoods" internal="true" lazy="true">
+              tagSet="pub,cascade-delete,updatable,insertable" depends="~orderGoods" internal="true" lazy="true">
             <schema>
                 <item bizObjName="LitemallGoodsProduct"/>
             </schema>
             <getter>
                             import io.nop.orm.support.OrmEntityHelper;
                             return OrmEntityHelper.getRefProps(
-                                entity.getOrderGoods(), "product");
+                                entity["orderGoods"], "product");
                         </getter>
         </prop>
         <prop name="relatedProductList_ids" displayName="relatedProductList" insertable="true" updatable="true"
@@ -179,12 +179,12 @@
             <getter>
                             import io.nop.orm.support.OrmEntityHelper;
                             return OrmEntityHelper.getRefIds(
-                                entity.getOrderGoods(), "product");
+                                 entity["orderGoods"], "product");
                         </getter>
             <setter>
                             import io.nop.orm.support.OrmEntityHelper;
                             OrmEntityHelper.setRefIds(
-                                entity.getOrderGoods(), "product",value);
+                                 entity["orderGoods"], "product",value);
                         </setter>
         </prop>
         <prop name="relatedProductList_label" displayName="relatedProductList" internal="true" depends="~orderGoods"
@@ -193,7 +193,7 @@
             <getter>
                     import io.nop.orm.support.OrmEntityHelper;
                     return OrmEntityHelper.getLabelForRefProps(
-                        entity.getOrderGoods(), "product");
+                         entity["orderGoods"], "product");
                 </getter>
         </prop>
     </props>

@@ -474,7 +474,7 @@ public class _LitemallCouponUser extends DynamicOrmEntity{
     /**
      * Id: ID
      */
-    public java.lang.Integer getId(){
+    public final java.lang.Integer getId(){
          onPropGet(PROP_ID_id);
          return _id;
     }
@@ -482,7 +482,7 @@ public class _LitemallCouponUser extends DynamicOrmEntity{
     /**
      * Id: ID
      */
-    public void setId(java.lang.Integer value){
+    public final void setId(java.lang.Integer value){
         if(onPropSet(PROP_ID_id,value)){
             this._id = value;
             internalClearRefs(PROP_ID_id);
@@ -493,7 +493,7 @@ public class _LitemallCouponUser extends DynamicOrmEntity{
     /**
      * 用户ID: USER_ID
      */
-    public java.lang.Integer getUserId(){
+    public final java.lang.Integer getUserId(){
          onPropGet(PROP_ID_userId);
          return _userId;
     }
@@ -501,7 +501,7 @@ public class _LitemallCouponUser extends DynamicOrmEntity{
     /**
      * 用户ID: USER_ID
      */
-    public void setUserId(java.lang.Integer value){
+    public final void setUserId(java.lang.Integer value){
         if(onPropSet(PROP_ID_userId,value)){
             this._userId = value;
             internalClearRefs(PROP_ID_userId);
@@ -512,7 +512,7 @@ public class _LitemallCouponUser extends DynamicOrmEntity{
     /**
      * 优惠券ID: COUPON_ID
      */
-    public java.lang.Integer getCouponId(){
+    public final java.lang.Integer getCouponId(){
          onPropGet(PROP_ID_couponId);
          return _couponId;
     }
@@ -520,7 +520,7 @@ public class _LitemallCouponUser extends DynamicOrmEntity{
     /**
      * 优惠券ID: COUPON_ID
      */
-    public void setCouponId(java.lang.Integer value){
+    public final void setCouponId(java.lang.Integer value){
         if(onPropSet(PROP_ID_couponId,value)){
             this._couponId = value;
             internalClearRefs(PROP_ID_couponId);
@@ -531,7 +531,7 @@ public class _LitemallCouponUser extends DynamicOrmEntity{
     /**
      * 使用状态: STATUS
      */
-    public java.lang.Short getStatus(){
+    public final java.lang.Short getStatus(){
          onPropGet(PROP_ID_status);
          return _status;
     }
@@ -539,7 +539,7 @@ public class _LitemallCouponUser extends DynamicOrmEntity{
     /**
      * 使用状态: STATUS
      */
-    public void setStatus(java.lang.Short value){
+    public final void setStatus(java.lang.Short value){
         if(onPropSet(PROP_ID_status,value)){
             this._status = value;
             internalClearRefs(PROP_ID_status);
@@ -550,7 +550,7 @@ public class _LitemallCouponUser extends DynamicOrmEntity{
     /**
      * 使用时间: USED_TIME
      */
-    public java.time.LocalDateTime getUsedTime(){
+    public final java.time.LocalDateTime getUsedTime(){
          onPropGet(PROP_ID_usedTime);
          return _usedTime;
     }
@@ -558,7 +558,7 @@ public class _LitemallCouponUser extends DynamicOrmEntity{
     /**
      * 使用时间: USED_TIME
      */
-    public void setUsedTime(java.time.LocalDateTime value){
+    public final void setUsedTime(java.time.LocalDateTime value){
         if(onPropSet(PROP_ID_usedTime,value)){
             this._usedTime = value;
             internalClearRefs(PROP_ID_usedTime);
@@ -569,7 +569,7 @@ public class _LitemallCouponUser extends DynamicOrmEntity{
     /**
      * 有效期开始时间: START_TIME
      */
-    public java.time.LocalDateTime getStartTime(){
+    public final java.time.LocalDateTime getStartTime(){
          onPropGet(PROP_ID_startTime);
          return _startTime;
     }
@@ -577,7 +577,7 @@ public class _LitemallCouponUser extends DynamicOrmEntity{
     /**
      * 有效期开始时间: START_TIME
      */
-    public void setStartTime(java.time.LocalDateTime value){
+    public final void setStartTime(java.time.LocalDateTime value){
         if(onPropSet(PROP_ID_startTime,value)){
             this._startTime = value;
             internalClearRefs(PROP_ID_startTime);
@@ -588,7 +588,7 @@ public class _LitemallCouponUser extends DynamicOrmEntity{
     /**
      * 有效期截至时间: END_TIME
      */
-    public java.time.LocalDateTime getEndTime(){
+    public final java.time.LocalDateTime getEndTime(){
          onPropGet(PROP_ID_endTime);
          return _endTime;
     }
@@ -596,7 +596,7 @@ public class _LitemallCouponUser extends DynamicOrmEntity{
     /**
      * 有效期截至时间: END_TIME
      */
-    public void setEndTime(java.time.LocalDateTime value){
+    public final void setEndTime(java.time.LocalDateTime value){
         if(onPropSet(PROP_ID_endTime,value)){
             this._endTime = value;
             internalClearRefs(PROP_ID_endTime);
@@ -607,7 +607,7 @@ public class _LitemallCouponUser extends DynamicOrmEntity{
     /**
      * 订单ID: ORDER_ID
      */
-    public java.lang.Integer getOrderId(){
+    public final java.lang.Integer getOrderId(){
          onPropGet(PROP_ID_orderId);
          return _orderId;
     }
@@ -615,7 +615,7 @@ public class _LitemallCouponUser extends DynamicOrmEntity{
     /**
      * 订单ID: ORDER_ID
      */
-    public void setOrderId(java.lang.Integer value){
+    public final void setOrderId(java.lang.Integer value){
         if(onPropSet(PROP_ID_orderId,value)){
             this._orderId = value;
             internalClearRefs(PROP_ID_orderId);
@@ -626,7 +626,7 @@ public class _LitemallCouponUser extends DynamicOrmEntity{
     /**
      * 创建时间: ADD_TIME
      */
-    public java.time.LocalDateTime getAddTime(){
+    public final java.time.LocalDateTime getAddTime(){
          onPropGet(PROP_ID_addTime);
          return _addTime;
     }
@@ -634,7 +634,7 @@ public class _LitemallCouponUser extends DynamicOrmEntity{
     /**
      * 创建时间: ADD_TIME
      */
-    public void setAddTime(java.time.LocalDateTime value){
+    public final void setAddTime(java.time.LocalDateTime value){
         if(onPropSet(PROP_ID_addTime,value)){
             this._addTime = value;
             internalClearRefs(PROP_ID_addTime);
@@ -645,7 +645,7 @@ public class _LitemallCouponUser extends DynamicOrmEntity{
     /**
      * 更新时间: UPDATE_TIME
      */
-    public java.time.LocalDateTime getUpdateTime(){
+    public final java.time.LocalDateTime getUpdateTime(){
          onPropGet(PROP_ID_updateTime);
          return _updateTime;
     }
@@ -653,7 +653,7 @@ public class _LitemallCouponUser extends DynamicOrmEntity{
     /**
      * 更新时间: UPDATE_TIME
      */
-    public void setUpdateTime(java.time.LocalDateTime value){
+    public final void setUpdateTime(java.time.LocalDateTime value){
         if(onPropSet(PROP_ID_updateTime,value)){
             this._updateTime = value;
             internalClearRefs(PROP_ID_updateTime);
@@ -664,7 +664,7 @@ public class _LitemallCouponUser extends DynamicOrmEntity{
     /**
      * 逻辑删除: DELETED
      */
-    public java.lang.Boolean getDeleted(){
+    public final java.lang.Boolean getDeleted(){
          onPropGet(PROP_ID_deleted);
          return _deleted;
     }
@@ -672,7 +672,7 @@ public class _LitemallCouponUser extends DynamicOrmEntity{
     /**
      * 逻辑删除: DELETED
      */
-    public void setDeleted(java.lang.Boolean value){
+    public final void setDeleted(java.lang.Boolean value){
         if(onPropSet(PROP_ID_deleted,value)){
             this._deleted = value;
             internalClearRefs(PROP_ID_deleted);
@@ -683,11 +683,11 @@ public class _LitemallCouponUser extends DynamicOrmEntity{
     /**
      * 优惠券
      */
-    public app.mall.dao.entity.LitemallCoupon getCoupon(){
+    public final app.mall.dao.entity.LitemallCoupon getCoupon(){
        return (app.mall.dao.entity.LitemallCoupon)internalGetRefEntity(PROP_NAME_coupon);
     }
 
-    public void setCoupon(app.mall.dao.entity.LitemallCoupon refEntity){
+    public final void setCoupon(app.mall.dao.entity.LitemallCoupon refEntity){
    
            if(refEntity == null){
            
@@ -706,11 +706,11 @@ public class _LitemallCouponUser extends DynamicOrmEntity{
     /**
      * 客户
      */
-    public app.mall.dao.entity.LitemallUser getUser(){
+    public final app.mall.dao.entity.LitemallUser getUser(){
        return (app.mall.dao.entity.LitemallUser)internalGetRefEntity(PROP_NAME_user);
     }
 
-    public void setUser(app.mall.dao.entity.LitemallUser refEntity){
+    public final void setUser(app.mall.dao.entity.LitemallUser refEntity){
    
            if(refEntity == null){
            

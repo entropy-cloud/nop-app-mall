@@ -19,13 +19,13 @@
             <cols>
 
                 <!--Id-->
-                <col id="id" mandatory="true" sortable="true"/>
+                <col id="id" mandatory="true" ui:number="true" sortable="true"/>
 
                 <!--用户ID-->
-                <col id="userId" mandatory="true" sortable="true"/>
+                <col id="userId" mandatory="true" ui:number="true" sortable="true"/>
 
                 <!--如果type=0，则是商品ID；如果type=1，则是专题ID-->
-                <col id="valueId" mandatory="true" sortable="true"/>
+                <col id="valueId" mandatory="true" ui:number="true" sortable="true"/>
 
                 <!--收藏类型-->
                 <col id="type" mandatory="true" sortable="true"/>

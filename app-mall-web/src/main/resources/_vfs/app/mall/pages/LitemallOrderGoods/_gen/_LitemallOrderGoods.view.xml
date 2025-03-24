@@ -19,13 +19,13 @@
             <cols>
 
                 <!--Id-->
-                <col id="id" mandatory="true" sortable="true"/>
+                <col id="id" mandatory="true" ui:number="true" sortable="true"/>
 
                 <!--订单ID-->
-                <col id="orderId" mandatory="true" sortable="true"/>
+                <col id="orderId" mandatory="true" ui:number="true" sortable="true"/>
 
                 <!--商品ID-->
-                <col id="goodsId" mandatory="true" sortable="true"/>
+                <col id="goodsId" mandatory="true" ui:number="true" sortable="true"/>
 
                 <!--商品名称-->
                 <col id="goodsName" mandatory="true" sortable="true"/>
@@ -34,13 +34,13 @@
                 <col id="goodsSn" mandatory="true" sortable="true"/>
 
                 <!--货品ID-->
-                <col id="productId" mandatory="true" sortable="true"/>
+                <col id="productId" mandatory="true" ui:number="true" sortable="true"/>
 
                 <!--购买数量-->
-                <col id="number" mandatory="true" sortable="true"/>
+                <col id="number" mandatory="true" ui:number="true" sortable="true"/>
 
                 <!--售价-->
-                <col id="price" mandatory="true" sortable="true"/>
+                <col id="price" mandatory="true" ui:number="true" sortable="true"/>
 
                 <!--规格列表-->
                 <col id="specifications" mandatory="true" sortable="true"/>
@@ -49,7 +49,7 @@
                 <col id="picUrl" mandatory="true" sortable="true"/>
 
                 <!--订单商品评论，如果是-1，则超期不能评价；如果是0，则可以评价；如果其他值，则是comment表里面的评论ID。-->
-                <col id="comment" sortable="true"/>
+                <col id="comment" ui:number="true" sortable="true"/>
             </cols>
         </grid>
         <grid id="pick-list" x:prototype="list" x:abstract="true"/>

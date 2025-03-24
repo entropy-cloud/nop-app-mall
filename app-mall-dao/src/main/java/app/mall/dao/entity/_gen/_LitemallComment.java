@@ -504,7 +504,7 @@ public class _LitemallComment extends DynamicOrmEntity{
     /**
      * Id: ID
      */
-    public java.lang.Integer getId(){
+    public final java.lang.Integer getId(){
          onPropGet(PROP_ID_id);
          return _id;
     }
@@ -512,7 +512,7 @@ public class _LitemallComment extends DynamicOrmEntity{
     /**
      * Id: ID
      */
-    public void setId(java.lang.Integer value){
+    public final void setId(java.lang.Integer value){
         if(onPropSet(PROP_ID_id,value)){
             this._id = value;
             internalClearRefs(PROP_ID_id);
@@ -523,7 +523,7 @@ public class _LitemallComment extends DynamicOrmEntity{
     /**
      * 如果type=0，则是商品评论；如果是type=1，则是专题评论。: VALUE_ID
      */
-    public java.lang.Integer getValueId(){
+    public final java.lang.Integer getValueId(){
          onPropGet(PROP_ID_valueId);
          return _valueId;
     }
@@ -531,7 +531,7 @@ public class _LitemallComment extends DynamicOrmEntity{
     /**
      * 如果type=0，则是商品评论；如果是type=1，则是专题评论。: VALUE_ID
      */
-    public void setValueId(java.lang.Integer value){
+    public final void setValueId(java.lang.Integer value){
         if(onPropSet(PROP_ID_valueId,value)){
             this._valueId = value;
             internalClearRefs(PROP_ID_valueId);
@@ -542,7 +542,7 @@ public class _LitemallComment extends DynamicOrmEntity{
     /**
      * 评论类型: TYPE
      */
-    public java.lang.Byte getType(){
+    public final java.lang.Byte getType(){
          onPropGet(PROP_ID_type);
          return _type;
     }
@@ -550,7 +550,7 @@ public class _LitemallComment extends DynamicOrmEntity{
     /**
      * 评论类型: TYPE
      */
-    public void setType(java.lang.Byte value){
+    public final void setType(java.lang.Byte value){
         if(onPropSet(PROP_ID_type,value)){
             this._type = value;
             internalClearRefs(PROP_ID_type);
@@ -561,7 +561,7 @@ public class _LitemallComment extends DynamicOrmEntity{
     /**
      * 评论内容: CONTENT
      */
-    public java.lang.String getContent(){
+    public final java.lang.String getContent(){
          onPropGet(PROP_ID_content);
          return _content;
     }
@@ -569,7 +569,7 @@ public class _LitemallComment extends DynamicOrmEntity{
     /**
      * 评论内容: CONTENT
      */
-    public void setContent(java.lang.String value){
+    public final void setContent(java.lang.String value){
         if(onPropSet(PROP_ID_content,value)){
             this._content = value;
             internalClearRefs(PROP_ID_content);
@@ -580,7 +580,7 @@ public class _LitemallComment extends DynamicOrmEntity{
     /**
      * 管理员回复内容: ADMIN_CONTENT
      */
-    public java.lang.String getAdminContent(){
+    public final java.lang.String getAdminContent(){
          onPropGet(PROP_ID_adminContent);
          return _adminContent;
     }
@@ -588,7 +588,7 @@ public class _LitemallComment extends DynamicOrmEntity{
     /**
      * 管理员回复内容: ADMIN_CONTENT
      */
-    public void setAdminContent(java.lang.String value){
+    public final void setAdminContent(java.lang.String value){
         if(onPropSet(PROP_ID_adminContent,value)){
             this._adminContent = value;
             internalClearRefs(PROP_ID_adminContent);
@@ -599,7 +599,7 @@ public class _LitemallComment extends DynamicOrmEntity{
     /**
      * 用户ID: USER_ID
      */
-    public java.lang.Integer getUserId(){
+    public final java.lang.Integer getUserId(){
          onPropGet(PROP_ID_userId);
          return _userId;
     }
@@ -607,7 +607,7 @@ public class _LitemallComment extends DynamicOrmEntity{
     /**
      * 用户ID: USER_ID
      */
-    public void setUserId(java.lang.Integer value){
+    public final void setUserId(java.lang.Integer value){
         if(onPropSet(PROP_ID_userId,value)){
             this._userId = value;
             internalClearRefs(PROP_ID_userId);
@@ -618,7 +618,7 @@ public class _LitemallComment extends DynamicOrmEntity{
     /**
      * 是否含有图片: HAS_PICTURE
      */
-    public java.lang.Boolean getHasPicture(){
+    public final java.lang.Boolean getHasPicture(){
          onPropGet(PROP_ID_hasPicture);
          return _hasPicture;
     }
@@ -626,7 +626,7 @@ public class _LitemallComment extends DynamicOrmEntity{
     /**
      * 是否含有图片: HAS_PICTURE
      */
-    public void setHasPicture(java.lang.Boolean value){
+    public final void setHasPicture(java.lang.Boolean value){
         if(onPropSet(PROP_ID_hasPicture,value)){
             this._hasPicture = value;
             internalClearRefs(PROP_ID_hasPicture);
@@ -637,7 +637,7 @@ public class _LitemallComment extends DynamicOrmEntity{
     /**
      * 图片地址列表，采用JSON数组格式: PIC_URLS
      */
-    public java.lang.String getPicUrls(){
+    public final java.lang.String getPicUrls(){
          onPropGet(PROP_ID_picUrls);
          return _picUrls;
     }
@@ -645,7 +645,7 @@ public class _LitemallComment extends DynamicOrmEntity{
     /**
      * 图片地址列表，采用JSON数组格式: PIC_URLS
      */
-    public void setPicUrls(java.lang.String value){
+    public final void setPicUrls(java.lang.String value){
         if(onPropSet(PROP_ID_picUrls,value)){
             this._picUrls = value;
             internalClearRefs(PROP_ID_picUrls);
@@ -656,7 +656,7 @@ public class _LitemallComment extends DynamicOrmEntity{
     /**
      * 评分， 1-5: STAR
      */
-    public java.lang.Short getStar(){
+    public final java.lang.Short getStar(){
          onPropGet(PROP_ID_star);
          return _star;
     }
@@ -664,7 +664,7 @@ public class _LitemallComment extends DynamicOrmEntity{
     /**
      * 评分， 1-5: STAR
      */
-    public void setStar(java.lang.Short value){
+    public final void setStar(java.lang.Short value){
         if(onPropSet(PROP_ID_star,value)){
             this._star = value;
             internalClearRefs(PROP_ID_star);
@@ -675,7 +675,7 @@ public class _LitemallComment extends DynamicOrmEntity{
     /**
      * 创建时间: ADD_TIME
      */
-    public java.time.LocalDateTime getAddTime(){
+    public final java.time.LocalDateTime getAddTime(){
          onPropGet(PROP_ID_addTime);
          return _addTime;
     }
@@ -683,7 +683,7 @@ public class _LitemallComment extends DynamicOrmEntity{
     /**
      * 创建时间: ADD_TIME
      */
-    public void setAddTime(java.time.LocalDateTime value){
+    public final void setAddTime(java.time.LocalDateTime value){
         if(onPropSet(PROP_ID_addTime,value)){
             this._addTime = value;
             internalClearRefs(PROP_ID_addTime);
@@ -694,7 +694,7 @@ public class _LitemallComment extends DynamicOrmEntity{
     /**
      * 更新时间: UPDATE_TIME
      */
-    public java.time.LocalDateTime getUpdateTime(){
+    public final java.time.LocalDateTime getUpdateTime(){
          onPropGet(PROP_ID_updateTime);
          return _updateTime;
     }
@@ -702,7 +702,7 @@ public class _LitemallComment extends DynamicOrmEntity{
     /**
      * 更新时间: UPDATE_TIME
      */
-    public void setUpdateTime(java.time.LocalDateTime value){
+    public final void setUpdateTime(java.time.LocalDateTime value){
         if(onPropSet(PROP_ID_updateTime,value)){
             this._updateTime = value;
             internalClearRefs(PROP_ID_updateTime);
@@ -713,7 +713,7 @@ public class _LitemallComment extends DynamicOrmEntity{
     /**
      * 逻辑删除: DELETED
      */
-    public java.lang.Boolean getDeleted(){
+    public final java.lang.Boolean getDeleted(){
          onPropGet(PROP_ID_deleted);
          return _deleted;
     }
@@ -721,7 +721,7 @@ public class _LitemallComment extends DynamicOrmEntity{
     /**
      * 逻辑删除: DELETED
      */
-    public void setDeleted(java.lang.Boolean value){
+    public final void setDeleted(java.lang.Boolean value){
         if(onPropSet(PROP_ID_deleted,value)){
             this._deleted = value;
             internalClearRefs(PROP_ID_deleted);
@@ -732,11 +732,11 @@ public class _LitemallComment extends DynamicOrmEntity{
     /**
      * 客户
      */
-    public app.mall.dao.entity.LitemallUser getUser(){
+    public final app.mall.dao.entity.LitemallUser getUser(){
        return (app.mall.dao.entity.LitemallUser)internalGetRefEntity(PROP_NAME_user);
     }
 
-    public void setUser(app.mall.dao.entity.LitemallUser refEntity){
+    public final void setUser(app.mall.dao.entity.LitemallUser refEntity){
    
            if(refEntity == null){
            
@@ -761,7 +761,7 @@ public class _LitemallComment extends DynamicOrmEntity{
       
    }
 
-   public io.nop.orm.component.OrmFileListComponent getPicUrlsComponent(){
+   public final io.nop.orm.component.OrmFileListComponent getPicUrlsComponent(){
       if(_picUrlsComponent == null){
           _picUrlsComponent = new io.nop.orm.component.OrmFileListComponent();
           _picUrlsComponent.bindToEntity(this, COMPONENT_PROP_ID_MAP_picUrlsComponent);

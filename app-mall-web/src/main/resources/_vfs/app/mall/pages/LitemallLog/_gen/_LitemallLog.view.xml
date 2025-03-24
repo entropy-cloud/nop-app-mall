@@ -19,7 +19,7 @@
             <cols>
 
                 <!--Id-->
-                <col id="id" mandatory="true" sortable="true"/>
+                <col id="id" mandatory="true" ui:number="true" sortable="true"/>
 
                 <!--管理员-->
                 <col id="admin" sortable="true"/>
@@ -28,7 +28,7 @@
                 <col id="ip" sortable="true"/>
 
                 <!--操作分类-->
-                <col id="type" sortable="true"/>
+                <col id="type" ui:number="true" sortable="true"/>
 
                 <!--操作动作-->
                 <col id="action" sortable="true"/>

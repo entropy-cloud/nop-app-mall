@@ -294,7 +294,7 @@ public class _LitemallRegion extends DynamicOrmEntity{
     /**
      * Id: ID
      */
-    public java.lang.Integer getId(){
+    public final java.lang.Integer getId(){
          onPropGet(PROP_ID_id);
          return _id;
     }
@@ -302,7 +302,7 @@ public class _LitemallRegion extends DynamicOrmEntity{
     /**
      * Id: ID
      */
-    public void setId(java.lang.Integer value){
+    public final void setId(java.lang.Integer value){
         if(onPropSet(PROP_ID_id,value)){
             this._id = value;
             internalClearRefs(PROP_ID_id);
@@ -313,7 +313,7 @@ public class _LitemallRegion extends DynamicOrmEntity{
     /**
      * 行政区域父ID: PID
      */
-    public java.lang.Integer getPid(){
+    public final java.lang.Integer getPid(){
          onPropGet(PROP_ID_pid);
          return _pid;
     }
@@ -321,7 +321,7 @@ public class _LitemallRegion extends DynamicOrmEntity{
     /**
      * 行政区域父ID: PID
      */
-    public void setPid(java.lang.Integer value){
+    public final void setPid(java.lang.Integer value){
         if(onPropSet(PROP_ID_pid,value)){
             this._pid = value;
             internalClearRefs(PROP_ID_pid);
@@ -332,7 +332,7 @@ public class _LitemallRegion extends DynamicOrmEntity{
     /**
      * 行政区域名称: NAME
      */
-    public java.lang.String getName(){
+    public final java.lang.String getName(){
          onPropGet(PROP_ID_name);
          return _name;
     }
@@ -340,7 +340,7 @@ public class _LitemallRegion extends DynamicOrmEntity{
     /**
      * 行政区域名称: NAME
      */
-    public void setName(java.lang.String value){
+    public final void setName(java.lang.String value){
         if(onPropSet(PROP_ID_name,value)){
             this._name = value;
             internalClearRefs(PROP_ID_name);
@@ -351,7 +351,7 @@ public class _LitemallRegion extends DynamicOrmEntity{
     /**
      * 行政区域类型: TYPE
      */
-    public java.lang.Byte getType(){
+    public final java.lang.Byte getType(){
          onPropGet(PROP_ID_type);
          return _type;
     }
@@ -359,7 +359,7 @@ public class _LitemallRegion extends DynamicOrmEntity{
     /**
      * 行政区域类型: TYPE
      */
-    public void setType(java.lang.Byte value){
+    public final void setType(java.lang.Byte value){
         if(onPropSet(PROP_ID_type,value)){
             this._type = value;
             internalClearRefs(PROP_ID_type);
@@ -370,7 +370,7 @@ public class _LitemallRegion extends DynamicOrmEntity{
     /**
      * 行政区域编码: CODE
      */
-    public java.lang.Integer getCode(){
+    public final java.lang.Integer getCode(){
          onPropGet(PROP_ID_code);
          return _code;
     }
@@ -378,7 +378,7 @@ public class _LitemallRegion extends DynamicOrmEntity{
     /**
      * 行政区域编码: CODE
      */
-    public void setCode(java.lang.Integer value){
+    public final void setCode(java.lang.Integer value){
         if(onPropSet(PROP_ID_code,value)){
             this._code = value;
             internalClearRefs(PROP_ID_code);
@@ -389,11 +389,11 @@ public class _LitemallRegion extends DynamicOrmEntity{
     /**
      * 父区域
      */
-    public app.mall.dao.entity.LitemallRegion getParent(){
+    public final app.mall.dao.entity.LitemallRegion getParent(){
        return (app.mall.dao.entity.LitemallRegion)internalGetRefEntity(PROP_NAME_parent);
     }
 
-    public void setParent(app.mall.dao.entity.LitemallRegion refEntity){
+    public final void setParent(app.mall.dao.entity.LitemallRegion refEntity){
    
            if(refEntity == null){
            
@@ -415,7 +415,7 @@ public class _LitemallRegion extends DynamicOrmEntity{
     /**
      * 子区域。 refPropName: parent, keyProp: {rel.keyProp}
      */
-    public IOrmEntitySet<app.mall.dao.entity.LitemallRegion> getChildren(){
+    public final IOrmEntitySet<app.mall.dao.entity.LitemallRegion> getChildren(){
        return _children;
     }
        

@@ -19,10 +19,10 @@
             <cols>
 
                 <!--Id-->
-                <col id="id" mandatory="true" sortable="true"/>
+                <col id="id" mandatory="true" ui:number="true" sortable="true"/>
 
                 <!--商品ID-->
-                <col id="goodsId" mandatory="true" sortable="true"/>
+                <col id="goodsId" mandatory="true" ui:number="true" sortable="true"/>
 
                 <!--商品名称-->
                 <col id="goodsName" mandatory="true" sortable="true"/>
@@ -31,16 +31,16 @@
                 <col id="picUrl" sortable="true"/>
 
                 <!--优惠金额-->
-                <col id="discount" mandatory="true" sortable="true"/>
+                <col id="discount" mandatory="true" ui:number="true" sortable="true"/>
 
                 <!--达到优惠条件的人数-->
-                <col id="discountMember" mandatory="true" sortable="true"/>
+                <col id="discountMember" mandatory="true" ui:number="true" sortable="true"/>
 
                 <!--团购过期时间-->
                 <col id="expireTime" sortable="true"/>
 
                 <!--团购规则状态，正常上线则0，到期自动下线则1，管理手动下线则2-->
-                <col id="status" sortable="true"/>
+                <col id="status" ui:number="true" sortable="true"/>
             </cols>
         </grid>
         <grid id="pick-list" x:prototype="list" x:abstract="true"/>

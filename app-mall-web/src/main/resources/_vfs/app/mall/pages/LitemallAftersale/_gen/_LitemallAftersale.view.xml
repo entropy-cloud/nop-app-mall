@@ -19,25 +19,25 @@
             <cols>
 
                 <!--Id-->
-                <col id="id" mandatory="true" sortable="true"/>
+                <col id="id" mandatory="true" ui:number="true" sortable="true"/>
 
                 <!--售后编号-->
                 <col id="aftersaleSn" sortable="true"/>
 
                 <!--订单ID-->
-                <col id="orderId" mandatory="true" sortable="true"/>
+                <col id="orderId" mandatory="true" ui:number="true" sortable="true"/>
 
                 <!--用户ID-->
-                <col id="userId" mandatory="true" sortable="true"/>
+                <col id="userId" mandatory="true" ui:number="true" sortable="true"/>
 
                 <!--售后类型-->
-                <col id="type" sortable="true"/>
+                <col id="type" ui:number="true" sortable="true"/>
 
                 <!--退款原因-->
                 <col id="reason" sortable="true"/>
 
                 <!--退款金额-->
-                <col id="amount" sortable="true"/>
+                <col id="amount" ui:number="true" sortable="true"/>
 
                 <!--退款凭证图片链接数组-->
                 <col id="pictures" sortable="true" x:abstract="true"/>
@@ -46,7 +46,7 @@
                 <col id="comment" sortable="true"/>
 
                 <!--售后状态-->
-                <col id="status" sortable="true"/>
+                <col id="status" ui:number="true" sortable="true"/>
 
                 <!--管理员操作时间-->
                 <col id="handleTime" sortable="true"/>

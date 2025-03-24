@@ -19,16 +19,16 @@
             <cols>
 
                 <!--Id-->
-                <col id="id" mandatory="true" sortable="true"/>
+                <col id="id" mandatory="true" ui:number="true" sortable="true"/>
 
                 <!--用户ID-->
-                <col id="userId" mandatory="true" sortable="true"/>
+                <col id="userId" mandatory="true" ui:number="true" sortable="true"/>
 
                 <!--优惠券ID-->
-                <col id="couponId" mandatory="true" sortable="true"/>
+                <col id="couponId" mandatory="true" ui:number="true" sortable="true"/>
 
                 <!--使用状态-->
-                <col id="status" sortable="true"/>
+                <col id="status" ui:number="true" sortable="true"/>
 
                 <!--使用时间-->
                 <col id="usedTime" sortable="true"/>
@@ -40,7 +40,7 @@
                 <col id="endTime" sortable="true"/>
 
                 <!--订单ID-->
-                <col id="orderId" sortable="true"/>
+                <col id="orderId" ui:number="true" sortable="true"/>
             </cols>
         </grid>
         <grid id="pick-list" x:prototype="list" x:abstract="true"/>

@@ -501,7 +501,7 @@ public class _LitemallAd extends DynamicOrmEntity{
     /**
      * Id: ID
      */
-    public java.lang.Integer getId(){
+    public final java.lang.Integer getId(){
          onPropGet(PROP_ID_id);
          return _id;
     }
@@ -509,7 +509,7 @@ public class _LitemallAd extends DynamicOrmEntity{
     /**
      * Id: ID
      */
-    public void setId(java.lang.Integer value){
+    public final void setId(java.lang.Integer value){
         if(onPropSet(PROP_ID_id,value)){
             this._id = value;
             internalClearRefs(PROP_ID_id);
@@ -520,7 +520,7 @@ public class _LitemallAd extends DynamicOrmEntity{
     /**
      * 广告标题: NAME
      */
-    public java.lang.String getName(){
+    public final java.lang.String getName(){
          onPropGet(PROP_ID_name);
          return _name;
     }
@@ -528,7 +528,7 @@ public class _LitemallAd extends DynamicOrmEntity{
     /**
      * 广告标题: NAME
      */
-    public void setName(java.lang.String value){
+    public final void setName(java.lang.String value){
         if(onPropSet(PROP_ID_name,value)){
             this._name = value;
             internalClearRefs(PROP_ID_name);
@@ -539,7 +539,7 @@ public class _LitemallAd extends DynamicOrmEntity{
     /**
      * 所广告的商品页面或者活动页面链接地址: LINK
      */
-    public java.lang.String getLink(){
+    public final java.lang.String getLink(){
          onPropGet(PROP_ID_link);
          return _link;
     }
@@ -547,7 +547,7 @@ public class _LitemallAd extends DynamicOrmEntity{
     /**
      * 所广告的商品页面或者活动页面链接地址: LINK
      */
-    public void setLink(java.lang.String value){
+    public final void setLink(java.lang.String value){
         if(onPropSet(PROP_ID_link,value)){
             this._link = value;
             internalClearRefs(PROP_ID_link);
@@ -558,7 +558,7 @@ public class _LitemallAd extends DynamicOrmEntity{
     /**
      * 广告宣传图片: URL
      */
-    public java.lang.String getUrl(){
+    public final java.lang.String getUrl(){
          onPropGet(PROP_ID_url);
          return _url;
     }
@@ -566,7 +566,7 @@ public class _LitemallAd extends DynamicOrmEntity{
     /**
      * 广告宣传图片: URL
      */
-    public void setUrl(java.lang.String value){
+    public final void setUrl(java.lang.String value){
         if(onPropSet(PROP_ID_url,value)){
             this._url = value;
             internalClearRefs(PROP_ID_url);
@@ -577,7 +577,7 @@ public class _LitemallAd extends DynamicOrmEntity{
     /**
      * 广告位置：1则是首页: POSITION
      */
-    public java.lang.Byte getPosition(){
+    public final java.lang.Byte getPosition(){
          onPropGet(PROP_ID_position);
          return _position;
     }
@@ -585,7 +585,7 @@ public class _LitemallAd extends DynamicOrmEntity{
     /**
      * 广告位置：1则是首页: POSITION
      */
-    public void setPosition(java.lang.Byte value){
+    public final void setPosition(java.lang.Byte value){
         if(onPropSet(PROP_ID_position,value)){
             this._position = value;
             internalClearRefs(PROP_ID_position);
@@ -596,7 +596,7 @@ public class _LitemallAd extends DynamicOrmEntity{
     /**
      * 活动内容: CONTENT
      */
-    public java.lang.String getContent(){
+    public final java.lang.String getContent(){
          onPropGet(PROP_ID_content);
          return _content;
     }
@@ -604,7 +604,7 @@ public class _LitemallAd extends DynamicOrmEntity{
     /**
      * 活动内容: CONTENT
      */
-    public void setContent(java.lang.String value){
+    public final void setContent(java.lang.String value){
         if(onPropSet(PROP_ID_content,value)){
             this._content = value;
             internalClearRefs(PROP_ID_content);
@@ -615,7 +615,7 @@ public class _LitemallAd extends DynamicOrmEntity{
     /**
      * 广告开始时间: START_TIME
      */
-    public java.time.LocalDateTime getStartTime(){
+    public final java.time.LocalDateTime getStartTime(){
          onPropGet(PROP_ID_startTime);
          return _startTime;
     }
@@ -623,7 +623,7 @@ public class _LitemallAd extends DynamicOrmEntity{
     /**
      * 广告开始时间: START_TIME
      */
-    public void setStartTime(java.time.LocalDateTime value){
+    public final void setStartTime(java.time.LocalDateTime value){
         if(onPropSet(PROP_ID_startTime,value)){
             this._startTime = value;
             internalClearRefs(PROP_ID_startTime);
@@ -634,7 +634,7 @@ public class _LitemallAd extends DynamicOrmEntity{
     /**
      * 广告结束时间: END_TIME
      */
-    public java.time.LocalDateTime getEndTime(){
+    public final java.time.LocalDateTime getEndTime(){
          onPropGet(PROP_ID_endTime);
          return _endTime;
     }
@@ -642,7 +642,7 @@ public class _LitemallAd extends DynamicOrmEntity{
     /**
      * 广告结束时间: END_TIME
      */
-    public void setEndTime(java.time.LocalDateTime value){
+    public final void setEndTime(java.time.LocalDateTime value){
         if(onPropSet(PROP_ID_endTime,value)){
             this._endTime = value;
             internalClearRefs(PROP_ID_endTime);
@@ -653,7 +653,7 @@ public class _LitemallAd extends DynamicOrmEntity{
     /**
      * 是否启动: ENABLED
      */
-    public java.lang.Boolean getEnabled(){
+    public final java.lang.Boolean getEnabled(){
          onPropGet(PROP_ID_enabled);
          return _enabled;
     }
@@ -661,7 +661,7 @@ public class _LitemallAd extends DynamicOrmEntity{
     /**
      * 是否启动: ENABLED
      */
-    public void setEnabled(java.lang.Boolean value){
+    public final void setEnabled(java.lang.Boolean value){
         if(onPropSet(PROP_ID_enabled,value)){
             this._enabled = value;
             internalClearRefs(PROP_ID_enabled);
@@ -672,7 +672,7 @@ public class _LitemallAd extends DynamicOrmEntity{
     /**
      * 创建时间: ADD_TIME
      */
-    public java.time.LocalDateTime getAddTime(){
+    public final java.time.LocalDateTime getAddTime(){
          onPropGet(PROP_ID_addTime);
          return _addTime;
     }
@@ -680,7 +680,7 @@ public class _LitemallAd extends DynamicOrmEntity{
     /**
      * 创建时间: ADD_TIME
      */
-    public void setAddTime(java.time.LocalDateTime value){
+    public final void setAddTime(java.time.LocalDateTime value){
         if(onPropSet(PROP_ID_addTime,value)){
             this._addTime = value;
             internalClearRefs(PROP_ID_addTime);
@@ -691,7 +691,7 @@ public class _LitemallAd extends DynamicOrmEntity{
     /**
      * 更新时间: UPDATE_TIME
      */
-    public java.time.LocalDateTime getUpdateTime(){
+    public final java.time.LocalDateTime getUpdateTime(){
          onPropGet(PROP_ID_updateTime);
          return _updateTime;
     }
@@ -699,7 +699,7 @@ public class _LitemallAd extends DynamicOrmEntity{
     /**
      * 更新时间: UPDATE_TIME
      */
-    public void setUpdateTime(java.time.LocalDateTime value){
+    public final void setUpdateTime(java.time.LocalDateTime value){
         if(onPropSet(PROP_ID_updateTime,value)){
             this._updateTime = value;
             internalClearRefs(PROP_ID_updateTime);
@@ -710,7 +710,7 @@ public class _LitemallAd extends DynamicOrmEntity{
     /**
      * 逻辑删除: DELETED
      */
-    public java.lang.Boolean getDeleted(){
+    public final java.lang.Boolean getDeleted(){
          onPropGet(PROP_ID_deleted);
          return _deleted;
     }
@@ -718,7 +718,7 @@ public class _LitemallAd extends DynamicOrmEntity{
     /**
      * 逻辑删除: DELETED
      */
-    public void setDeleted(java.lang.Boolean value){
+    public final void setDeleted(java.lang.Boolean value){
         if(onPropSet(PROP_ID_deleted,value)){
             this._deleted = value;
             internalClearRefs(PROP_ID_deleted);
@@ -735,7 +735,7 @@ public class _LitemallAd extends DynamicOrmEntity{
       
    }
 
-   public io.nop.orm.component.OrmFileComponent getUrlComponent(){
+   public final io.nop.orm.component.OrmFileComponent getUrlComponent(){
       if(_urlComponent == null){
           _urlComponent = new io.nop.orm.component.OrmFileComponent();
           _urlComponent.bindToEntity(this, COMPONENT_PROP_ID_MAP_urlComponent);

@@ -510,7 +510,7 @@ public class _LitemallCategory extends DynamicOrmEntity{
     /**
      * Id: ID
      */
-    public java.lang.Integer getId(){
+    public final java.lang.Integer getId(){
          onPropGet(PROP_ID_id);
          return _id;
     }
@@ -518,7 +518,7 @@ public class _LitemallCategory extends DynamicOrmEntity{
     /**
      * Id: ID
      */
-    public void setId(java.lang.Integer value){
+    public final void setId(java.lang.Integer value){
         if(onPropSet(PROP_ID_id,value)){
             this._id = value;
             internalClearRefs(PROP_ID_id);
@@ -529,7 +529,7 @@ public class _LitemallCategory extends DynamicOrmEntity{
     /**
      * 类目名称: NAME
      */
-    public java.lang.String getName(){
+    public final java.lang.String getName(){
          onPropGet(PROP_ID_name);
          return _name;
     }
@@ -537,7 +537,7 @@ public class _LitemallCategory extends DynamicOrmEntity{
     /**
      * 类目名称: NAME
      */
-    public void setName(java.lang.String value){
+    public final void setName(java.lang.String value){
         if(onPropSet(PROP_ID_name,value)){
             this._name = value;
             internalClearRefs(PROP_ID_name);
@@ -548,7 +548,7 @@ public class _LitemallCategory extends DynamicOrmEntity{
     /**
      * 类目图标: ICON_URL
      */
-    public java.lang.String getIconUrl(){
+    public final java.lang.String getIconUrl(){
          onPropGet(PROP_ID_iconUrl);
          return _iconUrl;
     }
@@ -556,7 +556,7 @@ public class _LitemallCategory extends DynamicOrmEntity{
     /**
      * 类目图标: ICON_URL
      */
-    public void setIconUrl(java.lang.String value){
+    public final void setIconUrl(java.lang.String value){
         if(onPropSet(PROP_ID_iconUrl,value)){
             this._iconUrl = value;
             internalClearRefs(PROP_ID_iconUrl);
@@ -567,7 +567,7 @@ public class _LitemallCategory extends DynamicOrmEntity{
     /**
      * 类目图片: PIC_URL
      */
-    public java.lang.String getPicUrl(){
+    public final java.lang.String getPicUrl(){
          onPropGet(PROP_ID_picUrl);
          return _picUrl;
     }
@@ -575,7 +575,7 @@ public class _LitemallCategory extends DynamicOrmEntity{
     /**
      * 类目图片: PIC_URL
      */
-    public void setPicUrl(java.lang.String value){
+    public final void setPicUrl(java.lang.String value){
         if(onPropSet(PROP_ID_picUrl,value)){
             this._picUrl = value;
             internalClearRefs(PROP_ID_picUrl);
@@ -586,7 +586,7 @@ public class _LitemallCategory extends DynamicOrmEntity{
     /**
      * 类目关键字: KEYWORDS
      */
-    public java.lang.String getKeywords(){
+    public final java.lang.String getKeywords(){
          onPropGet(PROP_ID_keywords);
          return _keywords;
     }
@@ -594,7 +594,7 @@ public class _LitemallCategory extends DynamicOrmEntity{
     /**
      * 类目关键字: KEYWORDS
      */
-    public void setKeywords(java.lang.String value){
+    public final void setKeywords(java.lang.String value){
         if(onPropSet(PROP_ID_keywords,value)){
             this._keywords = value;
             internalClearRefs(PROP_ID_keywords);
@@ -605,7 +605,7 @@ public class _LitemallCategory extends DynamicOrmEntity{
     /**
      * 简介: DESC
      */
-    public java.lang.String getDesc(){
+    public final java.lang.String getDesc(){
          onPropGet(PROP_ID_desc);
          return _desc;
     }
@@ -613,7 +613,7 @@ public class _LitemallCategory extends DynamicOrmEntity{
     /**
      * 简介: DESC
      */
-    public void setDesc(java.lang.String value){
+    public final void setDesc(java.lang.String value){
         if(onPropSet(PROP_ID_desc,value)){
             this._desc = value;
             internalClearRefs(PROP_ID_desc);
@@ -624,7 +624,7 @@ public class _LitemallCategory extends DynamicOrmEntity{
     /**
      * 级别: LEVEL
      */
-    public java.lang.String getLevel(){
+    public final java.lang.String getLevel(){
          onPropGet(PROP_ID_level);
          return _level;
     }
@@ -632,7 +632,7 @@ public class _LitemallCategory extends DynamicOrmEntity{
     /**
      * 级别: LEVEL
      */
-    public void setLevel(java.lang.String value){
+    public final void setLevel(java.lang.String value){
         if(onPropSet(PROP_ID_level,value)){
             this._level = value;
             internalClearRefs(PROP_ID_level);
@@ -643,7 +643,7 @@ public class _LitemallCategory extends DynamicOrmEntity{
     /**
      * 父类目ID: PID
      */
-    public java.lang.Integer getPid(){
+    public final java.lang.Integer getPid(){
          onPropGet(PROP_ID_pid);
          return _pid;
     }
@@ -651,7 +651,7 @@ public class _LitemallCategory extends DynamicOrmEntity{
     /**
      * 父类目ID: PID
      */
-    public void setPid(java.lang.Integer value){
+    public final void setPid(java.lang.Integer value){
         if(onPropSet(PROP_ID_pid,value)){
             this._pid = value;
             internalClearRefs(PROP_ID_pid);
@@ -662,7 +662,7 @@ public class _LitemallCategory extends DynamicOrmEntity{
     /**
      * 排序: SORT_ORDER
      */
-    public java.lang.Byte getSortOrder(){
+    public final java.lang.Byte getSortOrder(){
          onPropGet(PROP_ID_sortOrder);
          return _sortOrder;
     }
@@ -670,7 +670,7 @@ public class _LitemallCategory extends DynamicOrmEntity{
     /**
      * 排序: SORT_ORDER
      */
-    public void setSortOrder(java.lang.Byte value){
+    public final void setSortOrder(java.lang.Byte value){
         if(onPropSet(PROP_ID_sortOrder,value)){
             this._sortOrder = value;
             internalClearRefs(PROP_ID_sortOrder);
@@ -681,7 +681,7 @@ public class _LitemallCategory extends DynamicOrmEntity{
     /**
      * 创建时间: ADD_TIME
      */
-    public java.time.LocalDateTime getAddTime(){
+    public final java.time.LocalDateTime getAddTime(){
          onPropGet(PROP_ID_addTime);
          return _addTime;
     }
@@ -689,7 +689,7 @@ public class _LitemallCategory extends DynamicOrmEntity{
     /**
      * 创建时间: ADD_TIME
      */
-    public void setAddTime(java.time.LocalDateTime value){
+    public final void setAddTime(java.time.LocalDateTime value){
         if(onPropSet(PROP_ID_addTime,value)){
             this._addTime = value;
             internalClearRefs(PROP_ID_addTime);
@@ -700,7 +700,7 @@ public class _LitemallCategory extends DynamicOrmEntity{
     /**
      * 更新时间: UPDATE_TIME
      */
-    public java.time.LocalDateTime getUpdateTime(){
+    public final java.time.LocalDateTime getUpdateTime(){
          onPropGet(PROP_ID_updateTime);
          return _updateTime;
     }
@@ -708,7 +708,7 @@ public class _LitemallCategory extends DynamicOrmEntity{
     /**
      * 更新时间: UPDATE_TIME
      */
-    public void setUpdateTime(java.time.LocalDateTime value){
+    public final void setUpdateTime(java.time.LocalDateTime value){
         if(onPropSet(PROP_ID_updateTime,value)){
             this._updateTime = value;
             internalClearRefs(PROP_ID_updateTime);
@@ -719,7 +719,7 @@ public class _LitemallCategory extends DynamicOrmEntity{
     /**
      * 逻辑删除: DELETED
      */
-    public java.lang.Boolean getDeleted(){
+    public final java.lang.Boolean getDeleted(){
          onPropGet(PROP_ID_deleted);
          return _deleted;
     }
@@ -727,7 +727,7 @@ public class _LitemallCategory extends DynamicOrmEntity{
     /**
      * 逻辑删除: DELETED
      */
-    public void setDeleted(java.lang.Boolean value){
+    public final void setDeleted(java.lang.Boolean value){
         if(onPropSet(PROP_ID_deleted,value)){
             this._deleted = value;
             internalClearRefs(PROP_ID_deleted);
@@ -738,11 +738,11 @@ public class _LitemallCategory extends DynamicOrmEntity{
     /**
      * 父类目
      */
-    public app.mall.dao.entity.LitemallCategory getParent(){
+    public final app.mall.dao.entity.LitemallCategory getParent(){
        return (app.mall.dao.entity.LitemallCategory)internalGetRefEntity(PROP_NAME_parent);
     }
 
-    public void setParent(app.mall.dao.entity.LitemallCategory refEntity){
+    public final void setParent(app.mall.dao.entity.LitemallCategory refEntity){
    
            if(refEntity == null){
            
@@ -764,7 +764,7 @@ public class _LitemallCategory extends DynamicOrmEntity{
     /**
      * 子类目。 refPropName: parent, keyProp: {rel.keyProp}
      */
-    public IOrmEntitySet<app.mall.dao.entity.LitemallCategory> getChildren(){
+    public final IOrmEntitySet<app.mall.dao.entity.LitemallCategory> getChildren(){
        return _children;
     }
        
@@ -777,7 +777,7 @@ public class _LitemallCategory extends DynamicOrmEntity{
       
    }
 
-   public io.nop.orm.component.OrmFileComponent getIconUrlComponent(){
+   public final io.nop.orm.component.OrmFileComponent getIconUrlComponent(){
       if(_iconUrlComponent == null){
           _iconUrlComponent = new io.nop.orm.component.OrmFileComponent();
           _iconUrlComponent.bindToEntity(this, COMPONENT_PROP_ID_MAP_iconUrlComponent);
@@ -794,7 +794,7 @@ public class _LitemallCategory extends DynamicOrmEntity{
       
    }
 
-   public io.nop.orm.component.OrmFileComponent getPicUrlComponent(){
+   public final io.nop.orm.component.OrmFileComponent getPicUrlComponent(){
       if(_picUrlComponent == null){
           _picUrlComponent = new io.nop.orm.component.OrmFileComponent();
           _picUrlComponent.bindToEntity(this, COMPONENT_PROP_ID_MAP_picUrlComponent);

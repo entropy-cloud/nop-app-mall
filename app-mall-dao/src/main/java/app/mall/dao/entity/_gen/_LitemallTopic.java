@@ -501,7 +501,7 @@ public class _LitemallTopic extends DynamicOrmEntity{
     /**
      * Id: ID
      */
-    public java.lang.Integer getId(){
+    public final java.lang.Integer getId(){
          onPropGet(PROP_ID_id);
          return _id;
     }
@@ -509,7 +509,7 @@ public class _LitemallTopic extends DynamicOrmEntity{
     /**
      * Id: ID
      */
-    public void setId(java.lang.Integer value){
+    public final void setId(java.lang.Integer value){
         if(onPropSet(PROP_ID_id,value)){
             this._id = value;
             internalClearRefs(PROP_ID_id);
@@ -520,7 +520,7 @@ public class _LitemallTopic extends DynamicOrmEntity{
     /**
      * 专题标题: TITLE
      */
-    public java.lang.String getTitle(){
+    public final java.lang.String getTitle(){
          onPropGet(PROP_ID_title);
          return _title;
     }
@@ -528,7 +528,7 @@ public class _LitemallTopic extends DynamicOrmEntity{
     /**
      * 专题标题: TITLE
      */
-    public void setTitle(java.lang.String value){
+    public final void setTitle(java.lang.String value){
         if(onPropSet(PROP_ID_title,value)){
             this._title = value;
             internalClearRefs(PROP_ID_title);
@@ -539,7 +539,7 @@ public class _LitemallTopic extends DynamicOrmEntity{
     /**
      * 专题子标题: SUBTITLE
      */
-    public java.lang.String getSubtitle(){
+    public final java.lang.String getSubtitle(){
          onPropGet(PROP_ID_subtitle);
          return _subtitle;
     }
@@ -547,7 +547,7 @@ public class _LitemallTopic extends DynamicOrmEntity{
     /**
      * 专题子标题: SUBTITLE
      */
-    public void setSubtitle(java.lang.String value){
+    public final void setSubtitle(java.lang.String value){
         if(onPropSet(PROP_ID_subtitle,value)){
             this._subtitle = value;
             internalClearRefs(PROP_ID_subtitle);
@@ -558,7 +558,7 @@ public class _LitemallTopic extends DynamicOrmEntity{
     /**
      * 专题内容: CONTENT
      */
-    public java.lang.String getContent(){
+    public final java.lang.String getContent(){
          onPropGet(PROP_ID_content);
          return _content;
     }
@@ -566,7 +566,7 @@ public class _LitemallTopic extends DynamicOrmEntity{
     /**
      * 专题内容: CONTENT
      */
-    public void setContent(java.lang.String value){
+    public final void setContent(java.lang.String value){
         if(onPropSet(PROP_ID_content,value)){
             this._content = value;
             internalClearRefs(PROP_ID_content);
@@ -577,7 +577,7 @@ public class _LitemallTopic extends DynamicOrmEntity{
     /**
      * 专题相关商品最低价: PRICE
      */
-    public java.math.BigDecimal getPrice(){
+    public final java.math.BigDecimal getPrice(){
          onPropGet(PROP_ID_price);
          return _price;
     }
@@ -585,7 +585,7 @@ public class _LitemallTopic extends DynamicOrmEntity{
     /**
      * 专题相关商品最低价: PRICE
      */
-    public void setPrice(java.math.BigDecimal value){
+    public final void setPrice(java.math.BigDecimal value){
         if(onPropSet(PROP_ID_price,value)){
             this._price = value;
             internalClearRefs(PROP_ID_price);
@@ -596,7 +596,7 @@ public class _LitemallTopic extends DynamicOrmEntity{
     /**
      * 专题阅读量: READ_COUNT
      */
-    public java.lang.String getReadCount(){
+    public final java.lang.String getReadCount(){
          onPropGet(PROP_ID_readCount);
          return _readCount;
     }
@@ -604,7 +604,7 @@ public class _LitemallTopic extends DynamicOrmEntity{
     /**
      * 专题阅读量: READ_COUNT
      */
-    public void setReadCount(java.lang.String value){
+    public final void setReadCount(java.lang.String value){
         if(onPropSet(PROP_ID_readCount,value)){
             this._readCount = value;
             internalClearRefs(PROP_ID_readCount);
@@ -615,7 +615,7 @@ public class _LitemallTopic extends DynamicOrmEntity{
     /**
      * 专题图片: PIC_URL
      */
-    public java.lang.String getPicUrl(){
+    public final java.lang.String getPicUrl(){
          onPropGet(PROP_ID_picUrl);
          return _picUrl;
     }
@@ -623,7 +623,7 @@ public class _LitemallTopic extends DynamicOrmEntity{
     /**
      * 专题图片: PIC_URL
      */
-    public void setPicUrl(java.lang.String value){
+    public final void setPicUrl(java.lang.String value){
         if(onPropSet(PROP_ID_picUrl,value)){
             this._picUrl = value;
             internalClearRefs(PROP_ID_picUrl);
@@ -634,7 +634,7 @@ public class _LitemallTopic extends DynamicOrmEntity{
     /**
      * 排序: SORT_ORDER
      */
-    public java.lang.Integer getSortOrder(){
+    public final java.lang.Integer getSortOrder(){
          onPropGet(PROP_ID_sortOrder);
          return _sortOrder;
     }
@@ -642,7 +642,7 @@ public class _LitemallTopic extends DynamicOrmEntity{
     /**
      * 排序: SORT_ORDER
      */
-    public void setSortOrder(java.lang.Integer value){
+    public final void setSortOrder(java.lang.Integer value){
         if(onPropSet(PROP_ID_sortOrder,value)){
             this._sortOrder = value;
             internalClearRefs(PROP_ID_sortOrder);
@@ -653,7 +653,7 @@ public class _LitemallTopic extends DynamicOrmEntity{
     /**
      * 专题相关商品: GOODS
      */
-    public java.lang.String getGoods(){
+    public final java.lang.String getGoods(){
          onPropGet(PROP_ID_goods);
          return _goods;
     }
@@ -661,7 +661,7 @@ public class _LitemallTopic extends DynamicOrmEntity{
     /**
      * 专题相关商品: GOODS
      */
-    public void setGoods(java.lang.String value){
+    public final void setGoods(java.lang.String value){
         if(onPropSet(PROP_ID_goods,value)){
             this._goods = value;
             internalClearRefs(PROP_ID_goods);
@@ -672,7 +672,7 @@ public class _LitemallTopic extends DynamicOrmEntity{
     /**
      * 创建时间: ADD_TIME
      */
-    public java.time.LocalDateTime getAddTime(){
+    public final java.time.LocalDateTime getAddTime(){
          onPropGet(PROP_ID_addTime);
          return _addTime;
     }
@@ -680,7 +680,7 @@ public class _LitemallTopic extends DynamicOrmEntity{
     /**
      * 创建时间: ADD_TIME
      */
-    public void setAddTime(java.time.LocalDateTime value){
+    public final void setAddTime(java.time.LocalDateTime value){
         if(onPropSet(PROP_ID_addTime,value)){
             this._addTime = value;
             internalClearRefs(PROP_ID_addTime);
@@ -691,7 +691,7 @@ public class _LitemallTopic extends DynamicOrmEntity{
     /**
      * 更新时间: UPDATE_TIME
      */
-    public java.time.LocalDateTime getUpdateTime(){
+    public final java.time.LocalDateTime getUpdateTime(){
          onPropGet(PROP_ID_updateTime);
          return _updateTime;
     }
@@ -699,7 +699,7 @@ public class _LitemallTopic extends DynamicOrmEntity{
     /**
      * 更新时间: UPDATE_TIME
      */
-    public void setUpdateTime(java.time.LocalDateTime value){
+    public final void setUpdateTime(java.time.LocalDateTime value){
         if(onPropSet(PROP_ID_updateTime,value)){
             this._updateTime = value;
             internalClearRefs(PROP_ID_updateTime);
@@ -710,7 +710,7 @@ public class _LitemallTopic extends DynamicOrmEntity{
     /**
      * 逻辑删除: DELETED
      */
-    public java.lang.Boolean getDeleted(){
+    public final java.lang.Boolean getDeleted(){
          onPropGet(PROP_ID_deleted);
          return _deleted;
     }
@@ -718,7 +718,7 @@ public class _LitemallTopic extends DynamicOrmEntity{
     /**
      * 逻辑删除: DELETED
      */
-    public void setDeleted(java.lang.Boolean value){
+    public final void setDeleted(java.lang.Boolean value){
         if(onPropSet(PROP_ID_deleted,value)){
             this._deleted = value;
             internalClearRefs(PROP_ID_deleted);
@@ -735,7 +735,7 @@ public class _LitemallTopic extends DynamicOrmEntity{
       
    }
 
-   public io.nop.orm.component.JsonOrmComponent getGoodsComponent(){
+   public final io.nop.orm.component.JsonOrmComponent getGoodsComponent(){
       if(_goodsComponent == null){
           _goodsComponent = new io.nop.orm.component.JsonOrmComponent();
           _goodsComponent.bindToEntity(this, COMPONENT_PROP_ID_MAP_goodsComponent);

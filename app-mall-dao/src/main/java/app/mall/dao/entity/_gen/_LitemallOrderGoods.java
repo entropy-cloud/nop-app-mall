@@ -570,7 +570,7 @@ public class _LitemallOrderGoods extends DynamicOrmEntity{
     /**
      * Id: ID
      */
-    public java.lang.Integer getId(){
+    public final java.lang.Integer getId(){
          onPropGet(PROP_ID_id);
          return _id;
     }
@@ -578,7 +578,7 @@ public class _LitemallOrderGoods extends DynamicOrmEntity{
     /**
      * Id: ID
      */
-    public void setId(java.lang.Integer value){
+    public final void setId(java.lang.Integer value){
         if(onPropSet(PROP_ID_id,value)){
             this._id = value;
             internalClearRefs(PROP_ID_id);
@@ -589,7 +589,7 @@ public class _LitemallOrderGoods extends DynamicOrmEntity{
     /**
      * 订单ID: ORDER_ID
      */
-    public java.lang.Integer getOrderId(){
+    public final java.lang.Integer getOrderId(){
          onPropGet(PROP_ID_orderId);
          return _orderId;
     }
@@ -597,7 +597,7 @@ public class _LitemallOrderGoods extends DynamicOrmEntity{
     /**
      * 订单ID: ORDER_ID
      */
-    public void setOrderId(java.lang.Integer value){
+    public final void setOrderId(java.lang.Integer value){
         if(onPropSet(PROP_ID_orderId,value)){
             this._orderId = value;
             internalClearRefs(PROP_ID_orderId);
@@ -608,7 +608,7 @@ public class _LitemallOrderGoods extends DynamicOrmEntity{
     /**
      * 商品ID: GOODS_ID
      */
-    public java.lang.Integer getGoodsId(){
+    public final java.lang.Integer getGoodsId(){
          onPropGet(PROP_ID_goodsId);
          return _goodsId;
     }
@@ -616,7 +616,7 @@ public class _LitemallOrderGoods extends DynamicOrmEntity{
     /**
      * 商品ID: GOODS_ID
      */
-    public void setGoodsId(java.lang.Integer value){
+    public final void setGoodsId(java.lang.Integer value){
         if(onPropSet(PROP_ID_goodsId,value)){
             this._goodsId = value;
             internalClearRefs(PROP_ID_goodsId);
@@ -627,7 +627,7 @@ public class _LitemallOrderGoods extends DynamicOrmEntity{
     /**
      * 商品名称: GOODS_NAME
      */
-    public java.lang.String getGoodsName(){
+    public final java.lang.String getGoodsName(){
          onPropGet(PROP_ID_goodsName);
          return _goodsName;
     }
@@ -635,7 +635,7 @@ public class _LitemallOrderGoods extends DynamicOrmEntity{
     /**
      * 商品名称: GOODS_NAME
      */
-    public void setGoodsName(java.lang.String value){
+    public final void setGoodsName(java.lang.String value){
         if(onPropSet(PROP_ID_goodsName,value)){
             this._goodsName = value;
             internalClearRefs(PROP_ID_goodsName);
@@ -646,7 +646,7 @@ public class _LitemallOrderGoods extends DynamicOrmEntity{
     /**
      * 商品编号: GOODS_SN
      */
-    public java.lang.String getGoodsSn(){
+    public final java.lang.String getGoodsSn(){
          onPropGet(PROP_ID_goodsSn);
          return _goodsSn;
     }
@@ -654,7 +654,7 @@ public class _LitemallOrderGoods extends DynamicOrmEntity{
     /**
      * 商品编号: GOODS_SN
      */
-    public void setGoodsSn(java.lang.String value){
+    public final void setGoodsSn(java.lang.String value){
         if(onPropSet(PROP_ID_goodsSn,value)){
             this._goodsSn = value;
             internalClearRefs(PROP_ID_goodsSn);
@@ -665,7 +665,7 @@ public class _LitemallOrderGoods extends DynamicOrmEntity{
     /**
      * 货品ID: PRODUCT_ID
      */
-    public java.lang.Integer getProductId(){
+    public final java.lang.Integer getProductId(){
          onPropGet(PROP_ID_productId);
          return _productId;
     }
@@ -673,7 +673,7 @@ public class _LitemallOrderGoods extends DynamicOrmEntity{
     /**
      * 货品ID: PRODUCT_ID
      */
-    public void setProductId(java.lang.Integer value){
+    public final void setProductId(java.lang.Integer value){
         if(onPropSet(PROP_ID_productId,value)){
             this._productId = value;
             internalClearRefs(PROP_ID_productId);
@@ -684,7 +684,7 @@ public class _LitemallOrderGoods extends DynamicOrmEntity{
     /**
      * 购买数量: NUMBER
      */
-    public java.lang.Short getNumber(){
+    public final java.lang.Short getNumber(){
          onPropGet(PROP_ID_number);
          return _number;
     }
@@ -692,7 +692,7 @@ public class _LitemallOrderGoods extends DynamicOrmEntity{
     /**
      * 购买数量: NUMBER
      */
-    public void setNumber(java.lang.Short value){
+    public final void setNumber(java.lang.Short value){
         if(onPropSet(PROP_ID_number,value)){
             this._number = value;
             internalClearRefs(PROP_ID_number);
@@ -703,7 +703,7 @@ public class _LitemallOrderGoods extends DynamicOrmEntity{
     /**
      * 售价: PRICE
      */
-    public java.math.BigDecimal getPrice(){
+    public final java.math.BigDecimal getPrice(){
          onPropGet(PROP_ID_price);
          return _price;
     }
@@ -711,7 +711,7 @@ public class _LitemallOrderGoods extends DynamicOrmEntity{
     /**
      * 售价: PRICE
      */
-    public void setPrice(java.math.BigDecimal value){
+    public final void setPrice(java.math.BigDecimal value){
         if(onPropSet(PROP_ID_price,value)){
             this._price = value;
             internalClearRefs(PROP_ID_price);
@@ -722,7 +722,7 @@ public class _LitemallOrderGoods extends DynamicOrmEntity{
     /**
      * 规格列表: SPECIFICATIONS
      */
-    public java.lang.String getSpecifications(){
+    public final java.lang.String getSpecifications(){
          onPropGet(PROP_ID_specifications);
          return _specifications;
     }
@@ -730,7 +730,7 @@ public class _LitemallOrderGoods extends DynamicOrmEntity{
     /**
      * 规格列表: SPECIFICATIONS
      */
-    public void setSpecifications(java.lang.String value){
+    public final void setSpecifications(java.lang.String value){
         if(onPropSet(PROP_ID_specifications,value)){
             this._specifications = value;
             internalClearRefs(PROP_ID_specifications);
@@ -741,7 +741,7 @@ public class _LitemallOrderGoods extends DynamicOrmEntity{
     /**
      * 商品/货品图片: PIC_URL
      */
-    public java.lang.String getPicUrl(){
+    public final java.lang.String getPicUrl(){
          onPropGet(PROP_ID_picUrl);
          return _picUrl;
     }
@@ -749,7 +749,7 @@ public class _LitemallOrderGoods extends DynamicOrmEntity{
     /**
      * 商品/货品图片: PIC_URL
      */
-    public void setPicUrl(java.lang.String value){
+    public final void setPicUrl(java.lang.String value){
         if(onPropSet(PROP_ID_picUrl,value)){
             this._picUrl = value;
             internalClearRefs(PROP_ID_picUrl);
@@ -760,7 +760,7 @@ public class _LitemallOrderGoods extends DynamicOrmEntity{
     /**
      * 订单商品评论，如果是-1，则超期不能评价；如果是0，则可以评价；如果其他值，则是comment表里面的评论ID。: COMMENT
      */
-    public java.lang.Integer getComment(){
+    public final java.lang.Integer getComment(){
          onPropGet(PROP_ID_comment);
          return _comment;
     }
@@ -768,7 +768,7 @@ public class _LitemallOrderGoods extends DynamicOrmEntity{
     /**
      * 订单商品评论，如果是-1，则超期不能评价；如果是0，则可以评价；如果其他值，则是comment表里面的评论ID。: COMMENT
      */
-    public void setComment(java.lang.Integer value){
+    public final void setComment(java.lang.Integer value){
         if(onPropSet(PROP_ID_comment,value)){
             this._comment = value;
             internalClearRefs(PROP_ID_comment);
@@ -779,7 +779,7 @@ public class _LitemallOrderGoods extends DynamicOrmEntity{
     /**
      * 创建时间: ADD_TIME
      */
-    public java.time.LocalDateTime getAddTime(){
+    public final java.time.LocalDateTime getAddTime(){
          onPropGet(PROP_ID_addTime);
          return _addTime;
     }
@@ -787,7 +787,7 @@ public class _LitemallOrderGoods extends DynamicOrmEntity{
     /**
      * 创建时间: ADD_TIME
      */
-    public void setAddTime(java.time.LocalDateTime value){
+    public final void setAddTime(java.time.LocalDateTime value){
         if(onPropSet(PROP_ID_addTime,value)){
             this._addTime = value;
             internalClearRefs(PROP_ID_addTime);
@@ -798,7 +798,7 @@ public class _LitemallOrderGoods extends DynamicOrmEntity{
     /**
      * 更新时间: UPDATE_TIME
      */
-    public java.time.LocalDateTime getUpdateTime(){
+    public final java.time.LocalDateTime getUpdateTime(){
          onPropGet(PROP_ID_updateTime);
          return _updateTime;
     }
@@ -806,7 +806,7 @@ public class _LitemallOrderGoods extends DynamicOrmEntity{
     /**
      * 更新时间: UPDATE_TIME
      */
-    public void setUpdateTime(java.time.LocalDateTime value){
+    public final void setUpdateTime(java.time.LocalDateTime value){
         if(onPropSet(PROP_ID_updateTime,value)){
             this._updateTime = value;
             internalClearRefs(PROP_ID_updateTime);
@@ -817,7 +817,7 @@ public class _LitemallOrderGoods extends DynamicOrmEntity{
     /**
      * 逻辑删除: DELETED
      */
-    public java.lang.Boolean getDeleted(){
+    public final java.lang.Boolean getDeleted(){
          onPropGet(PROP_ID_deleted);
          return _deleted;
     }
@@ -825,7 +825,7 @@ public class _LitemallOrderGoods extends DynamicOrmEntity{
     /**
      * 逻辑删除: DELETED
      */
-    public void setDeleted(java.lang.Boolean value){
+    public final void setDeleted(java.lang.Boolean value){
         if(onPropSet(PROP_ID_deleted,value)){
             this._deleted = value;
             internalClearRefs(PROP_ID_deleted);
@@ -836,11 +836,11 @@ public class _LitemallOrderGoods extends DynamicOrmEntity{
     /**
      * 订单
      */
-    public app.mall.dao.entity.LitemallOrder getOrder(){
+    public final app.mall.dao.entity.LitemallOrder getOrder(){
        return (app.mall.dao.entity.LitemallOrder)internalGetRefEntity(PROP_NAME_order);
     }
 
-    public void setOrder(app.mall.dao.entity.LitemallOrder refEntity){
+    public final void setOrder(app.mall.dao.entity.LitemallOrder refEntity){
    
            if(refEntity == null){
            
@@ -859,11 +859,11 @@ public class _LitemallOrderGoods extends DynamicOrmEntity{
     /**
      * 订单商品
      */
-    public app.mall.dao.entity.LitemallGoods getGoods(){
+    public final app.mall.dao.entity.LitemallGoods getGoods(){
        return (app.mall.dao.entity.LitemallGoods)internalGetRefEntity(PROP_NAME_goods);
     }
 
-    public void setGoods(app.mall.dao.entity.LitemallGoods refEntity){
+    public final void setGoods(app.mall.dao.entity.LitemallGoods refEntity){
    
            if(refEntity == null){
            
@@ -882,11 +882,11 @@ public class _LitemallOrderGoods extends DynamicOrmEntity{
     /**
      * 订单产品
      */
-    public app.mall.dao.entity.LitemallGoodsProduct getProduct(){
+    public final app.mall.dao.entity.LitemallGoodsProduct getProduct(){
        return (app.mall.dao.entity.LitemallGoodsProduct)internalGetRefEntity(PROP_NAME_product);
     }
 
-    public void setProduct(app.mall.dao.entity.LitemallGoodsProduct refEntity){
+    public final void setProduct(app.mall.dao.entity.LitemallGoodsProduct refEntity){
    
            if(refEntity == null){
            
@@ -911,7 +911,7 @@ public class _LitemallOrderGoods extends DynamicOrmEntity{
       
    }
 
-   public io.nop.orm.component.OrmFileComponent getPicUrlComponent(){
+   public final io.nop.orm.component.OrmFileComponent getPicUrlComponent(){
       if(_picUrlComponent == null){
           _picUrlComponent = new io.nop.orm.component.OrmFileComponent();
           _picUrlComponent.bindToEntity(this, COMPONENT_PROP_ID_MAP_picUrlComponent);

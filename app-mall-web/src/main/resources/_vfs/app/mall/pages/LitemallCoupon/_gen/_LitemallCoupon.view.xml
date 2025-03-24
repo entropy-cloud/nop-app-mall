@@ -19,7 +19,7 @@
             <cols>
 
                 <!--Id-->
-                <col id="id" mandatory="true" sortable="true"/>
+                <col id="id" mandatory="true" ui:number="true" sortable="true"/>
 
                 <!--优惠券名称-->
                 <col id="name" mandatory="true" sortable="true"/>
@@ -31,25 +31,25 @@
                 <col id="tag" sortable="true"/>
 
                 <!--优惠券数量-->
-                <col id="total" mandatory="true" sortable="true"/>
+                <col id="total" mandatory="true" ui:number="true" sortable="true"/>
 
                 <!--优惠金额，-->
-                <col id="discount" sortable="true"/>
+                <col id="discount" ui:number="true" sortable="true"/>
 
                 <!--最少消费金额-->
-                <col id="min" sortable="true"/>
+                <col id="min" ui:number="true" sortable="true"/>
 
                 <!--用户领券限制数量-->
-                <col id="limit" sortable="true"/>
+                <col id="limit" ui:number="true" sortable="true"/>
 
                 <!--优惠券赠送类型-->
-                <col id="type" sortable="true"/>
+                <col id="type" ui:number="true" sortable="true"/>
 
                 <!--优惠券状态-->
-                <col id="status" sortable="true"/>
+                <col id="status" ui:number="true" sortable="true"/>
 
                 <!--商品限制类型-->
-                <col id="goodsType" sortable="true"/>
+                <col id="goodsType" ui:number="true" sortable="true"/>
 
                 <!--商品限制值-->
                 <col id="goodsValue" sortable="true"/>
@@ -58,10 +58,10 @@
                 <col id="code" sortable="true"/>
 
                 <!--有效时间限制-->
-                <col id="timeType" sortable="true"/>
+                <col id="timeType" ui:number="true" sortable="true"/>
 
                 <!--基于领取时间的有效天数days。-->
-                <col id="days" sortable="true"/>
+                <col id="days" ui:number="true" sortable="true"/>
 
                 <!--使用券开始时间-->
                 <col id="startTime" sortable="true"/>

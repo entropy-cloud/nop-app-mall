@@ -19,31 +19,31 @@
             <cols>
 
                 <!--Id-->
-                <col id="id" mandatory="true" sortable="true"/>
+                <col id="id" mandatory="true" ui:number="true" sortable="true"/>
 
                 <!--订单ID-->
-                <col id="orderId" mandatory="true" sortable="true"/>
+                <col id="orderId" mandatory="true" ui:number="true" sortable="true"/>
 
                 <!--如果是开团用户，则groupon_id是0；如果是参团用户，则groupon_id是团购活动ID-->
-                <col id="grouponId" sortable="true"/>
+                <col id="grouponId" ui:number="true" sortable="true"/>
 
                 <!--团购规则ID-->
-                <col id="rulesId" mandatory="true" sortable="true"/>
+                <col id="rulesId" mandatory="true" ui:number="true" sortable="true"/>
 
                 <!--用户ID-->
-                <col id="userId" mandatory="true" sortable="true"/>
+                <col id="userId" mandatory="true" ui:number="true" sortable="true"/>
 
                 <!--团购分享图片地址-->
                 <col id="shareUrl" sortable="true"/>
 
                 <!--开团用户ID-->
-                <col id="creatorUserId" mandatory="true" sortable="true"/>
+                <col id="creatorUserId" mandatory="true" ui:number="true" sortable="true"/>
 
                 <!--开团时间-->
                 <col id="creatorUserTime" sortable="true"/>
 
                 <!--团购活动状态，开团未支付则0，开团中则1，开团失败则2-->
-                <col id="status" sortable="true"/>
+                <col id="status" ui:number="true" sortable="true"/>
             </cols>
         </grid>
         <grid id="pick-list" x:prototype="list" x:abstract="true"/>

@@ -561,7 +561,7 @@ public class _LitemallAddress extends DynamicOrmEntity{
     /**
      * Id: ID
      */
-    public java.lang.Integer getId(){
+    public final java.lang.Integer getId(){
          onPropGet(PROP_ID_id);
          return _id;
     }
@@ -569,7 +569,7 @@ public class _LitemallAddress extends DynamicOrmEntity{
     /**
      * Id: ID
      */
-    public void setId(java.lang.Integer value){
+    public final void setId(java.lang.Integer value){
         if(onPropSet(PROP_ID_id,value)){
             this._id = value;
             internalClearRefs(PROP_ID_id);
@@ -580,7 +580,7 @@ public class _LitemallAddress extends DynamicOrmEntity{
     /**
      * 收货人名称: NAME
      */
-    public java.lang.String getName(){
+    public final java.lang.String getName(){
          onPropGet(PROP_ID_name);
          return _name;
     }
@@ -588,7 +588,7 @@ public class _LitemallAddress extends DynamicOrmEntity{
     /**
      * 收货人名称: NAME
      */
-    public void setName(java.lang.String value){
+    public final void setName(java.lang.String value){
         if(onPropSet(PROP_ID_name,value)){
             this._name = value;
             internalClearRefs(PROP_ID_name);
@@ -599,7 +599,7 @@ public class _LitemallAddress extends DynamicOrmEntity{
     /**
      * 用户ID: USER_ID
      */
-    public java.lang.Integer getUserId(){
+    public final java.lang.Integer getUserId(){
          onPropGet(PROP_ID_userId);
          return _userId;
     }
@@ -607,7 +607,7 @@ public class _LitemallAddress extends DynamicOrmEntity{
     /**
      * 用户ID: USER_ID
      */
-    public void setUserId(java.lang.Integer value){
+    public final void setUserId(java.lang.Integer value){
         if(onPropSet(PROP_ID_userId,value)){
             this._userId = value;
             internalClearRefs(PROP_ID_userId);
@@ -618,7 +618,7 @@ public class _LitemallAddress extends DynamicOrmEntity{
     /**
      * 行政区域表的省ID: PROVINCE
      */
-    public java.lang.String getProvince(){
+    public final java.lang.String getProvince(){
          onPropGet(PROP_ID_province);
          return _province;
     }
@@ -626,7 +626,7 @@ public class _LitemallAddress extends DynamicOrmEntity{
     /**
      * 行政区域表的省ID: PROVINCE
      */
-    public void setProvince(java.lang.String value){
+    public final void setProvince(java.lang.String value){
         if(onPropSet(PROP_ID_province,value)){
             this._province = value;
             internalClearRefs(PROP_ID_province);
@@ -637,7 +637,7 @@ public class _LitemallAddress extends DynamicOrmEntity{
     /**
      * 行政区域表的市ID: CITY
      */
-    public java.lang.String getCity(){
+    public final java.lang.String getCity(){
          onPropGet(PROP_ID_city);
          return _city;
     }
@@ -645,7 +645,7 @@ public class _LitemallAddress extends DynamicOrmEntity{
     /**
      * 行政区域表的市ID: CITY
      */
-    public void setCity(java.lang.String value){
+    public final void setCity(java.lang.String value){
         if(onPropSet(PROP_ID_city,value)){
             this._city = value;
             internalClearRefs(PROP_ID_city);
@@ -656,7 +656,7 @@ public class _LitemallAddress extends DynamicOrmEntity{
     /**
      * 行政区域表的区县ID: COUNTY
      */
-    public java.lang.String getCounty(){
+    public final java.lang.String getCounty(){
          onPropGet(PROP_ID_county);
          return _county;
     }
@@ -664,7 +664,7 @@ public class _LitemallAddress extends DynamicOrmEntity{
     /**
      * 行政区域表的区县ID: COUNTY
      */
-    public void setCounty(java.lang.String value){
+    public final void setCounty(java.lang.String value){
         if(onPropSet(PROP_ID_county,value)){
             this._county = value;
             internalClearRefs(PROP_ID_county);
@@ -675,7 +675,7 @@ public class _LitemallAddress extends DynamicOrmEntity{
     /**
      * 详细收货地址: ADDRESS_DETAIL
      */
-    public java.lang.String getAddressDetail(){
+    public final java.lang.String getAddressDetail(){
          onPropGet(PROP_ID_addressDetail);
          return _addressDetail;
     }
@@ -683,7 +683,7 @@ public class _LitemallAddress extends DynamicOrmEntity{
     /**
      * 详细收货地址: ADDRESS_DETAIL
      */
-    public void setAddressDetail(java.lang.String value){
+    public final void setAddressDetail(java.lang.String value){
         if(onPropSet(PROP_ID_addressDetail,value)){
             this._addressDetail = value;
             internalClearRefs(PROP_ID_addressDetail);
@@ -694,7 +694,7 @@ public class _LitemallAddress extends DynamicOrmEntity{
     /**
      * 地区编码: AREA_CODE
      */
-    public java.lang.String getAreaCode(){
+    public final java.lang.String getAreaCode(){
          onPropGet(PROP_ID_areaCode);
          return _areaCode;
     }
@@ -702,7 +702,7 @@ public class _LitemallAddress extends DynamicOrmEntity{
     /**
      * 地区编码: AREA_CODE
      */
-    public void setAreaCode(java.lang.String value){
+    public final void setAreaCode(java.lang.String value){
         if(onPropSet(PROP_ID_areaCode,value)){
             this._areaCode = value;
             internalClearRefs(PROP_ID_areaCode);
@@ -713,7 +713,7 @@ public class _LitemallAddress extends DynamicOrmEntity{
     /**
      * 邮政编码: POSTAL_CODE
      */
-    public java.lang.String getPostalCode(){
+    public final java.lang.String getPostalCode(){
          onPropGet(PROP_ID_postalCode);
          return _postalCode;
     }
@@ -721,7 +721,7 @@ public class _LitemallAddress extends DynamicOrmEntity{
     /**
      * 邮政编码: POSTAL_CODE
      */
-    public void setPostalCode(java.lang.String value){
+    public final void setPostalCode(java.lang.String value){
         if(onPropSet(PROP_ID_postalCode,value)){
             this._postalCode = value;
             internalClearRefs(PROP_ID_postalCode);
@@ -732,7 +732,7 @@ public class _LitemallAddress extends DynamicOrmEntity{
     /**
      * 手机号码: TEL
      */
-    public java.lang.String getTel(){
+    public final java.lang.String getTel(){
          onPropGet(PROP_ID_tel);
          return _tel;
     }
@@ -740,7 +740,7 @@ public class _LitemallAddress extends DynamicOrmEntity{
     /**
      * 手机号码: TEL
      */
-    public void setTel(java.lang.String value){
+    public final void setTel(java.lang.String value){
         if(onPropSet(PROP_ID_tel,value)){
             this._tel = value;
             internalClearRefs(PROP_ID_tel);
@@ -751,7 +751,7 @@ public class _LitemallAddress extends DynamicOrmEntity{
     /**
      * 是否默认地址: IS_DEFAULT
      */
-    public java.lang.Boolean getIsDefault(){
+    public final java.lang.Boolean getIsDefault(){
          onPropGet(PROP_ID_isDefault);
          return _isDefault;
     }
@@ -759,7 +759,7 @@ public class _LitemallAddress extends DynamicOrmEntity{
     /**
      * 是否默认地址: IS_DEFAULT
      */
-    public void setIsDefault(java.lang.Boolean value){
+    public final void setIsDefault(java.lang.Boolean value){
         if(onPropSet(PROP_ID_isDefault,value)){
             this._isDefault = value;
             internalClearRefs(PROP_ID_isDefault);
@@ -770,7 +770,7 @@ public class _LitemallAddress extends DynamicOrmEntity{
     /**
      * 创建时间: ADD_TIME
      */
-    public java.time.LocalDateTime getAddTime(){
+    public final java.time.LocalDateTime getAddTime(){
          onPropGet(PROP_ID_addTime);
          return _addTime;
     }
@@ -778,7 +778,7 @@ public class _LitemallAddress extends DynamicOrmEntity{
     /**
      * 创建时间: ADD_TIME
      */
-    public void setAddTime(java.time.LocalDateTime value){
+    public final void setAddTime(java.time.LocalDateTime value){
         if(onPropSet(PROP_ID_addTime,value)){
             this._addTime = value;
             internalClearRefs(PROP_ID_addTime);
@@ -789,7 +789,7 @@ public class _LitemallAddress extends DynamicOrmEntity{
     /**
      * 更新时间: UPDATE_TIME
      */
-    public java.time.LocalDateTime getUpdateTime(){
+    public final java.time.LocalDateTime getUpdateTime(){
          onPropGet(PROP_ID_updateTime);
          return _updateTime;
     }
@@ -797,7 +797,7 @@ public class _LitemallAddress extends DynamicOrmEntity{
     /**
      * 更新时间: UPDATE_TIME
      */
-    public void setUpdateTime(java.time.LocalDateTime value){
+    public final void setUpdateTime(java.time.LocalDateTime value){
         if(onPropSet(PROP_ID_updateTime,value)){
             this._updateTime = value;
             internalClearRefs(PROP_ID_updateTime);
@@ -808,7 +808,7 @@ public class _LitemallAddress extends DynamicOrmEntity{
     /**
      * 逻辑删除: DELETED
      */
-    public java.lang.Boolean getDeleted(){
+    public final java.lang.Boolean getDeleted(){
          onPropGet(PROP_ID_deleted);
          return _deleted;
     }
@@ -816,7 +816,7 @@ public class _LitemallAddress extends DynamicOrmEntity{
     /**
      * 逻辑删除: DELETED
      */
-    public void setDeleted(java.lang.Boolean value){
+    public final void setDeleted(java.lang.Boolean value){
         if(onPropSet(PROP_ID_deleted,value)){
             this._deleted = value;
             internalClearRefs(PROP_ID_deleted);
@@ -827,11 +827,11 @@ public class _LitemallAddress extends DynamicOrmEntity{
     /**
      * 客户
      */
-    public app.mall.dao.entity.LitemallUser getUser(){
+    public final app.mall.dao.entity.LitemallUser getUser(){
        return (app.mall.dao.entity.LitemallUser)internalGetRefEntity(PROP_NAME_user);
     }
 
-    public void setUser(app.mall.dao.entity.LitemallUser refEntity){
+    public final void setUser(app.mall.dao.entity.LitemallUser refEntity){
    
            if(refEntity == null){
            

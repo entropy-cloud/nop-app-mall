@@ -738,7 +738,7 @@ public class _LitemallCoupon extends DynamicOrmEntity{
     /**
      * Id: ID
      */
-    public java.lang.Integer getId(){
+    public final java.lang.Integer getId(){
          onPropGet(PROP_ID_id);
          return _id;
     }
@@ -746,7 +746,7 @@ public class _LitemallCoupon extends DynamicOrmEntity{
     /**
      * Id: ID
      */
-    public void setId(java.lang.Integer value){
+    public final void setId(java.lang.Integer value){
         if(onPropSet(PROP_ID_id,value)){
             this._id = value;
             internalClearRefs(PROP_ID_id);
@@ -757,7 +757,7 @@ public class _LitemallCoupon extends DynamicOrmEntity{
     /**
      * 优惠券名称: NAME
      */
-    public java.lang.String getName(){
+    public final java.lang.String getName(){
          onPropGet(PROP_ID_name);
          return _name;
     }
@@ -765,7 +765,7 @@ public class _LitemallCoupon extends DynamicOrmEntity{
     /**
      * 优惠券名称: NAME
      */
-    public void setName(java.lang.String value){
+    public final void setName(java.lang.String value){
         if(onPropSet(PROP_ID_name,value)){
             this._name = value;
             internalClearRefs(PROP_ID_name);
@@ -776,7 +776,7 @@ public class _LitemallCoupon extends DynamicOrmEntity{
     /**
      * 优惠券介绍: DESC
      */
-    public java.lang.String getDesc(){
+    public final java.lang.String getDesc(){
          onPropGet(PROP_ID_desc);
          return _desc;
     }
@@ -784,7 +784,7 @@ public class _LitemallCoupon extends DynamicOrmEntity{
     /**
      * 优惠券介绍: DESC
      */
-    public void setDesc(java.lang.String value){
+    public final void setDesc(java.lang.String value){
         if(onPropSet(PROP_ID_desc,value)){
             this._desc = value;
             internalClearRefs(PROP_ID_desc);
@@ -795,7 +795,7 @@ public class _LitemallCoupon extends DynamicOrmEntity{
     /**
      * 优惠券标签: TAG
      */
-    public java.lang.String getTag(){
+    public final java.lang.String getTag(){
          onPropGet(PROP_ID_tag);
          return _tag;
     }
@@ -803,7 +803,7 @@ public class _LitemallCoupon extends DynamicOrmEntity{
     /**
      * 优惠券标签: TAG
      */
-    public void setTag(java.lang.String value){
+    public final void setTag(java.lang.String value){
         if(onPropSet(PROP_ID_tag,value)){
             this._tag = value;
             internalClearRefs(PROP_ID_tag);
@@ -814,7 +814,7 @@ public class _LitemallCoupon extends DynamicOrmEntity{
     /**
      * 优惠券数量: TOTAL
      */
-    public java.lang.Integer getTotal(){
+    public final java.lang.Integer getTotal(){
          onPropGet(PROP_ID_total);
          return _total;
     }
@@ -822,7 +822,7 @@ public class _LitemallCoupon extends DynamicOrmEntity{
     /**
      * 优惠券数量: TOTAL
      */
-    public void setTotal(java.lang.Integer value){
+    public final void setTotal(java.lang.Integer value){
         if(onPropSet(PROP_ID_total,value)){
             this._total = value;
             internalClearRefs(PROP_ID_total);
@@ -833,7 +833,7 @@ public class _LitemallCoupon extends DynamicOrmEntity{
     /**
      * 优惠金额，: DISCOUNT
      */
-    public java.math.BigDecimal getDiscount(){
+    public final java.math.BigDecimal getDiscount(){
          onPropGet(PROP_ID_discount);
          return _discount;
     }
@@ -841,7 +841,7 @@ public class _LitemallCoupon extends DynamicOrmEntity{
     /**
      * 优惠金额，: DISCOUNT
      */
-    public void setDiscount(java.math.BigDecimal value){
+    public final void setDiscount(java.math.BigDecimal value){
         if(onPropSet(PROP_ID_discount,value)){
             this._discount = value;
             internalClearRefs(PROP_ID_discount);
@@ -852,7 +852,7 @@ public class _LitemallCoupon extends DynamicOrmEntity{
     /**
      * 最少消费金额: MIN
      */
-    public java.math.BigDecimal getMin(){
+    public final java.math.BigDecimal getMin(){
          onPropGet(PROP_ID_min);
          return _min;
     }
@@ -860,7 +860,7 @@ public class _LitemallCoupon extends DynamicOrmEntity{
     /**
      * 最少消费金额: MIN
      */
-    public void setMin(java.math.BigDecimal value){
+    public final void setMin(java.math.BigDecimal value){
         if(onPropSet(PROP_ID_min,value)){
             this._min = value;
             internalClearRefs(PROP_ID_min);
@@ -871,7 +871,7 @@ public class _LitemallCoupon extends DynamicOrmEntity{
     /**
      * 用户领券限制数量: LIMIT
      */
-    public java.lang.Short getLimit(){
+    public final java.lang.Short getLimit(){
          onPropGet(PROP_ID_limit);
          return _limit;
     }
@@ -879,7 +879,7 @@ public class _LitemallCoupon extends DynamicOrmEntity{
     /**
      * 用户领券限制数量: LIMIT
      */
-    public void setLimit(java.lang.Short value){
+    public final void setLimit(java.lang.Short value){
         if(onPropSet(PROP_ID_limit,value)){
             this._limit = value;
             internalClearRefs(PROP_ID_limit);
@@ -890,7 +890,7 @@ public class _LitemallCoupon extends DynamicOrmEntity{
     /**
      * 优惠券赠送类型: TYPE
      */
-    public java.lang.Short getType(){
+    public final java.lang.Short getType(){
          onPropGet(PROP_ID_type);
          return _type;
     }
@@ -898,7 +898,7 @@ public class _LitemallCoupon extends DynamicOrmEntity{
     /**
      * 优惠券赠送类型: TYPE
      */
-    public void setType(java.lang.Short value){
+    public final void setType(java.lang.Short value){
         if(onPropSet(PROP_ID_type,value)){
             this._type = value;
             internalClearRefs(PROP_ID_type);
@@ -909,7 +909,7 @@ public class _LitemallCoupon extends DynamicOrmEntity{
     /**
      * 优惠券状态: STATUS
      */
-    public java.lang.Short getStatus(){
+    public final java.lang.Short getStatus(){
          onPropGet(PROP_ID_status);
          return _status;
     }
@@ -917,7 +917,7 @@ public class _LitemallCoupon extends DynamicOrmEntity{
     /**
      * 优惠券状态: STATUS
      */
-    public void setStatus(java.lang.Short value){
+    public final void setStatus(java.lang.Short value){
         if(onPropSet(PROP_ID_status,value)){
             this._status = value;
             internalClearRefs(PROP_ID_status);
@@ -928,7 +928,7 @@ public class _LitemallCoupon extends DynamicOrmEntity{
     /**
      * 商品限制类型: GOODS_TYPE
      */
-    public java.lang.Short getGoodsType(){
+    public final java.lang.Short getGoodsType(){
          onPropGet(PROP_ID_goodsType);
          return _goodsType;
     }
@@ -936,7 +936,7 @@ public class _LitemallCoupon extends DynamicOrmEntity{
     /**
      * 商品限制类型: GOODS_TYPE
      */
-    public void setGoodsType(java.lang.Short value){
+    public final void setGoodsType(java.lang.Short value){
         if(onPropSet(PROP_ID_goodsType,value)){
             this._goodsType = value;
             internalClearRefs(PROP_ID_goodsType);
@@ -947,7 +947,7 @@ public class _LitemallCoupon extends DynamicOrmEntity{
     /**
      * 商品限制值: GOODS_VALUE
      */
-    public java.lang.String getGoodsValue(){
+    public final java.lang.String getGoodsValue(){
          onPropGet(PROP_ID_goodsValue);
          return _goodsValue;
     }
@@ -955,7 +955,7 @@ public class _LitemallCoupon extends DynamicOrmEntity{
     /**
      * 商品限制值: GOODS_VALUE
      */
-    public void setGoodsValue(java.lang.String value){
+    public final void setGoodsValue(java.lang.String value){
         if(onPropSet(PROP_ID_goodsValue,value)){
             this._goodsValue = value;
             internalClearRefs(PROP_ID_goodsValue);
@@ -966,7 +966,7 @@ public class _LitemallCoupon extends DynamicOrmEntity{
     /**
      * 优惠券兑换码: CODE
      */
-    public java.lang.String getCode(){
+    public final java.lang.String getCode(){
          onPropGet(PROP_ID_code);
          return _code;
     }
@@ -974,7 +974,7 @@ public class _LitemallCoupon extends DynamicOrmEntity{
     /**
      * 优惠券兑换码: CODE
      */
-    public void setCode(java.lang.String value){
+    public final void setCode(java.lang.String value){
         if(onPropSet(PROP_ID_code,value)){
             this._code = value;
             internalClearRefs(PROP_ID_code);
@@ -985,7 +985,7 @@ public class _LitemallCoupon extends DynamicOrmEntity{
     /**
      * 有效时间限制: TIME_TYPE
      */
-    public java.lang.Short getTimeType(){
+    public final java.lang.Short getTimeType(){
          onPropGet(PROP_ID_timeType);
          return _timeType;
     }
@@ -993,7 +993,7 @@ public class _LitemallCoupon extends DynamicOrmEntity{
     /**
      * 有效时间限制: TIME_TYPE
      */
-    public void setTimeType(java.lang.Short value){
+    public final void setTimeType(java.lang.Short value){
         if(onPropSet(PROP_ID_timeType,value)){
             this._timeType = value;
             internalClearRefs(PROP_ID_timeType);
@@ -1004,7 +1004,7 @@ public class _LitemallCoupon extends DynamicOrmEntity{
     /**
      * 基于领取时间的有效天数days。: DAYS
      */
-    public java.lang.Short getDays(){
+    public final java.lang.Short getDays(){
          onPropGet(PROP_ID_days);
          return _days;
     }
@@ -1012,7 +1012,7 @@ public class _LitemallCoupon extends DynamicOrmEntity{
     /**
      * 基于领取时间的有效天数days。: DAYS
      */
-    public void setDays(java.lang.Short value){
+    public final void setDays(java.lang.Short value){
         if(onPropSet(PROP_ID_days,value)){
             this._days = value;
             internalClearRefs(PROP_ID_days);
@@ -1023,7 +1023,7 @@ public class _LitemallCoupon extends DynamicOrmEntity{
     /**
      * 使用券开始时间: START_TIME
      */
-    public java.time.LocalDateTime getStartTime(){
+    public final java.time.LocalDateTime getStartTime(){
          onPropGet(PROP_ID_startTime);
          return _startTime;
     }
@@ -1031,7 +1031,7 @@ public class _LitemallCoupon extends DynamicOrmEntity{
     /**
      * 使用券开始时间: START_TIME
      */
-    public void setStartTime(java.time.LocalDateTime value){
+    public final void setStartTime(java.time.LocalDateTime value){
         if(onPropSet(PROP_ID_startTime,value)){
             this._startTime = value;
             internalClearRefs(PROP_ID_startTime);
@@ -1042,7 +1042,7 @@ public class _LitemallCoupon extends DynamicOrmEntity{
     /**
      * 使用券截至时间: END_TIME
      */
-    public java.time.LocalDateTime getEndTime(){
+    public final java.time.LocalDateTime getEndTime(){
          onPropGet(PROP_ID_endTime);
          return _endTime;
     }
@@ -1050,7 +1050,7 @@ public class _LitemallCoupon extends DynamicOrmEntity{
     /**
      * 使用券截至时间: END_TIME
      */
-    public void setEndTime(java.time.LocalDateTime value){
+    public final void setEndTime(java.time.LocalDateTime value){
         if(onPropSet(PROP_ID_endTime,value)){
             this._endTime = value;
             internalClearRefs(PROP_ID_endTime);
@@ -1061,7 +1061,7 @@ public class _LitemallCoupon extends DynamicOrmEntity{
     /**
      * 创建时间: ADD_TIME
      */
-    public java.time.LocalDateTime getAddTime(){
+    public final java.time.LocalDateTime getAddTime(){
          onPropGet(PROP_ID_addTime);
          return _addTime;
     }
@@ -1069,7 +1069,7 @@ public class _LitemallCoupon extends DynamicOrmEntity{
     /**
      * 创建时间: ADD_TIME
      */
-    public void setAddTime(java.time.LocalDateTime value){
+    public final void setAddTime(java.time.LocalDateTime value){
         if(onPropSet(PROP_ID_addTime,value)){
             this._addTime = value;
             internalClearRefs(PROP_ID_addTime);
@@ -1080,7 +1080,7 @@ public class _LitemallCoupon extends DynamicOrmEntity{
     /**
      * 更新时间: UPDATE_TIME
      */
-    public java.time.LocalDateTime getUpdateTime(){
+    public final java.time.LocalDateTime getUpdateTime(){
          onPropGet(PROP_ID_updateTime);
          return _updateTime;
     }
@@ -1088,7 +1088,7 @@ public class _LitemallCoupon extends DynamicOrmEntity{
     /**
      * 更新时间: UPDATE_TIME
      */
-    public void setUpdateTime(java.time.LocalDateTime value){
+    public final void setUpdateTime(java.time.LocalDateTime value){
         if(onPropSet(PROP_ID_updateTime,value)){
             this._updateTime = value;
             internalClearRefs(PROP_ID_updateTime);
@@ -1099,7 +1099,7 @@ public class _LitemallCoupon extends DynamicOrmEntity{
     /**
      * 逻辑删除: DELETED
      */
-    public java.lang.Boolean getDeleted(){
+    public final java.lang.Boolean getDeleted(){
          onPropGet(PROP_ID_deleted);
          return _deleted;
     }
@@ -1107,7 +1107,7 @@ public class _LitemallCoupon extends DynamicOrmEntity{
     /**
      * 逻辑删除: DELETED
      */
-    public void setDeleted(java.lang.Boolean value){
+    public final void setDeleted(java.lang.Boolean value){
         if(onPropSet(PROP_ID_deleted,value)){
             this._deleted = value;
             internalClearRefs(PROP_ID_deleted);
