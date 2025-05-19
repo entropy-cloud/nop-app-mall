@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<meta x:schema="/nop/schema/xmeta.xdef" xmlns:x="/nop/schema/xdsl.xdef" xmlns:i18n-en="i18n-en" xmlns:ext="ext"
+      xmlns:xpl="xpl" ext:model="orm" xmlns:c="c" xmlns:graphql="graphql" xmlns:meta-gen="meta-gen" xmlns:biz="biz"
+      displayName="操作日志" i18n-en:displayName="Operation Log" tagSet="log,no-tenant" xmlns:ui="ui" xmlns:orm="orm">
+
+    <entityName>io.nop.auth.dao.entity.NopAuthOpLog</entityName>
+
+    <primaryKey>logId</primaryKey>
+
+    <x:gen-extends>
+        <meta-gen:DefaultMetaGenExtends xpl:lib="/nop/core/xlib/meta-gen.xlib"/>
+    </x:gen-extends>
+
+    <x:post-extends>
+        <meta-gen:DefaultMetaPostExtends xpl:lib="/nop/core/xlib/meta-gen.xlib"/>
+    </x:post-extends>
+
+    <keys/>
+
+    <props>
+        <prop name="logId" displayName="主键" propId="1" i18n-en:displayName="LOG_ID" tagSet="seq" mandatory="true"
+              queryable="true" sortable="true" insertable="true" updatable="false">
+            <schema type="java.lang.String" precision="32"/>
+        </prop>
+        <prop name="userName" displayName="用户名" propId="2" i18n-en:displayName="USER_NAME" mandatory="true"
+              queryable="true" sortable="true" insertable="true" updatable="false">
+            <schema domain="userName" type="java.lang.String" precision="32"/>
+        </prop>
+        <prop name="userId" displayName="用户ID" propId="3" i18n-en:displayName="USER_ID" queryable="true" sortable="true"
+              insertable="true" updatable="false" ext:relation="user">
+            <schema domain="userId" type="java.lang.String" precision="50"/>
+        </prop>
+        <prop name="sessionId" displayName="会话ID" propId="4" i18n-en:displayName="Session ID" queryable="true"
+              sortable="true" insertable="true" updatable="false" ext:relation="session">
+            <schema type="java.lang.String" precision="100"/>
+        </prop>
+        <prop name="operation" displayName="业务操作" propId="5" i18n-en:displayName="Operation" queryable="true"
+              sortable="true" insertable="true" updatable="false">
+            <schema type="java.lang.String" precision="800"/>
+        </prop>
+        <prop name="description" displayName="操作描述" propId="6" i18n-en:displayName="Description" queryable="true"
+              sortable="true" insertable="true" updatable="false">
+            <schema type="java.lang.String" precision="2000"/>
+        </prop>
+        <prop name="actionTime" displayName="操作时间" propId="7" i18n-en:displayName="Action Time" tagSet="clock"
+              mandatory="true" queryable="true" sortable="true" insertable="true" updatable="false">
+            <schema type="java.sql.Timestamp"/>
+        </prop>
+        <prop name="usedTime" displayName="操作时长" propId="8" i18n-en:displayName="Used Time" tagSet="var"
+              mandatory="true" queryable="true" sortable="true" insertable="true" updatable="false">
+            <schema type="java.lang.Long"/>
+        </prop>
+        <prop name="resultStatus" displayName="操作状态" propId="9" i18n-en:displayName="Result Status" mandatory="true"
+              queryable="true" sortable="true" insertable="true" updatable="false">
+            <schema type="java.lang.Integer"/>
+        </prop>
+        <prop name="errorCode" displayName="错误码" propId="10" i18n-en:displayName="ErrorCode" queryable="true"
+              sortable="true" insertable="true" updatable="false">
+            <schema type="java.lang.String" precision="200"/>
+        </prop>
+        <prop name="retMessage" displayName="返回消息" propId="11" i18n-en:displayName="Return Message" queryable="true"
+              sortable="true" insertable="true" updatable="false">
+            <schema type="java.lang.String" precision="1000"/>
+        </prop>
+        <prop name="opRequest" displayName="请求参数" propId="12" i18n-en:displayName="Request" queryable="true"
+              sortable="true" insertable="true" updatable="false">
+            <schema type="java.lang.String" precision="8000"/>
+        </prop>
+        <prop name="opResponse" displayName="响应数据" propId="13" i18n-en:displayName="Response" queryable="true"
+              sortable="true" insertable="true" updatable="false">
+            <schema type="java.lang.String" precision="4000"/>
+        </prop>
+        <prop name="session" displayName="会话" i18n-en:displayName="Session" tagSet="pub" ext:kind="to-one"
+              internal="true" queryable="true" ext:joinLeftProp="sessionId" ext:joinRightProp="sessionId"
+              insertable="false" updatable="false" lazy="true">
+            <schema bizObjName="NopAuthSession"/>
+        </prop>
+        <prop name="user" displayName="用户" i18n-en:displayName="User" tagSet="pub,ref-pub" ext:kind="to-one"
+              internal="true" queryable="true" ext:joinLeftProp="userId" ext:joinRightProp="userId"
+              ext:joinRightDisplayProp="userName" insertable="false" updatable="false" lazy="true">
+            <schema bizObjName="NopAuthUser"/>
+        </prop>
+        <prop name="user.userName" displayName="用户" i18n-en:displayName="User" internal="true" queryable="true"
+              sortable="true" lazy="true">
+            <schema type="String"/>
+        </prop>
+    </props>
+</meta>

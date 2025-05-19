@@ -24,8 +24,12 @@ public class _NopAuthUserEx extends io.nop.auth.dao.entity.NopAuthUser{
     public static final String PROP_NAME_mallUserId = "mallUserId";
     public static final int PROP_ID_mallUserId = 100;
     
+    /* 测试图片: PIC_URL VARCHAR */
+    public static final String PROP_NAME_picUrl = "picUrl";
+    public static final int PROP_ID_picUrl = 101;
+    
 
-    private static int _PROP_ID_BOUND = 101;
+    private static int _PROP_ID_BOUND = 102;
 
     
     /* relation: 关联用户 */
@@ -35,18 +39,24 @@ public class _NopAuthUserEx extends io.nop.auth.dao.entity.NopAuthUser{
     protected static final List<String> PK_PROP_NAMES = Arrays.asList(PROP_NAME_userId);
     protected static final int[] PK_PROP_IDS = new int[]{PROP_ID_userId};
 
-    private static final String[] PROP_ID_TO_NAME = new String[101];
+    private static final String[] PROP_ID_TO_NAME = new String[102];
     private static final Map<String,Integer> PROP_NAME_TO_ID = new HashMap<>();
     static{
       
           PROP_ID_TO_NAME[PROP_ID_mallUserId] = PROP_NAME_mallUserId;
           PROP_NAME_TO_ID.put(PROP_NAME_mallUserId, PROP_ID_mallUserId);
       
+          PROP_ID_TO_NAME[PROP_ID_picUrl] = PROP_NAME_picUrl;
+          PROP_NAME_TO_ID.put(PROP_NAME_picUrl, PROP_ID_picUrl);
+      
     }
 
     
     /* 关联用户ID: MALL_USER_ID */
     private java.lang.Integer _mallUserId;
+    
+    /* 测试图片: PIC_URL */
+    private java.lang.String _picUrl;
     
 
     public _NopAuthUserEx(){
@@ -125,6 +135,9 @@ public class _NopAuthUserEx extends io.nop.auth.dao.entity.NopAuthUser{
             case PROP_ID_mallUserId:
                return getMallUserId();
         
+            case PROP_ID_picUrl:
+               return getPicUrl();
+        
            default:
               return super.orm_propValue(propId);
         }
@@ -146,6 +159,16 @@ public class _NopAuthUserEx extends io.nop.auth.dao.entity.NopAuthUser{
                break;
             }
         
+            case PROP_ID_picUrl:{
+               java.lang.String typedValue = null;
+               if(value != null){
+                   typedValue = ConvertHelper.toString(value,
+                       err-> newTypeConversionError(PROP_NAME_picUrl));
+               }
+               setPicUrl(typedValue);
+               break;
+            }
+        
            default:
               super.orm_propValue(propId,value);
         }
@@ -158,6 +181,13 @@ public class _NopAuthUserEx extends io.nop.auth.dao.entity.NopAuthUser{
             case PROP_ID_mallUserId:{
                onInitProp(propId);
                this._mallUserId = (java.lang.Integer)value;
+               
+               break;
+            }
+        
+            case PROP_ID_picUrl:{
+               onInitProp(propId);
+               this._picUrl = (java.lang.String)value;
                
                break;
             }
@@ -183,6 +213,25 @@ public class _NopAuthUserEx extends io.nop.auth.dao.entity.NopAuthUser{
         if(onPropSet(PROP_ID_mallUserId,value)){
             this._mallUserId = value;
             internalClearRefs(PROP_ID_mallUserId);
+            
+        }
+    }
+    
+    /**
+     * 测试图片: PIC_URL
+     */
+    public final java.lang.String getPicUrl(){
+         onPropGet(PROP_ID_picUrl);
+         return _picUrl;
+    }
+
+    /**
+     * 测试图片: PIC_URL
+     */
+    public final void setPicUrl(java.lang.String value){
+        if(onPropSet(PROP_ID_picUrl,value)){
+            this._picUrl = value;
+            internalClearRefs(PROP_ID_picUrl);
             
         }
     }
