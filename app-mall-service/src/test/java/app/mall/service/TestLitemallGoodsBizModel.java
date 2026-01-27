@@ -1,6 +1,7 @@
 package app.mall.service;
 
 import io.nop.api.core.annotations.autotest.EnableSnapshot;
+import io.nop.api.core.annotations.autotest.NopTestConfig;
 import io.nop.api.core.beans.ApiRequest;
 import io.nop.api.core.context.ContextProvider;
 import io.nop.api.core.util.FutureHelper;
@@ -11,6 +12,7 @@ import io.nop.graphql.core.engine.IGraphQLEngine;
 import jakarta.inject.Inject;
 import org.junit.jupiter.api.Test;
 
+@NopTestConfig
 public class TestLitemallGoodsBizModel extends JunitAutoTestCase {
 
     @Inject

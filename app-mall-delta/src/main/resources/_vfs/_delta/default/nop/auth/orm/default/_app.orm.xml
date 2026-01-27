@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<orm ext:mavenArtifactId="app-mall" ext:entityPackageName="app.mall.delta.dao.entity" ext:registerShortName="true"
-     ext:deltaDir="default" ext:allowIdAsColName="true" ext:mavenGroupId="io.nop.app"
-     ext:basePackageName="app.mall.delta" ext:appName="nop-auth" ext:platformVersion="2.0.0-SNAPSHOT"
-     ext:dialect="mysql,oracle,postgresql" ext:mavenVersion="1.0.0-SNAPSHOT" x:schema="/nop/schema/orm/orm.xdef"
+<orm ext:registerShortName="true" ext:appName="nop-auth" ext:entityPackageName="app.mall.delta.dao.entity"
+     ext:basePackageName="app.mall.delta" ext:mavenGroupId="io.nop.app" ext:mavenArtifactId="app-mall"
+     ext:mavenVersion="1.0.0-SNAPSHOT" ext:platformVersion="2.0.0-SNAPSHOT" ext:dialect="mysql,oracle,postgresql"
+     ext:deltaDir="default" ext:allowIdAsColName="true" x:schema="/nop/schema/orm/orm.xdef"
      xmlns:x="/nop/schema/xdsl.xdef" xmlns:i18n-en="i18n-en" xmlns:ref-i18n-en="ref-i18n-en" xmlns:ext="ext"
      xmlns:orm-gen="orm-gen" xmlns:xpl="xpl" xmlns:ui="ui">
 
@@ -37,14 +37,14 @@
     <entities>
         <entity className="app.mall.delta.dao.entity.NopAuthUserEx" displayName="用户"
                 name="io.nop.auth.dao.entity.NopAuthUser" registerShortName="true" tableName="nop_auth_user"
-                i18n-en:displayName="User" ext:baseClass="io.nop.auth.dao.entity.NopAuthUser">
+                ext:baseClass="io.nop.auth.dao.entity.NopAuthUser" i18n-en:displayName="User">
             <columns>
                 <column code="USER_ID" displayName="用户ID" domain="userId" mandatory="true" name="userId"
                         notGenCode="true" precision="50" primary="true" propId="1" stdDataType="string"
-                        stdSqlType="VARCHAR" tagSet="seq,not-gen" i18n-en:displayName="User ID" ui:show="X"/>
+                        stdSqlType="VARCHAR" tagSet="seq,not-gen" ui:show="X" i18n-en:displayName="User ID"/>
                 <column code="CLIENT_ID" displayName="设备ID" name="clientId" notGenCode="true" precision="100"
-                        propId="26" stdDataType="string" stdSqlType="VARCHAR" tagSet="del"
-                        i18n-en:displayName="Client Id" ui:show="X"/>
+                        propId="26" stdDataType="string" stdSqlType="VARCHAR" tagSet="del" ui:show="X"
+                        i18n-en:displayName="Client Id"/>
                 <column code="MALL_USER_ID" displayName="关联用户ID" name="mallUserId" propId="100" stdDataType="int"
                         stdSqlType="INTEGER" i18n-en:displayName="Mall User ID"/>
                 <column code="PIC_URL" displayName="测试图片" domain="image" name="picUrl" precision="100" propId="101"
@@ -65,7 +65,7 @@
             <columns>
                 <column code="ID" displayName="用户ID" domain="userId" mandatory="true" name="id" notGenCode="true"
                         precision="50" primary="true" propId="1" stdDataType="string" stdSqlType="VARCHAR"
-                        tagSet="not-gen" i18n-en:displayName="ID" ui:show="X"/>
+                        tagSet="not-gen" ui:show="X" i18n-en:displayName="ID"/>
             </columns>
         </entity>
     </entities>
