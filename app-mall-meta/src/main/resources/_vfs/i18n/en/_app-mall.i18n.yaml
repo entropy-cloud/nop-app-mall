@@ -334,6 +334,7 @@ prop:
       deleted: null
       order: Order
       order.orderSn: Order
+      grouponRules: GrouponRules
       shareUrlComponentFileStatus: null
     LitemallGrouponRules:
       id: null

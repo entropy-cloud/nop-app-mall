@@ -26,7 +26,6 @@ drop table  if exists  litemall_goods;
 drop table  if exists  litemall_coupon_user;
 drop table  if exists  litemall_user_role;
 drop table  if exists  litemall_aftersale;
-drop table  if exists  litemall_groupon;
 drop table  if exists  litemall_cart;
 drop table  if exists  litemall_footprint;
 drop table  if exists  litemall_goods_attribute;
@@ -34,4 +33,5 @@ drop table  if exists  litemall_goods_product;
 drop table  if exists  litemall_goods_specification;
 drop table  if exists  litemall_groupon_rules;
 drop table  if exists  litemall_order_goods;
+drop table  if exists  litemall_groupon;
 

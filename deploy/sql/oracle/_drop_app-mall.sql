@@ -26,7 +26,6 @@ drop table litemall_goods;
 drop table litemall_coupon_user;
 drop table litemall_user_role;
 drop table litemall_aftersale;
-drop table litemall_groupon;
 drop table litemall_cart;
 drop table litemall_footprint;
 drop table litemall_goods_attribute;
@@ -34,4 +33,5 @@ drop table litemall_goods_product;
 drop table litemall_goods_specification;
 drop table litemall_groupon_rules;
 drop table litemall_order_goods;
+drop table litemall_groupon;
 

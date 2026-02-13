@@ -75,6 +75,9 @@ public class _LitemallGroupon extends DynamicOrmEntity{
     /* relation: 订单 */
     public static final String PROP_NAME_order = "order";
     
+    /* relation: 订单 */
+    public static final String PROP_NAME_grouponRules = "grouponRules";
+    
     /* component:  */
     public static final String PROP_NAME_shareUrlComponent = "shareUrlComponent";
     
@@ -746,6 +749,29 @@ public class _LitemallGroupon extends DynamicOrmEntity{
            internalSetRefEntity(PROP_NAME_order, refEntity,()->{
            
                            this.setOrderId(refEntity.getId());
+                       
+           });
+           }
+       
+    }
+       
+    /**
+     * 订单
+     */
+    public final app.mall.dao.entity.LitemallGrouponRules getGrouponRules(){
+       return (app.mall.dao.entity.LitemallGrouponRules)internalGetRefEntity(PROP_NAME_grouponRules);
+    }
+
+    public final void setGrouponRules(app.mall.dao.entity.LitemallGrouponRules refEntity){
+   
+           if(refEntity == null){
+           
+                   this.setRulesId(null);
+               
+           }else{
+           internalSetRefEntity(PROP_NAME_grouponRules, refEntity,()->{
+           
+                           this.setRulesId(refEntity.getId());
                        
            });
            }

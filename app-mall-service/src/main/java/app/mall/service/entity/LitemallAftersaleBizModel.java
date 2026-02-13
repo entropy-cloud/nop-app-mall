@@ -16,6 +16,7 @@ import io.nop.api.core.annotations.core.Name;
 import io.nop.api.core.beans.ApiRequest;
 import io.nop.api.core.exceptions.NopException;
 import io.nop.biz.crud.CrudBizModel;
+import app.mall.biz.ILitemallAftersaleBiz;
 import io.nop.commons.util.DateHelper;
 import io.nop.commons.util.StringHelper;
 import io.nop.core.context.IServiceContext;
@@ -31,7 +32,7 @@ import java.util.Set;
 import static app.mall.service.AppMallErrors.ERR_AFTERSALE_NOT_ALLOW_REFUND;
 
 @BizModel("LitemallAftersale")
-public class LitemallAftersaleBizModel extends CrudBizModel<LitemallAftersale> {
+public class LitemallAftersaleBizModel extends CrudBizModel<LitemallAftersale> implements ILitemallAftersaleBiz {
 
     @Inject
     @Nullable

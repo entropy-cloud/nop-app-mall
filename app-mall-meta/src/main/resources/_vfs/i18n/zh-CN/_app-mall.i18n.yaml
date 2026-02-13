@@ -325,6 +325,7 @@ prop:
       creatorUserTime: 开团时间
       deleted: 逻辑删除
       grouponId: 如果是开团用户，则groupon_id是0；如果是参团用户，则groupon_id是团购活动ID
+      grouponRules: 订单
       id: Id
       order: 订单
       order.orderSn: 订单

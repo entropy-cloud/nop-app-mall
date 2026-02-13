@@ -830,6 +830,12 @@
                         <on leftProp="orderId" rightProp="id"/>
                     </join>
                 </to-one>
+                <to-one displayName="订单" name="grouponRules" refEntityName="app.mall.dao.entity.LitemallGrouponRules"
+                        tagSet="pub,ref-pub" i18n-en:displayName="GrouponRules">
+                    <join>
+                        <on leftProp="rulesId" rightProp="id"/>
+                    </join>
+                </to-one>
             </relations>
         </entity>
         <entity className="app.mall.dao.entity.LitemallGrouponRules" createTimeProp="addTime" deleteFlagProp="deleted"
