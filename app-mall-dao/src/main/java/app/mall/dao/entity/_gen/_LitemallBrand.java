@@ -36,7 +36,7 @@ public class _LitemallBrand extends DynamicOrmEntity{
     public static final String PROP_NAME_desc = "desc";
     public static final int PROP_ID_desc = 4;
     
-    /* 排序: SORT_ORDER TINYINT */
+    /* 排序: SORT_ORDER INTEGER */
     public static final String PROP_NAME_sortOrder = "sortOrder";
     public static final int PROP_ID_sortOrder = 5;
     
@@ -102,7 +102,7 @@ public class _LitemallBrand extends DynamicOrmEntity{
 
     
     /* Id: ID */
-    private java.lang.Integer _id;
+    private java.lang.String _id;
     
     /* 品牌商名称: NAME */
     private java.lang.String _name;
@@ -241,9 +241,9 @@ public class _LitemallBrand extends DynamicOrmEntity{
         switch(propId){
         
             case PROP_ID_id:{
-               java.lang.Integer typedValue = null;
+               java.lang.String typedValue = null;
                if(value != null){
-                   typedValue = ConvertHelper.toInteger(value,
+                   typedValue = ConvertHelper.toString(value,
                        err-> newTypeConversionError(PROP_NAME_id));
                }
                setId(typedValue);
@@ -341,7 +341,7 @@ public class _LitemallBrand extends DynamicOrmEntity{
         
             case PROP_ID_id:{
                onInitProp(propId);
-               this._id = (java.lang.Integer)value;
+               this._id = (java.lang.String)value;
                orm_id(); // 如果是设置主键字段，则触发watcher
                break;
             }
@@ -411,7 +411,7 @@ public class _LitemallBrand extends DynamicOrmEntity{
     /**
      * Id: ID
      */
-    public final java.lang.Integer getId(){
+    public final java.lang.String getId(){
          onPropGet(PROP_ID_id);
          return _id;
     }
@@ -419,7 +419,7 @@ public class _LitemallBrand extends DynamicOrmEntity{
     /**
      * Id: ID
      */
-    public final void setId(java.lang.Integer value){
+    public final void setId(java.lang.String value){
         if(onPropSet(PROP_ID_id,value)){
             this._id = value;
             internalClearRefs(PROP_ID_id);

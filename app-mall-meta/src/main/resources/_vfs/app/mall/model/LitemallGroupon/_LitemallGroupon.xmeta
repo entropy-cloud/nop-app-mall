@@ -20,11 +20,11 @@
     <props>
         <prop name="id" displayName="Id" propId="1" tagSet="seq" mandatory="true" queryable="true" sortable="true"
               insertable="false" updatable="false" ui:show="R">
-            <schema type="java.lang.Integer"/>
+            <schema type="java.lang.String"/>
         </prop>
         <prop name="orderId" displayName="订单ID" propId="2" mandatory="true" queryable="true" sortable="true"
               insertable="true" updatable="true" ext:relation="order">
-            <schema type="java.lang.Integer"/>
+            <schema type="java.lang.String"/>
         </prop>
         <prop name="grouponId" displayName="如果是开团用户，则groupon_id是0；如果是参团用户，则groupon_id是团购活动ID" propId="3"
               queryable="true" sortable="true" insertable="true" updatable="true">
@@ -32,7 +32,7 @@
         </prop>
         <prop name="rulesId" displayName="团购规则ID" propId="4" mandatory="true" queryable="true" sortable="true"
               insertable="true" updatable="true" ext:relation="grouponRules">
-            <schema type="java.lang.Integer"/>
+            <schema type="java.lang.String"/>
         </prop>
         <prop name="userId" displayName="用户ID" propId="5" mandatory="true" queryable="true" sortable="true"
               insertable="true" updatable="true">

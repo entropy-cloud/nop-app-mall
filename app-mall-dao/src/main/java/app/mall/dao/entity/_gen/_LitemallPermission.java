@@ -78,10 +78,10 @@ public class _LitemallPermission extends DynamicOrmEntity{
 
     
     /* Id: ID */
-    private java.lang.Integer _id;
+    private java.lang.String _id;
     
     /* 角色ID: ROLE_ID */
-    private java.lang.Integer _roleId;
+    private java.lang.String _roleId;
     
     /* 权限: PERMISSION */
     private java.lang.String _permission;
@@ -199,9 +199,9 @@ public class _LitemallPermission extends DynamicOrmEntity{
         switch(propId){
         
             case PROP_ID_id:{
-               java.lang.Integer typedValue = null;
+               java.lang.String typedValue = null;
                if(value != null){
-                   typedValue = ConvertHelper.toInteger(value,
+                   typedValue = ConvertHelper.toString(value,
                        err-> newTypeConversionError(PROP_NAME_id));
                }
                setId(typedValue);
@@ -209,9 +209,9 @@ public class _LitemallPermission extends DynamicOrmEntity{
             }
         
             case PROP_ID_roleId:{
-               java.lang.Integer typedValue = null;
+               java.lang.String typedValue = null;
                if(value != null){
-                   typedValue = ConvertHelper.toInteger(value,
+                   typedValue = ConvertHelper.toString(value,
                        err-> newTypeConversionError(PROP_NAME_roleId));
                }
                setRoleId(typedValue);
@@ -269,14 +269,14 @@ public class _LitemallPermission extends DynamicOrmEntity{
         
             case PROP_ID_id:{
                onInitProp(propId);
-               this._id = (java.lang.Integer)value;
+               this._id = (java.lang.String)value;
                orm_id(); // 如果是设置主键字段，则触发watcher
                break;
             }
         
             case PROP_ID_roleId:{
                onInitProp(propId);
-               this._roleId = (java.lang.Integer)value;
+               this._roleId = (java.lang.String)value;
                
                break;
             }
@@ -318,7 +318,7 @@ public class _LitemallPermission extends DynamicOrmEntity{
     /**
      * Id: ID
      */
-    public final java.lang.Integer getId(){
+    public final java.lang.String getId(){
          onPropGet(PROP_ID_id);
          return _id;
     }
@@ -326,7 +326,7 @@ public class _LitemallPermission extends DynamicOrmEntity{
     /**
      * Id: ID
      */
-    public final void setId(java.lang.Integer value){
+    public final void setId(java.lang.String value){
         if(onPropSet(PROP_ID_id,value)){
             this._id = value;
             internalClearRefs(PROP_ID_id);
@@ -337,7 +337,7 @@ public class _LitemallPermission extends DynamicOrmEntity{
     /**
      * 角色ID: ROLE_ID
      */
-    public final java.lang.Integer getRoleId(){
+    public final java.lang.String getRoleId(){
          onPropGet(PROP_ID_roleId);
          return _roleId;
     }
@@ -345,7 +345,7 @@ public class _LitemallPermission extends DynamicOrmEntity{
     /**
      * 角色ID: ROLE_ID
      */
-    public final void setRoleId(java.lang.Integer value){
+    public final void setRoleId(java.lang.String value){
         if(onPropSet(PROP_ID_roleId,value)){
             this._roleId = value;
             internalClearRefs(PROP_ID_roleId);

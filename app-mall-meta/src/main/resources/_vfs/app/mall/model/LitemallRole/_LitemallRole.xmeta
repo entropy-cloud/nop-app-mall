@@ -20,7 +20,7 @@
     <props>
         <prop name="id" displayName="Id" propId="1" mandatory="true" queryable="true" sortable="true" insertable="true"
               updatable="false">
-            <schema type="java.lang.Integer"/>
+            <schema type="java.lang.String"/>
         </prop>
         <prop name="name" displayName="角色名称" propId="2" mandatory="true" queryable="true" sortable="true"
               insertable="true" updatable="true">

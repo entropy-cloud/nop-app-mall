@@ -19,16 +19,16 @@
             <cols>
 
                 <!--Id-->
-                <col id="id" mandatory="true" ui:number="true" sortable="true"/>
+                <col id="id" mandatory="true" sortable="true"/>
 
                 <!--订单ID-->
-                <col id="orderId" mandatory="true" ui:number="true" sortable="true"/>
+                <col id="orderId" mandatory="true" sortable="true"/>
 
                 <!--如果是开团用户，则groupon_id是0；如果是参团用户，则groupon_id是团购活动ID-->
                 <col id="grouponId" ui:number="true" sortable="true"/>
 
                 <!--团购规则ID-->
-                <col id="rulesId" mandatory="true" ui:number="true" sortable="true"/>
+                <col id="rulesId" mandatory="true" sortable="true"/>
 
                 <!--用户ID-->
                 <col id="userId" mandatory="true" ui:number="true" sortable="true"/>

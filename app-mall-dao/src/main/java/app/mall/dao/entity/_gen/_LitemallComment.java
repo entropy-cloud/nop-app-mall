@@ -28,7 +28,7 @@ public class _LitemallComment extends DynamicOrmEntity{
     public static final String PROP_NAME_valueId = "valueId";
     public static final int PROP_ID_valueId = 2;
     
-    /* 评论类型: TYPE TINYINT */
+    /* 评论类型: TYPE INTEGER */
     public static final String PROP_NAME_type = "type";
     public static final int PROP_ID_type = 3;
     
@@ -52,7 +52,7 @@ public class _LitemallComment extends DynamicOrmEntity{
     public static final String PROP_NAME_picUrls = "picUrls";
     public static final int PROP_ID_picUrls = 8;
     
-    /* 评分， 1-5: STAR SMALLINT */
+    /* 评分， 1-5: STAR INTEGER */
     public static final String PROP_NAME_star = "star";
     public static final int PROP_ID_star = 9;
     
@@ -126,7 +126,7 @@ public class _LitemallComment extends DynamicOrmEntity{
 
     
     /* Id: ID */
-    private java.lang.Integer _id;
+    private java.lang.String _id;
     
     /* 如果type=0，则是商品评论；如果是type=1，则是专题评论。: VALUE_ID */
     private java.lang.Integer _valueId;
@@ -141,7 +141,7 @@ public class _LitemallComment extends DynamicOrmEntity{
     private java.lang.String _adminContent;
     
     /* 用户ID: USER_ID */
-    private java.lang.Integer _userId;
+    private java.lang.String _userId;
     
     /* 是否含有图片: HAS_PICTURE */
     private java.lang.Boolean _hasPicture;
@@ -283,9 +283,9 @@ public class _LitemallComment extends DynamicOrmEntity{
         switch(propId){
         
             case PROP_ID_id:{
-               java.lang.Integer typedValue = null;
+               java.lang.String typedValue = null;
                if(value != null){
-                   typedValue = ConvertHelper.toInteger(value,
+                   typedValue = ConvertHelper.toString(value,
                        err-> newTypeConversionError(PROP_NAME_id));
                }
                setId(typedValue);
@@ -333,9 +333,9 @@ public class _LitemallComment extends DynamicOrmEntity{
             }
         
             case PROP_ID_userId:{
-               java.lang.Integer typedValue = null;
+               java.lang.String typedValue = null;
                if(value != null){
-                   typedValue = ConvertHelper.toInteger(value,
+                   typedValue = ConvertHelper.toString(value,
                        err-> newTypeConversionError(PROP_NAME_userId));
                }
                setUserId(typedValue);
@@ -413,7 +413,7 @@ public class _LitemallComment extends DynamicOrmEntity{
         
             case PROP_ID_id:{
                onInitProp(propId);
-               this._id = (java.lang.Integer)value;
+               this._id = (java.lang.String)value;
                orm_id(); // 如果是设置主键字段，则触发watcher
                break;
             }
@@ -448,7 +448,7 @@ public class _LitemallComment extends DynamicOrmEntity{
         
             case PROP_ID_userId:{
                onInitProp(propId);
-               this._userId = (java.lang.Integer)value;
+               this._userId = (java.lang.String)value;
                
                break;
             }
@@ -504,7 +504,7 @@ public class _LitemallComment extends DynamicOrmEntity{
     /**
      * Id: ID
      */
-    public final java.lang.Integer getId(){
+    public final java.lang.String getId(){
          onPropGet(PROP_ID_id);
          return _id;
     }
@@ -512,7 +512,7 @@ public class _LitemallComment extends DynamicOrmEntity{
     /**
      * Id: ID
      */
-    public final void setId(java.lang.Integer value){
+    public final void setId(java.lang.String value){
         if(onPropSet(PROP_ID_id,value)){
             this._id = value;
             internalClearRefs(PROP_ID_id);
@@ -599,7 +599,7 @@ public class _LitemallComment extends DynamicOrmEntity{
     /**
      * 用户ID: USER_ID
      */
-    public final java.lang.Integer getUserId(){
+    public final java.lang.String getUserId(){
          onPropGet(PROP_ID_userId);
          return _userId;
     }
@@ -607,7 +607,7 @@ public class _LitemallComment extends DynamicOrmEntity{
     /**
      * 用户ID: USER_ID
      */
-    public final void setUserId(java.lang.Integer value){
+    public final void setUserId(java.lang.String value){
         if(onPropSet(PROP_ID_userId,value)){
             this._userId = value;
             internalClearRefs(PROP_ID_userId);

@@ -1,9 +1,9 @@
 {
-  "id": 0,
+  "id": "",
   "goodsSn": "",
   "name": "",
-  "categoryId": 0,
-  "brandId": 0,
+  "categoryId": "",
+  "brandId": "",
   "brandId_label": "",
   "gallery": null,
   "keywords": "",

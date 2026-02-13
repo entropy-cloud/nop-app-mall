@@ -48,19 +48,19 @@ public class _LitemallCoupon extends DynamicOrmEntity{
     public static final String PROP_NAME_min = "min";
     public static final int PROP_ID_min = 7;
     
-    /* 用户领券限制数量: LIMIT SMALLINT */
+    /* 用户领券限制数量: LIMIT INTEGER */
     public static final String PROP_NAME_limit = "limit";
     public static final int PROP_ID_limit = 8;
     
-    /* 优惠券赠送类型: TYPE SMALLINT */
+    /* 优惠券赠送类型: TYPE INTEGER */
     public static final String PROP_NAME_type = "type";
     public static final int PROP_ID_type = 9;
     
-    /* 优惠券状态: STATUS SMALLINT */
+    /* 优惠券状态: STATUS INTEGER */
     public static final String PROP_NAME_status = "status";
     public static final int PROP_ID_status = 10;
     
-    /* 商品限制类型: GOODS_TYPE SMALLINT */
+    /* 商品限制类型: GOODS_TYPE INTEGER */
     public static final String PROP_NAME_goodsType = "goodsType";
     public static final int PROP_ID_goodsType = 11;
     
@@ -72,11 +72,11 @@ public class _LitemallCoupon extends DynamicOrmEntity{
     public static final String PROP_NAME_code = "code";
     public static final int PROP_ID_code = 13;
     
-    /* 有效时间限制: TIME_TYPE SMALLINT */
+    /* 有效时间限制: TIME_TYPE INTEGER */
     public static final String PROP_NAME_timeType = "timeType";
     public static final int PROP_ID_timeType = 14;
     
-    /* 基于领取时间的有效天数days。: DAYS SMALLINT */
+    /* 基于领取时间的有效天数days。: DAYS INTEGER */
     public static final String PROP_NAME_days = "days";
     public static final int PROP_ID_days = 15;
     
@@ -176,7 +176,7 @@ public class _LitemallCoupon extends DynamicOrmEntity{
 
     
     /* Id: ID */
-    private java.lang.Integer _id;
+    private java.lang.String _id;
     
     /* 优惠券名称: NAME */
     private java.lang.String _name;
@@ -381,9 +381,9 @@ public class _LitemallCoupon extends DynamicOrmEntity{
         switch(propId){
         
             case PROP_ID_id:{
-               java.lang.Integer typedValue = null;
+               java.lang.String typedValue = null;
                if(value != null){
-                   typedValue = ConvertHelper.toInteger(value,
+                   typedValue = ConvertHelper.toString(value,
                        err-> newTypeConversionError(PROP_NAME_id));
                }
                setId(typedValue);
@@ -591,7 +591,7 @@ public class _LitemallCoupon extends DynamicOrmEntity{
         
             case PROP_ID_id:{
                onInitProp(propId);
-               this._id = (java.lang.Integer)value;
+               this._id = (java.lang.String)value;
                orm_id(); // 如果是设置主键字段，则触发watcher
                break;
             }
@@ -738,7 +738,7 @@ public class _LitemallCoupon extends DynamicOrmEntity{
     /**
      * Id: ID
      */
-    public final java.lang.Integer getId(){
+    public final java.lang.String getId(){
          onPropGet(PROP_ID_id);
          return _id;
     }
@@ -746,7 +746,7 @@ public class _LitemallCoupon extends DynamicOrmEntity{
     /**
      * Id: ID
      */
-    public final void setId(java.lang.Integer value){
+    public final void setId(java.lang.String value){
         if(onPropSet(PROP_ID_id,value)){
             this._id = value;
             internalClearRefs(PROP_ID_id);

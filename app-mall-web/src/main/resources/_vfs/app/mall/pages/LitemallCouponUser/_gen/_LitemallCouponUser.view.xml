@@ -19,13 +19,13 @@
             <cols>
 
                 <!--Id-->
-                <col id="id" mandatory="true" ui:number="true" sortable="true"/>
+                <col id="id" mandatory="true" sortable="true"/>
 
                 <!--用户ID-->
-                <col id="userId" mandatory="true" ui:number="true" sortable="true"/>
+                <col id="userId" mandatory="true" sortable="true"/>
 
                 <!--优惠券ID-->
-                <col id="couponId" mandatory="true" ui:number="true" sortable="true"/>
+                <col id="couponId" mandatory="true" sortable="true"/>
 
                 <!--使用状态-->
                 <col id="status" ui:number="true" sortable="true"/>

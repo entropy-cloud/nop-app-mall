@@ -20,15 +20,15 @@
     <props>
         <prop name="id" displayName="Id" propId="1" tagSet="seq" mandatory="true" queryable="true" sortable="true"
               insertable="false" updatable="false" ui:show="R">
-            <schema type="java.lang.Integer"/>
+            <schema type="java.lang.String"/>
         </prop>
         <prop name="orderId" displayName="订单ID" propId="2" mandatory="true" queryable="true" sortable="true"
               insertable="true" updatable="true" ext:relation="order">
-            <schema type="java.lang.Integer"/>
+            <schema type="java.lang.String"/>
         </prop>
         <prop name="goodsId" displayName="商品ID" propId="3" mandatory="true" queryable="true" sortable="true"
               insertable="true" updatable="true" ext:relation="goods">
-            <schema type="java.lang.Integer"/>
+            <schema type="java.lang.String"/>
         </prop>
         <prop name="goodsName" displayName="商品名称" propId="4" mandatory="true" queryable="true" sortable="true"
               insertable="true" updatable="true">
@@ -40,7 +40,7 @@
         </prop>
         <prop name="productId" displayName="货品ID" propId="6" mandatory="true" queryable="true" sortable="true"
               insertable="true" updatable="true" ext:relation="product">
-            <schema type="java.lang.Integer"/>
+            <schema type="java.lang.String"/>
         </prop>
         <prop name="number" displayName="购买数量" propId="7" mandatory="true" queryable="true" sortable="true"
               insertable="true" updatable="true">

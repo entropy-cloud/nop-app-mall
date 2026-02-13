@@ -1,7 +1,7 @@
 {
-  "id": 0,
-  "userId": 0,
-  "goodsId": 0,
+  "id": "",
+  "userId": "",
+  "goodsId": "",
   "addTime": "2000-01-01 14:00:00",
   "updateTime": "2000-01-01 14:00:00",
   "deleted": false,

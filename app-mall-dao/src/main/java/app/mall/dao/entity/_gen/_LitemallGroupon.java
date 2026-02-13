@@ -52,7 +52,7 @@ public class _LitemallGroupon extends DynamicOrmEntity{
     public static final String PROP_NAME_creatorUserTime = "creatorUserTime";
     public static final int PROP_ID_creatorUserTime = 8;
     
-    /* 团购活动状态，开团未支付则0，开团中则1，开团失败则2: STATUS SMALLINT */
+    /* 团购活动状态，开团未支付则0，开团中则1，开团失败则2: STATUS INTEGER */
     public static final String PROP_NAME_status = "status";
     public static final int PROP_ID_status = 9;
     
@@ -129,16 +129,16 @@ public class _LitemallGroupon extends DynamicOrmEntity{
 
     
     /* Id: ID */
-    private java.lang.Integer _id;
+    private java.lang.String _id;
     
     /* 订单ID: ORDER_ID */
-    private java.lang.Integer _orderId;
+    private java.lang.String _orderId;
     
     /* 如果是开团用户，则groupon_id是0；如果是参团用户，则groupon_id是团购活动ID: GROUPON_ID */
     private java.lang.Integer _grouponId;
     
     /* 团购规则ID: RULES_ID */
-    private java.lang.Integer _rulesId;
+    private java.lang.String _rulesId;
     
     /* 用户ID: USER_ID */
     private java.lang.Integer _userId;
@@ -286,9 +286,9 @@ public class _LitemallGroupon extends DynamicOrmEntity{
         switch(propId){
         
             case PROP_ID_id:{
-               java.lang.Integer typedValue = null;
+               java.lang.String typedValue = null;
                if(value != null){
-                   typedValue = ConvertHelper.toInteger(value,
+                   typedValue = ConvertHelper.toString(value,
                        err-> newTypeConversionError(PROP_NAME_id));
                }
                setId(typedValue);
@@ -296,9 +296,9 @@ public class _LitemallGroupon extends DynamicOrmEntity{
             }
         
             case PROP_ID_orderId:{
-               java.lang.Integer typedValue = null;
+               java.lang.String typedValue = null;
                if(value != null){
-                   typedValue = ConvertHelper.toInteger(value,
+                   typedValue = ConvertHelper.toString(value,
                        err-> newTypeConversionError(PROP_NAME_orderId));
                }
                setOrderId(typedValue);
@@ -316,9 +316,9 @@ public class _LitemallGroupon extends DynamicOrmEntity{
             }
         
             case PROP_ID_rulesId:{
-               java.lang.Integer typedValue = null;
+               java.lang.String typedValue = null;
                if(value != null){
-                   typedValue = ConvertHelper.toInteger(value,
+                   typedValue = ConvertHelper.toString(value,
                        err-> newTypeConversionError(PROP_NAME_rulesId));
                }
                setRulesId(typedValue);
@@ -416,14 +416,14 @@ public class _LitemallGroupon extends DynamicOrmEntity{
         
             case PROP_ID_id:{
                onInitProp(propId);
-               this._id = (java.lang.Integer)value;
+               this._id = (java.lang.String)value;
                orm_id(); // 如果是设置主键字段，则触发watcher
                break;
             }
         
             case PROP_ID_orderId:{
                onInitProp(propId);
-               this._orderId = (java.lang.Integer)value;
+               this._orderId = (java.lang.String)value;
                
                break;
             }
@@ -437,7 +437,7 @@ public class _LitemallGroupon extends DynamicOrmEntity{
         
             case PROP_ID_rulesId:{
                onInitProp(propId);
-               this._rulesId = (java.lang.Integer)value;
+               this._rulesId = (java.lang.String)value;
                
                break;
             }
@@ -507,7 +507,7 @@ public class _LitemallGroupon extends DynamicOrmEntity{
     /**
      * Id: ID
      */
-    public final java.lang.Integer getId(){
+    public final java.lang.String getId(){
          onPropGet(PROP_ID_id);
          return _id;
     }
@@ -515,7 +515,7 @@ public class _LitemallGroupon extends DynamicOrmEntity{
     /**
      * Id: ID
      */
-    public final void setId(java.lang.Integer value){
+    public final void setId(java.lang.String value){
         if(onPropSet(PROP_ID_id,value)){
             this._id = value;
             internalClearRefs(PROP_ID_id);
@@ -526,7 +526,7 @@ public class _LitemallGroupon extends DynamicOrmEntity{
     /**
      * 订单ID: ORDER_ID
      */
-    public final java.lang.Integer getOrderId(){
+    public final java.lang.String getOrderId(){
          onPropGet(PROP_ID_orderId);
          return _orderId;
     }
@@ -534,7 +534,7 @@ public class _LitemallGroupon extends DynamicOrmEntity{
     /**
      * 订单ID: ORDER_ID
      */
-    public final void setOrderId(java.lang.Integer value){
+    public final void setOrderId(java.lang.String value){
         if(onPropSet(PROP_ID_orderId,value)){
             this._orderId = value;
             internalClearRefs(PROP_ID_orderId);
@@ -564,7 +564,7 @@ public class _LitemallGroupon extends DynamicOrmEntity{
     /**
      * 团购规则ID: RULES_ID
      */
-    public final java.lang.Integer getRulesId(){
+    public final java.lang.String getRulesId(){
          onPropGet(PROP_ID_rulesId);
          return _rulesId;
     }
@@ -572,7 +572,7 @@ public class _LitemallGroupon extends DynamicOrmEntity{
     /**
      * 团购规则ID: RULES_ID
      */
-    public final void setRulesId(java.lang.Integer value){
+    public final void setRulesId(java.lang.String value){
         if(onPropSet(PROP_ID_rulesId,value)){
             this._rulesId = value;
             internalClearRefs(PROP_ID_rulesId);

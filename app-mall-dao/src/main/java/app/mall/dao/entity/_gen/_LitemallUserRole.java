@@ -549,8 +549,7 @@ public class _LitemallUserRole extends DynamicOrmEntity{
            }else{
            internalSetRefEntity(PROP_NAME_user, refEntity,()->{
            
-                           this.orm_propValue(PROP_ID_userId,
-                           refEntity.getId());
+                           this.setUserId(refEntity.getId());
                        
            });
            }
@@ -573,8 +572,7 @@ public class _LitemallUserRole extends DynamicOrmEntity{
            }else{
            internalSetRefEntity(PROP_NAME_role, refEntity,()->{
            
-                           this.orm_propValue(PROP_ID_roleId,
-                           refEntity.getId());
+                           this.setRoleId(refEntity.getId());
                        
            });
            }

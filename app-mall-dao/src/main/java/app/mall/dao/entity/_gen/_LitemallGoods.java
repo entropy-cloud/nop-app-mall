@@ -56,7 +56,7 @@ public class _LitemallGoods extends DynamicOrmEntity{
     public static final String PROP_NAME_isOnSale = "isOnSale";
     public static final int PROP_ID_isOnSale = 9;
     
-    /* 排序顺序: SORT_ORDER SMALLINT */
+    /* 排序顺序: SORT_ORDER INTEGER */
     public static final String PROP_NAME_sortOrder = "sortOrder";
     public static final int PROP_ID_sortOrder = 10;
     
@@ -210,7 +210,7 @@ public class _LitemallGoods extends DynamicOrmEntity{
 
     
     /* Id: ID */
-    private java.lang.Integer _id;
+    private java.lang.String _id;
     
     /* 商品编号: GOODS_SN */
     private java.lang.String _goodsSn;
@@ -219,10 +219,10 @@ public class _LitemallGoods extends DynamicOrmEntity{
     private java.lang.String _name;
     
     /* 商品所属类目ID: CATEGORY_ID */
-    private java.lang.Integer _categoryId;
+    private java.lang.String _categoryId;
     
     /* 品牌ID: BRAND_ID */
-    private java.lang.Integer _brandId;
+    private java.lang.String _brandId;
     
     /* 商品宣传图片列表: GALLERY */
     private java.lang.String _gallery;
@@ -421,9 +421,9 @@ public class _LitemallGoods extends DynamicOrmEntity{
         switch(propId){
         
             case PROP_ID_id:{
-               java.lang.Integer typedValue = null;
+               java.lang.String typedValue = null;
                if(value != null){
-                   typedValue = ConvertHelper.toInteger(value,
+                   typedValue = ConvertHelper.toString(value,
                        err-> newTypeConversionError(PROP_NAME_id));
                }
                setId(typedValue);
@@ -451,9 +451,9 @@ public class _LitemallGoods extends DynamicOrmEntity{
             }
         
             case PROP_ID_categoryId:{
-               java.lang.Integer typedValue = null;
+               java.lang.String typedValue = null;
                if(value != null){
-                   typedValue = ConvertHelper.toInteger(value,
+                   typedValue = ConvertHelper.toString(value,
                        err-> newTypeConversionError(PROP_NAME_categoryId));
                }
                setCategoryId(typedValue);
@@ -461,9 +461,9 @@ public class _LitemallGoods extends DynamicOrmEntity{
             }
         
             case PROP_ID_brandId:{
-               java.lang.Integer typedValue = null;
+               java.lang.String typedValue = null;
                if(value != null){
-                   typedValue = ConvertHelper.toInteger(value,
+                   typedValue = ConvertHelper.toString(value,
                        err-> newTypeConversionError(PROP_NAME_brandId));
                }
                setBrandId(typedValue);
@@ -641,7 +641,7 @@ public class _LitemallGoods extends DynamicOrmEntity{
         
             case PROP_ID_id:{
                onInitProp(propId);
-               this._id = (java.lang.Integer)value;
+               this._id = (java.lang.String)value;
                orm_id(); // 如果是设置主键字段，则触发watcher
                break;
             }
@@ -662,14 +662,14 @@ public class _LitemallGoods extends DynamicOrmEntity{
         
             case PROP_ID_categoryId:{
                onInitProp(propId);
-               this._categoryId = (java.lang.Integer)value;
+               this._categoryId = (java.lang.String)value;
                
                break;
             }
         
             case PROP_ID_brandId:{
                onInitProp(propId);
-               this._brandId = (java.lang.Integer)value;
+               this._brandId = (java.lang.String)value;
                
                break;
             }
@@ -795,7 +795,7 @@ public class _LitemallGoods extends DynamicOrmEntity{
     /**
      * Id: ID
      */
-    public final java.lang.Integer getId(){
+    public final java.lang.String getId(){
          onPropGet(PROP_ID_id);
          return _id;
     }
@@ -803,7 +803,7 @@ public class _LitemallGoods extends DynamicOrmEntity{
     /**
      * Id: ID
      */
-    public final void setId(java.lang.Integer value){
+    public final void setId(java.lang.String value){
         if(onPropSet(PROP_ID_id,value)){
             this._id = value;
             internalClearRefs(PROP_ID_id);
@@ -852,7 +852,7 @@ public class _LitemallGoods extends DynamicOrmEntity{
     /**
      * 商品所属类目ID: CATEGORY_ID
      */
-    public final java.lang.Integer getCategoryId(){
+    public final java.lang.String getCategoryId(){
          onPropGet(PROP_ID_categoryId);
          return _categoryId;
     }
@@ -860,7 +860,7 @@ public class _LitemallGoods extends DynamicOrmEntity{
     /**
      * 商品所属类目ID: CATEGORY_ID
      */
-    public final void setCategoryId(java.lang.Integer value){
+    public final void setCategoryId(java.lang.String value){
         if(onPropSet(PROP_ID_categoryId,value)){
             this._categoryId = value;
             internalClearRefs(PROP_ID_categoryId);
@@ -871,7 +871,7 @@ public class _LitemallGoods extends DynamicOrmEntity{
     /**
      * 品牌ID: BRAND_ID
      */
-    public final java.lang.Integer getBrandId(){
+    public final java.lang.String getBrandId(){
          onPropGet(PROP_ID_brandId);
          return _brandId;
     }
@@ -879,7 +879,7 @@ public class _LitemallGoods extends DynamicOrmEntity{
     /**
      * 品牌ID: BRAND_ID
      */
-    public final void setBrandId(java.lang.Integer value){
+    public final void setBrandId(java.lang.String value){
         if(onPropSet(PROP_ID_brandId,value)){
             this._brandId = value;
             internalClearRefs(PROP_ID_brandId);

@@ -22,11 +22,11 @@
     <props>
         <prop name="id" displayName="Id" propId="1" tagSet="seq" mandatory="true" queryable="true" sortable="true"
               insertable="false" updatable="false" ui:show="R">
-            <schema type="java.lang.Integer"/>
+            <schema type="java.lang.String"/>
         </prop>
         <prop name="pid" displayName="行政区域父ID" propId="2" tagSet="parent" mandatory="true" queryable="true"
               sortable="true" insertable="true" updatable="true" ui:control="tree-parent" ext:relation="parent">
-            <schema type="java.lang.Integer"/>
+            <schema type="java.lang.String"/>
         </prop>
         <prop name="name" displayName="行政区域名称" propId="3" mandatory="true" queryable="true" sortable="true"
               insertable="true" updatable="true">
@@ -38,7 +38,7 @@
         </prop>
         <prop name="code" displayName="行政区域编码" propId="5" mandatory="true" queryable="true" sortable="true"
               insertable="true" updatable="true">
-            <schema type="java.lang.Integer"/>
+            <schema type="java.lang.String"/>
         </prop>
         <prop name="parent" displayName="父区域" i18n-en:displayName="Parent" tagSet="pub,ref-pub" ext:kind="to-one"
               internal="true" queryable="true" ext:joinLeftProp="pid" ext:joinRightProp="id" insertable="false"

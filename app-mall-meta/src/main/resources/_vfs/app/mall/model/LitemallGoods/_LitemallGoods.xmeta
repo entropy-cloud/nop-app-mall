@@ -28,7 +28,7 @@
     <props>
         <prop name="id" displayName="Id" propId="1" i18n-en:displayName="ID" tagSet="seq" mandatory="true"
               queryable="true" sortable="true" insertable="false" updatable="false" ui:show="R">
-            <schema type="java.lang.Integer"/>
+            <schema type="java.lang.String"/>
         </prop>
         <prop name="goodsSn" displayName="商品编号" propId="2" i18n-en:displayName="Goods SN" mandatory="true"
               queryable="true" sortable="true" insertable="true" updatable="true" ui:show="L">
@@ -40,11 +40,11 @@
         </prop>
         <prop name="categoryId" displayName="商品所属类目ID" propId="4" i18n-en:displayName="Category" queryable="true"
               sortable="true" insertable="true" updatable="true" ext:relation="category">
-            <schema type="java.lang.Integer"/>
+            <schema type="java.lang.String"/>
         </prop>
         <prop name="brandId" displayName="品牌ID" propId="5" i18n-en:displayName="Brand" queryable="true" sortable="true"
               insertable="true" updatable="true" ext:relation="brand">
-            <schema type="java.lang.Integer" dict="obj/LitemallBrand"/>
+            <schema type="java.lang.String" dict="obj/LitemallBrand"/>
         </prop>
         <prop name="gallery" displayName="商品宣传图片列表" propId="6" i18n-en:displayName="Gallery" queryable="true"
               sortable="true" insertable="true" updatable="true">

@@ -1,8 +1,8 @@
 {
-  "id": 0,
-  "orderId": 0,
+  "id": "",
+  "orderId": "",
   "grouponId": 0,
-  "rulesId": 0,
+  "rulesId": "",
   "userId": 0,
   "shareUrl": "",
   "creatorUserId": 0,
