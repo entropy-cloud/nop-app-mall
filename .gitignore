@@ -21,3 +21,12 @@ _dump/
 # Project files, i.e. `.project`, `.actionScriptProperties` and `.flexProperties`
 # should NOT be excluded as they contain compiler settings and other important
 # information for Eclipse / Flash Builder.
+
+# Node.js (tools directory only)
+node_modules/
+
+# OS files
+.DS_Store
+
+# Tools
+tools/report/
