@@ -10,6 +10,7 @@ import io.nop.api.core.beans.query.QueryBean;
 import io.nop.biz.crud.CrudBizModel;
 import io.nop.biz.crud.EntityData;
 import io.nop.core.context.IServiceContext;
+import app.mall.biz.ILitemallGoodsBiz;
 
 import jakarta.inject.Inject;
 import java.util.List;
@@ -19,7 +20,7 @@ import static io.nop.api.core.beans.FilterBeans.contains;
 import static io.nop.api.core.beans.FilterBeans.or;
 
 @BizModel("LitemallGoods")
-public class LitemallGoodsBizModel extends CrudBizModel<LitemallGoods> {
+public class LitemallGoodsBizModel extends CrudBizModel<LitemallGoods> implements ILitemallGoodsBiz {
 
     @Inject
     LitemallGoodsMapper goodsMapper;

@@ -3,11 +3,12 @@ package app.mall.service.entity;
 
 import io.nop.api.core.annotations.biz.BizModel;
 import io.nop.biz.crud.CrudBizModel;
+import app.mall.biz.ILitemallCartBiz;
 
 import app.mall.dao.entity.LitemallCart;
 
 @BizModel("LitemallCart")
-public class LitemallCartBizModel extends CrudBizModel<LitemallCart>{
+public class LitemallCartBizModel extends CrudBizModel<LitemallCart> implements ILitemallCartBiz {
     public LitemallCartBizModel(){
         setEntityName(LitemallCart.class.getName());
     }

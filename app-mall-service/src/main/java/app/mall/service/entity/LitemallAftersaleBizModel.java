@@ -21,6 +21,7 @@ import io.nop.commons.util.StringHelper;
 import io.nop.core.context.IServiceContext;
 import io.nop.integration.api.sms.ISmsSender;
 import io.nop.integration.api.sms.SmsMessage;
+import app.mall.biz.ILitemallAftersaleBiz;
 
 import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
@@ -31,7 +32,7 @@ import java.util.Set;
 import static app.mall.service.AppMallErrors.ERR_AFTERSALE_NOT_ALLOW_REFUND;
 
 @BizModel("LitemallAftersale")
-public class LitemallAftersaleBizModel extends CrudBizModel<LitemallAftersale> {
+public class LitemallAftersaleBizModel extends CrudBizModel<LitemallAftersale> implements ILitemallAftersaleBiz {
 
     @Inject
     @Nullable
