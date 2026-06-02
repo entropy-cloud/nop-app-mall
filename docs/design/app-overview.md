@@ -23,22 +23,29 @@ Describe the current supported app-level baseline.
 
 ## Core Workflows
 
-- Product management: category -> brand -> goods -> goods product (SKU)
-- Order workflow: cart -> checkout -> payment -> shipping -> completion
-- After-sales: order -> refund/return request -> review -> resolution
+- Product management: category -> brand -> goods -> goods product (SKU) → [product-catalog.md](product-catalog.md)
+- Order workflow: cart -> checkout -> payment -> shipping -> completion → [order-and-cart.md](order-and-cart.md)
+- After-sales: order -> refund/return request -> review -> resolution → [order-and-cart.md](order-and-cart.md)
+- User management: registration -> profile -> address -> orders → [user-and-address.md](user-and-address.md)
+- Marketing: coupon -> groupon -> promotions → [marketing-and-promotions.md](marketing-and-promotions.md)
 
 ## Key Domain Objects
+
+### MVP Domain Objects
 
 - User, Address, Admin
 - Category, Brand, Goods, GoodsProduct (SKU), GoodsSpecification, GoodsAttribute
 - Order, OrderGoods, Cart
+- Storage, Region
+
+### Deferred Domain Objects
+
 - Coupon, CouponUser
 - GrouponRules, Groupon
 - Comment, Aftersale
 - Collect, Footprint, SearchHistory, Keyword
 - Topic, Ad, Issue, Feedback
-- Notice, NoticeAdmin
-- Storage, Region
+- Notice
 
 ## Integration Points
 
