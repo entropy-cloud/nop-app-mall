@@ -45,7 +45,7 @@ Do not jump from a feature request directly to code unless the route is already 
 4. If input is ambiguous, first create or update a file in `docs/discussions/` or `docs/requirements/`.
 5. Create or update a plan before implementation when the planning triggers below apply.
 6. Keep `docs/design/` and `docs/architecture/` focused on the current supported baseline, not migration history.
-7. Keep logs short, dated, and append-only.
+7. Keep logs short, dated, and append-only. After completing any significant code change, you MUST update the daily dev log at `docs/logs/{year}/{month}-{day}.md` (reverse chronological, see `docs/logs/00-log-writing-guide.md` for format).
 8. Record non-obvious regressions in `docs/bugs/`.
 9. If prototype and implementation diverge materially, capture the reason in `docs/retrospectives/` instead of silently moving on.
 10. Promote repeated process lessons into `docs/skills/` or `docs/audits/` only when the pattern is recurring enough to justify reuse.
@@ -190,6 +190,15 @@ For non-trivial plans, each phase or item that depends on a reusable skill shoul
 - Do not hide mandatory rules in `docs/references/`; if an AI must apply it by default, put it in `docs/context/` or `AGENTS.md`.
 - Use `docs/backlog/` and `docs/context/ai-autonomy-policy.md` to decide whether AI may choose and execute the next task without asking.
 - When editing Nop platform files, follow the platform's conventions: XML models for code generation, delta customization for overrides, AMIS JSON for views.
+
+## Docs Maintenance
+
+After completing any significant code change, you MUST:
+
+1. **Update the daily dev log** at `docs/logs/{year}/{month}-{day}.md` (reverse chronological, see `docs/logs/00-log-writing-guide.md` for format).
+2. **Update relevant owner docs** in `docs/design/` or `docs/architecture/` when the change affects app-layer behavior or technical structure.
+
+When verification passes completely (full green), record the verification status in the log entry and include it in the git commit message. This provides reliable known-good baselines for future debugging.
 
 ## Verification Baseline
 
