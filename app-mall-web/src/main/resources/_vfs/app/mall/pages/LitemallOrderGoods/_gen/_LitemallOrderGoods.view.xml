@@ -56,7 +56,7 @@
     </grids>
 
     <forms>
-        <form id="view" editMode="view" title="查看-订单商品表" i18n-en:title="View ">
+        <form id="view" editMode="view" title="查看-订单商品表" i18n-en:title="">
             <layout>
  id[Id] orderId[订单ID]
  goodsId[商品ID] goodsName[商品名称]
@@ -66,8 +66,8 @@
  comment[订单商品评论，如果是-1，则超期不能评价；如果是0，则可以评价；如果其他值，则是comment表里面的评论ID。] 
 </layout>
         </form>
-        <form id="add" editMode="add" title="新增-订单商品表" i18n-en:title="Add " x:prototype="edit"/>
-        <form id="edit" editMode="edit" title="编辑-订单商品表" i18n-en:title="Edit ">
+        <form id="add" editMode="add" title="新增-订单商品表" i18n-en:title="" x:prototype="edit"/>
+        <form id="edit" editMode="edit" title="编辑-订单商品表" i18n-en:title="">
             <layout>
  orderId[订单ID] goodsId[商品ID]
  goodsName[商品名称] goodsSn[商品编号]
@@ -78,7 +78,7 @@
         </form>
         <form id="query" editMode="query" title="查询条件" i18n-en:title="Query Condition" x:abstract="true"/>
         <form id="asideFilter" editMode="query" x:abstract="true" submitOnChange="true"/>
-        <form id="batchUpdate" editMode="edit" x:abstract="true" title="修改-订单商品表" i18n-en:title="Update "/>
+        <form id="batchUpdate" editMode="edit" x:abstract="true" title="修改-订单商品表" i18n-en:title=""/>
     </forms>
 
     <pages>

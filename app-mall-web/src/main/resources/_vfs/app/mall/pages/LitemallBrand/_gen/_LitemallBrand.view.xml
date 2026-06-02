@@ -38,7 +38,7 @@
     </grids>
 
     <forms>
-        <form id="view" editMode="view" title="查看-品牌商表" i18n-en:title="View ">
+        <form id="view" editMode="view" title="查看-品牌商表" i18n-en:title="">
             <layout>
  id[Id]
  name[品牌商名称]
@@ -47,8 +47,8 @@
  floorPrice[底价]
 </layout>
         </form>
-        <form id="add" editMode="add" title="新增-品牌商表" i18n-en:title="Add " x:prototype="edit"/>
-        <form id="edit" editMode="edit" title="编辑-品牌商表" i18n-en:title="Edit ">
+        <form id="add" editMode="add" title="新增-品牌商表" i18n-en:title="" x:prototype="edit"/>
+        <form id="edit" editMode="edit" title="编辑-品牌商表" i18n-en:title="">
             <layout>
  name[品牌商名称]
  picUrl[品牌商图片]
@@ -58,7 +58,7 @@
         </form>
         <form id="query" editMode="query" title="查询条件" i18n-en:title="Query Condition" x:abstract="true"/>
         <form id="asideFilter" editMode="query" x:abstract="true" submitOnChange="true"/>
-        <form id="batchUpdate" editMode="edit" x:abstract="true" title="修改-品牌商表" i18n-en:title="Update "/>
+        <form id="batchUpdate" editMode="edit" x:abstract="true" title="修改-品牌商表" i18n-en:title=""/>
     </forms>
 
     <pages>

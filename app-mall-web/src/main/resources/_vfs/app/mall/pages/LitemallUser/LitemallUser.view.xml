@@ -2,14 +2,53 @@
 <view x:extends="_gen/_LitemallUser.view.xml" x:schema="/nop/schema/xui/xview.xdef" xmlns:x="/nop/schema/xdsl.xdef">
 
     <grids>
-        <grid id="list"/>
-        <grid id="pick-list"/>
+        <grid id="list">
+            <cols x:override="bounded-merge">
+                <col id="id"/>
+                <col id="username"/>
+                <col id="gender"/>
+                <col id="birthday"/>
+                <col id="lastLoginTime"/>
+                <col id="lastLoginIp"/>
+                <col id="userLevel"/>
+                <col id="nickname"/>
+                <col id="mobile"/>
+                <col id="avatar"/>
+                <col id="status"/>
+            </cols>
+        </grid>
+        <grid id="pick-list" x:prototype="list">
+            <cols x:override="bounded-merge">
+                <col id="id"/>
+                <col id="username"/>
+                <col id="nickname"/>
+                <col id="mobile"/>
+                <col id="status"/>
+            </cols>
+        </grid>
     </grids>
 
     <forms>
-        <form id="view"/>
-        <form id="edit"/>
-        <form id="add"/>
+        <form id="view">
+            <layout>
+ id[Id] username[用户名称]
+ gender[性别] birthday[生日]
+ lastLoginTime[最近一次登录时间] lastLoginIp[最近一次登录IP地址]
+ userLevel[用户等级] nickname[用户昵称或网络名称]
+ mobile[用户手机号码] avatar[用户头像图片]
+ status[用户状态]
+</layout>
+        </form>
+        <form id="edit">
+            <layout>
+ username[用户名称] gender[性别]
+ birthday[生日] lastLoginTime[最近一次登录时间]
+ lastLoginIp[最近一次登录IP地址] userLevel[用户等级]
+ nickname[用户昵称或网络名称] mobile[用户手机号码]
+ avatar[用户头像图片] status[用户状态]
+</layout>
+        </form>
+        <form id="add" x:prototype="edit"/>
     </forms>
 
     <pages>

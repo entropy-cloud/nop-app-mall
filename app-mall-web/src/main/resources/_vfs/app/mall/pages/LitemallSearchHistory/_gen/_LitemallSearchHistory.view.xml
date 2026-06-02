@@ -35,7 +35,7 @@
     </grids>
 
     <forms>
-        <form id="view" editMode="view" title="查看-搜索历史表" i18n-en:title="View ">
+        <form id="view" editMode="view" title="查看-搜索历史表" i18n-en:title="">
             <layout>
  id[Id]
  userId[用户ID]

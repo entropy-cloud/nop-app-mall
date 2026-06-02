@@ -41,7 +41,7 @@
     </grids>
 
     <forms>
-        <form id="view" editMode="view" title="查看-行政区域表" i18n-en:title="View ">
+        <form id="view" editMode="view" title="查看-行政区域表" i18n-en:title="">
             <layout>
  id[Id]
  pid[行政区域父ID]
@@ -50,8 +50,8 @@
  code[行政区域编码]
 </layout>
         </form>
-        <form id="add" editMode="add" title="新增-行政区域表" i18n-en:title="Add " x:prototype="edit"/>
-        <form id="edit" editMode="edit" title="编辑-行政区域表" i18n-en:title="Edit ">
+        <form id="add" editMode="add" title="新增-行政区域表" i18n-en:title="" x:prototype="edit"/>
+        <form id="edit" editMode="edit" title="编辑-行政区域表" i18n-en:title="">
             <layout>
  pid[行政区域父ID]
  name[行政区域名称]
@@ -61,7 +61,7 @@
         </form>
         <form id="query" editMode="query" title="查询条件" i18n-en:title="Query Condition" x:abstract="true"/>
         <form id="asideFilter" editMode="query" x:abstract="true" submitOnChange="true"/>
-        <form id="batchUpdate" editMode="edit" x:abstract="true" title="修改-行政区域表" i18n-en:title="Update "/>
+        <form id="batchUpdate" editMode="edit" x:abstract="true" title="修改-行政区域表" i18n-en:title=""/>
     </forms>
 
     <pages>

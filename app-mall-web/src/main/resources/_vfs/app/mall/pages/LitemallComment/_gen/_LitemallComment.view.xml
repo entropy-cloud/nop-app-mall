@@ -50,7 +50,7 @@
     </grids>
 
     <forms>
-        <form id="view" editMode="view" title="查看-评论表" i18n-en:title="View ">
+        <form id="view" editMode="view" title="查看-评论表" i18n-en:title="">
             <layout>
  id[Id]
  valueId[如果type=0，则是商品评论；如果是type=1，则是专题评论。]
@@ -63,8 +63,8 @@
  star[评分， 1-5]
 </layout>
         </form>
-        <form id="add" editMode="add" title="新增-评论表" i18n-en:title="Add " x:prototype="edit"/>
-        <form id="edit" editMode="edit" title="编辑-评论表" i18n-en:title="Edit ">
+        <form id="add" editMode="add" title="新增-评论表" i18n-en:title="" x:prototype="edit"/>
+        <form id="edit" editMode="edit" title="编辑-评论表" i18n-en:title="">
             <layout>
  valueId[如果type=0，则是商品评论；如果是type=1，则是专题评论。]
  type[评论类型]
@@ -78,7 +78,7 @@
         </form>
         <form id="query" editMode="query" title="查询条件" i18n-en:title="Query Condition" x:abstract="true"/>
         <form id="asideFilter" editMode="query" x:abstract="true" submitOnChange="true"/>
-        <form id="batchUpdate" editMode="edit" x:abstract="true" title="修改-评论表" i18n-en:title="Update "/>
+        <form id="batchUpdate" editMode="edit" x:abstract="true" title="修改-评论表" i18n-en:title=""/>
     </forms>
 
     <pages>
