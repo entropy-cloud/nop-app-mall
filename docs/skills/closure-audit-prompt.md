@@ -5,7 +5,7 @@ Use this prompt when independently checking whether a planned slice is actually 
 All created plans require closure audit.
 
 ```text
-Read `AGENTS.md`, `docs/index.md`, the active requirement/design docs, the active plan, the latest related log entry, and the live changed code.
+Read `AGENTS.md`, `docs/index.md`, the relevant requirement/design docs, the plan being closed, the latest related log entry, and the live changed code.
 
 Audit whether the claimed implementation is truly closed.
 
@@ -24,4 +24,6 @@ Focus on:
 Return findings first, ordered by severity.
 If closure is blocked, say `needs revision` and list the exact missing proof or changes.
 If the slice is acceptable, say `passes closure audit` and note any residual risks.
+
+The implementing session should record the result in the plan's `Closure` section by default. Do not ask for a separate `docs/audits/` file unless the audit is specialized, complex, disputed, reusable, or useful for future replay.
 ```

@@ -10,7 +10,7 @@ For small and medium projects, this keeps the repo easy to navigate without forc
 
 ### 1. Stable Owner Docs
 
-These describe the current supported baseline and should usually keep stable names without dates.
+These describe stable supported baseline truth and should usually keep stable names without dates.
 
 Use stable names for:
 
@@ -19,7 +19,7 @@ Use stable names for:
 - `docs/design/`
 - `docs/references/`
 - `docs/skills/`
-- long-lived requirement baseline files such as `docs/requirements/product-scope.md` and `docs/requirements/mvp.md`
+- long-lived requirement baseline files such as `docs/requirements/product-scope.md` and `docs/requirements/commercial-baseline.md`
 
 Examples:
 
@@ -31,6 +31,7 @@ Rule:
 
 - these files should be updated in place
 - do not create a new dated version just because the content changed
+- do not use stable owner docs to mirror active plans, current blockers, roadmap sequencing, or repeated feature status matrices
 
 ### 2. Time-Sensitive Records
 
@@ -44,9 +45,15 @@ Use dated naming for:
 - `docs/testing/`
 - `docs/discussions/`
 - `docs/analysis/`
-- `docs/audits/`
+- `docs/audits/` for specialized audit records, not ordinary plan-local audit evidence
 - `docs/retrospectives/`
 - most one-off requirement synthesis files and implementation plans
+
+Rule:
+
+- time-sensitive directories should not maintain hand-written per-record indexes unless a human explicitly accepts the maintenance cost
+- plans and audits should be discovered by filename, status inside the file, or search rather than mirrored into global context files
+- a directory may keep one lightweight guide or README for naming and usage rules, but it should not duplicate every dated record
 
 ## Recommended Path Conventions
 
@@ -82,10 +89,13 @@ Examples:
 
 - `docs/audits/YYYY-MM-DD-<kind>-<topic>.md`
 
+Use separate audit files only for specialized, complex, disputed, reusable, or future-replay-worthy audits. Ordinary plan-audit and closure-audit evidence should stay in the corresponding plan.
+
 Examples:
 
 - `docs/audits/2026-05-21-document-audit-user-management.md`
-- `docs/audits/2026-05-21-closure-audit-order-list.md`
+- `docs/audits/2026-05-21-multi-dimensional-audit-checkout-flow.md`
+- `docs/audits/2026-05-21-doc-code-alignment-audit-order-list.md`
 
 ### Retrospectives
 
@@ -149,7 +159,7 @@ Recommendation:
 
 ## Simple Rule Of Thumb
 
-- if the file answers "what is the current supported baseline?" -> stable name
+- if the file answers "what is the stable supported baseline?" -> stable name
 - if the file answers "what happened in this round / this day / this investigation?" -> dated name
 
 ## Quick Copy Set

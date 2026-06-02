@@ -14,9 +14,9 @@ This preserves the distinction between raw input and settled requirement intent.
 
 - `00-requirement-synthesis-guide.md`
 - `product-scope.md`
-- `mvp.md`
+- `commercial-baseline.md`
 
 ## Suggested Filenames For New Requirements
 
-- use stable names for long-lived baseline files like `product-scope.md` and `mvp.md`
+- use stable names for long-lived baseline files like `product-scope.md` and `commercial-baseline.md`
 - use dated filenames for one-off requirement synthesis files tied to a specific round of work (e.g., `2026-MM-DD-topic.md`)

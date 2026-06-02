@@ -56,7 +56,7 @@ Exit Criteria:
 
 - Status: pending
 - Reviewer / Agent: `<independent reviewer or subagent>`
-- Evidence: `<audit file or task id>`
+- Evidence: `<task id and short findings/disposition summary; link audit file only when separately justified>`
 
 ## Closure Gates
 
@@ -84,7 +84,7 @@ Status Note: <why the plan can close>
 Closure Audit Evidence:
 
 - Reviewer / Agent: `<independent reviewer or subagent>`
-- Evidence: `<task id / log link / audit file>`
+- Evidence: `<task id / log link; link audit file only when separately justified>`
 
 Follow-up:
 

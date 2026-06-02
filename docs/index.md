@@ -15,26 +15,30 @@ This file is the top-level docs router.
 - `docs/index.md` owns navigation and directory responsibilities
 - `AGENTS.md` owns agent workflow rules and execution expectations
 - `docs/design/` and `docs/architecture/` own the stable project attractor
+- `model/*.orm.xml` and `model/*.api.xml` own persisted model and generated contract truth
 
 ## Read This First
 
 | If you need to...                                                    | Read this first                                     | Then read                                                                                                                                      |
 | -------------------------------------------------------------------- | --------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
 | Understand mandatory AI context and current project state            | `docs/context/README.md`                            | `docs/context/project-context.md`, `docs/context/ai-autonomy-policy.md`, `docs/context/codebase-map.md`                                        |
+| Run, build, or verify the project                                    | `docs/context/project-context.md`                   | `docs/context/codebase-map.md`, `docs/architecture/system-baseline.md`                                                                         |
 | Understand the lightweight default development workflow              | `docs/process/application-development-workflow.md`  | `AGENTS.md`                                                                                                                                    |
-| Choose the next AI-ready work item                                   | `docs/backlog/README.md`                            | `docs/context/ai-autonomy-policy.md`, active requirement and owner doc                                                                         |
+| Choose the next AI-ready work item                                   | `docs/backlog/README.md`                            | `docs/context/ai-autonomy-policy.md`, the relevant requirement and owner doc                                                                   |
 | Read raw PM, prototype, article, or card-set inputs                  | `docs/input/README.md`                              | the active file in `docs/input/`                                                                                                               |
 | Read explanatory methodology articles                                | `docs/articles/README.md`                           | the relevant article under `docs/articles/`                                                                                                    |
 | Clarify ambiguous requirements                                       | `docs/discussions/README.md`                        | `docs/requirements/00-requirement-synthesis-guide.md`                                                                                          |
 | Route a task before coding                                           | `AGENTS.md`                                         | `docs/skills/README.md`, the relevant owner doc, and `docs/plans/00-plan-authoring-and-execution-guide.md`                                     |
-| Decide whether an existing skill applies                             | `docs/skills/README.md`                             | the relevant owner doc and active requirement                                                                                                  |
+| Decide whether an existing skill applies                             | `docs/skills/README.md`                             | the relevant owner doc and requirement                                                                                                         |
 | Understand the project goal and product shape                        | `docs/architecture/project-vision.md`               | `docs/design/app-overview.md`                                                                                                                  |
-| Understand the current app-layer baseline                            | `docs/design/app-overview.md`                       | `docs/design/feature-inventory.md`, `docs/design/roles-and-permissions.md`                                                                     |
-| Understand the current technical baseline                            | `docs/architecture/system-baseline.md`              | `docs/architecture/module-boundaries.md`                                                                                                       |
+| Understand the stable app-layer baseline                             | `docs/design/app-overview.md`                       | `docs/design/feature-inventory.md`, `docs/design/domain-design-guidelines.md`, `docs/design/roles-and-permissions.md`                         |
+| Understand the stable technical baseline                             | `docs/architecture/system-baseline.md`              | `docs/architecture/module-boundaries.md`                                                                                                       |
+| Understand persisted model or dictionary truth                       | `docs/context/source-of-truth-and-precedence.md`    | `model/app-mall.orm.xml`, `model/app-mall.api.xml`                                                                                             |
 | Look up Nop Platform APIs, patterns, or conventions                  | `../nop-entropy/docs-for-ai/INDEX.md`               | the relevant guide under `nop-entropy/docs-for-ai/`                                                                                            |
 | Understand owner-doc precedence and source-of-truth boundaries       | `docs/context/source-of-truth-and-precedence.md`    | the relevant owner doc                                                                                                                         |
-| Start or review a non-trivial implementation                         | `AGENTS.md`                                         | `docs/skills/README.md`, `docs/plans/00-plan-authoring-and-execution-guide.md`, the active plan, and `docs/audits/00-audit-execution-guide.md` |
-| Review audit workflows or required plan/closure audits               | `docs/audits/00-audit-execution-guide.md`           | the relevant prompt in `docs/skills/`                                                                                                          |
+| Start or review a non-trivial implementation                         | `AGENTS.md`                                         | `docs/skills/README.md`, `docs/plans/00-plan-authoring-and-execution-guide.md`, the relevant plan if one exists, and `docs/audits/00-audit-execution-guide.md` |
+| Review a planned or completed slice                                  | the relevant file under `docs/plans/`               | ordinary plan/closure audit evidence is in the plan; use `docs/audits/` only for specialized audit records                                    |
+| Review audit workflows or specialized audit records                  | `docs/audits/00-audit-execution-guide.md`           | the relevant prompt in `docs/skills/`                                                                                                          |
 | Understand which docs should use dated filenames versus stable names | `docs/references/document-naming-and-timeliness.md` | the relevant guide in the target directory                                                                                                     |
 | Quickly copy a recommended filename pattern for a new dated document | `docs/references/document-naming-and-timeliness.md` | the `Quick Copy Set` section                                                                                                                   |
 | Copy a ready-made dated document skeleton                            | `docs/examples/README.md`                           | rename the closest `.example.md` file                                                                                                          |
@@ -46,7 +50,7 @@ This file is the top-level docs router.
 | Check the latest known-good verification state                       | `docs/testing/known-good-baselines.md`              | latest dated testing or log note                                                                                                               |
 | Review tradeoffs or open design investigations                       | `docs/analysis/README.md`                           | the relevant analysis note                                                                                                                     |
 | Review durable reusable engineering lessons                          | `docs/lessons/README.md`                            | the relevant numbered lesson                                                                                                                   |
-| Read implementation-ready requirements                               | `docs/requirements/README.md`                       | the active requirement file                                                                                                                    |
+| Read implementation-ready requirements                               | `docs/requirements/README.md`                       | the requirement file relevant to the selected slice                                                                                            |
 | Review why a landed result still missed expectation                  | `docs/retrospectives/README.md`                     | the relevant retrospective note                                                                                                                |
 
 ## Recommended Default Path
@@ -57,10 +61,10 @@ For most small and medium projects, the default path is:
 2. `docs/backlog/` when choosing work
 3. `docs/input/`
 4. `docs/requirements/`
-5. `docs/design/` and `docs/architecture/`
+5. `docs/design/`, `docs/architecture/`, and `model/*.orm.xml` when the question touches persisted model truth
 6. route the task and select candidate reusable skills
 7. `docs/plans/` when planning triggers apply
-8. `docs/audits/` for required plan/closure audits or stored audit evidence
+8. `docs/audits/` only when specialized, complex, disputed, reusable, or future-replay-worthy audit evidence needs a separate file
 9. `docs/logs/`
 10. `docs/bugs/` when needed
 
@@ -81,18 +85,19 @@ Skills select the work method. They do not replace requirements, design, archite
 
 - `docs/process/` - workflow and operating process documents
 - `docs/context/` - mandatory AI context, owner precedence, and project-wide conventions
-- `docs/backlog/` - prioritized candidate work and AI-ready next actions
+- `docs/backlog/` - roadmap, implementation ordering, candidate work, and AI-ready next actions
 - `docs/input/` - raw external inputs and copied source material
 - `docs/discussions/` - optional requirement clarification and unresolved question records
 - `docs/requirements/` - synthesized implementation-ready requirement docs
 - `docs/design/` - stable app-layer feature and business-flow owner docs
 - `docs/architecture/` - stable technical baseline and module-boundary docs
+- `model/` - XML model source of truth for persisted entities, dictionaries, and generated contracts
 - `docs/lessons/` - durable engineering lessons extracted from repeated issues and recoveries
 - `docs/references/` - stable lookup guides and maintenance aids
 - `docs/articles/` - outward-facing methodology and explanatory articles
 - `docs/examples/` - small copyable skeletons for dated working documents
 - `docs/plans/` - execution plans with closure criteria
-- `docs/audits/` - audit methods and audit records, including required plan/closure audit evidence for created plans
+- `docs/audits/` - audit methods and specialized audit records; ordinary plan/closure audit evidence belongs in the plan by default
 - `docs/skills/` - optional reusable AI prompts and audit/review playbooks
 - `docs/logs/` - dated implementation memory
 - `docs/testing/` - optional exploratory and manual testing notes
@@ -107,10 +112,11 @@ Use files for durable truth.
 
 - input captures where requirements came from
 - context captures mandatory project rules and source-of-truth precedence
-- backlog captures prioritized next actions and autonomy labels
+- backlog captures roadmap and implementation-order signals
 - discussions capture what was unclear
 - requirements capture what should be built
-- design and architecture capture what must stay true
+- design and architecture capture business and technical owner truth
+- model files capture persisted data and generated contract truth
 - source-of-truth precedence tells which artifact wins for each question
 - plans capture how a non-trivial slice will be closed
 - audits capture how claims were challenged

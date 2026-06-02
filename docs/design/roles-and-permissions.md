@@ -4,21 +4,26 @@
 
 Record the current supported role model for the application.
 
+## Boundary
+
+- This document owns business-facing role meanings, visibility rules, and action restrictions.
+- Technical auth implementation detail belongs in `docs/architecture/`.
+- Persisted role and permission structures are defined in platform and model artifacts, not in this prose doc.
+
 ## Roles
 
-| Role        | Description                          | Backend Source                 |
-| ----------- | ------------------------------------ | ------------------------------ |
-| Super admin | Full system access, all operations   | `nop-auth` via delta module    |
-| Admin       | Product and order management         | `nop-auth` role configuration  |
-| Mall user   | Browsing, purchasing, order mgmt     | `nop-auth` user role           |
+| Role        | Description |
+| ----------- | ----------- |
+| Super admin | Full system access across the mall management baseline |
+| Admin       | Product and order operations within assigned responsibilities |
+| Mall user   | Browsing, purchasing, and self-service order management |
 
 ## Permissions
 
 - Admin pages require authenticated admin session
 - Mall user pages require authenticated user session
-- Permission control is managed through Nop Platform's auth system (`nop-auth`) with delta customizations in `app-mall-delta`
-- Action-level permissions defined in `*.action-auth.xml` files
-- Data-level permissions defined in `*.data-auth.xml` files
+- Public storefront browsing is available without login unless the specific action requires authentication
+- Role and permission assignment must match the business restrictions defined below
 
 ## Visibility Rules
 
@@ -29,15 +34,16 @@ Record the current supported role model for the application.
 ## Action Restrictions
 
 - Order cancellation: user can cancel unpaid orders only
-- Refund request: user can request for orders within return window
+- Refund request: user can request refund only for eligible paid orders according to order and after-sale rules
+- Direct refund: admin can directly refund eligible paid orders according to order and after-sale rules
 - Product management: admin only
-- User management: super admin only
+- Admin account and role management: super admin only
 
 ## Approval Or Audit Requirements
 
-- Payment processing requires WeChat Pay callback verification
 - Order status changes follow a fixed state machine
-- After-sales review requires admin approval
+- User-initiated refund and after-sale requests require admin review where the order policy requires approval
+- Direct admin refund actions must remain auditable
 
 ## Rule
 

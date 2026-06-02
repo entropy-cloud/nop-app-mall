@@ -2,127 +2,93 @@
 
 ## Purpose
 
-Describe the user management, authentication, address management, and user profile domain for nop-app-mall.
+Describe mall-user identity, admin-user roles, profile behavior, address management, and region usage for `nop-app-mall`.
+
+## Boundary
+
+- This document owns user-facing and admin-facing account semantics, profile rules, and address behavior.
+- Persisted model shape, field sets, and dictionaries are defined in `model/*.orm.xml`.
+- Platform-auth implementation detail belongs in `docs/architecture/`.
 
 ## Domain Overview
 
-The user system supports two distinct user types: **mall users** (customers) and **admin users** (store managers). Authentication is handled by Nop Platform's `nop-auth` module with delta customizations in `app-mall-delta`.
+The app distinguishes two business user groups:
 
-### Core Entities
+- mall users who browse, purchase, and maintain their own profile and addresses
+- admin users who operate the store and manage business data
 
-| Entity | Table | Role |
-|--------|-------|------|
-| User | Nop auth user (via delta) | Mall customer profile |
-| Address | `app_mall_address` | User shipping addresses |
-| Admin | Nop auth admin (via delta) | Store management user |
-| Region | `app_mall_region` | Administrative region hierarchy |
+The address domain supports delivery information and region-based selection for checkout.
 
-## User Management
+## Mall User Management
 
-### User Data Model
+### Supported User Capabilities
 
-- Core identity managed by Nop Platform auth (nop-auth)
-- Extended profile fields via delta customization:
-  - nickname, gender (0=unknown, 1=male, 2=female)
-  - birthday, phone, avatar_url
-  - user_level (0=normal, 1=VIP, 2=advanced VIP)
-  - wechat_openid (for WeChat mini-program login, deferred in MVP)
-  - status (0=active, 1=disabled, 2=deleted)
-
-### Authentication
-
-- MVP: username/password login via Nop Platform auth
-- Deferred: WeChat mini-program OAuth login (auto-register if new user)
-- Login returns JWT token for subsequent API calls
-- Token expiry managed by Nop Platform auth configuration
-
-### User Registration (MVP)
-
-- Admin-created accounts (default admin account: nop/123)
-- Self-registration: username, password, optional nickname
-- Deferred: WeChat auto-registration on first login
-
-### User Profile Operations
-
-- **Get profile**: return current user info (excluding password)
-- **Update profile**: modify nickname, avatar, gender, birthday, phone
-- **Change password**: validate old password, set new password
-- All operations require authenticated user
-
-### User Status Management (Admin)
-
-- Active (0): normal user, can browse and purchase
-- Disabled (1): cannot login or place orders
-- Deleted (2): soft delete, data retained
-
-## Address Management
-
-### Data Model
-
-- Fields: user_id, name (recipient), phone, province_id, city_id, area_id, address (detail), is_default, region_code, postal_code (optional)
+- register and sign in
+- view current profile information
+- update personal profile details
+- change password
+- manage delivery addresses
+- view personal orders and order state
 
 ### Business Rules
 
-- Each user can have up to 20 addresses
-- One address must be the default (is_default=1)
-- When setting an address as default, unset previous default
-- Province/city/area must be complete (all three levels)
-- Phone must be valid format
-- Deleting the default address: prompt user to set a new default or auto-set the first remaining address
-- User can only manage their own addresses
+- Only authenticated users can view or modify their own profile and addresses.
+- Disabled users must not be able to continue normal mall use.
+- Profile updates must not expose or return sensitive credential data.
+- Additional login channels such as WeChat must preserve the same user identity and account-safety semantics when enabled.
 
-### Address Operations
+## Registration And Authentication
 
-- **Add address**: validate field completeness, enforce 20-address limit
-- **Update address**: modify any field, handle default flag change
-- **Delete address**: soft delete, handle default address logic
-- **List addresses**: all addresses for current user, default first
-- **Set default**: toggle is_default flag, unset previous default
+### Business Baseline
+
+- Username/password login is supported.
+- Self-registration is supported for mall users.
+- Admin-created accounts may also exist where needed.
+
+### Additional Login Channels
+
+- WeChat mini-program login and auto-registration are integration capabilities that must map to the same mall-user identity rules.
+
+## Address Management
+
+### Business Rules
+
+- Each user may maintain multiple delivery addresses up to the configured limit.
+- One address acts as the default delivery address.
+- Changing the default address must leave exactly one default address afterward.
+- Users may only manage addresses they own.
+- Address data must be sufficient for delivery, including recipient, contact method, region, and detailed address.
+
+### Supported Behavior
+
+- Add address.
+- Edit address.
+- Delete address.
+- List addresses with the default address surfaced clearly.
+- Set or change the default address.
 
 ## Region Data
 
-### Data Model
+### Business Role
 
-- Fields: pid (parent ID), name, type (1=province, 2=city, 3=district), code
-- Tree structure: province → city → district
-- Self-referencing via pid (province pid=0, city pid=province_id, district pid=city_id)
-
-### Data Source
-
-- Pre-loaded administrative region data (China provinces, cities, districts)
-- Read-only for users and admins
-- Used for address selection cascading dropdowns
+- Region data supports cascading address selection.
+- Region data is reference data rather than user-managed business content.
+- Region hierarchy must be stable enough for address entry and delivery presentation.
 
 ## Admin User Management
 
-### Admin Roles
+### Business Roles
 
-- **Super admin**: full system access, can manage other admins and roles
-- **Admin**: product and order management, limited system access
-- Role-based access control managed by Nop Platform auth (nop-auth)
+- Super admin has full store-management access.
+- Admin users handle operational scopes such as product and order management.
 
-### Admin Operations
+### Supported Behavior
 
-- Admin CRUD via Nop Platform's built-in admin management
-- Role assignment and permission configuration
-- Operation logging for audit trail
+- Manage admin accounts and role assignment.
+- Apply permission boundaries appropriate to operational responsibilities.
+- Record meaningful admin operations for audit and troubleshooting.
 
-## Nop Platform Implementation Notes
+## Relationship To Other Owner Docs
 
-- User and Admin entities extend Nop Platform's auth user model
-- Delta customizations in `app-mall-delta/` module
-- Do not directly modify nop-auth; use delta mechanism
-- Address BizModel extends `CrudBizModel<Address>` with ownership validation
-- Region data is read-only; provide query endpoints only
-- Use `@BizQuery` for read operations, `@BizMutation` for write operations
-- Address ownership check: verify user_id matches current authenticated user
-
-## Reference Projects Comparison
-
-| Aspect | mall (macrozheng) | litemall | nop-app-mall |
-|--------|-------------------|----------|-------------|
-| User model | Separate member table | Separate user table | Nop auth delta |
-| Admin model | Separate admin with RBAC | Admin + role + permission | Nop auth RBAC |
-| WeChat login | Optional channel | Deep integration | Deferred |
-| Region data | Not included | Pre-loaded hierarchy | Pre-loaded (litemall style) |
-| Address limit | Not enforced | 20 per user | 20 per user |
+- Permission semantics are further constrained by `roles-and-permissions.md`.
+- Order ownership and order-facing user actions are defined in `order-and-cart.md`.

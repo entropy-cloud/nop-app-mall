@@ -4,9 +4,9 @@
 
 This guide defines the default audit checkpoints for app-layer development.
 
-Plan audit and closure audit are mandatory for created plans.
+Plan audit and closure audit are mandatory for created plans, but they do not usually need separate files under `docs/audits/`.
 
-Every created plan must record durable audit evidence in at least one place: the plan, the daily log, or a file under `docs/audits/`. Do not leave audit results only in chat.
+Every created plan must record durable audit evidence in the plan itself by default. Do not leave audit results only in chat.
 
 Cold replay is not a second reviewer and cannot approve plan creation, plan closure, or protected-area scope changes by itself.
 
@@ -33,6 +33,8 @@ The template provides generic default prompts for these styles under `docs/skill
 ## Document Audit
 
 Run after requirement/design updates and before large implementation work.
+
+When the target is the stable app-layer baseline under `docs/design/`, prefer `docs/skills/design-doc-audit-prompt.md` over the generic document audit prompt.
 
 For high-risk, cross-module, or cross-doc work, consider layering `multi-dimensional-audit-prompt.md` on top of the normal document audit.
 
@@ -75,14 +77,38 @@ Check for:
 
 ## Output Rule
 
-Audit results must be recorded durably for every created plan. Use a separate file when the audit is non-trivial, disputed, reusable, or likely to matter later.
+Plan audit and closure audit results should be written back into the corresponding plan file by default.
+
+Use the plan's `Plan Audit` and `Closure` sections for:
+
+- reviewer or agent identity
+- verdict
+- task id or review evidence id
+- blocking findings summary
+- disposition after fixes
+
+If a plan audit or closure audit fails, revise the plan, implementation, docs, or proof, then re-run the audit. Do not create a separate audit file just because a normal audit failed.
+
+Use a separate file under `docs/audits/` only when the audit record itself is a durable artifact, such as:
+
+- multi-dimensional audit
+- open-ended audit
+- design document audit
+- architecture document audit
+- document-code alignment audit
+- protected-area audit for auth, payment, permission, data deletion, model/API, deployment, or external integration behavior
+- historical baseline audit for stale or legacy areas
+- disputed audit with findings that need future replay
+- large findings ledger that would make a plan hard to read
+- reusable audit method or pattern worth preserving
 
 Use `docs/skills/` for reusable prompt templates and `docs/logs/` for small audit notes attached to daily execution.
 
 ## Filename Guidance
 
-Prefer dated filenames for audit records:
+When a separate audit file is justified, prefer dated filenames:
 
 - `docs/audits/YYYY-MM-DD-document-audit-topic.md`
-- `docs/audits/YYYY-MM-DD-plan-audit-topic.md`
-- `docs/audits/YYYY-MM-DD-closure-audit-topic.md`
+- `docs/audits/YYYY-MM-DD-multi-dimensional-audit-topic.md`
+- `docs/audits/YYYY-MM-DD-open-ended-audit-topic.md`
+- `docs/audits/YYYY-MM-DD-doc-code-alignment-audit-topic.md`

@@ -9,7 +9,7 @@ This guide captures day-to-day coding expectations for AI and humans.
 - prefer the smallest correct change
 - follow existing patterns before inventing new abstractions
 - keep state ownership explicit
-- avoid demo-only placeholders unless the active requirement explicitly allows them
+- avoid demo-only placeholders unless the relevant requirement explicitly allows them
 - add tests when a bug or contract could regress silently
 - do not put code-level technical details into plan files unless they are needed for scope, proof, or contract reasoning
 - prefer no comments by default; add only rare, high-value comments when a local constraint is easy to misread

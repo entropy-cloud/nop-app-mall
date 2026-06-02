@@ -9,7 +9,7 @@ It exists because app-layer projects often fail before coding quality becomes th
 - raw inputs are incomplete
 - requirement boundaries are unstable
 - prototype fidelity is mistaken for implementation readiness
-- process records are missing
+- stable owner docs are polluted by time-sensitive execution status
 - teams jump from discussion straight to code
 
 This workflow makes those failure modes explicit.
@@ -54,7 +54,7 @@ Before non-trivial work, read:
 - `docs/context/source-of-truth-and-precedence.md`
 - `docs/context/conventions.md`
 
-If these files are empty or stale, update factual context before relying on the rest of the workflow. AI may make rules stricter, but must not loosen autonomy, remove blockers, mark stale docs fresh, or downgrade protected areas without human confirmation or human-approved owner-doc evidence.
+If these files are empty or factually wrong, update low-churn factual context before relying on the rest of the workflow. AI may make rules stricter, but must not loosen autonomy, downgrade protected areas, or declare disputed product behavior settled without human confirmation or human-approved owner-doc evidence.
 
 For a direct user-requested local low-risk edit, backlog setup is not required if the change clearly fits the no-plan path and verification commands are real.
 
@@ -68,6 +68,7 @@ Split design output into two parts:
 
 - pure requirement/app behavior design under `docs/requirements/` and `docs/design/`
 - pure technical and architectural design under `docs/architecture/`
+- persisted model and dictionary truth in `model/*.orm.xml` and `model/*.api.xml`
 
 These files should reference each other when needed, but should not collapse into one mixed document.
 
@@ -125,8 +126,8 @@ Convert clarified input into implementation-ready files under `docs/requirements
 
 This stage should answer:
 
-- what is in scope now
-- what is not in scope now
+- what commercial capability or complete slice is being specified
+- what is explicitly outside this slice without redefining the long-term product baseline
 - what user-visible behavior is required
 - what data, permissions, and business rules matter
 - what remains unresolved
@@ -141,10 +142,11 @@ Move durable decisions into owner docs.
 
 - app-layer feature, role, page, and flow decisions go into `docs/design/`
 - cross-cutting technical and module decisions go into `docs/architecture/`
+- persisted entity shape, field sets, and dictionaries stay in `model/*.orm.xml`
 
 Keep requirement/app design and technical architecture design separate, then cross-reference them.
 
-These files should describe the current supported baseline, not a running negotiation transcript.
+These files should describe the stable supported product baseline, not a running negotiation transcript, roadmap, or active execution dashboard.
 
 ## Stage 5 - Audit The Documents When Needed
 
@@ -156,9 +158,9 @@ At minimum, challenge these risks:
 - prototype details are mistaken for complete requirements
 - key business rules are missing
 - unresolved questions are hidden inside “nice looking” text
-- stable owner docs and active requirements disagree
+- stable owner docs and relevant requirements disagree
 
-Use `docs/audits/` and the prompt templates under `docs/skills/`.
+Use the prompt templates under `docs/skills/`. Record ordinary plan/closure audit evidence inside the relevant plan; use `docs/audits/` only when the audit itself is specialized, complex, disputed, reusable, or useful for future replay.
 
 For high-risk or cross-boundary work, add a multi-dimensional audit pass.
 When hidden problems are suspected outside the normal checklist, add an open-ended audit pass.
@@ -177,13 +179,13 @@ If no existing skill clearly fits, proceed with the normal docs-driven workflow 
 
 ## Stage 7 - Write The Plan When Planning Triggers Apply
 
-Create a plan under `docs/plans/` when work is more than a very small low-risk edit or when any planning trigger in the plan guide applies.
+Create a plan under `docs/plans/` only when the work needs an explicit closure contract: protected areas, cross-module behavior, user-visible behavior across surfaces, unresolved product/technical risk, multi-session execution, or proof that cannot be captured by a simple local change.
 
 The only no-plan path is a local low-risk change that affects very few files, has clear existing behavior or tests, and does not touch contracts, data/model shape, auth, permissions, integrations, deployment, cross-surface behavior, or stale-doc conflicts. Larger local edits should use the full-plan path in the plan guide.
 
 The plan should capture:
 
-- current baseline
+- live baseline relevant to this slice
 - goals
 - non-goals
 - task route and skill selection
@@ -206,7 +208,7 @@ The audit should test:
 
 If the audit finds blocking issues, revise the plan and repeat the audit until no major objection remains.
 
-If structured plan or closure audits repeatedly miss important issues, escalate with `multi-dimensional-audit-prompt.md` or `open-ended-audit-prompt.md` instead of repeating the same narrow audit forever.
+If structured plan or closure audits repeatedly miss important issues, escalate with `multi-dimensional-audit-prompt.md` or `open-ended-audit-prompt.md` instead of repeating the same narrow audit forever. Store the escalated audit under `docs/audits/` when its findings need future replay.
 
 ## Stage 9 - Implement Small Complete Slices
 
@@ -291,7 +293,7 @@ Use specs if helpful, but keep docs split by responsibility.
 
 For most non-trivial tasks, the default loop is:
 
-1. read or update context
+1. read low-churn context and the relevant requirement/backlog/roadmap/plan files
 2. write or update input/requirement files
 3. update design or architecture docs if the supported baseline changed
 4. write or update a plan when planning triggers apply

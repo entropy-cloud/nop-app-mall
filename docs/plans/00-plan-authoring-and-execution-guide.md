@@ -41,6 +41,9 @@ If unsure, use a full plan.
 10. **Checklist integrity before closure.** Before marking a plan complete, no in-scope checklist item may remain unchecked. Either complete it or explicitly move it out of scope with a written reason. Scope narrowing after plan approval is a scope change and must be recorded with rationale; silently removing items from scope is a violation.
 11. **Text consistency before closure.** Before closing, verify that `Plan Status`, every phase `Status`, every phase `Exit Criteria`, `Closure Gates`, and the `docs/logs/` entry all agree. No `completed` at the top while a phase inside still says `planned`.
 12. **Independent plan and closure audit.** Do not implement a created plan until it has passed plan audit, and do not mark it complete as a side effect of finishing the last implementation slice. Use a separate review pass. Protected areas, unresolved product risk, and source-of-truth conflicts require human/subagent review or stay open.
+    - Record normal plan-audit and closure-audit evidence inside the plan by default.
+    - Do not create `docs/audits/` files for ordinary plan-audit or closure-audit failures; revise the plan or work and audit again.
+    - Use `docs/audits/` only for specialized, complex, disputed, reusable, or future-replay-worthy audit records.
 13. **Non-degradable items** cannot be downgraded to non-blocking follow-ups: confirmed live defects, confirmed contract drift, confirmed owner-doc drift, and CI/lint rules already fixed in the repo.
 
 ### Anti-Slacking Rule
@@ -78,7 +81,7 @@ Before setting `Plan Status: completed`, do all of the following:
 **Full closure** (multi-session, multi-module, or high-risk plans — add these):
 
 7. Re-read the entire plan from the top, not just the most recent slice.
-8. Record independent audit evidence in the plan's `Closure` section and link any stored audit file under `docs/audits/`.
+8. Record independent audit evidence in the plan's `Closure` section. Link a stored audit file only when the audit qualifies as a specialized, complex, disputed, reusable, or future-replay-worthy record.
 
 If any of these fail, the plan stays open.
 
@@ -146,7 +149,7 @@ Exit Criteria:
 
 - Status: <pending | passed>
 - Reviewer / Agent: <independent reviewer, subagent, or cold-replay proxy>
-- Evidence: <task id / audit file>
+- Evidence: <task id and short findings/disposition summary; link audit file only when separately justified>
 
 ## Closure Gates
 
@@ -174,7 +177,7 @@ Status Note: <why the plan can close>
 Closure Audit Evidence:
 
 - Reviewer / Agent: <independent reviewer or cold-replay proxy>
-- Evidence: <task id / log link / walkthrough record>
+- Evidence: <task id / log link / walkthrough record; link audit file only when separately justified>
 
 Follow-up:
 

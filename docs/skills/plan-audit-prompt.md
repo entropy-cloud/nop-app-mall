@@ -5,7 +5,7 @@ Use this prompt when auditing an execution plan before implementation.
 All created plans require this audit.
 
 ```text
-Read `AGENTS.md`, `docs/index.md`, `docs/process/application-development-workflow.md`, the active requirement/design docs, and the active file under `docs/plans/`.
+Read `AGENTS.md`, `docs/index.md`, `docs/process/application-development-workflow.md`, the relevant requirement/design docs, and the plan being audited under `docs/plans/`.
 
 Audit the plan as an execution contract.
 
@@ -27,4 +27,6 @@ Do not praise the plan unless it changes the risk assessment.
 
 If blocking issues are found, say `needs revision` and list the exact files/sections to change.
 If no blocking issue remains, say `passes plan audit` and list residual risks if any.
+
+The implementing session should record the result in the plan's `Plan Audit` section by default. Do not ask for a separate `docs/audits/` file unless the audit is specialized, complex, disputed, reusable, or useful for future replay.
 ```

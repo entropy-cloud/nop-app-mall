@@ -2,35 +2,25 @@
 
 ## Purpose
 
-Track the stable feature map for the application.
+Map product capability areas to their stable owner docs.
 
-## Features
+This file is not a roadmap, backlog, or implementation-status matrix. Use it to route readers to the owner doc for a capability, not to track whether the capability is currently being implemented.
 
-| Feature              | Status     | Owner Doc                          | Requirement Source                     | Notes                          |
-| -------------------- | ---------- | ---------------------------------- | -------------------------------------- | ------------------------------ |
-| User management      | designed   | `docs/design/user-and-address.md`  | `docs/input/litemall-requirements.md` | Registration, login, profile   |
-| Admin management     | designed   | `docs/design/user-and-address.md`  | `docs/input/litemall-requirements.md` | CRUD, role assignment          |
-| Product management   | designed   | `docs/design/product-catalog.md`   | `docs/input/litemall-requirements.md` | Category, brand, goods, SKU    |
-| Cart                 | designed   | `docs/design/order-and-cart.md`    | `docs/input/litemall-requirements.md` | Add, remove, quantity          |
-| Order management     | designed   | `docs/design/order-and-cart.md`    | `docs/input/litemall-requirements.md` | Full order lifecycle           |
-| Search               | designed   | `docs/design/product-catalog.md`   | `docs/input/litemall-requirements.md` | Search history, keywords       |
-| Address management   | designed   | `docs/design/user-and-address.md`  | `docs/input/litemall-requirements.md` | CRUD, default, region          |
-| System configuration | designed   | `docs/design/system-configuration.md` | `docs/input/litemall-requirements.md` | Config key-value, file storage |
-| Payment (WeChat Pay) | deferred   | `docs/design/order-and-cart.md`    | `docs/requirements/mvp.md`            | Deferred in MVP; wx module exists |
-| Coupon               | deferred   | `docs/design/marketing-and-promotions.md` | `docs/requirements/mvp.md`    | Deferred in MVP                |
-| Group buying         | deferred   | `docs/design/marketing-and-promotions.md` | `docs/requirements/mvp.md`    | Deferred in MVP                |
-| Comment/Review       | deferred   | `docs/design/order-and-cart.md`    | `docs/requirements/mvp.md`            | Deferred in MVP                |
-| After-sales          | deferred   | `docs/design/order-and-cart.md`    | `docs/requirements/mvp.md`            | Deferred in MVP                |
-| Content management   | deferred   | `docs/design/marketing-and-promotions.md` | `docs/requirements/mvp.md`    | Topics, ads, issues, notices   |
-| Notifications        | deferred   | `docs/design/system-configuration.md` | `docs/requirements/mvp.md`         | SMS, WeChat, email             |
-| Statistics           | deferred   | `docs/design/system-configuration.md` | `docs/requirements/mvp.md`         | Order, product, user stats     |
-| Search history       | deferred   | `docs/design/marketing-and-promotions.md` | `docs/requirements/mvp.md`    | Keyword history, clear         |
-| Favorites            | deferred   | `docs/design/marketing-and-promotions.md` | `docs/requirements/mvp.md`    | Goods and topic favorites      |
-| Browse footprint     | deferred   | `docs/design/marketing-and-promotions.md` | `docs/requirements/mvp.md`    | Browsing history               |
-| Feedback             | deferred   | `docs/design/marketing-and-promotions.md` | `docs/requirements/mvp.md`    | User feedback submission       |
-| FAQ (Issue)          | deferred   | `docs/design/marketing-and-promotions.md` | `docs/requirements/mvp.md`    | Help center FAQ management     |
-| Notice               | deferred   | `docs/design/system-configuration.md` | `docs/requirements/mvp.md`         | System and admin notifications |
+## Capability Map
+
+| Capability Area | Owner Doc | Notes |
+| ---------------- | --------- | ----- |
+| User and admin account management | `docs/design/user-and-address.md` | Registration, login, profile, admin accounts, addresses, region data |
+| Roles and permissions | `docs/design/roles-and-permissions.md` | Business role meanings, visibility, protected actions |
+| Product catalog | `docs/design/product-catalog.md` | Category, brand, goods, SKU, specifications, attributes, catalog search |
+| Cart and checkout | `docs/design/order-and-cart.md` | Cart lines, checkout preconditions, price components, order submission |
+| Order lifecycle | `docs/design/order-and-cart.md` | Payment, shipment, receipt, cancellation, refund, after-sale state meanings |
+| Marketing and promotions | `docs/design/marketing-and-promotions.md` | Coupons, group buying, engagement, promotion content, feedback surfaces |
+| System configuration and operations | `docs/design/system-configuration.md` | Business configuration, storage, notices, operational tasks, admin logs, statistics |
 
 ## Rule
 
-This file is not a backlog dump. Keep it to supported or actively owned features.
+- Add a row only when it helps route a reader to a stable owner doc.
+- Do not add per-feature implementation status, roadmap phase labels, plan links, or backlog state here.
+- Put implementation ordering in `docs/backlog/` or a plan.
+- Persisted model details remain authoritative in `model/*.orm.xml`.

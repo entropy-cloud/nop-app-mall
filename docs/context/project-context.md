@@ -2,39 +2,37 @@
 
 ## Purpose
 
-Keep this file as the shortest current snapshot an AI agent needs before doing useful work.
+Keep this file as the shortest low-churn context an AI agent needs before doing useful work.
 
-Update it in place. Do not create dated copies.
+This file is not an execution dashboard. Do not mirror active plans, current blockers, current backlog rows, or dated audit/log status here. Discover those from their owning files when needed.
 
 ## Project Identity
 
 - Project name: nop-app-mall
-- Product type: demo e-commerce application (mall) built on the Nop Platform
-- Primary users: developers learning Nop Platform; demo/test users browsing the mall
-- Current milestone: baseline implementation from litemall requirements
-- Documentation freshness: `partially stale`
-
-## Active Work
-
-- Active requirement: `docs/requirements/mvp.md`
-- Active owner doc: `docs/design/app-overview.md`
-- Active plan: `none`
-- Active backlog item: `docs/backlog/README.md#baseline-alignment`
-- AI autonomy: `plan-first`
-- Current blocker: `documentation baseline needs alignment with live code`
+- Product type: commercial-grade e-commerce application (mall) built on the Nop Platform
+- Primary users: mall shoppers, mall operators/admins, and developers learning Nop Platform from a realistic business app
+- Product baseline: formal commercial mall behavior derived from litemall requirements and Nop Platform conventions
+- Execution state: owned by the relevant requirement, backlog/roadmap, plan, audit, and log files; not mirrored here
 
 Rule:
 
-- If active requirement is `none`, agents may help create or clarify requirements and context, but must not implement product behavior.
-- If AI autonomy is not `implement`, agents must follow `docs/context/ai-autonomy-policy.md` before changing product behavior.
-- If documentation freshness is `stale` or `unknown`, agents may research, audit, and draft alignment docs, but must not implement product behavior until the baseline is re-established or a human confirms the intended behavior.
-- If documentation freshness is `partially stale`, agents may implement only slices whose active requirement, owner doc, codebase-map route, and touched code area have been verified fresh; otherwise treat the slice as `plan-first` or `research-only`.
+- Before changing product behavior, identify the requirement or roadmap slice that authorizes the change and the owner docs that control the touched behavior.
+- If AI autonomy is not clearly `implement` for the selected backlog/roadmap item, follow `docs/context/ai-autonomy-policy.md` before changing product behavior.
+- If the relevant requirement, owner doc, or code route is stale or disputed, treat the slice as `plan-first` or `research-only` until the baseline is re-established or a human confirms the intended behavior.
 
 ## Current Technical Baseline
 
 - Frontend stack: Baidu AMIS (JSON-driven UI in `.view.xml` files)
 - Backend stack: Java 17+, Quarkus, Nop Platform (nop-entropy 2.0.0-SNAPSHOT)
 - Database/model source: XML models in `model/app-mall.orm.xml`, `model/app-mall.api.xml`; generated ORM XML
+
+## Documentation Boundary Reminder
+
+- `docs/design/` owns business semantics, roles, workflows, and state transitions.
+- `docs/architecture/` owns technical structure and implementation strategy.
+- `model/*.orm.xml` and `model/*.api.xml` remain authoritative for persisted model and generated contract truth.
+- `docs/backlog/` owns roadmap and implementation-order signals.
+- `docs/plans/` and `docs/logs/` are ordinary harness records for execution and trajectory memory; `docs/audits/` is for specialized audit records, not routine plan-local audit evidence.
 
 ## Verification Commands
 
@@ -47,18 +45,6 @@ Rule:
 | Lint / static check       | `none`                                                                                                                   |
 | Unit tests                | `./mvnw test`                                                                                                            |
 | E2E / integration tests   | `none`                                                                                                                   |
-
-## Optional Layers Currently In Use
-
-Mark only the optional layers this project actually maintains.
-
-- [ ] `docs/discussions/`
-- [x] `docs/audits/`
-- [ ] `docs/testing/`
-- [x] `docs/skills/`
-- [ ] `docs/analysis/`
-- [ ] `docs/retrospectives/`
-- [ ] `docs/lessons/`
 
 ## AI Block Conditions
 
@@ -74,8 +60,8 @@ For ambiguity that does not affect user-visible behavior, contracts, protected a
 
 ## Notes For AI Agents
 
-- If this file is empty or stale, ask for or create a context update before large implementation work.
-- AI may correct factual context from live repo evidence, but must not loosen autonomy, remove blockers, mark stale docs fresh, or downgrade protected areas without human confirmation or human-approved owner-doc evidence.
-- Do not infer current milestone or active plan from chat alone.
+- If this file is empty or factually wrong, ask for or create a context update before large implementation work.
+- AI may correct factual context from live repo evidence, but must not loosen autonomy, downgrade protected areas, or declare disputed product behavior settled without human confirmation or human-approved owner-doc evidence.
+- Do not infer current execution state from chat alone; read the relevant backlog/roadmap, plan, audit, or log files.
 - Do not report verification success while commands still contain `<fill real command>` placeholders.
 - Building requires `nop-entropy` parent POM to be available in local Maven repository first.

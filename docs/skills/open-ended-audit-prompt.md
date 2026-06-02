@@ -5,7 +5,7 @@ Use this prompt when structured audit checklists may miss hidden problems and th
 This is a generic default prompt. After copying the template, tune it to the project's real failure history, protected areas, naming conventions, and false-positive tolerance.
 
 ```text
-Read `AGENTS.md`, `docs/index.md`, the active requirement and owner docs, the active plan if one exists, recent logs, and the live changed code.
+Read `AGENTS.md`, `docs/index.md`, the relevant requirement and owner docs, the relevant plan if one exists, recent logs, and the live changed code.
 
 Run an open-ended audit. Do not limit yourself to the standard checklist categories if the work suggests deeper risk.
 

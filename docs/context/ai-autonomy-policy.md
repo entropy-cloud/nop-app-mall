@@ -12,7 +12,7 @@ AI-authored or AI-modified docs, including owner docs, cannot be used as evidenc
 
 ## Autonomy Levels
 
-Use these labels in `docs/backlog/` and active plans:
+Use these labels in `docs/backlog/`, roadmap entries, and plans when relevant:
 
 - `implement` - AI may implement after reading the listed requirement, owner doc, and verification commands.
 - `plan-first` - AI may draft or update the plan, but implementation waits for plan audit and any protected-area approval required by the table below.
@@ -33,12 +33,12 @@ Rules:
 ## AI May Proceed Without Asking When
 
 - the work item is marked `implement` or the user directly requests a local low-risk change
-- the active requirement has concrete acceptance criteria
-- the active owner doc is listed in `docs/context/project-context.md`
+- the relevant requirement or roadmap slice has concrete acceptance criteria
+- the relevant owner docs are identified through `docs/index.md`, the requirement, backlog/roadmap item, or plan
 - for backlog-selected work, the backlog row is `ready`, has no stale links, and does not require a missing plan
 - verification commands in `docs/context/project-context.md` are real commands, not placeholders
 - protected-area placeholders in this file have been replaced with real entries or explicit `none`
-- documentation freshness in `docs/context/project-context.md` is `fresh`, or the active slice has explicitly verified fresh requirement, owner doc, codebase-map route, and touched code area
+- the selected slice has explicitly verified relevant requirement, owner docs, codebase-map route, and touched code area when freshness is uncertain or disputed
 - the task does not touch a protected area below
 - open questions are explicitly non-blocking
 
@@ -52,7 +52,7 @@ Rules:
 - closing a plan whose audit, verification, docs, or checklist evidence is missing
 - proceeding when live code and owner docs conflict and resolving the conflict would change user-visible behavior or public contracts
 - loosening autonomy labels, protected-area rules, or blockers without human confirmation or human-approved owner-doc evidence
-- proceeding with implementation when documentation freshness is `stale`, `unknown`, or `partially stale` for the active slice; first perform baseline research or a plan-first alignment slice
+- proceeding with implementation when the relevant requirement, owner doc, code route, or touched area is stale, unknown, or disputed; first perform baseline research or a plan-first alignment slice
 - editing generated code (under `target/` or generated from XML models) instead of regenerating from models
 
 ## Protected Areas

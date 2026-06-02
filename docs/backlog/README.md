@@ -1,17 +1,17 @@
-# Backlog
+# Roadmap And Backlog
 
 ## Purpose
 
-Use this file to list candidate work AI may inspect or execute.
+Use this file for implementation ordering and AI-ready candidate work.
 
-The backlog is not a replacement for requirements, owner docs, or plans. It only helps select the next slice.
+The backlog is not a replacement for requirements, design owner docs, architecture owner docs, or plans. It only answers what to consider next and what readiness constraints apply.
 
-## Work Items
+## Roadmap
 
-| Priority | Item                  | Requirement                                  | Owner Doc                      | Plan    | Status            | AI Autonomy  | Blocker                               | Last Checked |
-| -------- | --------------------- | -------------------------------------------- | ------------------------------ | ------- | ----------------- | ------------ | ------------------------------------- | ------------ |
-| P0       | Baseline alignment    | `docs/requirements/mvp.md`                   | `docs/design/app-overview.md`  | none    | `needs-requirement` | `plan-first` | `docs freshness partially stale`      | 2026-06-02   |
-| P1       | Feature gap analysis  | `docs/input/litemall-requirements.md`        | `docs/design/feature-inventory.md` | none | `needs-requirement` | `research-only` | `raw input needs synthesis`        | 2026-06-02   |
+| Priority | Item | Requirement | Owner Doc | Readiness | AI Autonomy | Notes |
+| -------- | ---- | ----------- | --------- | --------- | ----------- | ----- |
+| P0 | Commercial baseline alignment | `docs/requirements/commercial-baseline.md` | `docs/design/app-overview.md` | `done` | `plan-first` | Stable docs now use commercial baseline framing and avoid high-maintenance status sprawl |
+| P1 | Feature gap analysis | `docs/input/litemall-requirements.md` | `docs/design/feature-inventory.md` | `needs-requirement` | `research-only` | Synthesize any missing commercial capability gaps before implementation |
 
 ## Readiness Invariants
 
@@ -28,13 +28,13 @@ The backlog is not a replacement for requirements, owner docs, or plans. It only
 
 Agents may downgrade stale rows from `ready` to `needs-*` or `blocked` with evidence. Agents must not upgrade rows to `ready`, change autonomy to `implement`, or clear blockers without human confirmation or human-approved owner-doc evidence.
 
-## Status Values
+## Readiness Values
 
 - `idea` - not ready for implementation
 - `needs-requirement` - raw input exists but no implementation-ready requirement exists
 - `needs-design` - requirement exists but owner doc is missing or stale
+- `in-progress` - currently being implemented, planned, or aligned
 - `ready` - AI may proceed according to the autonomy label
-- `in-progress` - currently being implemented or planned
 - `blocked` - cannot proceed until the blocker is resolved
 - `done` - completed and verified
 
@@ -50,8 +50,8 @@ Use the values from `docs/context/ai-autonomy-policy.md`:
 
 ## Selection Rule
 
-When asked to continue without a named task, choose the highest-priority `ready` item whose `AI Autonomy` is `implement` and whose `Blocker` is `none`.
+When asked to continue without a named task, choose the highest-priority `ready` item whose `AI Autonomy` is `implement` and whose blocker is absent.
 
-Before implementation, confirm the linked requirement, owner doc, plan field, autonomy policy, and planning triggers are still valid. Do not infer readiness from chat alone.
+Before implementation, confirm the linked requirement, owner doc, autonomy policy, and planning triggers are still valid. Do not infer readiness from chat alone.
 
 If the table is stale, downgrade the row or ask before implementation.

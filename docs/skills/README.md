@@ -6,7 +6,7 @@ These are not one-off chat messages. They are reusable repo memory.
 
 Skills should primarily capture reusable work methods, review methods, or audit methods. Do not use a skill as a substitute for requirement truth, design truth, or architecture truth.
 
-A skill library is not the attractor. Without routing through `AGENTS.md`, `docs/index.md`, active requirements, and owner docs, a large skill library usually degenerates into structured vibe coding.
+A skill library is not the attractor. Without routing through `AGENTS.md`, `docs/index.md`, relevant requirements, and owner docs, a large skill library usually degenerates into structured vibe coding.
 
 These prompts are generic defaults for copied projects. After copying the template, you MUST customize them to the project's real owner docs, protected areas, verification stack, naming conventions, known failure modes, and false-positive tolerance.
 
@@ -28,6 +28,7 @@ Do not add broad business-scenario skills as a replacement for project-specific 
 | Skill                                     | Use when                                                                           | Do not use when                               | Required inputs                                                              | Expected output                                |
 | ----------------------------------------- | ---------------------------------------------------------------------------------- | --------------------------------------------- | ---------------------------------------------------------------------------- | ---------------------------------------------- |
 | `document-audit-prompt.md`                | requirement, design, or architecture docs may be incomplete or inconsistent        | the task is trivial and local                 | target doc paths, relevant input or owner docs                               | audit findings and revision targets            |
+| `design-doc-audit-prompt.md`              | `docs/design/` needs commercial app-layer baseline review or revalidation          | the task is requirement synthesis, architecture review, ORM review, roadmap planning, or plan/closure audit | relevant requirement, `docs/design/README.md`, all `docs/design/` files, source-of-truth docs | severity-ordered design findings, boundary classification, and maintenance-cost risks |
 | `plan-audit-prompt.md`                    | a non-trivial plan is ready for challenge before implementation                    | no plan exists yet                            | plan file, related requirement and owner docs                                | pass/fail audit with concrete issues           |
 | `closure-audit-prompt.md`                 | implementation claims completion and needs independent closure review              | work is still mid-flight                      | plan, verification evidence, relevant changed docs                           | closure verdict and remaining gaps             |
 | `requirement-gap-retrospective-prompt.md` | landed work still missed expectations and the requirement pipeline needs diagnosis | the requirement is still being drafted        | original input, requirement/discussion docs, delivered result                | retrospective findings and process corrections |
@@ -42,6 +43,7 @@ Do not add broad business-scenario skills as a replacement for project-specific 
 ## Starter Skills
 
 - `document-audit-prompt.md`
+- `design-doc-audit-prompt.md`
 - `plan-audit-prompt.md`
 - `closure-audit-prompt.md`
 - `requirement-gap-retrospective-prompt.md`

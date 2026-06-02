@@ -2,7 +2,7 @@
 
 ## Project Intent
 
-`nop-app-mall` is a demo e-commerce application (mall) built on the Nop Platform, using Attractor-Guided Engineering workflow for AI-assisted application development.
+`nop-app-mall` is a commercial-grade e-commerce reference application (mall) built on the Nop Platform, using Attractor-Guided Engineering workflow for AI-assisted application development.
 
 This repository is an application-layer product built on the Nop low-code platform (nop-entropy), not a framework-core project.
 
@@ -13,12 +13,24 @@ Before writing non-trivial code, agents must first understand:
 - `docs/context/project-context.md`
 - `docs/context/ai-autonomy-policy.md`
 - `docs/context/codebase-map.md`
-- the active requirement listed in project context
-- the active owner doc listed in project context
+- the requirement, backlog, roadmap, plan, or user request that defines the current slice
+- the relevant owner docs routed from `docs/index.md`
 - the relevant raw inputs under `docs/input/` when requirement meaning depends on source material
 
 Read `docs/context/source-of-truth-and-precedence.md` when facts conflict or you are unsure which artifact owns the answer.
 Read `docs/process/application-development-workflow.md` when planning or workflow decisions are part of the task.
+
+## Quick Routing
+
+| If you need to... | Start with | Then check |
+| ----------------- | ---------- | ---------- |
+| understand the product baseline | `docs/requirements/commercial-baseline.md` | `docs/design/app-overview.md`, `docs/design/feature-inventory.md` |
+| choose the next work item | `docs/backlog/README.md` | relevant requirement and owner docs |
+| implement a feature | relevant requirement or backlog item | `docs/design/`, `docs/architecture/`, `model/*.orm.xml`, plan guide if triggers apply |
+| change persisted model or API contract | `model/*.orm.xml`, `model/*.api.xml` | Nop docs under `../nop-entropy/docs-for-ai/` |
+| change a page or view | relevant design owner doc | AMIS `.view.xml` files under `app-mall-web` |
+| review a planned or completed slice | relevant plan under `docs/plans/` | plan/closure audit prompts; ordinary audit evidence stays in the plan |
+| run or verify the project | `docs/context/project-context.md` | `docs/context/codebase-map.md` |
 
 ## Task Routing
 
@@ -35,7 +47,7 @@ Before writing code, agents MUST classify the task first:
 3. Check `docs/skills/README.md` for candidate reusable skills before drafting or revising a plan.
 4. For non-trivial work, record the chosen route and planned skill usage in the plan before implementation.
 
-Do not jump from a feature request directly to code unless the route is already obvious from the active requirement and owner docs.
+Do not jump from a feature request directly to code unless the route is already obvious from the relevant requirement and owner docs.
 
 ## Operating Rules
 
@@ -44,16 +56,17 @@ Do not jump from a feature request directly to code unless the route is already 
 3. Do not jump from raw PM text or prototype screenshots straight to code when scope is still unclear.
 4. If input is ambiguous, first create or update a file in `docs/discussions/` or `docs/requirements/`.
 5. Create or update a plan before implementation when the planning triggers below apply.
-6. Keep `docs/design/` and `docs/architecture/` focused on the current supported baseline, not migration history.
-7. Keep logs short, dated, and append-only. After completing any significant code change, you MUST update the daily dev log at `docs/logs/{year}/{month}-{day}.md` (reverse chronological, see `docs/logs/00-log-writing-guide.md` for format).
-8. Record non-obvious regressions in `docs/bugs/`.
-9. If prototype and implementation diverge materially, capture the reason in `docs/retrospectives/` instead of silently moving on.
-10. Promote repeated process lessons into `docs/skills/` or `docs/audits/` only when the pattern is recurring enough to justify reuse.
-11. For high-risk or high-ambiguity requirement, design, or plan drafts, request an independent subagent or reviewer pass and revise until major objections are resolved. Every created plan MUST pass an independent plan audit before implementation begins and an independent closure audit before being marked complete.
-12. Keep code comments minimal. Prefer self-explanatory code; add only rare comments when a local constraint is otherwise easy to misread.
-13. When a referenced file is not found at its expected path, check `docs/archive/` before concluding it does not exist. Archived files retain their original relative name under `docs/archive/`. Do not move files to `docs/archive/` without human approval.
-14. Treat reusable skills as method selectors, not substitutes for requirements, design, or architecture docs. Business knowledge belongs in owner docs first.
-15. When the same error pattern keeps recurring, do not stop at prose-only lessons. First promote it into a reusable audit prompt, checklist, or review playbook when that method is still missing. If the defect pattern still recurs, then evaluate promotion into a heuristic script, static check, lint rule, CI guard, or codemod, tuned to the copied project's real conventions and false-positive tolerance.
+6. Keep `docs/design/` and `docs/architecture/` focused on the stable supported product baseline, not migration history, roadmap sequencing, or execution status.
+7. Keep `docs/design/` focused on business semantics, workflows, and state meanings; keep persisted entities, field sets, and data dictionaries authoritative in `model/*.orm.xml` rather than duplicating them in prose.
+8. Keep logs short, dated, and append-only. After completing any significant code change, you MUST update the daily dev log at `docs/logs/{year}/{month}-{day}.md` (reverse chronological, see `docs/logs/00-log-writing-guide.md` for format).
+9. Record non-obvious regressions in `docs/bugs/`.
+10. If prototype and implementation diverge materially, capture the reason in `docs/retrospectives/` instead of silently moving on.
+11. Promote repeated process lessons into `docs/skills/` or `docs/audits/` only when the pattern is recurring enough to justify reuse.
+12. For high-risk or high-ambiguity requirement, design, or plan drafts, request an independent subagent or reviewer pass and revise until major objections are resolved. Every created plan MUST pass an independent plan audit before implementation begins and an independent closure audit before being marked complete.
+13. Keep code comments minimal. Prefer self-explanatory code; add only rare comments when a local constraint is otherwise easy to misread.
+14. When a referenced file is not found at its expected path, check `docs/archive/` before concluding it does not exist. Archived files retain their original relative name under `docs/archive/`. Do not move files to `docs/archive/` without human approval.
+15. Treat reusable skills as method selectors, not substitutes for requirements, design, or architecture docs. Business knowledge belongs in owner docs first.
+16. When the same error pattern keeps recurring, do not stop at prose-only lessons. First promote it into a reusable audit prompt, checklist, or review playbook when that method is still missing. If the defect pattern still recurs, then evaluate promotion into a heuristic script, static check, lint rule, CI guard, or codemod, tuned to the copied project's real conventions and false-positive tolerance.
 
 ## Nop Platform Specific Rules
 
@@ -96,8 +109,8 @@ The Nop Platform's authoritative development documentation lives at `../nop-entr
 - `docs/context/project-context.md`
 - `docs/context/ai-autonomy-policy.md`
 - `docs/context/codebase-map.md`
-- the active requirement listed in `docs/context/project-context.md`
-- the active owner doc listed in `docs/context/project-context.md`
+- the requirement, backlog, roadmap, plan, or user request that defines the current slice
+- the relevant owner docs routed from `docs/index.md`
 
 Read additionally when needed:
 
@@ -109,15 +122,16 @@ Read additionally when needed:
 ## Documentation Ownership
 
 - `docs/context/` owns mandatory AI context, source-of-truth precedence, and project-wide conventions.
-- `docs/backlog/` owns prioritized candidate work and AI-ready next actions.
+- `docs/backlog/` owns roadmap, implementation ordering, and candidate work selection.
 - `docs/input/` owns raw external inputs such as PM notes, card docs, article extracts, prototype references, and copied source material.
 - `docs/discussions/` owns requirement clarification conversations and unresolved question records.
 - `docs/requirements/` owns implementation-ready requirement synthesis.
 - `docs/design/` owns stable app-layer business and feature design.
 - `docs/architecture/` owns cross-cutting technical and module-boundary truth.
+- `model/*.orm.xml` and `model/*.api.xml` own persisted model structure, data dictionaries, and generated contract truth.
 - `docs/lessons/` owns durable reusable lessons extracted from bugs, audits, and retrospectives.
 - `docs/plans/` owns execution and closure criteria for non-trivial work.
-- `docs/audits/` owns audit workflow records and audit methodology.
+- `docs/audits/` owns audit methodology and specialized audit records.
 - `docs/skills/` owns reusable prompts, review playbooks, and audit prompt templates.
 - `docs/logs/` owns dated implementation memory.
 - `docs/testing/` owns manual and exploratory testing records.
@@ -143,7 +157,7 @@ Read additionally when needed:
 
 Use these when warranted by task complexity. Plan and closure audits are mandatory for created plans.
 
-- `docs/audits/` for document audits and plan/closure audit evidence
+- `docs/audits/` for specialized, complex, disputed, reusable, or future-replay-worthy audit evidence; ordinary plan/closure audit evidence belongs in the plan by default
 - `docs/testing/` for manual or exploratory proof
 - `docs/retrospectives/` for material requirement/prototype gaps
 - `docs/skills/` for reusable prompts after repeated failures
@@ -188,7 +202,7 @@ For non-trivial plans, each phase or item that depends on a reusable skill shoul
 - Do not put code-level implementation detail into plan files unless the detail is required for scope or closure reasoning.
 - Prefer citing the existing owner doc instead of restating the same rule in multiple files.
 - Do not hide mandatory rules in `docs/references/`; if an AI must apply it by default, put it in `docs/context/` or `AGENTS.md`.
-- Use `docs/backlog/` and `docs/context/ai-autonomy-policy.md` to decide whether AI may choose and execute the next task without asking.
+- Use `docs/backlog/` and `docs/context/ai-autonomy-policy.md` to decide whether AI may choose and execute the next task without asking. Do not mirror the active plan, active blocker, or active requirement into broad context files just to track execution state.
 - When editing Nop platform files, follow the platform's conventions: XML models for code generation, delta customization for overrides, AMIS JSON for views.
 
 ## Docs Maintenance

@@ -6,13 +6,13 @@ Describe the long-term product and engineering attractor for `nop-app-mall`.
 
 ## Product Goal
 
-nop-app-mall is a demo e-commerce application showcasing the Nop Platform's development workflow. It demonstrates how to build a full-featured mall application using Nop's meta-programming, code generation, and delta customization capabilities.
+nop-app-mall is a commercial-grade e-commerce reference application showcasing the Nop Platform's development workflow. It demonstrates how to build a full-featured mall application using Nop's meta-programming, code generation, and delta customization capabilities.
 
 ## Primary Users
 
-- Developers learning the Nop Platform
-- Teams evaluating Nop for production use
-- Demo/test users browsing and purchasing products
+- Mall shoppers
+- Mall operators and administrators
+- Developers and teams evaluating Nop through a realistic business application
 
 ## Constraints That Must Stay True
 
@@ -26,13 +26,13 @@ nop-app-mall is a demo e-commerce application showcasing the Nop Platform's deve
 
 ## Explicit Non-Goals
 
-- Not a production-ready e-commerce platform
+- Not a disposable prototype or throwaway demo implementation
 - Not a framework-core project (this is application-layer)
 - Not a mobile application (web-only)
 - Not a microservices architecture (monolithic Quarkus app)
 - Not a template for other Nop applications (the AGE template is separate)
 
-## Success Criteria For The First Production Milestone
+## Success Criteria For The First Commercial Milestone
 
 - All major litemall features implemented using Nop Platform conventions
 - Code generation workflow validated end-to-end
@@ -41,7 +41,7 @@ nop-app-mall is a demo e-commerce application showcasing the Nop Platform's deve
 
 ## Required Human Decision Points That AI Should Not Silently Invent
 
-- Scope and priority of which litemall features to implement
+- Roadmap priority of which litemall-derived capabilities to implement first
 - Database schema design choices
 - Payment integration configuration
 - Production deployment strategy
@@ -51,6 +51,6 @@ nop-app-mall is a demo e-commerce application showcasing the Nop Platform's deve
 
 - Keep this document stable and high level.
 - Do not turn it into a backlog.
-- Do not duplicate current milestone scope from `docs/requirements/product-scope.md`.
-- Do not duplicate current app surfaces from `docs/design/app-overview.md`.
-- Move implementation sequencing into `docs/plans/` or `docs/requirements/`.
+- Do not duplicate commercial baseline requirements from `docs/requirements/product-scope.md`.
+- Do not duplicate app surfaces from `docs/design/app-overview.md`.
+- Move implementation sequencing into `docs/backlog/` or plans.

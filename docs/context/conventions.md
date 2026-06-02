@@ -17,6 +17,7 @@ Keep it short. If a rule becomes detailed lookup material, move the detail to `d
 
 - Requirement/app behavior design belongs in `docs/requirements/` and `docs/design/`.
 - Technical architecture design belongs in `docs/architecture/`.
+- Persisted entity shape, field sets, and data dictionaries belong in `model/*.orm.xml`.
 - Cross-reference instead of duplicating the same rule in multiple docs.
 
 ## Nop Platform Conventions

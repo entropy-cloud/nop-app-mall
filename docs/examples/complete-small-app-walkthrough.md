@@ -194,7 +194,7 @@ Exit Criteria:
 
 - Status: pending
 - Reviewer / Agent: `<independent reviewer or subagent>`
-- Evidence: `<audit file or task id>`
+- Evidence: `<task id and short findings/disposition summary; link audit file only when separately justified>`
 
 ## Closure Gates
 
@@ -218,7 +218,7 @@ Status Note: complete only after plan and closure audits both pass.
 Closure Audit Evidence:
 
 - Reviewer / Agent: `<independent reviewer or subagent>`
-- Evidence: `<task id / log link / audit file>`
+- Evidence: `<task id / log link; link audit file only when separately justified>`
 
 Follow-up:
 
@@ -246,4 +246,4 @@ Target file:
 
 This slice has a plan and therefore needs closure audit before the plan is marked complete.
 
-Use a separate audit file if the audit is non-trivial, disputed, or useful for future sessions. Otherwise, record the independent reviewer/subagent evidence in the plan and daily log.
+Use a separate audit file only if the audit is specialized, complex, disputed, reusable, or useful for future replay. Otherwise, record the independent reviewer/subagent evidence in the plan and daily log.
