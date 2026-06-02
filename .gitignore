@@ -30,3 +30,9 @@ node_modules/
 
 # Tools
 tools/report/
+
+# Local database
+db/
+
+# Windows artifact
+nul
