@@ -1,127 +1,127 @@
-# Product Catalog Business Design
+# 商品目录业务设计
 
-## Purpose
+## 目的
 
-Describe the product-catalog domain for categories, brands, goods, SKU variants, and catalog search.
+说明商品目录领域，包括分类、品牌、商品、SKU 变体和目录搜索。
 
-## Boundary
+## 边界
 
-- This document owns business concepts, user/admin behavior, and catalog rules.
-- Persisted entities, fields, dictionaries, and relationship details are defined in `model/app-mall.orm.xml`.
-- Technical implementation strategy belongs in `docs/architecture/`.
+- 本文档负责商品目录中的业务概念、用户/管理员行为和目录规则。
+- 持久化实体、字段、字典和关系细节以 `model/app-mall.orm.xml` 为准。
+- 技术实现策略属于 `docs/architecture/`。
 
-## Domain Overview
+## 领域概览
 
-The catalog follows a three-level business model:
+商品目录采用三层业务模型：
 
-- Category groups goods for navigation and filtering.
-- Goods represent the sellable product concept at SPU level.
-- SKU represents the purchasable variant selected by the user.
+- Category 用于对商品进行导航与筛选分组。
+- Goods 表示用户看到的可销售商品概念，即 SPU 层级。
+- SKU 表示用户最终购买的具体规格变体。
 
-Supporting concepts:
+配套概念：
 
-- Brand identifies the commercial brand attached to goods.
-- Specification defines selectable variant dimensions such as color or size.
-- Attribute defines display-only descriptive properties such as origin or material.
+- Brand 表示商品所属的商业品牌。
+- Specification 定义颜色、尺寸等用户可选择的变体维度。
+- Attribute 定义产地、材质等仅用于展示的描述性属性。
 
-## Business Relationships
+## 业务关系
 
-- Categories are hierarchical and drive navigation.
-- Goods belong to a leaf category and may optionally belong to a brand.
-- One goods item can have many SKU variants.
-- Specifications describe how SKU variants differ from each other.
-- Attributes describe goods but do not affect purchasing.
+- 分类是层级结构，并驱动导航。
+- 商品必须归属叶子分类，也可以选择性归属品牌。
+- 一个商品可以有多个 SKU 变体。
+- 规格用于描述不同 SKU 之间的差异。
+- 属性用于描述商品，但不直接影响购买。
 
-## Category Management
+## 分类管理
 
-### Business Rules
+### 业务规则
 
-- Categories use a two-level browsing structure for storefront navigation.
-- Category names must be clear and unique within the same parent.
-- Goods can only be assigned to leaf categories.
-- A category cannot be removed while it still has child categories or assigned goods.
-- Sort order controls display order in admin and storefront navigation.
+- 前台浏览按两级分类结构组织。
+- 同一父分类下，分类名称必须清晰且唯一。
+- 商品只能挂载到叶子分类。
+- 当分类仍有子分类或已分配商品时，不能删除该分类。
+- 排序值控制后台和前台导航中的展示顺序。
 
-### Supported Behavior
+### 支持行为
 
-- Admin users can create, edit, reorder, and remove categories within the supported hierarchy rules.
-- Mall users can browse category trees and enter goods lists from category navigation.
+- 管理员可以在支持的层级规则内创建、编辑、排序和删除分类。
+- 商城用户可以浏览分类树，并从分类导航进入商品列表。
 
-## Brand Management
+## 品牌管理
 
-### Business Rules
+### 业务规则
 
-- Brand identity is optional for goods, but once used it should be presented consistently.
-- Brands without active goods may be hidden from storefront-first experiences.
-- Brand ordering is business-controlled for storefront presentation.
+- 品牌对商品来说是可选属性，但一旦使用，应保持前台展示一致。
+- 没有上架商品的品牌可以在以前台优先的入口中隐藏。
+- 品牌排序由业务侧控制，以满足前台展示需要。
 
-### Supported Behavior
+### 支持行为
 
-- Admin users manage brand information.
-- Mall users can browse brand-led entry points and filter goods by brand where relevant.
+- 管理员维护品牌信息。
+- 商城用户可以从品牌入口浏览商品，并在适用场景下按品牌过滤商品。
 
-## Goods And SKU Management
+## 商品与 SKU 管理
 
-### Goods (SPU) Rules
+### Goods（SPU）规则
 
-- Goods define the shared commercial identity shown to users.
-- Goods must belong to a leaf category before they can be sold.
-- Goods must be on sale to appear in storefront search and browsing.
-- Goods should have at least one SKU before they become purchasable.
-- Rich media, brief descriptions, and detailed descriptions are part of the goods presentation baseline.
+- Goods 定义用户看到的统一商品商业身份。
+- 商品必须归属叶子分类后才能售卖。
+- 只有上架商品才会出现在前台搜索和浏览中。
+- 商品在可购买前应至少拥有一个 SKU。
+- 富媒体、简要描述和详细描述属于商品展示基线的一部分。
 
-### SKU Rules
+### SKU 规则
 
-- Each SKU is one purchasable combination of specification values.
-- SKU price and stock are the values that matter at purchase time.
-- Stock cannot go below zero.
-- Users must not be allowed to purchase unavailable SKU quantity.
+- 每个 SKU 对应一种可购买的规格组合。
+- 用户购买时真正生效的是 SKU 价格和 SKU 库存。
+- 库存不能小于零。
+- 不允许用户购买超出可用数量的 SKU。
 
-### Pricing Semantics
+### 价格语义
 
-- Reference price is display-oriented.
-- Retail price is the normal selling price shown in the catalog.
-- SKU price may vary from the default goods-level selling price.
-- Goods listing should present a price or price range that matches available SKU data.
+- 参考价主要用于展示。
+- 零售价是目录中展示的正常销售价格。
+- SKU 价格可以与商品默认销售价不同。
+- 商品列表应展示与可用 SKU 数据相匹配的单价或价格区间。
 
-### Supported Behavior
+### 支持行为
 
-- Admin users can create goods, maintain variants, manage sale status, and control merchandising flags such as new or hot.
-- Mall users can browse goods lists, open goods detail pages, choose specifications, and purchase SKU variants.
+- 管理员可以创建商品、维护变体、管理上下架状态，并控制新品、热门等陈列标记。
+- 商城用户可以浏览商品列表、查看商品详情、选择规格并购买 SKU 变体。
 
-## Specifications And Attributes
+## 规格与属性
 
-### Specifications
+### 规格
 
-- Specifications describe user-selectable dimensions that lead to SKU choice.
-- Specification values should map cleanly to actual SKU combinations.
-- Visual specifications may include supporting media when needed.
+- 规格描述用户可选择的维度，并最终导向 SKU 选择。
+- 规格值必须能清晰映射到实际 SKU 组合。
+- 在需要时，可为视觉类规格补充配套图片等展示素材。
 
-### Attributes
+### 属性
 
-- Attributes are descriptive only.
-- Attributes help users understand the goods but do not change SKU selection or pricing.
+- 属性仅用于描述展示。
+- 属性帮助用户理解商品，但不改变 SKU 选择和价格。
 
-## Search And Discovery
+## 搜索与发现
 
-### Storefront Search
+### 前台搜索
 
-- Search covers goods that are currently on sale.
-- Users can filter by category, brand, merchandising flags, and price-related criteria.
-- Sorting should support business-relevant options such as price, freshness, and default merchandising order.
+- 搜索范围覆盖当前已上架商品。
+- 用户可以按分类、品牌、陈列标记和价格相关条件进行过滤。
+- 排序应支持价格、上新程度和默认陈列顺序等业务相关选项。
 
-### Admin Search
+### 后台搜索
 
-- Admin search must support faster operational lookup across goods regardless of storefront sale status.
-- Admin search should expose enough information to manage goods, variants, and sale state efficiently.
+- 后台搜索应支持跨商品的高效运营检索，不受前台上下架状态限制。
+- 后台搜索应提供足够信息，便于管理商品、变体和售卖状态。
 
-## Consistency Rules
+## 一致性规则
 
-- Goods, SKU variants, specifications, and attributes must stay mutually consistent after admin edits.
-- Users should see the current sellable price and availability at checkout time, even if catalog data changed after add-to-cart.
-- Orders must preserve the purchased goods and SKU meaning even if catalog content changes later.
+- 商品、SKU 变体、规格和属性在后台编辑后必须保持相互一致。
+- 即使加入购物车后目录数据发生变化，用户在结算时也应看到当前真实的可售价格和库存。
+- 即使后续目录内容变化，订单仍必须保留被购买商品及其 SKU 的原始含义。
 
-## Adjacent Scope
+## 邻接范围
 
-- Search history, favorites, and browse footprint are owned by `marketing-and-promotions.md`.
-- Promotion pricing such as coupon and groupon effects are owned by `order-and-cart.md` and `marketing-and-promotions.md`.
+- 搜索历史、收藏和浏览足迹由 `marketing-and-promotions.md` 负责。
+- 优惠券和团购等促销定价影响由 `order-and-cart.md` 和 `marketing-and-promotions.md` 共同负责。

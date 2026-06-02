@@ -1,174 +1,174 @@
-# Order and Cart Business Design
+# 订单与购物车业务设计
 
-## Purpose
+## 目的
 
-Describe cart behavior, checkout, order lifecycle, price semantics, and refund-related order flows for `nop-app-mall`.
+说明 `nop-app-mall` 的购物车行为、结算、订单生命周期、价格语义以及与退款相关的订单流程。
 
-## Boundary
+## 边界
 
-- This document owns order and cart business semantics, user/admin actions, and state transitions.
-- Persisted fields, dictionaries, and exact stored status values are defined in `model/app-mall.orm.xml`.
-- Technical transaction, locking, scheduling, and integration implementation belongs in `docs/architecture/`.
+- 本文档负责订单与购物车的业务语义、用户/管理员动作和状态迁移。
+- 持久化字段、字典和精确存储状态值以 `model/app-mall.orm.xml` 为准。
+- 技术事务、锁、调度和集成实现属于 `docs/architecture/`。
 
-## Domain Overview
+## 领域概览
 
-The order domain covers:
+订单领域覆盖以下内容：
 
-- cart management before purchase
-- checkout preview and order submission
-- payment and shipment progression
-- receipt confirmation and post-order actions
-- refund and after-sale flows
+- 购买前的购物车管理
+- 结算预览与订单提交
+- 支付与发货推进
+- 收货确认与订单后续动作
+- 退款与售后流程
 
-Core business concepts:
+核心业务概念：
 
-- Cart stores the user's intended purchase selections before order submission.
-- Order is the commercial contract between user and mall.
-- Order goods captures the goods and SKU snapshot purchased in that order.
-- After-sale is a separate refund or return process after fulfillment events.
+- Cart 用于在订单提交前保存用户计划购买的选择。
+- Order 是用户与商城之间的商业合同。
+- Order goods 保存该订单中被购买商品和 SKU 的快照。
+- 售后是在履约之后发生的独立退款或退货流程。
 
-## Shopping Cart
+## 购物车
 
-### Business Rules
+### 业务规则
 
-- Users must be authenticated to maintain a cart.
-- The same user and the same SKU should merge into one cart line instead of creating duplicates.
-- Only currently sellable goods may be added to cart.
-- Quantity changes must respect current availability.
-- Checked state determines which cart lines participate in checkout.
+- 用户必须先完成认证，才能维护购物车。
+- 同一用户、同一 SKU 应合并为一条购物车记录，而不是重复新增。
+- 只有当前可售商品才能加入购物车。
+- 数量变更必须满足当前可用库存约束。
+- 勾选状态决定哪些购物车行会参与结算。
 
-### Supported Behavior
+### 支持行为
 
-- Add goods to cart by SKU and quantity.
-- View cart with goods information, selected specifications, quantity, checked state, and subtotal behavior.
-- Change quantity.
-- Check or uncheck individual or all items.
-- Remove items or clear cart.
-- Preview checkout from checked items.
+- 按 SKU 和数量加入购物车。
+- 查看购物车，展示商品信息、已选规格、数量、勾选状态和小计行为。
+- 修改数量。
+- 勾选或取消勾选单项或全部项目。
+- 删除商品或清空购物车。
+- 基于已勾选商品预览结算。
 
-## Price Semantics
+## 价格语义
 
-The order price model contains these business components:
+订单价格模型包含以下业务构成：
 
-- goods price: subtotal of ordered items
-- freight price: shipping fee based on current freight policy
-- coupon price: reserved price component for future coupon support
-- groupon price: reserved price component for future group-buy support
-- integral price: points discount, reserved for future support
-- order price: pre-payment amount after shipping and discounts
-- actual price: final amount the user needs to pay
+- goods price：商品金额小计
+- freight price：基于当前运费策略计算出的配送费
+- coupon price：为未来优惠券支持预留的价格构件
+- groupon price：为未来团购支持预留的价格构件
+- integral price：积分抵扣金额，当前仅作预留
+- order price：叠加运费与优惠后的支付前金额
+- actual price：用户最终需要支付的金额
 
-### Freight Rules
+### 运费规则
 
-- Freight policy is centrally configured.
-- Free-shipping threshold is centrally configured.
-- Checkout must show whether freight is charged or waived.
+- 运费策略统一配置。
+- 包邮门槛统一配置。
+- 结算时必须明确展示是否收取运费或已免运费。
 
-## Order State Machine
+## 订单状态机
 
-### Business States
+### 业务状态
 
-The product baseline uses these business states. The persisted status-code dictionary is maintained in `model/app-mall.orm.xml`.
+产品基线采用以下业务状态。持久化状态码字典由 `model/app-mall.orm.xml` 维护。
 
-| Business State | Meaning | User Actions | Admin Actions |
-| -------------- | ------- | ------------ | ------------- |
-| Unpaid | Order created and waiting for payment | cancel, pay | none |
-| Cancelled by user | User cancelled before payment | delete | none |
-| Cancelled by system | Payment timeout closed the order | delete | none |
-| Paid | Payment confirmed and waiting for shipment | request refund | ship, refund |
-| Refund requested | User requested refund before shipment | none | approve refund, reject refund, direct refund |
-| Refunded | Refund completed | delete | none |
-| Shipped | Goods shipped and waiting for receipt confirmation | confirm receipt | none |
-| Received by user | User confirmed receipt | delete | none |
-| Received by system | System auto-confirmed receipt | delete | none |
+| 业务状态 | 含义 | 用户动作 | 管理员动作 |
+| -------- | ---- | -------- | ---------- |
+| 待支付 | 订单已创建，等待支付 | 取消、支付 | 无 |
+| 用户取消 | 用户在支付前主动取消订单 | 删除 | 无 |
+| 系统取消 | 支付超时后系统关闭订单 | 删除 | 无 |
+| 已支付 | 支付已确认，等待发货 | 申请退款 | 发货、退款 |
+| 已申请退款 | 用户在发货前提交退款申请 | 无 | 通过退款、驳回退款、直接退款 |
+| 已退款 | 退款已完成 | 删除 | 无 |
+| 已发货 | 商品已发出，等待确认收货 | 确认收货 | 无 |
+| 用户已收货 | 用户主动确认收货 | 删除 | 无 |
+| 系统已收货 | 系统超时自动确认收货 | 删除 | 无 |
 
-### Transition Rules
+### 迁移规则
 
-- Unpaid orders can become user-cancelled, system-cancelled, or paid.
-- Paid orders can move to refund-requested, refunded, or shipped.
-- Refund-requested orders can return to paid on rejection or move to refunded on approval or direct admin refund.
-- Shipped orders can move to received by user or received by system.
-- Terminal states support deletion from the user's visible list through soft-delete semantics.
+- 待支付订单可以变为用户取消、系统取消或已支付。
+- 已支付订单可以进入已申请退款、已退款或已发货。
+- 已申请退款订单在驳回后回到已支付，在通过或管理员直接退款后进入已退款。
+- 已发货订单可以进入用户已收货或系统已收货。
+- 终态订单支持通过软删除语义从用户可见列表中移除。
 
-### State Narrative
+### 状态叙述
 
 ```text
-Unpaid
-  -> Cancelled by user
-  -> Cancelled by system
-  -> Paid
-       -> Refund requested
-            -> Refunded
-            -> Paid
-       -> Refunded [direct admin refund]
-       -> Shipped
-            -> Received by user
-            -> Received by system
+待支付
+  -> 用户取消
+  -> 系统取消
+  -> 已支付
+       -> 已申请退款
+            -> 已退款
+            -> 已支付
+       -> 已退款 [管理员直接退款]
+       -> 已发货
+            -> 用户已收货
+            -> 系统已收货
 ```
 
-### Related State Extensions
+### 相关状态扩展
 
-- Groupon-enabled orders may introduce a dedicated groupon-timeout business state.
-- Comment/review and after-sale for received orders extend the allowed user actions after receipt without changing the core payment/shipment/receipt progression.
+- 启用团购的订单可以引入专门的团购超时业务状态。
+- 已收货订单上的评价与售后能力，会在收货后扩展允许动作，但不改变支付/发货/收货这条核心履约主线。
 
-## Order Creation
+## 订单创建
 
-### Business Preconditions
+### 业务前置条件
 
-- User must be authenticated.
-- Checkout items must come from the user's current checked cart selection or an equivalent direct-buy path.
-- Delivery address must belong to the user.
-- Ordered SKU quantity must still be available at submission time.
-- Delivery-related pricing rules and any enabled discount mechanism must still be valid at submission time.
+- 用户必须已认证。
+- 结算项必须来自用户当前已勾选的购物车选择，或等价的直接购买路径。
+- 收货地址必须归属于当前用户。
+- 提交时所选 SKU 数量仍然可用。
+- 配送相关定价规则以及任何启用中的优惠机制在提交时仍然有效。
 
-### Business Outcome
+### 业务结果
 
-- The order captures a snapshot of the purchased goods, SKU selection, price composition, and delivery information.
-- Ordered cart lines leave the active cart after successful submission.
-- A zero-amount order is treated as paid without waiting for an external payment step.
+- 订单会固化所购商品、SKU 选择、价格构成和配送信息快照。
+- 成功提交后，对应购物车行离开活跃购物车。
+- 零金额订单可直接视为已支付，无需等待外部支付步骤。
 
-## Payment, Shipping, And Completion
+## 支付、发货与完成
 
-### Payment
+### 支付
 
-- The business contract still distinguishes unpaid and paid orders.
-- Payment confirmation moves the order into the paid state.
-- Production payment behavior is an integration-owned capability; WeChat Pay details belong in the relevant integration architecture and code.
-- Development or local-test payment substitutes must be explicitly marked non-production and must not redefine commercial payment behavior.
+- 业务合同上仍然区分待支付与已支付订单。
+- 支付确认会把订单推进到已支付状态。
+- 生产环境支付行为属于集成能力；微信支付细节应放在对应的集成架构和代码中。
+- 开发或本地测试中的支付替代机制必须明确标注为非生产行为，且不能重定义正式商业支付语义。
 
-### Shipping
+### 发货
 
-- Only paid orders can be shipped.
-- Shipping records carrier and tracking information for user follow-up.
+- 只有已支付订单才能发货。
+- 发货时记录承运信息和运单信息，便于用户跟踪。
 
-### Receipt Confirmation
+### 收货确认
 
-- Only shipped orders can be confirmed as received.
-- Receipt confirmation completes the core fulfillment lifecycle and becomes the boundary for comment/review and after-sale eligibility.
-- System auto-confirmation exists as a fallback when the user does not confirm in time.
+- 只有已发货订单才能确认收货。
+- 收货确认标志着核心履约流程完成，也是评价和售后资格的边界。
+- 当用户未在规定时间内确认时，系统自动确认作为兜底机制存在。
 
-## Refund And After-Sale
+## 退款与售后
 
-### Refund Scope
+### 退款范围
 
-- Paid but unshipped orders may enter refund-requested state.
-- Admin users may directly refund eligible paid but unshipped orders.
-- Admin users may also approve or reject a user-initiated refund request.
-- Approved refunds restore the order to a terminal refunded state.
+- 已支付但未发货订单可以进入已申请退款状态。
+- 管理员可以对符合条件的已支付未发货订单直接退款。
+- 管理员也可以审核用户发起的退款申请，执行通过或驳回。
+- 退款通过后，订单进入终态的已退款状态。
 
-### After-Sale Scope
+### 售后范围
 
-- After-sale for received orders covers refund-only and return-and-refund scenarios after receipt.
-- After-sale eligibility and approval rules must preserve the meaning of the completed fulfillment lifecycle.
+- 对已收货订单的售后，覆盖仅退款和退货退款两类场景。
+- 售后资格和审批规则必须保持“订单已完成履约”这一业务含义不变。
 
-## Query And Presentation Rules
+## 查询与展示规则
 
-- Users can filter order lists by business-relevant status groups such as unpaid, unshipped, and shipped.
-- Order detail must show price composition, goods snapshot, delivery snapshot, current business state, and available next actions.
-- Admin order views must support search by user, order number, state, and time range.
+- 用户可以按待支付、待发货、已发货等业务状态组过滤订单列表。
+- 订单详情必须展示价格构成、商品快照、配送快照、当前业务状态以及可执行的下一步动作。
+- 后台订单视图应支持按用户、订单号、状态和时间范围进行查询。
 
-## Consistency Rules
+## 一致性规则
 
-- Checkout and order submission must use current sellable price and availability, not stale cart assumptions.
-- Order detail must preserve the meaning of purchased goods, selected specifications, and delivery data even if the underlying catalog or address records later change.
-- State transitions must follow the allowed business flow and must not silently skip required intermediate meaning.
+- 结算和订单提交必须基于当前可售价格和库存，而不是沿用购物车中的过期假设。
+- 即使后续商品目录或地址记录发生变化，订单详情也必须保留已购买商品、已选规格和配送数据的原始含义。
+- 状态迁移必须遵循允许的业务流转，不得静默跳过本应存在的中间业务含义。

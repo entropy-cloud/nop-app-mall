@@ -1,103 +1,103 @@
-# System Configuration Business Design
+# 系统配置业务设计
 
-## Purpose
+## 目的
 
-Describe the business-managed configuration, file-storage expectations, operational jobs, notifications, and admin-operation records for `nop-app-mall`.
+说明 `nop-app-mall` 中由业务管理的配置项、文件存储预期、运营任务、通知能力以及管理员操作记录。
 
-## Boundary
+## 边界
 
-- This document owns business-facing configuration categories and operational behavior.
-- Persisted config keys, entities, field sets, and dictionaries are defined in `model/*.orm.xml` or the platform-owned system configuration model.
-- Technical scheduling, storage, and integration strategy belongs in `docs/architecture/`.
+- 本文档负责面向业务的配置分类和运营行为。
+- 持久化配置键、实体、字段集和字典定义在 `model/*.orm.xml` 或平台自带的系统配置模型中。
+- 技术调度、存储和集成策略属于 `docs/architecture/`。
 
-## System Configuration
+## 系统配置
 
-### Business Role
+### 业务角色
 
-System configuration stores editable operational settings that change mall behavior without redefining product scope.
+系统配置用于保存可编辑的运营设置，这些设置会改变商城行为，但不会重定义产品范围。
 
-### Current Supported Configuration Categories
+### 当前支持的配置分类
 
-- storefront display counts for homepage sections
-- freight amount and free-shipping threshold
-- order timeout and auto-confirm timing
-- per-user address limit
-- mall identity and contact information
+- 首页各区块展示数量
+- 运费金额和包邮门槛
+- 订单超时与自动收货时长
+- 每用户地址数量上限
+- 商城身份信息与联系方式
 
-### Business Rules
+### 业务规则
 
-- Supported configuration items are predefined by the application baseline.
-- Configuration changes should take effect quickly for newly evaluated business flows.
-- Operational settings should be editable only by the appropriate administrative role.
+- 支持的配置项由应用基线预先定义。
+- 配置变更应尽快对新进入评估的业务流程生效。
+- 运营配置只能由具备相应职责的管理角色编辑。
 
-## File Storage
+## 文件存储
 
-### Business Role
+### 业务角色
 
-- File storage supports goods images, brand images, avatars, and other mall assets.
+- 文件存储用于承载商品图片、品牌图片、头像和其他商城素材。
 
-### Business Rules
+### 业务规则
 
-- Uploaded assets must be retrievable by the app after upload.
-- Allowed upload categories and size limits are centrally controlled.
-- Storage backend choice should not change the business meaning of uploaded assets.
+- 上传后的素材必须能被应用正常读取和访问。
+- 允许上传的分类和大小限制由系统统一控制。
+- 存储后端的选择不应改变上传素材的业务含义。
 
-### Business Baseline
+### 业务基线
 
-- Local storage may be used when it preserves the business meaning and retrievability of uploaded assets.
-- Cloud-backed storage is an infrastructure choice and should not change asset semantics.
+- 只要能保证素材语义和可取回性，本地存储可作为支持方案。
+- 云存储属于基础设施选择，不应改变素材的业务语义。
 
-## Notifications
+## 通知
 
-Notification categories include:
+通知类别包括：
 
-- payment confirmation
-- shipping updates
-- administrative order alerts
+- 支付确认
+- 发货更新
+- 后台订单提醒
 
-## Notice
+## 公告
 
-- Notice means admin-authored system or operational announcements shown to users or operators inside the product surface.
-- Notice is a content-like communication object.
-- Notice is different from notification events such as payment confirmation or shipping updates, which are delivery-triggered operational messages.
+- 公告是管理员编写并展示给用户或运营人员的系统或运营类消息。
+- 公告是一种内容对象。
+- 公告不同于支付确认、发货更新这类由事件触发的通知消息。
 
-## Scheduled Operational Tasks
+## 定时运营任务
 
-### Business Baseline
+### 业务基线
 
-- auto-cancel overdue unpaid orders
-- auto-confirm overdue shipped orders
+- 自动取消超时未支付订单
+- 自动确认超时未收货订单
 
-### Additional Operational Tasks
+### 扩展运营任务
 
-- coupon expiry handling
-- groupon expiry handling
-- comment-window expiry handling
+- 优惠券过期处理
+- 团购过期处理
+- 评价窗口过期处理
 
-## Admin Operation Log
+## 管理员操作日志
 
-### Business Role
+### 业务角色
 
-- Record meaningful admin actions for auditability and troubleshooting.
+- 记录重要管理员动作，满足审计和排障需要。
 
-### Logged Areas
+### 记录范围
 
-- product management
-- order operations such as ship and refund
-- user and admin management
-- system configuration changes
-- future marketing operations
+- 商品管理
+- 发货、退款等订单操作
+- 用户和管理员管理
+- 系统配置变更
+- 后续营销运营动作
 
-## Data Statistics
+## 数据统计
 
-Reporting areas include:
+报表区域包括：
 
-- order counts and revenue
-- pending-order workload
-- goods and inventory summaries
-- user growth and activity
+- 订单数量与收入
+- 待处理订单工作量
+- 商品与库存汇总
+- 用户增长与活跃度
 
-## Relationship To Other Owner Docs
+## 与其他 Owner Docs 的关系
 
-- Freight and timeout effects are used by `order-and-cart.md`.
-- Notification and promotion use cases may expand `marketing-and-promotions.md` in later phases.
+- 运费和超时配置效果会被 `order-and-cart.md` 使用。
+- 通知和营销相关用例在后续阶段可能扩展 `marketing-and-promotions.md`。

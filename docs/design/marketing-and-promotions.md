@@ -1,92 +1,92 @@
-# Marketing and Promotions Business Design
+# 营销与促销业务设计
 
-## Purpose
+## 目的
 
-Describe marketing capabilities for coupons, group buying, content promotion, and engagement features.
+说明优惠券、团购、内容营销和互动能力的业务设计。
 
-## Boundary
+## 边界
 
-- This document owns business semantics and feature rules for marketing surfaces.
-- Persisted model shape, field sets, and dictionaries are defined in `model/app-mall.orm.xml`.
-- Technical implementation strategies belong in `docs/architecture/`.
+- 本文档负责营销相关界面的业务语义和功能规则。
+- 持久化模型结构、字段集和字典定义以 `model/app-mall.orm.xml` 为准。
+- 技术实现策略属于 `docs/architecture/`。
 
-## Coupon System
+## 优惠券体系
 
-### Business Intent
+### 业务意图
 
-- Coupons provide rule-based discounts that can be claimed, granted, or redeemed.
-- Coupon applicability may depend on minimum spend, product scope, and validity window.
+- 优惠券提供基于规则的优惠能力，可被领取、发放或核销。
+- 优惠券是否可用可能取决于最低消费金额、商品适用范围和有效期。
 
-### Business Rules
+### 业务规则
 
-- A coupon has one business meaning and can only be used once per granted instance.
-- Coupon claim and use may be limited per user.
-- Coupon validity may be relative to claim time or fixed to a date range.
-- Coupon scope may apply to all goods, selected categories, or selected goods.
-- Cancelled or refunded qualifying orders should restore coupon usability according to the supported order policy.
+- 每张优惠券实例只有一个业务含义，且每次发放实例只能使用一次。
+- 优惠券的领取和使用次数可以按用户限制。
+- 优惠券有效期可以相对领取时间计算，也可以固定为某个日期区间。
+- 优惠券适用范围可以覆盖全场商品、指定分类或指定商品。
+- 对于满足条件后又被取消或退款的订单，应按既定订单策略恢复优惠券可用性。
 
-### Lifecycle
+### 生命周期
 
-- Admin creates coupon rules.
-- Users receive coupons by claim, registration gift, or redemption flow.
-- Users apply an eligible coupon during checkout.
-- Used, expired, or off-shelf coupon states remove further eligibility.
+- 管理员创建优惠券规则。
+- 用户通过主动领取、注册赠送或兑换流程获得优惠券。
+- 用户在结算时使用符合条件的优惠券。
+- 已使用、已过期或已下架的优惠券状态会失去继续使用资格。
 
-## Group Buying / Groupon
+## 团购 / Groupon
 
-### Business Intent
+### 业务意图
 
-- Group buying rewards enough users purchasing the same goods together.
-- One user starts a group and other users join it before expiry.
+- 团购用于鼓励多个用户共同购买同一商品。
+- 由一名用户开团，其他用户在有效期内参团。
 
-### Business Rules
+### 业务规则
 
-- Groupon rules are tied to a specific goods item.
-- Group success depends on reaching the required participant count before the deadline.
-- Users cannot join their own group as a follower.
-- Users cannot join the same active group multiple times.
-- Groupon discount affects order pricing only when the group-business conditions are satisfied.
+- 团购规则绑定到具体商品。
+- 团购是否成功取决于截止时间前是否达到规定参团人数。
+- 用户不能以跟团身份加入自己发起的团。
+- 用户不能重复加入同一个有效团。
+- 团购优惠只有在团购业务条件成立时才影响订单价格。
 
-### Lifecycle
+### 生命周期
 
-- Admin defines groupon rules.
-- A user opens a group through an order.
-- Other users join before expiry.
-- The group ends in success when enough valid participants pay, otherwise it times out.
+- 管理员定义团购规则。
+- 用户通过下单发起团购。
+- 其他用户在过期前参团。
+- 当足够数量的有效参与者完成支付时，团购成功；否则超时结束。
 
-## Search And Engagement Features
+## 搜索与互动能力
 
-### Search History
+### 搜索历史
 
-- Record recent user searches.
-- Support viewing and clearing search history.
+- 记录用户最近的搜索行为。
+- 支持查看和清空搜索历史。
 
-### Favorites
+### 收藏
 
-- Users can favorite goods and topic-like promotional content.
-- Favorite status should be queryable from detail surfaces.
+- 用户可以收藏商品和专题类营销内容。
+- 详情页等界面应能查询收藏状态。
 
-### Browse Footprint
+### 浏览足迹
 
-- Record recent browse history for user convenience.
-- Support viewing and clearing footprint records.
+- 记录用户最近浏览历史，方便回看。
+- 支持查看和清空足迹记录。
 
-## Content Promotion
+## 内容营销
 
-### Topic / Special Content
+### 专题 / 特别内容
 
-- Admins can publish themed promotional content that links users toward goods discovery.
+- 管理员可以发布主题化营销内容，引导用户发现商品。
 
-### Advertisement
+### 广告
 
-- Admins can manage banner-style promotion placements.
-- Promotions may be time-bound and enable/disable controlled.
+- 管理员可以管理横幅类广告位。
+- 广告可受时间窗口和启停状态控制。
 
-### FAQ And Feedback
+### 常见问题与反馈
 
-- FAQ and feedback support storefront guidance and customer communication.
+- FAQ 与反馈能力用于支持前台引导和客户沟通。
 
-## Out Of Scope
+## 不在范围内
 
-- Flash sale / seckill is not part of the supported baseline.
-- Tiered pricing, full reduction, and member-tier pricing are not part of the supported baseline.
+- 秒杀 / seckill 不属于当前支持基线。
+- 阶梯价、满减和会员等级价不属于当前支持基线。

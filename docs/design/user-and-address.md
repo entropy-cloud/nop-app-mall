@@ -1,94 +1,94 @@
-# User and Address Business Design
+# 用户与地址业务设计
 
-## Purpose
+## 目的
 
-Describe mall-user identity, admin-user roles, profile behavior, address management, and region usage for `nop-app-mall`.
+说明 `nop-app-mall` 中商城用户身份、后台用户角色、个人资料行为、地址管理和地区数据使用方式。
 
-## Boundary
+## 边界
 
-- This document owns user-facing and admin-facing account semantics, profile rules, and address behavior.
-- Persisted model shape, field sets, and dictionaries are defined in `model/*.orm.xml`.
-- Platform-auth implementation detail belongs in `docs/architecture/`.
+- 本文档负责用户侧和管理员侧账号语义、资料规则以及地址行为。
+- 持久化模型结构、字段集和字典定义以 `model/*.orm.xml` 为准。
+- 平台认证实现细节属于 `docs/architecture/`。
 
-## Domain Overview
+## 领域概览
 
-The app distinguishes two business user groups:
+应用区分两类业务用户：
 
-- mall users who browse, purchase, and maintain their own profile and addresses
-- admin users who operate the store and manage business data
+- 商城用户：浏览、购买，并维护自己的资料和地址
+- 后台用户：负责店铺运营和业务数据管理
 
-The address domain supports delivery information and region-based selection for checkout.
+地址领域用于支持结算时的配送信息和地区选择。
 
-## Mall User Management
+## 商城用户管理
 
-### Supported User Capabilities
+### 支持的用户能力
 
-- register and sign in
-- view current profile information
-- update personal profile details
-- change password
-- manage delivery addresses
-- view personal orders and order state
+- 注册与登录
+- 查看当前个人资料
+- 更新个人资料信息
+- 修改密码
+- 管理收货地址
+- 查看个人订单及订单状态
 
-### Business Rules
+### 业务规则
 
-- Only authenticated users can view or modify their own profile and addresses.
-- Disabled users must not be able to continue normal mall use.
-- Profile updates must not expose or return sensitive credential data.
-- Additional login channels such as WeChat must preserve the same user identity and account-safety semantics when enabled.
+- 只有已认证用户才能查看或修改自己的资料和地址。
+- 被禁用用户不得继续正常使用商城。
+- 资料更新过程不得暴露或返回敏感凭证数据。
+- 微信等附加登录渠道在启用时，必须保持与原有商城用户身份和账号安全语义一致。
 
-## Registration And Authentication
+## 注册与认证
 
-### Business Baseline
+### 业务基线
 
-- Username/password login is supported.
-- Self-registration is supported for mall users.
-- Admin-created accounts may also exist where needed.
+- 支持用户名/密码登录。
+- 支持商城用户自助注册。
+- 在需要时，也可以存在管理员创建账号的方式。
 
-### Additional Login Channels
+### 附加登录渠道
 
-- WeChat mini-program login and auto-registration are integration capabilities that must map to the same mall-user identity rules.
+- 微信小程序登录和自动注册属于集成能力，但必须映射到同一套商城用户身份规则。
 
-## Address Management
+## 地址管理
 
-### Business Rules
+### 业务规则
 
-- Each user may maintain multiple delivery addresses up to the configured limit.
-- One address acts as the default delivery address.
-- Changing the default address must leave exactly one default address afterward.
-- Users may only manage addresses they own.
-- Address data must be sufficient for delivery, including recipient, contact method, region, and detailed address.
+- 每个用户可以维护多条收货地址，数量上限由系统配置控制。
+- 其中一条地址作为默认收货地址。
+- 修改默认地址后，系统中必须仍然且只能存在一条默认地址。
+- 用户只能管理自己名下的地址。
+- 地址数据必须足以支持配送，包括收件人、联系方式、地区和详细地址。
 
-### Supported Behavior
+### 支持行为
 
-- Add address.
-- Edit address.
-- Delete address.
-- List addresses with the default address surfaced clearly.
-- Set or change the default address.
+- 新增地址。
+- 编辑地址。
+- 删除地址。
+- 列表展示地址，并清晰标识默认地址。
+- 设置或切换默认地址。
 
-## Region Data
+## 地区数据
 
-### Business Role
+### 业务角色
 
-- Region data supports cascading address selection.
-- Region data is reference data rather than user-managed business content.
-- Region hierarchy must be stable enough for address entry and delivery presentation.
+- 地区数据用于支持级联地址选择。
+- 地区数据属于参考数据，而不是用户自行维护的业务内容。
+- 地区层级必须足够稳定，以支持地址录入和配送展示。
 
-## Admin User Management
+## 后台用户管理
 
-### Business Roles
+### 业务角色
 
-- Super admin has full store-management access.
-- Admin users handle operational scopes such as product and order management.
+- 超级管理员拥有完整店铺管理权限。
+- 管理员负责商品管理、订单管理等运营范围。
 
-### Supported Behavior
+### 支持行为
 
-- Manage admin accounts and role assignment.
-- Apply permission boundaries appropriate to operational responsibilities.
-- Record meaningful admin operations for audit and troubleshooting.
+- 管理后台账号和角色分配。
+- 按运营职责应用对应的权限边界。
+- 记录重要管理员操作，满足审计和排障需要。
 
-## Relationship To Other Owner Docs
+## 与其他 Owner Docs 的关系
 
-- Permission semantics are further constrained by `roles-and-permissions.md`.
-- Order ownership and order-facing user actions are defined in `order-and-cart.md`.
+- 权限语义还需进一步受 `roles-and-permissions.md` 约束。
+- 订单归属及用户在订单上的动作定义由 `order-and-cart.md` 负责。

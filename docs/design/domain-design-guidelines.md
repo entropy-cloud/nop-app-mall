@@ -1,58 +1,59 @@
-# Domain Design Guidelines
+# 领域设计指南
 
-## Purpose
+## 目的
 
-Define the `nop-app-mall` project-specific domain design supplement.
+定义 `nop-app-mall` 的项目级领域设计补充规则。
 
-General Nop application rules are owned by `../nop-entropy/docs-for-ai/02-core-guides/application-project-docs-and-domain-design.md`.
+通用的 Nop 应用项目规则由 `../nop-entropy/docs-for-ai/02-core-guides/application-project-docs-and-domain-design.md` 负责。
 
-Use this file only for mall-specific domain ownership and local interpretation. Do not copy general Nop platform rules here.
+本文件只用于记录商城项目特有的领域归属和本地解释，不重复通用 Nop 平台规则。
 
-## Upstream Rules
+## 上游规则
 
-Before changing mall design docs, apply these shared Nop application rules:
+修改商城设计文档前，应先应用这些共享的 Nop 应用规则：
 
 - `../nop-entropy/docs-for-ai/00-start-here/application-project-defaults.md`
 - `../nop-entropy/docs-for-ai/02-core-guides/application-project-docs-and-domain-design.md`
 - `../nop-entropy/docs-for-ai/02-core-guides/domain-logic-and-ddd.md`
 
-Local rule:
+本地规则：
 
-- If this file conflicts with the shared Nop application rules, fix this file unless the conflict is caused by a deliberate mall-specific business constraint.
-- Mall-specific business constraints must be traceable to `docs/requirements/`, `docs/design/`, `docs/architecture/`, or `model/*.orm.xml` / `model/*.api.xml`.
+- 如果本文件与共享的 Nop 应用规则冲突，应优先修正本文件，除非冲突来自明确的商城项目特有业务约束。
+- 商城特有业务约束必须可以追溯到 `docs/requirements/`、`docs/design/`、`docs/architecture/` 或 `model/*.orm.xml` / `model/*.api.xml`。
+- 术语中英文对应或具体含义发生冲突时，以 `domain-glossary.md` 为准。
 
-## Mall Domain Areas
+## 商城领域区域
 
-Use these domain areas as the stable owner-doc map for `nop-app-mall`:
+在 `nop-app-mall` 中，以下领域区域构成稳定的 owner-doc 映射：
 
-| Domain Area | Owner Doc | Owns |
-| ----------- | --------- | ---- |
-| Catalog | `product-catalog.md` | Category, brand, goods, SKU, specification, attribute, catalog search, storefront presentation |
-| Commerce | `order-and-cart.md` | Cart, checkout, order lifecycle, payment state, shipment state, cancellation, refund, after-sale |
-| Identity and address | `user-and-address.md` | Mall user, admin user, profile, authentication baseline, address, region |
-| Marketing and engagement | `marketing-and-promotions.md` | Coupon, group buying, favorites, comments, topics, ads, feedback, footprint, search history, keyword |
-| Operations | `system-configuration.md` | Business configuration, storage, notices, operational tasks, admin logs, statistics |
-| Roles and permissions | `roles-and-permissions.md` | Business-facing role meanings, visibility, and protected actions across domain areas |
+| 领域区域 | Owner Doc | 负责内容 |
+| -------- | --------- | -------- |
+| 商品目录 | `product-catalog.md` | 分类、品牌、商品、SKU、规格、属性、目录搜索、前台展示 |
+| 交易领域 | `order-and-cart.md` | 购物车、结算、订单生命周期、支付状态、发货状态、取消、退款、售后 |
+| 身份与地址 | `user-and-address.md` | 商城用户、后台用户、个人资料、认证基线、地址、地区 |
+| 营销与互动 | `marketing-and-promotions.md` | 优惠券、团购、收藏、评论、专题、广告、反馈、足迹、搜索历史、关键词 |
+| 运营配置 | `system-configuration.md` | 业务配置、存储、公告、运营任务、管理员日志、统计 |
+| 角色与权限 | `roles-and-permissions.md` | 跨领域的业务角色含义、可见性与受保护操作 |
 
-## Cross-Domain Ownership
+## 跨领域归属
 
-- Checkout is owned by `order-and-cart.md`; it may reference catalog availability, user address, coupon eligibility, and payment capability without copying their full rules.
-- Payment, refund, and after-sale business states are owned by `order-and-cart.md`; integration mechanics belong in `docs/architecture/` or implementation docs.
-- Coupon and group-buying eligibility are owned by `marketing-and-promotions.md`; final order price and order state effects are owned by `order-and-cart.md`.
-- User identity and address ownership are owned by `user-and-address.md`; order delivery and shipment outcomes are owned by `order-and-cart.md`.
-- Role meanings and protected action visibility are owned by `roles-and-permissions.md`; each domain doc may mention role participation only where needed for business flow clarity.
-- Storage, notices, scheduled operation effects, admin logs, and statistics business semantics are owned by `system-configuration.md`; technical scheduling, storage adapter, notification delivery, and reporting implementation belong in `docs/architecture/`.
+- 结算由 `order-and-cart.md` 负责；其中可以引用商品可售性、用户地址、优惠券资格和支付能力，但不复制这些领域的完整规则。
+- 支付、退款和售后业务状态由 `order-and-cart.md` 负责；集成机制属于 `docs/architecture/` 或实现文档。
+- 优惠券和团购资格由 `marketing-and-promotions.md` 负责；最终订单价格影响和订单状态结果由 `order-and-cart.md` 负责。
+- 用户身份与地址归属由 `user-and-address.md` 负责；订单配送与收货结果由 `order-and-cart.md` 负责。
+- 角色含义和受保护操作的可见性由 `roles-and-permissions.md` 负责；各领域文档仅在业务流程说明需要时提及角色参与。
+- 存储、公告、定时运营效果、管理员日志和统计语义由 `system-configuration.md` 负责；技术调度、存储适配器、通知投递和报表实现属于 `docs/architecture/`。
 
-## Mall-Specific Authoring Rules
+## 商城特有编写规则
 
-- Keep storefront, admin, and system-initiated actions distinct.
-- Keep commercial behavior formal even when implementation proceeds in small complete slices.
-- Describe payment and refund states as business outcomes; do not invent external WeChat Pay behavior beyond the owner docs and code route.
-- Keep persisted field sets, status codes, and dictionary values in `model/*.orm.xml` and `model/*.api.xml`.
-- Put implementation sequencing in `docs/backlog/` or `docs/plans/`, not in domain design docs.
+- 保持前台用户动作、后台管理员动作和系统自动动作之间的区别清晰。
+- 即使实现按小步闭环推进，也要保持商业行为定义是正式的，而不是临时演示语义。
+- 支付和退款状态应描述为业务结果，不应超出 owner docs 和代码路径去虚构外部微信支付行为。
+- 持久化字段集、状态码和字典值仍以 `model/*.orm.xml` 和 `model/*.api.xml` 为准。
+- 实施顺序写入 `docs/backlog/` 或 `docs/plans/`，不要写进领域设计文档。
 
-## Update Rule
+## 更新规则
 
-Update this file only when the mall domain ownership map or local interpretation changes.
+只有在商城领域归属映射或本地解释发生变化时，才更新本文件。
 
-When changing a single feature's supported behavior, update the owning design doc instead.
+如果只是某个单独功能的支持行为变化，应更新对应的设计 owner doc，而不是修改本文件。

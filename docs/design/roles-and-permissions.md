@@ -1,50 +1,50 @@
-# Roles And Permissions
+# 角色与权限
 
-## Purpose
+## 目的
 
-Record the current supported role model for the application.
+记录当前应用支持的角色模型。
 
-## Boundary
+## 边界
 
-- This document owns business-facing role meanings, visibility rules, and action restrictions.
-- Technical auth implementation detail belongs in `docs/architecture/`.
-- Persisted role and permission structures are defined in platform and model artifacts, not in this prose doc.
+- 本文档负责面向业务的角色含义、可见性规则和动作限制。
+- 技术层认证实现细节属于 `docs/architecture/`。
+- 持久化的角色与权限结构定义在平台和模型文件中，而不是这份业务 prose 文档中。
 
-## Roles
+## 角色
 
-| Role        | Description |
-| ----------- | ----------- |
-| Super admin | Full system access across the mall management baseline |
-| Admin       | Product and order operations within assigned responsibilities |
-| Mall user   | Browsing, purchasing, and self-service order management |
+| 角色 | 说明 |
+| ---- | ---- |
+| 超级管理员 | 在商城管理基线范围内拥有全系统访问权限 |
+| 管理员 | 在分配职责范围内执行商品和订单运营 |
+| 商城用户 | 负责浏览、购买和订单自助管理 |
 
-## Permissions
+## 权限
 
-- Admin pages require authenticated admin session
-- Mall user pages require authenticated user session
-- Public storefront browsing is available without login unless the specific action requires authentication
-- Role and permission assignment must match the business restrictions defined below
+- 后台页面要求已认证的管理员会话。
+- 商城用户页面要求已认证的用户会话。
+- 前台商品浏览默认可公开访问，只有特定动作要求登录。
+- 角色和权限分配必须满足下述业务限制。
 
-## Visibility Rules
+## 可见性规则
 
-- Admin portal: visible only to authenticated admin users
-- Mall storefront: product browsing public; cart/orders require user login
-- User center: visible only to authenticated mall users
+- 后台：仅对已认证管理员可见。
+- 商城前台：商品浏览公开；购物车与订单要求用户登录。
+- 用户中心：仅对已认证商城用户可见。
 
-## Action Restrictions
+## 动作限制
 
-- Order cancellation: user can cancel unpaid orders only
-- Refund request: user can request refund only for eligible paid orders according to order and after-sale rules
-- Direct refund: admin can directly refund eligible paid orders according to order and after-sale rules
-- Product management: admin only
-- Admin account and role management: super admin only
+- 取消订单：用户只能取消待支付订单。
+- 申请退款：用户只能对符合条件的已支付订单发起退款申请，具体以订单与售后规则为准。
+- 直接退款：管理员只能对符合条件的已支付订单直接退款，具体以订单与售后规则为准。
+- 商品管理：仅管理员可执行。
+- 管理员账号与角色管理：仅超级管理员可执行。
 
-## Approval Or Audit Requirements
+## 审批与审计要求
 
-- Order status changes follow a fixed state machine
-- User-initiated refund and after-sale requests require admin review where the order policy requires approval
-- Direct admin refund actions must remain auditable
+- 订单状态变更必须遵循固定状态机。
+- 用户发起的退款和售后申请，在订单策略要求审批时必须经过管理员审核。
+- 管理员直接退款动作必须保持可审计。
 
-## Rule
+## 规则
 
-If role-based behavior affects implementation, keep this document aligned with live behavior.
+如果某项基于角色的行为影响到实现，应保持本文件与当前真实行为一致。
