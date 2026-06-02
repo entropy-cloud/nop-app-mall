@@ -15,20 +15,20 @@ Keep it current enough to route common work. Do not turn it into a full architec
 | API layer         | `app-mall-api/src/main/java/`               | External API interfaces                            | 2026-06-02    | high       |
 | Service layer     | `app-mall-service/src/main/java/`           | BizModel classes, business logic                   | 2026-06-02    | high       |
 | DAO layer         | `app-mall-dao/src/main/java/`               | Entity classes, ORM mappers                        | 2026-06-02    | high       |
-| Code generation   | `app-mall-codegen/src/main/java/`           | Code generator from Excel models                   | 2026-06-02    | high       |
+| Code generation   | `app-mall-codegen/src/main/java/`           | Code generator from XML models                     | 2026-06-02    | high       |
 | Tests             | `*/src/test/java/`                          | Unit tests per module                              | 2026-06-02    | medium     |
 | Config            | `app-mall-app/src/main/resources/`          | Quarkus config, application.yaml                   | 2026-06-02    | high       |
 | SQL deploy        | `deploy/sql/`                               | MySQL, PostgreSQL, Oracle DDL scripts              | 2026-06-02    | high       |
 | Engineering tools | `tools/`                                    | Node.js scripts for docs/code quality checks       | 2026-06-02    | medium     |
-| Excel models      | `model/app-mall.orm.xlsx`, `model/app-mall.api.xlsx`, `model/nop-auth-delta.orm.xlsx` | ORM, API, and delta code generation source | 2026-06-02    | high       |
+| XML models        | `model/app-mall.orm.xml`, `model/app-mall.api.xml`, `model/nop-auth-delta.orm.xml` | ORM, API, and delta code generation source | 2026-06-02    | high       |
 
 ## Common Change Routes
 
 | Task Type                         | Start Here                    | Then Check                          | Verification          | Last Verified | Confidence |
 | --------------------------------- | ----------------------------- | ----------------------------------- | --------------------- | ------------- | ---------- |
-| Add page/screen                   | `app-mall-web/src/main/resources/_vfs/app/mall/pages/` | `model/app-mall.api.xlsx` | `./mvnw compile -DskipTests && run app` | 2026-06-02 | high |
-| Add API/handler                   | `app-mall-service/src/main/java/` | `model/app-mall.api.xlsx`      | `./mvnw test`         | 2026-06-02    | medium     |
-| Change model/schema               | `model/app-mall.orm.xlsx`     | `app-mall-dao/`, `deploy/sql/`      | `./codegen.sh` then `./mvnw compile` | 2026-06-02 | high |
+| Add page/screen                   | `app-mall-web/src/main/resources/_vfs/app/mall/pages/` | `model/app-mall.api.xml` | `./mvnw compile -DskipTests && run app` | 2026-06-02 | high |
+| Add API/handler                   | `app-mall-service/src/main/java/` | `model/app-mall.api.xml`      | `./mvnw test`         | 2026-06-02    | medium     |
+| Change model/schema               | `model/app-mall.orm.xml`     | `app-mall-dao/`, `deploy/sql/`      | `./codegen.sh` then `./mvnw compile` | 2026-06-02 | high |
 | Change permissions                | `app-mall-delta/`             | `docs/design/roles-and-permissions.md` | `./mvnw test`    | 2026-06-02    | low        |
 | Fix UI behavior                   | `app-mall-web/src/main/resources/_vfs/` | AMIS docs                 | visual check          | 2026-06-02    | medium     |
 | Add business logic                | `app-mall-service/src/main/java/` | `*.xbiz.xml` files             | `./mvnw test`         | 2026-06-02    | medium     |
@@ -38,13 +38,13 @@ Keep it current enough to route common work. Do not turn it into a full architec
 
 | Path                                    | Risk                               | Preferred Approach                                   |
 | --------------------------------------- | ---------------------------------- | ---------------------------------------------------- |
-| `model/app-mall.orm.xlsx`               | Code generation source of truth    | Edit model then regenerate, never edit generated code |
-| `model/app-mall.api.xlsx`               | API generation source of truth     | Edit model then regenerate                            |
-| `model/nop-auth-delta.orm.xlsx`         | Delta ORM model for nop-auth overrides | Edit model then regenerate, drives app-mall-delta |
+| `model/app-mall.orm.xml`               | Code generation source of truth    | Edit model then regenerate, never edit generated code |
+| `model/app-mall.api.xml`               | API generation source of truth     | Edit model then regenerate                            |
+| `model/nop-auth-delta.orm.xml`         | Delta ORM model for nop-auth overrides | Edit model then regenerate, drives app-mall-delta |
 | `docs/input/litemall-requirements.md`   | Very large (1876+ lines)           | Reference for requirement synthesis, not direct impl  |
 | `deploy/sql/mysql/`                     | Database DDL                       | Align with ORM model changes                          |
 | `app-mall-delta/`                       | Overrides nop-auth via delta mech  | Respect Nop delta customization rules                 |
-| `*_gen.xml` or files in `target/`       | Auto-generated, will be overwritten| Never edit; regenerate from Excel models              |
+| `*_gen.xml` or files in `target/`       | Auto-generated, will be overwritten| Never edit; regenerate from XML models                |
 
 ## Project-Specific Search Hints
 
@@ -53,7 +53,7 @@ Keep it current enough to route common work. Do not turn it into a full architec
 - Avoid editing generated files: check for `_gen` suffix or files under `target/` directories
 - For AMIS views: search `app-mall-web/src/main/resources/_vfs/`
 - For delta customizations: search `app-mall-delta/src/main/resources/_vfs/`
-- Excel models use `.orm.xlsx` for ORM and `.api.xlsx` for API definitions
+- XML models use `.orm.xml` for ORM and `.api.xml` for API definitions; use `nop-cli convert` to generate XLSX when needed
 
 ## Update Rule
 

@@ -17,7 +17,7 @@ nop-app-mall is a demo e-commerce application showcasing the Nop Platform's deve
 ## Constraints That Must Stay True
 
 - Built on Nop Platform (nop-entropy) as the foundation
-- Excel models drive code generation for ORM and API layers
+- XML models drive code generation for ORM and API layers
 - Delta customization mechanism for overriding platform behavior
 - Quarkus as the runtime framework
 - AMIS as the frontend framework (JSON-driven, no separate frontend build)

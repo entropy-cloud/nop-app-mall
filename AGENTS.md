@@ -57,10 +57,10 @@ Do not jump from a feature request directly to code unless the route is already 
 
 ## Nop Platform Specific Rules
 
-- Code generation is driven by Excel models (`model/*.orm.xlsx`, `model/*.api.xlsx`). Do not manually edit generated code; regenerate from models instead.
+- Code generation is driven by XML models (`model/*.orm.xml`, `model/*.api.xml`). XLSX files can be generated from XML via `nop-cli convert` but are not the source of truth. Do not manually edit generated code; regenerate from models instead.
 - The delta module (`app-mall-delta`) overrides `nop-auth` behavior. Changes here must respect Nop's delta customization mechanism.
 - Frontend views are AMIS JSON definitions inside `.view.xml` files in `app-mall-web`. Follow AMIS conventions.
-- ORM XML files (`*.orm.xml`) define entity mappings. Do not edit these directly; use the ORM Excel model.
+- ORM XML files (`*.orm.xml`) define entity mappings. Do not edit these directly; edit `model/*.orm.xml` and regenerate.
 - Business logic lives in `*.xbiz.xml` and BizModel Java classes in `app-mall-service`.
 - SQL libraries are defined in `*.sql-lib.xml` files.
 - Build requires `nop-entropy` parent to be built first.
@@ -189,7 +189,7 @@ For non-trivial plans, each phase or item that depends on a reusable skill shoul
 - Prefer citing the existing owner doc instead of restating the same rule in multiple files.
 - Do not hide mandatory rules in `docs/references/`; if an AI must apply it by default, put it in `docs/context/` or `AGENTS.md`.
 - Use `docs/backlog/` and `docs/context/ai-autonomy-policy.md` to decide whether AI may choose and execute the next task without asking.
-- When editing Nop platform files, follow the platform's conventions: Excel models for code generation, delta customization for overrides, AMIS JSON for views.
+- When editing Nop platform files, follow the platform's conventions: XML models for code generation, delta customization for overrides, AMIS JSON for views.
 
 ## Verification Baseline
 

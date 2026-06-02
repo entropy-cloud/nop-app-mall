@@ -27,7 +27,7 @@ Define the main code ownership boundaries for `nop-app-mall`.
 - Responsibility: Data access layer — generated entity classes, ORM mappers
 - Allowed dependencies: nop-entropy ORM libraries, app-mall-api
 - Forbidden dependencies: app-mall-service, app-mall-web, app-mall-app
-- Owner docs: `docs/architecture/system-baseline.md`, `model/app-mall.orm.xlsx`
+- Owner docs: `docs/architecture/system-baseline.md`, `model/app-mall.orm.xml`
 
 ### app-mall-service
 
@@ -68,10 +68,10 @@ Define the main code ownership boundaries for `nop-app-mall`.
 
 ### app-mall-codegen
 
-- Responsibility: Code generation from Excel models
+- Responsibility: Code generation from XML models
 - Allowed dependencies: nop-entropy codegen libraries
 - Forbidden dependencies: runtime modules (service, web, app)
-- Owner docs: `model/app-mall.orm.xlsx`, `model/app-mall.api.xlsx`
+- Owner docs: `model/app-mall.orm.xml`, `model/app-mall.api.xml`
 
 ## Shared Data/Service Layer
 

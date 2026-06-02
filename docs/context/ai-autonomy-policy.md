@@ -46,14 +46,14 @@ Rules:
 
 - changing product scope when the requirement or owner doc is ambiguous
 - changing database/model shape, data deletion, payment, auth, permission, deployment, or external integration behavior without an owner doc and test strategy
-- modifying Excel models (`model/*.orm.xlsx`, `model/*.api.xlsx`) — these drive code generation and must be human-approved
+- modifying XML models (`model/*.orm.xml`, `model/*.api.xml`) — these drive code generation and must be human-approved
 - inventing behavior for an external system that is not described in committed integration docs or tests
 - skipping required verification because commands are missing, broken, or too slow
 - closing a plan whose audit, verification, docs, or checklist evidence is missing
 - proceeding when live code and owner docs conflict and resolving the conflict would change user-visible behavior or public contracts
 - loosening autonomy labels, protected-area rules, or blockers without human confirmation or human-approved owner-doc evidence
 - proceeding with implementation when documentation freshness is `stale`, `unknown`, or `partially stale` for the active slice; first perform baseline research or a plan-first alignment slice
-- editing generated code (under `target/` or generated from Excel models) instead of regenerating from models
+- editing generated code (under `target/` or generated from XML models) instead of regenerating from models
 
 ## Protected Areas
 
@@ -62,7 +62,7 @@ Rules:
 | WeChat Pay (app-mall-wx) | ask first   | owner doc + tests                      |
 | Data deletion (orders, users) | ask first   | owner doc + tests                      |
 | Auth/permissions (app-mall-delta) | plan-first | owner doc + tests                      |
-| Excel models (model/*.orm.xlsx, model/*.api.xlsx) | ask first | human approval + regenerated code      |
+| XML models (model/*.orm.xml, model/*.api.xml) | ask first | human approval + regenerated code      |
 | Database schema (deploy/sql/) | plan-first | migration script + owner doc           |
 
 Protected-area rule meanings:

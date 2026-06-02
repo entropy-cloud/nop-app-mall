@@ -5,7 +5,7 @@
 - MVP scope: See `docs/requirements/mvp.md` — user management, product browsing, cart, orders, admin management
 - Deferred scope: See `docs/requirements/mvp.md` — WeChat Pay, groupon, coupons, after-sales, comments, content management, storage
 - Success metrics: All must-have features from `mvp.md` implemented and testable; application builds and runs without errors
-- Constraints: Must follow Nop Platform conventions (Excel models, code generation, delta customization, AMIS views)
+- Constraints: Must follow Nop Platform conventions (XML models, code generation, delta customization, AMIS views)
 
 ## Rule
 

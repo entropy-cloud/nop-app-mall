@@ -21,14 +21,14 @@ Keep it short. If a rule becomes detailed lookup material, move the detail to `d
 
 ## Nop Platform Conventions
 
-- Code generation is driven by Excel models. Never manually edit generated code.
-- ORM entities and mappers are generated from `model/app-mall.orm.xlsx`.
-- API interfaces are generated from `model/app-mall.api.xlsx`.
-- Delta ORM overrides are generated from `model/nop-auth-delta.orm.xlsx`.
+- Code generation is driven by XML models. Never manually edit generated code.
+- ORM entities and mappers are generated from `model/app-mall.orm.xml`.
+- API interfaces are generated from `model/app-mall.api.xml`.
+- Delta ORM overrides are generated from `model/nop-auth-delta.orm.xml`.
 - Business logic goes in `*.xbiz.xml` and BizModel Java classes.
 - Frontend views are AMIS JSON in `.view.xml` files.
 - The delta module (`app-mall-delta`) uses Nop's delta mechanism to override nop-auth.
-- Always regenerate from models after Excel model changes (`codegen.sh` / `codegen.bat`).
+- Always regenerate from models after XML model changes (`codegen.sh` / `codegen.bat`).
 
 ## Review Rule
 

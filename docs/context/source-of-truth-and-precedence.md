@@ -50,15 +50,15 @@ Rule:
 
 Primary source:
 
-- `model/app-mall.orm.xlsx` (Excel ORM model)
-- `model/app-mall.api.xlsx` (Excel API model)
-- `model/nop-auth-delta.orm.xlsx` (delta ORM model for nop-auth overrides)
+- `model/app-mall.orm.xml` (XML ORM model)
+- `model/app-mall.api.xml` (XML API model)
+- `model/nop-auth-delta.orm.xml` (delta ORM model for nop-auth overrides)
 - `deploy/sql/` (DDL scripts)
 - generated `*.orm.xml` files
 
 Rule:
 
-- database definitions are owned by the Excel model and generated ORM XML, not by plan text or prose documentation
+- database definitions are owned by the XML model and generated ORM XML, not by plan text or prose documentation
 - documentation may explain intent, but the model files are the source of truth
 - DDL scripts in `deploy/sql/` should be aligned with model changes
 
@@ -66,7 +66,7 @@ Rule:
 
 Primary source:
 
-- `model/app-mall.api.xlsx` (Excel API model)
+- `model/app-mall.api.xml` (XML API model)
 - generated API interface code
 - `*.xbiz.xml` business logic definitions
 
@@ -139,7 +139,7 @@ Rule:
 - If live code and owner docs disagree, treat it as either implementation drift or stale docs; do not silently choose one.
 - If resolving a conflict changes user-visible behavior, data/model shape, API behavior, auth/permission behavior, or external integration behavior, stop and ask for confirmation.
 - If verification fails, the plan is not closed even if implementation appears complete.
-- If Excel model files and generated code disagree, the Excel model wins; regenerate and align DDL scripts.
+- If XML model files and generated code disagree, the XML model wins; regenerate and align DDL scripts.
 
 ## Legacy Or Stale-Docs Mode
 

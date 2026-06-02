@@ -35,7 +35,7 @@ Record the current supported implementation baseline for `nop-app-mall`.
 ## Data Access Approach
 
 - Nop ORM with generated entity classes and mappers
-- Code generated from `model/app-mall.orm.xlsx`
+- Code generated from `model/app-mall.orm.xml`
 - Supports MySQL, PostgreSQL, Oracle, H2 (for testing)
 - Auto-creates schema on first start
 - SQL libraries in `*.sql-lib.xml` files
@@ -67,11 +67,11 @@ Record the current supported implementation baseline for `nop-app-mall`.
 ## Stable Rules
 
 - Module dependency order: codegen -> api -> dao -> service -> web -> app; wx/delta/meta are additional modules
-- Never edit generated code; always regenerate from Excel models
+- Never edit generated code; always regenerate from XML models
 - Delta customization in `app-mall-delta` for overriding platform behavior
 - AMIS views follow AMIS JSON conventions
 - Business logic in `*.xbiz.xml` and BizModel Java classes
-- SQL changes must align with Excel model changes
+- SQL changes must align with XML model changes
 
 ## Update Rule
 

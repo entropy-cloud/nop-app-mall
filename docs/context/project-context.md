@@ -34,7 +34,7 @@ Rule:
 
 - Frontend stack: Baidu AMIS (JSON-driven UI in `.view.xml` files)
 - Backend stack: Java 17+, Quarkus, Nop Platform (nop-entropy 2.0.0-SNAPSHOT)
-- Database/model source: Excel models in `model/app-mall.orm.xlsx`, `model/app-mall.api.xlsx`; generated ORM XML
+- Database/model source: XML models in `model/app-mall.orm.xml`, `model/app-mall.api.xml`; generated ORM XML
 
 ## Verification Commands
 
@@ -66,7 +66,7 @@ AI MUST stop and wait for human input before proceeding when:
 
 - verification commands are all placeholders and cannot be inferred from the project
 - any change touches payment or data-deletion paths with no existing test coverage and no owner doc describing expected behavior
-- any change modifies Excel models (`model/*.orm.xlsx`, `model/*.api.xlsx`) without explicit human approval — these drive code generation
+- any change modifies XML models (`model/*.orm.xml`, `model/*.api.xml`) without explicit human approval — these drive code generation
 
 These are project-specific hard stops in addition to `AGENTS.md`, `docs/context/ai-autonomy-policy.md`, source-of-truth conflict rules, and required plan/closure audit rules.
 
