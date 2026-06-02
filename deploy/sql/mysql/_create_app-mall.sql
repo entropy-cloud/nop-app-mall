@@ -13,7 +13,7 @@ CREATE TABLE litemall_ad(
   UPDATE_TIME DATETIME NULL    COMMENT '更新时间',
   DELETED BOOLEAN NULL    COMMENT '逻辑删除',
   constraint PK_litemall_ad primary key (ID)
-);
+)CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
 
 CREATE TABLE litemall_user(
   ID INTEGER NOT NULL    COMMENT 'Id',
@@ -34,7 +34,7 @@ CREATE TABLE litemall_user(
   UPDATE_TIME DATETIME NULL    COMMENT '更新时间',
   DELETED BOOLEAN NULL    COMMENT '逻辑删除',
   constraint PK_litemall_user primary key (ID)
-);
+)CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
 
 CREATE TABLE litemall_admin(
   ID INTEGER NOT NULL    COMMENT 'Id',
@@ -48,7 +48,7 @@ CREATE TABLE litemall_admin(
   DELETED BOOLEAN NULL    COMMENT '逻辑删除',
   ROLE_IDS VARCHAR(127) NULL    COMMENT '角色列表',
   constraint PK_litemall_admin primary key (ID)
-);
+)CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
 
 CREATE TABLE litemall_brand(
   ID INTEGER NOT NULL    COMMENT 'Id',
@@ -61,7 +61,7 @@ CREATE TABLE litemall_brand(
   UPDATE_TIME DATETIME NULL    COMMENT '更新时间',
   DELETED BOOLEAN NULL    COMMENT '逻辑删除',
   constraint PK_litemall_brand primary key (ID)
-);
+)CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
 
 CREATE TABLE litemall_category(
   ID INTEGER NOT NULL    COMMENT 'Id',
@@ -77,7 +77,7 @@ CREATE TABLE litemall_category(
   UPDATE_TIME DATETIME NULL    COMMENT '更新时间',
   DELETED BOOLEAN NULL    COMMENT '逻辑删除',
   constraint PK_litemall_category primary key (ID)
-);
+)CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
 
 CREATE TABLE litemall_coupon(
   ID INTEGER NOT NULL    COMMENT 'Id',
@@ -101,7 +101,7 @@ CREATE TABLE litemall_coupon(
   UPDATE_TIME DATETIME NULL    COMMENT '更新时间',
   DELETED BOOLEAN NULL    COMMENT '逻辑删除',
   constraint PK_litemall_coupon primary key (ID)
-);
+)CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
 
 CREATE TABLE litemall_issue(
   ID INTEGER NOT NULL    COMMENT 'Id',
@@ -111,7 +111,7 @@ CREATE TABLE litemall_issue(
   UPDATE_TIME DATETIME NULL    COMMENT '更新时间',
   DELETED BOOLEAN NULL    COMMENT '逻辑删除',
   constraint PK_litemall_issue primary key (ID)
-);
+)CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
 
 CREATE TABLE litemall_keyword(
   ID INTEGER NOT NULL    COMMENT 'Id',
@@ -124,7 +124,7 @@ CREATE TABLE litemall_keyword(
   UPDATE_TIME DATETIME NULL    COMMENT '更新时间',
   DELETED BOOLEAN NULL    COMMENT '逻辑删除',
   constraint PK_litemall_keyword primary key (ID)
-);
+)CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
 
 CREATE TABLE litemall_log(
   ID INTEGER NOT NULL    COMMENT 'Id',
@@ -139,7 +139,7 @@ CREATE TABLE litemall_log(
   UPDATE_TIME DATETIME NULL    COMMENT '更新时间',
   DELETED BOOLEAN NULL    COMMENT '逻辑删除',
   constraint PK_litemall_log primary key (ID)
-);
+)CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
 
 CREATE TABLE litemall_notice(
   ID INTEGER NOT NULL    COMMENT 'Id',
@@ -150,7 +150,7 @@ CREATE TABLE litemall_notice(
   UPDATE_TIME DATETIME NULL    COMMENT '更新时间',
   DELETED BOOLEAN NULL    COMMENT '逻辑删除',
   constraint PK_litemall_notice primary key (ID)
-);
+)CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
 
 CREATE TABLE litemall_notice_admin(
   ID INTEGER NOT NULL    COMMENT 'Id',
@@ -162,7 +162,7 @@ CREATE TABLE litemall_notice_admin(
   UPDATE_TIME DATETIME NULL    COMMENT '更新时间',
   DELETED BOOLEAN NULL    COMMENT '逻辑删除',
   constraint PK_litemall_notice_admin primary key (ID)
-);
+)CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
 
 CREATE TABLE litemall_permission(
   ID INTEGER NOT NULL    COMMENT 'Id',
@@ -172,7 +172,7 @@ CREATE TABLE litemall_permission(
   UPDATE_TIME DATETIME NULL    COMMENT '更新时间',
   DELETED BOOLEAN NULL    COMMENT '逻辑删除',
   constraint PK_litemall_permission primary key (ID)
-);
+)CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
 
 CREATE TABLE litemall_region(
   ID INTEGER NOT NULL    COMMENT 'Id',
@@ -181,7 +181,7 @@ CREATE TABLE litemall_region(
   TYPE TINYINT NOT NULL    COMMENT '行政区域类型',
   CODE INTEGER NOT NULL    COMMENT '行政区域编码',
   constraint PK_litemall_region primary key (ID)
-);
+)CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
 
 CREATE TABLE litemall_role(
   ID INTEGER NOT NULL    COMMENT 'Id',
@@ -192,7 +192,7 @@ CREATE TABLE litemall_role(
   UPDATE_TIME DATETIME NULL    COMMENT '更新时间',
   DELETED BOOLEAN NULL    COMMENT '逻辑删除',
   constraint PK_litemall_role primary key (ID)
-);
+)CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
 
 CREATE TABLE litemall_storage(
   ID INTEGER NOT NULL    COMMENT 'Id',
@@ -205,7 +205,7 @@ CREATE TABLE litemall_storage(
   UPDATE_TIME DATETIME NULL    COMMENT '更新时间',
   DELETED BOOLEAN NULL    COMMENT '逻辑删除',
   constraint PK_litemall_storage primary key (ID)
-);
+)CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
 
 CREATE TABLE litemall_system(
   ID INTEGER NOT NULL    COMMENT 'Id',
@@ -215,7 +215,7 @@ CREATE TABLE litemall_system(
   UPDATE_TIME DATETIME NULL    COMMENT '更新时间',
   DELETED BOOLEAN NULL    COMMENT '逻辑删除',
   constraint PK_litemall_system primary key (ID)
-);
+)CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
 
 CREATE TABLE litemall_topic(
   ID INTEGER NOT NULL    COMMENT 'Id',
@@ -231,7 +231,7 @@ CREATE TABLE litemall_topic(
   UPDATE_TIME DATETIME NULL    COMMENT '更新时间',
   DELETED BOOLEAN NULL    COMMENT '逻辑删除',
   constraint PK_litemall_topic primary key (ID)
-);
+)CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
 
 CREATE TABLE litemall_address(
   ID INTEGER NOT NULL    COMMENT 'Id',
@@ -249,7 +249,7 @@ CREATE TABLE litemall_address(
   UPDATE_TIME DATETIME NULL    COMMENT '更新时间',
   DELETED BOOLEAN NULL    COMMENT '逻辑删除',
   constraint PK_litemall_address primary key (ID)
-);
+)CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
 
 CREATE TABLE litemall_collect(
   ID INTEGER NOT NULL    COMMENT 'Id',
@@ -260,7 +260,7 @@ CREATE TABLE litemall_collect(
   UPDATE_TIME DATETIME NULL    COMMENT '更新时间',
   DELETED BOOLEAN NULL    COMMENT '逻辑删除',
   constraint PK_litemall_collect primary key (ID)
-);
+)CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
 
 CREATE TABLE litemall_comment(
   ID INTEGER NOT NULL    COMMENT 'Id',
@@ -276,7 +276,7 @@ CREATE TABLE litemall_comment(
   UPDATE_TIME DATETIME NULL    COMMENT '更新时间',
   DELETED BOOLEAN NULL    COMMENT '逻辑删除',
   constraint PK_litemall_comment primary key (ID)
-);
+)CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
 
 CREATE TABLE litemall_feedback(
   ID INTEGER NOT NULL    COMMENT 'Id',
@@ -292,7 +292,7 @@ CREATE TABLE litemall_feedback(
   UPDATE_TIME DATETIME NULL    COMMENT '更新时间',
   DELETED BOOLEAN NULL    COMMENT '逻辑删除',
   constraint PK_litemall_feedback primary key (ID)
-);
+)CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
 
 CREATE TABLE litemall_order(
   ID INTEGER NOT NULL    COMMENT 'Id',
@@ -327,7 +327,7 @@ CREATE TABLE litemall_order(
   UPDATE_TIME DATETIME NULL    COMMENT '更新时间',
   DELETED BOOLEAN NULL    COMMENT '逻辑删除',
   constraint PK_litemall_order primary key (ID)
-);
+)CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
 
 CREATE TABLE litemall_search_history(
   ID INTEGER NOT NULL    COMMENT 'Id',
@@ -338,7 +338,7 @@ CREATE TABLE litemall_search_history(
   UPDATE_TIME DATETIME NULL    COMMENT '更新时间',
   DELETED BOOLEAN NULL    COMMENT '逻辑删除',
   constraint PK_litemall_search_history primary key (ID)
-);
+)CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
 
 CREATE TABLE litemall_goods(
   ID INTEGER NOT NULL    COMMENT 'Id',
@@ -363,7 +363,7 @@ CREATE TABLE litemall_goods(
   UPDATE_TIME DATETIME NULL    COMMENT '更新时间',
   DELETED BOOLEAN NULL    COMMENT '逻辑删除',
   constraint PK_litemall_goods primary key (ID)
-);
+)CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
 
 CREATE TABLE litemall_coupon_user(
   ID INTEGER NOT NULL    COMMENT 'Id',
@@ -378,7 +378,7 @@ CREATE TABLE litemall_coupon_user(
   UPDATE_TIME DATETIME NULL    COMMENT '更新时间',
   DELETED BOOLEAN NULL    COMMENT '逻辑删除',
   constraint PK_litemall_coupon_user primary key (ID)
-);
+)CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
 
 CREATE TABLE litemall_user_role(
   USER_ID VARCHAR(32) NOT NULL    COMMENT '用户ID',
@@ -390,7 +390,7 @@ CREATE TABLE litemall_user_role(
   UPDATE_TIME DATETIME NOT NULL    COMMENT '修改时间',
   REMARK VARCHAR(200) NULL    COMMENT '备注',
   constraint PK_litemall_user_role primary key (USER_ID,ROLE_ID)
-);
+)CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
 
 CREATE TABLE litemall_aftersale(
   ID INTEGER NOT NULL    COMMENT 'Id',
@@ -408,7 +408,7 @@ CREATE TABLE litemall_aftersale(
   UPDATE_TIME DATETIME NULL    COMMENT '更新时间',
   DELETED BOOLEAN NULL    COMMENT '逻辑删除',
   constraint PK_litemall_aftersale primary key (ID)
-);
+)CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
 
 CREATE TABLE litemall_groupon(
   ID INTEGER NOT NULL    COMMENT 'Id',
@@ -424,7 +424,7 @@ CREATE TABLE litemall_groupon(
   UPDATE_TIME DATETIME NULL    COMMENT '更新时间',
   DELETED BOOLEAN NULL    COMMENT '逻辑删除',
   constraint PK_litemall_groupon primary key (ID)
-);
+)CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
 
 CREATE TABLE litemall_cart(
   ID INTEGER NOT NULL    COMMENT 'Id',
@@ -442,7 +442,7 @@ CREATE TABLE litemall_cart(
   UPDATE_TIME DATETIME NULL    COMMENT '更新时间',
   DELETED BOOLEAN NULL    COMMENT '逻辑删除',
   constraint PK_litemall_cart primary key (ID)
-);
+)CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
 
 CREATE TABLE litemall_footprint(
   ID INTEGER NOT NULL    COMMENT 'Id',
@@ -452,7 +452,7 @@ CREATE TABLE litemall_footprint(
   UPDATE_TIME DATETIME NULL    COMMENT '更新时间',
   DELETED BOOLEAN NULL    COMMENT '逻辑删除',
   constraint PK_litemall_footprint primary key (ID)
-);
+)CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
 
 CREATE TABLE litemall_goods_attribute(
   ID INTEGER NOT NULL    COMMENT 'Id',
@@ -463,7 +463,7 @@ CREATE TABLE litemall_goods_attribute(
   UPDATE_TIME DATETIME NULL    COMMENT '更新时间',
   DELETED BOOLEAN NULL    COMMENT '逻辑删除',
   constraint PK_litemall_goods_attribute primary key (ID)
-);
+)CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
 
 CREATE TABLE litemall_goods_product(
   ID INTEGER NOT NULL    COMMENT 'Id',
@@ -476,7 +476,7 @@ CREATE TABLE litemall_goods_product(
   UPDATE_TIME DATETIME NULL    COMMENT '更新时间',
   DELETED BOOLEAN NULL    COMMENT '逻辑删除',
   constraint PK_litemall_goods_product primary key (ID)
-);
+)CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
 
 CREATE TABLE litemall_goods_specification(
   ID INTEGER NOT NULL    COMMENT 'Id',
@@ -488,7 +488,7 @@ CREATE TABLE litemall_goods_specification(
   UPDATE_TIME DATETIME NULL    COMMENT '更新时间',
   DELETED BOOLEAN NULL    COMMENT '逻辑删除',
   constraint PK_litemall_goods_specification primary key (ID)
-);
+)CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
 
 CREATE TABLE litemall_groupon_rules(
   ID INTEGER NOT NULL    COMMENT 'Id',
@@ -503,7 +503,7 @@ CREATE TABLE litemall_groupon_rules(
   UPDATE_TIME DATETIME NULL    COMMENT '更新时间',
   DELETED BOOLEAN NULL    COMMENT '逻辑删除',
   constraint PK_litemall_groupon_rules primary key (ID)
-);
+)CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
 
 CREATE TABLE litemall_order_goods(
   ID INTEGER NOT NULL    COMMENT 'Id',
@@ -521,7 +521,7 @@ CREATE TABLE litemall_order_goods(
   UPDATE_TIME DATETIME NULL    COMMENT '更新时间',
   DELETED BOOLEAN NULL    COMMENT '逻辑删除',
   constraint PK_litemall_order_goods primary key (ID)
-);
+)CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
 
 
    ALTER TABLE litemall_ad COMMENT '广告表';
