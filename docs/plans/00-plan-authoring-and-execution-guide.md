@@ -17,15 +17,53 @@ Write a plan when the task:
 
 Skip a formal plan only for local low-risk edits such as copy changes, small styling fixes, test-only cleanups, and single-file behavior fixes with clear existing tests.
 
+## Analysis / Audit Path
+
+Not every non-trivial task needs a full execution plan.
+
+For docs-only research, analysis, audit, or review work, do **not** create a separate plan by default.
+
+Prefer the no-plan path when all of the following are true:
+
+- the task does not change code, model, SQL, config, auth behavior, or supported product behavior
+- the main deliverable is an analysis, audit, review, or recommendation document
+- closure depends primarily on the quality of the output artifact, not on staged implementation work
+- there is no protected-area change, migration, or multi-surface behavioral rollout hidden inside the task
+
+For this path, lightweight tracking via the agent's built-in todo list is usually enough.
+
+Create a lightweight `analysis / audit brief` only when durable coordination still matters, such as:
+
+- multi-session analysis work
+- multiple output artifacts that must close together
+- disputed scope or source-of-truth conflicts
+- expected reviewer handoff where the output document alone is not enough context
+
+When needed, the brief may live either as:
+
+- a short section at the top of the output document, or
+- a lightweight dated plan file when durable tracking is still useful
+
+Minimum contents for a brief:
+
+- goal
+- scope
+- source-of-truth and precedence basis
+- expected output files
+- review method
+
+For this path, prefer spending review effort on the final analysis/audit artifact rather than repeatedly refining the brief itself.
+
 ## Plan Decision Table
 
 | Scope                                                                                                                               | Plan Level | Audit Rule                                                    | Examples                                                                               |
 | ----------------------------------------------------------------------------------------------------------------------------------- | ---------- | ------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
 | Trivial local edit                                                                                                                  | No plan    | No plan audit                                                 | typo/copy change, single style tweak, test-only cleanup                                |
+| Docs-only analysis / audit / review with no behavior change                                                                        | No separate plan by default; brief only when coordination complexity justifies it | if a brief exists, do one lightweight sanity-check review of the brief; repeated adversarial review should focus on the output artifact | design completeness assessment, architecture comparison, document audit, backlog research note |
 | Non-trivial tracked work                                                                                                            | Full plan  | independent plan audit and independent closure audit required | small UI polish with docs/test update, simple local bug fix with clear existing test   |
 | Contract, data/model, API, auth, permission, integration, deployment, cross-surface, stale-doc conflict, or clearly high-risk scope | Full plan  | independent plan audit and independent closure audit required | checkout flow, login behavior, data migration, external webhook, multi-module refactor |
 
-If unsure, use a full plan.
+If unsure, use a full plan. If the task is clearly docs-only and the real risk is weak analysis rather than weak execution sequencing, prefer the no-plan path or a lightweight brief instead.
 
 ## Minimum Rules
 
@@ -44,6 +82,8 @@ If unsure, use a full plan.
     - Record normal plan-audit and closure-audit evidence inside the plan by default.
     - Do not create `docs/audits/` files for ordinary plan-audit or closure-audit failures; revise the plan or work and audit again.
     - Use `docs/audits/` only for specialized, complex, disputed, reusable, or future-replay-worthy audit records.
+    - For docs-only `analysis / audit` work, one sanity-check review of the brief is usually enough when a brief exists at all.
+    - For docs-only `analysis / audit` work, repeated adversarial review should target the output artifact, not the planning artifact.
 13. **Non-degradable items** cannot be downgraded to non-blocking follow-ups: confirmed live defects, confirmed contract drift, confirmed owner-doc drift, and CI/lint rules already fixed in the repo.
 
 ### Anti-Slacking Rule
@@ -84,6 +124,14 @@ Before setting `Plan Status: completed`, do all of the following:
 8. Record independent audit evidence in the plan's `Closure` section. Link a stored audit file only when the audit qualifies as a specialized, complex, disputed, reusable, or future-replay-worthy record.
 
 If any of these fail, the plan stays open.
+
+## Notes For Analysis / Audit Work
+
+- Do not inflate docs-only analysis work into implementation-style phases unless staged execution is genuinely the risk.
+- Default to no separate plan; use the built-in todo mechanism for lightweight progress tracking unless durable coordination needs more.
+- Closure should usually be based on output quality and durable review evidence, not on implementation-flavored checklists.
+- For docs-only work, verification may consist of source review, artifact completeness, and independent audit evidence rather than build/test commands, as long as that proof is explicitly recorded.
+- If the task later turns into real implementation work, promote the brief into a full plan instead of stretching the brief beyond its purpose.
 
 ## Template
 

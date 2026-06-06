@@ -33,6 +33,8 @@ For most small and medium app projects, use this path:
 
 Use document audits, retrospectives, skill extraction, and extra testing notes only when the work is ambiguous, risky, or repeatedly failing.
 
+For docs-only `analysis / audit / review` work, do not assume a separate plan is required. Prefer lightweight task tracking plus direct production of the output artifact, and spend repeated adversarial review effort on the output artifact rather than on a planning artifact.
+
 ## Optional Extended Layers
 
 These are available but not mandatory for every task:
@@ -79,6 +81,8 @@ After drafting substantial design documents, use an independent subagent or revi
 Write `docs/plans/` from the settled design baseline, not from raw source material alone.
 
 After drafting a plan, use an independent subagent or reviewer pass and revise until major objections are resolved.
+
+For docs-only analysis/audit work, this step is optional by default. Use a lightweight brief only when coordination complexity justifies it, as defined in `docs/plans/00-plan-authoring-and-execution-guide.md`.
 
 ### C. Audit Periodically
 
@@ -173,7 +177,7 @@ Before implementation, explicitly decide how the work should be executed:
 - classify the task type
 - confirm the owner docs that control the work
 - check `docs/skills/README.md` for reusable method skills
-- record `Skill: <name>` or `Skill: none` in the plan where relevant
+- record `Skill: <name>` or `Skill: none` in the plan where relevant, or in the output artifact / brief for docs-only analysis work
 
 If no existing skill clearly fits, proceed with the normal docs-driven workflow instead of forcing a weak skill match.
 
@@ -182,6 +186,14 @@ If no existing skill clearly fits, proceed with the normal docs-driven workflow 
 Create a plan under `docs/plans/` only when the work needs an explicit closure contract: protected areas, cross-module behavior, user-visible behavior across surfaces, unresolved product/technical risk, multi-session execution, or proof that cannot be captured by a simple local change.
 
 The only no-plan path is a local low-risk change that affects very few files, has clear existing behavior or tests, and does not touch contracts, data/model shape, auth, permissions, integrations, deployment, cross-surface behavior, or stale-doc conflicts. Larger local edits should use the full-plan path in the plan guide.
+
+Docs-only `analysis / audit / review` work is also a normal no-separate-plan path when:
+
+- the task does not change code, model, config, or supported behavior
+- the main deliverable is an analysis, audit, review, or recommendation document
+- closure depends mainly on artifact quality and durable review evidence rather than staged execution
+
+In those cases, use the built-in lightweight task tracking by default. Create a lightweight brief only when durable coordination or handoff needs more structure.
 
 The plan should capture:
 
@@ -209,6 +221,8 @@ The audit should test:
 If the audit finds blocking issues, revise the plan and repeat the audit until no major objection remains.
 
 If structured plan or closure audits repeatedly miss important issues, escalate with `multi-dimensional-audit-prompt.md` or `open-ended-audit-prompt.md` instead of repeating the same narrow audit forever. Store the escalated audit under `docs/audits/` when its findings need future replay.
+
+For docs-only analysis/audit work, if a lightweight brief exists at all, one sanity-check review of the brief is usually enough. Repeated adversarial review should target the output artifact instead.
 
 ## Stage 9 - Implement Small Complete Slices
 

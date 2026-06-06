@@ -64,6 +64,13 @@ Record the current supported implementation baseline for `nop-app-mall`.
 - WeChat Pay (`app-mall-wx` module)
 - File storage (local or cloud)
 
+## Reporting And Notification Route
+
+- Reporting should prefer the platform `nop-report` module as the default implementation route when the business requirement is already settled and the app needs managed datasets, templates, or exportable report outputs.
+- Notification delivery should prefer platform integration capabilities instead of ad hoc channel code. In practice, `nop-integration` is the default route for email, SMS, and similar outbound channels.
+- App-layer design should stay at the business level: who receives which notification, from which business event, and what report view is required. Channel adapters, report-engine configuration, dataset wiring, retry strategy, and delivery integration details belong to architecture and implementation.
+- Current live evidence already shows SMS integration usage in `app-mall-service/src/main/java/app/mall/service/entity/LitemallAftersaleBizModel.java` via `io.nop.integration.api.sms.ISmsSender`. Additional channels such as email should follow the same integration-first pattern instead of introducing parallel bespoke notification infrastructure.
+
 ## Stable Rules
 
 - Module dependency order: codegen -> api -> dao -> service -> web -> app; wx/delta/meta are additional modules
@@ -72,6 +79,14 @@ Record the current supported implementation baseline for `nop-app-mall`.
 - AMIS views follow AMIS JSON conventions
 - Business logic in `*.xbiz.xml` and BizModel Java classes
 - SQL changes must align with XML model changes
+
+## Nop Implementation Defaults
+
+- Default decision order: business fact from local owner docs, then Nop implementation route from `../nop-entropy/docs-for-ai/00-start-here/application-project-defaults.md` and `../nop-entropy/docs-for-ai/02-core-guides/architecture-principles.md`.
+- Default technical order: `Model -> Delta -> Java`; see `../nop-entropy/docs-for-ai/02-core-guides/model-first-development.md`.
+- Standard entity services should stay on `CrudBizModel<T>` when possible; see `../nop-entropy/docs-for-ai/02-core-guides/service-layer.md`.
+- Standard CRUD should prefer generated/meta-driven behavior first. If CRUD needs extra pre/post handling, prefer `defaultPrepareSave(...)`, `defaultPrepareUpdate(...)`, `defaultPrepareQuery(...)`, `defaultPrepareDelete(...)`, or related hooks before creating heavier custom flows; see `../nop-entropy/docs-for-ai/03-runbooks/extend-crud-with-hooks.md`.
+- When customizing existing platform/app resources, prefer Delta overlays instead of direct modification; see `../nop-entropy/docs-for-ai/03-runbooks/prefer-delta-over-direct-modification.md`.
 
 ## Update Rule
 

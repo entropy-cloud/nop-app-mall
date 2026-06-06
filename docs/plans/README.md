@@ -3,6 +3,7 @@
 Use this directory for non-trivial implementation plans.
 
 - start from `00-plan-authoring-and-execution-guide.md`
+- docs-only `analysis / audit / review` work should not create a separate plan by default; follow the no-plan or lightweight-brief path in `00-plan-authoring-and-execution-guide.md`
 - keep each plan focused on one result surface
 - archive or supersede plans by status, not by deleting history
 - for small and medium projects, prefer `docs/plans/YYYY-MM-DD-topic-plan.md`
