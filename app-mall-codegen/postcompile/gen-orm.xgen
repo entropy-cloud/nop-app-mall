@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <c:script><![CDATA[
 // 根据ORM模型生成dao/entity/xbiz
-codeGenerator.withTargetDir("../").renderModel('../../model/app-mall.orm.xlsx','/nop/templates/orm', '/',$scope);
+codeGenerator.withTargetDir("../").renderModel('../../model/app-mall.orm.xml','/nop/templates/orm', '/',$scope);
 codeGenerator.withTargetDir("../app-mall-dao/src/main/java").renderModel('../../app-mall-dao/src/main/resources/_vfs/app/mall/orm/app.orm.xml',
 '/nop/templates/orm-entity','/',$scope);
 
-codeGenerator.withTargetDir("../app-mall-delta").renderModel('../../model/nop-auth-delta.orm.xlsx','/nop/templates/orm-delta', '/',$scope);
+codeGenerator.withTargetDir("../app-mall-delta").renderModel('../../model/nop-auth-delta.orm.xml','/nop/templates/orm-delta', '/',$scope);
 codeGenerator.withTargetDir("../app-mall-delta").renderModel('../../app-mall-delta/src/main/resources/_vfs/_delta/default/nop/auth/orm/app.orm.xml','/nop/templates/meta-delta', '/',$scope);
 ]]></c:script>

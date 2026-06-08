@@ -52,9 +52,9 @@
 
 - goods price：商品金额小计
 - freight price：基于当前运费策略计算出的配送费
-- coupon price：为未来优惠券支持预留的价格构件
-- groupon price：为未来团购支持预留的价格构件
-- integral price：积分抵扣金额，当前仅作预留
+- coupon price：订单在满足优惠券条件时形成的优惠金额构件
+- groupon price：订单在满足团购条件时形成的优惠金额构件
+- integral price：积分抵扣金额；当前如果未启用积分能力，则该金额保持为零
 - order price：叠加运费与优惠后的支付前金额
 - actual price：用户最终需要支付的金额
 

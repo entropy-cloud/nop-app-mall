@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<c:script>
+codeGenerator.withTplDir('/nop/templates/crud-api')
+    .withTargetDir("../app-mall-api/src/main/java")
+    .execute("/", { moduleId: "app/mall", apiPackageName: "app.mall.api" }, $scope);
+</c:script>

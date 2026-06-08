@@ -9,5 +9,15 @@ public class LitemallCart extends _LitemallCart{
     public LitemallCart(){
     }
 
+    public void increaseNumber(short delta) {
+        short current = getNumber() != null ? getNumber() : 0;
+        setNumber((short) (current + delta));
+    }
+
+    public void validateForCheckout() {
+        if (getNumber() == null || getNumber() <= 0) {
+            throw new IllegalStateException("cart.number is zero");
+        }
+    }
 
 }

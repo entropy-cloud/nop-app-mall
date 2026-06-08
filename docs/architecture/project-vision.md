@@ -51,6 +51,6 @@ nop-app-mall is a commercial-grade e-commerce reference application showcasing t
 
 - Keep this document stable and high level.
 - Do not turn it into a backlog.
-- Do not duplicate commercial baseline requirements from `docs/requirements/product-scope.md`.
+- Do not duplicate commercial baseline requirements from `docs/requirements/commercial-baseline.md`.
 - Do not duplicate app surfaces from `docs/design/app-overview.md`.
 - Move implementation sequencing into `docs/backlog/` or plans.
