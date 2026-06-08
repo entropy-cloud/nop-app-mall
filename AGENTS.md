@@ -103,6 +103,8 @@ The Nop Platform's authoritative development documentation lives at `../nop-entr
 - `@Inject` fields cannot be `private` in Nop's IoC container.
 - `@BizMutation` auto-wraps transactions; do not add `@Transactional` unless you need explicit propagation control.
 - For page customization, use the three-layer model (grid/form/page) with `bounded-merge` and `x:prototype` patterns.
+- **Cross-entity access**: within BizModel, always inject `I*Biz` interfaces for other entities. Use `IDaoProvider` / `IOrmTemplate` / `@SqlLibMapper` only when `I*Biz` cannot satisfy the requirement, and document the reason in a code comment. See `docs-for-ai/00-start-here/ai-defaults.md` anti-patterns table.
+- **Exception handling**: all business exceptions MUST extend `NopException` (directly or via module exception class). Never `extends RuntimeException` or `throws RuntimeException`. Use `ErrorCode` + `NopException` for public/GraphQL-facing errors (description in Chinese, i18n handles translation). For non-ErrorCode exceptions use English messages. See `docs-for-ai/02-core-guides/error-handling.md` before writing any throw statement.
 
 ## Read This First
 

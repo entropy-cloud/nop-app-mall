@@ -85,6 +85,7 @@ If unsure, use a full plan. If the task is clearly docs-only and the real risk i
     - For docs-only `analysis / audit` work, one sanity-check review of the brief is usually enough when a brief exists at all.
     - For docs-only `analysis / audit` work, repeated adversarial review should target the output artifact, not the planning artifact.
 13. **Non-degradable items** cannot be downgraded to non-blocking follow-ups: confirmed live defects, confirmed contract drift, confirmed owner-doc drift, and CI/lint rules already fixed in the repo.
+14. **Every phase must list `Reference Docs`.** The executor will read them before starting. If the phase does not require any platform docs beyond the global `Task Route` owner docs, write `none`. If the phase involves Nop platform features (BizModel, view.xml, ORM, delta, xbiz, etc.), the reference docs must cover the relevant `docs-for-ai/` guide — a bare `none` for a Nop-platform phase will fail plan audit.
 
 ### Anti-Slacking Rule
 
@@ -99,11 +100,12 @@ A `Follow-up` item must name the trigger condition that would promote it into sc
 1. Before implementation, record plan audit evidence.
 2. When you start a slice, update its `Status` to `in progress`.
 3. When you finish a slice, update its `Status` to `completed` and check off all its execution items and exit criteria.
-4. Before executing a phase, confirm the listed `Skill` still matches the task and available inputs. If not, update the plan before proceeding.
-5. If a slice changes the live baseline or public contract, its exit criteria must include the doc-update step. If no doc update is needed, write `No owner-doc update required` explicitly.
-6. Do not mark a slice complete because the function signature exists. Verify that the behavior, error handling, and test coverage land too.
-7. If an item cannot be completed, move it to `Deferred But Adjudicated` with classification and reason. Do not leave it unchecked in the execution list.
-8. Keep `docs/logs/` in sync with plan progress. A single aggregate log entry at plan closure is sufficient when all phases cover the same feature in one sprint; individual phase entries are required only when a phase spans a different day or a distinct deliverable.
+4. **Before executing a phase, read every doc listed in `Reference Docs`** for that phase. If the plan does not list any, check whether the `Task Route` section implies platform-doc reading (e.g. Nop platform features) — if so, add the missing reference docs before starting.
+5. Confirm the listed `Skill` still matches the task and available inputs. If not, update the plan before proceeding.
+6. If a slice changes the live baseline or public contract, its exit criteria must include the doc-update step. If no doc update is needed, write `No owner-doc update required` explicitly.
+7. Do not mark a slice complete because the function signature exists. Verify that the behavior, error handling, and test coverage land too.
+8. If an item cannot be completed, move it to `Deferred But Adjudicated` with classification and reason. Do not leave it unchecked in the execution list.
+9. Keep `docs/logs/` in sync with plan progress. A single aggregate log entry at plan closure is sufficient when all phases cover the same feature in one sprint; individual phase entries are required only when a phase spans a different day or a distinct deliverable.
 
 ## When Closing
 
@@ -134,6 +136,8 @@ If any of these fail, the plan stays open.
 - If the task later turns into real implementation work, promote the brief into a full plan instead of stretching the brief beyond its purpose.
 
 ## Template
+
+> **文件名规范**: 遵守 `docs/references/document-naming-and-timeliness.md`，使用 `docs/plans/YYYY-MM-DD-topic-plan.md` 格式。不允许无日期前缀的纯主题名。
 
 ```md
 # <plan-id> <title>
@@ -176,6 +180,7 @@ If any of these fail, the plan stays open.
 Status: planned
 Targets: `<paths>`
 Skill: `<skill-name | none>`
+Reference Docs: `<paths to platform docs or owner docs that the executor must read before starting this phase; list only docs that are new or non-obvious — if the required reading is already clear from the global Task Route, write none>`
 
 - Item Types: `Fix | Decision | Proof | Follow-up`
 - Prereqs: <phases or external dependencies that must complete first>
@@ -206,6 +211,7 @@ Exit Criteria:
 - [ ] verification has run (specify which commands; customize for visual/UX domains if needed)
 - [ ] no in-scope item downgraded to deferred/follow-up
 - [ ] plan audit passed before implementation
+- [ ] each phase has `Reference Docs` listed, and Nop-platform phases do not skip `docs-for-ai/` references
 - [ ] text consistency verified: status, phases, gates, and log all agree
 - [ ] closure audit was independent
 - [ ] closure evidence exists in files
