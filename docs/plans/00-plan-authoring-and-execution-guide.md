@@ -101,14 +101,15 @@ A `Follow-up` item must name the trigger condition that would promote it into sc
 ## When Executing
 
 1. Before implementation, record plan audit evidence.
-2. When you start a slice, update its `Status` to `in progress`.
-3. When you finish a slice, update its `Status` to `completed` and check off all its execution items and exit criteria.
-4. **MANDATORY PRE-READING GATE: Before executing ANY phase, read EVERY doc listed in `Required Pre-Reading` for that phase.** This is non-negotiable. Do NOT skip this step, do NOT rely on cached knowledge from previous sessions, and do NOT assume the listed docs merely repeat what you already know. After reading, confirm you understand the key rules (especially anti-patterns, safe APIs, and return-type conventions) before writing a single line of code. If the plan does not list any pre-reading, check whether the `Task Route` section implies platform-doc reading (e.g. Nop platform features) — if so, add the missing pre-reading before starting. **If a phase is delegated to a subagent, the subagent prompt MUST include the full `Required Pre-Reading` list and the instruction to read them before coding.**
-5. Confirm the listed `Skill` still matches the task and available inputs. If not, update the plan before proceeding.
-6. If a slice changes the live baseline or public contract, its exit criteria must include the doc-update step. If no doc update is needed, write `No owner-doc update required` explicitly.
-7. Do not mark a slice complete because the function signature exists. Verify that the behavior, error handling, and test coverage land too.
-8. If an item cannot be completed, move it to `Deferred But Adjudicated` with classification and reason. Do not leave it unchecked in the execution list.
-9. Keep `docs/logs/` in sync with plan progress. A single aggregate log entry at plan closure is sufficient when all phases cover the same feature in one sprint; individual phase entries are required only when a phase spans a different day or a distinct deliverable.
+2. **Roadmap update (plan creation):** If this plan implements a roadmap phase in `docs/backlog/implementation-roadmap.md`, update the phase status from `todo` to `planned`. Do this when the plan passes its plan audit and implementation is about to begin.
+3. When you start a slice, update its `Status` to `in progress`.
+4. When you finish a slice, update its `Status` to `completed` and check off all its execution items and exit criteria.
+6. **MANDATORY PRE-READING GATE: Before executing ANY phase, read EVERY doc listed in `Required Pre-Reading` for that phase.** This is non-negotiable. Do NOT skip this step, do NOT rely on cached knowledge from previous sessions, and do NOT assume the listed docs merely repeat what you already know. After reading, confirm you understand the key rules (especially anti-patterns, safe APIs, and return-type conventions) before writing a single line of code. If the plan does not list any pre-reading, check whether the `Task Route` section implies platform-doc reading (e.g. Nop platform features) — if so, add the missing pre-reading before starting. **If a phase is delegated to a subagent, the subagent prompt MUST include the full `Required Pre-Reading` list and the instruction to read them before coding.**
+7. Confirm the listed `Skill` still matches the task and available inputs. If not, update the plan before proceeding.
+8. If a slice changes the live baseline or public contract, its exit criteria must include the doc-update step. If no doc update is needed, write `No owner-doc update required` explicitly.
+9. Do not mark a slice complete because the function signature exists. Verify that the behavior, error handling, and test coverage land too.
+10. If an item cannot be completed, move it to `Deferred But Adjudicated` with classification and reason. Do not leave it unchecked in the execution list.
+11. Keep `docs/logs/` in sync with plan progress. A single aggregate log entry at plan closure is sufficient when all phases cover the same feature in one sprint; individual phase entries are required only when a phase spans a different day or a distinct deliverable.
 
 ## When Closing
 
@@ -129,6 +130,16 @@ Before setting `Plan Status: completed`, do all of the following:
 8. Record independent audit evidence in the plan's `Closure` section. Link a stored audit file only when the audit qualifies as a specialized, complex, disputed, reusable, or future-replay-worthy record.
 
 If any of these fail, the plan stays open.
+
+## When Closed
+
+After `Plan Status: completed` has been set and the closure audit has passed:
+
+1. **Roadmap update (closure):** If this plan implements a roadmap phase in `docs/backlog/implementation-roadmap.md`, update the phase status from `planned` to `done`. **Do this ONLY after the closure audit has passed — never before.** The roadmap must reflect only verified, audited completion, not implementation progress.
+2. If the plan reveals new platform reuse opportunities, update the roadmap's `Nop Platform Reuse` section.
+3. If the plan changes entity coverage (e.g., an entity was migrated to platform), update the roadmap's `Entity Coverage` section.
+
+**Critical rule: Never update the roadmap phase status before the closure audit passes.** Premature roadmap updates create false confidence. If the closure audit finds issues, the plan reopens and the roadmap must still show `planned`.
 
 ## Notes For Analysis / Audit Work
 
