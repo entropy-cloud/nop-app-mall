@@ -63,7 +63,7 @@ Do not jump from a feature request directly to code unless the route is already 
 5. Create or update a plan before implementation when the planning triggers below apply.
 6. Keep `docs/design/` and `docs/architecture/` focused on the stable supported product baseline, not migration history, roadmap sequencing, or execution status.
 7. Keep `docs/design/` focused on business semantics, workflows, and state meanings; keep persisted entities, field sets, and data dictionaries authoritative in `model/*.orm.xml` rather than duplicating them in prose.
-8. Keep logs short, dated, and append-only. After completing any significant code change, you MUST update the daily dev log at `docs/logs/{year}/{month}-{day}.md` (reverse chronological, see `docs/logs/00-log-writing-guide.md` for format).
+8. Keep logs short, dated, and append-only. After completing any significant code change, you MUST update the daily dev log at `docs/logs/{year}/{month}-{day}.md` (reverse chronological, see `docs/logs/00-log-writing-guide.md` for format). Changes to `nop-entropy` must be logged in `nop-entropy/ai-dev/logs/`, not in this project's `docs/logs/`.
 9. Record non-obvious regressions in `docs/bugs/`.
 10. If prototype and implementation diverge materially, capture the reason in `docs/retrospectives/` instead of silently moving on.
 11. Promote repeated process lessons into `docs/skills/` or `docs/audits/` only when the pattern is recurring enough to justify reuse.

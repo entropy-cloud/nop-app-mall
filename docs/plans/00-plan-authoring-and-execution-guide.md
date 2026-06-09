@@ -88,7 +88,8 @@ If unsure, use a full plan. If the task is clearly docs-only and the real risk i
     - For docs-only `analysis / audit` work, one sanity-check review of the brief is usually enough when a brief exists at all.
     - For docs-only `analysis / audit` work, repeated adversarial review should target the output artifact, not the planning artifact.
 13. **Non-degradable items** cannot be downgraded to non-blocking follow-ups: confirmed live defects, confirmed contract drift, confirmed owner-doc drift, and CI/lint rules already fixed in the repo.
-14. **Every phase must list `Required Pre-Reading`.** 计划阶段只列路径不读内容（执行上下文独立，不记得计划阶段读过的内容）。后端任务从 `00-required-reading-backend.md` 索引选路径，前端/页面任务从 `00-required-reading-frontend.md` 索引选路径。执行时必须读完全部列出文档后才能写代码（见 When Executing #6）。Nop 平台相关 phase 写 `none` 会 fail plan audit。
+14. **Every phase must list `Required Pre-Reading`.** 计划阶段只列路径不读内容（执行上下文独立，不记得计划阶段读过的内容）。后端任务从 `00-required-reading-backend.md` 索引选路径，前端/页面任务从 `00-required-reading-frontend.md` 索引选路径，单元/集成测试任务从 `00-required-reading-testing.md` 索引选路径，E2E 测试任务从 `00-required-reading-e2e-testing.md` 索引选路径。执行时必须读完全部列出文档后才能写代码（见 When Executing #6）。Nop 平台相关 phase 写 `none` 会 fail plan audit。
+15. **BizModel 方法必须通过 API 层测试。** 所有 `@BizMutation` 和 `@BizQuery` 方法必须通过 `IGraphQLEngine`（`JunitAutoTestCase` 录制回放）测试，不能只写实体级纯逻辑测试。`@BizAction` 方法无法通过 GraphQL 调用，如果需要测试则通过注入 `I*XxxBiz` 接口直接调用。含有新增 `@BizQuery`/`@BizMutation`/`@BizAction` 方法的 phase，其 `Required Pre-Reading` 必须包含 `00-required-reading-testing.md` 索引下的测试文档路径，测试项必须明确指定通过 `IGraphQLEngine` 还是 `I*XxxBiz` 接口测试。
 
 ### Anti-Slacking Rule
 
@@ -107,7 +108,7 @@ A `Follow-up` item must name the trigger condition that would promote it into sc
 6. **MANDATORY PRE-READING GATE: Before executing ANY phase, read EVERY doc listed in `Required Pre-Reading` for that phase.** 见 Minimum Rules #14。不跳过、不依赖缓存、不假设已知道。读完后确认理解 anti-patterns 和 safe API 再写代码。如果 phase 委托给 subagent，prompt 必须包含完整 `Required Pre-Reading` 列表和读后再编码的指令。
 7. Confirm the listed `Skill` still matches the task and available inputs. If not, update the plan before proceeding.
 8. If a slice changes the live baseline or public contract, its exit criteria must include the doc-update step. If no doc update is needed, write `No owner-doc update required` explicitly.
-9. Do not mark a slice complete because the function signature exists. Verify that the behavior, error handling, and test coverage land too.
+9. Do not mark a slice complete because the function signature exists. Verify that the behavior, error handling, and test coverage land too. **BizModel `@BizMutation`/`@BizQuery` 方法的测试必须通过 `IGraphQLEngine` 验证（`JunitAutoTestCase` 录制回放），不能只用实体级纯逻辑测试替代。`@BizAction` 方法需要测试时通过 `I*XxxBiz` 接口调用。**
 10. If an item cannot be completed, move it to `Deferred But Adjudicated` with classification and reason. Do not leave it unchecked in the execution list.
 11. Keep `docs/logs/` in sync with plan progress. A single aggregate log entry at plan closure is sufficient when all phases cover the same feature in one sprint; individual phase entries are required only when a phase spans a different day or a distinct deliverable.
 
@@ -194,7 +195,7 @@ After `Plan Status: completed` has been set and the closure audit has passed:
 Status: planned
 Targets: `<paths>`
 Skill: `<skill-name | none>`
-Required Pre-Reading: `<后端: 00-required-reading-backend.md 中的路径; 前端: 00-required-reading-frontend.md 中的路径; none if no platform docs needed>`
+Required Pre-Reading: `<后端: 00-required-reading-backend.md 中的路径; 前端: 00-required-reading-frontend.md 中的路径; 单元/集成测试: 00-required-reading-testing.md 中的路径; E2E测试: 00-required-reading-e2e-testing.md 中的路径; none if no platform docs needed>`
 
 - Item Types: `Fix | Decision | Proof | Follow-up`
 - Prereqs: <phases or external dependencies that must complete first>
@@ -211,6 +212,7 @@ Required Pre-Reading: `<后端: 00-required-reading-backend.md 中的路径; 前
 Exit Criteria:
 
 - [ ] <behavior lands — specify success and failure modes>
+- [ ] **API 测试：** 所有新增 `@BizMutation`/`@BizQuery` 方法通过 `IGraphQLEngine` 测试（`JunitAutoTestCase` 录制回放）；`@BizAction` 方法通过 `I*XxxBiz` 接口测试
 - [ ] <relevant docs updated, or No owner-doc update required>
 - [ ] `docs/logs/` updated
 
@@ -225,6 +227,7 @@ Exit Criteria:
 - [ ] in-scope behavior is complete
 - [ ] relevant docs are aligned
 - [ ] verification has run (specify which commands; customize for visual/UX domains if needed)
+- [ ] all new `@BizMutation`/`@BizQuery` methods tested via `IGraphQLEngine` (not entity-level unit tests only); `@BizAction` methods tested via `I*XxxBiz` interface if applicable
 - [ ] no in-scope item downgraded to deferred/follow-up
 - [ ] plan audit passed before implementation
 - [ ] each phase has `Required Pre-Reading` listed, and Nop-platform phases do not skip `docs-for-ai/` references
