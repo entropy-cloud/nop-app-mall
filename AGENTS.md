@@ -31,6 +31,11 @@ Read `docs/process/application-development-workflow.md` when planning or workflo
 | change a page or view | relevant design owner doc | AMIS `.view.xml` files under `app-mall-web` |
 | review a planned or completed slice | relevant plan under `docs/plans/` | plan/closure audit prompts; ordinary audit evidence stays in the plan |
 | run or verify the project | `docs/context/project-context.md` | `docs/context/codebase-map.md` |
+| draft, execute, or audit a plan under `docs/plans/` | `docs/plans/00-plan-authoring-and-execution-guide.md` | `docs/logs/00-log-writing-guide.md` |
+
+### Plan Authoring And Execution
+
+When creating, revising, executing, or auditing a file under `docs/plans/`, you MUST read `docs/plans/00-plan-authoring-and-execution-guide.md` first. Plans are execution docs with explicit status, scope, exit criteria, and validation checklists. Tick off checklist items as you complete them. Re-audit the live repo before claiming completion.
 
 ## Task Routing
 
