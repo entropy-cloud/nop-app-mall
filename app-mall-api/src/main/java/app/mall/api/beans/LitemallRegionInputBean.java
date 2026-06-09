@@ -12,16 +12,16 @@
     public class LitemallRegionInputBean extends CrudInputBase {
 
     
-        private Integer _pid;
+        private String _pid;
 
     
         @PropMeta(propId=2)
     
-        public Integer getPid(){
+        public String getPid(){
             return _pid;
         }
 
-        public void setPid(Integer value){
+        public void setPid(String value){
             this._pid = value;
         }
 

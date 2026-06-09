@@ -12,16 +12,16 @@
     public class LitemallPermissionInputBean extends CrudInputBase {
 
     
-        private Integer _roleId;
+        private String _roleId;
 
     
         @PropMeta(propId=2)
     
-        public Integer getRoleId(){
+        public String getRoleId(){
             return _roleId;
         }
 
-        public void setRoleId(Integer value){
+        public void setRoleId(String value){
             this._roleId = value;
         }
 

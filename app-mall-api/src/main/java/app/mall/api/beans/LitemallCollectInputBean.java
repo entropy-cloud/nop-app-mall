@@ -12,30 +12,30 @@
     public class LitemallCollectInputBean extends CrudInputBase {
 
     
-        private Integer _userId;
+        private String _userId;
 
     
         @PropMeta(propId=2)
     
-        public Integer getUserId(){
+        public String getUserId(){
             return _userId;
         }
 
-        public void setUserId(Integer value){
+        public void setUserId(String value){
             this._userId = value;
         }
 
 
-        private Integer _valueId;
+        private String _valueId;
 
     
         @PropMeta(propId=3)
     
-        public Integer getValueId(){
+        public String getValueId(){
             return _valueId;
         }
 
-        public void setValueId(Integer value){
+        public void setValueId(String value){
             this._valueId = value;
         }
 

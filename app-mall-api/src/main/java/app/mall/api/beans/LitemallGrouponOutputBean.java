@@ -13,72 +13,72 @@
     public class LitemallGrouponOutputBean {
 
     
-        private Integer _id;
+        private String _id;
 
     
         @PropMeta(propId=1)
     
-        public Integer getId(){
+        public String getId(){
             return _id;
         }
 
-        public void setId(Integer value){
+        public void setId(String value){
             this._id = value;
         }
 
 
-        private Integer _orderId;
+        private String _orderId;
 
     
         @PropMeta(propId=2)
     
-        public Integer getOrderId(){
+        public String getOrderId(){
             return _orderId;
         }
 
-        public void setOrderId(Integer value){
+        public void setOrderId(String value){
             this._orderId = value;
         }
 
 
-        private Integer _grouponId;
+        private String _grouponId;
 
     
         @PropMeta(propId=3)
     
-        public Integer getGrouponId(){
+        public String getGrouponId(){
             return _grouponId;
         }
 
-        public void setGrouponId(Integer value){
+        public void setGrouponId(String value){
             this._grouponId = value;
         }
 
 
-        private Integer _rulesId;
+        private String _rulesId;
 
     
         @PropMeta(propId=4)
     
-        public Integer getRulesId(){
+        public String getRulesId(){
             return _rulesId;
         }
 
-        public void setRulesId(Integer value){
+        public void setRulesId(String value){
             this._rulesId = value;
         }
 
 
-        private Integer _userId;
+        private String _userId;
 
     
         @PropMeta(propId=5)
     
-        public Integer getUserId(){
+        public String getUserId(){
             return _userId;
         }
 
-        public void setUserId(Integer value){
+        public void setUserId(String value){
             this._userId = value;
         }
 
@@ -97,16 +97,16 @@
         }
 
 
-        private Integer _creatorUserId;
+        private String _creatorUserId;
 
     
         @PropMeta(propId=7)
     
-        public Integer getCreatorUserId(){
+        public String getCreatorUserId(){
             return _creatorUserId;
         }
 
-        public void setCreatorUserId(Integer value){
+        public void setCreatorUserId(String value){
             this._creatorUserId = value;
         }
 

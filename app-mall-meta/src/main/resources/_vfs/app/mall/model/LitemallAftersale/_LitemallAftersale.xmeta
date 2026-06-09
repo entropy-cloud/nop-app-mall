@@ -22,7 +22,7 @@
     <props>
         <prop name="id" displayName="Id" propId="1" tagSet="seq" mandatory="true" queryable="true" sortable="true"
               insertable="false" updatable="false" ui:show="R">
-            <schema type="java.lang.Integer"/>
+            <schema type="java.lang.String"/>
         </prop>
         <prop name="aftersaleSn" displayName="售后编号" propId="2" tagSet="disp" queryable="true" sortable="true"
               insertable="true" updatable="true">
@@ -30,11 +30,11 @@
         </prop>
         <prop name="orderId" displayName="订单ID" propId="3" mandatory="true" queryable="true" sortable="true"
               insertable="true" updatable="true" ext:relation="order">
-            <schema type="java.lang.Integer"/>
+            <schema type="java.lang.String"/>
         </prop>
         <prop name="userId" displayName="用户ID" propId="4" mandatory="true" queryable="true" sortable="true"
               insertable="true" updatable="true" ext:relation="user">
-            <schema type="java.lang.Integer"/>
+            <schema type="java.lang.String"/>
         </prop>
         <prop name="type" displayName="售后类型" propId="5" queryable="true" sortable="true" insertable="true"
               updatable="true">

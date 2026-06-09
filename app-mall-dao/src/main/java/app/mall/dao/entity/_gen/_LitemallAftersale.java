@@ -143,16 +143,16 @@ public class _LitemallAftersale extends DynamicOrmEntity{
 
     
     /* Id: ID */
-    private java.lang.Integer _id;
+    private java.lang.String _id;
     
     /* 售后编号: AFTERSALE_SN */
     private java.lang.String _aftersaleSn;
     
     /* 订单ID: ORDER_ID */
-    private java.lang.Integer _orderId;
+    private java.lang.String _orderId;
     
     /* 用户ID: USER_ID */
-    private java.lang.Integer _userId;
+    private java.lang.String _userId;
     
     /* 售后类型: TYPE */
     private java.lang.Short _type;
@@ -312,9 +312,9 @@ public class _LitemallAftersale extends DynamicOrmEntity{
         switch(propId){
         
             case PROP_ID_id:{
-               java.lang.Integer typedValue = null;
+               java.lang.String typedValue = null;
                if(value != null){
-                   typedValue = ConvertHelper.toInteger(value,
+                   typedValue = ConvertHelper.toString(value,
                        err-> newTypeConversionError(PROP_NAME_id));
                }
                setId(typedValue);
@@ -332,9 +332,9 @@ public class _LitemallAftersale extends DynamicOrmEntity{
             }
         
             case PROP_ID_orderId:{
-               java.lang.Integer typedValue = null;
+               java.lang.String typedValue = null;
                if(value != null){
-                   typedValue = ConvertHelper.toInteger(value,
+                   typedValue = ConvertHelper.toString(value,
                        err-> newTypeConversionError(PROP_NAME_orderId));
                }
                setOrderId(typedValue);
@@ -342,9 +342,9 @@ public class _LitemallAftersale extends DynamicOrmEntity{
             }
         
             case PROP_ID_userId:{
-               java.lang.Integer typedValue = null;
+               java.lang.String typedValue = null;
                if(value != null){
-                   typedValue = ConvertHelper.toInteger(value,
+                   typedValue = ConvertHelper.toString(value,
                        err-> newTypeConversionError(PROP_NAME_userId));
                }
                setUserId(typedValue);
@@ -462,7 +462,7 @@ public class _LitemallAftersale extends DynamicOrmEntity{
         
             case PROP_ID_id:{
                onInitProp(propId);
-               this._id = (java.lang.Integer)value;
+               this._id = (java.lang.String)value;
                orm_id(); // 如果是设置主键字段，则触发watcher
                break;
             }
@@ -476,14 +476,14 @@ public class _LitemallAftersale extends DynamicOrmEntity{
         
             case PROP_ID_orderId:{
                onInitProp(propId);
-               this._orderId = (java.lang.Integer)value;
+               this._orderId = (java.lang.String)value;
                
                break;
             }
         
             case PROP_ID_userId:{
                onInitProp(propId);
-               this._userId = (java.lang.Integer)value;
+               this._userId = (java.lang.String)value;
                
                break;
             }
@@ -567,7 +567,7 @@ public class _LitemallAftersale extends DynamicOrmEntity{
     /**
      * Id: ID
      */
-    public final java.lang.Integer getId(){
+    public final java.lang.String getId(){
          onPropGet(PROP_ID_id);
          return _id;
     }
@@ -575,7 +575,7 @@ public class _LitemallAftersale extends DynamicOrmEntity{
     /**
      * Id: ID
      */
-    public final void setId(java.lang.Integer value){
+    public final void setId(java.lang.String value){
         if(onPropSet(PROP_ID_id,value)){
             this._id = value;
             internalClearRefs(PROP_ID_id);
@@ -605,7 +605,7 @@ public class _LitemallAftersale extends DynamicOrmEntity{
     /**
      * 订单ID: ORDER_ID
      */
-    public final java.lang.Integer getOrderId(){
+    public final java.lang.String getOrderId(){
          onPropGet(PROP_ID_orderId);
          return _orderId;
     }
@@ -613,7 +613,7 @@ public class _LitemallAftersale extends DynamicOrmEntity{
     /**
      * 订单ID: ORDER_ID
      */
-    public final void setOrderId(java.lang.Integer value){
+    public final void setOrderId(java.lang.String value){
         if(onPropSet(PROP_ID_orderId,value)){
             this._orderId = value;
             internalClearRefs(PROP_ID_orderId);
@@ -624,7 +624,7 @@ public class _LitemallAftersale extends DynamicOrmEntity{
     /**
      * 用户ID: USER_ID
      */
-    public final java.lang.Integer getUserId(){
+    public final java.lang.String getUserId(){
          onPropGet(PROP_ID_userId);
          return _userId;
     }
@@ -632,7 +632,7 @@ public class _LitemallAftersale extends DynamicOrmEntity{
     /**
      * 用户ID: USER_ID
      */
-    public final void setUserId(java.lang.Integer value){
+    public final void setUserId(java.lang.String value){
         if(onPropSet(PROP_ID_userId,value)){
             this._userId = value;
             internalClearRefs(PROP_ID_userId);

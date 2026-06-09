@@ -26,30 +26,30 @@
         }
 
 
-        private Integer _orderId;
+        private String _orderId;
 
     
         @PropMeta(propId=3)
     
-        public Integer getOrderId(){
+        public String getOrderId(){
             return _orderId;
         }
 
-        public void setOrderId(Integer value){
+        public void setOrderId(String value){
             this._orderId = value;
         }
 
 
-        private Integer _userId;
+        private String _userId;
 
     
         @PropMeta(propId=4)
     
-        public Integer getUserId(){
+        public String getUserId(){
             return _userId;
         }
 
-        public void setUserId(Integer value){
+        public void setUserId(String value){
             this._userId = value;
         }
 

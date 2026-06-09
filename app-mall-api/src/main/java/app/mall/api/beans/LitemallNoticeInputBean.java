@@ -40,16 +40,16 @@
         }
 
 
-        private Integer _adminId;
+        private String _adminId;
 
     
         @PropMeta(propId=4)
     
-        public Integer getAdminId(){
+        public String getAdminId(){
             return _adminId;
         }
 
-        public void setAdminId(Integer value){
+        public void setAdminId(String value){
             this._adminId = value;
         }
 

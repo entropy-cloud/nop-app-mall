@@ -14,30 +14,30 @@
     public class LitemallRegionOutputBean {
 
     
-        private Integer _id;
+        private String _id;
 
     
         @PropMeta(propId=1)
     
-        public Integer getId(){
+        public String getId(){
             return _id;
         }
 
-        public void setId(Integer value){
+        public void setId(String value){
             this._id = value;
         }
 
 
-        private Integer _pid;
+        private String _pid;
 
     
         @PropMeta(propId=2)
     
-        public Integer getPid(){
+        public String getPid(){
             return _pid;
         }
 
-        public void setPid(Integer value){
+        public void setPid(String value){
             this._pid = value;
         }
 

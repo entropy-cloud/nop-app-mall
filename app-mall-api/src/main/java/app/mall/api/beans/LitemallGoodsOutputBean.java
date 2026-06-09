@@ -14,16 +14,16 @@
     public class LitemallGoodsOutputBean {
 
     
-        private Integer _id;
+        private String _id;
 
     
         @PropMeta(propId=1)
     
-        public Integer getId(){
+        public String getId(){
             return _id;
         }
 
-        public void setId(Integer value){
+        public void setId(String value){
             this._id = value;
         }
 
@@ -56,30 +56,30 @@
         }
 
 
-        private Integer _categoryId;
+        private String _categoryId;
 
     
         @PropMeta(propId=4)
     
-        public Integer getCategoryId(){
+        public String getCategoryId(){
             return _categoryId;
         }
 
-        public void setCategoryId(Integer value){
+        public void setCategoryId(String value){
             this._categoryId = value;
         }
 
 
-        private Integer _brandId;
+        private String _brandId;
 
     
         @PropMeta(propId=5)
     
-        public Integer getBrandId(){
+        public String getBrandId(){
             return _brandId;
         }
 
-        public void setBrandId(Integer value){
+        public void setBrandId(String value){
             this._brandId = value;
         }
 

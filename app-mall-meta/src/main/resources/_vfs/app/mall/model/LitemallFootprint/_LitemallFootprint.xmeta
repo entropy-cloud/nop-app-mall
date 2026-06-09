@@ -20,15 +20,15 @@
     <props>
         <prop name="id" displayName="Id" propId="1" tagSet="seq" mandatory="true" queryable="true" sortable="true"
               insertable="false" updatable="false" ui:show="R">
-            <schema type="java.lang.Integer"/>
+            <schema type="java.lang.String"/>
         </prop>
         <prop name="userId" displayName="用户ID" propId="2" mandatory="true" queryable="true" sortable="true"
               insertable="true" updatable="true" ext:relation="user">
-            <schema type="java.lang.Integer"/>
+            <schema type="java.lang.String"/>
         </prop>
         <prop name="goodsId" displayName="浏览商品ID" propId="3" mandatory="true" queryable="true" sortable="true"
               insertable="true" updatable="true" ext:relation="goods">
-            <schema type="java.lang.Integer"/>
+            <schema type="java.lang.String"/>
         </prop>
         <prop name="addTime" displayName="创建时间" propId="4" queryable="true" sortable="true" insertable="false"
               updatable="false" internal="true" ui:show="X">

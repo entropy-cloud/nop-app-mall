@@ -20,11 +20,11 @@
     <props>
         <prop name="id" displayName="Id" propId="1" tagSet="seq" mandatory="true" queryable="true" sortable="true"
               insertable="false" updatable="false" ui:show="R">
-            <schema type="java.lang.Integer"/>
+            <schema type="java.lang.String"/>
         </prop>
         <prop name="noticeId" displayName="通知ID" propId="2" queryable="true" sortable="true" insertable="true"
               updatable="true">
-            <schema type="java.lang.Integer"/>
+            <schema type="java.lang.String"/>
         </prop>
         <prop name="noticeTitle" displayName="通知标题" propId="3" queryable="true" sortable="true" insertable="true"
               updatable="true">
@@ -32,7 +32,7 @@
         </prop>
         <prop name="adminId" displayName="管理员ID" propId="4" queryable="true" sortable="true" insertable="true"
               updatable="true">
-            <schema type="java.lang.Integer"/>
+            <schema type="java.lang.String"/>
         </prop>
         <prop name="readTime" displayName="阅读时间" propId="5" queryable="true" sortable="true" insertable="true"
               updatable="true">

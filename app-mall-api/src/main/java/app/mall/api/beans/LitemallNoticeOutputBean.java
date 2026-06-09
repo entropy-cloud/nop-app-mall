@@ -13,16 +13,16 @@
     public class LitemallNoticeOutputBean {
 
     
-        private Integer _id;
+        private String _id;
 
     
         @PropMeta(propId=1)
     
-        public Integer getId(){
+        public String getId(){
             return _id;
         }
 
-        public void setId(Integer value){
+        public void setId(String value){
             this._id = value;
         }
 
@@ -55,16 +55,16 @@
         }
 
 
-        private Integer _adminId;
+        private String _adminId;
 
     
         @PropMeta(propId=4)
     
-        public Integer getAdminId(){
+        public String getAdminId(){
             return _adminId;
         }
 
-        public void setAdminId(Integer value){
+        public void setAdminId(String value){
             this._adminId = value;
         }
 

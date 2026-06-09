@@ -12,30 +12,30 @@
     public class LitemallCartInputBean extends CrudInputBase {
 
     
-        private Integer _userId;
+        private String _userId;
 
     
         @PropMeta(propId=2)
     
-        public Integer getUserId(){
+        public String getUserId(){
             return _userId;
         }
 
-        public void setUserId(Integer value){
+        public void setUserId(String value){
             this._userId = value;
         }
 
 
-        private Integer _goodsId;
+        private String _goodsId;
 
     
         @PropMeta(propId=3)
     
-        public Integer getGoodsId(){
+        public String getGoodsId(){
             return _goodsId;
         }
 
-        public void setGoodsId(Integer value){
+        public void setGoodsId(String value){
             this._goodsId = value;
         }
 
@@ -68,16 +68,16 @@
         }
 
 
-        private Integer _productId;
+        private String _productId;
 
     
         @PropMeta(propId=6)
     
-        public Integer getProductId(){
+        public String getProductId(){
             return _productId;
         }
 
-        public void setProductId(Integer value){
+        public void setProductId(String value){
             this._productId = value;
         }
 

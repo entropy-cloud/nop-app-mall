@@ -13,30 +13,30 @@
     public class LitemallSearchHistoryOutputBean {
 
     
-        private Integer _id;
+        private String _id;
 
     
         @PropMeta(propId=1)
     
-        public Integer getId(){
+        public String getId(){
             return _id;
         }
 
-        public void setId(Integer value){
+        public void setId(String value){
             this._id = value;
         }
 
 
-        private Integer _userId;
+        private String _userId;
 
     
         @PropMeta(propId=2)
     
-        public Integer getUserId(){
+        public String getUserId(){
             return _userId;
         }
 
-        public void setUserId(Integer value){
+        public void setUserId(String value){
             this._userId = value;
         }
 

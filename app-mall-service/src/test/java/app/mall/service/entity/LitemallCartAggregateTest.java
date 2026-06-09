@@ -18,8 +18,8 @@ public class LitemallCartAggregateTest {
     @Test
     public void testValidateForCheckout() {
         LitemallCart cart = new LitemallCart();
-        cart.setUserId(1);
-        cart.setProductId(2);
+        cart.setUserId("1");
+        cart.setProductId("2");
         cart.setNumber((short) 1);
         assertDoesNotThrow(cart::validateForCheckout);
         cart.setNumber((short) 0);

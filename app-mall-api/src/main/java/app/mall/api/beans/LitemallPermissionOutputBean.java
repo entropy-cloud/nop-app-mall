@@ -13,30 +13,30 @@
     public class LitemallPermissionOutputBean {
 
     
-        private Integer _id;
+        private String _id;
 
     
         @PropMeta(propId=1)
     
-        public Integer getId(){
+        public String getId(){
             return _id;
         }
 
-        public void setId(Integer value){
+        public void setId(String value){
             this._id = value;
         }
 
 
-        private Integer _roleId;
+        private String _roleId;
 
     
         @PropMeta(propId=2)
     
-        public Integer getRoleId(){
+        public String getRoleId(){
             return _roleId;
         }
 
-        public void setRoleId(Integer value){
+        public void setRoleId(String value){
             this._roleId = value;
         }
 

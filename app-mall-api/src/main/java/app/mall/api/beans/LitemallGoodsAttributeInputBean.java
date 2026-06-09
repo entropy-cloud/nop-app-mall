@@ -12,16 +12,16 @@
     public class LitemallGoodsAttributeInputBean extends CrudInputBase {
 
     
-        private Integer _goodsId;
+        private String _goodsId;
 
     
         @PropMeta(propId=2)
     
-        public Integer getGoodsId(){
+        public String getGoodsId(){
             return _goodsId;
         }
 
-        public void setGoodsId(Integer value){
+        public void setGoodsId(String value){
             this._goodsId = value;
         }
 

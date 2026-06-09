@@ -116,9 +116,9 @@ public class LitemallAftersaleBizModel extends CrudBizModel<LitemallAftersale> i
         if (entity.getType() == AppMallDaoConstants.AFTERSALE_TYPE_GOODS_REQUIRED) {
             Set<LitemallOrderGoods> orderGoodsList = entity.getOrder().getOrderGoods();
             for (LitemallOrderGoods orderGoods : orderGoodsList) {
-                Integer productId = orderGoods.getProductId();
+                String productId = orderGoods.getProductId();
                 Short number = orderGoods.getNumber();
-                goodsProductMapper.addStock(String.valueOf(productId), number);
+                goodsProductMapper.addStock(productId, number);
             }
         }
 

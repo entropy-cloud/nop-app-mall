@@ -13,30 +13,30 @@
     public class LitemallGoodsSpecificationOutputBean {
 
     
-        private Integer _id;
+        private String _id;
 
     
         @PropMeta(propId=1)
     
-        public Integer getId(){
+        public String getId(){
             return _id;
         }
 
-        public void setId(Integer value){
+        public void setId(String value){
             this._id = value;
         }
 
 
-        private Integer _goodsId;
+        private String _goodsId;
 
     
         @PropMeta(propId=2)
     
-        public Integer getGoodsId(){
+        public String getGoodsId(){
             return _goodsId;
         }
 
-        public void setGoodsId(Integer value){
+        public void setGoodsId(String value){
             this._goodsId = value;
         }
 

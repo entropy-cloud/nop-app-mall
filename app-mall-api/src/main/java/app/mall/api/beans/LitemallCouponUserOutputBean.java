@@ -13,44 +13,44 @@
     public class LitemallCouponUserOutputBean {
 
     
-        private Integer _id;
+        private String _id;
 
     
         @PropMeta(propId=1)
     
-        public Integer getId(){
+        public String getId(){
             return _id;
         }
 
-        public void setId(Integer value){
+        public void setId(String value){
             this._id = value;
         }
 
 
-        private Integer _userId;
+        private String _userId;
 
     
         @PropMeta(propId=2)
     
-        public Integer getUserId(){
+        public String getUserId(){
             return _userId;
         }
 
-        public void setUserId(Integer value){
+        public void setUserId(String value){
             this._userId = value;
         }
 
 
-        private Integer _couponId;
+        private String _couponId;
 
     
         @PropMeta(propId=3)
     
-        public Integer getCouponId(){
+        public String getCouponId(){
             return _couponId;
         }
 
-        public void setCouponId(Integer value){
+        public void setCouponId(String value){
             this._couponId = value;
         }
 
@@ -123,16 +123,16 @@
         }
 
 
-        private Integer _orderId;
+        private String _orderId;
 
     
         @PropMeta(propId=8)
     
-        public Integer getOrderId(){
+        public String getOrderId(){
             return _orderId;
         }
 
-        public void setOrderId(Integer value){
+        public void setOrderId(String value){
             this._orderId = value;
         }
 

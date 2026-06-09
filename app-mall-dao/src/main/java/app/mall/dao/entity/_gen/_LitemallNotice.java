@@ -85,7 +85,7 @@ public class _LitemallNotice extends DynamicOrmEntity{
 
     
     /* Id: ID */
-    private java.lang.Integer _id;
+    private java.lang.String _id;
     
     /* 通知标题: TITLE */
     private java.lang.String _title;
@@ -94,7 +94,7 @@ public class _LitemallNotice extends DynamicOrmEntity{
     private java.lang.String _content;
     
     /* 创建通知的管理员ID: ADMIN_ID */
-    private java.lang.Integer _adminId;
+    private java.lang.String _adminId;
     
     /* 创建时间: ADD_TIME */
     private java.time.LocalDateTime _addTime;
@@ -212,9 +212,9 @@ public class _LitemallNotice extends DynamicOrmEntity{
         switch(propId){
         
             case PROP_ID_id:{
-               java.lang.Integer typedValue = null;
+               java.lang.String typedValue = null;
                if(value != null){
-                   typedValue = ConvertHelper.toInteger(value,
+                   typedValue = ConvertHelper.toString(value,
                        err-> newTypeConversionError(PROP_NAME_id));
                }
                setId(typedValue);
@@ -242,9 +242,9 @@ public class _LitemallNotice extends DynamicOrmEntity{
             }
         
             case PROP_ID_adminId:{
-               java.lang.Integer typedValue = null;
+               java.lang.String typedValue = null;
                if(value != null){
-                   typedValue = ConvertHelper.toInteger(value,
+                   typedValue = ConvertHelper.toString(value,
                        err-> newTypeConversionError(PROP_NAME_adminId));
                }
                setAdminId(typedValue);
@@ -292,7 +292,7 @@ public class _LitemallNotice extends DynamicOrmEntity{
         
             case PROP_ID_id:{
                onInitProp(propId);
-               this._id = (java.lang.Integer)value;
+               this._id = (java.lang.String)value;
                orm_id(); // 如果是设置主键字段，则触发watcher
                break;
             }
@@ -313,7 +313,7 @@ public class _LitemallNotice extends DynamicOrmEntity{
         
             case PROP_ID_adminId:{
                onInitProp(propId);
-               this._adminId = (java.lang.Integer)value;
+               this._adminId = (java.lang.String)value;
                
                break;
             }
@@ -348,7 +348,7 @@ public class _LitemallNotice extends DynamicOrmEntity{
     /**
      * Id: ID
      */
-    public final java.lang.Integer getId(){
+    public final java.lang.String getId(){
          onPropGet(PROP_ID_id);
          return _id;
     }
@@ -356,7 +356,7 @@ public class _LitemallNotice extends DynamicOrmEntity{
     /**
      * Id: ID
      */
-    public final void setId(java.lang.Integer value){
+    public final void setId(java.lang.String value){
         if(onPropSet(PROP_ID_id,value)){
             this._id = value;
             internalClearRefs(PROP_ID_id);
@@ -405,7 +405,7 @@ public class _LitemallNotice extends DynamicOrmEntity{
     /**
      * 创建通知的管理员ID: ADMIN_ID
      */
-    public final java.lang.Integer getAdminId(){
+    public final java.lang.String getAdminId(){
          onPropGet(PROP_ID_adminId);
          return _adminId;
     }
@@ -413,7 +413,7 @@ public class _LitemallNotice extends DynamicOrmEntity{
     /**
      * 创建通知的管理员ID: ADMIN_ID
      */
-    public final void setAdminId(java.lang.Integer value){
+    public final void setAdminId(java.lang.String value){
         if(onPropSet(PROP_ID_adminId,value)){
             this._adminId = value;
             internalClearRefs(PROP_ID_adminId);

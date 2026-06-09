@@ -12,16 +12,16 @@
     public class LitemallSearchHistoryInputBean extends CrudInputBase {
 
     
-        private Integer _userId;
+        private String _userId;
 
     
         @PropMeta(propId=2)
     
-        public Integer getUserId(){
+        public String getUserId(){
             return _userId;
         }
 
-        public void setUserId(Integer value){
+        public void setUserId(String value){
             this._userId = value;
         }
 

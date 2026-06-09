@@ -22,7 +22,7 @@
     <props>
         <prop name="id" displayName="Id" propId="1" tagSet="seq" mandatory="true" queryable="true" sortable="true"
               insertable="false" updatable="false" ui:show="R">
-            <schema type="java.lang.Integer"/>
+            <schema type="java.lang.String"/>
         </prop>
         <prop name="question" displayName="问题标题" propId="2" tagSet="disp" queryable="true" sortable="true"
               insertable="true" updatable="true">

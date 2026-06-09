@@ -12,16 +12,16 @@
     public class LitemallNoticeAdminInputBean extends CrudInputBase {
 
     
-        private Integer _noticeId;
+        private String _noticeId;
 
     
         @PropMeta(propId=2)
     
-        public Integer getNoticeId(){
+        public String getNoticeId(){
             return _noticeId;
         }
 
-        public void setNoticeId(Integer value){
+        public void setNoticeId(String value){
             this._noticeId = value;
         }
 
@@ -40,16 +40,16 @@
         }
 
 
-        private Integer _adminId;
+        private String _adminId;
 
     
         @PropMeta(propId=4)
     
-        public Integer getAdminId(){
+        public String getAdminId(){
             return _adminId;
         }
 
-        public void setAdminId(Integer value){
+        public void setAdminId(String value){
             this._adminId = value;
         }
 

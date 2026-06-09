@@ -119,10 +119,10 @@ public class _LitemallGrouponRules extends DynamicOrmEntity{
 
     
     /* Id: ID */
-    private java.lang.Integer _id;
+    private java.lang.String _id;
     
     /* 商品ID: GOODS_ID */
-    private java.lang.Integer _goodsId;
+    private java.lang.String _goodsId;
     
     /* 商品名称: GOODS_NAME */
     private java.lang.String _goodsName;
@@ -270,9 +270,9 @@ public class _LitemallGrouponRules extends DynamicOrmEntity{
         switch(propId){
         
             case PROP_ID_id:{
-               java.lang.Integer typedValue = null;
+               java.lang.String typedValue = null;
                if(value != null){
-                   typedValue = ConvertHelper.toInteger(value,
+                   typedValue = ConvertHelper.toString(value,
                        err-> newTypeConversionError(PROP_NAME_id));
                }
                setId(typedValue);
@@ -280,9 +280,9 @@ public class _LitemallGrouponRules extends DynamicOrmEntity{
             }
         
             case PROP_ID_goodsId:{
-               java.lang.Integer typedValue = null;
+               java.lang.String typedValue = null;
                if(value != null){
-                   typedValue = ConvertHelper.toInteger(value,
+                   typedValue = ConvertHelper.toString(value,
                        err-> newTypeConversionError(PROP_NAME_goodsId));
                }
                setGoodsId(typedValue);
@@ -390,14 +390,14 @@ public class _LitemallGrouponRules extends DynamicOrmEntity{
         
             case PROP_ID_id:{
                onInitProp(propId);
-               this._id = (java.lang.Integer)value;
+               this._id = (java.lang.String)value;
                orm_id(); // 如果是设置主键字段，则触发watcher
                break;
             }
         
             case PROP_ID_goodsId:{
                onInitProp(propId);
-               this._goodsId = (java.lang.Integer)value;
+               this._goodsId = (java.lang.String)value;
                
                break;
             }
@@ -474,7 +474,7 @@ public class _LitemallGrouponRules extends DynamicOrmEntity{
     /**
      * Id: ID
      */
-    public final java.lang.Integer getId(){
+    public final java.lang.String getId(){
          onPropGet(PROP_ID_id);
          return _id;
     }
@@ -482,7 +482,7 @@ public class _LitemallGrouponRules extends DynamicOrmEntity{
     /**
      * Id: ID
      */
-    public final void setId(java.lang.Integer value){
+    public final void setId(java.lang.String value){
         if(onPropSet(PROP_ID_id,value)){
             this._id = value;
             internalClearRefs(PROP_ID_id);
@@ -493,7 +493,7 @@ public class _LitemallGrouponRules extends DynamicOrmEntity{
     /**
      * 商品ID: GOODS_ID
      */
-    public final java.lang.Integer getGoodsId(){
+    public final java.lang.String getGoodsId(){
          onPropGet(PROP_ID_goodsId);
          return _goodsId;
     }
@@ -501,7 +501,7 @@ public class _LitemallGrouponRules extends DynamicOrmEntity{
     /**
      * 商品ID: GOODS_ID
      */
-    public final void setGoodsId(java.lang.Integer value){
+    public final void setGoodsId(java.lang.String value){
         if(onPropSet(PROP_ID_goodsId,value)){
             this._goodsId = value;
             internalClearRefs(PROP_ID_goodsId);

@@ -13,44 +13,44 @@
     public class LitemallFootprintOutputBean {
 
     
-        private Integer _id;
+        private String _id;
 
     
         @PropMeta(propId=1)
     
-        public Integer getId(){
+        public String getId(){
             return _id;
         }
 
-        public void setId(Integer value){
+        public void setId(String value){
             this._id = value;
         }
 
 
-        private Integer _userId;
+        private String _userId;
 
     
         @PropMeta(propId=2)
     
-        public Integer getUserId(){
+        public String getUserId(){
             return _userId;
         }
 
-        public void setUserId(Integer value){
+        public void setUserId(String value){
             this._userId = value;
         }
 
 
-        private Integer _goodsId;
+        private String _goodsId;
 
     
         @PropMeta(propId=3)
     
-        public Integer getGoodsId(){
+        public String getGoodsId(){
             return _goodsId;
         }
 
-        public void setGoodsId(Integer value){
+        public void setGoodsId(String value){
             this._goodsId = value;
         }
 

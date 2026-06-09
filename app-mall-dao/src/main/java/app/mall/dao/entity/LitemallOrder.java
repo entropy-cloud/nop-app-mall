@@ -15,7 +15,7 @@ public class LitemallOrder extends _LitemallOrder{
         return getOrderStatus() != null && getOrderStatus() == status;
     }
 
-    public LitemallOrderGoods addOrderGoods(Integer goodsId, Integer productId, String goodsSn,
+    public LitemallOrderGoods addOrderGoods(String goodsId, String productId, String goodsSn,
                                             BigDecimal price, short number) {
         LitemallOrderGoods orderGoods = new LitemallOrderGoods();
         orderGoods.setGoodsId(goodsId);
