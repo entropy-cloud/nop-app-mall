@@ -79,13 +79,16 @@ If unsure, use a full plan. If the task is clearly docs-only and the real risk i
 10. **Checklist integrity before closure.** Before marking a plan complete, no in-scope checklist item may remain unchecked. Either complete it or explicitly move it out of scope with a written reason. Scope narrowing after plan approval is a scope change and must be recorded with rationale; silently removing items from scope is a violation.
 11. **Text consistency before closure.** Before closing, verify that `Plan Status`, every phase `Status`, every phase `Exit Criteria`, `Closure Gates`, and the `docs/logs/` entry all agree. No `completed` at the top while a phase inside still says `planned`.
 12. **Independent plan and closure audit.** Do not implement a created plan until it has passed plan audit, and do not mark it complete as a side effect of finishing the last implementation slice. Use a separate review pass. Protected areas, unresolved product risk, and source-of-truth conflicts require human/subagent review or stay open.
+    - **Mandatory auto-trigger.** After writing or substantially revising a plan, the agent MUST immediately launch an independent subagent for adversarial plan audit. Do not wait for user prompting, do not ask whether to audit, and do not treat plan creation as finished until the audit completes.
+    - **Independent subagent adversarial review.** The plan audit must use an independent subagent (not the same session/context that wrote the plan). The reviewer must challenge the plan against live repo evidence, not trust the plan's own claims. Audit scope includes: baseline accuracy, goal clarity, dependency ordering, missing considerations, protected-area compliance, Reference Docs completeness, and anti-slacking compliance.
+    - **Consensus before implementation.** If the audit finds blockers or major objections, revise the plan and re-audit. Repeat until the independent reviewer reports no blocker and no major objection. Two consecutive clean audit rounds after the latest substantive revision constitute consensus. Only then may implementation begin.
     - Record normal plan-audit and closure-audit evidence inside the plan by default.
     - Do not create `docs/audits/` files for ordinary plan-audit or closure-audit failures; revise the plan or work and audit again.
     - Use `docs/audits/` only for specialized, complex, disputed, reusable, or future-replay-worthy audit records.
     - For docs-only `analysis / audit` work, one sanity-check review of the brief is usually enough when a brief exists at all.
     - For docs-only `analysis / audit` work, repeated adversarial review should target the output artifact, not the planning artifact.
 13. **Non-degradable items** cannot be downgraded to non-blocking follow-ups: confirmed live defects, confirmed contract drift, confirmed owner-doc drift, and CI/lint rules already fixed in the repo.
-14. **Every phase must list `Reference Docs`.** The executor will read them before starting. If the phase does not require any platform docs beyond the global `Task Route` owner docs, write `none`. If the phase involves Nop platform features (BizModel, view.xml, ORM, delta, xbiz, etc.), the reference docs must cover the relevant `docs-for-ai/` guide — a bare `none` for a Nop-platform phase will fail plan audit.
+14. **Every phase must list `Required Pre-Reading`.** The executor MUST read all listed docs BEFORE writing any code for that phase. If the phase does not require any platform docs beyond the global `Task Route` owner docs, write `none`. If the phase involves Nop platform features (BizModel, view.xml, ORM, delta, xbiz, etc.), the pre-reading must cover the relevant `docs-for-ai/` guide — a bare `none` for a Nop-platform phase will fail plan audit. **This is a hard gate, not a suggestion.** The agent must read these docs and confirm understanding before proceeding to implementation items. Violating this rule (writing code without reading the listed docs) is a mandatory rework trigger.
 
 ### Anti-Slacking Rule
 
@@ -100,7 +103,7 @@ A `Follow-up` item must name the trigger condition that would promote it into sc
 1. Before implementation, record plan audit evidence.
 2. When you start a slice, update its `Status` to `in progress`.
 3. When you finish a slice, update its `Status` to `completed` and check off all its execution items and exit criteria.
-4. **Before executing a phase, read every doc listed in `Reference Docs`** for that phase. If the plan does not list any, check whether the `Task Route` section implies platform-doc reading (e.g. Nop platform features) — if so, add the missing reference docs before starting.
+4. **MANDATORY PRE-READING GATE: Before executing ANY phase, read EVERY doc listed in `Required Pre-Reading` for that phase.** This is non-negotiable. Do NOT skip this step, do NOT rely on cached knowledge from previous sessions, and do NOT assume the listed docs merely repeat what you already know. After reading, confirm you understand the key rules (especially anti-patterns, safe APIs, and return-type conventions) before writing a single line of code. If the plan does not list any pre-reading, check whether the `Task Route` section implies platform-doc reading (e.g. Nop platform features) — if so, add the missing pre-reading before starting. **If a phase is delegated to a subagent, the subagent prompt MUST include the full `Required Pre-Reading` list and the instruction to read them before coding.**
 5. Confirm the listed `Skill` still matches the task and available inputs. If not, update the plan before proceeding.
 6. If a slice changes the live baseline or public contract, its exit criteria must include the doc-update step. If no doc update is needed, write `No owner-doc update required` explicitly.
 7. Do not mark a slice complete because the function signature exists. Verify that the behavior, error handling, and test coverage land too.
@@ -180,11 +183,13 @@ If any of these fail, the plan stays open.
 Status: planned
 Targets: `<paths>`
 Skill: `<skill-name | none>`
-Reference Docs: `<paths to platform docs or owner docs that the executor must read before starting this phase; list only docs that are new or non-obvious — if the required reading is already clear from the global Task Route, write none>`
+Required Pre-Reading: `<paths to platform docs or owner docs that MUST be read in full BEFORE writing any code for this phase; list only docs that are new or non-obvious — if the required reading is already clear from the global Task Route, write none>`
 
 - Item Types: `Fix | Decision | Proof | Follow-up`
 - Prereqs: <phases or external dependencies that must complete first>
 
+- [ ] **Pre-flight:** Read all docs listed in `Required Pre-Reading` above. Confirm understanding of key rules (anti-patterns, safe APIs, return-type conventions) before proceeding.
+  - Skill: `<skill-name | none>`
 - [ ] <implementation item>
       - Skill: `<skill-name | none>`
 - [ ] <Decision: record rationale and alternatives in the item or a referenced doc>
@@ -211,7 +216,8 @@ Exit Criteria:
 - [ ] verification has run (specify which commands; customize for visual/UX domains if needed)
 - [ ] no in-scope item downgraded to deferred/follow-up
 - [ ] plan audit passed before implementation
-- [ ] each phase has `Reference Docs` listed, and Nop-platform phases do not skip `docs-for-ai/` references
+- [ ] each phase has `Required Pre-Reading` listed, and Nop-platform phases do not skip `docs-for-ai/` references
+- [ ] pre-flight reading verification: code in each phase follows the patterns and anti-patterns documented in its `Required Pre-Reading` (no `Reference Docs` anti-patterns in the output)
 - [ ] text consistency verified: status, phases, gates, and log all agree
 - [ ] closure audit was independent
 - [ ] closure evidence exists in files
