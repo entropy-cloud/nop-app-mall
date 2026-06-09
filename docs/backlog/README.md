@@ -11,7 +11,8 @@ The backlog is not a replacement for requirements, design owner docs, architectu
 | Priority | Item | Requirement | Owner Doc | Readiness | AI Autonomy | Notes |
 | -------- | ---- | ----------- | --------- | --------- | ----------- | ----- |
 | P0 | Commercial baseline alignment | `docs/requirements/commercial-baseline.md` | `docs/design/app-overview.md` | `done` | `plan-first` | Stable docs now use commercial baseline framing and avoid high-maintenance status sprawl |
-| P1 | Feature gap analysis | `docs/input/litemall-requirements.md` | `docs/design/feature-inventory.md` | `needs-requirement` | `research-only` | Synthesize any missing commercial capability gaps before implementation |
+| P1 | Design-to-code gap implementation | `docs/requirements/commercial-baseline.md` | `docs/design/*.md` | `in-progress` | `plan-first` | 11-phase plan at `docs/plans/2026-06-08-design-code-gap-implementation-plan.md`; Phase 1 (user reg/login) first |
+| P2 | Feature gap analysis | `docs/input/litemall-requirements.md` | `docs/design/feature-inventory.md` | `needs-requirement` | `research-only` | Synthesize any missing commercial capability gaps before implementation |
 
 ## Readiness Invariants
 
