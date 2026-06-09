@@ -10,9 +10,9 @@ The backlog is not a replacement for requirements, design owner docs, architectu
 
 | Priority | Item | Requirement | Owner Doc | Readiness | AI Autonomy | Notes |
 | -------- | ---- | ----------- | --------- | --------- | ----------- | ----- |
-| P0 | Commercial baseline alignment | `docs/requirements/commercial-baseline.md` | `docs/design/app-overview.md` | `done` | `plan-first` | Stable docs now use commercial baseline framing and avoid high-maintenance status sprawl |
-| P1 | Design-to-code gap implementation | `docs/requirements/commercial-baseline.md` | `docs/design/*.md` | `in-progress` | `plan-first` | 11-phase plan at `docs/plans/2026-06-08-design-code-gap-implementation-plan.md`; Phase 1 (user reg/login) first |
-| P2 | Feature gap analysis | `docs/input/litemall-requirements.md` | `docs/design/feature-inventory.md` | `needs-requirement` | `research-only` | Synthesize any missing commercial capability gaps before implementation |
+| P0 | Commercial baseline alignment | `docs/requirements/commercial-baseline.md` | `docs/design/app-overview.md` | `done` | `plan-first` | Stable docs now use commercial baseline framing |
+| P1 | Design-to-code gap implementation | `docs/requirements/commercial-baseline.md` | `docs/design/*.md` | `in-progress` | `plan-first` | Roadmap: `docs/backlog/implementation-roadmap.md`; First Commercial Loop = Phase 1-5c + 6; start with Phase 1 |
+| P2 | Feature gap analysis | `docs/input/litemall-requirements.md` | `docs/design/feature-inventory.md` | `needs-requirement` | `research-only` | Synthesize missing commercial capability gaps |
 
 ## Readiness Invariants
 
