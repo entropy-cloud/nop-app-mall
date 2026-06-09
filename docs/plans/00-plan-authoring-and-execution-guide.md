@@ -88,7 +88,7 @@ If unsure, use a full plan. If the task is clearly docs-only and the real risk i
     - For docs-only `analysis / audit` work, one sanity-check review of the brief is usually enough when a brief exists at all.
     - For docs-only `analysis / audit` work, repeated adversarial review should target the output artifact, not the planning artifact.
 13. **Non-degradable items** cannot be downgraded to non-blocking follow-ups: confirmed live defects, confirmed contract drift, confirmed owner-doc drift, and CI/lint rules already fixed in the repo.
-14. **Every phase must list `Required Pre-Reading`.** The executor MUST read all listed docs BEFORE writing any code for that phase. If the phase does not require any platform docs beyond the global `Task Route` owner docs, write `none`. If the phase involves Nop platform features (BizModel, view.xml, ORM, delta, xbiz, etc.), the pre-reading must cover the relevant `docs-for-ai/` guide — a bare `none` for a Nop-platform phase will fail plan audit. **This is a hard gate, not a suggestion.** The agent must read these docs and confirm understanding before proceeding to implementation items. Violating this rule (writing code without reading the listed docs) is a mandatory rework trigger.
+14. **Every phase must list `Required Pre-Reading`.** 计划阶段只列路径不读内容（执行上下文独立，不记得计划阶段读过的内容）。后端任务从 `00-required-reading-backend.md` 索引选路径，前端/页面任务从 `00-required-reading-frontend.md` 索引选路径。执行时必须读完全部列出文档后才能写代码（见 When Executing #6）。Nop 平台相关 phase 写 `none` 会 fail plan audit。
 
 ### Anti-Slacking Rule
 
@@ -104,7 +104,7 @@ A `Follow-up` item must name the trigger condition that would promote it into sc
 2. **Roadmap update (plan creation):** If this plan implements a roadmap phase in `docs/backlog/implementation-roadmap.md`, update the phase status from `todo` to `planned`. Do this when the plan passes its plan audit and implementation is about to begin.
 3. When you start a slice, update its `Status` to `in progress`.
 4. When you finish a slice, update its `Status` to `completed` and check off all its execution items and exit criteria.
-6. **MANDATORY PRE-READING GATE: Before executing ANY phase, read EVERY doc listed in `Required Pre-Reading` for that phase.** This is non-negotiable. Do NOT skip this step, do NOT rely on cached knowledge from previous sessions, and do NOT assume the listed docs merely repeat what you already know. After reading, confirm you understand the key rules (especially anti-patterns, safe APIs, and return-type conventions) before writing a single line of code. If the plan does not list any pre-reading, check whether the `Task Route` section implies platform-doc reading (e.g. Nop platform features) — if so, add the missing pre-reading before starting. **If a phase is delegated to a subagent, the subagent prompt MUST include the full `Required Pre-Reading` list and the instruction to read them before coding.**
+6. **MANDATORY PRE-READING GATE: Before executing ANY phase, read EVERY doc listed in `Required Pre-Reading` for that phase.** 见 Minimum Rules #14。不跳过、不依赖缓存、不假设已知道。读完后确认理解 anti-patterns 和 safe API 再写代码。如果 phase 委托给 subagent，prompt 必须包含完整 `Required Pre-Reading` 列表和读后再编码的指令。
 7. Confirm the listed `Skill` still matches the task and available inputs. If not, update the plan before proceeding.
 8. If a slice changes the live baseline or public contract, its exit criteria must include the doc-update step. If no doc update is needed, write `No owner-doc update required` explicitly.
 9. Do not mark a slice complete because the function signature exists. Verify that the behavior, error handling, and test coverage land too.
@@ -194,7 +194,7 @@ After `Plan Status: completed` has been set and the closure audit has passed:
 Status: planned
 Targets: `<paths>`
 Skill: `<skill-name | none>`
-Required Pre-Reading: `<paths to platform docs or owner docs that MUST be read in full BEFORE writing any code for this phase; list only docs that are new or non-obvious — if the required reading is already clear from the global Task Route, write none>`
+Required Pre-Reading: `<后端: 00-required-reading-backend.md 中的路径; 前端: 00-required-reading-frontend.md 中的路径; none if no platform docs needed>`
 
 - Item Types: `Fix | Decision | Proof | Follow-up`
 - Prereqs: <phases or external dependencies that must complete first>
