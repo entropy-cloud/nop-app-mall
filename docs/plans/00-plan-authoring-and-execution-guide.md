@@ -110,7 +110,12 @@ A `Follow-up` item must name the trigger condition that would promote it into sc
 8. If a slice changes the live baseline or public contract, its exit criteria must include the doc-update step. If no doc update is needed, write `No owner-doc update required` explicitly.
 9. Do not mark a slice complete because the function signature exists. Verify that the behavior, error handling, and test coverage land too. **BizModel `@BizMutation`/`@BizQuery` 方法的测试必须通过 `IGraphQLEngine` 验证（`JunitAutoTestCase` 录制回放），不能只用实体级纯逻辑测试替代。`@BizAction` 方法需要测试时通过 `I*XxxBiz` 接口调用。**
 10. If an item cannot be completed, move it to `Deferred But Adjudicated` with classification and reason. Do not leave it unchecked in the execution list.
-11. Keep `docs/logs/` in sync with plan progress. A single aggregate log entry at plan closure is sufficient when all phases cover the same feature in one sprint; individual phase entries are required only when a phase spans a different day or a distinct deliverable.
+11. **编码阶段发现模型问题时的处理规则：**
+    - 编码时发现 ORM 模型缺少关系、字段或字典等，**不直接修改模型**（模型必须事先准备好）。
+    - **非阻塞**：问题不影响业务正确性（如缺少一个 ORM 关系，可以用 `I*Biz` 替代），记入当前 plan 的 `Deferred But Adjudicated` 区，标注分类为 `model-gap`、缺失内容、建议的修复方式、以及触发条件（"下次修改此模型时补充"）。继续实现。
+    - **阻塞**：问题影响业务正确性且没有合理的运行时替代路径（如缺少关键字段导致无法完成核心流程），停止当前实现，更新 plan 状态为 blocked，等待确认后再决定是补充模型还是调整范围。
+    - **不阻塞时禁止的行为**：用 `daoProvider().daoFor()` 绕过模型缺失来"凑合实现"。模型缺失应该在模型层面修复，运行时代码应使用正确的路径（`I*Biz` 或 ORM 关系 getter）。
+12. Keep `docs/logs/` in sync with plan progress. A single aggregate log entry at plan closure is sufficient when all phases cover the same feature in one sprint; individual phase entries are required only when a phase spans a different day or a distinct deliverable.
 
 ## When Closing
 
@@ -240,9 +245,10 @@ Exit Criteria:
 
 ### <item name>
 
-- Classification: `watch-only residual | optimization candidate | out-of-scope improvement`
+- Classification: `watch-only residual | optimization candidate | out-of-scope improvement | model-gap`
 - Why Not Blocking Closure: <reason>
 - Successor Required: `yes | no`
+- Model Gap Detail (if Classification is `model-gap`): <what relationship/field/dict is missing in which ORM model, suggested fix, and trigger condition for fixing>
 
 ## Closure
 
