@@ -462,4 +462,4 @@ Phase 1 (User Auth) ← nop-auth 提供 80% 能力
 - 本文档是状态索引和粗粒度划分，不是 execution plan
 - 每个 `planned`/`in-progress` 阶段由对应 execution plan 负责细节
 - 持久化模型以 `model/*.orm.xml` 为准
-- 阶段状态变更需同步更新本文档和 `docs/backlog/README.md`
+- 阶段状态变更需更新本文档（`docs/backlog/implementation-roadmap.md`）

@@ -49,6 +49,7 @@
 | 06-08 | 全局 | 补充编码规范 | 实现时发现规范缺失 |
 | 06-09 | 计划 | 多轮强化：审计规则、必读阅读门控、路线图生命周期 | AI 写计划不规范 |
 | 06-10 | 计划 | **测试验证规则和预读索引强化** | AI 不用 IGraphQLEngine 测试 |
+| 06-10 | backlog | **AGENTS.md Planning Rule 补充 roadmap 查阅和更新规则；README.md 去除时效性字段改为稳定索引** | AI 拟制 plan 时不查 roadmap，backlog README 与 roadmap 状态重复维护 |
 
 ## 3. 共性根因分析
 
@@ -86,7 +87,6 @@ AI 的实际执行顺序是：写 BizModel 实现 → 写完再补 I*Biz 接口 
 | 批量写代码时的中间检查点 | AI 一次写多个方法，不逐方法自检 | open — plan guide 可加"每个方法写完立即自检" |
 | order-full-lifecycle-plan 中的 API 测试 | 4 个 Phase 的 IGraphQLEngine 测试仍为 unchecked | open — 需要补充实现 |
 | dao() / 转型问题的代码修复 | CartBizModel、OrderBizModel、AftersaleBizModel 中仍有 dao() 和转型调用 | open — 需要修正 |
-
 ## 5. 可提取的通用教训
 
 1. **二次引用等效于 Required Pre-Reading** — 文档内部"先读 X"的指令不是背景描述，是强制门控。
@@ -94,3 +94,5 @@ AI 的实际执行顺序是：写 BizModel 实现 → 写完再补 I*Biz 接口 
 3. **最高抽象层级优先** — CrudBizModel 方法 > dao() > 直接 SQL。先查基类/接口提供了什么，再决定是否需要降级。
 4. **BizModel 方法测试必须走 IGraphQLEngine** — @BizMutation/@BizQuery 是 GraphQL API，测试入口是 IGraphQLEngine 不是实体类。
 5. **开发顺序是接口声明 → 实现 → 测试** — 不是实现 → 补接口 → 跳过 API 测试。
+6. **单一状态源原则** — 动态状态（Phase todo/planned/done）只维护在一处（`implementation-roadmap.md`）。索引文档（`README.md`）只放静态路由信息，不放时效性字段。多源维护必然失同步。
+7. **拟制 plan 前必须查 roadmap** — roadmap 定义了 Phase 依赖、交付范围和约束，plan 不能脱离 roadmap 独立存在。plan 完成后必须回写 roadmap 状态。

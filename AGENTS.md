@@ -174,6 +174,10 @@ Use `multi-dimensional-audit-prompt.md` when work must be challenged across seve
 
 ## Planning Rule
 
+Before drafting a plan, you MUST read `docs/backlog/implementation-roadmap.md` to confirm the current Phase status, delivery scope, dependencies, and cross-cutting constraints. A plan must not contradict or drift from the roadmap.
+
+When a plan is completed (passes closure audit), you MUST update the corresponding Phase status in `docs/backlog/implementation-roadmap.md`.
+
 Create a plan when the task has any of these traits:
 
 - changes API, database/model, auth, integration, deployment, or public contract behavior
