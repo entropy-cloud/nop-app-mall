@@ -128,7 +128,14 @@ Before writing **any** Nop platform code (BizModel method, view.xml page, test, 
 **Execution discipline:**
 
 1. Before writing code in any phase, read the global-mandatory section of the corresponding entry file above.
-2. After writing **each method**, self-check against the anti-patterns table in `00-required-reading-backend.md` (or the relevant entry). Specifically verify: no `dao()`, no `new Entity()`, no casting injected interfaces, method declared on `I*Biz`, correct annotation present.
+2. After writing **each public BizModel method** (`@BizQuery`/`@BizMutation`/`@BizAction`), self-check against the full checklist in `docs/skills/bizmodel-method-selfcheck-prompt.md` (19 items covering parameters, annotations, entity operations, exceptions, transactions, platform helpers). Specifically verify:
+   - Method declared on `I*Biz` interface with correct annotation (`@BizQuery`/`@BizMutation`/`@BizAction`) and `@Name`/`@RequestBean` parameters
+   - Parameter types: ≤5 params use `@Name`; >5 params use `@RequestBean` + `@DataBean`; standard CRUD 继承 CrudBizModel 的 Map 模式不受此限制，自定义业务方法勿用 `Object` 或 raw `Map` 代替 DTO
+   - No `dao()` — use `requireEntity()`/`findList()`/`saveEntity()`
+   - No `new Entity()` — use `newEntity()`
+   - No `@Transactional` on `@BizMutation` methods
+   - No `private` on `@Inject` fields
+   - All exceptions extend `NopException` with defined `ErrorCode`
 3. If any anti-pattern is found, fix it immediately before proceeding to the next method.
 
 The Nop Platform's authoritative development documentation lives at `../nop-entropy/docs-for-ai/` (sibling directory). This is the primary reference for all Nop platform conventions, APIs, and development patterns.
