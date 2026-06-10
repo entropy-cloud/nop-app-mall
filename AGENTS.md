@@ -111,6 +111,51 @@ The Nop Platform's authoritative development documentation lives at `../nop-entr
 - **Cross-entity access**: within BizModel, always inject `I*Biz` interfaces for other entities. Use `IDaoProvider` / `IOrmTemplate` / `@SqlLibMapper` only when `I*Biz` cannot satisfy the requirement, and document the reason in a code comment. See `docs-for-ai/00-start-here/ai-defaults.md` anti-patterns table.
 - **Exception handling**: all business exceptions MUST extend `NopException` (directly or via module exception class). Never `extends RuntimeException` or `throws RuntimeException`. Use `ErrorCode` + `NopException` for public/GraphQL-facing errors (description in Chinese, i18n handles translation). For non-ErrorCode exceptions use English messages. See `docs-for-ai/02-core-guides/error-handling.md` before writing any throw statement.
 
+## Mandatory Platform Required Reading
+
+Before writing **any** Nop platform code (BizModel method, view.xml page, test, ORM model change), agents MUST read the corresponding required-reading entry file below. These entry files contain **anti-patterns tables and self-check lists** that prevent the most common coding mistakes. Skipping them has been the root cause of repeated violations (see `docs/retrospectives/2026-06-10-docs-for-ai-iteration-retrospective.md`).
+
+**Agents must self-check against the anti-patterns in these documents after each method written, not just read them once.**
+
+| Task type | Mandatory entry file | What it prevents |
+|-----------|---------------------|-------------------|
+| Backend BizModel / service logic | `../nop-entropy/docs-for-ai/00-required-reading-backend.md` | Using `dao()` instead of `findList`/`requireEntity`; `new Entity()` instead of `newEntity()`; missing `@BizQuery`/`@BizMutation`; casting injected `I*Biz`; forgetting `I*Biz` interface declarations |
+| Frontend page / view.xml | `../nop-entropy/docs-for-ai/00-required-reading-frontend.md` | Editing generated view files; wrong merge strategy; missing delta layer |
+| Unit / integration test | `../nop-entropy/docs-for-ai/00-required-reading-testing.md` | Entity-level tests instead of `IGraphQLEngine`; wrong test base class |
+| E2E test | `../nop-entropy/docs-for-ai/00-required-reading-e2e-testing.md` | Wrong Playwright patterns; missing RPC verification |
+| ORM model design / change | `../nop-entropy/docs-for-ai/00-required-reading-model-design.md` | Wrong data types; missing dict; wrong primary key strategy |
+
+**Execution discipline:**
+
+1. Before writing code in any phase, read the global-mandatory section of the corresponding entry file above.
+2. After writing **each method**, self-check against the anti-patterns table in `00-required-reading-backend.md` (or the relevant entry). Specifically verify: no `dao()`, no `new Entity()`, no casting injected interfaces, method declared on `I*Biz`, correct annotation present.
+3. If any anti-pattern is found, fix it immediately before proceeding to the next method.
+
+The Nop Platform's authoritative development documentation lives at `../nop-entropy/docs-for-ai/` (sibling directory). This is the primary reference for all Nop platform conventions, APIs, and development patterns.
+
+**When to read it:** Before implementing any feature that involves Nop platform APIs, code generation, BizModel patterns, page/view customization, delta customization, testing, or any non-trivial platform interaction.
+
+**How to use it:**
+
+1. Start with `docs-for-ai/INDEX.md` — contains a routing table mapping ~40 common tasks to the correct document.
+2. Recommended lookup order: INDEX → `00-start-here/` → `03-runbooks/` → `02-core-guides/` → `01-repo-map/` → `04-reference/`
+3. `00-start-here/ai-defaults.md` — core decision framework: Model → Delta → Java, anti-patterns table, self-check list.
+4. `02-core-guides/` — 21 canonical pattern documents covering model-first development, service layer (CrudBizModel), page customization, delta mechanism, auth, testing, etc.
+5. `03-runbooks/` — 34 task-oriented step-by-step guides for common operations (create entity, write BizModel method, build page, etc.).
+6. `04-reference/common-java-helpers.md` and `04-reference/safe-api-reference.md` — quick reference for platform helper utilities and CrudBizModel safe APIs.
+
+**Key rules from platform docs that apply to this project:**
+
+- Decision order: Model → Delta → Java. Always prefer model/Delta/customization over writing new Java code.
+- Never manually edit generated files (files under `_gen/`, with `_` prefix, or `_app.orm.xml`/`_service.beans.xml`).
+- Use `CrudBizModel<T>` for standard entity services; use `@BizQuery`/`@BizMutation` annotations.
+- Use platform helpers: `CoreMetrics.currentTimeMillis()` not `System.currentTimeMillis()`, `JsonTool` not third-party JSON libs, `StringHelper` not Apache Commons.
+- `@Inject` fields cannot be `private` in Nop's IoC container.
+- `@BizMutation` auto-wraps transactions; do not add `@Transactional` unless you need explicit propagation control.
+- For page customization, use the three-layer model (grid/form/page) with `bounded-merge` and `x:prototype` patterns.
+- **Cross-entity access**: within BizModel, always inject `I*Biz` interfaces for other entities. Use `IDaoProvider` / `IOrmTemplate` / `@SqlLibMapper` only when `I*Biz` cannot satisfy the requirement, and document the reason in a code comment. See `docs-for-ai/00-start-here/ai-defaults.md` anti-patterns table.
+- **Exception handling**: all business exceptions MUST extend `NopException` (directly or via module exception class). Never `extends RuntimeException` or `throws RuntimeException`. Use `ErrorCode` + `NopException` for public/GraphQL-facing errors (description in Chinese, i18n handles translation). For non-ErrorCode exceptions use English messages. See `docs-for-ai/02-core-guides/error-handling.md` before writing any throw statement.
+
 ## Read This First
 
 - `docs/context/project-context.md`
@@ -145,6 +190,8 @@ Read additionally when needed:
 - `docs/bugs/` owns non-obvious bug histories and regression notes.
 - `docs/analysis/` owns research, tradeoff analysis, and rejected directions.
 - `docs/retrospectives/` owns post-implementation gap analysis and process improvements.
+
+Do not hide mandatory rules in `docs/references/`; if an AI must apply it by default, put it in `docs/context/` or `AGENTS.md`.
 
 ## Default Workflow
 
@@ -202,19 +249,6 @@ Before using a reusable skill, confirm all of the following:
 - the expected output is known and can be stored in the correct docs location
 
 For non-trivial plans, each phase or item that depends on a reusable skill should record `Skill: <name>` or `Skill: none`.
-
-## Prompting Guidance For Agents
-
-- Do not generate a full product from a single feature list.
-- Do not optimize for demo completeness.
-- Prefer small complete slices over broad placeholder coverage.
-- Prefer existing project patterns over invented abstractions.
-- If information is missing, write the missing assumptions into a requirement, discussion, or plan file instead of silently inventing them.
-- Do not put code-level implementation detail into plan files unless the detail is required for scope or closure reasoning.
-- Prefer citing the existing owner doc instead of restating the same rule in multiple files.
-- Do not hide mandatory rules in `docs/references/`; if an AI must apply it by default, put it in `docs/context/` or `AGENTS.md`.
-- Use `docs/backlog/` and `docs/context/ai-autonomy-policy.md` to decide whether AI may choose and execute the next task without asking. Do not mirror the active plan, active blocker, or active requirement into broad context files just to track execution state.
-- When editing Nop platform files, follow the platform's conventions: XML models for code generation, delta customization for overrides, AMIS JSON for views.
 
 ## Docs Maintenance
 
