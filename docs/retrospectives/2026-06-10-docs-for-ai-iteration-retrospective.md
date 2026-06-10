@@ -34,6 +34,7 @@
 | 06-09 | 3911a08be | 精简 ICrudBiz 注释、ai-defaults 反模式表 | ICrudBiz 注释冗余 |
 | 06-10 | 513ffcab9 | 拆分测试为独立开发阶段入口，新增必读索引 | AI 不知道 BizModel 测试要用 IGraphQLEngine |
 | 06-10 | 19af9faad | **接口注入与转型规则、二次引用追踪规则** | AI 转型注入的接口 + 不追踪文档内部引用 |
+| 06-10 | — | **00-required-reading-backend/frontend/testing/e2e-testing/model-design.md 强化索引元提示** | AI 读索引跳过子文档，I*Biz 接口方法漏加 @BizMutation 注解 |
 
 ### 2.2 nop-app-mall 项目 docs（61 个文件，+4755/-341 行）
 
@@ -50,10 +51,26 @@
 | 06-09 | 计划 | 多轮强化：审计规则、必读阅读门控、路线图生命周期 | AI 写计划不规范 |
 | 06-10 | 计划 | **测试验证规则和预读索引强化** | AI 不用 IGraphQLEngine 测试 |
 | 06-10 | backlog | **AGENTS.md Planning Rule 补充 roadmap 查阅和更新规则；README.md 去除时效性字段改为稳定索引** | AI 拟制 plan 时不查 roadmap，backlog README 与 roadmap 状态重复维护 |
+| 06-10 | docs-for-ai | **write-bizmodel-method.md 强化强制实现顺序（ErrorCode→I*Biz→BizModel→自检→测试）；新建 feature-implementation-checklist.md 端到端总纲** | AI 先写实现后补接口，缺少面向单次 plan 的完整实现流程 |
 
 ## 3. 共性根因分析
 
 所有修改可归为 **三条根因**：
+
+### 根因 D：索引文件被当作内容文件消费
+
+`00-required-reading-backend.md` 等 5 个索引文件的设计意图是路由入口，本身不包含规则内容。但 AI 读到索引后认为"已覆盖 Required Pre-Reading 义务"，不打开子文档。具体表现：
+
+- 索引文件首行写"执行时按实际涉及的内容项选择阅读"——"选择"给了跳过的借口
+- 索引末行写"计划阶段只引用本索引确定路径；执行阶段才实际阅读具体文档"——暗示索引本身不需要深入读
+- 表格的"为什么必读"列写的是内容摘要，AI 看到摘要认为"我大概知道了"
+
+**后果**：本次 order plan 执行中，`00-required-reading-backend.md` 索引指向 `service-layer.md`（全局必读），但 AI 未打开该文件。导致 I*Biz 接口方法全部缺少 `@BizMutation`/`@BizQuery` 注解，运行时代理无法路由。
+
+**修复**：在 5 个索引文件中做了三处结构改动：
+1. 开头元提示改为"必须逐个打开并通读每一个文档，不能用已读本索引替代阅读子文档"
+2. 全局必读表格增加"不读会怎样"列，写具体运行时错误后果而非抽象警告
+3. 删除末尾的弱化语句
 
 ### 根因 A：读文档但不追踪内部引用
 
@@ -83,6 +100,7 @@ AI 的实际执行顺序是：写 BizModel 实现 → 写完再补 I*Biz 接口 
 
 | 缺口 | 说明 | 状态 |
 |------|------|------|
+| 索引文件强制阅读的有效性 | 加了元提示后 AI 是否真的逐个打开子文档 | open — 需要下一次实现验证 |
 | 自检清单的强制执行机制 | 规则存在但 AI 可以跳过，没有硬性拦截 | open — 可能需要工具化 |
 | 批量写代码时的中间检查点 | AI 一次写多个方法，不逐方法自检 | open — plan guide 可加"每个方法写完立即自检" |
 | order-full-lifecycle-plan 中的 API 测试 | 4 个 Phase 的 IGraphQLEngine 测试仍为 unchecked | open — 需要补充实现 |
@@ -96,3 +114,4 @@ AI 的实际执行顺序是：写 BizModel 实现 → 写完再补 I*Biz 接口 
 5. **开发顺序是接口声明 → 实现 → 测试** — 不是实现 → 补接口 → 跳过 API 测试。
 6. **单一状态源原则** — 动态状态（Phase todo/planned/done）只维护在一处（`implementation-roadmap.md`）。索引文档（`README.md`）只放静态路由信息，不放时效性字段。多源维护必然失同步。
 7. **拟制 plan 前必须查 roadmap** — roadmap 定义了 Phase 依赖、交付范围和约束，plan 不能脱离 roadmap 独立存在。plan 完成后必须回写 roadmap 状态。
+8. **索引文件不等于内容** — `00-required-reading-*.md` 是路由入口，不包含任何规则。读到索引后必须逐个打开子文档通读全文。索引的"为什么必读"列只是用途说明，不是规则摘要。

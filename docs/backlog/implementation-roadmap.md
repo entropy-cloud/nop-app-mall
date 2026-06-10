@@ -1,6 +1,6 @@
 # Implementation Roadmap
 
-> Last Updated: 2026-06-09
+> Last Updated: 2026-06-10
 > Source: `docs/requirements/commercial-baseline.md`, `docs/design/*.md`
 
 ## Purpose
@@ -10,6 +10,27 @@
 **核心用途：** AI 读完本文后即可知道哪些能力尚未实现、哪些已有计划、哪些已经完成，无需重新遍历所有项目文档和代码。
 
 本文不包含具体实现细节。每个 `planned` 状态的阶段由对应 execution plan 负责。
+
+## Phase Status
+
+> **这是唯一的动态状态区域。更新状态只改这里，不改 Phase Details 中的状态行。**
+
+- 1. 用户注册登录: `todo`
+- 2. 商品目录管理: `todo`
+- 3. 地址管理: `todo`
+- 4. 购物车: `todo`
+- 5. 订单核心流程: `todo`
+- 5b. 支付集成: `todo`
+- 5c. 退款与售后: `todo`
+- 6. 搜索与发现: `todo`
+- 7. 互动（收藏/足迹/评论）: `todo`
+- 8. 优惠券体系: `todo`
+- 9. 团购: `todo`
+- 10. 内容营销与反馈: `todo`
+- 11. 系统运营与定时任务: `todo`
+- 12. 通知系统: `todo`
+- 13. 报表与统计: `todo`
+- 14. 微信支付集成: `todo`
 
 ## Status Values
 
@@ -86,7 +107,9 @@
 
 ## Phase Details
 
-> Status: `todo`
+### 1. 用户注册登录
+
+> Status: see Phase Status above
 
 **目标：** 商城用户可通过用户名/密码注册和登录，查看/更新个人资料，修改密码。
 
@@ -104,9 +127,9 @@
 
 **模块：** app-mall-delta、app-mall-web、app-mall-service
 
-### Phase 2 — 商品目录管理
+### 2. 商品目录管理
 
-> Status: `todo`
+> Status: see Phase Status above
 
 **目标：** 管理员管理分类/品牌/商品（含 SKU/规格/属性）；用户按分类和品牌浏览已上架商品。
 
@@ -124,9 +147,9 @@
 
 **模块：** app-mall-service、app-mall-web
 
-### Phase 3 — 地址管理
+### 3. 地址管理
 
-> Status: `todo`
+> Status: see Phase Status above
 
 **目标：** 登录用户管理收货地址，支持默认地址切换和数量限制。
 
@@ -140,9 +163,9 @@
 
 **模块：** app-mall-service、app-mall-web
 
-### Phase 4 — 购物车
+### 4. 购物车
 
-> Status: `todo`
+> Status: see Phase Status above
 
 **目标：** 登录用户加入购物车、管理购物车行、预览结算。
 
@@ -160,9 +183,9 @@
 
 **模块：** app-mall-service、app-mall-web
 
-### Phase 5 — 订单核心流程
+### 5. 订单核心流程
 
-> Status: `todo`
+> Status: see Phase Status above
 
 **目标：** 用户从购物车提交订单，管理员发货；覆盖订单状态机主线。
 
@@ -182,9 +205,9 @@
 
 **模块：** app-mall-service、app-mall-web、app-mall-api
 
-### Phase 5b — 支付集成
+### 5b. 支付集成
 
-> Status: `todo`
+> Status: see Phase Status above
 
 **目标：** 订单支付确认推进到已支付；包含模拟支付用于开发/测试。
 
@@ -198,9 +221,9 @@
 
 **模块：** app-mall-service、app-mall-api
 
-### Phase 5c — 退款与售后
+### 5c. 退款与售后
 
-> Status: `todo`
+> Status: see Phase Status above
 
 **目标：** 已支付未发货订单退款；已收货订单售后申请和审核。
 
@@ -217,9 +240,9 @@
 
 **模块：** app-mall-service、app-mall-web
 
-### Phase 6 — 搜索与发现
+### 6. 搜索与发现
 
-> Status: `todo`
+> Status: see Phase Status above
 
 **目标：** 用户按关键字搜索商品，支持分类/品牌过滤和排序。
 
@@ -234,9 +257,9 @@
 
 **模块：** app-mall-service、app-mall-web
 
-### Phase 7 — 互动（收藏/足迹/评论）
+### 7. 互动（收藏/足迹/评论）
 
-> Status: `todo`
+> Status: see Phase Status above
 
 **目标：** 用户收藏商品、记录足迹、评价已收货订单商品。
 
@@ -252,9 +275,9 @@
 
 **模块：** app-mall-service、app-mall-web
 
-### Phase 8 — 优惠券体系
+### 8. 优惠券体系
 
-> Status: `todo`
+> Status: see Phase Status above
 
 **目标：** 管理员管理优惠券；用户领取/兑换/在结算时使用。
 
@@ -269,9 +292,9 @@
 
 **模块：** app-mall-service、app-mall-web、app-mall-api
 
-### Phase 9 — 团购
+### 9. 团购
 
-> Status: `todo`
+> Status: see Phase Status above
 
 **目标：** 管理员创建团购规则；用户开团/参团；团购成功影响价格。
 
@@ -286,9 +309,9 @@
 
 **模块：** app-mall-service、app-mall-web
 
-### Phase 10 — 内容营销与反馈
+### 10. 内容营销与反馈
 
-> Status: `todo`
+> Status: see Phase Status above
 
 **目标：** 管理员管理专题/广告/FAQ；用户浏览和提交反馈。
 
@@ -303,9 +326,9 @@
 
 **模块：** app-mall-service、app-mall-web
 
-### Phase 11 — 系统运营与定时任务
+### 11. 系统运营与定时任务
 
-> Status: `todo`
+> Status: see Phase Status above
 
 **目标：** 系统配置可管理；定时任务自动执行超时处理；文件存储可用；公告可管理。
 
@@ -325,9 +348,9 @@
 
 **模块：** app-mall-service、app-mall-web、app-mall-app（定时任务）
 
-### Phase 12 — 通知系统
+### 12. 通知系统
 
-> Status: `todo`
+> Status: see Phase Status above
 
 **目标：** 业务事件触发通知投递。
 
@@ -341,9 +364,9 @@
 
 **模块：** app-mall-service、app-mall-api
 
-### Phase 13 — 报表与统计
+### 13. 报表与统计
 
-> Status: `todo`
+> Status: see Phase Status above
 
 **目标：** 后台查看订单/商品/用户/运营统计。
 
@@ -356,9 +379,9 @@
 
 **模块：** app-mall-service、app-mall-web
 
-### Phase 14 — 微信支付集成
+### 14. 微信支付集成
 
-> Status: `todo`
+> Status: see Phase Status above
 
 **目标：** 接入微信支付替代模拟支付。
 
@@ -376,30 +399,51 @@
 
 ## Dependency Graph
 
-```
-Phase 1 (User Auth) ← nop-auth 提供 80% 能力
-  ├── Phase 2 (Product Catalog)
-  │     ├── Phase 6 (Search) ← 可与 3-5 并行
-  │     ├── Phase 7a (Collect/Footprint)
-  │     └── Phase 10 (Content Marketing) → Phase 7b (Topic Collect)
-  ├── Phase 3 (Address)
-  └── Phase 4 (Cart) ← 依赖 Phase 1 + Phase 2
-               │
-     Phase 5 (Order Core) ← 依赖 Phase 3 + Phase 4
-               │
-     Phase 5b (Payment)
-               │
-     Phase 5c (Refund/Aftersale)
-               │
-     ┌─────────┼──────────┬──────────┐
-     │         │          │          │
-  Phase 8   Phase 9   Phase 11   Phase 12
-  (Coupon)  (Groupon)  (Sys/Tasks) (Notify)
-     │         │          │          │
-     └────┬────┘          │          │
-          │               │          │
-     Phase 13 (Reports)   │          │
-                         nop-job  nop-integration
+```mermaid
+graph TD
+    P1["1. 用户注册登录<br/><i>nop-auth 80%</i>"]
+    P2["2. 商品目录管理"]
+    P3["3. 地址管理"]
+    P4["4. 购物车"]
+    P5["5. 订单核心流程"]
+    P5b["5b. 支付集成"]
+    P5c["5c. 退款与售后"]
+    P6["6. 搜索与发现"]
+    P7["7. 互动（收藏/足迹/评论）"]
+    P8["8. 优惠券体系"]
+    P9["9. 团购"]
+    P10["10. 内容营销与反馈"]
+    P11["11. 系统运营与定时任务"]
+    P12["12. 通知系统"]
+    P13["13. 报表与统计"]
+    P14["14. 微信支付集成"]
+
+    P1 --> P2
+    P1 --> P3
+    P1 --> P4
+    P2 --> P4
+    P2 --> P6
+    P2 --> P7
+    P2 --> P10
+    P3 --> P5
+    P4 --> P5
+    P5 --> P5b
+    P5b --> P5c
+    P5 --> P7
+    P5b --> P8
+    P5 --> P9
+    P5b --> P9
+    P5 --> P11
+    P5b --> P12
+    P5c --> P12
+    P5 --> P13
+    P8 --> P13
+    P9 --> P13
+    P5b --> P14
+
+    P10 -.-> P7
+
+    style P14 fill:#fdd,stroke:#c33
 ```
 
 ## Entity Coverage
@@ -408,37 +452,37 @@ Phase 1 (User Auth) ← nop-auth 提供 80% 能力
 
 | 实体 | Phase | 备注 |
 |------|-------|------|
-| LitemallUser | Phase 1 | Delta 定制商城注册 |
-| LitemallAddress | Phase 3 | |
-| LitemallRegion | Phase 3 | SQL seed |
-| LitemallCategory | Phase 2 | |
-| LitemallBrand | Phase 2 | |
-| LitemallGoods | Phase 2 | 已有部分逻辑 |
-| LitemallGoodsProduct | Phase 2 | |
-| LitemallGoodsSpecification | Phase 2 | |
-| LitemallGoodsAttribute | Phase 2 | |
-| LitemallCart | Phase 4 | |
-| LitemallOrder | Phase 5 | |
-| LitemallOrderGoods | Phase 5 | |
-| LitemallAftersale | Phase 5c | 已有部分逻辑 |
-| LitemallKeyword | Phase 6 | |
-| LitemallSearchHistory | Phase 6 | |
-| LitemallCollect | Phase 7 | |
-| LitemallFootprint | Phase 7 | |
-| LitemallComment | Phase 7 | |
-| LitemallCoupon | Phase 8 | |
-| LitemallCouponUser | Phase 8 | |
-| LitemallGrouponRules | Phase 9 | |
-| LitemallGroupon | Phase 9 | |
-| LitemallTopic | Phase 10 | |
-| LitemallAd | Phase 10 | |
-| LitemallIssue | Phase 10 | |
-| LitemallFeedback | Phase 10 | |
-| LitemallSystem | Phase 11 | 评估是否迁移到 NopSysVariable |
-| LitemallStorage | Phase 11 | 评估是否迁移到 nop-integration-file-* |
-| LitemallNotice | Phase 11 | |
-| LitemallNoticeAdmin | Phase 11 | |
-| LitemallLog | Phase 11 | |
+| LitemallUser | 1 | Delta 定制商城注册 |
+| LitemallAddress | 3 | |
+| LitemallRegion | 3 | SQL seed |
+| LitemallCategory | 2 | |
+| LitemallBrand | 2 | |
+| LitemallGoods | 2 | 已有部分逻辑 |
+| LitemallGoodsProduct | 2 | |
+| LitemallGoodsSpecification | 2 | |
+| LitemallGoodsAttribute | 2 | |
+| LitemallCart | 4 | |
+| LitemallOrder | 5 | |
+| LitemallOrderGoods | 5 | |
+| LitemallAftersale | 5c | 已有部分逻辑 |
+| LitemallKeyword | 6 | |
+| LitemallSearchHistory | 6 | |
+| LitemallCollect | 7 | |
+| LitemallFootprint | 7 | |
+| LitemallComment | 7 | |
+| LitemallCoupon | 8 | |
+| LitemallCouponUser | 8 | |
+| LitemallGrouponRules | 9 | |
+| LitemallGroupon | 9 | |
+| LitemallTopic | 10 | |
+| LitemallAd | 10 | |
+| LitemallIssue | 10 | |
+| LitemallFeedback | 10 | |
+| LitemallSystem | 11 | 评估是否迁移到 NopSysVariable |
+| LitemallStorage | 11 | 评估是否迁移到 nop-integration-file-* |
+| LitemallNotice | 11 | |
+| LitemallNoticeAdmin | 11 | |
+| LitemallLog | 11 | |
 | LitemallAdmin | — | nop-auth NopAuthUser 覆盖 |
 | LitemallRole | — | nop-auth NopAuthRole 覆盖 |
 | LitemallPermission | — | nop-auth NopAuthResource 覆盖 |
@@ -462,4 +506,4 @@ Phase 1 (User Auth) ← nop-auth 提供 80% 能力
 - 本文档是状态索引和粗粒度划分，不是 execution plan
 - 每个 `planned`/`in-progress` 阶段由对应 execution plan 负责细节
 - 持久化模型以 `model/*.orm.xml` 为准
-- 阶段状态变更需更新本文档（`docs/backlog/implementation-roadmap.md`）
+- 阶段状态变更只需更新 Phase Status 列表（本文档顶部）

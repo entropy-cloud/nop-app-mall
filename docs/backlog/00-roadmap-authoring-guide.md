@@ -45,7 +45,7 @@ Roadmap 应包含以下固定段落（按顺序）：
 5. **Current Baseline** — 已有实现和核心缺口的简述
 6. **Phases 表** — 全局阶段状态索引表（Phase / Status / Owner Doc / 依赖 / Platform Reuse / Plan 链接）
 7. **Phase Details** — 每个阶段的简要交付范围（短列表，不含 checkbox）
-8. **Dependency Graph** — ASCII 概略图
+8. **Dependency Graph** — Mermaid 流程图
 9. **Entity Coverage** — 35 个 ORM 实体到阶段的映射
 10. **Cross-Cutting** — 跨阶段关注点
 11. **Rule** — 编写和更新规则
