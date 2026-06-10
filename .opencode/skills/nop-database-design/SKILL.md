@@ -496,6 +496,25 @@ CREATE TABLE nop_auth_op_log (
 
 ---
 
+## 13. 类型简化原则
+
+### 13.1 避免 tinyint / smallint，统一使用 int
+
+存储空间已不再是瓶颈。使用 `TINYINT` 或 `SMALLINT` 会导致 Java 代码中每次赋值常量都需要强制转型（如 `(short) STATUS_CREATED`），增加噪音且容易出错。
+
+| 场景 | 禁止 | 推荐 |
+|------|------|------|
+| 状态码 | `TINYINT` / `SMALLINT` → Java `short` | `INTEGER` → Java `int` |
+| 数量 | `SMALLINT` → Java `short` | `INTEGER` → Java `int` |
+| 排序号 | `SMALLINT` → Java `short` | `INTEGER` → Java `int` |
+| 布尔标记 | `TINYINT` → Java `byte` | 直接使用 `BOOLEAN` 类型 |
+
+### 13.2 布尔字段
+
+布尔标记字段直接使用 `BOOLEAN` 类型（ORM 中 `stdSqlType="BOOLEAN"` + `stdDataType="boolean"`），不要用 `TINYINT` 模拟布尔。
+
+---
+
 ## 附录 B：设计检查清单
 - [ ] 表名使用单数形式
 - [ ] 表名包含模块前缀
@@ -505,5 +524,7 @@ CREATE TABLE nop_auth_op_log (
 - [ ] 外键关系正确
 - [ ] 索引设计合理
 - [ ] 敏感字段已加密
+- [ ] 整数字段统一使用 INTEGER（避免 TINYINT/SMALLINT）
+- [ ] 布尔字段使用 BOOLEAN 类型
 - [ ] 考虑了性能优化
 - [ ] 编写了迁移脚本
