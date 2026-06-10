@@ -96,16 +96,16 @@
         }
 
 
-        private Short _number;
+        private Integer _number;
 
     
         @PropMeta(propId=8)
     
-        public Short getNumber(){
+        public Integer getNumber(){
             return _number;
         }
 
-        public void setNumber(Short value){
+        public void setNumber(Integer value){
             this._number = value;
         }
 

@@ -54,16 +54,16 @@
         }
 
 
-        private Byte _position;
+        private Integer _position;
 
     
         @PropMeta(propId=5)
     
-        public Byte getPosition(){
+        public Integer getPosition(){
             return _position;
         }
 
-        public void setPosition(Byte value){
+        public void setPosition(Integer value){
             this._position = value;
         }
 

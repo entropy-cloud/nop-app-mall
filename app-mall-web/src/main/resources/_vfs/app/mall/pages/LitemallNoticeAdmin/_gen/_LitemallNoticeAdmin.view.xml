@@ -19,16 +19,16 @@
             <cols>
 
                 <!--Id-->
-                <col id="id" mandatory="true" ui:number="true" sortable="true"/>
+                <col id="id" mandatory="true" sortable="true"/>
 
                 <!--通知ID-->
-                <col id="noticeId" ui:number="true" sortable="true"/>
+                <col id="noticeId" sortable="true"/>
 
                 <!--通知标题-->
                 <col id="noticeTitle" sortable="true"/>
 
                 <!--管理员ID-->
-                <col id="adminId" ui:number="true" sortable="true"/>
+                <col id="adminId" sortable="true"/>
 
                 <!--阅读时间-->
                 <col id="readTime" sortable="true"/>

@@ -36,7 +36,7 @@ public class _LitemallAd extends DynamicOrmEntity{
     public static final String PROP_NAME_url = "url";
     public static final int PROP_ID_url = 4;
     
-    /* 广告位置：1则是首页: POSITION TINYINT */
+    /* 广告位置：1则是首页: POSITION INTEGER */
     public static final String PROP_NAME_position = "position";
     public static final int PROP_ID_position = 5;
     
@@ -135,7 +135,7 @@ public class _LitemallAd extends DynamicOrmEntity{
     private java.lang.String _url;
     
     /* 广告位置：1则是首页: POSITION */
-    private java.lang.Byte _position;
+    private java.lang.Integer _position;
     
     /* 活动内容: CONTENT */
     private java.lang.String _content;
@@ -320,9 +320,9 @@ public class _LitemallAd extends DynamicOrmEntity{
             }
         
             case PROP_ID_position:{
-               java.lang.Byte typedValue = null;
+               java.lang.Integer typedValue = null;
                if(value != null){
-                   typedValue = ConvertHelper.toByte(value,
+                   typedValue = ConvertHelper.toInteger(value,
                        err-> newTypeConversionError(PROP_NAME_position));
                }
                setPosition(typedValue);
@@ -438,7 +438,7 @@ public class _LitemallAd extends DynamicOrmEntity{
         
             case PROP_ID_position:{
                onInitProp(propId);
-               this._position = (java.lang.Byte)value;
+               this._position = (java.lang.Integer)value;
                
                break;
             }
@@ -577,7 +577,7 @@ public class _LitemallAd extends DynamicOrmEntity{
     /**
      * 广告位置：1则是首页: POSITION
      */
-    public final java.lang.Byte getPosition(){
+    public final java.lang.Integer getPosition(){
          onPropGet(PROP_ID_position);
          return _position;
     }
@@ -585,7 +585,7 @@ public class _LitemallAd extends DynamicOrmEntity{
     /**
      * 广告位置：1则是首页: POSITION
      */
-    public final void setPosition(java.lang.Byte value){
+    public final void setPosition(java.lang.Integer value){
         if(onPropSet(PROP_ID_position,value)){
             this._position = value;
             internalClearRefs(PROP_ID_position);

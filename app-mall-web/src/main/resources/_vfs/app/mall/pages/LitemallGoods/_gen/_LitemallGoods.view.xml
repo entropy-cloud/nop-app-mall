@@ -19,7 +19,7 @@
             <cols>
 
                 <!--Id-->
-                <col id="id" mandatory="true" ui:number="true" sortable="true"/>
+                <col id="id" mandatory="true" sortable="true"/>
 
                 <!--商品编号-->
                 <col id="goodsSn" mandatory="true" sortable="true" x:abstract="true"/>
@@ -28,10 +28,10 @@
                 <col id="name" mandatory="true" sortable="true"/>
 
                 <!--商品所属类目ID-->
-                <col id="categoryId" ui:number="true" sortable="true"/>
+                <col id="categoryId" sortable="true"/>
 
                 <!--品牌ID-->
-                <col id="brandId" ui:number="true" sortable="true"/>
+                <col id="brandId" sortable="true"/>
 
                 <!--商品宣传图片列表-->
                 <col id="gallery" sortable="true"/>

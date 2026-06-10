@@ -19,10 +19,10 @@
             <cols>
 
                 <!--Id-->
-                <col id="id" mandatory="true" ui:number="true" sortable="true"/>
+                <col id="id" mandatory="true" sortable="true"/>
 
                 <!--角色ID-->
-                <col id="roleId" ui:number="true" sortable="true"/>
+                <col id="roleId" sortable="true"/>
 
                 <!--权限-->
                 <col id="permission" sortable="true"/>

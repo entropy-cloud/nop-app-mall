@@ -56,16 +56,16 @@
         }
 
 
-        private Byte _type;
+        private Integer _type;
 
     
         @PropMeta(propId=4)
     
-        public Byte getType(){
+        public Integer getType(){
             return _type;
         }
 
-        public void setType(Byte value){
+        public void setType(Integer value){
             this._type = value;
         }
 

@@ -38,7 +38,7 @@
         </prop>
         <prop name="position" displayName="广告位置：1则是首页" propId="5" queryable="true" sortable="true" insertable="true"
               updatable="true">
-            <schema type="java.lang.Byte"/>
+            <schema type="java.lang.Integer"/>
         </prop>
         <prop name="content" displayName="活动内容" propId="6" queryable="true" sortable="true" insertable="true"
               updatable="true">

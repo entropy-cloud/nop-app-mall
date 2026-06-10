@@ -42,16 +42,16 @@
         }
 
 
-        private Byte _gender;
+        private Integer _gender;
 
     
         @PropMeta(propId=4)
     
-        public Byte getGender(){
+        public Integer getGender(){
             return _gender;
         }
 
-        public void setGender(Byte value){
+        public void setGender(Integer value){
             this._gender = value;
         }
 
@@ -110,16 +110,16 @@
         }
 
 
-        private Byte _userLevel;
+        private Integer _userLevel;
 
     
         @PropMeta(propId=8)
     
-        public Byte getUserLevel(){
+        public Integer getUserLevel(){
             return _userLevel;
         }
 
-        public void setUserLevel(Byte value){
+        public void setUserLevel(Integer value){
             this._userLevel = value;
         }
 
@@ -206,16 +206,16 @@
         }
 
 
-        private Byte _status;
+        private Integer _status;
 
     
         @PropMeta(propId=14)
     
-        public Byte getStatus(){
+        public Integer getStatus(){
             return _status;
         }
 
-        public void setStatus(Byte value){
+        public void setStatus(Integer value){
             this._status = value;
         }
 

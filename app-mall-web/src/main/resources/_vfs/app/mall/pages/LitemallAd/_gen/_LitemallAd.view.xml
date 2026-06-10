@@ -19,7 +19,7 @@
             <cols>
 
                 <!--Id-->
-                <col id="id" mandatory="true" ui:number="true" sortable="true"/>
+                <col id="id" mandatory="true" sortable="true"/>
 
                 <!--广告标题-->
                 <col id="name" mandatory="true" sortable="true"/>
@@ -31,7 +31,7 @@
                 <col id="url" mandatory="true" sortable="true"/>
 
                 <!--广告位置：1则是首页-->
-                <col id="position" sortable="true"/>
+                <col id="position" ui:number="true" sortable="true"/>
 
                 <!--活动内容-->
                 <col id="content" sortable="true"/>

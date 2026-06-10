@@ -32,7 +32,7 @@
         </prop>
         <prop name="status" displayName="使用状态" propId="4" queryable="true" sortable="true" insertable="true"
               updatable="true">
-            <schema type="java.lang.Short" dict="mall/coupon-use-status"/>
+            <schema type="java.lang.Integer" dict="mall/coupon-use-status"/>
         </prop>
         <prop name="usedTime" displayName="使用时间" propId="5" queryable="true" sortable="true" insertable="true"
               updatable="true">

@@ -56,7 +56,7 @@
         </prop>
         <prop name="sortOrder" displayName="排序" propId="9" queryable="true" sortable="true" insertable="true"
               updatable="true" internal="true" ui:show="X">
-            <schema type="java.lang.Byte"/>
+            <schema type="java.lang.Integer"/>
         </prop>
         <prop name="addTime" displayName="创建时间" propId="10" queryable="true" sortable="true" insertable="false"
               updatable="false" internal="true" ui:show="X">

@@ -152,16 +152,16 @@
         }
 
 
-        private Short _sortOrder;
+        private Integer _sortOrder;
 
     
         @PropMeta(propId=10)
     
-        public Short getSortOrder(){
+        public Integer getSortOrder(){
             return _sortOrder;
         }
 
-        public void setSortOrder(Short value){
+        public void setSortOrder(Integer value){
             this._sortOrder = value;
         }
 

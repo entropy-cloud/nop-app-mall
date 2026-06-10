@@ -56,7 +56,7 @@ public class _LitemallGoods extends DynamicOrmEntity{
     public static final String PROP_NAME_isOnSale = "isOnSale";
     public static final int PROP_ID_isOnSale = 9;
     
-    /* 排序顺序: SORT_ORDER SMALLINT */
+    /* 排序顺序: SORT_ORDER INTEGER */
     public static final String PROP_NAME_sortOrder = "sortOrder";
     public static final int PROP_ID_sortOrder = 10;
     
@@ -237,7 +237,7 @@ public class _LitemallGoods extends DynamicOrmEntity{
     private java.lang.Boolean _isOnSale;
     
     /* 排序顺序: SORT_ORDER */
-    private java.lang.Short _sortOrder;
+    private java.lang.Integer _sortOrder;
     
     /* 商品图片: PIC_URL */
     private java.lang.String _picUrl;
@@ -511,9 +511,9 @@ public class _LitemallGoods extends DynamicOrmEntity{
             }
         
             case PROP_ID_sortOrder:{
-               java.lang.Short typedValue = null;
+               java.lang.Integer typedValue = null;
                if(value != null){
-                   typedValue = ConvertHelper.toShort(value,
+                   typedValue = ConvertHelper.toInteger(value,
                        err-> newTypeConversionError(PROP_NAME_sortOrder));
                }
                setSortOrder(typedValue);
@@ -704,7 +704,7 @@ public class _LitemallGoods extends DynamicOrmEntity{
         
             case PROP_ID_sortOrder:{
                onInitProp(propId);
-               this._sortOrder = (java.lang.Short)value;
+               this._sortOrder = (java.lang.Integer)value;
                
                break;
             }
@@ -966,7 +966,7 @@ public class _LitemallGoods extends DynamicOrmEntity{
     /**
      * 排序顺序: SORT_ORDER
      */
-    public final java.lang.Short getSortOrder(){
+    public final java.lang.Integer getSortOrder(){
          onPropGet(PROP_ID_sortOrder);
          return _sortOrder;
     }
@@ -974,7 +974,7 @@ public class _LitemallGoods extends DynamicOrmEntity{
     /**
      * 排序顺序: SORT_ORDER
      */
-    public final void setSortOrder(java.lang.Short value){
+    public final void setSortOrder(java.lang.Integer value){
         if(onPropSet(PROP_ID_sortOrder,value)){
             this._sortOrder = value;
             internalClearRefs(PROP_ID_sortOrder);

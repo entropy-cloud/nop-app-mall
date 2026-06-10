@@ -19,13 +19,13 @@
             <cols>
 
                 <!--Id-->
-                <col id="id" mandatory="true" ui:number="true" sortable="true"/>
+                <col id="id" mandatory="true" sortable="true"/>
 
                 <!--用户名称-->
                 <col id="username" mandatory="true" sortable="true"/>
 
                 <!--性别-->
-                <col id="gender" mandatory="true" sortable="true"/>
+                <col id="gender" mandatory="true" ui:number="true" sortable="true"/>
 
                 <!--生日-->
                 <col id="birthday" sortable="true"/>
@@ -37,7 +37,7 @@
                 <col id="lastLoginIp" mandatory="true" sortable="true"/>
 
                 <!--用户等级-->
-                <col id="userLevel" sortable="true"/>
+                <col id="userLevel" ui:number="true" sortable="true"/>
 
                 <!--用户昵称或网络名称-->
                 <col id="nickname" mandatory="true" sortable="true"/>
@@ -55,7 +55,7 @@
                 <col id="sessionKey" mandatory="true" sortable="true"/>
 
                 <!--用户状态-->
-                <col id="status" mandatory="true" sortable="true"/>
+                <col id="status" mandatory="true" ui:number="true" sortable="true"/>
             </cols>
         </grid>
         <grid id="pick-list" x:prototype="list" x:abstract="true"/>

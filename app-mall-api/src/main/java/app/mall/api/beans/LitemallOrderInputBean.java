@@ -41,30 +41,30 @@
         }
 
 
-        private Short _orderStatus;
+        private Integer _orderStatus;
 
     
         @PropMeta(propId=4)
     
-        public Short getOrderStatus(){
+        public Integer getOrderStatus(){
             return _orderStatus;
         }
 
-        public void setOrderStatus(Short value){
+        public void setOrderStatus(Integer value){
             this._orderStatus = value;
         }
 
 
-        private Short _aftersaleStatus;
+        private Integer _aftersaleStatus;
 
     
         @PropMeta(propId=5)
     
-        public Short getAftersaleStatus(){
+        public Integer getAftersaleStatus(){
             return _aftersaleStatus;
         }
 
-        public void setAftersaleStatus(Short value){
+        public void setAftersaleStatus(Integer value){
             this._aftersaleStatus = value;
         }
 
@@ -363,16 +363,16 @@
         }
 
 
-        private Short _comments;
+        private Integer _comments;
 
     
         @PropMeta(propId=27)
     
-        public Short getComments(){
+        public Integer getComments(){
             return _comments;
         }
 
-        public void setComments(Short value){
+        public void setComments(Integer value){
             this._comments = value;
         }
 

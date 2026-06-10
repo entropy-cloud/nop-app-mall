@@ -111,30 +111,30 @@
         }
 
 
-        private Short _limit;
+        private Integer _limit;
 
     
         @PropMeta(propId=8)
     
-        public Short getLimit(){
+        public Integer getLimit(){
             return _limit;
         }
 
-        public void setLimit(Short value){
+        public void setLimit(Integer value){
             this._limit = value;
         }
 
 
-        private Short _type;
+        private Integer _type;
 
     
         @PropMeta(propId=9)
     
-        public Short getType(){
+        public Integer getType(){
             return _type;
         }
 
-        public void setType(Short value){
+        public void setType(Integer value){
             this._type = value;
         }
 
@@ -151,16 +151,16 @@
         }
 
 
-        private Short _status;
+        private Integer _status;
 
     
         @PropMeta(propId=10)
     
-        public Short getStatus(){
+        public Integer getStatus(){
             return _status;
         }
 
-        public void setStatus(Short value){
+        public void setStatus(Integer value){
             this._status = value;
         }
 
@@ -177,16 +177,16 @@
         }
 
 
-        private Short _goodsType;
+        private Integer _goodsType;
 
     
         @PropMeta(propId=11)
     
-        public Short getGoodsType(){
+        public Integer getGoodsType(){
             return _goodsType;
         }
 
-        public void setGoodsType(Short value){
+        public void setGoodsType(Integer value){
             this._goodsType = value;
         }
 
@@ -231,16 +231,16 @@
         }
 
 
-        private Short _timeType;
+        private Integer _timeType;
 
     
         @PropMeta(propId=14)
     
-        public Short getTimeType(){
+        public Integer getTimeType(){
             return _timeType;
         }
 
-        public void setTimeType(Short value){
+        public void setTimeType(Integer value){
             this._timeType = value;
         }
 
@@ -257,16 +257,16 @@
         }
 
 
-        private Short _days;
+        private Integer _days;
 
     
         @PropMeta(propId=15)
     
-        public Short getDays(){
+        public Integer getDays(){
             return _days;
         }
 
-        public void setDays(Short value){
+        public void setDays(Integer value){
             this._days = value;
         }
 

@@ -96,16 +96,16 @@
         }
 
 
-        private Short _status;
+        private Integer _status;
 
     
         @PropMeta(propId=8)
     
-        public Short getStatus(){
+        public Integer getStatus(){
             return _status;
         }
 
-        public void setStatus(Short value){
+        public void setStatus(Integer value){
             this._status = value;
         }
 

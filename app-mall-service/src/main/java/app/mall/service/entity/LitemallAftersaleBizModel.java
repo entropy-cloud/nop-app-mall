@@ -61,7 +61,7 @@ public class LitemallAftersaleBizModel extends CrudBizModel<LitemallAftersale> i
             if (status != AppMallDaoConstants.AFTERSALE_STATUS_REQUEST) {
                 continue;
             }
-            entity.setStatus((short) AppMallDaoConstants.AFTERSALE_STATUS_APPROVED);
+            entity.setStatus(AppMallDaoConstants.AFTERSALE_STATUS_APPROVED);
             entity.setHandleTime(DateHelper.currentDateTime());
 
             // 订单也要更新售后状态
@@ -79,7 +79,7 @@ public class LitemallAftersaleBizModel extends CrudBizModel<LitemallAftersale> i
                 continue;
             }
 
-            entity.setStatus((short) AppMallDaoConstants.AFTERSALE_STATUS_REJECT);
+            entity.setStatus(AppMallDaoConstants.AFTERSALE_STATUS_REJECT);
             entity.setHandleTime(DateHelper.currentDateTime());
 
             entity.getOrder().setAftersaleStatus(entity.getStatus());
@@ -106,7 +106,7 @@ public class LitemallAftersaleBizModel extends CrudBizModel<LitemallAftersale> i
         // 如果失败会抛出异常
         payService.refund(ApiRequest.build(wxPayRefundRequest)).get();
 
-        entity.setStatus((short) AppMallDaoConstants.AFTERSALE_STATUS_REFUND);
+        entity.setStatus(AppMallDaoConstants.AFTERSALE_STATUS_REFUND);
         entity.setHandleTime(DateHelper.currentDateTime());
         entity.getOrder().setAftersaleStatus(entity.getStatus());
 
@@ -117,7 +117,7 @@ public class LitemallAftersaleBizModel extends CrudBizModel<LitemallAftersale> i
             Set<LitemallOrderGoods> orderGoodsList = entity.getOrder().getOrderGoods();
             for (LitemallOrderGoods orderGoods : orderGoodsList) {
                 String productId = orderGoods.getProductId();
-                Short number = orderGoods.getNumber();
+                Integer number = orderGoods.getNumber();
                 goodsProductMapper.addStock(productId, number);
             }
         }

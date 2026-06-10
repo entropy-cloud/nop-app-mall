@@ -34,7 +34,7 @@
         </prop>
         <prop name="type" displayName="行政区域类型" propId="4" mandatory="true" queryable="true" sortable="true"
               insertable="true" updatable="true">
-            <schema type="java.lang.Byte" dict="mall/region-type"/>
+            <schema type="java.lang.Integer" dict="mall/region-type"/>
         </prop>
         <prop name="code" displayName="行政区域编码" propId="5" mandatory="true" queryable="true" sortable="true"
               insertable="true" updatable="true">

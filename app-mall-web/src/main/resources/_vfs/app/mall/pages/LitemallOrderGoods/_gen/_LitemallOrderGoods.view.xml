@@ -19,13 +19,13 @@
             <cols>
 
                 <!--Id-->
-                <col id="id" mandatory="true" ui:number="true" sortable="true"/>
+                <col id="id" mandatory="true" sortable="true"/>
 
                 <!--订单ID-->
-                <col id="orderId" mandatory="true" ui:number="true" sortable="true"/>
+                <col id="orderId" mandatory="true" sortable="true"/>
 
                 <!--商品ID-->
-                <col id="goodsId" mandatory="true" ui:number="true" sortable="true"/>
+                <col id="goodsId" mandatory="true" sortable="true"/>
 
                 <!--商品名称-->
                 <col id="goodsName" mandatory="true" sortable="true"/>
@@ -34,7 +34,7 @@
                 <col id="goodsSn" mandatory="true" sortable="true"/>
 
                 <!--货品ID-->
-                <col id="productId" mandatory="true" ui:number="true" sortable="true"/>
+                <col id="productId" mandatory="true" sortable="true"/>
 
                 <!--购买数量-->
                 <col id="number" mandatory="true" ui:number="true" sortable="true"/>

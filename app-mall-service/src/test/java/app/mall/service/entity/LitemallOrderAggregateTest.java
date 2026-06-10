@@ -17,7 +17,7 @@ public class LitemallOrderAggregateTest {
         order.setCouponPrice(new BigDecimal("2"));
         order.setIntegralPrice(BigDecimal.ZERO);
         order.setGrouponPrice(BigDecimal.ZERO);
-        order.addOrderGoods("1", "100", "G1", new BigDecimal("20"), (short) 2);
+        order.addOrderGoods("1", "100", "G1", new BigDecimal("20"), 2);
         assertEquals(new BigDecimal("40"), order.getGoodsPrice());
         assertEquals(new BigDecimal("50"), order.getOrderPrice());
         assertEquals(new BigDecimal("48"), order.getActualPrice());
@@ -26,7 +26,7 @@ public class LitemallOrderAggregateTest {
     @Test
     public void testIsStatus() {
         LitemallOrder order = new LitemallOrder();
-        order.setOrderStatus((short) 101);
+        order.setOrderStatus(101);
         assertTrue(order.isStatus(101));
     }
 }

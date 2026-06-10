@@ -32,7 +32,7 @@ public class _LitemallUser extends DynamicOrmEntity{
     public static final String PROP_NAME_password = "password";
     public static final int PROP_ID_password = 3;
     
-    /* 性别: GENDER TINYINT */
+    /* 性别: GENDER INTEGER */
     public static final String PROP_NAME_gender = "gender";
     public static final int PROP_ID_gender = 4;
     
@@ -48,7 +48,7 @@ public class _LitemallUser extends DynamicOrmEntity{
     public static final String PROP_NAME_lastLoginIp = "lastLoginIp";
     public static final int PROP_ID_lastLoginIp = 7;
     
-    /* 用户等级: USER_LEVEL TINYINT */
+    /* 用户等级: USER_LEVEL INTEGER */
     public static final String PROP_NAME_userLevel = "userLevel";
     public static final int PROP_ID_userLevel = 8;
     
@@ -72,7 +72,7 @@ public class _LitemallUser extends DynamicOrmEntity{
     public static final String PROP_NAME_sessionKey = "sessionKey";
     public static final int PROP_ID_sessionKey = 13;
     
-    /* 用户状态: STATUS TINYINT */
+    /* 用户状态: STATUS INTEGER */
     public static final String PROP_NAME_status = "status";
     public static final int PROP_ID_status = 14;
     
@@ -170,7 +170,7 @@ public class _LitemallUser extends DynamicOrmEntity{
     private java.lang.String _password;
     
     /* 性别: GENDER */
-    private java.lang.Byte _gender;
+    private java.lang.Integer _gender;
     
     /* 生日: BIRTHDAY */
     private java.time.LocalDate _birthday;
@@ -182,7 +182,7 @@ public class _LitemallUser extends DynamicOrmEntity{
     private java.lang.String _lastLoginIp;
     
     /* 用户等级: USER_LEVEL */
-    private java.lang.Byte _userLevel;
+    private java.lang.Integer _userLevel;
     
     /* 用户昵称或网络名称: NICKNAME */
     private java.lang.String _nickname;
@@ -200,7 +200,7 @@ public class _LitemallUser extends DynamicOrmEntity{
     private java.lang.String _sessionKey;
     
     /* 用户状态: STATUS */
-    private java.lang.Byte _status;
+    private java.lang.Integer _status;
     
     /* 创建时间: ADD_TIME */
     private java.time.LocalDateTime _addTime;
@@ -378,9 +378,9 @@ public class _LitemallUser extends DynamicOrmEntity{
             }
         
             case PROP_ID_gender:{
-               java.lang.Byte typedValue = null;
+               java.lang.Integer typedValue = null;
                if(value != null){
-                   typedValue = ConvertHelper.toByte(value,
+                   typedValue = ConvertHelper.toInteger(value,
                        err-> newTypeConversionError(PROP_NAME_gender));
                }
                setGender(typedValue);
@@ -418,9 +418,9 @@ public class _LitemallUser extends DynamicOrmEntity{
             }
         
             case PROP_ID_userLevel:{
-               java.lang.Byte typedValue = null;
+               java.lang.Integer typedValue = null;
                if(value != null){
-                   typedValue = ConvertHelper.toByte(value,
+                   typedValue = ConvertHelper.toInteger(value,
                        err-> newTypeConversionError(PROP_NAME_userLevel));
                }
                setUserLevel(typedValue);
@@ -478,9 +478,9 @@ public class _LitemallUser extends DynamicOrmEntity{
             }
         
             case PROP_ID_status:{
-               java.lang.Byte typedValue = null;
+               java.lang.Integer typedValue = null;
                if(value != null){
-                   typedValue = ConvertHelper.toByte(value,
+                   typedValue = ConvertHelper.toInteger(value,
                        err-> newTypeConversionError(PROP_NAME_status));
                }
                setStatus(typedValue);
@@ -549,7 +549,7 @@ public class _LitemallUser extends DynamicOrmEntity{
         
             case PROP_ID_gender:{
                onInitProp(propId);
-               this._gender = (java.lang.Byte)value;
+               this._gender = (java.lang.Integer)value;
                
                break;
             }
@@ -577,7 +577,7 @@ public class _LitemallUser extends DynamicOrmEntity{
         
             case PROP_ID_userLevel:{
                onInitProp(propId);
-               this._userLevel = (java.lang.Byte)value;
+               this._userLevel = (java.lang.Integer)value;
                
                break;
             }
@@ -619,7 +619,7 @@ public class _LitemallUser extends DynamicOrmEntity{
         
             case PROP_ID_status:{
                onInitProp(propId);
-               this._status = (java.lang.Byte)value;
+               this._status = (java.lang.Integer)value;
                
                break;
             }
@@ -711,7 +711,7 @@ public class _LitemallUser extends DynamicOrmEntity{
     /**
      * 性别: GENDER
      */
-    public final java.lang.Byte getGender(){
+    public final java.lang.Integer getGender(){
          onPropGet(PROP_ID_gender);
          return _gender;
     }
@@ -719,7 +719,7 @@ public class _LitemallUser extends DynamicOrmEntity{
     /**
      * 性别: GENDER
      */
-    public final void setGender(java.lang.Byte value){
+    public final void setGender(java.lang.Integer value){
         if(onPropSet(PROP_ID_gender,value)){
             this._gender = value;
             internalClearRefs(PROP_ID_gender);
@@ -787,7 +787,7 @@ public class _LitemallUser extends DynamicOrmEntity{
     /**
      * 用户等级: USER_LEVEL
      */
-    public final java.lang.Byte getUserLevel(){
+    public final java.lang.Integer getUserLevel(){
          onPropGet(PROP_ID_userLevel);
          return _userLevel;
     }
@@ -795,7 +795,7 @@ public class _LitemallUser extends DynamicOrmEntity{
     /**
      * 用户等级: USER_LEVEL
      */
-    public final void setUserLevel(java.lang.Byte value){
+    public final void setUserLevel(java.lang.Integer value){
         if(onPropSet(PROP_ID_userLevel,value)){
             this._userLevel = value;
             internalClearRefs(PROP_ID_userLevel);
@@ -901,7 +901,7 @@ public class _LitemallUser extends DynamicOrmEntity{
     /**
      * 用户状态: STATUS
      */
-    public final java.lang.Byte getStatus(){
+    public final java.lang.Integer getStatus(){
          onPropGet(PROP_ID_status);
          return _status;
     }
@@ -909,7 +909,7 @@ public class _LitemallUser extends DynamicOrmEntity{
     /**
      * 用户状态: STATUS
      */
-    public final void setStatus(java.lang.Byte value){
+    public final void setStatus(java.lang.Integer value){
         if(onPropSet(PROP_ID_status,value)){
             this._status = value;
             internalClearRefs(PROP_ID_status);

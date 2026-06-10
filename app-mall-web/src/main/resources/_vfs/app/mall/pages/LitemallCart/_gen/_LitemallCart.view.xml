@@ -19,13 +19,13 @@
             <cols>
 
                 <!--Id-->
-                <col id="id" mandatory="true" ui:number="true" sortable="true"/>
+                <col id="id" mandatory="true" sortable="true"/>
 
                 <!--用户ID-->
-                <col id="userId" ui:number="true" sortable="true"/>
+                <col id="userId" sortable="true"/>
 
                 <!--商品ID-->
-                <col id="goodsId" ui:number="true" sortable="true"/>
+                <col id="goodsId" sortable="true"/>
 
                 <!--商品编号-->
                 <col id="goodsSn" sortable="true"/>
@@ -34,7 +34,7 @@
                 <col id="goodsName" sortable="true"/>
 
                 <!--商品货品表的货品ID-->
-                <col id="productId" ui:number="true" sortable="true"/>
+                <col id="productId" sortable="true"/>
 
                 <!--商品货品的价格-->
                 <col id="price" ui:number="true" sortable="true"/>

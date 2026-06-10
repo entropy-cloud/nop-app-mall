@@ -32,11 +32,11 @@ public class _LitemallOrder extends DynamicOrmEntity{
     public static final String PROP_NAME_orderSn = "orderSn";
     public static final int PROP_ID_orderSn = 3;
     
-    /* 订单状态: ORDER_STATUS SMALLINT */
+    /* 订单状态: ORDER_STATUS INTEGER */
     public static final String PROP_NAME_orderStatus = "orderStatus";
     public static final int PROP_ID_orderStatus = 4;
     
-    /* 售后状态: AFTERSALE_STATUS SMALLINT */
+    /* 售后状态: AFTERSALE_STATUS INTEGER */
     public static final String PROP_NAME_aftersaleStatus = "aftersaleStatus";
     public static final int PROP_ID_aftersaleStatus = 5;
     
@@ -124,7 +124,7 @@ public class _LitemallOrder extends DynamicOrmEntity{
     public static final String PROP_NAME_confirmTime = "confirmTime";
     public static final int PROP_ID_confirmTime = 26;
     
-    /* 待评价订单商品数量: COMMENTS SMALLINT */
+    /* 待评价订单商品数量: COMMENTS INTEGER */
     public static final String PROP_NAME_comments = "comments";
     public static final int PROP_ID_comments = 27;
     
@@ -268,10 +268,10 @@ public class _LitemallOrder extends DynamicOrmEntity{
     private java.lang.String _orderSn;
     
     /* 订单状态: ORDER_STATUS */
-    private java.lang.Short _orderStatus;
+    private java.lang.Integer _orderStatus;
     
     /* 售后状态: AFTERSALE_STATUS */
-    private java.lang.Short _aftersaleStatus;
+    private java.lang.Integer _aftersaleStatus;
     
     /* 收货人名称: CONSIGNEE */
     private java.lang.String _consignee;
@@ -337,7 +337,7 @@ public class _LitemallOrder extends DynamicOrmEntity{
     private java.time.LocalDateTime _confirmTime;
     
     /* 待评价订单商品数量: COMMENTS */
-    private java.lang.Short _comments;
+    private java.lang.Integer _comments;
     
     /* 订单关闭时间: END_TIME */
     private java.time.LocalDateTime _endTime;
@@ -560,9 +560,9 @@ public class _LitemallOrder extends DynamicOrmEntity{
             }
         
             case PROP_ID_orderStatus:{
-               java.lang.Short typedValue = null;
+               java.lang.Integer typedValue = null;
                if(value != null){
-                   typedValue = ConvertHelper.toShort(value,
+                   typedValue = ConvertHelper.toInteger(value,
                        err-> newTypeConversionError(PROP_NAME_orderStatus));
                }
                setOrderStatus(typedValue);
@@ -570,9 +570,9 @@ public class _LitemallOrder extends DynamicOrmEntity{
             }
         
             case PROP_ID_aftersaleStatus:{
-               java.lang.Short typedValue = null;
+               java.lang.Integer typedValue = null;
                if(value != null){
-                   typedValue = ConvertHelper.toShort(value,
+                   typedValue = ConvertHelper.toInteger(value,
                        err-> newTypeConversionError(PROP_NAME_aftersaleStatus));
                }
                setAftersaleStatus(typedValue);
@@ -790,9 +790,9 @@ public class _LitemallOrder extends DynamicOrmEntity{
             }
         
             case PROP_ID_comments:{
-               java.lang.Short typedValue = null;
+               java.lang.Integer typedValue = null;
                if(value != null){
-                   typedValue = ConvertHelper.toShort(value,
+                   typedValue = ConvertHelper.toInteger(value,
                        err-> newTypeConversionError(PROP_NAME_comments));
                }
                setComments(typedValue);
@@ -871,14 +871,14 @@ public class _LitemallOrder extends DynamicOrmEntity{
         
             case PROP_ID_orderStatus:{
                onInitProp(propId);
-               this._orderStatus = (java.lang.Short)value;
+               this._orderStatus = (java.lang.Integer)value;
                
                break;
             }
         
             case PROP_ID_aftersaleStatus:{
                onInitProp(propId);
-               this._aftersaleStatus = (java.lang.Short)value;
+               this._aftersaleStatus = (java.lang.Integer)value;
                
                break;
             }
@@ -1032,7 +1032,7 @@ public class _LitemallOrder extends DynamicOrmEntity{
         
             case PROP_ID_comments:{
                onInitProp(propId);
-               this._comments = (java.lang.Short)value;
+               this._comments = (java.lang.Integer)value;
                
                break;
             }
@@ -1131,7 +1131,7 @@ public class _LitemallOrder extends DynamicOrmEntity{
     /**
      * 订单状态: ORDER_STATUS
      */
-    public final java.lang.Short getOrderStatus(){
+    public final java.lang.Integer getOrderStatus(){
          onPropGet(PROP_ID_orderStatus);
          return _orderStatus;
     }
@@ -1139,7 +1139,7 @@ public class _LitemallOrder extends DynamicOrmEntity{
     /**
      * 订单状态: ORDER_STATUS
      */
-    public final void setOrderStatus(java.lang.Short value){
+    public final void setOrderStatus(java.lang.Integer value){
         if(onPropSet(PROP_ID_orderStatus,value)){
             this._orderStatus = value;
             internalClearRefs(PROP_ID_orderStatus);
@@ -1150,7 +1150,7 @@ public class _LitemallOrder extends DynamicOrmEntity{
     /**
      * 售后状态: AFTERSALE_STATUS
      */
-    public final java.lang.Short getAftersaleStatus(){
+    public final java.lang.Integer getAftersaleStatus(){
          onPropGet(PROP_ID_aftersaleStatus);
          return _aftersaleStatus;
     }
@@ -1158,7 +1158,7 @@ public class _LitemallOrder extends DynamicOrmEntity{
     /**
      * 售后状态: AFTERSALE_STATUS
      */
-    public final void setAftersaleStatus(java.lang.Short value){
+    public final void setAftersaleStatus(java.lang.Integer value){
         if(onPropSet(PROP_ID_aftersaleStatus,value)){
             this._aftersaleStatus = value;
             internalClearRefs(PROP_ID_aftersaleStatus);
@@ -1568,7 +1568,7 @@ public class _LitemallOrder extends DynamicOrmEntity{
     /**
      * 待评价订单商品数量: COMMENTS
      */
-    public final java.lang.Short getComments(){
+    public final java.lang.Integer getComments(){
          onPropGet(PROP_ID_comments);
          return _comments;
     }
@@ -1576,7 +1576,7 @@ public class _LitemallOrder extends DynamicOrmEntity{
     /**
      * 待评价订单商品数量: COMMENTS
      */
-    public final void setComments(java.lang.Short value){
+    public final void setComments(java.lang.Integer value){
         if(onPropSet(PROP_ID_comments,value)){
             this._comments = value;
             internalClearRefs(PROP_ID_comments);

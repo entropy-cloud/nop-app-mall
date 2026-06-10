@@ -19,16 +19,16 @@
             <cols>
 
                 <!--Id-->
-                <col id="id" mandatory="true" ui:number="true" sortable="true"/>
+                <col id="id" mandatory="true" sortable="true"/>
 
                 <!--行政区域父ID-->
-                <col id="pid" mandatory="true" ui:number="true" sortable="true"/>
+                <col id="pid" mandatory="true" sortable="true"/>
 
                 <!--行政区域名称-->
                 <col id="name" mandatory="true" sortable="true"/>
 
                 <!--行政区域类型-->
-                <col id="type" mandatory="true" sortable="true"/>
+                <col id="type" mandatory="true" ui:number="true" sortable="true"/>
 
                 <!--行政区域编码-->
                 <col id="code" mandatory="true" ui:number="true" sortable="true"/>

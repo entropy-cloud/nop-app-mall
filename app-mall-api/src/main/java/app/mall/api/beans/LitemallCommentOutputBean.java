@@ -41,16 +41,16 @@
         }
 
 
-        private Byte _type;
+        private Integer _type;
 
     
         @PropMeta(propId=3)
     
-        public Byte getType(){
+        public Integer getType(){
             return _type;
         }
 
-        public void setType(Byte value){
+        public void setType(Integer value){
             this._type = value;
         }
 
@@ -125,16 +125,16 @@
         }
 
 
-        private Short _star;
+        private Integer _star;
 
     
         @PropMeta(propId=9)
     
-        public Short getStar(){
+        public Integer getStar(){
             return _star;
         }
 
-        public void setStar(Short value){
+        public void setStar(Integer value){
             this._star = value;
         }
 

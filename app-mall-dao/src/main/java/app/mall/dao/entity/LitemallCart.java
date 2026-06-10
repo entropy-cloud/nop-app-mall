@@ -9,9 +9,9 @@ public class LitemallCart extends _LitemallCart{
     public LitemallCart(){
     }
 
-    public void increaseNumber(short delta) {
-        short current = getNumber() != null ? getNumber() : 0;
-        setNumber((short) (current + delta));
+    public void increaseNumber(int delta) {
+        int current = getNumber() != null ? getNumber() : 0;
+        setNumber(current + delta);
     }
 
     public void validateForCheckout() {

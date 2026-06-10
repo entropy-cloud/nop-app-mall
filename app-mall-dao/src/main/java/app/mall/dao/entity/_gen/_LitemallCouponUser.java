@@ -32,7 +32,7 @@ public class _LitemallCouponUser extends DynamicOrmEntity{
     public static final String PROP_NAME_couponId = "couponId";
     public static final int PROP_ID_couponId = 3;
     
-    /* 使用状态: STATUS SMALLINT */
+    /* 使用状态: STATUS INTEGER */
     public static final String PROP_NAME_status = "status";
     public static final int PROP_ID_status = 4;
     
@@ -128,7 +128,7 @@ public class _LitemallCouponUser extends DynamicOrmEntity{
     private java.lang.String _couponId;
     
     /* 使用状态: STATUS */
-    private java.lang.Short _status;
+    private java.lang.Integer _status;
     
     /* 使用时间: USED_TIME */
     private java.time.LocalDateTime _usedTime;
@@ -300,9 +300,9 @@ public class _LitemallCouponUser extends DynamicOrmEntity{
             }
         
             case PROP_ID_status:{
-               java.lang.Short typedValue = null;
+               java.lang.Integer typedValue = null;
                if(value != null){
-                   typedValue = ConvertHelper.toShort(value,
+                   typedValue = ConvertHelper.toInteger(value,
                        err-> newTypeConversionError(PROP_NAME_status));
                }
                setStatus(typedValue);
@@ -411,7 +411,7 @@ public class _LitemallCouponUser extends DynamicOrmEntity{
         
             case PROP_ID_status:{
                onInitProp(propId);
-               this._status = (java.lang.Short)value;
+               this._status = (java.lang.Integer)value;
                
                break;
             }
@@ -531,7 +531,7 @@ public class _LitemallCouponUser extends DynamicOrmEntity{
     /**
      * 使用状态: STATUS
      */
-    public final java.lang.Short getStatus(){
+    public final java.lang.Integer getStatus(){
          onPropGet(PROP_ID_status);
          return _status;
     }
@@ -539,7 +539,7 @@ public class _LitemallCouponUser extends DynamicOrmEntity{
     /**
      * 使用状态: STATUS
      */
-    public final void setStatus(java.lang.Short value){
+    public final void setStatus(java.lang.Integer value){
         if(onPropSet(PROP_ID_status,value)){
             this._status = value;
             internalClearRefs(PROP_ID_status);

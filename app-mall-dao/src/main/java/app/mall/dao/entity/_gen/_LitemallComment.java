@@ -28,7 +28,7 @@ public class _LitemallComment extends DynamicOrmEntity{
     public static final String PROP_NAME_valueId = "valueId";
     public static final int PROP_ID_valueId = 2;
     
-    /* 评论类型: TYPE TINYINT */
+    /* 评论类型: TYPE INTEGER */
     public static final String PROP_NAME_type = "type";
     public static final int PROP_ID_type = 3;
     
@@ -52,7 +52,7 @@ public class _LitemallComment extends DynamicOrmEntity{
     public static final String PROP_NAME_picUrls = "picUrls";
     public static final int PROP_ID_picUrls = 8;
     
-    /* 评分， 1-5: STAR SMALLINT */
+    /* 评分， 1-5: STAR INTEGER */
     public static final String PROP_NAME_star = "star";
     public static final int PROP_ID_star = 9;
     
@@ -132,7 +132,7 @@ public class _LitemallComment extends DynamicOrmEntity{
     private java.lang.String _valueId;
     
     /* 评论类型: TYPE */
-    private java.lang.Byte _type;
+    private java.lang.Integer _type;
     
     /* 评论内容: CONTENT */
     private java.lang.String _content;
@@ -150,7 +150,7 @@ public class _LitemallComment extends DynamicOrmEntity{
     private java.lang.String _picUrls;
     
     /* 评分， 1-5: STAR */
-    private java.lang.Short _star;
+    private java.lang.Integer _star;
     
     /* 创建时间: ADD_TIME */
     private java.time.LocalDateTime _addTime;
@@ -303,9 +303,9 @@ public class _LitemallComment extends DynamicOrmEntity{
             }
         
             case PROP_ID_type:{
-               java.lang.Byte typedValue = null;
+               java.lang.Integer typedValue = null;
                if(value != null){
-                   typedValue = ConvertHelper.toByte(value,
+                   typedValue = ConvertHelper.toInteger(value,
                        err-> newTypeConversionError(PROP_NAME_type));
                }
                setType(typedValue);
@@ -363,9 +363,9 @@ public class _LitemallComment extends DynamicOrmEntity{
             }
         
             case PROP_ID_star:{
-               java.lang.Short typedValue = null;
+               java.lang.Integer typedValue = null;
                if(value != null){
-                   typedValue = ConvertHelper.toShort(value,
+                   typedValue = ConvertHelper.toInteger(value,
                        err-> newTypeConversionError(PROP_NAME_star));
                }
                setStar(typedValue);
@@ -427,7 +427,7 @@ public class _LitemallComment extends DynamicOrmEntity{
         
             case PROP_ID_type:{
                onInitProp(propId);
-               this._type = (java.lang.Byte)value;
+               this._type = (java.lang.Integer)value;
                
                break;
             }
@@ -469,7 +469,7 @@ public class _LitemallComment extends DynamicOrmEntity{
         
             case PROP_ID_star:{
                onInitProp(propId);
-               this._star = (java.lang.Short)value;
+               this._star = (java.lang.Integer)value;
                
                break;
             }
@@ -542,7 +542,7 @@ public class _LitemallComment extends DynamicOrmEntity{
     /**
      * 评论类型: TYPE
      */
-    public final java.lang.Byte getType(){
+    public final java.lang.Integer getType(){
          onPropGet(PROP_ID_type);
          return _type;
     }
@@ -550,7 +550,7 @@ public class _LitemallComment extends DynamicOrmEntity{
     /**
      * 评论类型: TYPE
      */
-    public final void setType(java.lang.Byte value){
+    public final void setType(java.lang.Integer value){
         if(onPropSet(PROP_ID_type,value)){
             this._type = value;
             internalClearRefs(PROP_ID_type);
@@ -656,7 +656,7 @@ public class _LitemallComment extends DynamicOrmEntity{
     /**
      * 评分， 1-5: STAR
      */
-    public final java.lang.Short getStar(){
+    public final java.lang.Integer getStar(){
          onPropGet(PROP_ID_star);
          return _star;
     }
@@ -664,7 +664,7 @@ public class _LitemallComment extends DynamicOrmEntity{
     /**
      * 评分， 1-5: STAR
      */
-    public final void setStar(java.lang.Short value){
+    public final void setStar(java.lang.Integer value){
         if(onPropSet(PROP_ID_star,value)){
             this._star = value;
             internalClearRefs(PROP_ID_star);

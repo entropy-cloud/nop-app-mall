@@ -16,7 +16,7 @@ public class LitemallOrder extends _LitemallOrder{
     }
 
     public LitemallOrderGoods addOrderGoods(String goodsId, String productId, String goodsSn,
-                                            BigDecimal price, short number) {
+                                            BigDecimal price, int number) {
         LitemallOrderGoods orderGoods = new LitemallOrderGoods();
         orderGoods.setGoodsId(goodsId);
         orderGoods.setProductId(productId);

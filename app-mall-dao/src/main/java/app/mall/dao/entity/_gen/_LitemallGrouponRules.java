@@ -48,7 +48,7 @@ public class _LitemallGrouponRules extends DynamicOrmEntity{
     public static final String PROP_NAME_expireTime = "expireTime";
     public static final int PROP_ID_expireTime = 7;
     
-    /* 团购规则状态，正常上线则0，到期自动下线则1，管理手动下线则2: STATUS SMALLINT */
+    /* 团购规则状态，正常上线则0，到期自动下线则1，管理手动下线则2: STATUS INTEGER */
     public static final String PROP_NAME_status = "status";
     public static final int PROP_ID_status = 8;
     
@@ -140,7 +140,7 @@ public class _LitemallGrouponRules extends DynamicOrmEntity{
     private java.time.LocalDateTime _expireTime;
     
     /* 团购规则状态，正常上线则0，到期自动下线则1，管理手动下线则2: STATUS */
-    private java.lang.Short _status;
+    private java.lang.Integer _status;
     
     /* 创建时间: ADD_TIME */
     private java.time.LocalDateTime _addTime;
@@ -340,9 +340,9 @@ public class _LitemallGrouponRules extends DynamicOrmEntity{
             }
         
             case PROP_ID_status:{
-               java.lang.Short typedValue = null;
+               java.lang.Integer typedValue = null;
                if(value != null){
-                   typedValue = ConvertHelper.toShort(value,
+                   typedValue = ConvertHelper.toInteger(value,
                        err-> newTypeConversionError(PROP_NAME_status));
                }
                setStatus(typedValue);
@@ -439,7 +439,7 @@ public class _LitemallGrouponRules extends DynamicOrmEntity{
         
             case PROP_ID_status:{
                onInitProp(propId);
-               this._status = (java.lang.Short)value;
+               this._status = (java.lang.Integer)value;
                
                break;
             }
@@ -607,7 +607,7 @@ public class _LitemallGrouponRules extends DynamicOrmEntity{
     /**
      * 团购规则状态，正常上线则0，到期自动下线则1，管理手动下线则2: STATUS
      */
-    public final java.lang.Short getStatus(){
+    public final java.lang.Integer getStatus(){
          onPropGet(PROP_ID_status);
          return _status;
     }
@@ -615,7 +615,7 @@ public class _LitemallGrouponRules extends DynamicOrmEntity{
     /**
      * 团购规则状态，正常上线则0，到期自动下线则1，管理手动下线则2: STATUS
      */
-    public final void setStatus(java.lang.Short value){
+    public final void setStatus(java.lang.Integer value){
         if(onPropSet(PROP_ID_status,value)){
             this._status = value;
             internalClearRefs(PROP_ID_status);

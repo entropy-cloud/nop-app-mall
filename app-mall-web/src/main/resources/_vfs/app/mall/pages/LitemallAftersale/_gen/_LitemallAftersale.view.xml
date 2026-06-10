@@ -19,16 +19,16 @@
             <cols>
 
                 <!--Id-->
-                <col id="id" mandatory="true" ui:number="true" sortable="true"/>
+                <col id="id" mandatory="true" sortable="true"/>
 
                 <!--售后编号-->
                 <col id="aftersaleSn" sortable="true"/>
 
                 <!--订单ID-->
-                <col id="orderId" mandatory="true" ui:number="true" sortable="true"/>
+                <col id="orderId" mandatory="true" sortable="true"/>
 
                 <!--用户ID-->
-                <col id="userId" mandatory="true" ui:number="true" sortable="true"/>
+                <col id="userId" mandatory="true" sortable="true"/>
 
                 <!--售后类型-->
                 <col id="type" ui:number="true" sortable="true"/>

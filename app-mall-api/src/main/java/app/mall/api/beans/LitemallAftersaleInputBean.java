@@ -54,16 +54,16 @@
         }
 
 
-        private Short _type;
+        private Integer _type;
 
     
         @PropMeta(propId=5)
     
-        public Short getType(){
+        public Integer getType(){
             return _type;
         }
 
-        public void setType(Short value){
+        public void setType(Integer value){
             this._type = value;
         }
 
@@ -124,16 +124,16 @@
         }
 
 
-        private Short _status;
+        private Integer _status;
 
     
         @PropMeta(propId=10)
     
-        public Short getStatus(){
+        public Integer getStatus(){
             return _status;
         }
 
-        public void setStatus(Short value){
+        public void setStatus(Integer value){
             this._status = value;
         }
 

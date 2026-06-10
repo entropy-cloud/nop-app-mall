@@ -34,11 +34,11 @@
         </prop>
         <prop name="orderStatus" displayName="订单状态" propId="4" mandatory="true" queryable="true" sortable="true"
               insertable="true" updatable="true">
-            <schema type="java.lang.Short" dict="mall/order-status"/>
+            <schema type="java.lang.Integer" dict="mall/order-status"/>
         </prop>
         <prop name="aftersaleStatus" displayName="售后状态" propId="5" queryable="true" sortable="true" insertable="true"
               updatable="true">
-            <schema type="java.lang.Short" dict="mall/aftersale-status"/>
+            <schema type="java.lang.Integer" dict="mall/aftersale-status"/>
         </prop>
         <prop name="consignee" displayName="收货人名称" propId="6" mandatory="true" queryable="true" sortable="true"
               insertable="true" updatable="true">
@@ -126,7 +126,7 @@
         </prop>
         <prop name="comments" displayName="待评价订单商品数量" propId="27" queryable="true" sortable="true" insertable="true"
               updatable="true">
-            <schema type="java.lang.Short"/>
+            <schema type="java.lang.Integer"/>
         </prop>
         <prop name="endTime" displayName="订单关闭时间" propId="28" queryable="true" sortable="true" insertable="true"
               updatable="true">

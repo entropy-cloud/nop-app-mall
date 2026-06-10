@@ -19,13 +19,13 @@
             <cols>
 
                 <!--Id-->
-                <col id="id" mandatory="true" ui:number="true" sortable="true"/>
+                <col id="id" mandatory="true" sortable="true"/>
 
                 <!--如果type=0，则是商品评论；如果是type=1，则是专题评论。-->
-                <col id="valueId" mandatory="true" ui:number="true" sortable="true"/>
+                <col id="valueId" mandatory="true" sortable="true"/>
 
                 <!--评论类型-->
-                <col id="type" mandatory="true" sortable="true"/>
+                <col id="type" mandatory="true" ui:number="true" sortable="true"/>
 
                 <!--评论内容-->
                 <col id="content" sortable="true"/>
@@ -34,7 +34,7 @@
                 <col id="adminContent" sortable="true"/>
 
                 <!--用户ID-->
-                <col id="userId" mandatory="true" ui:number="true" sortable="true"/>
+                <col id="userId" mandatory="true" sortable="true"/>
 
                 <!--是否含有图片-->
                 <col id="hasPicture" sortable="true"/>
