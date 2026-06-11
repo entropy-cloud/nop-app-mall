@@ -74,7 +74,7 @@ If unsure, use a full plan. If the task is clearly docs-only and the real risk i
 5. **Proof before closure.** Do not mark a plan complete until the repo contains verifiable proof for every exit criterion.
 6. **No code-design dumps.** The plan captures scope, proof, and closure logic, not low-level implementation detail. Exception: refactoring and extraction plans MUST include the interface contracts between extracted modules — these are structural boundary definitions, not implementation pseudocode.
 7. **Tag items with types.** Each execution item must be `Fix`, `Add`, `Decision`, `Proof`, or `Follow-up`. `Fix` covers defect repairs; `Add` covers net-new code or config. An item may carry multiple types (e.g., `Decision | Add`); when it does, all implied obligations apply. A confirmed live defect or contract drift must be `Fix`, not `Follow-up`. When 80%+ of items in a phase share one type, declare the uniform type at the phase level instead of per-item (e.g., `Phase 1 — Fix-heavy (8/10 items tagged Fix)`).
-8. **Record skill usage deliberately.** For each phase or item where a reusable skill matters, record `Skill: <name>` or `Skill: none`. Skills choose the work method, not the business truth. If a skill is named, its required inputs and expected output must already be clear from `docs/skills/README.md` and the referenced owner docs.
+8. **Record skill usage deliberately.** Every phase must declare `Required Skill`（见规则 #14）。每个 execution item 不需要重复标注 skill——phase 级别的 `Required Skill` 已经覆盖该 phase 下所有 item 的 skill 加载义务。Skills choose the work method, not the business truth. If a skill is named, its required inputs and expected output must already be clear from `docs/skills/README.md` and the referenced owner docs.
 9. **Record Decisions with rationale.** Every `Decision` item must document the choice, the alternatives considered, and the residual risk if any. Write the rationale into the plan or a referenced doc. If a decision requires prototyping or exploration before committing, add a temporary `Explore` item that must conclude before the `Decision` resolves. Framework-forced or obvious choices (e.g., "must match existing framework pattern") can be noted as constrained without full alternatives analysis.
 10. **Checklist integrity before closure.** Before marking a plan complete, no in-scope checklist item may remain unchecked. Either complete it or explicitly move it out of scope with a written reason. Scope narrowing after plan approval is a scope change and must be recorded with rationale; silently removing items from scope is a violation.
 11. **Text consistency before closure.** Before closing, verify that `Plan Status`, every phase `Status`, every phase `Exit Criteria`, `Closure Gates`, and the `docs/logs/` entry all agree. No `completed` at the top while a phase inside still says `planned`.
@@ -106,7 +106,7 @@ A `Follow-up` item must name the trigger condition that would promote it into sc
 3. When you start a slice, update its `Status` to `in progress`.
 4. When you finish a slice, update its `Status` to `completed` and check off all its execution items and exit criteria.
 6. **MANDATORY SKILL LOADING GATE: Before executing ANY phase, load every skill listed in `Required Skill` for that phase.** 见 Minimum Rules #14。此规则适用于所有 agent（主 agent、子 agent、审核 agent）。加载 skill 后读完其路由的文档再写代码。后端代码每写完一个方法用 selfcheck 校验；前端和测试代码在每个文件/类完成后校验。如果 phase 委托给 subagent，prompt 必须包含 `Required Skill` 名称和加载后读文档+自检的指令。
-7. Confirm the listed `Skill` still matches the task and available inputs. If not, update the plan before proceeding.
+7. Confirm the listed `Required Skill` still matches the task and available inputs. If not, update the plan before proceeding.
 8. If a slice changes the live baseline or public contract, its exit criteria must include the doc-update step. If no doc update is needed, write `No owner-doc update required` explicitly.
 9. Do not mark a slice complete because the function signature exists. Verify that the behavior, error handling, and test coverage land too. **BizModel `@BizMutation`/`@BizQuery` 方法的测试必须通过 `IGraphQLEngine` 验证（`JunitAutoTestCase` 录制回放），不能只用实体级纯逻辑测试替代。`@BizAction` 方法需要测试时通过 `I*XxxBiz` 接口调用。**
 10. If an item cannot be completed, move it to `Deferred But Adjudicated` with classification and reason. Do not leave it unchecked in the execution list.
@@ -199,20 +199,15 @@ After `Plan Status: completed` has been set and the closure audit has passed:
 
 Status: planned
 Targets: `<paths>`
-Skill: `<skill-name | none>`
 Required Skill: `<scan available skills, list all whose description/trigger matches this phase; none if no match>`
 
 - Item Types: `Fix | Decision | Proof | Follow-up`
 - Prereqs: <phases or external dependencies that must complete first>
 
 - [ ] **Skill loading gate:** Scan available skills and load every skill listed in `Required Skill` above. Read all docs the skills route you to. After each method/class written, use the selfcheck mechanism provided by the loaded skill(s) to verify no anti-patterns.
-  - Skill: `<skill-name | none>`
 - [ ] <implementation item>
-      - Skill: `<skill-name | none>`
 - [ ] <Decision: record rationale and alternatives in the item or a referenced doc>
-  - Skill: `<skill-name | none>`
 - [ ] <Proof: specify test strategy (unit/integration/e2e) and exact verification commands>
-  - Skill: `<skill-name | none>`
 
 Exit Criteria:
 

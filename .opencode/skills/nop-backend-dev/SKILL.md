@@ -143,29 +143,78 @@ LitemallGoodsProduct product = goodsProductBiz.requireEntity(productId, null, co
 LitemallGoods goods = product.getGoods();
 ```
 
-### 6. 实体操作
+### 6. CrudBizModel API 签名
+
+**基础签名见 `io.nop.orm.biz.ICrudBiz<T>`（已实现）。以下仅列出 CrudBizModel 额外提供的 `do*` 辅助方法和钩子。**
+
+> **写代码前必须确认签名与 ICrudBiz 一致。最常见错误：漏参数、传错类型。**
+
+#### ICrudBiz 高频方法速查（防错）
 
 ```java
-// 创建：必须用 newEntity()
-LitemallOrder order = newEntity();
+// ★ 查询类 — 全部三参数：(query, selection, context)
+List<T>   findList(QueryBean query, FieldSelectionBean selection, IServiceContext context);
+PageBean<T> findPage(QueryBean query, FieldSelectionBean selection, IServiceContext context);
+long      findCount(QueryBean query, IServiceContext context);
+T         findFirst(QueryBean query, FieldSelectionBean selection, IServiceContext context);
+T         get(String id, boolean ignoreUnknown, IServiceContext context);
 
-// 程序化保存
-saveEntity(order, null, context);
+// ★ 修改类
+T         save(Map<String, Object> data, IServiceContext context);
+T         update(Map<String, Object> data, IServiceContext context);
+boolean   delete(String id, IServiceContext context);           // ★ 参数是String id，不是实体！
+Set<String> batchDelete(Set<String> ids, IServiceContext context);
 
-// 前端Map保存
-save(data, context);
+// ★ 管道类（@BizAction）
+T         requireEntity(String id, String action, IServiceContext context);
+void      saveEntity(T entity, String action, IServiceContext context);
+void      updateEntity(T entity, String action, IServiceContext context);
+void      deleteEntity(T entity, String action, IServiceContext context);
+T         newEntity();
+```
 
-// 获取（不存在抛错）
-LitemallOrder order = requireEntity(orderId, null, context);
+#### CrudBizModel 额外 do* 辅助方法
 
-// 获取（可返回null）
-LitemallOrder order = get(orderId, false, context);
+```java
+// 带自定义prepareQuery的分页/列表
+PageBean<T> doFindPage(QueryBean query,
+    BiConsumer<QueryBean, IServiceContext> prepareQuery,
+    FieldSelectionBean selection, IServiceContext context);
 
-// 查询列表
-List<LitemallOrder> list = findList(query, null, context);
+List<T> doFindList(QueryBean query,
+    BiConsumer<QueryBean, IServiceContext> prepareQuery,
+    FieldSelectionBean selection, IServiceContext context);
 
-// 分页查询
-PageBean<LitemallOrder> page = findPage(query, null, context);
+// 绕过管道直接查数据库（底层方法，业务代码谨慎使用，需注释说明原因）
+List<T> doFindListByQueryDirectly(QueryBean query, IServiceContext context);
+PageBean<T> doFindPageByQueryDirectly(QueryBean query, FieldSelectionBean selection, IServiceContext context);
+```
+
+#### 钩子方法（覆盖以注入自定义逻辑）
+
+```java
+protected void defaultPrepareQuery(QueryBean query, IServiceContext context);
+protected void defaultPrepareSave(EntityData<T> entityData, IServiceContext context);
+protected void defaultPrepareUpdate(EntityData<T> entityData, IServiceContext context);
+protected void defaultPrepareDelete(T entity, IServiceContext context);
+```
+
+#### QueryBean 排序
+
+```java
+// 两参数：字段名 + 是否降序（不是 "-fieldName" 字符串！）
+query.addOrderField("addTime", true);   // addTime 降序
+query.addOrderField("isDefault", true);
+```
+
+#### 常见调用模式
+
+```java
+List<T> list = findList(query, null, context);              // selection传null
+PageBean<T> page = findPage(query, null, context);          // selection传null
+T entity = requireEntity(id, null, context);                // action传null
+T entity = get(id, false, context);                         // 不存在返回null
+delete(id, context);                                        // ★ 传String id
 ```
 
 ### 7. 错误处理
@@ -231,6 +280,13 @@ query.setLimit(20);
 | 自定义方法与ICrudBiz标准方法重名 | 用不同的名字 |
 | 已有ORM关系时用IBiz.get()获取关联 | 用关系getter |
 | `daoProvider().daoFor(Xxx.class)` 在业务BizModel中 | 注入 `I*Biz` |
+| `findList(query, context)` 少传selection参数 | `findList(query, null, context)` 三参数 |
+| `delete(entityObj, context)` 传实体对象 | `delete(id, context)` 传String id |
+| `query.addOrderField("-fieldName")` 传字符串 | `query.addOrderField("fieldName", true)` 传name+desc |
+| `doFindListByQueryDirectly()` 在业务代码中 | `findList(query, null, context)` 走管道 |
+| `new XxxEntity()` 直接new实体 | `newEntity()` 走OrmEntity工厂 |
+| `findList(query, null, context).size()` 只为计数 | `findCount(query, context)` |
+| `count(query, context)` CrudBizModel无此方法 | `findCount(query, context)` |
 | 局部DTO放入 `*-api/` 模块 | 放 `*-dao/.../dto/` 或 `*-service/` |
 | 创建 `*Service`/`*Controller` 类 | Nop用BizModel/IBiz |
 | BizModel返回值无脑用DTO代替Entity | 实体能表达的优先用实体 |
@@ -242,7 +298,7 @@ query.setLimit(20);
 
 | 用途 | 正确用法 | 不要用 |
 |------|---------|--------|
-| 时间 | `CoreMetrics.currentTimeMillis()` | `System.currentTimeMillis()` |
+| 时间 | `io.nop.api.core.time.CoreMetrics.currentTimeMillis()` | `System.currentTimeMillis()` |
 | JSON | `JsonTool.parse/serialize()` | 第三方JSON库 |
 | 字符串 | `StringHelper.isEmpty/isBlank/...` | Apache Commons |
 | 资源关闭 | `IoHelper.safeClose(obj)` | 手写try-catch close |
