@@ -104,7 +104,7 @@ public class LitemallAftersaleBizModel extends CrudBizModel<LitemallAftersale> i
         wxPayRefundRequest.setRefundFee(entity.getAmount());
 
         // 如果失败会抛出异常
-        payService.refund(ApiRequest.build(wxPayRefundRequest)).get();
+        payService.refund(wxPayRefundRequest);
 
         entity.setStatus(AppMallDaoConstants.AFTERSALE_STATUS_REFUND);
         entity.setHandleTime(DateHelper.currentDateTime());

@@ -88,8 +88,8 @@ If unsure, use a full plan. If the task is clearly docs-only and the real risk i
     - For docs-only `analysis / audit` work, one sanity-check review of the brief is usually enough when a brief exists at all.
     - For docs-only `analysis / audit` work, repeated adversarial review should target the output artifact, not the planning artifact.
 13. **Non-degradable items** cannot be downgraded to non-blocking follow-ups: confirmed live defects, confirmed contract drift, confirmed owner-doc drift, and CI/lint rules already fixed in the repo.
-14. **Every phase must list `Required Pre-Reading`.** 计划阶段只列路径不读内容（执行上下文独立，不记得计划阶段读过的内容）。后端任务从 `00-required-reading-backend.md` 索引选路径，前端/页面任务从 `00-required-reading-frontend.md` 索引选路径，单元/集成测试任务从 `00-required-reading-testing.md` 索引选路径，E2E 测试任务从 `00-required-reading-e2e-testing.md` 索引选路径。执行时必须读完全部列出文档后才能写代码（见 When Executing #6）。Nop 平台相关 phase 写 `none` 会 fail plan audit。
-15. **BizModel 方法必须通过 API 层测试。** 所有 `@BizMutation` 和 `@BizQuery` 方法必须通过 `IGraphQLEngine`（`JunitAutoTestCase` 录制回放）测试，不能只写实体级纯逻辑测试。`@BizAction` 方法无法通过 GraphQL 调用，如果需要测试则通过注入 `I*XxxBiz` 接口直接调用。含有新增 `@BizQuery`/`@BizMutation`/`@BizAction` 方法的 phase，其 `Required Pre-Reading` 必须包含 `00-required-reading-testing.md` 索引下的测试文档路径，测试项必须明确指定通过 `IGraphQLEngine` 还是 `I*XxxBiz` 接口测试。
+14. **Every phase must list `Required Skill`.** 根据 AGENTS.md 的 Mandatory Skill Loading 表选择对应 skill（后端→`nop-backend-dev`，前端→`nop-frontend-dev`，测试→`nop-testing`，ORM→`nop-orm-modeler`）。执行时必须加载 skill 并读完其路由的文档后才能写代码（见 When Executing #6）。Nop 平台相关 phase 写 `none` 会 fail plan audit。
+15. **BizModel 方法必须通过 API 层测试。** 所有 `@BizMutation` 和 `@BizQuery` 方法必须通过 `IGraphQLEngine`（`JunitAutoTestCase` 录制回放）测试，不能只写实体级纯逻辑测试。`@BizAction` 方法无法通过 GraphQL 调用，如果需要测试则通过注入 `I*XxxBiz` 接口直接调用。含有新增 `@BizQuery`/`@BizMutation`/`@BizAction` 方法的 phase，其 `Required Skill` 必须同时包含 `nop-testing`，测试项必须明确指定通过 `IGraphQLEngine` 还是 `I*XxxBiz` 接口测试。
 
 ### Anti-Slacking Rule
 
@@ -105,7 +105,7 @@ A `Follow-up` item must name the trigger condition that would promote it into sc
 2. **Roadmap update (plan creation):** If this plan implements a roadmap phase in `docs/backlog/implementation-roadmap.md`, update the phase status from `todo` to `planned`. Do this when the plan passes its plan audit and implementation is about to begin.
 3. When you start a slice, update its `Status` to `in progress`.
 4. When you finish a slice, update its `Status` to `completed` and check off all its execution items and exit criteria.
-6. **MANDATORY PRE-READING GATE: Before executing ANY phase, read EVERY doc listed in `Required Pre-Reading` for that phase.** 见 Minimum Rules #14。不跳过、不依赖缓存、不假设已知道。读完后确认理解 anti-patterns 和 safe API 再写代码。如果 phase 委托给 subagent，prompt 必须包含完整 `Required Pre-Reading` 列表和读后再编码的指令。
+6. **MANDATORY SKILL LOADING GATE: Before executing ANY phase, load the skill listed in `Required Skill` for that phase.** 见 Minimum Rules #14。此规则适用于所有 agent（主 agent、子 agent、审核 agent）。加载 skill 后读完其路由的文档再写代码。后端代码每写完一个方法用 selfcheck 校验；前端和测试代码在每个文件/类完成后校验。如果 phase 委托给 subagent，prompt 必须包含 `Required Skill` 名称和加载后读文档+自检的指令。
 7. Confirm the listed `Skill` still matches the task and available inputs. If not, update the plan before proceeding.
 8. If a slice changes the live baseline or public contract, its exit criteria must include the doc-update step. If no doc update is needed, write `No owner-doc update required` explicitly.
 9. Do not mark a slice complete because the function signature exists. Verify that the behavior, error handling, and test coverage land too. **BizModel `@BizMutation`/`@BizQuery` 方法的测试必须通过 `IGraphQLEngine` 验证（`JunitAutoTestCase` 录制回放），不能只用实体级纯逻辑测试替代。`@BizAction` 方法需要测试时通过 `I*XxxBiz` 接口调用。**
@@ -200,12 +200,12 @@ After `Plan Status: completed` has been set and the closure audit has passed:
 Status: planned
 Targets: `<paths>`
 Skill: `<skill-name | none>`
-Required Pre-Reading: `<后端: 00-required-reading-backend.md 中的路径; 前端: 00-required-reading-frontend.md 中的路径; 单元/集成测试: 00-required-reading-testing.md 中的路径; E2E测试: 00-required-reading-e2e-testing.md 中的路径; none if no platform docs needed>`
+Required Skill: `<nop-backend-dev | nop-frontend-dev | nop-testing | nop-orm-modeler | none>`
 
 - Item Types: `Fix | Decision | Proof | Follow-up`
 - Prereqs: <phases or external dependencies that must complete first>
 
-- [ ] **Pre-flight:** Read all docs listed in `Required Pre-Reading` above. Confirm understanding of key rules (anti-patterns, safe APIs, return-type conventions) before proceeding.
+- [ ] **Skill loading gate:** Load the skill listed in `Required Skill` above. Read all docs the skill routes you to. After each method/class written, use the selfcheck document referenced by the skill to verify no anti-patterns.
   - Skill: `<skill-name | none>`
 - [ ] <implementation item>
       - Skill: `<skill-name | none>`
@@ -235,8 +235,8 @@ Exit Criteria:
 - [ ] all new `@BizMutation`/`@BizQuery` methods tested via `IGraphQLEngine` (not entity-level unit tests only); `@BizAction` methods tested via `I*XxxBiz` interface if applicable
 - [ ] no in-scope item downgraded to deferred/follow-up
 - [ ] plan audit passed before implementation
-- [ ] each phase has `Required Pre-Reading` listed, and Nop-platform phases do not skip `docs-for-ai/` references
-- [ ] pre-flight reading verification: code in each phase follows the patterns and anti-patterns documented in its `Required Pre-Reading` (no `Reference Docs` anti-patterns in the output)
+- [ ] each phase has `Required Skill` listed, and Nop-platform phases do not write `none` without justification
+- [ ] skill loading verification: each phase loaded its `Required Skill`, read routed docs, and selfchecked after each method/class (no anti-patterns in the output)
 - [ ] text consistency verified: status, phases, gates, and log all agree
 - [ ] closure audit was independent
 - [ ] closure evidence exists in files

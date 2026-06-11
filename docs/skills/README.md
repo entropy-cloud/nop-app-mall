@@ -39,7 +39,6 @@ Do not add broad business-scenario skills as a replacement for project-specific 
 | `code-quality-audit-prompt.md`            | reviewing code for behavioral risk and implementation quality                      | only formatting or trivial nits are needed    | changed files, owner docs, tests or verification evidence                    | severity-ordered findings                      |
 | `code-refactor-discovery-prompt.md`       | structural cleanup candidates need discovery before refactoring                    | the structural target is already agreed       | target area, owner docs, current code                                        | ranked refactor candidates                     |
 | `code-refactor-prompt.md`                 | behavior-preserving structural refactor work is the task                           | the task changes supported behavior           | target area, invariants, verification commands                               | safe refactor execution and proof              |
-| `bizmodel-method-selfcheck-prompt.md`     | just finished writing a BizModel method and need to verify no anti-patterns       | doing pre-flight reading (use docs directly)  | the method just written, `00-required-reading-backend.md` anti-pattern table | pass/fail per checklist item, immediate fix    |
 
 ## Starter Skills
 
@@ -55,4 +54,3 @@ Do not add broad business-scenario skills as a replacement for project-specific 
 - `code-quality-audit-prompt.md`
 - `code-refactor-discovery-prompt.md`
 - `code-refactor-prompt.md`
-- `bizmodel-method-selfcheck-prompt.md`

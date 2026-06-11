@@ -1,8 +1,10 @@
 package app.mall.pay;
 
-import io.nop.api.core.beans.ApiRequest;
-import io.nop.api.core.beans.ApiResponse;
+import io.nop.api.core.annotations.biz.BizModel;
+import io.nop.api.core.annotations.biz.BizMutation;
 
+@BizModel("PayService")
 public interface PayService {
-    ApiResponse<PayRefundResponseBean> refund(ApiRequest<PayRefundRequestBean> req);
+    @BizMutation("refund")
+    PayRefundResponseBean refund(PayRefundRequestBean req);
 }
