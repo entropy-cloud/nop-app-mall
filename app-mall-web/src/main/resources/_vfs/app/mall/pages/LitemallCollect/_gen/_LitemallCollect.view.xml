@@ -25,17 +25,17 @@
                 <col id="userId" mandatory="true" sortable="true"/>
 
                 <!--如果type=0，则是商品ID；如果type=1，则是专题ID-->
-                <col id="valueId" mandatory="true" ui:number="true" sortable="true"/>
+                <col id="valueId" mandatory="true" sortable="true"/>
 
                 <!--收藏类型-->
-                <col id="type" mandatory="true" sortable="true"/>
+                <col id="type" mandatory="true" ui:number="true" sortable="true"/>
             </cols>
         </grid>
         <grid id="pick-list" x:prototype="list" x:abstract="true"/>
     </grids>
 
     <forms>
-        <form id="view" editMode="view" title="查看-收藏表" i18n-en:title="View ">
+        <form id="view" editMode="view" title="查看-收藏表" i18n-en:title="">
             <layout>
  id[Id]
  userId[用户ID]
@@ -43,8 +43,8 @@
  type[收藏类型]
 </layout>
         </form>
-        <form id="add" editMode="add" title="新增-收藏表" i18n-en:title="Add " x:prototype="edit"/>
-        <form id="edit" editMode="edit" title="编辑-收藏表" i18n-en:title="Edit ">
+        <form id="add" editMode="add" title="新增-收藏表" i18n-en:title="" x:prototype="edit"/>
+        <form id="edit" editMode="edit" title="编辑-收藏表" i18n-en:title="">
             <layout>
  userId[用户ID]
  valueId[如果type=0，则是商品ID；如果type=1，则是专题ID]
@@ -53,7 +53,7 @@
         </form>
         <form id="query" editMode="query" title="查询条件" i18n-en:title="Query Condition" x:abstract="true"/>
         <form id="asideFilter" editMode="query" x:abstract="true" submitOnChange="true"/>
-        <form id="batchUpdate" editMode="edit" x:abstract="true" title="修改-收藏表" i18n-en:title="Update "/>
+        <form id="batchUpdate" editMode="edit" x:abstract="true" title="修改-收藏表" i18n-en:title=""/>
     </forms>
 
     <pages>

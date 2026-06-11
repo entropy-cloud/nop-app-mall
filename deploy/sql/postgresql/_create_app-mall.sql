@@ -410,6 +410,22 @@ CREATE TABLE litemall_aftersale(
   constraint PK_litemall_aftersale primary key (id)
 );
 
+CREATE TABLE litemall_groupon(
+  id INT4 NOT NULL ,
+  order_id INT4 NOT NULL ,
+  groupon_id INT4  ,
+  rules_id INT4 NOT NULL ,
+  user_id INT4 NOT NULL ,
+  share_url VARCHAR(255)  ,
+  creator_user_id INT4 NOT NULL ,
+  creator_user_time TIMESTAMP  ,
+  status INT4  ,
+  add_time TIMESTAMP NOT NULL ,
+  update_time TIMESTAMP  ,
+  deleted BOOLEAN  ,
+  constraint PK_litemall_groupon primary key (id)
+);
+
 CREATE TABLE litemall_cart(
   id INT4 NOT NULL ,
   user_id INT4  ,
@@ -505,22 +521,6 @@ CREATE TABLE litemall_order_goods(
   update_time TIMESTAMP  ,
   deleted BOOLEAN  ,
   constraint PK_litemall_order_goods primary key (id)
-);
-
-CREATE TABLE litemall_groupon(
-  id INT4 NOT NULL ,
-  order_id INT4 NOT NULL ,
-  groupon_id INT4  ,
-  rules_id INT4 NOT NULL ,
-  user_id INT4 NOT NULL ,
-  share_url VARCHAR(255)  ,
-  creator_user_id INT4 NOT NULL ,
-  creator_user_time TIMESTAMP  ,
-  status INT4  ,
-  add_time TIMESTAMP NOT NULL ,
-  update_time TIMESTAMP  ,
-  deleted BOOLEAN  ,
-  constraint PK_litemall_groupon primary key (id)
 );
 
 
@@ -1184,6 +1184,32 @@ CREATE TABLE litemall_groupon(
                     
       COMMENT ON COLUMN litemall_aftersale.deleted IS '逻辑删除';
                     
+      COMMENT ON TABLE litemall_groupon IS '团购活动表';
+                
+      COMMENT ON COLUMN litemall_groupon.id IS 'Id';
+                    
+      COMMENT ON COLUMN litemall_groupon.order_id IS '订单ID';
+                    
+      COMMENT ON COLUMN litemall_groupon.groupon_id IS '如果是开团用户，则groupon_id是0；如果是参团用户，则groupon_id是团购活动ID';
+                    
+      COMMENT ON COLUMN litemall_groupon.rules_id IS '团购规则ID';
+                    
+      COMMENT ON COLUMN litemall_groupon.user_id IS '用户ID';
+                    
+      COMMENT ON COLUMN litemall_groupon.share_url IS '团购分享图片地址';
+                    
+      COMMENT ON COLUMN litemall_groupon.creator_user_id IS '开团用户ID';
+                    
+      COMMENT ON COLUMN litemall_groupon.creator_user_time IS '开团时间';
+                    
+      COMMENT ON COLUMN litemall_groupon.status IS '团购活动状态，开团未支付则0，开团中则1，开团失败则2';
+                    
+      COMMENT ON COLUMN litemall_groupon.add_time IS '创建时间';
+                    
+      COMMENT ON COLUMN litemall_groupon.update_time IS '更新时间';
+                    
+      COMMENT ON COLUMN litemall_groupon.deleted IS '逻辑删除';
+                    
       COMMENT ON TABLE litemall_cart IS '购物车商品表';
                 
       COMMENT ON COLUMN litemall_cart.id IS 'Id';
@@ -1335,30 +1361,4 @@ CREATE TABLE litemall_groupon(
       COMMENT ON COLUMN litemall_order_goods.update_time IS '更新时间';
                     
       COMMENT ON COLUMN litemall_order_goods.deleted IS '逻辑删除';
-                    
-      COMMENT ON TABLE litemall_groupon IS '团购活动表';
-                
-      COMMENT ON COLUMN litemall_groupon.id IS 'Id';
-                    
-      COMMENT ON COLUMN litemall_groupon.order_id IS '订单ID';
-                    
-      COMMENT ON COLUMN litemall_groupon.groupon_id IS '如果是开团用户，则groupon_id是0；如果是参团用户，则groupon_id是团购活动ID';
-                    
-      COMMENT ON COLUMN litemall_groupon.rules_id IS '团购规则ID';
-                    
-      COMMENT ON COLUMN litemall_groupon.user_id IS '用户ID';
-                    
-      COMMENT ON COLUMN litemall_groupon.share_url IS '团购分享图片地址';
-                    
-      COMMENT ON COLUMN litemall_groupon.creator_user_id IS '开团用户ID';
-                    
-      COMMENT ON COLUMN litemall_groupon.creator_user_time IS '开团时间';
-                    
-      COMMENT ON COLUMN litemall_groupon.status IS '团购活动状态，开团未支付则0，开团中则1，开团失败则2';
-                    
-      COMMENT ON COLUMN litemall_groupon.add_time IS '创建时间';
-                    
-      COMMENT ON COLUMN litemall_groupon.update_time IS '更新时间';
-                    
-      COMMENT ON COLUMN litemall_groupon.deleted IS '逻辑删除';
                     

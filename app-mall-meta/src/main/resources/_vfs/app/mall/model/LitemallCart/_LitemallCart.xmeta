@@ -48,7 +48,7 @@
         </prop>
         <prop name="number" displayName="商品货品的数量" propId="8" queryable="true" sortable="true" insertable="true"
               updatable="true">
-            <schema type="java.lang.Short"/>
+            <schema type="java.lang.Integer"/>
         </prop>
         <prop name="specifications" displayName="商品规格值列表" propId="9" queryable="true" sortable="true" insertable="true"
               updatable="true">

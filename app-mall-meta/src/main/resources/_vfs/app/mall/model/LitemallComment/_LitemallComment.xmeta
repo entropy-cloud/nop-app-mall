@@ -24,11 +24,11 @@
         </prop>
         <prop name="valueId" displayName="如果type=0，则是商品评论；如果是type=1，则是专题评论。" propId="2" mandatory="true"
               queryable="true" sortable="true" insertable="true" updatable="true">
-            <schema type="java.lang.Integer"/>
+            <schema type="java.lang.String"/>
         </prop>
         <prop name="type" displayName="评论类型" propId="3" mandatory="true" queryable="true" sortable="true"
               insertable="true" updatable="true">
-            <schema type="java.lang.Byte"/>
+            <schema type="java.lang.Integer"/>
         </prop>
         <prop name="content" displayName="评论内容" propId="4" queryable="true" sortable="true" insertable="true"
               updatable="true">
@@ -52,7 +52,7 @@
         </prop>
         <prop name="star" displayName="评分， 1-5" propId="9" queryable="true" sortable="true" insertable="true"
               updatable="true">
-            <schema type="java.lang.Short"/>
+            <schema type="java.lang.Integer"/>
         </prop>
         <prop name="addTime" displayName="创建时间" propId="10" queryable="true" sortable="true" insertable="false"
               updatable="false" internal="true" ui:show="X">

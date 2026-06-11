@@ -56,7 +56,7 @@
     </grids>
 
     <forms>
-        <form id="view" editMode="view" title="查看-购物车商品表" i18n-en:title="View ">
+        <form id="view" editMode="view" title="查看-购物车商品表" i18n-en:title="">
             <layout>
  id[Id] userId[用户ID]
  goodsId[商品ID] goodsSn[商品编号]
@@ -66,8 +66,8 @@
  picUrl[商品图片或者商品货品图片] 
 </layout>
         </form>
-        <form id="add" editMode="add" title="新增-购物车商品表" i18n-en:title="Add " x:prototype="edit"/>
-        <form id="edit" editMode="edit" title="编辑-购物车商品表" i18n-en:title="Edit ">
+        <form id="add" editMode="add" title="新增-购物车商品表" i18n-en:title="" x:prototype="edit"/>
+        <form id="edit" editMode="edit" title="编辑-购物车商品表" i18n-en:title="">
             <layout>
  userId[用户ID] goodsId[商品ID]
  goodsSn[商品编号] goodsName[商品名称]
@@ -78,7 +78,7 @@
         </form>
         <form id="query" editMode="query" title="查询条件" i18n-en:title="Query Condition" x:abstract="true"/>
         <form id="asideFilter" editMode="query" x:abstract="true" submitOnChange="true"/>
-        <form id="batchUpdate" editMode="edit" x:abstract="true" title="修改-购物车商品表" i18n-en:title="Update "/>
+        <form id="batchUpdate" editMode="edit" x:abstract="true" title="修改-购物车商品表" i18n-en:title=""/>
     </forms>
 
     <pages>

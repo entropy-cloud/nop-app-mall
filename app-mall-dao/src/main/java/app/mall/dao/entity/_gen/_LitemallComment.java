@@ -129,10 +129,10 @@ public class _LitemallComment extends DynamicOrmEntity{
     private java.lang.String _id;
     
     /* 如果type=0，则是商品评论；如果是type=1，则是专题评论。: VALUE_ID */
-    private java.lang.Integer _valueId;
+    private java.lang.String _valueId;
     
     /* 评论类型: TYPE */
-    private java.lang.Byte _type;
+    private java.lang.Integer _type;
     
     /* 评论内容: CONTENT */
     private java.lang.String _content;
@@ -150,7 +150,7 @@ public class _LitemallComment extends DynamicOrmEntity{
     private java.lang.String _picUrls;
     
     /* 评分， 1-5: STAR */
-    private java.lang.Short _star;
+    private java.lang.Integer _star;
     
     /* 创建时间: ADD_TIME */
     private java.time.LocalDateTime _addTime;
@@ -293,9 +293,9 @@ public class _LitemallComment extends DynamicOrmEntity{
             }
         
             case PROP_ID_valueId:{
-               java.lang.Integer typedValue = null;
+               java.lang.String typedValue = null;
                if(value != null){
-                   typedValue = ConvertHelper.toInteger(value,
+                   typedValue = ConvertHelper.toString(value,
                        err-> newTypeConversionError(PROP_NAME_valueId));
                }
                setValueId(typedValue);
@@ -303,9 +303,9 @@ public class _LitemallComment extends DynamicOrmEntity{
             }
         
             case PROP_ID_type:{
-               java.lang.Byte typedValue = null;
+               java.lang.Integer typedValue = null;
                if(value != null){
-                   typedValue = ConvertHelper.toByte(value,
+                   typedValue = ConvertHelper.toInteger(value,
                        err-> newTypeConversionError(PROP_NAME_type));
                }
                setType(typedValue);
@@ -363,9 +363,9 @@ public class _LitemallComment extends DynamicOrmEntity{
             }
         
             case PROP_ID_star:{
-               java.lang.Short typedValue = null;
+               java.lang.Integer typedValue = null;
                if(value != null){
-                   typedValue = ConvertHelper.toShort(value,
+                   typedValue = ConvertHelper.toInteger(value,
                        err-> newTypeConversionError(PROP_NAME_star));
                }
                setStar(typedValue);
@@ -420,14 +420,14 @@ public class _LitemallComment extends DynamicOrmEntity{
         
             case PROP_ID_valueId:{
                onInitProp(propId);
-               this._valueId = (java.lang.Integer)value;
+               this._valueId = (java.lang.String)value;
                
                break;
             }
         
             case PROP_ID_type:{
                onInitProp(propId);
-               this._type = (java.lang.Byte)value;
+               this._type = (java.lang.Integer)value;
                
                break;
             }
@@ -469,7 +469,7 @@ public class _LitemallComment extends DynamicOrmEntity{
         
             case PROP_ID_star:{
                onInitProp(propId);
-               this._star = (java.lang.Short)value;
+               this._star = (java.lang.Integer)value;
                
                break;
             }
@@ -523,7 +523,7 @@ public class _LitemallComment extends DynamicOrmEntity{
     /**
      * 如果type=0，则是商品评论；如果是type=1，则是专题评论。: VALUE_ID
      */
-    public final java.lang.Integer getValueId(){
+    public final java.lang.String getValueId(){
          onPropGet(PROP_ID_valueId);
          return _valueId;
     }
@@ -531,7 +531,7 @@ public class _LitemallComment extends DynamicOrmEntity{
     /**
      * 如果type=0，则是商品评论；如果是type=1，则是专题评论。: VALUE_ID
      */
-    public final void setValueId(java.lang.Integer value){
+    public final void setValueId(java.lang.String value){
         if(onPropSet(PROP_ID_valueId,value)){
             this._valueId = value;
             internalClearRefs(PROP_ID_valueId);
@@ -542,7 +542,7 @@ public class _LitemallComment extends DynamicOrmEntity{
     /**
      * 评论类型: TYPE
      */
-    public final java.lang.Byte getType(){
+    public final java.lang.Integer getType(){
          onPropGet(PROP_ID_type);
          return _type;
     }
@@ -550,7 +550,7 @@ public class _LitemallComment extends DynamicOrmEntity{
     /**
      * 评论类型: TYPE
      */
-    public final void setType(java.lang.Byte value){
+    public final void setType(java.lang.Integer value){
         if(onPropSet(PROP_ID_type,value)){
             this._type = value;
             internalClearRefs(PROP_ID_type);
@@ -656,7 +656,7 @@ public class _LitemallComment extends DynamicOrmEntity{
     /**
      * 评分， 1-5: STAR
      */
-    public final java.lang.Short getStar(){
+    public final java.lang.Integer getStar(){
          onPropGet(PROP_ID_star);
          return _star;
     }
@@ -664,7 +664,7 @@ public class _LitemallComment extends DynamicOrmEntity{
     /**
      * 评分， 1-5: STAR
      */
-    public final void setStar(java.lang.Short value){
+    public final void setStar(java.lang.Integer value){
         if(onPropSet(PROP_ID_star,value)){
             this._star = value;
             internalClearRefs(PROP_ID_star);

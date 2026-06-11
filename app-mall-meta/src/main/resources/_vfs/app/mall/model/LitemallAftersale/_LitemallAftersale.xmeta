@@ -38,7 +38,7 @@
         </prop>
         <prop name="type" displayName="售后类型" propId="5" queryable="true" sortable="true" insertable="true"
               updatable="true">
-            <schema type="java.lang.Short" dict="mall/aftersale-type"/>
+            <schema type="java.lang.Integer" dict="mall/aftersale-type"/>
         </prop>
         <prop name="reason" displayName="退款原因" propId="6" queryable="true" sortable="true" insertable="true"
               updatable="true">
@@ -58,7 +58,7 @@
         </prop>
         <prop name="status" displayName="售后状态" propId="10" queryable="true" sortable="true" insertable="true"
               updatable="true">
-            <schema type="java.lang.Short" dict="mall/aftersale-status"/>
+            <schema type="java.lang.Integer" dict="mall/aftersale-status"/>
         </prop>
         <prop name="handleTime" displayName="管理员操作时间" propId="11" queryable="true" sortable="true" insertable="true"
               updatable="true">

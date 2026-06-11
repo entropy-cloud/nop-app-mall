@@ -48,7 +48,7 @@
         </prop>
         <prop name="status" displayName="团购规则状态，正常上线则0，到期自动下线则1，管理手动下线则2" propId="8" queryable="true" sortable="true"
               insertable="true" updatable="true">
-            <schema type="java.lang.Short"/>
+            <schema type="java.lang.Integer"/>
         </prop>
         <prop name="addTime" displayName="创建时间" propId="9" mandatory="true" queryable="true" sortable="true"
               insertable="false" updatable="false" internal="true" ui:show="X">

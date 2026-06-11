@@ -8,7 +8,7 @@ import app.mall.biz.ILitemallGoodsProductBiz;
 import app.mall.dao.entity.LitemallGoodsProduct;
 
 @BizModel("LitemallGoodsProduct")
-public class LitemallGoodsProductBizModel extends CrudBizModel<LitemallGoodsProduct> implements ILitemallGoodsProductBiz{
+public class LitemallGoodsProductBizModel extends CrudBizModel<LitemallGoodsProduct> implements ILitemallGoodsProductBiz {
     public LitemallGoodsProductBizModel(){
         setEntityName(LitemallGoodsProduct.class.getName());
     }

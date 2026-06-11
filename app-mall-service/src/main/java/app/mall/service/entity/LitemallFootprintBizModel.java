@@ -8,7 +8,7 @@ import app.mall.biz.ILitemallFootprintBiz;
 import app.mall.dao.entity.LitemallFootprint;
 
 @BizModel("LitemallFootprint")
-public class LitemallFootprintBizModel extends CrudBizModel<LitemallFootprint> implements ILitemallFootprintBiz{
+public class LitemallFootprintBizModel extends CrudBizModel<LitemallFootprint> implements ILitemallFootprintBiz {
     public LitemallFootprintBizModel(){
         setEntityName(LitemallFootprint.class.getName());
     }

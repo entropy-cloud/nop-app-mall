@@ -7,9 +7,9 @@
 
 #### 软件架构
 软件架构说明
-1. model/app-mall.orm.xlsx Excel格式的数据模型
+1. model/app-mall.orm.xml XML格式的数据模型
 2. app-mall-api 对外暴露的服务接口
-3. app-mall-codegen maven打包时根据app-mall.orm.xlsx来自动生成后台工程代码
+3. app-mall-codegen maven打包时根据app-mall.orm.xml来自动生成后台工程代码
 4. app-mall-dao 后台数据库访问代码以及实体代码
 5. app-mall-service  后台服务的实现代码
 6. app-mall-web 前端页面对应的JSON和JS代码

@@ -25,19 +25,19 @@
                 <col id="orderId" mandatory="true" sortable="true"/>
 
                 <!--如果是开团用户，则groupon_id是0；如果是参团用户，则groupon_id是团购活动ID-->
-                <col id="grouponId" ui:number="true" sortable="true"/>
+                <col id="grouponId" sortable="true"/>
 
                 <!--团购规则ID-->
                 <col id="rulesId" mandatory="true" sortable="true"/>
 
                 <!--用户ID-->
-                <col id="userId" mandatory="true" ui:number="true" sortable="true"/>
+                <col id="userId" mandatory="true" sortable="true"/>
 
                 <!--团购分享图片地址-->
                 <col id="shareUrl" sortable="true"/>
 
                 <!--开团用户ID-->
-                <col id="creatorUserId" mandatory="true" ui:number="true" sortable="true"/>
+                <col id="creatorUserId" mandatory="true" sortable="true"/>
 
                 <!--开团时间-->
                 <col id="creatorUserTime" sortable="true"/>
@@ -50,7 +50,7 @@
     </grids>
 
     <forms>
-        <form id="view" editMode="view" title="查看-团购活动表" i18n-en:title="View ">
+        <form id="view" editMode="view" title="查看-团购活动表" i18n-en:title="">
             <layout>
  id[Id]
  orderId[订单ID]
@@ -63,8 +63,8 @@
  status[团购活动状态，开团未支付则0，开团中则1，开团失败则2]
 </layout>
         </form>
-        <form id="add" editMode="add" title="新增-团购活动表" i18n-en:title="Add " x:prototype="edit"/>
-        <form id="edit" editMode="edit" title="编辑-团购活动表" i18n-en:title="Edit ">
+        <form id="add" editMode="add" title="新增-团购活动表" i18n-en:title="" x:prototype="edit"/>
+        <form id="edit" editMode="edit" title="编辑-团购活动表" i18n-en:title="">
             <layout>
  orderId[订单ID]
  grouponId[如果是开团用户，则groupon_id是0；如果是参团用户，则groupon_id是团购活动ID]
@@ -78,7 +78,7 @@
         </form>
         <form id="query" editMode="query" title="查询条件" i18n-en:title="Query Condition" x:abstract="true"/>
         <form id="asideFilter" editMode="query" x:abstract="true" submitOnChange="true"/>
-        <form id="batchUpdate" editMode="edit" x:abstract="true" title="修改-团购活动表" i18n-en:title="Update "/>
+        <form id="batchUpdate" editMode="edit" x:abstract="true" title="修改-团购活动表" i18n-en:title=""/>
     </forms>
 
     <pages>

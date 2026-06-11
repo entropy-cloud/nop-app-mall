@@ -155,7 +155,7 @@ public class _LitemallAftersale extends DynamicOrmEntity{
     private java.lang.String _userId;
     
     /* 售后类型: TYPE */
-    private java.lang.Short _type;
+    private java.lang.Integer _type;
     
     /* 退款原因: REASON */
     private java.lang.String _reason;
@@ -170,7 +170,7 @@ public class _LitemallAftersale extends DynamicOrmEntity{
     private java.lang.String _comment;
     
     /* 售后状态: STATUS */
-    private java.lang.Short _status;
+    private java.lang.Integer _status;
     
     /* 管理员操作时间: HANDLE_TIME */
     private java.time.LocalDateTime _handleTime;
@@ -352,9 +352,9 @@ public class _LitemallAftersale extends DynamicOrmEntity{
             }
         
             case PROP_ID_type:{
-               java.lang.Short typedValue = null;
+               java.lang.Integer typedValue = null;
                if(value != null){
-                   typedValue = ConvertHelper.toShort(value,
+                   typedValue = ConvertHelper.toInteger(value,
                        err-> newTypeConversionError(PROP_NAME_type));
                }
                setType(typedValue);
@@ -402,9 +402,9 @@ public class _LitemallAftersale extends DynamicOrmEntity{
             }
         
             case PROP_ID_status:{
-               java.lang.Short typedValue = null;
+               java.lang.Integer typedValue = null;
                if(value != null){
-                   typedValue = ConvertHelper.toShort(value,
+                   typedValue = ConvertHelper.toInteger(value,
                        err-> newTypeConversionError(PROP_NAME_status));
                }
                setStatus(typedValue);
@@ -490,7 +490,7 @@ public class _LitemallAftersale extends DynamicOrmEntity{
         
             case PROP_ID_type:{
                onInitProp(propId);
-               this._type = (java.lang.Short)value;
+               this._type = (java.lang.Integer)value;
                
                break;
             }
@@ -525,7 +525,7 @@ public class _LitemallAftersale extends DynamicOrmEntity{
         
             case PROP_ID_status:{
                onInitProp(propId);
-               this._status = (java.lang.Short)value;
+               this._status = (java.lang.Integer)value;
                
                break;
             }
@@ -643,7 +643,7 @@ public class _LitemallAftersale extends DynamicOrmEntity{
     /**
      * 售后类型: TYPE
      */
-    public final java.lang.Short getType(){
+    public final java.lang.Integer getType(){
          onPropGet(PROP_ID_type);
          return _type;
     }
@@ -651,7 +651,7 @@ public class _LitemallAftersale extends DynamicOrmEntity{
     /**
      * 售后类型: TYPE
      */
-    public final void setType(java.lang.Short value){
+    public final void setType(java.lang.Integer value){
         if(onPropSet(PROP_ID_type,value)){
             this._type = value;
             internalClearRefs(PROP_ID_type);
@@ -738,7 +738,7 @@ public class _LitemallAftersale extends DynamicOrmEntity{
     /**
      * 售后状态: STATUS
      */
-    public final java.lang.Short getStatus(){
+    public final java.lang.Integer getStatus(){
          onPropGet(PROP_ID_status);
          return _status;
     }
@@ -746,7 +746,7 @@ public class _LitemallAftersale extends DynamicOrmEntity{
     /**
      * 售后状态: STATUS
      */
-    public final void setStatus(java.lang.Short value){
+    public final void setStatus(java.lang.Integer value){
         if(onPropSet(PROP_ID_status,value)){
             this._status = value;
             internalClearRefs(PROP_ID_status);

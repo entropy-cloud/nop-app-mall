@@ -8,7 +8,7 @@ import app.mall.biz.ILitemallFeedbackBiz;
 import app.mall.dao.entity.LitemallFeedback;
 
 @BizModel("LitemallFeedback")
-public class LitemallFeedbackBizModel extends CrudBizModel<LitemallFeedback> implements ILitemallFeedbackBiz{
+public class LitemallFeedbackBizModel extends CrudBizModel<LitemallFeedback> implements ILitemallFeedbackBiz {
     public LitemallFeedbackBizModel(){
         setEntityName(LitemallFeedback.class.getName());
     }

@@ -28,15 +28,15 @@
         </prop>
         <prop name="grouponId" displayName="如果是开团用户，则groupon_id是0；如果是参团用户，则groupon_id是团购活动ID" propId="3"
               queryable="true" sortable="true" insertable="true" updatable="true">
-            <schema type="java.lang.Integer"/>
+            <schema type="java.lang.String"/>
         </prop>
         <prop name="rulesId" displayName="团购规则ID" propId="4" mandatory="true" queryable="true" sortable="true"
-              insertable="true" updatable="true" ext:relation="grouponRules">
+              insertable="true" updatable="true">
             <schema type="java.lang.String"/>
         </prop>
         <prop name="userId" displayName="用户ID" propId="5" mandatory="true" queryable="true" sortable="true"
               insertable="true" updatable="true">
-            <schema type="java.lang.Integer"/>
+            <schema type="java.lang.String"/>
         </prop>
         <prop name="shareUrl" displayName="团购分享图片地址" propId="6" queryable="true" sortable="true" insertable="true"
               updatable="true">
@@ -44,7 +44,7 @@
         </prop>
         <prop name="creatorUserId" displayName="开团用户ID" propId="7" mandatory="true" queryable="true" sortable="true"
               insertable="true" updatable="true">
-            <schema type="java.lang.Integer"/>
+            <schema type="java.lang.String"/>
         </prop>
         <prop name="creatorUserTime" displayName="开团时间" propId="8" queryable="true" sortable="true" insertable="true"
               updatable="true">
@@ -52,7 +52,7 @@
         </prop>
         <prop name="status" displayName="团购活动状态，开团未支付则0，开团中则1，开团失败则2" propId="9" queryable="true" sortable="true"
               insertable="true" updatable="true">
-            <schema type="java.lang.Short"/>
+            <schema type="java.lang.Integer"/>
         </prop>
         <prop name="addTime" displayName="创建时间" propId="10" mandatory="true" queryable="true" sortable="true"
               insertable="false" updatable="false" internal="true" ui:show="X">
@@ -74,11 +74,6 @@
         <prop name="order.orderSn" displayName="订单" i18n-en:displayName="Order" internal="true" queryable="true"
               sortable="true" lazy="true">
             <schema type="String"/>
-        </prop>
-        <prop name="grouponRules" displayName="订单" i18n-en:displayName="GrouponRules" tagSet="pub,ref-pub"
-              ext:kind="to-one" internal="true" queryable="true" ext:joinLeftProp="rulesId" ext:joinRightProp="id"
-              insertable="false" updatable="false" mandatory="true" lazy="true">
-            <schema bizObjName="LitemallGrouponRules"/>
         </prop>
         <prop name="shareUrlComponentFileStatus" mapToProp="shareUrlComponent.fileStatus" internal="true" lazy="true">
             <schema type="io.nop.api.core.beans.file.FileStatusBean"/>

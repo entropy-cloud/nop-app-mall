@@ -98,7 +98,7 @@
         <domain name="roleId" precision="100" stdSqlType="VARCHAR"/>
         <domain name="userId" precision="50" stdSqlType="VARCHAR"/>
         <domain name="deptId" precision="50" stdSqlType="VARCHAR"/>
-        <domain name="boolFlag" stdSqlType="INTEGER"/>
+        <domain name="boolFlag" stdSqlType="TINYINT"/>
         <domain name="json-1000" precision="1000" stdDomain="json" stdSqlType="VARCHAR"/>
         <domain name="remark" precision="1000" stdSqlType="VARCHAR"/>
         <domain name="version" stdSqlType="INTEGER"/>
@@ -126,7 +126,7 @@
                         propId="3" stdDataType="string" stdSqlType="VARCHAR"/>
                 <column code="URL" displayName="广告宣传图片" domain="image" mandatory="true" name="url" precision="255"
                         propId="4" stdDataType="string" stdDomain="file" stdSqlType="VARCHAR"/>
-                <column code="POSITION" displayName="广告位置：1则是首页" name="position" propId="5" stdDataType="byte"
+                <column code="POSITION" displayName="广告位置：1则是首页" name="position" propId="5" stdDataType="int"
                         stdSqlType="INTEGER"/>
                 <column code="CONTENT" displayName="活动内容" name="content" precision="255" propId="6" stdDataType="string"
                         stdSqlType="VARCHAR"/>
@@ -224,7 +224,7 @@
                         stdDataType="string" stdSqlType="INTEGER"/>
                 <column code="USER_ID" displayName="用户ID" mandatory="true" name="userId" propId="4" stdDataType="string"
                         stdSqlType="INTEGER"/>
-                <column code="TYPE" displayName="售后类型" name="type" propId="5" stdDataType="short" stdSqlType="INTEGER"
+                <column code="TYPE" displayName="售后类型" name="type" propId="5" stdDataType="int" stdSqlType="INTEGER"
                         ext:dict="mall/aftersale-type"/>
                 <column code="REASON" displayName="退款原因" name="reason" precision="31" propId="6" stdDataType="string"
                         stdSqlType="VARCHAR"/>
@@ -234,7 +234,7 @@
                         propId="8" stdDataType="string" stdDomain="file-list" stdSqlType="VARCHAR" ui:show="L"/>
                 <column code="COMMENT" displayName="退款说明" name="comment" precision="511" propId="9" stdDataType="string"
                         stdSqlType="VARCHAR"/>
-                <column code="STATUS" displayName="售后状态" name="status" propId="10" stdDataType="short"
+                <column code="STATUS" displayName="售后状态" name="status" propId="10" stdDataType="int"
                         stdSqlType="INTEGER" ext:dict="mall/aftersale-status"/>
                 <column code="HANDLE_TIME" displayName="管理员操作时间" name="handleTime" propId="11" stdDataType="datetime"
                         stdSqlType="DATETIME"/>
@@ -272,7 +272,7 @@
                         propId="3" stdDataType="string" stdDomain="file" stdSqlType="VARCHAR"/>
                 <column code="DESC" displayName="品牌商简介" mandatory="true" name="desc" precision="255" propId="4"
                         stdDataType="string" stdSqlType="VARCHAR"/>
-                <column code="SORT_ORDER" displayName="排序" name="sortOrder" propId="5" stdDataType="byte"
+                <column code="SORT_ORDER" displayName="排序" name="sortOrder" propId="5" stdDataType="int"
                         stdSqlType="INTEGER" ui:show="X"/>
                 <column code="FLOOR_PRICE" displayName="底价" name="floorPrice" precision="10" propId="6" scale="2"
                         stdDataType="decimal" stdSqlType="DECIMAL"/>
@@ -302,7 +302,7 @@
                         stdSqlType="INTEGER"/>
                 <column code="PRICE" displayName="商品货品的价格" name="price" precision="10" propId="7" scale="2"
                         stdDataType="decimal" stdSqlType="DECIMAL"/>
-                <column code="NUMBER" displayName="商品货品的数量" name="number" propId="8" stdDataType="short"
+                <column code="NUMBER" displayName="商品货品的数量" name="number" propId="8" stdDataType="int"
                         stdSqlType="INTEGER"/>
                 <column code="SPECIFICATIONS" displayName="商品规格值列表" name="specifications" precision="1023" propId="9"
                         stdDataType="string" stdSqlType="VARCHAR"/>
@@ -352,7 +352,7 @@
                         stdDataType="string" stdSqlType="VARCHAR" tagSet="layerLevel" ext:dict="mall/category-level"/>
                 <column code="PID" displayName="父类目ID" name="pid" propId="8" stdDataType="string" stdSqlType="INTEGER"
                         tagSet="parent" ui:show="L"/>
-                <column code="SORT_ORDER" displayName="排序" name="sortOrder" propId="9" stdDataType="byte"
+                <column code="SORT_ORDER" displayName="排序" name="sortOrder" propId="9" stdDataType="int"
                         stdSqlType="INTEGER" ui:show="X"/>
                 <column code="ADD_TIME" displayName="创建时间" domain="createTime" name="addTime" propId="10"
                         stdDataType="datetime" stdSqlType="DATETIME" ui:show="X"/>
@@ -386,9 +386,9 @@
                 <column code="USER_ID" displayName="用户ID" mandatory="true" name="userId" propId="2" stdDataType="string"
                         stdSqlType="INTEGER"/>
                 <column code="VALUE_ID" displayName="如果type=0，则是商品ID；如果type=1，则是专题ID" mandatory="true" name="valueId"
-                        propId="3" stdDataType="int" stdSqlType="INTEGER"/>
+                        propId="3" stdDataType="string" stdSqlType="INTEGER"/>
                 <column code="TYPE" comment="如果type=0，则是商品ID；如果type=1，则是专题ID" displayName="收藏类型" mandatory="true"
-                        name="type" propId="4" stdDataType="byte" stdSqlType="INTEGER"/>
+                        name="type" propId="4" stdDataType="int" stdSqlType="INTEGER"/>
                 <column code="ADD_TIME" displayName="创建时间" domain="createTime" name="addTime" propId="5"
                         stdDataType="datetime" stdSqlType="DATETIME" ui:show="X"/>
                 <column code="UPDATE_TIME" displayName="更新时间" domain="updateTime" name="updateTime" propId="6"
@@ -412,9 +412,9 @@
                 <column code="ID" displayName="Id" mandatory="true" name="id" primary="true" propId="1"
                         stdDataType="string" stdSqlType="INTEGER" tagSet="seq" ui:show="R"/>
                 <column code="VALUE_ID" displayName="如果type=0，则是商品评论；如果是type=1，则是专题评论。" mandatory="true" name="valueId"
-                        propId="2" stdDataType="int" stdSqlType="INTEGER"/>
+                        propId="2" stdDataType="string" stdSqlType="INTEGER"/>
                 <column code="TYPE" comment="如果type=0，则是商品评论；如果是type=1，则是专题评论；" displayName="评论类型" mandatory="true"
-                        name="type" propId="3" stdDataType="byte" stdSqlType="INTEGER"/>
+                        name="type" propId="3" stdDataType="int" stdSqlType="INTEGER"/>
                 <column code="CONTENT" displayName="评论内容" name="content" precision="1023" propId="4"
                         stdDataType="string" stdSqlType="VARCHAR"/>
                 <column code="ADMIN_CONTENT" displayName="管理员回复内容" name="adminContent" precision="511" propId="5"
@@ -425,8 +425,7 @@
                         stdSqlType="BOOLEAN"/>
                 <column code="PIC_URLS" displayName="图片地址列表，采用JSON数组格式" domain="images" name="picUrls" precision="1023"
                         propId="8" stdDataType="string" stdDomain="file-list" stdSqlType="VARCHAR"/>
-                <column code="STAR" displayName="评分， 1-5" name="star" propId="9" stdDataType="short"
-                        stdSqlType="INTEGER"/>
+                <column code="STAR" displayName="评分， 1-5" name="star" propId="9" stdDataType="int" stdSqlType="INTEGER"/>
                 <column code="ADD_TIME" displayName="创建时间" domain="createTime" name="addTime" propId="10"
                         stdDataType="datetime" stdSqlType="DATETIME" ui:show="X"/>
                 <column code="UPDATE_TIME" displayName="更新时间" domain="updateTime" name="updateTime" propId="11"
@@ -462,20 +461,20 @@
                 <column code="MIN" comment="超过最小消费金额才能使用优惠券" displayName="最少消费金额" name="min" precision="10" propId="7"
                         scale="2" stdDataType="decimal" stdSqlType="DECIMAL"/>
                 <column code="LIMIT" comment="如果是0，则是不限制；默认是1，限领一张." displayName="用户领券限制数量" name="limit" propId="8"
-                        stdDataType="short" stdSqlType="INTEGER"/>
-                <column code="TYPE" displayName="优惠券赠送类型" name="type" propId="9" stdDataType="short"
-                        stdSqlType="INTEGER" ext:dict="mall/coupon-type"/>
-                <column code="STATUS" displayName="优惠券状态" name="status" propId="10" stdDataType="short"
+                        stdDataType="int" stdSqlType="INTEGER"/>
+                <column code="TYPE" displayName="优惠券赠送类型" name="type" propId="9" stdDataType="int" stdSqlType="INTEGER"
+                        ext:dict="mall/coupon-type"/>
+                <column code="STATUS" displayName="优惠券状态" name="status" propId="10" stdDataType="int"
                         stdSqlType="INTEGER" ext:dict="mall/coupon-status"/>
-                <column code="GOODS_TYPE" displayName="商品限制类型" name="goodsType" propId="11" stdDataType="short"
+                <column code="GOODS_TYPE" displayName="商品限制类型" name="goodsType" propId="11" stdDataType="int"
                         stdSqlType="INTEGER" ext:dict="mall/coupon-goods-type"/>
                 <column code="GOODS_VALUE" displayName="商品限制值" name="goodsValue" precision="1023" propId="12"
                         stdDataType="string" stdSqlType="VARCHAR"/>
                 <column code="CODE" displayName="优惠券兑换码" name="code" precision="63" propId="13" stdDataType="string"
                         stdSqlType="VARCHAR"/>
-                <column code="TIME_TYPE" displayName="有效时间限制" name="timeType" propId="14" stdDataType="short"
+                <column code="TIME_TYPE" displayName="有效时间限制" name="timeType" propId="14" stdDataType="int"
                         stdSqlType="INTEGER" ext:dict="mall/coupon-time-type"/>
-                <column code="DAYS" displayName="基于领取时间的有效天数days。" name="days" propId="15" stdDataType="short"
+                <column code="DAYS" displayName="基于领取时间的有效天数days。" name="days" propId="15" stdDataType="int"
                         stdSqlType="INTEGER"/>
                 <column code="START_TIME" displayName="使用券开始时间" name="startTime" propId="16" stdDataType="datetime"
                         stdSqlType="DATETIME"/>
@@ -499,15 +498,15 @@
                         stdSqlType="INTEGER"/>
                 <column code="COUPON_ID" displayName="优惠券ID" mandatory="true" name="couponId" propId="3"
                         stdDataType="string" stdSqlType="INTEGER"/>
-                <column code="STATUS" displayName="使用状态" name="status" propId="4" stdDataType="short"
-                        stdSqlType="INTEGER" ext:dict="mall/coupon-use-status"/>
+                <column code="STATUS" displayName="使用状态" name="status" propId="4" stdDataType="int" stdSqlType="INTEGER"
+                        ext:dict="mall/coupon-use-status"/>
                 <column code="USED_TIME" displayName="使用时间" name="usedTime" propId="5" stdDataType="datetime"
                         stdSqlType="DATETIME"/>
                 <column code="START_TIME" displayName="有效期开始时间" name="startTime" propId="6" stdDataType="datetime"
                         stdSqlType="DATETIME"/>
                 <column code="END_TIME" displayName="有效期截至时间" name="endTime" propId="7" stdDataType="datetime"
                         stdSqlType="DATETIME"/>
-                <column code="ORDER_ID" displayName="订单ID" name="orderId" propId="8" stdDataType="int"
+                <column code="ORDER_ID" displayName="订单ID" name="orderId" propId="8" stdDataType="string"
                         stdSqlType="INTEGER"/>
                 <column code="ADD_TIME" displayName="创建时间" domain="createTime" name="addTime" propId="9"
                         stdDataType="datetime" stdSqlType="DATETIME" ui:show="X"/>
@@ -623,7 +622,7 @@
                         stdSqlType="VARCHAR" i18n-en:displayName="Brief"/>
                 <column code="IS_ON_SALE" displayName="是否在售" name="isOnSale" propId="9" stdDataType="boolean"
                         stdSqlType="BOOLEAN" i18n-en:displayName="Is On Sale"/>
-                <column code="SORT_ORDER" displayName="排序顺序" name="sortOrder" propId="10" stdDataType="short"
+                <column code="SORT_ORDER" displayName="排序顺序" name="sortOrder" propId="10" stdDataType="int"
                         stdSqlType="INTEGER" i18n-en:displayName="Sort Order"/>
                 <column code="PIC_URL" displayName="商品图片" domain="image" name="picUrl" precision="255" propId="11"
                         stdDataType="string" stdDomain="file" stdSqlType="VARCHAR" i18n-en:displayName="Picture Url"/>
@@ -803,19 +802,19 @@
                         stdDataType="string" stdSqlType="INTEGER"/>
                 <column code="GROUPON_ID" comment="如果是开团用户，则groupon_id是0；如果是参团用户，则groupon_id是团购活动ID"
                         displayName="如果是开团用户，则groupon_id是0；如果是参团用户，则groupon_id是团购活动ID" name="grouponId" propId="3"
-                        stdDataType="int" stdSqlType="INTEGER"/>
+                        stdDataType="string" stdSqlType="INTEGER"/>
                 <column code="RULES_ID" comment="，关联litemall_groupon_rules表ID字段" displayName="团购规则ID" mandatory="true"
                         name="rulesId" propId="4" stdDataType="string" stdSqlType="INTEGER"/>
-                <column code="USER_ID" displayName="用户ID" mandatory="true" name="userId" propId="5" stdDataType="int"
+                <column code="USER_ID" displayName="用户ID" mandatory="true" name="userId" propId="5" stdDataType="string"
                         stdSqlType="INTEGER"/>
                 <column code="SHARE_URL" displayName="团购分享图片地址" domain="image" name="shareUrl" precision="255"
                         propId="6" stdDataType="string" stdDomain="file" stdSqlType="VARCHAR"/>
                 <column code="CREATOR_USER_ID" displayName="开团用户ID" mandatory="true" name="creatorUserId" propId="7"
-                        stdDataType="int" stdSqlType="INTEGER"/>
+                        stdDataType="string" stdSqlType="INTEGER"/>
                 <column code="CREATOR_USER_TIME" displayName="开团时间" name="creatorUserTime" propId="8"
                         stdDataType="datetime" stdSqlType="DATETIME"/>
                 <column code="STATUS" displayName="团购活动状态，开团未支付则0，开团中则1，开团失败则2" name="status" propId="9"
-                        stdDataType="short" stdSqlType="INTEGER"/>
+                        stdDataType="int" stdSqlType="INTEGER"/>
                 <column code="ADD_TIME" displayName="创建时间" domain="createTime" mandatory="true" name="addTime"
                         propId="10" stdDataType="datetime" stdSqlType="DATETIME" ui:show="X"/>
                 <column code="UPDATE_TIME" displayName="更新时间" domain="updateTime" name="updateTime" propId="11"
@@ -828,12 +827,6 @@
                         tagSet="pub,ref-pub" i18n-en:displayName="Order">
                     <join>
                         <on leftProp="orderId" rightProp="id"/>
-                    </join>
-                </to-one>
-                <to-one displayName="订单" name="grouponRules" refEntityName="app.mall.dao.entity.LitemallGrouponRules"
-                        tagSet="pub,ref-pub" i18n-en:displayName="GrouponRules">
-                    <join>
-                        <on leftProp="rulesId" rightProp="id"/>
                     </join>
                 </to-one>
             </relations>
@@ -857,7 +850,7 @@
                 <column code="EXPIRE_TIME" displayName="团购过期时间" name="expireTime" propId="7" stdDataType="datetime"
                         stdSqlType="DATETIME"/>
                 <column code="STATUS" displayName="团购规则状态，正常上线则0，到期自动下线则1，管理手动下线则2" name="status" propId="8"
-                        stdDataType="short" stdSqlType="INTEGER"/>
+                        stdDataType="int" stdSqlType="INTEGER"/>
                 <column code="ADD_TIME" displayName="创建时间" domain="createTime" mandatory="true" name="addTime"
                         propId="9" stdDataType="datetime" stdSqlType="DATETIME" ui:show="X"/>
                 <column code="UPDATE_TIME" displayName="更新时间" domain="updateTime" name="updateTime" propId="10"
@@ -953,7 +946,7 @@
                         stdSqlType="VARCHAR" tagSet="disp"/>
                 <column code="CONTENT" comment="如果是系统内置通知则是0." displayName="通知内容" name="content" precision="511"
                         propId="3" stdDataType="string" stdSqlType="VARCHAR"/>
-                <column code="ADMIN_ID" displayName="创建通知的管理员ID" name="adminId" propId="4" stdDataType="int"
+                <column code="ADMIN_ID" displayName="创建通知的管理员ID" name="adminId" propId="4" stdDataType="string"
                         stdSqlType="INTEGER"/>
                 <column code="ADD_TIME" displayName="创建时间" domain="createTime" name="addTime" propId="5"
                         stdDataType="datetime" stdSqlType="DATETIME" ui:show="X"/>
@@ -969,11 +962,11 @@
             <columns>
                 <column code="ID" displayName="Id" mandatory="true" name="id" primary="true" propId="1"
                         stdDataType="string" stdSqlType="INTEGER" tagSet="seq" ui:show="R"/>
-                <column code="NOTICE_ID" displayName="通知ID" name="noticeId" propId="2" stdDataType="int"
+                <column code="NOTICE_ID" displayName="通知ID" name="noticeId" propId="2" stdDataType="string"
                         stdSqlType="INTEGER"/>
                 <column code="NOTICE_TITLE" displayName="通知标题" name="noticeTitle" precision="63" propId="3"
                         stdDataType="string" stdSqlType="VARCHAR"/>
-                <column code="ADMIN_ID" displayName="管理员ID" name="adminId" propId="4" stdDataType="int"
+                <column code="ADMIN_ID" displayName="管理员ID" name="adminId" propId="4" stdDataType="string"
                         stdSqlType="INTEGER"/>
                 <column code="READ_TIME" comment="如果是NULL则是未读状态" displayName="阅读时间" name="readTime" propId="5"
                         stdDataType="datetime" stdSqlType="DATETIME"/>
@@ -996,8 +989,8 @@
                 <column code="ORDER_SN" displayName="订单编号" mandatory="true" name="orderSn" precision="63" propId="3"
                         stdDataType="string" stdSqlType="VARCHAR" tagSet="disp"/>
                 <column code="ORDER_STATUS" displayName="订单状态" mandatory="true" name="orderStatus" propId="4"
-                        stdDataType="short" stdSqlType="INTEGER" ext:dict="mall/order-status"/>
-                <column code="AFTERSALE_STATUS" displayName="售后状态" name="aftersaleStatus" propId="5" stdDataType="short"
+                        stdDataType="int" stdSqlType="INTEGER" ext:dict="mall/order-status"/>
+                <column code="AFTERSALE_STATUS" displayName="售后状态" name="aftersaleStatus" propId="5" stdDataType="int"
                         stdSqlType="INTEGER" ext:dict="mall/aftersale-status"/>
                 <column code="CONSIGNEE" displayName="收货人名称" mandatory="true" name="consignee" precision="63" propId="6"
                         stdDataType="string" stdSqlType="VARCHAR"/>
@@ -1043,7 +1036,7 @@
                         stdSqlType="DATETIME"/>
                 <column code="CONFIRM_TIME" displayName="用户确认收货时间" name="confirmTime" propId="26" stdDataType="datetime"
                         stdSqlType="DATETIME"/>
-                <column code="COMMENTS" displayName="待评价订单商品数量" name="comments" propId="27" stdDataType="short"
+                <column code="COMMENTS" displayName="待评价订单商品数量" name="comments" propId="27" stdDataType="int"
                         stdSqlType="INTEGER"/>
                 <column code="END_TIME" displayName="订单关闭时间" name="endTime" propId="28" stdDataType="datetime"
                         stdSqlType="DATETIME"/>
@@ -1087,7 +1080,7 @@
                         stdDataType="string" stdSqlType="VARCHAR"/>
                 <column code="PRODUCT_ID" displayName="货品ID" mandatory="true" name="productId" propId="6"
                         stdDataType="string" stdSqlType="INTEGER"/>
-                <column code="NUMBER" displayName="购买数量" mandatory="true" name="number" propId="7" stdDataType="short"
+                <column code="NUMBER" displayName="购买数量" mandatory="true" name="number" propId="7" stdDataType="int"
                         stdSqlType="INTEGER"/>
                 <column code="PRICE" displayName="售价" mandatory="true" name="price" precision="10" propId="8" scale="2"
                         stdDataType="decimal" stdSqlType="DECIMAL"/>
@@ -1156,9 +1149,9 @@
                         name="pid" propId="2" stdDataType="string" stdSqlType="INTEGER" tagSet="parent"/>
                 <column code="NAME" displayName="行政区域名称" mandatory="true" name="name" precision="120" propId="3"
                         stdDataType="string" stdSqlType="VARCHAR"/>
-                <column code="TYPE" displayName="行政区域类型" mandatory="true" name="type" propId="4" stdDataType="byte"
+                <column code="TYPE" displayName="行政区域类型" mandatory="true" name="type" propId="4" stdDataType="int"
                         stdSqlType="INTEGER" ext:dict="mall/region-type"/>
-                <column code="CODE" displayName="行政区域编码" mandatory="true" name="code" propId="5" stdDataType="string"
+                <column code="CODE" displayName="行政区域编码" mandatory="true" name="code" propId="5" stdDataType="int"
                         stdSqlType="INTEGER"/>
             </columns>
             <relations>
@@ -1315,14 +1308,14 @@
                 <column code="PASSWORD" displayName="用户密码" mandatory="true" name="password" precision="63" propId="3"
                         stdDataType="string" stdSqlType="VARCHAR" tagSet="masked,var,not-pub"/>
                 <column code="GENDER" comment="0 未知， 1男， 1 女" displayName="性别" mandatory="true" name="gender" propId="4"
-                        stdDataType="byte" stdSqlType="INTEGER" ext:dict="mall/gender"/>
+                        stdDataType="int" stdSqlType="INTEGER" ext:dict="mall/gender"/>
                 <column code="BIRTHDAY" displayName="生日" name="birthday" propId="5" stdDataType="date" stdSqlType="DATE"/>
                 <column code="LAST_LOGIN_TIME" displayName="最近一次登录时间" name="lastLoginTime" propId="6"
                         stdDataType="datetime" stdSqlType="DATETIME"/>
                 <column code="LAST_LOGIN_IP" displayName="最近一次登录IP地址" mandatory="true" name="lastLoginIp" precision="63"
                         propId="7" stdDataType="string" stdSqlType="VARCHAR"/>
                 <column code="USER_LEVEL" comment="0 普通用户，1 VIP用户，2 高级VIP用户" displayName="用户等级" name="userLevel"
-                        propId="8" stdDataType="byte" stdSqlType="INTEGER" ext:dict="mall/user-level"/>
+                        propId="8" stdDataType="int" stdSqlType="INTEGER" ext:dict="mall/user-level"/>
                 <column code="NICKNAME" displayName="用户昵称或网络名称" mandatory="true" name="nickname" precision="63"
                         propId="9" stdDataType="string" stdSqlType="VARCHAR"/>
                 <column code="MOBILE" displayName="用户手机号码" mandatory="true" name="mobile" precision="20" propId="10"
@@ -1334,7 +1327,7 @@
                 <column code="SESSION_KEY" displayName="微信登录会话KEY" mandatory="true" name="sessionKey" precision="100"
                         propId="13" stdDataType="string" stdSqlType="VARCHAR"/>
                 <column code="STATUS" comment="0 可用, 1 禁用, 2 注销" displayName="用户状态" mandatory="true" name="status"
-                        propId="14" stdDataType="byte" stdSqlType="INTEGER" ext:dict="mall/user-status"/>
+                        propId="14" stdDataType="int" stdSqlType="INTEGER" ext:dict="mall/user-status"/>
                 <column code="ADD_TIME" displayName="创建时间" domain="createTime" name="addTime" propId="15"
                         stdDataType="datetime" stdSqlType="DATETIME" ui:show="X"/>
                 <column code="UPDATE_TIME" displayName="更新时间" domain="updateTime" name="updateTime" propId="16"

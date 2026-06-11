@@ -114,7 +114,7 @@ public class _LitemallBrand extends DynamicOrmEntity{
     private java.lang.String _desc;
     
     /* 排序: SORT_ORDER */
-    private java.lang.Byte _sortOrder;
+    private java.lang.Integer _sortOrder;
     
     /* 底价: FLOOR_PRICE */
     private java.math.BigDecimal _floorPrice;
@@ -281,9 +281,9 @@ public class _LitemallBrand extends DynamicOrmEntity{
             }
         
             case PROP_ID_sortOrder:{
-               java.lang.Byte typedValue = null;
+               java.lang.Integer typedValue = null;
                if(value != null){
-                   typedValue = ConvertHelper.toByte(value,
+                   typedValue = ConvertHelper.toInteger(value,
                        err-> newTypeConversionError(PROP_NAME_sortOrder));
                }
                setSortOrder(typedValue);
@@ -369,7 +369,7 @@ public class _LitemallBrand extends DynamicOrmEntity{
         
             case PROP_ID_sortOrder:{
                onInitProp(propId);
-               this._sortOrder = (java.lang.Byte)value;
+               this._sortOrder = (java.lang.Integer)value;
                
                break;
             }
@@ -487,7 +487,7 @@ public class _LitemallBrand extends DynamicOrmEntity{
     /**
      * 排序: SORT_ORDER
      */
-    public final java.lang.Byte getSortOrder(){
+    public final java.lang.Integer getSortOrder(){
          onPropGet(PROP_ID_sortOrder);
          return _sortOrder;
     }
@@ -495,7 +495,7 @@ public class _LitemallBrand extends DynamicOrmEntity{
     /**
      * 排序: SORT_ORDER
      */
-    public final void setSortOrder(java.lang.Byte value){
+    public final void setSortOrder(java.lang.Integer value){
         if(onPropSet(PROP_ID_sortOrder,value)){
             this._sortOrder = value;
             internalClearRefs(PROP_ID_sortOrder);

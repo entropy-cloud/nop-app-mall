@@ -64,7 +64,7 @@
         </prop>
         <prop name="sortOrder" displayName="排序顺序" propId="10" i18n-en:displayName="Sort Order" queryable="true"
               sortable="true" insertable="true" updatable="true">
-            <schema type="java.lang.Short"/>
+            <schema type="java.lang.Integer"/>
         </prop>
         <prop name="picUrl" displayName="商品图片" propId="11" i18n-en:displayName="Picture Url" queryable="true"
               sortable="true" insertable="true" updatable="true">

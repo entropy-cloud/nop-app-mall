@@ -135,25 +135,25 @@ public class _LitemallGroupon extends DynamicOrmEntity{
     private java.lang.String _orderId;
     
     /* 如果是开团用户，则groupon_id是0；如果是参团用户，则groupon_id是团购活动ID: GROUPON_ID */
-    private java.lang.Integer _grouponId;
+    private java.lang.String _grouponId;
     
     /* 团购规则ID: RULES_ID */
     private java.lang.String _rulesId;
     
     /* 用户ID: USER_ID */
-    private java.lang.Integer _userId;
+    private java.lang.String _userId;
     
     /* 团购分享图片地址: SHARE_URL */
     private java.lang.String _shareUrl;
     
     /* 开团用户ID: CREATOR_USER_ID */
-    private java.lang.Integer _creatorUserId;
+    private java.lang.String _creatorUserId;
     
     /* 开团时间: CREATOR_USER_TIME */
     private java.time.LocalDateTime _creatorUserTime;
     
     /* 团购活动状态，开团未支付则0，开团中则1，开团失败则2: STATUS */
-    private java.lang.Short _status;
+    private java.lang.Integer _status;
     
     /* 创建时间: ADD_TIME */
     private java.time.LocalDateTime _addTime;
@@ -306,9 +306,9 @@ public class _LitemallGroupon extends DynamicOrmEntity{
             }
         
             case PROP_ID_grouponId:{
-               java.lang.Integer typedValue = null;
+               java.lang.String typedValue = null;
                if(value != null){
-                   typedValue = ConvertHelper.toInteger(value,
+                   typedValue = ConvertHelper.toString(value,
                        err-> newTypeConversionError(PROP_NAME_grouponId));
                }
                setGrouponId(typedValue);
@@ -326,9 +326,9 @@ public class _LitemallGroupon extends DynamicOrmEntity{
             }
         
             case PROP_ID_userId:{
-               java.lang.Integer typedValue = null;
+               java.lang.String typedValue = null;
                if(value != null){
-                   typedValue = ConvertHelper.toInteger(value,
+                   typedValue = ConvertHelper.toString(value,
                        err-> newTypeConversionError(PROP_NAME_userId));
                }
                setUserId(typedValue);
@@ -346,9 +346,9 @@ public class _LitemallGroupon extends DynamicOrmEntity{
             }
         
             case PROP_ID_creatorUserId:{
-               java.lang.Integer typedValue = null;
+               java.lang.String typedValue = null;
                if(value != null){
-                   typedValue = ConvertHelper.toInteger(value,
+                   typedValue = ConvertHelper.toString(value,
                        err-> newTypeConversionError(PROP_NAME_creatorUserId));
                }
                setCreatorUserId(typedValue);
@@ -366,9 +366,9 @@ public class _LitemallGroupon extends DynamicOrmEntity{
             }
         
             case PROP_ID_status:{
-               java.lang.Short typedValue = null;
+               java.lang.Integer typedValue = null;
                if(value != null){
-                   typedValue = ConvertHelper.toShort(value,
+                   typedValue = ConvertHelper.toInteger(value,
                        err-> newTypeConversionError(PROP_NAME_status));
                }
                setStatus(typedValue);
@@ -430,7 +430,7 @@ public class _LitemallGroupon extends DynamicOrmEntity{
         
             case PROP_ID_grouponId:{
                onInitProp(propId);
-               this._grouponId = (java.lang.Integer)value;
+               this._grouponId = (java.lang.String)value;
                
                break;
             }
@@ -444,7 +444,7 @@ public class _LitemallGroupon extends DynamicOrmEntity{
         
             case PROP_ID_userId:{
                onInitProp(propId);
-               this._userId = (java.lang.Integer)value;
+               this._userId = (java.lang.String)value;
                
                break;
             }
@@ -458,7 +458,7 @@ public class _LitemallGroupon extends DynamicOrmEntity{
         
             case PROP_ID_creatorUserId:{
                onInitProp(propId);
-               this._creatorUserId = (java.lang.Integer)value;
+               this._creatorUserId = (java.lang.String)value;
                
                break;
             }
@@ -472,7 +472,7 @@ public class _LitemallGroupon extends DynamicOrmEntity{
         
             case PROP_ID_status:{
                onInitProp(propId);
-               this._status = (java.lang.Short)value;
+               this._status = (java.lang.Integer)value;
                
                break;
             }
@@ -545,7 +545,7 @@ public class _LitemallGroupon extends DynamicOrmEntity{
     /**
      * 如果是开团用户，则groupon_id是0；如果是参团用户，则groupon_id是团购活动ID: GROUPON_ID
      */
-    public final java.lang.Integer getGrouponId(){
+    public final java.lang.String getGrouponId(){
          onPropGet(PROP_ID_grouponId);
          return _grouponId;
     }
@@ -553,7 +553,7 @@ public class _LitemallGroupon extends DynamicOrmEntity{
     /**
      * 如果是开团用户，则groupon_id是0；如果是参团用户，则groupon_id是团购活动ID: GROUPON_ID
      */
-    public final void setGrouponId(java.lang.Integer value){
+    public final void setGrouponId(java.lang.String value){
         if(onPropSet(PROP_ID_grouponId,value)){
             this._grouponId = value;
             internalClearRefs(PROP_ID_grouponId);
@@ -583,7 +583,7 @@ public class _LitemallGroupon extends DynamicOrmEntity{
     /**
      * 用户ID: USER_ID
      */
-    public final java.lang.Integer getUserId(){
+    public final java.lang.String getUserId(){
          onPropGet(PROP_ID_userId);
          return _userId;
     }
@@ -591,7 +591,7 @@ public class _LitemallGroupon extends DynamicOrmEntity{
     /**
      * 用户ID: USER_ID
      */
-    public final void setUserId(java.lang.Integer value){
+    public final void setUserId(java.lang.String value){
         if(onPropSet(PROP_ID_userId,value)){
             this._userId = value;
             internalClearRefs(PROP_ID_userId);
@@ -621,7 +621,7 @@ public class _LitemallGroupon extends DynamicOrmEntity{
     /**
      * 开团用户ID: CREATOR_USER_ID
      */
-    public final java.lang.Integer getCreatorUserId(){
+    public final java.lang.String getCreatorUserId(){
          onPropGet(PROP_ID_creatorUserId);
          return _creatorUserId;
     }
@@ -629,7 +629,7 @@ public class _LitemallGroupon extends DynamicOrmEntity{
     /**
      * 开团用户ID: CREATOR_USER_ID
      */
-    public final void setCreatorUserId(java.lang.Integer value){
+    public final void setCreatorUserId(java.lang.String value){
         if(onPropSet(PROP_ID_creatorUserId,value)){
             this._creatorUserId = value;
             internalClearRefs(PROP_ID_creatorUserId);
@@ -659,7 +659,7 @@ public class _LitemallGroupon extends DynamicOrmEntity{
     /**
      * 团购活动状态，开团未支付则0，开团中则1，开团失败则2: STATUS
      */
-    public final java.lang.Short getStatus(){
+    public final java.lang.Integer getStatus(){
          onPropGet(PROP_ID_status);
          return _status;
     }
@@ -667,7 +667,7 @@ public class _LitemallGroupon extends DynamicOrmEntity{
     /**
      * 团购活动状态，开团未支付则0，开团中则1，开团失败则2: STATUS
      */
-    public final void setStatus(java.lang.Short value){
+    public final void setStatus(java.lang.Integer value){
         if(onPropSet(PROP_ID_status,value)){
             this._status = value;
             internalClearRefs(PROP_ID_status);

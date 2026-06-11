@@ -8,7 +8,7 @@ import app.mall.biz.ILitemallTopicBiz;
 import app.mall.dao.entity.LitemallTopic;
 
 @BizModel("LitemallTopic")
-public class LitemallTopicBizModel extends CrudBizModel<LitemallTopic> implements ILitemallTopicBiz{
+public class LitemallTopicBizModel extends CrudBizModel<LitemallTopic> implements ILitemallTopicBiz {
     public LitemallTopicBizModel(){
         setEntityName(LitemallTopic.class.getName());
     }

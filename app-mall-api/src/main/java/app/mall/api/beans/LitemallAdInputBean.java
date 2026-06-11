@@ -1,0 +1,141 @@
+//__XGEN_FORCE_OVERRIDE__
+    package app.mall.api.beans;
+
+    import com.fasterxml.jackson.annotation.JsonInclude;
+    import io.nop.api.core.annotations.data.DataBean;
+    import io.nop.api.core.annotations.meta.PropMeta;
+    import io.nop.api.core.api.CrudInputBase;
+    
+    @DataBean
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @SuppressWarnings({"PMD","java:S116","java:S115"})
+    public class LitemallAdInputBean extends CrudInputBase {
+
+    
+        private String _name;
+
+    
+        @PropMeta(propId=2)
+    
+        public String getName(){
+            return _name;
+        }
+
+        public void setName(String value){
+            this._name = value;
+        }
+
+
+        private String _link;
+
+    
+        @PropMeta(propId=3)
+    
+        public String getLink(){
+            return _link;
+        }
+
+        public void setLink(String value){
+            this._link = value;
+        }
+
+
+        private String _url;
+
+    
+        @PropMeta(propId=4)
+    
+        public String getUrl(){
+            return _url;
+        }
+
+        public void setUrl(String value){
+            this._url = value;
+        }
+
+
+        private Integer _position;
+
+    
+        @PropMeta(propId=5)
+    
+        public Integer getPosition(){
+            return _position;
+        }
+
+        public void setPosition(Integer value){
+            this._position = value;
+        }
+
+
+        private String _content;
+
+    
+        @PropMeta(propId=6)
+    
+        public String getContent(){
+            return _content;
+        }
+
+        public void setContent(String value){
+            this._content = value;
+        }
+
+
+        private java.time.LocalDateTime _startTime;
+
+    
+        @PropMeta(propId=7)
+    
+        public java.time.LocalDateTime getStartTime(){
+            return _startTime;
+        }
+
+        public void setStartTime(java.time.LocalDateTime value){
+            this._startTime = value;
+        }
+
+
+        private java.time.LocalDateTime _endTime;
+
+    
+        @PropMeta(propId=8)
+    
+        public java.time.LocalDateTime getEndTime(){
+            return _endTime;
+        }
+
+        public void setEndTime(java.time.LocalDateTime value){
+            this._endTime = value;
+        }
+
+
+        private Boolean _enabled;
+
+    
+        @PropMeta(propId=9)
+    
+        public Boolean getEnabled(){
+            return _enabled;
+        }
+
+        public void setEnabled(Boolean value){
+            this._enabled = value;
+        }
+
+
+        private Boolean _deleted;
+
+    
+        @PropMeta(propId=12)
+    
+        public Boolean getDeleted(){
+            return _deleted;
+        }
+
+        public void setDeleted(Boolean value){
+            this._deleted = value;
+        }
+
+
+    }

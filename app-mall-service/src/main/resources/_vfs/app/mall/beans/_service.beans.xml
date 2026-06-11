@@ -195,6 +195,13 @@
         <property name="bizObjName" value="LitemallAftersale"/>
     </bean>
 
+    <bean id="app.mall.service.entity.LitemallGrouponBizModel" ioc:type="@bean:id" ioc:default="true"/>
+
+    <bean id="biz_LitemallGroupon" class="io.nop.biz.proxy.BizProxyFactoryBean"
+          ioc:type="app.mall.biz.ILitemallGrouponBiz" ioc:force-lazy-property="true" lazy-init="true" primary="true">
+        <property name="bizObjName" value="LitemallGroupon"/>
+    </bean>
+
     <bean id="app.mall.service.entity.LitemallCartBizModel" ioc:type="@bean:id" ioc:default="true"/>
 
     <bean id="biz_LitemallCart" class="io.nop.biz.proxy.BizProxyFactoryBean" ioc:type="app.mall.biz.ILitemallCartBiz"
@@ -246,12 +253,5 @@
     <bean id="biz_LitemallOrderGoods" class="io.nop.biz.proxy.BizProxyFactoryBean"
           ioc:type="app.mall.biz.ILitemallOrderGoodsBiz" ioc:force-lazy-property="true" lazy-init="true" primary="true">
         <property name="bizObjName" value="LitemallOrderGoods"/>
-    </bean>
-
-    <bean id="app.mall.service.entity.LitemallGrouponBizModel" ioc:type="@bean:id" ioc:default="true"/>
-
-    <bean id="biz_LitemallGroupon" class="io.nop.biz.proxy.BizProxyFactoryBean"
-          ioc:type="app.mall.biz.ILitemallGrouponBiz" ioc:force-lazy-property="true" lazy-init="true" primary="true">
-        <property name="bizObjName" value="LitemallGroupon"/>
     </bean>
 </beans>

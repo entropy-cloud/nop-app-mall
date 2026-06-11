@@ -8,7 +8,7 @@ import app.mall.biz.ILitemallGrouponBiz;
 import app.mall.dao.entity.LitemallGroupon;
 
 @BizModel("LitemallGroupon")
-public class LitemallGrouponBizModel extends CrudBizModel<LitemallGroupon> implements ILitemallGrouponBiz{
+public class LitemallGrouponBizModel extends CrudBizModel<LitemallGroupon> implements ILitemallGrouponBiz {
     public LitemallGrouponBizModel(){
         setEntityName(LitemallGroupon.class.getName());
     }

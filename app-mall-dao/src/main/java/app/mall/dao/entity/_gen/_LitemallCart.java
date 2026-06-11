@@ -164,7 +164,7 @@ public class _LitemallCart extends DynamicOrmEntity{
     private java.math.BigDecimal _price;
     
     /* 商品货品的数量: NUMBER */
-    private java.lang.Short _number;
+    private java.lang.Integer _number;
     
     /* 商品规格值列表: SPECIFICATIONS */
     private java.lang.String _specifications;
@@ -382,9 +382,9 @@ public class _LitemallCart extends DynamicOrmEntity{
             }
         
             case PROP_ID_number:{
-               java.lang.Short typedValue = null;
+               java.lang.Integer typedValue = null;
                if(value != null){
-                   typedValue = ConvertHelper.toShort(value,
+                   typedValue = ConvertHelper.toInteger(value,
                        err-> newTypeConversionError(PROP_NAME_number));
                }
                setNumber(typedValue);
@@ -511,7 +511,7 @@ public class _LitemallCart extends DynamicOrmEntity{
         
             case PROP_ID_number:{
                onInitProp(propId);
-               this._number = (java.lang.Short)value;
+               this._number = (java.lang.Integer)value;
                
                break;
             }
@@ -700,7 +700,7 @@ public class _LitemallCart extends DynamicOrmEntity{
     /**
      * 商品货品的数量: NUMBER
      */
-    public final java.lang.Short getNumber(){
+    public final java.lang.Integer getNumber(){
          onPropGet(PROP_ID_number);
          return _number;
     }
@@ -708,7 +708,7 @@ public class _LitemallCart extends DynamicOrmEntity{
     /**
      * 商品货品的数量: NUMBER
      */
-    public final void setNumber(java.lang.Short value){
+    public final void setNumber(java.lang.Integer value){
         if(onPropSet(PROP_ID_number,value)){
             this._number = value;
             internalClearRefs(PROP_ID_number);

@@ -25,7 +25,7 @@
                 <col id="username" mandatory="true" sortable="true"/>
 
                 <!--性别-->
-                <col id="gender" mandatory="true" sortable="true"/>
+                <col id="gender" mandatory="true" ui:number="true" sortable="true"/>
 
                 <!--生日-->
                 <col id="birthday" sortable="true"/>
@@ -37,7 +37,7 @@
                 <col id="lastLoginIp" mandatory="true" sortable="true"/>
 
                 <!--用户等级-->
-                <col id="userLevel" sortable="true"/>
+                <col id="userLevel" ui:number="true" sortable="true"/>
 
                 <!--用户昵称或网络名称-->
                 <col id="nickname" mandatory="true" sortable="true"/>
@@ -55,14 +55,14 @@
                 <col id="sessionKey" mandatory="true" sortable="true"/>
 
                 <!--用户状态-->
-                <col id="status" mandatory="true" sortable="true"/>
+                <col id="status" mandatory="true" ui:number="true" sortable="true"/>
             </cols>
         </grid>
         <grid id="pick-list" x:prototype="list" x:abstract="true"/>
     </grids>
 
     <forms>
-        <form id="view" editMode="view" title="查看-用户表" i18n-en:title="View ">
+        <form id="view" editMode="view" title="查看-用户表" i18n-en:title="">
             <layout>
  id[Id] username[用户名称]
  gender[性别] birthday[生日]
@@ -73,8 +73,8 @@
  status[用户状态] 
 </layout>
         </form>
-        <form id="add" editMode="add" title="新增-用户表" i18n-en:title="Add " x:prototype="edit"/>
-        <form id="edit" editMode="edit" title="编辑-用户表" i18n-en:title="Edit ">
+        <form id="add" editMode="add" title="新增-用户表" i18n-en:title="" x:prototype="edit"/>
+        <form id="edit" editMode="edit" title="编辑-用户表" i18n-en:title="">
             <layout>
  username[用户名称] gender[性别]
  birthday[生日] lastLoginTime[最近一次登录时间]
@@ -86,7 +86,7 @@
         </form>
         <form id="query" editMode="query" title="查询条件" i18n-en:title="Query Condition" x:abstract="true"/>
         <form id="asideFilter" editMode="query" x:abstract="true" submitOnChange="true"/>
-        <form id="batchUpdate" editMode="edit" x:abstract="true" title="修改-用户表" i18n-en:title="Update "/>
+        <form id="batchUpdate" editMode="edit" x:abstract="true" title="修改-用户表" i18n-en:title=""/>
     </forms>
 
     <pages>

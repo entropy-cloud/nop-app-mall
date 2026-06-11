@@ -8,7 +8,7 @@ import app.mall.biz.ILitemallSearchHistoryBiz;
 import app.mall.dao.entity.LitemallSearchHistory;
 
 @BizModel("LitemallSearchHistory")
-public class LitemallSearchHistoryBizModel extends CrudBizModel<LitemallSearchHistory> implements ILitemallSearchHistoryBiz{
+public class LitemallSearchHistoryBizModel extends CrudBizModel<LitemallSearchHistory> implements ILitemallSearchHistoryBiz {
     public LitemallSearchHistoryBizModel(){
         setEntityName(LitemallSearchHistory.class.getName());
     }

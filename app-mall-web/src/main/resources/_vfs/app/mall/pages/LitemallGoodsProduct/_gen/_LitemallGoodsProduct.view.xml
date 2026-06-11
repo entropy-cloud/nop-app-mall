@@ -52,7 +52,7 @@
     </grids>
 
     <forms>
-        <form id="view" editMode="view" title="查看-商品货品表" i18n-en:title="View ">
+        <form id="view" editMode="view" title="查看-商品货品表" i18n-en:title="">
             <layout>
  id[Id]
  goodsId[商品ID]
@@ -62,8 +62,8 @@
  url[商品货品图片]
 </layout>
         </form>
-        <form id="add" editMode="add" title="新增-商品货品表" i18n-en:title="Add " x:prototype="edit"/>
-        <form id="edit" editMode="edit" title="编辑-商品货品表" i18n-en:title="Edit ">
+        <form id="add" editMode="add" title="新增-商品货品表" i18n-en:title="" x:prototype="edit"/>
+        <form id="edit" editMode="edit" title="编辑-商品货品表" i18n-en:title="">
             <layout>
  goodsId[商品ID]
  specifications[商品规格值]
@@ -74,7 +74,7 @@
         </form>
         <form id="query" editMode="query" title="查询条件" i18n-en:title="Query Condition" x:abstract="true"/>
         <form id="asideFilter" editMode="query" x:abstract="true" submitOnChange="true"/>
-        <form id="batchUpdate" editMode="edit" x:abstract="true" title="修改-商品货品表" i18n-en:title="Update "/>
+        <form id="batchUpdate" editMode="edit" x:abstract="true" title="修改-商品货品表" i18n-en:title=""/>
     </forms>
 
     <pages>

@@ -13,15 +13,14 @@ import app.mall.service.consts.NotifyType;
 import io.nop.api.core.annotations.biz.BizModel;
 import io.nop.api.core.annotations.biz.BizMutation;
 import io.nop.api.core.annotations.core.Name;
-import io.nop.api.core.beans.ApiRequest;
 import io.nop.api.core.exceptions.NopException;
 import io.nop.biz.crud.CrudBizModel;
-import app.mall.biz.ILitemallAftersaleBiz;
 import io.nop.commons.util.DateHelper;
 import io.nop.commons.util.StringHelper;
 import io.nop.core.context.IServiceContext;
 import io.nop.integration.api.sms.ISmsSender;
 import io.nop.integration.api.sms.SmsMessage;
+import app.mall.biz.ILitemallAftersaleBiz;
 
 import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
@@ -61,7 +60,7 @@ public class LitemallAftersaleBizModel extends CrudBizModel<LitemallAftersale> i
             if (status != AppMallDaoConstants.AFTERSALE_STATUS_REQUEST) {
                 continue;
             }
-            entity.setStatus((short) AppMallDaoConstants.AFTERSALE_STATUS_APPROVED);
+            entity.setStatus(AppMallDaoConstants.AFTERSALE_STATUS_APPROVED);
             entity.setHandleTime(DateHelper.currentDateTime());
 
             // 订单也要更新售后状态
@@ -79,7 +78,7 @@ public class LitemallAftersaleBizModel extends CrudBizModel<LitemallAftersale> i
                 continue;
             }
 
-            entity.setStatus((short) AppMallDaoConstants.AFTERSALE_STATUS_REJECT);
+            entity.setStatus(AppMallDaoConstants.AFTERSALE_STATUS_REJECT);
             entity.setHandleTime(DateHelper.currentDateTime());
 
             entity.getOrder().setAftersaleStatus(entity.getStatus());
@@ -104,9 +103,9 @@ public class LitemallAftersaleBizModel extends CrudBizModel<LitemallAftersale> i
         wxPayRefundRequest.setRefundFee(entity.getAmount());
 
         // 如果失败会抛出异常
-        payService.refund(ApiRequest.build(wxPayRefundRequest)).get();
+        payService.refund(wxPayRefundRequest);
 
-        entity.setStatus((short) AppMallDaoConstants.AFTERSALE_STATUS_REFUND);
+        entity.setStatus(AppMallDaoConstants.AFTERSALE_STATUS_REFUND);
         entity.setHandleTime(DateHelper.currentDateTime());
         entity.getOrder().setAftersaleStatus(entity.getStatus());
 
@@ -117,7 +116,7 @@ public class LitemallAftersaleBizModel extends CrudBizModel<LitemallAftersale> i
             Set<LitemallOrderGoods> orderGoodsList = entity.getOrder().getOrderGoods();
             for (LitemallOrderGoods orderGoods : orderGoodsList) {
                 String productId = orderGoods.getProductId();
-                Short number = orderGoods.getNumber();
+                Integer number = orderGoods.getNumber();
                 goodsProductMapper.addStock(productId, number);
             }
         }

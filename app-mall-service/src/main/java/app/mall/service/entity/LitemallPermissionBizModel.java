@@ -8,7 +8,7 @@ import app.mall.biz.ILitemallPermissionBiz;
 import app.mall.dao.entity.LitemallPermission;
 
 @BizModel("LitemallPermission")
-public class LitemallPermissionBizModel extends CrudBizModel<LitemallPermission> implements ILitemallPermissionBiz{
+public class LitemallPermissionBizModel extends CrudBizModel<LitemallPermission> implements ILitemallPermissionBiz {
     public LitemallPermissionBizModel(){
         setEntityName(LitemallPermission.class.getName());
     }

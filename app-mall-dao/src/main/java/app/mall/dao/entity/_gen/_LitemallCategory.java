@@ -156,7 +156,7 @@ public class _LitemallCategory extends DynamicOrmEntity{
     private java.lang.String _pid;
     
     /* 排序: SORT_ORDER */
-    private java.lang.Byte _sortOrder;
+    private java.lang.Integer _sortOrder;
     
     /* 创建时间: ADD_TIME */
     private java.time.LocalDateTime _addTime;
@@ -369,9 +369,9 @@ public class _LitemallCategory extends DynamicOrmEntity{
             }
         
             case PROP_ID_sortOrder:{
-               java.lang.Byte typedValue = null;
+               java.lang.Integer typedValue = null;
                if(value != null){
-                   typedValue = ConvertHelper.toByte(value,
+                   typedValue = ConvertHelper.toInteger(value,
                        err-> newTypeConversionError(PROP_NAME_sortOrder));
                }
                setSortOrder(typedValue);
@@ -475,7 +475,7 @@ public class _LitemallCategory extends DynamicOrmEntity{
         
             case PROP_ID_sortOrder:{
                onInitProp(propId);
-               this._sortOrder = (java.lang.Byte)value;
+               this._sortOrder = (java.lang.Integer)value;
                
                break;
             }
@@ -662,7 +662,7 @@ public class _LitemallCategory extends DynamicOrmEntity{
     /**
      * 排序: SORT_ORDER
      */
-    public final java.lang.Byte getSortOrder(){
+    public final java.lang.Integer getSortOrder(){
          onPropGet(PROP_ID_sortOrder);
          return _sortOrder;
     }
@@ -670,7 +670,7 @@ public class _LitemallCategory extends DynamicOrmEntity{
     /**
      * 排序: SORT_ORDER
      */
-    public final void setSortOrder(java.lang.Byte value){
+    public final void setSortOrder(java.lang.Integer value){
         if(onPropSet(PROP_ID_sortOrder,value)){
             this._sortOrder = value;
             internalClearRefs(PROP_ID_sortOrder);

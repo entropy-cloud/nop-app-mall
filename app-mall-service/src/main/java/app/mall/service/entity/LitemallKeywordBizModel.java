@@ -8,7 +8,7 @@ import app.mall.biz.ILitemallKeywordBiz;
 import app.mall.dao.entity.LitemallKeyword;
 
 @BizModel("LitemallKeyword")
-public class LitemallKeywordBizModel extends CrudBizModel<LitemallKeyword> implements ILitemallKeywordBiz{
+public class LitemallKeywordBizModel extends CrudBizModel<LitemallKeyword> implements ILitemallKeywordBiz {
     public LitemallKeywordBizModel(){
         setEntityName(LitemallKeyword.class.getName());
     }

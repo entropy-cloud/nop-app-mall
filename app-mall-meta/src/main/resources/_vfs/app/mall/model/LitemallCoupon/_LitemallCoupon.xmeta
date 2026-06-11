@@ -50,19 +50,19 @@
         </prop>
         <prop name="limit" displayName="用户领券限制数量" propId="8" queryable="true" sortable="true" insertable="true"
               updatable="true">
-            <schema type="java.lang.Short"/>
+            <schema type="java.lang.Integer"/>
         </prop>
         <prop name="type" displayName="优惠券赠送类型" propId="9" queryable="true" sortable="true" insertable="true"
               updatable="true">
-            <schema type="java.lang.Short" dict="mall/coupon-type"/>
+            <schema type="java.lang.Integer" dict="mall/coupon-type"/>
         </prop>
         <prop name="status" displayName="优惠券状态" propId="10" queryable="true" sortable="true" insertable="true"
               updatable="true">
-            <schema type="java.lang.Short" dict="mall/coupon-status"/>
+            <schema type="java.lang.Integer" dict="mall/coupon-status"/>
         </prop>
         <prop name="goodsType" displayName="商品限制类型" propId="11" queryable="true" sortable="true" insertable="true"
               updatable="true">
-            <schema type="java.lang.Short" dict="mall/coupon-goods-type"/>
+            <schema type="java.lang.Integer" dict="mall/coupon-goods-type"/>
         </prop>
         <prop name="goodsValue" displayName="商品限制值" propId="12" queryable="true" sortable="true" insertable="true"
               updatable="true">
@@ -74,11 +74,11 @@
         </prop>
         <prop name="timeType" displayName="有效时间限制" propId="14" queryable="true" sortable="true" insertable="true"
               updatable="true">
-            <schema type="java.lang.Short" dict="mall/coupon-time-type"/>
+            <schema type="java.lang.Integer" dict="mall/coupon-time-type"/>
         </prop>
         <prop name="days" displayName="基于领取时间的有效天数days。" propId="15" queryable="true" sortable="true" insertable="true"
               updatable="true">
-            <schema type="java.lang.Short"/>
+            <schema type="java.lang.Integer"/>
         </prop>
         <prop name="startTime" displayName="使用券开始时间" propId="16" queryable="true" sortable="true" insertable="true"
               updatable="true">

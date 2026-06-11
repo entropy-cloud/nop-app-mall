@@ -197,16 +197,16 @@ public class _LitemallCoupon extends DynamicOrmEntity{
     private java.math.BigDecimal _min;
     
     /* 用户领券限制数量: LIMIT */
-    private java.lang.Short _limit;
+    private java.lang.Integer _limit;
     
     /* 优惠券赠送类型: TYPE */
-    private java.lang.Short _type;
+    private java.lang.Integer _type;
     
     /* 优惠券状态: STATUS */
-    private java.lang.Short _status;
+    private java.lang.Integer _status;
     
     /* 商品限制类型: GOODS_TYPE */
-    private java.lang.Short _goodsType;
+    private java.lang.Integer _goodsType;
     
     /* 商品限制值: GOODS_VALUE */
     private java.lang.String _goodsValue;
@@ -215,10 +215,10 @@ public class _LitemallCoupon extends DynamicOrmEntity{
     private java.lang.String _code;
     
     /* 有效时间限制: TIME_TYPE */
-    private java.lang.Short _timeType;
+    private java.lang.Integer _timeType;
     
     /* 基于领取时间的有效天数days。: DAYS */
-    private java.lang.Short _days;
+    private java.lang.Integer _days;
     
     /* 使用券开始时间: START_TIME */
     private java.time.LocalDateTime _startTime;
@@ -451,9 +451,9 @@ public class _LitemallCoupon extends DynamicOrmEntity{
             }
         
             case PROP_ID_limit:{
-               java.lang.Short typedValue = null;
+               java.lang.Integer typedValue = null;
                if(value != null){
-                   typedValue = ConvertHelper.toShort(value,
+                   typedValue = ConvertHelper.toInteger(value,
                        err-> newTypeConversionError(PROP_NAME_limit));
                }
                setLimit(typedValue);
@@ -461,9 +461,9 @@ public class _LitemallCoupon extends DynamicOrmEntity{
             }
         
             case PROP_ID_type:{
-               java.lang.Short typedValue = null;
+               java.lang.Integer typedValue = null;
                if(value != null){
-                   typedValue = ConvertHelper.toShort(value,
+                   typedValue = ConvertHelper.toInteger(value,
                        err-> newTypeConversionError(PROP_NAME_type));
                }
                setType(typedValue);
@@ -471,9 +471,9 @@ public class _LitemallCoupon extends DynamicOrmEntity{
             }
         
             case PROP_ID_status:{
-               java.lang.Short typedValue = null;
+               java.lang.Integer typedValue = null;
                if(value != null){
-                   typedValue = ConvertHelper.toShort(value,
+                   typedValue = ConvertHelper.toInteger(value,
                        err-> newTypeConversionError(PROP_NAME_status));
                }
                setStatus(typedValue);
@@ -481,9 +481,9 @@ public class _LitemallCoupon extends DynamicOrmEntity{
             }
         
             case PROP_ID_goodsType:{
-               java.lang.Short typedValue = null;
+               java.lang.Integer typedValue = null;
                if(value != null){
-                   typedValue = ConvertHelper.toShort(value,
+                   typedValue = ConvertHelper.toInteger(value,
                        err-> newTypeConversionError(PROP_NAME_goodsType));
                }
                setGoodsType(typedValue);
@@ -511,9 +511,9 @@ public class _LitemallCoupon extends DynamicOrmEntity{
             }
         
             case PROP_ID_timeType:{
-               java.lang.Short typedValue = null;
+               java.lang.Integer typedValue = null;
                if(value != null){
-                   typedValue = ConvertHelper.toShort(value,
+                   typedValue = ConvertHelper.toInteger(value,
                        err-> newTypeConversionError(PROP_NAME_timeType));
                }
                setTimeType(typedValue);
@@ -521,9 +521,9 @@ public class _LitemallCoupon extends DynamicOrmEntity{
             }
         
             case PROP_ID_days:{
-               java.lang.Short typedValue = null;
+               java.lang.Integer typedValue = null;
                if(value != null){
-                   typedValue = ConvertHelper.toShort(value,
+                   typedValue = ConvertHelper.toInteger(value,
                        err-> newTypeConversionError(PROP_NAME_days));
                }
                setDays(typedValue);
@@ -640,28 +640,28 @@ public class _LitemallCoupon extends DynamicOrmEntity{
         
             case PROP_ID_limit:{
                onInitProp(propId);
-               this._limit = (java.lang.Short)value;
+               this._limit = (java.lang.Integer)value;
                
                break;
             }
         
             case PROP_ID_type:{
                onInitProp(propId);
-               this._type = (java.lang.Short)value;
+               this._type = (java.lang.Integer)value;
                
                break;
             }
         
             case PROP_ID_status:{
                onInitProp(propId);
-               this._status = (java.lang.Short)value;
+               this._status = (java.lang.Integer)value;
                
                break;
             }
         
             case PROP_ID_goodsType:{
                onInitProp(propId);
-               this._goodsType = (java.lang.Short)value;
+               this._goodsType = (java.lang.Integer)value;
                
                break;
             }
@@ -682,14 +682,14 @@ public class _LitemallCoupon extends DynamicOrmEntity{
         
             case PROP_ID_timeType:{
                onInitProp(propId);
-               this._timeType = (java.lang.Short)value;
+               this._timeType = (java.lang.Integer)value;
                
                break;
             }
         
             case PROP_ID_days:{
                onInitProp(propId);
-               this._days = (java.lang.Short)value;
+               this._days = (java.lang.Integer)value;
                
                break;
             }
@@ -871,7 +871,7 @@ public class _LitemallCoupon extends DynamicOrmEntity{
     /**
      * 用户领券限制数量: LIMIT
      */
-    public final java.lang.Short getLimit(){
+    public final java.lang.Integer getLimit(){
          onPropGet(PROP_ID_limit);
          return _limit;
     }
@@ -879,7 +879,7 @@ public class _LitemallCoupon extends DynamicOrmEntity{
     /**
      * 用户领券限制数量: LIMIT
      */
-    public final void setLimit(java.lang.Short value){
+    public final void setLimit(java.lang.Integer value){
         if(onPropSet(PROP_ID_limit,value)){
             this._limit = value;
             internalClearRefs(PROP_ID_limit);
@@ -890,7 +890,7 @@ public class _LitemallCoupon extends DynamicOrmEntity{
     /**
      * 优惠券赠送类型: TYPE
      */
-    public final java.lang.Short getType(){
+    public final java.lang.Integer getType(){
          onPropGet(PROP_ID_type);
          return _type;
     }
@@ -898,7 +898,7 @@ public class _LitemallCoupon extends DynamicOrmEntity{
     /**
      * 优惠券赠送类型: TYPE
      */
-    public final void setType(java.lang.Short value){
+    public final void setType(java.lang.Integer value){
         if(onPropSet(PROP_ID_type,value)){
             this._type = value;
             internalClearRefs(PROP_ID_type);
@@ -909,7 +909,7 @@ public class _LitemallCoupon extends DynamicOrmEntity{
     /**
      * 优惠券状态: STATUS
      */
-    public final java.lang.Short getStatus(){
+    public final java.lang.Integer getStatus(){
          onPropGet(PROP_ID_status);
          return _status;
     }
@@ -917,7 +917,7 @@ public class _LitemallCoupon extends DynamicOrmEntity{
     /**
      * 优惠券状态: STATUS
      */
-    public final void setStatus(java.lang.Short value){
+    public final void setStatus(java.lang.Integer value){
         if(onPropSet(PROP_ID_status,value)){
             this._status = value;
             internalClearRefs(PROP_ID_status);
@@ -928,7 +928,7 @@ public class _LitemallCoupon extends DynamicOrmEntity{
     /**
      * 商品限制类型: GOODS_TYPE
      */
-    public final java.lang.Short getGoodsType(){
+    public final java.lang.Integer getGoodsType(){
          onPropGet(PROP_ID_goodsType);
          return _goodsType;
     }
@@ -936,7 +936,7 @@ public class _LitemallCoupon extends DynamicOrmEntity{
     /**
      * 商品限制类型: GOODS_TYPE
      */
-    public final void setGoodsType(java.lang.Short value){
+    public final void setGoodsType(java.lang.Integer value){
         if(onPropSet(PROP_ID_goodsType,value)){
             this._goodsType = value;
             internalClearRefs(PROP_ID_goodsType);
@@ -985,7 +985,7 @@ public class _LitemallCoupon extends DynamicOrmEntity{
     /**
      * 有效时间限制: TIME_TYPE
      */
-    public final java.lang.Short getTimeType(){
+    public final java.lang.Integer getTimeType(){
          onPropGet(PROP_ID_timeType);
          return _timeType;
     }
@@ -993,7 +993,7 @@ public class _LitemallCoupon extends DynamicOrmEntity{
     /**
      * 有效时间限制: TIME_TYPE
      */
-    public final void setTimeType(java.lang.Short value){
+    public final void setTimeType(java.lang.Integer value){
         if(onPropSet(PROP_ID_timeType,value)){
             this._timeType = value;
             internalClearRefs(PROP_ID_timeType);
@@ -1004,7 +1004,7 @@ public class _LitemallCoupon extends DynamicOrmEntity{
     /**
      * 基于领取时间的有效天数days。: DAYS
      */
-    public final java.lang.Short getDays(){
+    public final java.lang.Integer getDays(){
          onPropGet(PROP_ID_days);
          return _days;
     }
@@ -1012,7 +1012,7 @@ public class _LitemallCoupon extends DynamicOrmEntity{
     /**
      * 基于领取时间的有效天数days。: DAYS
      */
-    public final void setDays(java.lang.Short value){
+    public final void setDays(java.lang.Integer value){
         if(onPropSet(PROP_ID_days,value)){
             this._days = value;
             internalClearRefs(PROP_ID_days);

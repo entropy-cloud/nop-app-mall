@@ -128,7 +128,7 @@ public class _LitemallCouponUser extends DynamicOrmEntity{
     private java.lang.String _couponId;
     
     /* 使用状态: STATUS */
-    private java.lang.Short _status;
+    private java.lang.Integer _status;
     
     /* 使用时间: USED_TIME */
     private java.time.LocalDateTime _usedTime;
@@ -140,7 +140,7 @@ public class _LitemallCouponUser extends DynamicOrmEntity{
     private java.time.LocalDateTime _endTime;
     
     /* 订单ID: ORDER_ID */
-    private java.lang.Integer _orderId;
+    private java.lang.String _orderId;
     
     /* 创建时间: ADD_TIME */
     private java.time.LocalDateTime _addTime;
@@ -300,9 +300,9 @@ public class _LitemallCouponUser extends DynamicOrmEntity{
             }
         
             case PROP_ID_status:{
-               java.lang.Short typedValue = null;
+               java.lang.Integer typedValue = null;
                if(value != null){
-                   typedValue = ConvertHelper.toShort(value,
+                   typedValue = ConvertHelper.toInteger(value,
                        err-> newTypeConversionError(PROP_NAME_status));
                }
                setStatus(typedValue);
@@ -340,9 +340,9 @@ public class _LitemallCouponUser extends DynamicOrmEntity{
             }
         
             case PROP_ID_orderId:{
-               java.lang.Integer typedValue = null;
+               java.lang.String typedValue = null;
                if(value != null){
-                   typedValue = ConvertHelper.toInteger(value,
+                   typedValue = ConvertHelper.toString(value,
                        err-> newTypeConversionError(PROP_NAME_orderId));
                }
                setOrderId(typedValue);
@@ -411,7 +411,7 @@ public class _LitemallCouponUser extends DynamicOrmEntity{
         
             case PROP_ID_status:{
                onInitProp(propId);
-               this._status = (java.lang.Short)value;
+               this._status = (java.lang.Integer)value;
                
                break;
             }
@@ -439,7 +439,7 @@ public class _LitemallCouponUser extends DynamicOrmEntity{
         
             case PROP_ID_orderId:{
                onInitProp(propId);
-               this._orderId = (java.lang.Integer)value;
+               this._orderId = (java.lang.String)value;
                
                break;
             }
@@ -531,7 +531,7 @@ public class _LitemallCouponUser extends DynamicOrmEntity{
     /**
      * 使用状态: STATUS
      */
-    public final java.lang.Short getStatus(){
+    public final java.lang.Integer getStatus(){
          onPropGet(PROP_ID_status);
          return _status;
     }
@@ -539,7 +539,7 @@ public class _LitemallCouponUser extends DynamicOrmEntity{
     /**
      * 使用状态: STATUS
      */
-    public final void setStatus(java.lang.Short value){
+    public final void setStatus(java.lang.Integer value){
         if(onPropSet(PROP_ID_status,value)){
             this._status = value;
             internalClearRefs(PROP_ID_status);
@@ -607,7 +607,7 @@ public class _LitemallCouponUser extends DynamicOrmEntity{
     /**
      * 订单ID: ORDER_ID
      */
-    public final java.lang.Integer getOrderId(){
+    public final java.lang.String getOrderId(){
          onPropGet(PROP_ID_orderId);
          return _orderId;
     }
@@ -615,7 +615,7 @@ public class _LitemallCouponUser extends DynamicOrmEntity{
     /**
      * 订单ID: ORDER_ID
      */
-    public final void setOrderId(java.lang.Integer value){
+    public final void setOrderId(java.lang.String value){
         if(onPropSet(PROP_ID_orderId,value)){
             this._orderId = value;
             internalClearRefs(PROP_ID_orderId);

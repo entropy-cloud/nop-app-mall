@@ -1,4 +1,246 @@
-
-
-# key: value
-
+site:
+  resource:
+    FNPT:LitemallAd:mutation:
+      displayName: ''
+    FNPT:LitemallAd:query:
+      displayName: ''
+    FNPT:LitemallAddress:mutation:
+      displayName: ''
+    FNPT:LitemallAddress:query:
+      displayName: ''
+    FNPT:LitemallAdmin:mutation:
+      displayName: ''
+    FNPT:LitemallAdmin:query:
+      displayName: ''
+    FNPT:LitemallAftersale:mutation:
+      displayName: ''
+    FNPT:LitemallAftersale:query:
+      displayName: ''
+    FNPT:LitemallBrand:mutation:
+      displayName: ''
+    FNPT:LitemallBrand:query:
+      displayName: ''
+    FNPT:LitemallCart:mutation:
+      displayName: ''
+    FNPT:LitemallCart:query:
+      displayName: ''
+    FNPT:LitemallCategory:mutation:
+      displayName: ''
+    FNPT:LitemallCategory:query:
+      displayName: ''
+    FNPT:LitemallCollect:mutation:
+      displayName: ''
+    FNPT:LitemallCollect:query:
+      displayName: ''
+    FNPT:LitemallComment:mutation:
+      displayName: ''
+    FNPT:LitemallComment:query:
+      displayName: ''
+    FNPT:LitemallCoupon:mutation:
+      displayName: ''
+    FNPT:LitemallCoupon:query:
+      displayName: ''
+    FNPT:LitemallCouponUser:mutation:
+      displayName: ''
+    FNPT:LitemallCouponUser:query:
+      displayName: ''
+    FNPT:LitemallFeedback:mutation:
+      displayName: ''
+    FNPT:LitemallFeedback:query:
+      displayName: ''
+    FNPT:LitemallFootprint:mutation:
+      displayName: ''
+    FNPT:LitemallFootprint:query:
+      displayName: ''
+    FNPT:LitemallGoods:mutation:
+      displayName: ''
+    FNPT:LitemallGoods:query:
+      displayName: ''
+    FNPT:LitemallGoodsAttribute:mutation:
+      displayName: ''
+    FNPT:LitemallGoodsAttribute:query:
+      displayName: ''
+    FNPT:LitemallGoodsProduct:mutation:
+      displayName: ''
+    FNPT:LitemallGoodsProduct:query:
+      displayName: ''
+    FNPT:LitemallGoodsSpecification:mutation:
+      displayName: ''
+    FNPT:LitemallGoodsSpecification:query:
+      displayName: ''
+    FNPT:LitemallGroupon:mutation:
+      displayName: ''
+    FNPT:LitemallGroupon:query:
+      displayName: ''
+    FNPT:LitemallGrouponRules:mutation:
+      displayName: ''
+    FNPT:LitemallGrouponRules:query:
+      displayName: ''
+    FNPT:LitemallIssue:mutation:
+      displayName: ''
+    FNPT:LitemallIssue:query:
+      displayName: ''
+    FNPT:LitemallKeyword:mutation:
+      displayName: ''
+    FNPT:LitemallKeyword:query:
+      displayName: ''
+    FNPT:LitemallLog:mutation:
+      displayName: ''
+    FNPT:LitemallLog:query:
+      displayName: ''
+    FNPT:LitemallNotice:mutation:
+      displayName: ''
+    FNPT:LitemallNotice:query:
+      displayName: ''
+    FNPT:LitemallNoticeAdmin:mutation:
+      displayName: ''
+    FNPT:LitemallNoticeAdmin:query:
+      displayName: ''
+    FNPT:LitemallOrder:mutation:
+      displayName: ''
+    FNPT:LitemallOrder:query:
+      displayName: ''
+    FNPT:LitemallOrderGoods:mutation:
+      displayName: ''
+    FNPT:LitemallOrderGoods:query:
+      displayName: ''
+    FNPT:LitemallPermission:mutation:
+      displayName: ''
+    FNPT:LitemallPermission:query:
+      displayName: ''
+    FNPT:LitemallRegion:mutation:
+      displayName: ''
+    FNPT:LitemallRegion:query:
+      displayName: ''
+    FNPT:LitemallRole:mutation:
+      displayName: ''
+    FNPT:LitemallRole:query:
+      displayName: ''
+    FNPT:LitemallSearchHistory:mutation:
+      displayName: ''
+    FNPT:LitemallSearchHistory:query:
+      displayName: ''
+    FNPT:LitemallStorage:mutation:
+      displayName: ''
+    FNPT:LitemallStorage:query:
+      displayName: ''
+    FNPT:LitemallSystem:mutation:
+      displayName: ''
+    FNPT:LitemallSystem:query:
+      displayName: ''
+    FNPT:LitemallTopic:mutation:
+      displayName: ''
+    FNPT:LitemallTopic:query:
+      displayName: ''
+    FNPT:LitemallUser:mutation:
+      displayName: ''
+    FNPT:LitemallUser:query:
+      displayName: ''
+    LitemallAd-main:
+      displayName: ''
+    LitemallAddress-main:
+      displayName: ''
+    LitemallAdmin-main:
+      displayName: ''
+    LitemallAftersale-main:
+      displayName: ''
+    LitemallBrand-main:
+      displayName: ''
+    LitemallCart-main:
+      displayName: ''
+    LitemallCategory-main:
+      displayName: ''
+    LitemallCollect-main:
+      displayName: ''
+    LitemallComment-main:
+      displayName: ''
+    LitemallCoupon-main:
+      displayName: ''
+    LitemallCouponUser-main:
+      displayName: ''
+    LitemallFeedback-main:
+      displayName: ''
+    LitemallFootprint-main:
+      displayName: ''
+    LitemallGoods-main:
+      displayName: ''
+    LitemallGoodsAttribute-main:
+      displayName: ''
+    LitemallGoodsProduct-main:
+      displayName: ''
+    LitemallGoodsSpecification-main:
+      displayName: ''
+    LitemallGroupon-main:
+      displayName: ''
+    LitemallGrouponRules-main:
+      displayName: ''
+    LitemallIssue-main:
+      displayName: ''
+    LitemallKeyword-main:
+      displayName: ''
+    LitemallLog-main:
+      displayName: ''
+    LitemallNotice-main:
+      displayName: ''
+    LitemallNoticeAdmin-main:
+      displayName: ''
+    LitemallOrder-main:
+      displayName: ''
+    LitemallOrderGoods-main:
+      displayName: ''
+    LitemallPermission-main:
+      displayName: ''
+    LitemallRegion-main:
+      displayName: ''
+    LitemallRole-main:
+      displayName: ''
+    LitemallSearchHistory-main:
+      displayName: ''
+    LitemallStorage-main:
+      displayName: ''
+    LitemallSystem-main:
+      displayName: ''
+    LitemallTopic-main:
+      displayName: ''
+    LitemallUser-main:
+      displayName: ''
+    goods-manage:
+      displayName: ''
+    link-tencent-oss:
+      displayName: ''
+    link-tencent-sms:
+      displayName: ''
+    link-wx-pay:
+      displayName: ''
+    links-manage:
+      displayName: ''
+    mall-aftersales-manage:
+      displayName: ''
+    mall-brand-manage:
+      displayName: ''
+    mall-category-manage:
+      displayName: ''
+    mall-customer:
+      displayName: ''
+    mall-customer-addr:
+      displayName: ''
+    mall-customer-collect:
+      displayName: ''
+    mall-customer-footprint:
+      displayName: ''
+    mall-feedback:
+      displayName: ''
+    mall-goods-create:
+      displayName: ''
+    mall-goods-list:
+      displayName: ''
+    mall-manage:
+      displayName: ''
+    mall-order-manage:
+      displayName: ''
+    mall-search-history:
+      displayName: ''
+    mall-user-manage:
+      displayName: ''
+    test-orm-app-mall:
+      displayName: Test app-mall

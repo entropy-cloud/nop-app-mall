@@ -86,7 +86,7 @@ public class _LitemallRegion extends DynamicOrmEntity{
     private java.lang.String _name;
     
     /* 行政区域类型: TYPE */
-    private java.lang.Byte _type;
+    private java.lang.Integer _type;
     
     /* 行政区域编码: CODE */
     private java.lang.String _code;
@@ -222,9 +222,9 @@ public class _LitemallRegion extends DynamicOrmEntity{
             }
         
             case PROP_ID_type:{
-               java.lang.Byte typedValue = null;
+               java.lang.Integer typedValue = null;
                if(value != null){
-                   typedValue = ConvertHelper.toByte(value,
+                   typedValue = ConvertHelper.toInteger(value,
                        err-> newTypeConversionError(PROP_NAME_type));
                }
                setType(typedValue);
@@ -273,7 +273,7 @@ public class _LitemallRegion extends DynamicOrmEntity{
         
             case PROP_ID_type:{
                onInitProp(propId);
-               this._type = (java.lang.Byte)value;
+               this._type = (java.lang.Integer)value;
                
                break;
             }
@@ -351,7 +351,7 @@ public class _LitemallRegion extends DynamicOrmEntity{
     /**
      * 行政区域类型: TYPE
      */
-    public final java.lang.Byte getType(){
+    public final java.lang.Integer getType(){
          onPropGet(PROP_ID_type);
          return _type;
     }
@@ -359,7 +359,7 @@ public class _LitemallRegion extends DynamicOrmEntity{
     /**
      * 行政区域类型: TYPE
      */
-    public final void setType(java.lang.Byte value){
+    public final void setType(java.lang.Integer value){
         if(onPropSet(PROP_ID_type,value)){
             this._type = value;
             internalClearRefs(PROP_ID_type);

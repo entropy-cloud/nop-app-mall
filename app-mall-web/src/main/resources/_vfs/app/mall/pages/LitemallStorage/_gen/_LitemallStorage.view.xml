@@ -41,7 +41,7 @@
     </grids>
 
     <forms>
-        <form id="view" editMode="view" title="查看-文件存储表" i18n-en:title="View ">
+        <form id="view" editMode="view" title="查看-文件存储表" i18n-en:title="">
             <layout>
  id[Id]
  key[文件的唯一索引]
@@ -51,8 +51,8 @@
  url[文件访问链接]
 </layout>
         </form>
-        <form id="add" editMode="add" title="新增-文件存储表" i18n-en:title="Add " x:prototype="edit"/>
-        <form id="edit" editMode="edit" title="编辑-文件存储表" i18n-en:title="Edit ">
+        <form id="add" editMode="add" title="新增-文件存储表" i18n-en:title="" x:prototype="edit"/>
+        <form id="edit" editMode="edit" title="编辑-文件存储表" i18n-en:title="">
             <layout>
  key[文件的唯一索引]
  name[文件名]
@@ -63,7 +63,7 @@
         </form>
         <form id="query" editMode="query" title="查询条件" i18n-en:title="Query Condition" x:abstract="true"/>
         <form id="asideFilter" editMode="query" x:abstract="true" submitOnChange="true"/>
-        <form id="batchUpdate" editMode="edit" x:abstract="true" title="修改-文件存储表" i18n-en:title="Update "/>
+        <form id="batchUpdate" editMode="edit" x:abstract="true" title="修改-文件存储表" i18n-en:title=""/>
     </forms>
 
     <pages>

@@ -31,7 +31,7 @@
                 <col id="url" mandatory="true" sortable="true"/>
 
                 <!--广告位置：1则是首页-->
-                <col id="position" sortable="true"/>
+                <col id="position" ui:number="true" sortable="true"/>
 
                 <!--活动内容-->
                 <col id="content" sortable="true"/>
@@ -50,7 +50,7 @@
     </grids>
 
     <forms>
-        <form id="view" editMode="view" title="查看-广告表" i18n-en:title="View ">
+        <form id="view" editMode="view" title="查看-广告表" i18n-en:title="">
             <layout>
  id[Id]
  name[广告标题]
@@ -63,8 +63,8 @@
  enabled[是否启动]
 </layout>
         </form>
-        <form id="add" editMode="add" title="新增-广告表" i18n-en:title="Add " x:prototype="edit"/>
-        <form id="edit" editMode="edit" title="编辑-广告表" i18n-en:title="Edit ">
+        <form id="add" editMode="add" title="新增-广告表" i18n-en:title="" x:prototype="edit"/>
+        <form id="edit" editMode="edit" title="编辑-广告表" i18n-en:title="">
             <layout>
  name[广告标题]
  link[所广告的商品页面或者活动页面链接地址]
@@ -78,7 +78,7 @@
         </form>
         <form id="query" editMode="query" title="查询条件" i18n-en:title="Query Condition" x:abstract="true"/>
         <form id="asideFilter" editMode="query" x:abstract="true" submitOnChange="true"/>
-        <form id="batchUpdate" editMode="edit" x:abstract="true" title="修改-广告表" i18n-en:title="Update "/>
+        <form id="batchUpdate" editMode="edit" x:abstract="true" title="修改-广告表" i18n-en:title=""/>
     </forms>
 
     <pages>

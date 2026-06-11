@@ -11,6 +11,7 @@ import io.nop.biz.crud.CrudBizModel;
 import app.mall.biz.ILitemallGoodsBiz;
 import io.nop.biz.crud.EntityData;
 import io.nop.core.context.IServiceContext;
+import app.mall.biz.ILitemallGoodsBiz;
 
 import jakarta.inject.Inject;
 import java.util.List;

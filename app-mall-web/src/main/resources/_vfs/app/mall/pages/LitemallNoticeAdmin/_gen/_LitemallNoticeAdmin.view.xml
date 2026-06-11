@@ -22,13 +22,13 @@
                 <col id="id" mandatory="true" sortable="true"/>
 
                 <!--通知ID-->
-                <col id="noticeId" ui:number="true" sortable="true"/>
+                <col id="noticeId" sortable="true"/>
 
                 <!--通知标题-->
                 <col id="noticeTitle" sortable="true"/>
 
                 <!--管理员ID-->
-                <col id="adminId" ui:number="true" sortable="true"/>
+                <col id="adminId" sortable="true"/>
 
                 <!--阅读时间-->
                 <col id="readTime" sortable="true"/>
@@ -38,7 +38,7 @@
     </grids>
 
     <forms>
-        <form id="view" editMode="view" title="查看-通知管理员表" i18n-en:title="View ">
+        <form id="view" editMode="view" title="查看-通知管理员表" i18n-en:title="">
             <layout>
  id[Id]
  noticeId[通知ID]
@@ -47,8 +47,8 @@
  readTime[阅读时间]
 </layout>
         </form>
-        <form id="add" editMode="add" title="新增-通知管理员表" i18n-en:title="Add " x:prototype="edit"/>
-        <form id="edit" editMode="edit" title="编辑-通知管理员表" i18n-en:title="Edit ">
+        <form id="add" editMode="add" title="新增-通知管理员表" i18n-en:title="" x:prototype="edit"/>
+        <form id="edit" editMode="edit" title="编辑-通知管理员表" i18n-en:title="">
             <layout>
  noticeId[通知ID]
  noticeTitle[通知标题]
@@ -58,7 +58,7 @@
         </form>
         <form id="query" editMode="query" title="查询条件" i18n-en:title="Query Condition" x:abstract="true"/>
         <form id="asideFilter" editMode="query" x:abstract="true" submitOnChange="true"/>
-        <form id="batchUpdate" editMode="edit" x:abstract="true" title="修改-通知管理员表" i18n-en:title="Update "/>
+        <form id="batchUpdate" editMode="edit" x:abstract="true" title="修改-通知管理员表" i18n-en:title=""/>
     </forms>
 
     <pages>

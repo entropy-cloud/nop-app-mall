@@ -54,7 +54,7 @@ CREATE TABLE litemall_brand(
   ID INTEGER NOT NULL    COMMENT 'Id',
   NAME VARCHAR(255) NOT NULL    COMMENT '品牌商名称',
   PIC_URL VARCHAR(255) NOT NULL    COMMENT '品牌商图片',
-  "DESC" VARCHAR(255) NOT NULL    COMMENT '品牌商简介',
+  `DESC` VARCHAR(255) NOT NULL    COMMENT '品牌商简介',
   SORT_ORDER INTEGER NULL    COMMENT '排序',
   FLOOR_PRICE DECIMAL(10,2) NULL    COMMENT '底价',
   ADD_TIME DATETIME NULL    COMMENT '创建时间',
@@ -69,7 +69,7 @@ CREATE TABLE litemall_category(
   ICON_URL VARCHAR(255) NULL    COMMENT '类目图标',
   PIC_URL VARCHAR(255) NULL    COMMENT '类目图片',
   KEYWORDS VARCHAR(1023) NULL    COMMENT '类目关键字',
-  "DESC" VARCHAR(255) NULL    COMMENT '简介',
+  `DESC` VARCHAR(255) NULL    COMMENT '简介',
   LEVEL VARCHAR(255) NOT NULL    COMMENT '级别',
   PID INTEGER NULL    COMMENT '父类目ID',
   SORT_ORDER INTEGER NULL    COMMENT '排序',
@@ -82,12 +82,12 @@ CREATE TABLE litemall_category(
 CREATE TABLE litemall_coupon(
   ID INTEGER NOT NULL    COMMENT 'Id',
   NAME VARCHAR(63) NOT NULL    COMMENT '优惠券名称',
-  "DESC" VARCHAR(127) NULL    COMMENT '优惠券介绍',
+  `DESC` VARCHAR(127) NULL    COMMENT '优惠券介绍',
   TAG VARCHAR(63) NULL    COMMENT '优惠券标签',
   TOTAL INTEGER NOT NULL    COMMENT '优惠券数量',
   DISCOUNT DECIMAL(10,2) NULL    COMMENT '优惠金额，',
   MIN DECIMAL(10,2) NULL    COMMENT '最少消费金额',
-  "LIMIT" INTEGER NULL    COMMENT '用户领券限制数量',
+  `LIMIT` INTEGER NULL    COMMENT '用户领券限制数量',
   TYPE INTEGER NULL    COMMENT '优惠券赠送类型',
   STATUS INTEGER NULL    COMMENT '优惠券状态',
   GOODS_TYPE INTEGER NULL    COMMENT '商品限制类型',
@@ -186,7 +186,7 @@ CREATE TABLE litemall_region(
 CREATE TABLE litemall_role(
   ID INTEGER NOT NULL    COMMENT 'Id',
   NAME VARCHAR(63) NOT NULL    COMMENT '角色名称',
-  "DESC" VARCHAR(1023) NULL    COMMENT '角色描述',
+  `DESC` VARCHAR(1023) NULL    COMMENT '角色描述',
   ENABLED BOOLEAN NULL    COMMENT '是否启用',
   ADD_TIME DATETIME NULL    COMMENT '创建时间',
   UPDATE_TIME DATETIME NULL    COMMENT '更新时间',
@@ -196,7 +196,7 @@ CREATE TABLE litemall_role(
 
 CREATE TABLE litemall_storage(
   ID INTEGER NOT NULL    COMMENT 'Id',
-  "KEY" VARCHAR(63) NOT NULL    COMMENT '文件的唯一索引',
+  `KEY` VARCHAR(63) NOT NULL    COMMENT '文件的唯一索引',
   NAME VARCHAR(255) NOT NULL    COMMENT '文件名',
   TYPE VARCHAR(20) NOT NULL    COMMENT '文件类型',
   SIZE INTEGER NOT NULL    COMMENT '文件大小',
@@ -333,7 +333,7 @@ CREATE TABLE litemall_search_history(
   ID INTEGER NOT NULL    COMMENT 'Id',
   USER_ID INTEGER NOT NULL    COMMENT '用户ID',
   KEYWORD VARCHAR(63) NOT NULL    COMMENT '搜索关键字',
-  "FROM" VARCHAR(63) NOT NULL    COMMENT '搜索来源',
+  `FROM` VARCHAR(63) NOT NULL    COMMENT '搜索来源',
   ADD_TIME DATETIME NULL    COMMENT '创建时间',
   UPDATE_TIME DATETIME NULL    COMMENT '更新时间',
   DELETED BOOLEAN NULL    COMMENT '逻辑删除',
@@ -408,6 +408,22 @@ CREATE TABLE litemall_aftersale(
   UPDATE_TIME DATETIME NULL    COMMENT '更新时间',
   DELETED BOOLEAN NULL    COMMENT '逻辑删除',
   constraint PK_litemall_aftersale primary key (ID)
+)CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
+
+CREATE TABLE litemall_groupon(
+  ID INTEGER NOT NULL    COMMENT 'Id',
+  ORDER_ID INTEGER NOT NULL    COMMENT '订单ID',
+  GROUPON_ID INTEGER NULL    COMMENT '如果是开团用户，则groupon_id是0；如果是参团用户，则groupon_id是团购活动ID',
+  RULES_ID INTEGER NOT NULL    COMMENT '团购规则ID',
+  USER_ID INTEGER NOT NULL    COMMENT '用户ID',
+  SHARE_URL VARCHAR(255) NULL    COMMENT '团购分享图片地址',
+  CREATOR_USER_ID INTEGER NOT NULL    COMMENT '开团用户ID',
+  CREATOR_USER_TIME DATETIME NULL    COMMENT '开团时间',
+  STATUS INTEGER NULL    COMMENT '团购活动状态，开团未支付则0，开团中则1，开团失败则2',
+  ADD_TIME DATETIME NOT NULL    COMMENT '创建时间',
+  UPDATE_TIME DATETIME NULL    COMMENT '更新时间',
+  DELETED BOOLEAN NULL    COMMENT '逻辑删除',
+  constraint PK_litemall_groupon primary key (ID)
 )CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
 
 CREATE TABLE litemall_cart(
@@ -507,22 +523,6 @@ CREATE TABLE litemall_order_goods(
   constraint PK_litemall_order_goods primary key (ID)
 )CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
 
-CREATE TABLE litemall_groupon(
-  ID INTEGER NOT NULL    COMMENT 'Id',
-  ORDER_ID INTEGER NOT NULL    COMMENT '订单ID',
-  GROUPON_ID INTEGER NULL    COMMENT '如果是开团用户，则groupon_id是0；如果是参团用户，则groupon_id是团购活动ID',
-  RULES_ID INTEGER NOT NULL    COMMENT '团购规则ID',
-  USER_ID INTEGER NOT NULL    COMMENT '用户ID',
-  SHARE_URL VARCHAR(255) NULL    COMMENT '团购分享图片地址',
-  CREATOR_USER_ID INTEGER NOT NULL    COMMENT '开团用户ID',
-  CREATOR_USER_TIME DATETIME NULL    COMMENT '开团时间',
-  STATUS INTEGER NULL    COMMENT '团购活动状态，开团未支付则0，开团中则1，开团失败则2',
-  ADD_TIME DATETIME NOT NULL    COMMENT '创建时间',
-  UPDATE_TIME DATETIME NULL    COMMENT '更新时间',
-  DELETED BOOLEAN NULL    COMMENT '逻辑删除',
-  constraint PK_litemall_groupon primary key (ID)
-)CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
-
 
    ALTER TABLE litemall_ad COMMENT '广告表';
                 
@@ -578,6 +578,8 @@ CREATE TABLE litemall_groupon(
                 
    ALTER TABLE litemall_aftersale COMMENT '售后表';
                 
+   ALTER TABLE litemall_groupon COMMENT '团购活动表';
+                
    ALTER TABLE litemall_cart COMMENT '购物车商品表';
                 
    ALTER TABLE litemall_footprint COMMENT '用户浏览足迹表';
@@ -591,6 +593,4 @@ CREATE TABLE litemall_groupon(
    ALTER TABLE litemall_groupon_rules COMMENT '团购规则表';
                 
    ALTER TABLE litemall_order_goods COMMENT '订单商品表';
-                
-   ALTER TABLE litemall_groupon COMMENT '团购活动表';
                 

@@ -94,10 +94,10 @@ public class _LitemallCollect extends DynamicOrmEntity{
     private java.lang.String _userId;
     
     /* 如果type=0，则是商品ID；如果type=1，则是专题ID: VALUE_ID */
-    private java.lang.Integer _valueId;
+    private java.lang.String _valueId;
     
     /* 收藏类型: TYPE */
-    private java.lang.Byte _type;
+    private java.lang.Integer _type;
     
     /* 创建时间: ADD_TIME */
     private java.time.LocalDateTime _addTime;
@@ -235,9 +235,9 @@ public class _LitemallCollect extends DynamicOrmEntity{
             }
         
             case PROP_ID_valueId:{
-               java.lang.Integer typedValue = null;
+               java.lang.String typedValue = null;
                if(value != null){
-                   typedValue = ConvertHelper.toInteger(value,
+                   typedValue = ConvertHelper.toString(value,
                        err-> newTypeConversionError(PROP_NAME_valueId));
                }
                setValueId(typedValue);
@@ -245,9 +245,9 @@ public class _LitemallCollect extends DynamicOrmEntity{
             }
         
             case PROP_ID_type:{
-               java.lang.Byte typedValue = null;
+               java.lang.Integer typedValue = null;
                if(value != null){
-                   typedValue = ConvertHelper.toByte(value,
+                   typedValue = ConvertHelper.toInteger(value,
                        err-> newTypeConversionError(PROP_NAME_type));
                }
                setType(typedValue);
@@ -309,14 +309,14 @@ public class _LitemallCollect extends DynamicOrmEntity{
         
             case PROP_ID_valueId:{
                onInitProp(propId);
-               this._valueId = (java.lang.Integer)value;
+               this._valueId = (java.lang.String)value;
                
                break;
             }
         
             case PROP_ID_type:{
                onInitProp(propId);
-               this._type = (java.lang.Byte)value;
+               this._type = (java.lang.Integer)value;
                
                break;
             }
@@ -389,7 +389,7 @@ public class _LitemallCollect extends DynamicOrmEntity{
     /**
      * 如果type=0，则是商品ID；如果type=1，则是专题ID: VALUE_ID
      */
-    public final java.lang.Integer getValueId(){
+    public final java.lang.String getValueId(){
          onPropGet(PROP_ID_valueId);
          return _valueId;
     }
@@ -397,7 +397,7 @@ public class _LitemallCollect extends DynamicOrmEntity{
     /**
      * 如果type=0，则是商品ID；如果type=1，则是专题ID: VALUE_ID
      */
-    public final void setValueId(java.lang.Integer value){
+    public final void setValueId(java.lang.String value){
         if(onPropSet(PROP_ID_valueId,value)){
             this._valueId = value;
             internalClearRefs(PROP_ID_valueId);
@@ -408,7 +408,7 @@ public class _LitemallCollect extends DynamicOrmEntity{
     /**
      * 收藏类型: TYPE
      */
-    public final java.lang.Byte getType(){
+    public final java.lang.Integer getType(){
          onPropGet(PROP_ID_type);
          return _type;
     }
@@ -416,7 +416,7 @@ public class _LitemallCollect extends DynamicOrmEntity{
     /**
      * 收藏类型: TYPE
      */
-    public final void setType(java.lang.Byte value){
+    public final void setType(java.lang.Integer value){
         if(onPropSet(PROP_ID_type,value)){
             this._type = value;
             internalClearRefs(PROP_ID_type);

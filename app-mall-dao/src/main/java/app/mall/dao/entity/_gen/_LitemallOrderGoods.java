@@ -164,7 +164,7 @@ public class _LitemallOrderGoods extends DynamicOrmEntity{
     private java.lang.String _productId;
     
     /* 购买数量: NUMBER */
-    private java.lang.Short _number;
+    private java.lang.Integer _number;
     
     /* 售价: PRICE */
     private java.math.BigDecimal _price;
@@ -375,9 +375,9 @@ public class _LitemallOrderGoods extends DynamicOrmEntity{
             }
         
             case PROP_ID_number:{
-               java.lang.Short typedValue = null;
+               java.lang.Integer typedValue = null;
                if(value != null){
-                   typedValue = ConvertHelper.toShort(value,
+                   typedValue = ConvertHelper.toInteger(value,
                        err-> newTypeConversionError(PROP_NAME_number));
                }
                setNumber(typedValue);
@@ -507,7 +507,7 @@ public class _LitemallOrderGoods extends DynamicOrmEntity{
         
             case PROP_ID_number:{
                onInitProp(propId);
-               this._number = (java.lang.Short)value;
+               this._number = (java.lang.Integer)value;
                
                break;
             }
@@ -684,7 +684,7 @@ public class _LitemallOrderGoods extends DynamicOrmEntity{
     /**
      * 购买数量: NUMBER
      */
-    public final java.lang.Short getNumber(){
+    public final java.lang.Integer getNumber(){
          onPropGet(PROP_ID_number);
          return _number;
     }
@@ -692,7 +692,7 @@ public class _LitemallOrderGoods extends DynamicOrmEntity{
     /**
      * 购买数量: NUMBER
      */
-    public final void setNumber(java.lang.Short value){
+    public final void setNumber(java.lang.Integer value){
         if(onPropSet(PROP_ID_number,value)){
             this._number = value;
             internalClearRefs(PROP_ID_number);
