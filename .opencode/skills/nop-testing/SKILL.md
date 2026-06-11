@@ -233,6 +233,56 @@ ApiResponse<?> executeRpc(GraphQLOperationType opType, String action,
 
 ---
 
+## @EnableSnapshot 方法级快照控制
+
+`@EnableSnapshot` 是方法级注解，在 CHECKING 模式下按方法控制快照行为。
+
+### 参数
+
+| 参数 | 默认值 | 说明 |
+|------|--------|------|
+| `localDb` | `true` | 强制使用 H2 内存数据库 |
+| `sqlInput` | `true` | 是否自动执行 input 目录下的 SQL 文件 |
+| `sqlInit` | `true` | 是否执行 SQL 初始化脚本 |
+| `tableInit` | `true` | 是否将 `input/tables/` CSV 插入数据库 |
+| `saveOutput` | `false` | 是否保存输出（设为 `true` 即为录制模式） |
+| `checkOutput` | `true` | 是否校验输出与录制结果匹配 |
+
+### 全局 vs 单方法录制控制
+
+| 目标 | 做法 |
+|------|------|
+| 全部重新录制 | `@NopTestConfig(snapshotTest = SnapshotTest.RECORDING)` |
+| 全部仅更新输出 | `@NopTestConfig(forceSaveOutput = true)` |
+| 单个方法重新录制 | 类保持裸 `@NopTestConfig`，目标方法加 `@EnableSnapshot(saveOutput = true)` |
+| 单个方法跳过校验 | `@EnableSnapshot(checkOutput = false)` |
+| 全局禁用快照 | `nop.autotest.disable-snapshot=true` 或 `@NopTestConfig(snapshotTest = SnapshotTest.NOT_USE)` |
+
+### 关键约束
+
+- **类级 RECORDING 模式下 `@EnableSnapshot` 被完全忽略**，所有方法强制录制。
+- **裸 `@EnableSnapshot` 与不加行为相同**（默认值与 CHECKING 一致），仅用作多步测试的惯例标记。
+
+### 单方法重新录制示例
+
+```java
+@NopTestConfig  // 默认 CHECKING
+public class TestOrder extends JunitAutoTestCase {
+    @Test
+    public void testQuery() { /* 普通校验 */ }
+
+    @EnableSnapshot(saveOutput = true)  // 仅此方法重新录制
+    @Test
+    public void testCreate() {
+        output("response.json5", executeRpc(...));
+    }
+}
+```
+
+录制完成后去掉 `saveOutput = true` 或去掉整个 `@EnableSnapshot`。完整参数说明和源码机制见 `{DOCS-FOR-AI}/02-core-guides/testing.md` 的"@EnableSnapshot 方法级快照控制"章节。
+
+---
+
 ## 录制模式行为说明
 
 录制模式下每个测试方法执行完毕后框架抛 `nop.err.autotest.snapshot-finished` 异常表示录制完成。这是**预期行为**不是测试失败。Maven 输出会显示 `Tests run: X, Errors: X`，切换到 CHECKING 模式后 Errors 归零。
@@ -252,6 +302,7 @@ ApiResponse<?> executeRpc(GraphQLOperationType opType, String action,
 | `JunitAutoTestCase` 忘加 `@NopTestConfig` | 必须加 |
 | 对快照测试手写大量重复断言 | 用 `output()` 自动比对 |
 | `@Name("data")` 参数用扁平JSON | 嵌套一层：`{data: {name: ...}}` |
+| 类级 RECORDING 下用 `@EnableSnapshot` 控制单方法 | RECORDING 下 `@EnableSnapshot` 被忽略，改用 CHECKING + `@EnableSnapshot(saveOutput=true)` |
 | 异步测试裸 `future.get()` | `future.get(5, TimeUnit.SECONDS)` |
 | 异步测试裸 `BlockingQueue.take()` | `poll(timeout, unit)` |
 | 异步测试类无 `@Timeout` | 类级别 `@Timeout(10)` |
