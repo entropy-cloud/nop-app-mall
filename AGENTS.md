@@ -113,23 +113,19 @@ The Nop Platform's authoritative development documentation lives at `../nop-entr
 
 ## Mandatory Skill Loading
 
-Before writing **any** Nop platform code (BizModel method, view.xml page, test, ORM model change), agents **MUST** load the corresponding skill. This rule applies to **all agents** — main agent, subagent, and audit/review agent. Any agent that writes or checks backend/frontend/testing/ORM files must load the corresponding skill first.
+Before doing **any** implementation work, agents **MUST** scan the available skills list and load every skill whose description matches the current task. This rule applies to **all agents** — main agent, subagent, and audit/review agent — without exception.
 
-The skill is the **single entry point** — it contains the required-reading routing table, code patterns, and anti-pattern self-check lists. Do not read `docs-for-ai/` entry files directly; the skill routes you to the right docs.
+**Matching rule:** A skill matches when its `description` or trigger words cover the work about to be done (e.g., writing a BizModel method, creating a view.xml page, writing a test class, modifying an ORM model). When multiple skills match, load all of them.
 
-| Phase / Task type | Mandatory skill | When to load |
-|-------------------|----------------|--------------|
-| Backend BizModel / service logic / IBiz / ErrorCode | `nop-backend-dev` | Before writing any BizModel method, IBiz interface method, or error code |
-| Frontend page / view.xml / AMIS / page.yaml | `nop-frontend-dev` | Before creating or modifying any `.view.xml` or `.page.yaml` file |
-| Unit / integration / snapshot testing | `nop-testing` | Before writing any test class (`JunitAutoTestCase`, `JunitBaseTestCase`, etc.) |
-| ORM model design / change | `nop-orm-modeler` | Before creating or modifying any `.orm.xml` model file |
+**Why principle-based, not list-based:** Skills can be added or extended by any contributor at any time. Hardcoding specific skill names here would cause new skills to be silently ignored. The available skills list is the single source of truth; this section only enforces the discipline of checking and loading it.
 
 **Execution discipline:**
 
-1. Load the skill **before** writing code. The skill contains the required-reading routing table and anti-pattern self-check lists.
+1. **Before writing code**, scan available skills and load every matching skill. The skill is the single entry point — it contains the required-reading routing table, code patterns, and anti-pattern self-check lists.
 2. After the skill is loaded, read the docs it routes you to. The skill does not replace reading platform docs — it selects which docs to read for the current task.
-3. **After adding or modifying each backend method** (`@BizQuery`/`@BizMutation`/`@BizAction`), use `{DOCS-FOR-AI}/04-reference/bizmodel-method-selfcheck.md` to verify no anti-patterns. If any anti-pattern is found, fix it immediately before proceeding. For frontend and testing code, selfcheck at the end of the file/class, not after each individual change.
-4. If a task spans multiple phases (e.g., implementing a feature with both backend and frontend), load each skill when entering the corresponding phase.
+3. After adding or modifying code, use the selfcheck mechanism provided by the loaded skill to verify no anti-patterns. For backend BizModel methods, selfcheck after each method; for frontend and testing code, selfcheck at the end of the file/class.
+4. If a task spans multiple phases (e.g., implementing a feature with both backend and frontend), re-scan and load matching skills when entering each new phase.
+5. If no skill matches the current task, proceed without loading — but do not skip the scan step itself.
 
 ## Read This First
 
