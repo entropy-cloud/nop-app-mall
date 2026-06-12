@@ -15,25 +15,22 @@ CREATE TABLE litemall_ad(
   constraint PK_litemall_ad primary key (ID)
 );
 
-CREATE TABLE litemall_user(
+CREATE TABLE litemall_address(
   ID INTEGER NOT NULL ,
-  USERNAME VARCHAR2(63) NOT NULL ,
-  PASSWORD VARCHAR2(63) NOT NULL ,
-  GENDER INTEGER NOT NULL ,
-  BIRTHDAY DATE  ,
-  LAST_LOGIN_TIME DATE  ,
-  LAST_LOGIN_IP VARCHAR2(63) NOT NULL ,
-  USER_LEVEL INTEGER  ,
-  NICKNAME VARCHAR2(63) NOT NULL ,
-  MOBILE VARCHAR2(20) NOT NULL ,
-  AVATAR VARCHAR2(255) NOT NULL ,
-  WEIXIN_OPENID VARCHAR2(63) NOT NULL ,
-  SESSION_KEY VARCHAR2(100) NOT NULL ,
-  STATUS INTEGER NOT NULL ,
+  NAME VARCHAR2(63) NOT NULL ,
+  USER_ID VARCHAR2(50) NOT NULL ,
+  PROVINCE VARCHAR2(63) NOT NULL ,
+  CITY VARCHAR2(63) NOT NULL ,
+  COUNTY VARCHAR2(63) NOT NULL ,
+  ADDRESS_DETAIL VARCHAR2(127) NOT NULL ,
+  AREA_CODE CHAR(6)  ,
+  POSTAL_CODE CHAR(6)  ,
+  TEL VARCHAR2(20) NOT NULL ,
+  IS_DEFAULT CHAR(1) NOT NULL ,
   ADD_TIME DATE  ,
   UPDATE_TIME DATE  ,
   DELETED CHAR(1)  ,
-  constraint PK_litemall_user primary key (ID)
+  constraint PK_litemall_address primary key (ID)
 );
 
 CREATE TABLE litemall_admin(
@@ -48,6 +45,41 @@ CREATE TABLE litemall_admin(
   DELETED CHAR(1)  ,
   ROLE_IDS VARCHAR2(127)  ,
   constraint PK_litemall_admin primary key (ID)
+);
+
+CREATE TABLE litemall_order(
+  ID INTEGER NOT NULL ,
+  USER_ID VARCHAR2(50) NOT NULL ,
+  ORDER_SN VARCHAR2(63) NOT NULL ,
+  ORDER_STATUS INTEGER NOT NULL ,
+  AFTERSALE_STATUS INTEGER  ,
+  CONSIGNEE VARCHAR2(63) NOT NULL ,
+  MOBILE VARCHAR2(63) NOT NULL ,
+  ADDRESS VARCHAR2(127) NOT NULL ,
+  MESSAGE VARCHAR2(512) NOT NULL ,
+  GOODS_PRICE NUMBER(10,2) NOT NULL ,
+  FREIGHT_PRICE NUMBER(10,2) NOT NULL ,
+  COUPON_PRICE NUMBER(10,2) NOT NULL ,
+  INTEGRAL_PRICE NUMBER(10,2) NOT NULL ,
+  GROUPON_PRICE NUMBER(10,2) NOT NULL ,
+  ORDER_PRICE NUMBER(10,2) NOT NULL ,
+  ACTUAL_PRICE NUMBER(10,2) NOT NULL ,
+  PAY_ID VARCHAR2(63)  ,
+  PAY_TIME DATE  ,
+  SHIP_SN VARCHAR2(63)  ,
+  SHIP_CHANNEL VARCHAR2(63)  ,
+  SHIP_TIME DATE  ,
+  REFUND_AMOUNT NUMBER(10,2)  ,
+  REFUND_TYPE VARCHAR2(63)  ,
+  REFUND_CONTENT VARCHAR2(127)  ,
+  REFUND_TIME DATE  ,
+  CONFIRM_TIME DATE  ,
+  COMMENTS INTEGER  ,
+  END_TIME DATE  ,
+  ADD_TIME DATE  ,
+  UPDATE_TIME DATE  ,
+  DELETED CHAR(1)  ,
+  constraint PK_litemall_order primary key (ID)
 );
 
 CREATE TABLE litemall_brand(
@@ -79,6 +111,33 @@ CREATE TABLE litemall_category(
   constraint PK_litemall_category primary key (ID)
 );
 
+CREATE TABLE litemall_collect(
+  ID INTEGER NOT NULL ,
+  USER_ID VARCHAR2(50) NOT NULL ,
+  VALUE_ID INTEGER NOT NULL ,
+  TYPE INTEGER NOT NULL ,
+  ADD_TIME DATE  ,
+  UPDATE_TIME DATE  ,
+  DELETED CHAR(1)  ,
+  constraint PK_litemall_collect primary key (ID)
+);
+
+CREATE TABLE litemall_comment(
+  ID INTEGER NOT NULL ,
+  VALUE_ID INTEGER NOT NULL ,
+  TYPE INTEGER NOT NULL ,
+  CONTENT VARCHAR2(1023)  ,
+  ADMIN_CONTENT VARCHAR2(511)  ,
+  USER_ID VARCHAR2(50) NOT NULL ,
+  HAS_PICTURE CHAR(1)  ,
+  PIC_URLS VARCHAR2(1023)  ,
+  STAR INTEGER  ,
+  ADD_TIME DATE  ,
+  UPDATE_TIME DATE  ,
+  DELETED CHAR(1)  ,
+  constraint PK_litemall_comment primary key (ID)
+);
+
 CREATE TABLE litemall_coupon(
   ID INTEGER NOT NULL ,
   NAME VARCHAR2(63) NOT NULL ,
@@ -101,6 +160,22 @@ CREATE TABLE litemall_coupon(
   UPDATE_TIME DATE  ,
   DELETED CHAR(1)  ,
   constraint PK_litemall_coupon primary key (ID)
+);
+
+CREATE TABLE litemall_feedback(
+  ID INTEGER NOT NULL ,
+  USER_ID VARCHAR2(50) NOT NULL ,
+  USERNAME VARCHAR2(63) NOT NULL ,
+  MOBILE VARCHAR2(20) NOT NULL ,
+  FEED_TYPE VARCHAR2(63) NOT NULL ,
+  CONTENT VARCHAR2(1023) NOT NULL ,
+  STATUS INTEGER NOT NULL ,
+  HAS_PICTURE CHAR(1)  ,
+  PIC_URLS VARCHAR2(1023)  ,
+  ADD_TIME DATE  ,
+  UPDATE_TIME DATE  ,
+  DELETED CHAR(1)  ,
+  constraint PK_litemall_feedback primary key (ID)
 );
 
 CREATE TABLE litemall_issue(
@@ -194,6 +269,17 @@ CREATE TABLE litemall_role(
   constraint PK_litemall_role primary key (ID)
 );
 
+CREATE TABLE litemall_search_history(
+  ID INTEGER NOT NULL ,
+  USER_ID VARCHAR2(50) NOT NULL ,
+  KEYWORD VARCHAR2(63) NOT NULL ,
+  "FROM" VARCHAR2(63) NOT NULL ,
+  ADD_TIME DATE  ,
+  UPDATE_TIME DATE  ,
+  DELETED CHAR(1)  ,
+  constraint PK_litemall_search_history primary key (ID)
+);
+
 CREATE TABLE litemall_storage(
   ID INTEGER NOT NULL ,
   KEY VARCHAR2(63) NOT NULL ,
@@ -233,111 +319,38 @@ CREATE TABLE litemall_topic(
   constraint PK_litemall_topic primary key (ID)
 );
 
-CREATE TABLE litemall_address(
+CREATE TABLE litemall_aftersale(
   ID INTEGER NOT NULL ,
-  NAME VARCHAR2(63) NOT NULL ,
-  USER_ID INTEGER NOT NULL ,
-  PROVINCE VARCHAR2(63) NOT NULL ,
-  CITY VARCHAR2(63) NOT NULL ,
-  COUNTY VARCHAR2(63) NOT NULL ,
-  ADDRESS_DETAIL VARCHAR2(127) NOT NULL ,
-  AREA_CODE CHAR(6)  ,
-  POSTAL_CODE CHAR(6)  ,
-  TEL VARCHAR2(20) NOT NULL ,
-  IS_DEFAULT CHAR(1) NOT NULL ,
+  AFTERSALE_SN VARCHAR2(63)  ,
+  ORDER_ID INTEGER NOT NULL ,
+  USER_ID VARCHAR2(50) NOT NULL ,
+  TYPE INTEGER  ,
+  REASON VARCHAR2(31)  ,
+  AMOUNT NUMBER(10,2)  ,
+  PICTURES VARCHAR2(1023)  ,
+  "COMMENT" VARCHAR2(511)  ,
+  STATUS INTEGER  ,
+  HANDLE_TIME DATE  ,
   ADD_TIME DATE  ,
   UPDATE_TIME DATE  ,
   DELETED CHAR(1)  ,
-  constraint PK_litemall_address primary key (ID)
+  constraint PK_litemall_aftersale primary key (ID)
 );
 
-CREATE TABLE litemall_collect(
+CREATE TABLE litemall_groupon(
   ID INTEGER NOT NULL ,
-  USER_ID INTEGER NOT NULL ,
-  VALUE_ID INTEGER NOT NULL ,
-  TYPE INTEGER NOT NULL ,
-  ADD_TIME DATE  ,
+  ORDER_ID INTEGER NOT NULL ,
+  GROUPON_ID INTEGER  ,
+  RULES_ID INTEGER NOT NULL ,
+  USER_ID VARCHAR2(50) NOT NULL ,
+  SHARE_URL VARCHAR2(255)  ,
+  CREATOR_USER_ID VARCHAR2(50) NOT NULL ,
+  CREATOR_USER_TIME DATE  ,
+  STATUS INTEGER  ,
+  ADD_TIME DATE NOT NULL ,
   UPDATE_TIME DATE  ,
   DELETED CHAR(1)  ,
-  constraint PK_litemall_collect primary key (ID)
-);
-
-CREATE TABLE litemall_comment(
-  ID INTEGER NOT NULL ,
-  VALUE_ID INTEGER NOT NULL ,
-  TYPE INTEGER NOT NULL ,
-  CONTENT VARCHAR2(1023)  ,
-  ADMIN_CONTENT VARCHAR2(511)  ,
-  USER_ID INTEGER NOT NULL ,
-  HAS_PICTURE CHAR(1)  ,
-  PIC_URLS VARCHAR2(1023)  ,
-  STAR INTEGER  ,
-  ADD_TIME DATE  ,
-  UPDATE_TIME DATE  ,
-  DELETED CHAR(1)  ,
-  constraint PK_litemall_comment primary key (ID)
-);
-
-CREATE TABLE litemall_feedback(
-  ID INTEGER NOT NULL ,
-  USER_ID INTEGER NOT NULL ,
-  USERNAME VARCHAR2(63) NOT NULL ,
-  MOBILE VARCHAR2(20) NOT NULL ,
-  FEED_TYPE VARCHAR2(63) NOT NULL ,
-  CONTENT VARCHAR2(1023) NOT NULL ,
-  STATUS INTEGER NOT NULL ,
-  HAS_PICTURE CHAR(1)  ,
-  PIC_URLS VARCHAR2(1023)  ,
-  ADD_TIME DATE  ,
-  UPDATE_TIME DATE  ,
-  DELETED CHAR(1)  ,
-  constraint PK_litemall_feedback primary key (ID)
-);
-
-CREATE TABLE litemall_order(
-  ID INTEGER NOT NULL ,
-  USER_ID INTEGER NOT NULL ,
-  ORDER_SN VARCHAR2(63) NOT NULL ,
-  ORDER_STATUS INTEGER NOT NULL ,
-  AFTERSALE_STATUS INTEGER  ,
-  CONSIGNEE VARCHAR2(63) NOT NULL ,
-  MOBILE VARCHAR2(63) NOT NULL ,
-  ADDRESS VARCHAR2(127) NOT NULL ,
-  MESSAGE VARCHAR2(512) NOT NULL ,
-  GOODS_PRICE NUMBER(10,2) NOT NULL ,
-  FREIGHT_PRICE NUMBER(10,2) NOT NULL ,
-  COUPON_PRICE NUMBER(10,2) NOT NULL ,
-  INTEGRAL_PRICE NUMBER(10,2) NOT NULL ,
-  GROUPON_PRICE NUMBER(10,2) NOT NULL ,
-  ORDER_PRICE NUMBER(10,2) NOT NULL ,
-  ACTUAL_PRICE NUMBER(10,2) NOT NULL ,
-  PAY_ID VARCHAR2(63)  ,
-  PAY_TIME DATE  ,
-  SHIP_SN VARCHAR2(63)  ,
-  SHIP_CHANNEL VARCHAR2(63)  ,
-  SHIP_TIME DATE  ,
-  REFUND_AMOUNT NUMBER(10,2)  ,
-  REFUND_TYPE VARCHAR2(63)  ,
-  REFUND_CONTENT VARCHAR2(127)  ,
-  REFUND_TIME DATE  ,
-  CONFIRM_TIME DATE  ,
-  COMMENTS INTEGER  ,
-  END_TIME DATE  ,
-  ADD_TIME DATE  ,
-  UPDATE_TIME DATE  ,
-  DELETED CHAR(1)  ,
-  constraint PK_litemall_order primary key (ID)
-);
-
-CREATE TABLE litemall_search_history(
-  ID INTEGER NOT NULL ,
-  USER_ID INTEGER NOT NULL ,
-  KEYWORD VARCHAR2(63) NOT NULL ,
-  "FROM" VARCHAR2(63) NOT NULL ,
-  ADD_TIME DATE  ,
-  UPDATE_TIME DATE  ,
-  DELETED CHAR(1)  ,
-  constraint PK_litemall_search_history primary key (ID)
+  constraint PK_litemall_groupon primary key (ID)
 );
 
 CREATE TABLE litemall_goods(
@@ -367,7 +380,7 @@ CREATE TABLE litemall_goods(
 
 CREATE TABLE litemall_coupon_user(
   ID INTEGER NOT NULL ,
-  USER_ID INTEGER NOT NULL ,
+  USER_ID VARCHAR2(50) NOT NULL ,
   COUPON_ID INTEGER NOT NULL ,
   STATUS INTEGER  ,
   USED_TIME DATE  ,
@@ -380,55 +393,9 @@ CREATE TABLE litemall_coupon_user(
   constraint PK_litemall_coupon_user primary key (ID)
 );
 
-CREATE TABLE litemall_user_role(
-  USER_ID VARCHAR2(32) NOT NULL ,
-  ROLE_ID VARCHAR2(50) NOT NULL ,
-  VERSION INTEGER NOT NULL ,
-  CREATED_BY VARCHAR2(50) NOT NULL ,
-  CREATE_TIME DATE NOT NULL ,
-  UPDATED_BY VARCHAR2(50) NOT NULL ,
-  UPDATE_TIME DATE NOT NULL ,
-  REMARK VARCHAR2(200)  ,
-  constraint PK_litemall_user_role primary key (USER_ID,ROLE_ID)
-);
-
-CREATE TABLE litemall_aftersale(
-  ID INTEGER NOT NULL ,
-  AFTERSALE_SN VARCHAR2(63)  ,
-  ORDER_ID INTEGER NOT NULL ,
-  USER_ID INTEGER NOT NULL ,
-  TYPE INTEGER  ,
-  REASON VARCHAR2(31)  ,
-  AMOUNT NUMBER(10,2)  ,
-  PICTURES VARCHAR2(1023)  ,
-  "COMMENT" VARCHAR2(511)  ,
-  STATUS INTEGER  ,
-  HANDLE_TIME DATE  ,
-  ADD_TIME DATE  ,
-  UPDATE_TIME DATE  ,
-  DELETED CHAR(1)  ,
-  constraint PK_litemall_aftersale primary key (ID)
-);
-
-CREATE TABLE litemall_groupon(
-  ID INTEGER NOT NULL ,
-  ORDER_ID INTEGER NOT NULL ,
-  GROUPON_ID INTEGER  ,
-  RULES_ID INTEGER NOT NULL ,
-  USER_ID INTEGER NOT NULL ,
-  SHARE_URL VARCHAR2(255)  ,
-  CREATOR_USER_ID INTEGER NOT NULL ,
-  CREATOR_USER_TIME DATE  ,
-  STATUS INTEGER  ,
-  ADD_TIME DATE NOT NULL ,
-  UPDATE_TIME DATE  ,
-  DELETED CHAR(1)  ,
-  constraint PK_litemall_groupon primary key (ID)
-);
-
 CREATE TABLE litemall_cart(
   ID INTEGER NOT NULL ,
-  USER_ID INTEGER  ,
+  USER_ID VARCHAR2(50)  ,
   GOODS_ID INTEGER  ,
   GOODS_SN VARCHAR2(63)  ,
   GOODS_NAME VARCHAR2(127)  ,
@@ -446,7 +413,7 @@ CREATE TABLE litemall_cart(
 
 CREATE TABLE litemall_footprint(
   ID INTEGER NOT NULL ,
-  USER_ID INTEGER NOT NULL ,
+  USER_ID VARCHAR2(50) NOT NULL ,
   GOODS_ID INTEGER NOT NULL ,
   ADD_TIME DATE  ,
   UPDATE_TIME DATE  ,
@@ -550,41 +517,35 @@ CREATE TABLE litemall_order_goods(
                     
       COMMENT ON COLUMN litemall_ad.DELETED IS '逻辑删除';
                     
-      COMMENT ON TABLE litemall_user IS '用户表';
+      COMMENT ON TABLE litemall_address IS '收货地址表';
                 
-      COMMENT ON COLUMN litemall_user.ID IS 'Id';
+      COMMENT ON COLUMN litemall_address.ID IS 'Id';
                     
-      COMMENT ON COLUMN litemall_user.USERNAME IS '用户名称';
+      COMMENT ON COLUMN litemall_address.NAME IS '收货人名称';
                     
-      COMMENT ON COLUMN litemall_user.PASSWORD IS '用户密码';
+      COMMENT ON COLUMN litemall_address.USER_ID IS '用户ID';
                     
-      COMMENT ON COLUMN litemall_user.GENDER IS '性别';
+      COMMENT ON COLUMN litemall_address.PROVINCE IS '行政区域表的省ID';
                     
-      COMMENT ON COLUMN litemall_user.BIRTHDAY IS '生日';
+      COMMENT ON COLUMN litemall_address.CITY IS '行政区域表的市ID';
                     
-      COMMENT ON COLUMN litemall_user.LAST_LOGIN_TIME IS '最近一次登录时间';
+      COMMENT ON COLUMN litemall_address.COUNTY IS '行政区域表的区县ID';
                     
-      COMMENT ON COLUMN litemall_user.LAST_LOGIN_IP IS '最近一次登录IP地址';
+      COMMENT ON COLUMN litemall_address.ADDRESS_DETAIL IS '详细收货地址';
                     
-      COMMENT ON COLUMN litemall_user.USER_LEVEL IS '用户等级';
+      COMMENT ON COLUMN litemall_address.AREA_CODE IS '地区编码';
                     
-      COMMENT ON COLUMN litemall_user.NICKNAME IS '用户昵称或网络名称';
+      COMMENT ON COLUMN litemall_address.POSTAL_CODE IS '邮政编码';
                     
-      COMMENT ON COLUMN litemall_user.MOBILE IS '用户手机号码';
+      COMMENT ON COLUMN litemall_address.TEL IS '手机号码';
                     
-      COMMENT ON COLUMN litemall_user.AVATAR IS '用户头像图片';
+      COMMENT ON COLUMN litemall_address.IS_DEFAULT IS '是否默认地址';
                     
-      COMMENT ON COLUMN litemall_user.WEIXIN_OPENID IS '微信登录openid';
+      COMMENT ON COLUMN litemall_address.ADD_TIME IS '创建时间';
                     
-      COMMENT ON COLUMN litemall_user.SESSION_KEY IS '微信登录会话KEY';
+      COMMENT ON COLUMN litemall_address.UPDATE_TIME IS '更新时间';
                     
-      COMMENT ON COLUMN litemall_user.STATUS IS '用户状态';
-                    
-      COMMENT ON COLUMN litemall_user.ADD_TIME IS '创建时间';
-                    
-      COMMENT ON COLUMN litemall_user.UPDATE_TIME IS '更新时间';
-                    
-      COMMENT ON COLUMN litemall_user.DELETED IS '逻辑删除';
+      COMMENT ON COLUMN litemall_address.DELETED IS '逻辑删除';
                     
       COMMENT ON TABLE litemall_admin IS '管理员表';
                 
@@ -607,6 +568,70 @@ CREATE TABLE litemall_order_goods(
       COMMENT ON COLUMN litemall_admin.DELETED IS '逻辑删除';
                     
       COMMENT ON COLUMN litemall_admin.ROLE_IDS IS '角色列表';
+                    
+      COMMENT ON TABLE litemall_order IS '订单表';
+                
+      COMMENT ON COLUMN litemall_order.ID IS 'Id';
+                    
+      COMMENT ON COLUMN litemall_order.USER_ID IS '用户ID';
+                    
+      COMMENT ON COLUMN litemall_order.ORDER_SN IS '订单编号';
+                    
+      COMMENT ON COLUMN litemall_order.ORDER_STATUS IS '订单状态';
+                    
+      COMMENT ON COLUMN litemall_order.AFTERSALE_STATUS IS '售后状态';
+                    
+      COMMENT ON COLUMN litemall_order.CONSIGNEE IS '收货人名称';
+                    
+      COMMENT ON COLUMN litemall_order.MOBILE IS '收货人手机号';
+                    
+      COMMENT ON COLUMN litemall_order.ADDRESS IS '收货具体地址';
+                    
+      COMMENT ON COLUMN litemall_order.MESSAGE IS '用户订单留言';
+                    
+      COMMENT ON COLUMN litemall_order.GOODS_PRICE IS '商品总费用';
+                    
+      COMMENT ON COLUMN litemall_order.FREIGHT_PRICE IS '配送费用';
+                    
+      COMMENT ON COLUMN litemall_order.COUPON_PRICE IS '优惠券减免';
+                    
+      COMMENT ON COLUMN litemall_order.INTEGRAL_PRICE IS '用户积分减免';
+                    
+      COMMENT ON COLUMN litemall_order.GROUPON_PRICE IS '团购优惠价减免';
+                    
+      COMMENT ON COLUMN litemall_order.ORDER_PRICE IS '订单费用';
+                    
+      COMMENT ON COLUMN litemall_order.ACTUAL_PRICE IS '实付费用';
+                    
+      COMMENT ON COLUMN litemall_order.PAY_ID IS '微信付款编号';
+                    
+      COMMENT ON COLUMN litemall_order.PAY_TIME IS '微信付款时间';
+                    
+      COMMENT ON COLUMN litemall_order.SHIP_SN IS '发货编号';
+                    
+      COMMENT ON COLUMN litemall_order.SHIP_CHANNEL IS '发货快递公司';
+                    
+      COMMENT ON COLUMN litemall_order.SHIP_TIME IS '发货开始时间';
+                    
+      COMMENT ON COLUMN litemall_order.REFUND_AMOUNT IS '实际退款金额';
+                    
+      COMMENT ON COLUMN litemall_order.REFUND_TYPE IS '退款方式';
+                    
+      COMMENT ON COLUMN litemall_order.REFUND_CONTENT IS '退款备注';
+                    
+      COMMENT ON COLUMN litemall_order.REFUND_TIME IS '退款时间';
+                    
+      COMMENT ON COLUMN litemall_order.CONFIRM_TIME IS '用户确认收货时间';
+                    
+      COMMENT ON COLUMN litemall_order.COMMENTS IS '待评价订单商品数量';
+                    
+      COMMENT ON COLUMN litemall_order.END_TIME IS '订单关闭时间';
+                    
+      COMMENT ON COLUMN litemall_order.ADD_TIME IS '创建时间';
+                    
+      COMMENT ON COLUMN litemall_order.UPDATE_TIME IS '更新时间';
+                    
+      COMMENT ON COLUMN litemall_order.DELETED IS '逻辑删除';
                     
       COMMENT ON TABLE litemall_brand IS '品牌商表';
                 
@@ -654,6 +679,48 @@ CREATE TABLE litemall_order_goods(
                     
       COMMENT ON COLUMN litemall_category.DELETED IS '逻辑删除';
                     
+      COMMENT ON TABLE litemall_collect IS '收藏表';
+                
+      COMMENT ON COLUMN litemall_collect.ID IS 'Id';
+                    
+      COMMENT ON COLUMN litemall_collect.USER_ID IS '用户ID';
+                    
+      COMMENT ON COLUMN litemall_collect.VALUE_ID IS '如果type=0，则是商品ID；如果type=1，则是专题ID';
+                    
+      COMMENT ON COLUMN litemall_collect.TYPE IS '收藏类型';
+                    
+      COMMENT ON COLUMN litemall_collect.ADD_TIME IS '创建时间';
+                    
+      COMMENT ON COLUMN litemall_collect.UPDATE_TIME IS '更新时间';
+                    
+      COMMENT ON COLUMN litemall_collect.DELETED IS '逻辑删除';
+                    
+      COMMENT ON TABLE litemall_comment IS '评论表';
+                
+      COMMENT ON COLUMN litemall_comment.ID IS 'Id';
+                    
+      COMMENT ON COLUMN litemall_comment.VALUE_ID IS '如果type=0，则是商品评论；如果是type=1，则是专题评论。';
+                    
+      COMMENT ON COLUMN litemall_comment.TYPE IS '评论类型';
+                    
+      COMMENT ON COLUMN litemall_comment.CONTENT IS '评论内容';
+                    
+      COMMENT ON COLUMN litemall_comment.ADMIN_CONTENT IS '管理员回复内容';
+                    
+      COMMENT ON COLUMN litemall_comment.USER_ID IS '用户ID';
+                    
+      COMMENT ON COLUMN litemall_comment.HAS_PICTURE IS '是否含有图片';
+                    
+      COMMENT ON COLUMN litemall_comment.PIC_URLS IS '图片地址列表，采用JSON数组格式';
+                    
+      COMMENT ON COLUMN litemall_comment.STAR IS '评分， 1-5';
+                    
+      COMMENT ON COLUMN litemall_comment.ADD_TIME IS '创建时间';
+                    
+      COMMENT ON COLUMN litemall_comment.UPDATE_TIME IS '更新时间';
+                    
+      COMMENT ON COLUMN litemall_comment.DELETED IS '逻辑删除';
+                    
       COMMENT ON TABLE litemall_coupon IS '优惠券信息及规则表';
                 
       COMMENT ON COLUMN litemall_coupon.ID IS 'Id';
@@ -695,6 +762,32 @@ CREATE TABLE litemall_order_goods(
       COMMENT ON COLUMN litemall_coupon.UPDATE_TIME IS '更新时间';
                     
       COMMENT ON COLUMN litemall_coupon.DELETED IS '逻辑删除';
+                    
+      COMMENT ON TABLE litemall_feedback IS '意见反馈表';
+                
+      COMMENT ON COLUMN litemall_feedback.ID IS 'Id';
+                    
+      COMMENT ON COLUMN litemall_feedback.USER_ID IS '用户ID';
+                    
+      COMMENT ON COLUMN litemall_feedback.USERNAME IS '用户名称';
+                    
+      COMMENT ON COLUMN litemall_feedback.MOBILE IS '手机号';
+                    
+      COMMENT ON COLUMN litemall_feedback.FEED_TYPE IS '反馈类型';
+                    
+      COMMENT ON COLUMN litemall_feedback.CONTENT IS '反馈内容';
+                    
+      COMMENT ON COLUMN litemall_feedback.STATUS IS '状态';
+                    
+      COMMENT ON COLUMN litemall_feedback.HAS_PICTURE IS '是否含有图片';
+                    
+      COMMENT ON COLUMN litemall_feedback.PIC_URLS IS '图片地址列表，采用JSON数组格式';
+                    
+      COMMENT ON COLUMN litemall_feedback.ADD_TIME IS '创建时间';
+                    
+      COMMENT ON COLUMN litemall_feedback.UPDATE_TIME IS '更新时间';
+                    
+      COMMENT ON COLUMN litemall_feedback.DELETED IS '逻辑删除';
                     
       COMMENT ON TABLE litemall_issue IS '常见问题表';
                 
@@ -830,6 +923,22 @@ CREATE TABLE litemall_order_goods(
                     
       COMMENT ON COLUMN litemall_role.DELETED IS '逻辑删除';
                     
+      COMMENT ON TABLE litemall_search_history IS '搜索历史表';
+                
+      COMMENT ON COLUMN litemall_search_history.ID IS 'Id';
+                    
+      COMMENT ON COLUMN litemall_search_history.USER_ID IS '用户ID';
+                    
+      COMMENT ON COLUMN litemall_search_history.KEYWORD IS '搜索关键字';
+                    
+      COMMENT ON COLUMN litemall_search_history."FROM" IS '搜索来源';
+                    
+      COMMENT ON COLUMN litemall_search_history.ADD_TIME IS '创建时间';
+                    
+      COMMENT ON COLUMN litemall_search_history.UPDATE_TIME IS '更新时间';
+                    
+      COMMENT ON COLUMN litemall_search_history.DELETED IS '逻辑删除';
+                    
       COMMENT ON TABLE litemall_storage IS '文件存储表';
                 
       COMMENT ON COLUMN litemall_storage.ID IS 'Id';
@@ -890,183 +999,61 @@ CREATE TABLE litemall_order_goods(
                     
       COMMENT ON COLUMN litemall_topic.DELETED IS '逻辑删除';
                     
-      COMMENT ON TABLE litemall_address IS '收货地址表';
+      COMMENT ON TABLE litemall_aftersale IS '售后表';
                 
-      COMMENT ON COLUMN litemall_address.ID IS 'Id';
+      COMMENT ON COLUMN litemall_aftersale.ID IS 'Id';
                     
-      COMMENT ON COLUMN litemall_address.NAME IS '收货人名称';
+      COMMENT ON COLUMN litemall_aftersale.AFTERSALE_SN IS '售后编号';
                     
-      COMMENT ON COLUMN litemall_address.USER_ID IS '用户ID';
+      COMMENT ON COLUMN litemall_aftersale.ORDER_ID IS '订单ID';
                     
-      COMMENT ON COLUMN litemall_address.PROVINCE IS '行政区域表的省ID';
+      COMMENT ON COLUMN litemall_aftersale.USER_ID IS '用户ID';
                     
-      COMMENT ON COLUMN litemall_address.CITY IS '行政区域表的市ID';
+      COMMENT ON COLUMN litemall_aftersale.TYPE IS '售后类型';
                     
-      COMMENT ON COLUMN litemall_address.COUNTY IS '行政区域表的区县ID';
+      COMMENT ON COLUMN litemall_aftersale.REASON IS '退款原因';
                     
-      COMMENT ON COLUMN litemall_address.ADDRESS_DETAIL IS '详细收货地址';
+      COMMENT ON COLUMN litemall_aftersale.AMOUNT IS '退款金额';
                     
-      COMMENT ON COLUMN litemall_address.AREA_CODE IS '地区编码';
+      COMMENT ON COLUMN litemall_aftersale.PICTURES IS '退款凭证图片链接数组';
                     
-      COMMENT ON COLUMN litemall_address.POSTAL_CODE IS '邮政编码';
+      COMMENT ON COLUMN litemall_aftersale."COMMENT" IS '退款说明';
                     
-      COMMENT ON COLUMN litemall_address.TEL IS '手机号码';
+      COMMENT ON COLUMN litemall_aftersale.STATUS IS '售后状态';
                     
-      COMMENT ON COLUMN litemall_address.IS_DEFAULT IS '是否默认地址';
+      COMMENT ON COLUMN litemall_aftersale.HANDLE_TIME IS '管理员操作时间';
                     
-      COMMENT ON COLUMN litemall_address.ADD_TIME IS '创建时间';
+      COMMENT ON COLUMN litemall_aftersale.ADD_TIME IS '添加时间';
                     
-      COMMENT ON COLUMN litemall_address.UPDATE_TIME IS '更新时间';
+      COMMENT ON COLUMN litemall_aftersale.UPDATE_TIME IS '更新时间';
                     
-      COMMENT ON COLUMN litemall_address.DELETED IS '逻辑删除';
+      COMMENT ON COLUMN litemall_aftersale.DELETED IS '逻辑删除';
                     
-      COMMENT ON TABLE litemall_collect IS '收藏表';
+      COMMENT ON TABLE litemall_groupon IS '团购活动表';
                 
-      COMMENT ON COLUMN litemall_collect.ID IS 'Id';
+      COMMENT ON COLUMN litemall_groupon.ID IS 'Id';
                     
-      COMMENT ON COLUMN litemall_collect.USER_ID IS '用户ID';
+      COMMENT ON COLUMN litemall_groupon.ORDER_ID IS '订单ID';
                     
-      COMMENT ON COLUMN litemall_collect.VALUE_ID IS '如果type=0，则是商品ID；如果type=1，则是专题ID';
+      COMMENT ON COLUMN litemall_groupon.GROUPON_ID IS '如果是开团用户，则groupon_id是0；如果是参团用户，则groupon_id是团购活动ID';
                     
-      COMMENT ON COLUMN litemall_collect.TYPE IS '收藏类型';
+      COMMENT ON COLUMN litemall_groupon.RULES_ID IS '团购规则ID';
                     
-      COMMENT ON COLUMN litemall_collect.ADD_TIME IS '创建时间';
+      COMMENT ON COLUMN litemall_groupon.USER_ID IS '用户ID';
                     
-      COMMENT ON COLUMN litemall_collect.UPDATE_TIME IS '更新时间';
+      COMMENT ON COLUMN litemall_groupon.SHARE_URL IS '团购分享图片地址';
                     
-      COMMENT ON COLUMN litemall_collect.DELETED IS '逻辑删除';
+      COMMENT ON COLUMN litemall_groupon.CREATOR_USER_ID IS '开团用户ID';
                     
-      COMMENT ON TABLE litemall_comment IS '评论表';
-                
-      COMMENT ON COLUMN litemall_comment.ID IS 'Id';
+      COMMENT ON COLUMN litemall_groupon.CREATOR_USER_TIME IS '开团时间';
                     
-      COMMENT ON COLUMN litemall_comment.VALUE_ID IS '如果type=0，则是商品评论；如果是type=1，则是专题评论。';
+      COMMENT ON COLUMN litemall_groupon.STATUS IS '团购活动状态，开团未支付则0，开团中则1，开团失败则2';
                     
-      COMMENT ON COLUMN litemall_comment.TYPE IS '评论类型';
+      COMMENT ON COLUMN litemall_groupon.ADD_TIME IS '创建时间';
                     
-      COMMENT ON COLUMN litemall_comment.CONTENT IS '评论内容';
+      COMMENT ON COLUMN litemall_groupon.UPDATE_TIME IS '更新时间';
                     
-      COMMENT ON COLUMN litemall_comment.ADMIN_CONTENT IS '管理员回复内容';
-                    
-      COMMENT ON COLUMN litemall_comment.USER_ID IS '用户ID';
-                    
-      COMMENT ON COLUMN litemall_comment.HAS_PICTURE IS '是否含有图片';
-                    
-      COMMENT ON COLUMN litemall_comment.PIC_URLS IS '图片地址列表，采用JSON数组格式';
-                    
-      COMMENT ON COLUMN litemall_comment.STAR IS '评分， 1-5';
-                    
-      COMMENT ON COLUMN litemall_comment.ADD_TIME IS '创建时间';
-                    
-      COMMENT ON COLUMN litemall_comment.UPDATE_TIME IS '更新时间';
-                    
-      COMMENT ON COLUMN litemall_comment.DELETED IS '逻辑删除';
-                    
-      COMMENT ON TABLE litemall_feedback IS '意见反馈表';
-                
-      COMMENT ON COLUMN litemall_feedback.ID IS 'Id';
-                    
-      COMMENT ON COLUMN litemall_feedback.USER_ID IS '用户ID';
-                    
-      COMMENT ON COLUMN litemall_feedback.USERNAME IS '用户名称';
-                    
-      COMMENT ON COLUMN litemall_feedback.MOBILE IS '手机号';
-                    
-      COMMENT ON COLUMN litemall_feedback.FEED_TYPE IS '反馈类型';
-                    
-      COMMENT ON COLUMN litemall_feedback.CONTENT IS '反馈内容';
-                    
-      COMMENT ON COLUMN litemall_feedback.STATUS IS '状态';
-                    
-      COMMENT ON COLUMN litemall_feedback.HAS_PICTURE IS '是否含有图片';
-                    
-      COMMENT ON COLUMN litemall_feedback.PIC_URLS IS '图片地址列表，采用JSON数组格式';
-                    
-      COMMENT ON COLUMN litemall_feedback.ADD_TIME IS '创建时间';
-                    
-      COMMENT ON COLUMN litemall_feedback.UPDATE_TIME IS '更新时间';
-                    
-      COMMENT ON COLUMN litemall_feedback.DELETED IS '逻辑删除';
-                    
-      COMMENT ON TABLE litemall_order IS '订单表';
-                
-      COMMENT ON COLUMN litemall_order.ID IS 'Id';
-                    
-      COMMENT ON COLUMN litemall_order.USER_ID IS '用户ID';
-                    
-      COMMENT ON COLUMN litemall_order.ORDER_SN IS '订单编号';
-                    
-      COMMENT ON COLUMN litemall_order.ORDER_STATUS IS '订单状态';
-                    
-      COMMENT ON COLUMN litemall_order.AFTERSALE_STATUS IS '售后状态';
-                    
-      COMMENT ON COLUMN litemall_order.CONSIGNEE IS '收货人名称';
-                    
-      COMMENT ON COLUMN litemall_order.MOBILE IS '收货人手机号';
-                    
-      COMMENT ON COLUMN litemall_order.ADDRESS IS '收货具体地址';
-                    
-      COMMENT ON COLUMN litemall_order.MESSAGE IS '用户订单留言';
-                    
-      COMMENT ON COLUMN litemall_order.GOODS_PRICE IS '商品总费用';
-                    
-      COMMENT ON COLUMN litemall_order.FREIGHT_PRICE IS '配送费用';
-                    
-      COMMENT ON COLUMN litemall_order.COUPON_PRICE IS '优惠券减免';
-                    
-      COMMENT ON COLUMN litemall_order.INTEGRAL_PRICE IS '用户积分减免';
-                    
-      COMMENT ON COLUMN litemall_order.GROUPON_PRICE IS '团购优惠价减免';
-                    
-      COMMENT ON COLUMN litemall_order.ORDER_PRICE IS '订单费用';
-                    
-      COMMENT ON COLUMN litemall_order.ACTUAL_PRICE IS '实付费用';
-                    
-      COMMENT ON COLUMN litemall_order.PAY_ID IS '微信付款编号';
-                    
-      COMMENT ON COLUMN litemall_order.PAY_TIME IS '微信付款时间';
-                    
-      COMMENT ON COLUMN litemall_order.SHIP_SN IS '发货编号';
-                    
-      COMMENT ON COLUMN litemall_order.SHIP_CHANNEL IS '发货快递公司';
-                    
-      COMMENT ON COLUMN litemall_order.SHIP_TIME IS '发货开始时间';
-                    
-      COMMENT ON COLUMN litemall_order.REFUND_AMOUNT IS '实际退款金额';
-                    
-      COMMENT ON COLUMN litemall_order.REFUND_TYPE IS '退款方式';
-                    
-      COMMENT ON COLUMN litemall_order.REFUND_CONTENT IS '退款备注';
-                    
-      COMMENT ON COLUMN litemall_order.REFUND_TIME IS '退款时间';
-                    
-      COMMENT ON COLUMN litemall_order.CONFIRM_TIME IS '用户确认收货时间';
-                    
-      COMMENT ON COLUMN litemall_order.COMMENTS IS '待评价订单商品数量';
-                    
-      COMMENT ON COLUMN litemall_order.END_TIME IS '订单关闭时间';
-                    
-      COMMENT ON COLUMN litemall_order.ADD_TIME IS '创建时间';
-                    
-      COMMENT ON COLUMN litemall_order.UPDATE_TIME IS '更新时间';
-                    
-      COMMENT ON COLUMN litemall_order.DELETED IS '逻辑删除';
-                    
-      COMMENT ON TABLE litemall_search_history IS '搜索历史表';
-                
-      COMMENT ON COLUMN litemall_search_history.ID IS 'Id';
-                    
-      COMMENT ON COLUMN litemall_search_history.USER_ID IS '用户ID';
-                    
-      COMMENT ON COLUMN litemall_search_history.KEYWORD IS '搜索关键字';
-                    
-      COMMENT ON COLUMN litemall_search_history."FROM" IS '搜索来源';
-                    
-      COMMENT ON COLUMN litemall_search_history.ADD_TIME IS '创建时间';
-                    
-      COMMENT ON COLUMN litemall_search_history.UPDATE_TIME IS '更新时间';
-                    
-      COMMENT ON COLUMN litemall_search_history.DELETED IS '逻辑删除';
+      COMMENT ON COLUMN litemall_groupon.DELETED IS '逻辑删除';
                     
       COMMENT ON TABLE litemall_goods IS '商品基本信息';
                 
@@ -1135,80 +1122,6 @@ CREATE TABLE litemall_order_goods(
       COMMENT ON COLUMN litemall_coupon_user.UPDATE_TIME IS '更新时间';
                     
       COMMENT ON COLUMN litemall_coupon_user.DELETED IS '逻辑删除';
-                    
-      COMMENT ON TABLE litemall_user_role IS '用户角色';
-                
-      COMMENT ON COLUMN litemall_user_role.USER_ID IS '用户ID';
-                    
-      COMMENT ON COLUMN litemall_user_role.ROLE_ID IS '角色ID';
-                    
-      COMMENT ON COLUMN litemall_user_role.VERSION IS '数据版本';
-                    
-      COMMENT ON COLUMN litemall_user_role.CREATED_BY IS '创建人';
-                    
-      COMMENT ON COLUMN litemall_user_role.CREATE_TIME IS '创建时间';
-                    
-      COMMENT ON COLUMN litemall_user_role.UPDATED_BY IS '修改人';
-                    
-      COMMENT ON COLUMN litemall_user_role.UPDATE_TIME IS '修改时间';
-                    
-      COMMENT ON COLUMN litemall_user_role.REMARK IS '备注';
-                    
-      COMMENT ON TABLE litemall_aftersale IS '售后表';
-                
-      COMMENT ON COLUMN litemall_aftersale.ID IS 'Id';
-                    
-      COMMENT ON COLUMN litemall_aftersale.AFTERSALE_SN IS '售后编号';
-                    
-      COMMENT ON COLUMN litemall_aftersale.ORDER_ID IS '订单ID';
-                    
-      COMMENT ON COLUMN litemall_aftersale.USER_ID IS '用户ID';
-                    
-      COMMENT ON COLUMN litemall_aftersale.TYPE IS '售后类型';
-                    
-      COMMENT ON COLUMN litemall_aftersale.REASON IS '退款原因';
-                    
-      COMMENT ON COLUMN litemall_aftersale.AMOUNT IS '退款金额';
-                    
-      COMMENT ON COLUMN litemall_aftersale.PICTURES IS '退款凭证图片链接数组';
-                    
-      COMMENT ON COLUMN litemall_aftersale."COMMENT" IS '退款说明';
-                    
-      COMMENT ON COLUMN litemall_aftersale.STATUS IS '售后状态';
-                    
-      COMMENT ON COLUMN litemall_aftersale.HANDLE_TIME IS '管理员操作时间';
-                    
-      COMMENT ON COLUMN litemall_aftersale.ADD_TIME IS '添加时间';
-                    
-      COMMENT ON COLUMN litemall_aftersale.UPDATE_TIME IS '更新时间';
-                    
-      COMMENT ON COLUMN litemall_aftersale.DELETED IS '逻辑删除';
-                    
-      COMMENT ON TABLE litemall_groupon IS '团购活动表';
-                
-      COMMENT ON COLUMN litemall_groupon.ID IS 'Id';
-                    
-      COMMENT ON COLUMN litemall_groupon.ORDER_ID IS '订单ID';
-                    
-      COMMENT ON COLUMN litemall_groupon.GROUPON_ID IS '如果是开团用户，则groupon_id是0；如果是参团用户，则groupon_id是团购活动ID';
-                    
-      COMMENT ON COLUMN litemall_groupon.RULES_ID IS '团购规则ID';
-                    
-      COMMENT ON COLUMN litemall_groupon.USER_ID IS '用户ID';
-                    
-      COMMENT ON COLUMN litemall_groupon.SHARE_URL IS '团购分享图片地址';
-                    
-      COMMENT ON COLUMN litemall_groupon.CREATOR_USER_ID IS '开团用户ID';
-                    
-      COMMENT ON COLUMN litemall_groupon.CREATOR_USER_TIME IS '开团时间';
-                    
-      COMMENT ON COLUMN litemall_groupon.STATUS IS '团购活动状态，开团未支付则0，开团中则1，开团失败则2';
-                    
-      COMMENT ON COLUMN litemall_groupon.ADD_TIME IS '创建时间';
-                    
-      COMMENT ON COLUMN litemall_groupon.UPDATE_TIME IS '更新时间';
-                    
-      COMMENT ON COLUMN litemall_groupon.DELETED IS '逻辑删除';
                     
       COMMENT ON TABLE litemall_cart IS '购物车商品表';
                 
