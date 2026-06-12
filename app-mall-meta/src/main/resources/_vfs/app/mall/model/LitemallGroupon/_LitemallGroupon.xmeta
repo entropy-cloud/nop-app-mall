@@ -36,7 +36,7 @@
         </prop>
         <prop name="userId" displayName="用户ID" propId="5" mandatory="true" queryable="true" sortable="true"
               insertable="true" updatable="true">
-            <schema type="java.lang.String"/>
+            <schema domain="userId" type="java.lang.String" precision="50"/>
         </prop>
         <prop name="shareUrl" displayName="团购分享图片地址" propId="6" queryable="true" sortable="true" insertable="true"
               updatable="true">
@@ -44,7 +44,7 @@
         </prop>
         <prop name="creatorUserId" displayName="开团用户ID" propId="7" mandatory="true" queryable="true" sortable="true"
               insertable="true" updatable="true">
-            <schema type="java.lang.String"/>
+            <schema domain="userId" type="java.lang.String" precision="50"/>
         </prop>
         <prop name="creatorUserTime" displayName="开团时间" propId="8" queryable="true" sortable="true" insertable="true"
               updatable="true">

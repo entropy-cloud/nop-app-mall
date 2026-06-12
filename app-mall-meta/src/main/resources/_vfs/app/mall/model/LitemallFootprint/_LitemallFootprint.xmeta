@@ -23,8 +23,8 @@
             <schema type="java.lang.String"/>
         </prop>
         <prop name="userId" displayName="用户ID" propId="2" mandatory="true" queryable="true" sortable="true"
-              insertable="true" updatable="true" ext:relation="user">
-            <schema type="java.lang.String"/>
+              insertable="true" updatable="true">
+            <schema domain="userId" type="java.lang.String" precision="50"/>
         </prop>
         <prop name="goodsId" displayName="浏览商品ID" propId="3" mandatory="true" queryable="true" sortable="true"
               insertable="true" updatable="true" ext:relation="goods">
@@ -48,15 +48,6 @@
             <schema bizObjName="LitemallGoods"/>
         </prop>
         <prop name="goods.name" displayName="订单" i18n-en:displayName="Goods" internal="true" queryable="true"
-              sortable="true" lazy="true">
-            <schema type="String"/>
-        </prop>
-        <prop name="user" displayName="客户" i18n-en:displayName="User" tagSet="pub,ref-pub" ext:kind="to-one"
-              internal="true" queryable="true" ext:joinLeftProp="userId" ext:joinRightProp="id"
-              ext:joinRightDisplayProp="username" insertable="false" updatable="false" mandatory="true" lazy="true">
-            <schema bizObjName="LitemallUser"/>
-        </prop>
-        <prop name="user.username" displayName="客户" i18n-en:displayName="User" internal="true" queryable="true"
               sortable="true" lazy="true">
             <schema type="String"/>
         </prop>

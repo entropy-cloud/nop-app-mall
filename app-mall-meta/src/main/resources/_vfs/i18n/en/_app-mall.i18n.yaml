@@ -33,8 +33,6 @@ entity:
     LitemallStorage: null
     LitemallSystem: null
     LitemallTopic: null
-    LitemallUser: null
-    LitemallUserRole: User Role
 prop:
   label:
     LitemallAd:
@@ -66,8 +64,6 @@ prop:
       addTime: null
       updateTime: null
       deleted: null
-      user: User
-      user.username: User
     LitemallAdmin:
       id: null
       username: null
@@ -98,8 +94,6 @@ prop:
       deleted: null
       order: Order
       order.orderSn: Order
-      user: User
-      user.username: User
       picturesComponentFileStatusList: null
     LitemallBrand:
       id: null
@@ -129,8 +123,6 @@ prop:
       deleted: null
       goods: Goods
       goods.name: Goods
-      user: User
-      user.username: User
       picUrlComponentFileStatus: null
     LitemallCategory:
       id: null
@@ -159,8 +151,6 @@ prop:
       addTime: null
       updateTime: null
       deleted: null
-      user: User
-      user.username: User
     LitemallComment:
       id: null
       valueId: null
@@ -174,8 +164,6 @@ prop:
       addTime: null
       updateTime: null
       deleted: null
-      user: User
-      user.username: User
       picUrlsComponentFileStatusList: null
     LitemallCoupon:
       id: null
@@ -217,8 +205,6 @@ prop:
       deleted: null
       coupon: Coupon
       coupon.name: Coupon
-      user: User
-      user.username: User
     LitemallFeedback:
       id: null
       userId: null
@@ -232,8 +218,6 @@ prop:
       addTime: null
       updateTime: null
       deleted: null
-      user: User
-      user.username: User
       picUrlsComponentFileStatusList: null
     LitemallFootprint:
       id: null
@@ -244,8 +228,6 @@ prop:
       deleted: null
       goods: Goods
       goods.name: Goods
-      user: User
-      user.username: User
     LitemallGoods:
       id: ID
       goodsSn: Goods SN
@@ -334,7 +316,6 @@ prop:
       deleted: null
       order: Order
       order.orderSn: Order
-      grouponRules: GrouponRules
       shareUrlComponentFileStatus: null
     LitemallGrouponRules:
       id: null
@@ -431,8 +412,6 @@ prop:
       addTime: null
       updateTime: null
       deleted: null
-      user: User
-      user.username: User
       orderGoods: Order Goods
       relatedProductList: null
       relatedProductList_ids: null
@@ -482,10 +461,6 @@ prop:
       addTime: null
       updateTime: null
       deleted: null
-      userMappings: null
-      relatedUserList: null
-      relatedUserList_ids: null
-      relatedUserList_label: null
     LitemallSearchHistory:
       id: null
       userId: null
@@ -494,8 +469,6 @@ prop:
       addTime: null
       updateTime: null
       deleted: null
-      user: User
-      user.username: User
     LitemallStorage:
       id: null
       key: null
@@ -527,41 +500,3 @@ prop:
       updateTime: null
       deleted: null
       goodsComponent: null
-    LitemallUser:
-      id: null
-      username: null
-      password: null
-      gender: null
-      gender_label: null
-      birthday: null
-      lastLoginTime: null
-      lastLoginIp: null
-      userLevel: null
-      userLevel_label: null
-      nickname: null
-      mobile: null
-      avatar: null
-      weixinOpenid: null
-      sessionKey: null
-      status: null
-      status_label: null
-      addTime: null
-      updateTime: null
-      deleted: null
-      roleMappings: RoleMappings
-      avatarComponentFileStatus: null
-      relatedRoleList: null
-      relatedRoleList_ids: null
-      relatedRoleList_label: null
-    LitemallUserRole:
-      userId: User ID
-      roleId: Role ID
-      version: Version
-      createdBy: Created By
-      createTime: Create Time
-      updatedBy: Updated By
-      updateTime: Update Time
-      remark: Remark
-      user: User
-      user.username: User
-      role: Role

@@ -6,7 +6,5 @@
   "updateTime": "2000-01-01 14:00:00",
   "deleted": false,
   "goods": null,
-  "goods.name": "",
-  "user": null,
-  "user.username": ""
+  "goods.name": ""
 }

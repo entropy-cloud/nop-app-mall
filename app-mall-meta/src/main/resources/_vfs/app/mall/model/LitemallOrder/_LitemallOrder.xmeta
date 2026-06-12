@@ -25,8 +25,8 @@
             <schema type="java.lang.String"/>
         </prop>
         <prop name="userId" displayName="用户ID" propId="2" mandatory="true" queryable="true" sortable="true"
-              insertable="true" updatable="true" ext:relation="user">
-            <schema type="java.lang.String"/>
+              insertable="true" updatable="true">
+            <schema domain="userId" type="java.lang.String" precision="50"/>
         </prop>
         <prop name="orderSn" displayName="订单编号" propId="3" tagSet="disp" mandatory="true" queryable="true"
               sortable="true" insertable="true" updatable="true">
@@ -143,15 +143,6 @@
         <prop name="deleted" displayName="逻辑删除" propId="31" queryable="true" sortable="true" insertable="false"
               updatable="true" internal="true" ui:show="X">
             <schema domain="delFlag" type="java.lang.Boolean"/>
-        </prop>
-        <prop name="user" displayName="客户" i18n-en:displayName="User" tagSet="pub,ref-pub" ext:kind="to-one"
-              internal="true" queryable="true" ext:joinLeftProp="userId" ext:joinRightProp="id"
-              ext:joinRightDisplayProp="username" insertable="false" updatable="false" mandatory="true" lazy="true">
-            <schema bizObjName="LitemallUser"/>
-        </prop>
-        <prop name="user.username" displayName="客户" i18n-en:displayName="User" internal="true" queryable="true"
-              sortable="true" lazy="true">
-            <schema type="String"/>
         </prop>
         <prop name="orderGoods" displayName="订单商品" i18n-en:displayName="Order Goods"
               tagSet="pub,cascade-delete,updatable,insertable" ext:kind="to-many" internal="true" ext:joinLeftProp="id"

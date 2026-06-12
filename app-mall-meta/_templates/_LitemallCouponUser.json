@@ -12,7 +12,5 @@
   "updateTime": "2000-01-01 14:00:00",
   "deleted": false,
   "coupon": null,
-  "coupon.name": "",
-  "user": null,
-  "user.username": ""
+  "coupon.name": ""
 }
