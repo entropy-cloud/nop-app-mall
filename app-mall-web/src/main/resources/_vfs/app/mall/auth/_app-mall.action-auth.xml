@@ -463,19 +463,6 @@
                         </resource>
                     </children>
                 </resource>
-                <resource id="LitemallUser-main" displayName="用户表" orderNo="10100" i18n-en:displayName="" icon="blocks"
-                          component="AMIS" resourceType="SUBM" url="/app/mall/pages/LitemallUser/main.page.yaml">
-                    <children>
-                        <resource id="FNPT:LitemallUser:query" displayName="查询用户表" i18n-en:displayName=""
-                                  orderNo="10101" resourceType="FNPT">
-                            <permissions>LitemallUser:query</permissions>
-                        </resource>
-                        <resource id="FNPT:LitemallUser:mutation" displayName="修改用户表" i18n-en:displayName=""
-                                  orderNo="10102" resourceType="FNPT">
-                            <permissions>LitemallUser:mutation</permissions>
-                        </resource>
-                    </children>
-                </resource>
             </children>
         </resource>
     </site>

@@ -31,7 +31,7 @@
                 <col id="type" mandatory="true" ui:number="true" sortable="true"/>
 
                 <!--行政区域编码-->
-                <col id="code" mandatory="true" sortable="true"/>
+                <col id="code" mandatory="true" ui:number="true" sortable="true"/>
             </cols>
         </grid>
         <grid id="tree-list" x:prototype="list">

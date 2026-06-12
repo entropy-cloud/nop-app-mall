@@ -2,8 +2,19 @@
 <view x:extends="_gen/_LitemallCart.view.xml" x:schema="/nop/schema/xui/xview.xdef" xmlns:x="/nop/schema/xdsl.xdef">
 
     <grids>
-        <grid id="list"/>
-        <grid id="pick-list"/>
+        <grid id="list">
+            <cols x:override="bounded-merge">
+                <col id="id"/>
+                <col id="goodsName"/>
+                <col id="goodsSn" label="商品编号"/>
+                <col id="specifications" label="规格"/>
+                <col id="price"/>
+                <col id="number"/>
+                <col id="checked"/>
+                <col id="picUrl"/>
+            </cols>
+        </grid>
+        <grid id="pick-list" x:prototype="list"/>
     </grids>
 
     <forms>

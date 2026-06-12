@@ -132,10 +132,6 @@ site:
       displayName: ''
     FNPT:LitemallTopic:query:
       displayName: ''
-    FNPT:LitemallUser:mutation:
-      displayName: ''
-    FNPT:LitemallUser:query:
-      displayName: ''
     LitemallAd-main:
       displayName: ''
     LitemallAddress-main:
@@ -201,8 +197,6 @@ site:
     LitemallSystem-main:
       displayName: ''
     LitemallTopic-main:
-      displayName: ''
-    LitemallUser-main:
       displayName: ''
     goods-manage:
       displayName: ''
