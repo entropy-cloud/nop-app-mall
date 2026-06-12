@@ -18,6 +18,7 @@ public interface ILitemallOrderBiz extends ICrudBiz<LitemallOrder> {
     LitemallOrder submit(@Name("addressId") String addressId,
                          @Optional @Name("message") String message,
                          @Name("freightPrice") BigDecimal freightPrice,
+                         @Optional @Name("couponUserId") String couponUserId,
                          IServiceContext context);
 
     @BizMutation

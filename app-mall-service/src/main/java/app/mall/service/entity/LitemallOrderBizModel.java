@@ -2,12 +2,14 @@ package app.mall.service.entity;
 
 import app.mall.biz.ILitemallAddressBiz;
 import app.mall.biz.ILitemallCartBiz;
+import app.mall.biz.ILitemallCouponUserBiz;
 import app.mall.biz.ILitemallGoodsProductBiz;
 import app.mall.biz.ILitemallOrderBiz;
 import app.mall.biz.ILitemallOrderGoodsBiz;
 import app.mall.dao._AppMallDaoConstants;
 import app.mall.dao.entity.LitemallAddress;
 import app.mall.dao.entity.LitemallCart;
+import app.mall.dao.entity.LitemallCouponUser;
 import app.mall.dao.entity.LitemallGoodsProduct;
 import app.mall.dao.entity.LitemallOrder;
 import app.mall.dao.entity.LitemallOrderGoods;
@@ -57,6 +59,9 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
     @Inject
     LitemallGoodsProductMapper goodsProductMapper;
 
+    @Inject
+    ILitemallCouponUserBiz couponUserBiz;
+
     public LitemallOrderBizModel() {
         setEntityName(LitemallOrder.class.getName());
     }
@@ -66,6 +71,7 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
     public LitemallOrder submit(@Name("addressId") String addressId,
                                  @Optional @Name("message") String message,
                                  @Name("freightPrice") BigDecimal freightPrice,
+                                 @Optional @Name("couponUserId") String couponUserId,
                                  IServiceContext context) {
         String userId = context.getUserId();
 
@@ -144,16 +150,20 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
 
         order.setGoodsPrice(goodsPriceTotal);
 
+        BigDecimal couponPrice = BigDecimal.ZERO;
+        if (couponUserId != null && !couponUserId.isEmpty()) {
+            couponPrice = couponUserBiz.selectCouponForOrder(couponUserId, goodsPriceTotal, null, context);
+        }
+        order.setCouponPrice(couponPrice);
+
         BigDecimal orderPrice = goodsPriceTotal;
         if (order.getFreightPrice() != null) {
             orderPrice = orderPrice.add(order.getFreightPrice());
         }
+        orderPrice = orderPrice.subtract(couponPrice);
         order.setOrderPrice(orderPrice);
 
         BigDecimal actualPrice = orderPrice;
-        if (order.getCouponPrice() != null) {
-            actualPrice = actualPrice.subtract(order.getCouponPrice());
-        }
         if (order.getIntegralPrice() != null) {
             actualPrice = actualPrice.subtract(order.getIntegralPrice());
         }
@@ -163,6 +173,10 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
         order.setActualPrice(actualPrice);
 
         saveEntity(order, "submit", context);
+
+        if (couponUserId != null && !couponUserId.isEmpty() && couponPrice.compareTo(BigDecimal.ZERO) > 0) {
+            couponUserBiz.useCoupon(couponUserId, order.orm_idString(), context);
+        }
 
         for (LitemallCart item : checkedItems) {
             cartBiz.delete(item.orm_idString(), context);
@@ -197,6 +211,15 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
 
         for (LitemallOrderGoods orderGoods : order.getOrderGoods()) {
             goodsProductMapper.addStock(orderGoods.getProductId(), orderGoods.getNumber());
+        }
+
+        QueryBean cuQuery = new QueryBean();
+        cuQuery.addFilter(FilterBeans.eq(LitemallCouponUser.PROP_NAME_orderId, order.orm_idString()));
+        cuQuery.addFilter(FilterBeans.eq(LitemallCouponUser.PROP_NAME_status, 1));
+        cuQuery.addFilter(FilterBeans.eq(LitemallCouponUser.PROP_NAME_deleted, false));
+        List<LitemallCouponUser> usedCoupons = couponUserBiz.findList(cuQuery, null, context);
+        for (LitemallCouponUser cu : usedCoupons) {
+            couponUserBiz.returnCoupon(cu.orm_idString(), context);
         }
 
         updateEntity(order, "cancel", context);
