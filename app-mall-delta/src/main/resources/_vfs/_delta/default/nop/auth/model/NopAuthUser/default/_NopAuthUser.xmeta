@@ -166,13 +166,25 @@
               insertable="true" updatable="true" ui:show="SL">
             <schema domain="remark" type="java.lang.String" precision="200"/>
         </prop>
-        <prop name="mallUserId" displayName="关联用户ID" propId="100" i18n-en:displayName="Mall User ID" queryable="true"
-              sortable="true" insertable="true" updatable="true" ext:relation="mallUser">
-            <schema type="java.lang.Integer"/>
-        </prop>
         <prop name="picUrl" displayName="测试图片" propId="101" i18n-en:displayName="Pic Url" queryable="true"
               sortable="true" insertable="true" updatable="true">
             <schema stdDomain="file" domain="image" type="java.lang.String" precision="100"/>
+        </prop>
+        <prop name="lastLoginTime" displayName="最近登录时间" propId="102" i18n-en:displayName="Last Login Time"
+              queryable="true" sortable="true" insertable="true" updatable="true">
+            <schema type="java.time.LocalDateTime"/>
+        </prop>
+        <prop name="lastLoginIp" displayName="最近登录IP" propId="103" i18n-en:displayName="Last Login Ip" queryable="true"
+              sortable="true" insertable="true" updatable="true">
+            <schema type="java.lang.String" precision="63"/>
+        </prop>
+        <prop name="userLevel" displayName="用户等级" propId="104" i18n-en:displayName="User Level" queryable="true"
+              sortable="true" insertable="true" updatable="true">
+            <schema type="java.lang.Integer" dict="mall/user-level"/>
+        </prop>
+        <prop name="sessionKey" displayName="微信会话KEY" propId="105" i18n-en:displayName="Session Key" queryable="true"
+              sortable="true" insertable="true" updatable="true">
+            <schema type="java.lang.String" precision="100"/>
         </prop>
         <prop name="dept" displayName="部门" i18n-en:displayName="Department" tagSet="pub,ref-pub" ext:kind="to-one"
               internal="true" queryable="true" ext:joinLeftProp="deptId" ext:joinRightProp="deptId"
@@ -232,11 +244,6 @@
             <schema>
                 <item bizObjName="NopAuthGroupUser"/>
             </schema>
-        </prop>
-        <prop name="mallUser" displayName="关联用户" i18n-en:displayName="Mall User" tagSet="pub,ref-pub" ext:kind="to-one"
-              internal="true" queryable="true" ext:joinLeftProp="mallUserId" ext:joinRightProp="id" insertable="false"
-              updatable="false" lazy="true">
-            <schema bizObjName="LitemallUser"/>
         </prop>
         <prop name="avatarComponentFileStatus" mapToProp="avatarComponent.fileStatus" internal="true" lazy="true">
             <schema type="io.nop.api.core.beans.file.FileStatusBean"/>

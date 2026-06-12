@@ -45,27 +45,16 @@
                 <column code="CLIENT_ID" displayName="设备ID" name="clientId" notGenCode="true" precision="100"
                         propId="26" stdDataType="string" stdSqlType="VARCHAR" tagSet="del" ui:show="X"
                         i18n-en:displayName="Client Id"/>
-                <column code="MALL_USER_ID" displayName="关联用户ID" name="mallUserId" propId="100" stdDataType="int"
-                        stdSqlType="INTEGER" i18n-en:displayName="Mall User ID"/>
                 <column code="PIC_URL" displayName="测试图片" domain="image" name="picUrl" precision="100" propId="101"
                         stdDataType="string" stdDomain="file" stdSqlType="VARCHAR" i18n-en:displayName="Pic Url"/>
-            </columns>
-            <relations>
-                <to-one displayName="关联用户" name="mallUser" refEntityName="app.mall.dao.entity.LitemallUser"
-                        tagSet="pub,ref-pub" i18n-en:displayName="Mall User">
-                    <join>
-                        <on leftProp="mallUserId" rightProp="id"/>
-                    </join>
-                </to-one>
-            </relations>
-        </entity>
-        <entity className="app.mall.dao.entity.LitemallUser" displayName="用户" name="app.mall.dao.entity.LitemallUser"
-                notGenCode="true" registerShortName="true" tableName="litemall_user" tagSet="not-gen"
-                i18n-en:displayName="User">
-            <columns>
-                <column code="ID" displayName="用户ID" domain="userId" mandatory="true" name="id" notGenCode="true"
-                        precision="50" primary="true" propId="1" stdDataType="string" stdSqlType="VARCHAR"
-                        tagSet="not-gen" ui:show="X" i18n-en:displayName="ID"/>
+                <column code="LAST_LOGIN_TIME" displayName="最近登录时间" name="lastLoginTime" propId="102"
+                        stdDataType="datetime" stdSqlType="DATETIME" i18n-en:displayName="Last Login Time"/>
+                <column code="LAST_LOGIN_IP" displayName="最近登录IP" name="lastLoginIp" precision="63" propId="103"
+                        stdDataType="string" stdSqlType="VARCHAR" i18n-en:displayName="Last Login Ip"/>
+                <column code="USER_LEVEL" displayName="用户等级" name="userLevel" propId="104" stdDataType="int"
+                        stdSqlType="INTEGER" ext:dict="mall/user-level" i18n-en:displayName="User Level"/>
+                <column code="SESSION_KEY" displayName="微信会话KEY" name="sessionKey" precision="100" propId="105"
+                        stdDataType="string" stdSqlType="VARCHAR" i18n-en:displayName="Session Key"/>
             </columns>
         </entity>
     </entities>

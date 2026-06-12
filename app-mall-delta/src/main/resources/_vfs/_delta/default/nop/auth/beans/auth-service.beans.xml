@@ -15,4 +15,7 @@
     <bean id="nopAuthUserExt2BizModel"
           class="app.mall.delta.biz.NopAuthUserEx2BizModel"/>
 
+    <bean id="loginApiExtBizModel"
+          class="app.mall.delta.biz.LoginApiExBizModel"/>
+
 </beans>
