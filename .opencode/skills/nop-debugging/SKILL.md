@@ -283,6 +283,10 @@ These techniques are part of systematic debugging and available in this director
 - **`defense-in-depth.md`** - Add validation at multiple layers after finding root cause
 - **`condition-based-waiting.md`** - Replace arbitrary timeouts with condition polling
 
+**Platform reference:** `../nop-entropy/docs-for-ai/04-reference/debugging-checklist.md`
+
+Nop 平台常见症状 → 根因速查表（EQL 列名错误、Bean 创建失败、类型转换等）。在 Phase 1（Root Cause）中如果症状匹配，优先查此表，不匹配再重新回溯。
+
 **Related skills:**
 - **superpowers:test-driven-development** - For creating failing test case (Phase 4, Step 1)
 - **superpowers:verification-before-completion** - Verify fix worked before claiming success
