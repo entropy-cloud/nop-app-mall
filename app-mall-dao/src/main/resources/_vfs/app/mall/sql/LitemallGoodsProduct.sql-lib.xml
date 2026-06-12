@@ -8,7 +8,7 @@
 
             <source>
                 update LitemallGoodsProduct
-                set number = number + ${num}, update_time = now()
+                set number = number + ${num}, updateTime = now()
                 where id = ${productId}
             </source>
         </eql>
@@ -19,7 +19,7 @@
 
             <source>
                 update LitemallGoodsProduct
-                set number = number - ${num}, update_time = now()
+                set number = number - ${num}, updateTime = now()
                 where id = ${productId} and number >= ${num}
             </source>
         </eql>

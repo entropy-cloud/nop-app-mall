@@ -36,7 +36,7 @@ public class _LitemallGroupon extends DynamicOrmEntity{
     public static final String PROP_NAME_rulesId = "rulesId";
     public static final int PROP_ID_rulesId = 4;
     
-    /* 用户ID: USER_ID INTEGER */
+    /* 用户ID: USER_ID VARCHAR */
     public static final String PROP_NAME_userId = "userId";
     public static final int PROP_ID_userId = 5;
     
@@ -44,7 +44,7 @@ public class _LitemallGroupon extends DynamicOrmEntity{
     public static final String PROP_NAME_shareUrl = "shareUrl";
     public static final int PROP_ID_shareUrl = 6;
     
-    /* 开团用户ID: CREATOR_USER_ID INTEGER */
+    /* 开团用户ID: CREATOR_USER_ID VARCHAR */
     public static final String PROP_NAME_creatorUserId = "creatorUserId";
     public static final int PROP_ID_creatorUserId = 7;
     
@@ -74,9 +74,6 @@ public class _LitemallGroupon extends DynamicOrmEntity{
     
     /* relation: 订单 */
     public static final String PROP_NAME_order = "order";
-    
-    /* relation: 订单 */
-    public static final String PROP_NAME_grouponRules = "grouponRules";
     
     /* component:  */
     public static final String PROP_NAME_shareUrlComponent = "shareUrlComponent";
@@ -749,29 +746,6 @@ public class _LitemallGroupon extends DynamicOrmEntity{
            internalSetRefEntity(PROP_NAME_order, refEntity,()->{
            
                            this.setOrderId(refEntity.getId());
-                       
-           });
-           }
-       
-    }
-       
-    /**
-     * 订单
-     */
-    public final app.mall.dao.entity.LitemallGrouponRules getGrouponRules(){
-       return (app.mall.dao.entity.LitemallGrouponRules)internalGetRefEntity(PROP_NAME_grouponRules);
-    }
-
-    public final void setGrouponRules(app.mall.dao.entity.LitemallGrouponRules refEntity){
-   
-           if(refEntity == null){
-           
-                   this.setRulesId(null);
-               
-           }else{
-           internalSetRefEntity(PROP_NAME_grouponRules, refEntity,()->{
-           
-                           this.setRulesId(refEntity.getId());
                        
            });
            }

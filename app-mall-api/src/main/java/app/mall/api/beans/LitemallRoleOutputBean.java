@@ -4,7 +4,6 @@
     import com.fasterxml.jackson.annotation.JsonInclude;
     import io.nop.api.core.annotations.data.DataBean;
     import io.nop.api.core.annotations.meta.PropMeta;
-    import java.util.List;
     
     import java.util.Map;
 
@@ -109,52 +108,6 @@
 
         public void setDeleted(Boolean value){
             this._deleted = value;
-        }
-
-
-        private java.util.List<java.lang.String> _relatedUserList_ids;
-
-    
-        public java.util.List<java.lang.String> getRelatedUserList_ids(){
-            return _relatedUserList_ids;
-        }
-
-        public void setRelatedUserList_ids(java.util.List<java.lang.String> value){
-            this._relatedUserList_ids = value;
-        }
-
-
-        private String _relatedUserList_label;
-
-    
-        public String getRelatedUserList_label(){
-            return _relatedUserList_label;
-        }
-
-        public void setRelatedUserList_label(String value){
-            this._relatedUserList_label = value;
-        }
-
-
-        private List<Map<String,Object>> _userMappings;
-
-        public List<Map<String,Object>> getUserMappings(){
-            return _userMappings;
-        }
-
-        public void setUserMappings(List<Map<String,Object>> value){
-            this._userMappings = value;
-        }
-
-
-        private List<Map<String,Object>> _relatedUserList;
-
-        public List<Map<String,Object>> getRelatedUserList(){
-            return _relatedUserList;
-        }
-
-        public void setRelatedUserList(List<Map<String,Object>> value){
-            this._relatedUserList = value;
         }
 
 

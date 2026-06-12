@@ -89,7 +89,7 @@ public class _LitemallRegion extends DynamicOrmEntity{
     private java.lang.Integer _type;
     
     /* 行政区域编码: CODE */
-    private java.lang.String _code;
+    private java.lang.Integer _code;
     
 
     public _LitemallRegion(){
@@ -232,9 +232,9 @@ public class _LitemallRegion extends DynamicOrmEntity{
             }
         
             case PROP_ID_code:{
-               java.lang.String typedValue = null;
+               java.lang.Integer typedValue = null;
                if(value != null){
-                   typedValue = ConvertHelper.toString(value,
+                   typedValue = ConvertHelper.toInteger(value,
                        err-> newTypeConversionError(PROP_NAME_code));
                }
                setCode(typedValue);
@@ -280,7 +280,7 @@ public class _LitemallRegion extends DynamicOrmEntity{
         
             case PROP_ID_code:{
                onInitProp(propId);
-               this._code = (java.lang.String)value;
+               this._code = (java.lang.Integer)value;
                
                break;
             }
@@ -370,7 +370,7 @@ public class _LitemallRegion extends DynamicOrmEntity{
     /**
      * 行政区域编码: CODE
      */
-    public final java.lang.String getCode(){
+    public final java.lang.Integer getCode(){
          onPropGet(PROP_ID_code);
          return _code;
     }
@@ -378,7 +378,7 @@ public class _LitemallRegion extends DynamicOrmEntity{
     /**
      * 行政区域编码: CODE
      */
-    public final void setCode(java.lang.String value){
+    public final void setCode(java.lang.Integer value){
         if(onPropSet(PROP_ID_code,value)){
             this._code = value;
             internalClearRefs(PROP_ID_code);

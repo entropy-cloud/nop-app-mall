@@ -152,8 +152,8 @@
                         stdDataType="string" stdSqlType="INTEGER" tagSet="seq" ui:show="R"/>
                 <column code="NAME" displayName="收货人名称" mandatory="true" name="name" precision="63" propId="2"
                         stdDataType="string" stdSqlType="VARCHAR" tagSet="disp"/>
-                <column code="USER_ID" displayName="用户ID" mandatory="true" name="userId" propId="3" stdDataType="string"
-                        stdSqlType="INTEGER"/>
+                <column code="USER_ID" displayName="用户ID" domain="userId" mandatory="true" name="userId" precision="50"
+                        propId="3" stdDataType="string" stdSqlType="VARCHAR"/>
                 <column code="PROVINCE" displayName="行政区域表的省ID" mandatory="true" name="province" precision="63"
                         propId="4" stdDataType="string" stdSqlType="VARCHAR"/>
                 <column code="CITY" displayName="行政区域表的市ID" mandatory="true" name="city" precision="63" propId="5"
@@ -177,14 +177,6 @@
                 <column code="DELETED" displayName="逻辑删除" domain="delFlag" name="deleted" propId="14"
                         stdDataType="boolean" stdSqlType="BOOLEAN" ui:show="X"/>
             </columns>
-            <relations>
-                <to-one displayName="客户" name="user" refEntityName="app.mall.dao.entity.LitemallUser"
-                        tagSet="pub,ref-pub" i18n-en:displayName="User">
-                    <join>
-                        <on leftProp="userId" rightProp="id"/>
-                    </join>
-                </to-one>
-            </relations>
         </entity>
         <entity className="app.mall.dao.entity.LitemallAdmin" createTimeProp="addTime" deleteFlagProp="deleted"
                 displayName="管理员表" name="app.mall.dao.entity.LitemallAdmin" registerShortName="true"
@@ -222,8 +214,8 @@
                         stdDataType="string" stdSqlType="VARCHAR" tagSet="disp"/>
                 <column code="ORDER_ID" displayName="订单ID" mandatory="true" name="orderId" propId="3"
                         stdDataType="string" stdSqlType="INTEGER"/>
-                <column code="USER_ID" displayName="用户ID" mandatory="true" name="userId" propId="4" stdDataType="string"
-                        stdSqlType="INTEGER"/>
+                <column code="USER_ID" displayName="用户ID" domain="userId" mandatory="true" name="userId" precision="50"
+                        propId="4" stdDataType="string" stdSqlType="VARCHAR"/>
                 <column code="TYPE" displayName="售后类型" name="type" propId="5" stdDataType="int" stdSqlType="INTEGER"
                         ext:dict="mall/aftersale-type"/>
                 <column code="REASON" displayName="退款原因" name="reason" precision="31" propId="6" stdDataType="string"
@@ -250,12 +242,6 @@
                         tagSet="pub,ref-pub" i18n-en:displayName="Order">
                     <join>
                         <on leftProp="orderId" rightProp="id"/>
-                    </join>
-                </to-one>
-                <to-one displayName="客户" name="user" refEntityName="app.mall.dao.entity.LitemallUser"
-                        tagSet="pub,ref-pub" i18n-en:displayName="User">
-                    <join>
-                        <on leftProp="userId" rightProp="id"/>
                     </join>
                 </to-one>
             </relations>
@@ -290,8 +276,8 @@
             <columns>
                 <column code="ID" displayName="Id" mandatory="true" name="id" primary="true" propId="1"
                         stdDataType="string" stdSqlType="INTEGER" tagSet="seq" ui:show="R"/>
-                <column code="USER_ID" displayName="用户ID" name="userId" propId="2" stdDataType="string"
-                        stdSqlType="INTEGER"/>
+                <column code="USER_ID" displayName="用户ID" domain="userId" name="userId" precision="50" propId="2"
+                        stdDataType="string" stdSqlType="VARCHAR"/>
                 <column code="GOODS_ID" displayName="商品ID" name="goodsId" propId="3" stdDataType="string"
                         stdSqlType="INTEGER"/>
                 <column code="GOODS_SN" displayName="商品编号" name="goodsSn" precision="63" propId="4" stdDataType="string"
@@ -322,12 +308,6 @@
                         tagSet="pub,ref-pub" i18n-en:displayName="Goods">
                     <join>
                         <on leftProp="goodsId" rightProp="id"/>
-                    </join>
-                </to-one>
-                <to-one displayName="客户" name="user" refEntityName="app.mall.dao.entity.LitemallUser"
-                        tagSet="pub,ref-pub" i18n-en:displayName="User">
-                    <join>
-                        <on leftProp="userId" rightProp="id"/>
                     </join>
                 </to-one>
             </relations>
@@ -383,8 +363,8 @@
             <columns>
                 <column code="ID" displayName="Id" mandatory="true" name="id" primary="true" propId="1"
                         stdDataType="string" stdSqlType="INTEGER" tagSet="seq" ui:show="R"/>
-                <column code="USER_ID" displayName="用户ID" mandatory="true" name="userId" propId="2" stdDataType="string"
-                        stdSqlType="INTEGER"/>
+                <column code="USER_ID" displayName="用户ID" domain="userId" mandatory="true" name="userId" precision="50"
+                        propId="2" stdDataType="string" stdSqlType="VARCHAR"/>
                 <column code="VALUE_ID" displayName="如果type=0，则是商品ID；如果type=1，则是专题ID" mandatory="true" name="valueId"
                         propId="3" stdDataType="string" stdSqlType="INTEGER"/>
                 <column code="TYPE" comment="如果type=0，则是商品ID；如果type=1，则是专题ID" displayName="收藏类型" mandatory="true"
@@ -396,14 +376,6 @@
                 <column code="DELETED" displayName="逻辑删除" domain="delFlag" name="deleted" propId="7"
                         stdDataType="boolean" stdSqlType="BOOLEAN" ui:show="X"/>
             </columns>
-            <relations>
-                <to-one displayName="客户" name="user" refEntityName="app.mall.dao.entity.LitemallUser"
-                        tagSet="pub,ref-pub" i18n-en:displayName="User">
-                    <join>
-                        <on leftProp="userId" rightProp="id"/>
-                    </join>
-                </to-one>
-            </relations>
         </entity>
         <entity className="app.mall.dao.entity.LitemallComment" createTimeProp="addTime" deleteFlagProp="deleted"
                 displayName="评论表" name="app.mall.dao.entity.LitemallComment" registerShortName="true"
@@ -419,8 +391,8 @@
                         stdDataType="string" stdSqlType="VARCHAR"/>
                 <column code="ADMIN_CONTENT" displayName="管理员回复内容" name="adminContent" precision="511" propId="5"
                         stdDataType="string" stdSqlType="VARCHAR"/>
-                <column code="USER_ID" displayName="用户ID" mandatory="true" name="userId" propId="6" stdDataType="string"
-                        stdSqlType="INTEGER"/>
+                <column code="USER_ID" displayName="用户ID" domain="userId" mandatory="true" name="userId" precision="50"
+                        propId="6" stdDataType="string" stdSqlType="VARCHAR"/>
                 <column code="HAS_PICTURE" displayName="是否含有图片" name="hasPicture" propId="7" stdDataType="boolean"
                         stdSqlType="BOOLEAN"/>
                 <column code="PIC_URLS" displayName="图片地址列表，采用JSON数组格式" domain="images" name="picUrls" precision="1023"
@@ -433,14 +405,6 @@
                 <column code="DELETED" displayName="逻辑删除" domain="delFlag" name="deleted" propId="12"
                         stdDataType="boolean" stdSqlType="BOOLEAN" ui:show="X"/>
             </columns>
-            <relations>
-                <to-one displayName="客户" name="user" refEntityName="app.mall.dao.entity.LitemallUser"
-                        tagSet="pub,ref-pub" i18n-en:displayName="User">
-                    <join>
-                        <on leftProp="userId" rightProp="id"/>
-                    </join>
-                </to-one>
-            </relations>
         </entity>
         <entity className="app.mall.dao.entity.LitemallCoupon" createTimeProp="addTime" deleteFlagProp="deleted"
                 displayName="优惠券信息及规则表" name="app.mall.dao.entity.LitemallCoupon" registerShortName="true"
@@ -494,8 +458,8 @@
             <columns>
                 <column code="ID" displayName="Id" mandatory="true" name="id" primary="true" propId="1"
                         stdDataType="string" stdSqlType="INTEGER" tagSet="seq" ui:show="R"/>
-                <column code="USER_ID" displayName="用户ID" mandatory="true" name="userId" propId="2" stdDataType="string"
-                        stdSqlType="INTEGER"/>
+                <column code="USER_ID" displayName="用户ID" domain="userId" mandatory="true" name="userId" precision="50"
+                        propId="2" stdDataType="string" stdSqlType="VARCHAR"/>
                 <column code="COUPON_ID" displayName="优惠券ID" mandatory="true" name="couponId" propId="3"
                         stdDataType="string" stdSqlType="INTEGER"/>
                 <column code="STATUS" displayName="使用状态" name="status" propId="4" stdDataType="int" stdSqlType="INTEGER"
@@ -522,12 +486,6 @@
                         <on leftProp="couponId" rightProp="id"/>
                     </join>
                 </to-one>
-                <to-one displayName="客户" name="user" refEntityName="app.mall.dao.entity.LitemallUser"
-                        tagSet="pub,ref-pub" i18n-en:displayName="User">
-                    <join>
-                        <on leftProp="userId" rightProp="id"/>
-                    </join>
-                </to-one>
             </relations>
         </entity>
         <entity className="app.mall.dao.entity.LitemallFeedback" createTimeProp="addTime" deleteFlagProp="deleted"
@@ -536,8 +494,8 @@
             <columns>
                 <column code="ID" displayName="Id" mandatory="true" name="id" primary="true" propId="1"
                         stdDataType="string" stdSqlType="INTEGER" tagSet="seq" ui:show="R"/>
-                <column code="USER_ID" displayName="用户ID" mandatory="true" name="userId" propId="2" stdDataType="string"
-                        stdSqlType="INTEGER"/>
+                <column code="USER_ID" displayName="用户ID" domain="userId" mandatory="true" name="userId" precision="50"
+                        propId="2" stdDataType="string" stdSqlType="VARCHAR"/>
                 <column code="USERNAME" displayName="用户名称" mandatory="true" name="username" precision="63" propId="3"
                         stdDataType="string" stdSqlType="VARCHAR"/>
                 <column code="MOBILE" displayName="手机号" mandatory="true" name="mobile" precision="20" propId="4"
@@ -559,14 +517,6 @@
                 <column code="DELETED" displayName="逻辑删除" domain="delFlag" name="deleted" propId="12"
                         stdDataType="boolean" stdSqlType="BOOLEAN" ui:show="X"/>
             </columns>
-            <relations>
-                <to-one displayName="客户" name="user" refEntityName="app.mall.dao.entity.LitemallUser"
-                        tagSet="pub,ref-pub" i18n-en:displayName="User">
-                    <join>
-                        <on leftProp="userId" rightProp="id"/>
-                    </join>
-                </to-one>
-            </relations>
         </entity>
         <entity className="app.mall.dao.entity.LitemallFootprint" createTimeProp="addTime" deleteFlagProp="deleted"
                 displayName="用户浏览足迹表" name="app.mall.dao.entity.LitemallFootprint" registerShortName="true"
@@ -574,8 +524,8 @@
             <columns>
                 <column code="ID" displayName="Id" mandatory="true" name="id" primary="true" propId="1"
                         stdDataType="string" stdSqlType="INTEGER" tagSet="seq" ui:show="R"/>
-                <column code="USER_ID" displayName="用户ID" mandatory="true" name="userId" propId="2" stdDataType="string"
-                        stdSqlType="INTEGER"/>
+                <column code="USER_ID" displayName="用户ID" domain="userId" mandatory="true" name="userId" precision="50"
+                        propId="2" stdDataType="string" stdSqlType="VARCHAR"/>
                 <column code="GOODS_ID" displayName="浏览商品ID" mandatory="true" name="goodsId" propId="3"
                         stdDataType="string" stdSqlType="INTEGER"/>
                 <column code="ADD_TIME" displayName="创建时间" domain="createTime" name="addTime" propId="4"
@@ -590,12 +540,6 @@
                         tagSet="pub,ref-pub" i18n-en:displayName="Goods">
                     <join>
                         <on leftProp="goodsId" rightProp="id"/>
-                    </join>
-                </to-one>
-                <to-one displayName="客户" name="user" refEntityName="app.mall.dao.entity.LitemallUser"
-                        tagSet="pub,ref-pub" i18n-en:displayName="User">
-                    <join>
-                        <on leftProp="userId" rightProp="id"/>
                     </join>
                 </to-one>
             </relations>
@@ -805,12 +749,12 @@
                         stdDataType="string" stdSqlType="INTEGER"/>
                 <column code="RULES_ID" comment="，关联litemall_groupon_rules表ID字段" displayName="团购规则ID" mandatory="true"
                         name="rulesId" propId="4" stdDataType="string" stdSqlType="INTEGER"/>
-                <column code="USER_ID" displayName="用户ID" mandatory="true" name="userId" propId="5" stdDataType="string"
-                        stdSqlType="INTEGER"/>
+                <column code="USER_ID" displayName="用户ID" domain="userId" mandatory="true" name="userId" precision="50"
+                        propId="5" stdDataType="string" stdSqlType="VARCHAR"/>
                 <column code="SHARE_URL" displayName="团购分享图片地址" domain="image" name="shareUrl" precision="255"
                         propId="6" stdDataType="string" stdDomain="file" stdSqlType="VARCHAR"/>
-                <column code="CREATOR_USER_ID" displayName="开团用户ID" mandatory="true" name="creatorUserId" propId="7"
-                        stdDataType="string" stdSqlType="INTEGER"/>
+                <column code="CREATOR_USER_ID" displayName="开团用户ID" domain="userId" mandatory="true"
+                        name="creatorUserId" precision="50" propId="7" stdDataType="string" stdSqlType="VARCHAR"/>
                 <column code="CREATOR_USER_TIME" displayName="开团时间" name="creatorUserTime" propId="8"
                         stdDataType="datetime" stdSqlType="DATETIME"/>
                 <column code="STATUS" displayName="团购活动状态，开团未支付则0，开团中则1，开团失败则2" name="status" propId="9"
@@ -984,8 +928,8 @@
             <columns>
                 <column code="ID" displayName="Id" mandatory="true" name="id" primary="true" propId="1"
                         stdDataType="string" stdSqlType="INTEGER" tagSet="seq" ui:show="R"/>
-                <column code="USER_ID" displayName="用户ID" mandatory="true" name="userId" propId="2" stdDataType="string"
-                        stdSqlType="INTEGER"/>
+                <column code="USER_ID" displayName="用户ID" domain="userId" mandatory="true" name="userId" precision="50"
+                        propId="2" stdDataType="string" stdSqlType="VARCHAR"/>
                 <column code="ORDER_SN" displayName="订单编号" mandatory="true" name="orderSn" precision="63" propId="3"
                         stdDataType="string" stdSqlType="VARCHAR" tagSet="disp"/>
                 <column code="ORDER_STATUS" displayName="订单状态" mandatory="true" name="orderStatus" propId="4"
@@ -1048,12 +992,6 @@
                         stdDataType="boolean" stdSqlType="BOOLEAN" ui:show="X"/>
             </columns>
             <relations>
-                <to-one displayName="客户" name="user" refEntityName="app.mall.dao.entity.LitemallUser"
-                        tagSet="pub,ref-pub" i18n-en:displayName="User">
-                    <join>
-                        <on leftProp="userId" rightProp="id"/>
-                    </join>
-                </to-one>
                 <to-many cascadeDelete="true" displayName="订单商品" name="orderGoods"
                          refEntityName="app.mall.dao.entity.LitemallOrderGoods" refPropName="order"
                          tagSet="pub,cascade-delete,updatable,insertable" i18n-en:displayName="Order Goods">
@@ -1188,14 +1126,6 @@
                 <column code="DELETED" displayName="逻辑删除" name="deleted" propId="7" stdDataType="boolean"
                         stdSqlType="BOOLEAN" ui:show="X"/>
             </columns>
-            <relations>
-                <to-many cascadeDelete="true" name="userMappings" refEntityName="app.mall.dao.entity.LitemallUserRole"
-                         refPropName="role" tagSet="pub,cascade-delete,insertable,updatable">
-                    <join>
-                        <on leftProp="id" rightProp="roleId"/>
-                    </join>
-                </to-many>
-            </relations>
         </entity>
         <entity className="app.mall.dao.entity.LitemallSearchHistory" createTimeProp="addTime" deleteFlagProp="deleted"
                 displayName="搜索历史表" name="app.mall.dao.entity.LitemallSearchHistory" registerShortName="true"
@@ -1203,8 +1133,8 @@
             <columns>
                 <column code="ID" displayName="Id" mandatory="true" name="id" primary="true" propId="1"
                         stdDataType="string" stdSqlType="INTEGER" tagSet="seq" ui:show="R"/>
-                <column code="USER_ID" displayName="用户ID" mandatory="true" name="userId" propId="2" stdDataType="string"
-                        stdSqlType="INTEGER"/>
+                <column code="USER_ID" displayName="用户ID" domain="userId" mandatory="true" name="userId" precision="50"
+                        propId="2" stdDataType="string" stdSqlType="VARCHAR"/>
                 <column code="KEYWORD" displayName="搜索关键字" mandatory="true" name="keyword" precision="63" propId="3"
                         stdDataType="string" stdSqlType="VARCHAR"/>
                 <column code="FROM" comment="如pc、wx、app" displayName="搜索来源" mandatory="true" name="from" precision="63"
@@ -1216,14 +1146,6 @@
                 <column code="DELETED" displayName="逻辑删除" domain="delFlag" name="deleted" propId="7"
                         stdDataType="boolean" stdSqlType="BOOLEAN" ui:show="X"/>
             </columns>
-            <relations>
-                <to-one displayName="客户" name="user" refEntityName="app.mall.dao.entity.LitemallUser"
-                        tagSet="pub,ref-pub" i18n-en:displayName="User">
-                    <join>
-                        <on leftProp="userId" rightProp="id"/>
-                    </join>
-                </to-one>
-            </relations>
         </entity>
         <entity className="app.mall.dao.entity.LitemallStorage" createTimeProp="addTime" deleteFlagProp="deleted"
                 displayName="文件存储表" name="app.mall.dao.entity.LitemallStorage" registerShortName="true"
@@ -1296,97 +1218,6 @@
                 <column code="DELETED" displayName="逻辑删除" domain="delFlag" name="deleted" propId="12"
                         stdDataType="boolean" stdSqlType="BOOLEAN" ui:show="X"/>
             </columns>
-        </entity>
-        <entity className="app.mall.dao.entity.LitemallUser" createTimeProp="addTime" deleteFlagProp="deleted"
-                displayName="用户表" name="app.mall.dao.entity.LitemallUser" registerShortName="true"
-                tableName="litemall_user" updateTimeProp="updateTime" useLogicalDelete="true">
-            <columns>
-                <column code="ID" displayName="Id" mandatory="true" name="id" primary="true" propId="1"
-                        stdDataType="string" stdSqlType="INTEGER" tagSet="seq" ui:show="R"/>
-                <column code="USERNAME" displayName="用户名称" mandatory="true" name="username" precision="63" propId="2"
-                        stdDataType="string" stdSqlType="VARCHAR" tagSet="disp"/>
-                <column code="PASSWORD" displayName="用户密码" mandatory="true" name="password" precision="63" propId="3"
-                        stdDataType="string" stdSqlType="VARCHAR" tagSet="masked,var,not-pub"/>
-                <column code="GENDER" comment="0 未知， 1男， 1 女" displayName="性别" mandatory="true" name="gender" propId="4"
-                        stdDataType="int" stdSqlType="INTEGER" ext:dict="mall/gender"/>
-                <column code="BIRTHDAY" displayName="生日" name="birthday" propId="5" stdDataType="date" stdSqlType="DATE"/>
-                <column code="LAST_LOGIN_TIME" displayName="最近一次登录时间" name="lastLoginTime" propId="6"
-                        stdDataType="datetime" stdSqlType="DATETIME"/>
-                <column code="LAST_LOGIN_IP" displayName="最近一次登录IP地址" mandatory="true" name="lastLoginIp" precision="63"
-                        propId="7" stdDataType="string" stdSqlType="VARCHAR"/>
-                <column code="USER_LEVEL" comment="0 普通用户，1 VIP用户，2 高级VIP用户" displayName="用户等级" name="userLevel"
-                        propId="8" stdDataType="int" stdSqlType="INTEGER" ext:dict="mall/user-level"/>
-                <column code="NICKNAME" displayName="用户昵称或网络名称" mandatory="true" name="nickname" precision="63"
-                        propId="9" stdDataType="string" stdSqlType="VARCHAR"/>
-                <column code="MOBILE" displayName="用户手机号码" mandatory="true" name="mobile" precision="20" propId="10"
-                        stdDataType="string" stdSqlType="VARCHAR"/>
-                <column code="AVATAR" displayName="用户头像图片" domain="image" mandatory="true" name="avatar" precision="255"
-                        propId="11" stdDataType="string" stdDomain="file" stdSqlType="VARCHAR"/>
-                <column code="WEIXIN_OPENID" displayName="微信登录openid" mandatory="true" name="weixinOpenid"
-                        precision="63" propId="12" stdDataType="string" stdSqlType="VARCHAR"/>
-                <column code="SESSION_KEY" displayName="微信登录会话KEY" mandatory="true" name="sessionKey" precision="100"
-                        propId="13" stdDataType="string" stdSqlType="VARCHAR"/>
-                <column code="STATUS" comment="0 可用, 1 禁用, 2 注销" displayName="用户状态" mandatory="true" name="status"
-                        propId="14" stdDataType="int" stdSqlType="INTEGER" ext:dict="mall/user-status"/>
-                <column code="ADD_TIME" displayName="创建时间" domain="createTime" name="addTime" propId="15"
-                        stdDataType="datetime" stdSqlType="DATETIME" ui:show="X"/>
-                <column code="UPDATE_TIME" displayName="更新时间" domain="updateTime" name="updateTime" propId="16"
-                        stdDataType="datetime" stdSqlType="DATETIME" ui:show="X"/>
-                <column code="DELETED" displayName="逻辑删除" domain="delFlag" name="deleted" propId="17"
-                        stdDataType="boolean" stdSqlType="BOOLEAN" ui:show="X"/>
-            </columns>
-            <relations>
-                <to-many cascadeDelete="true" displayName="角色映射" name="roleMappings"
-                         refEntityName="app.mall.dao.entity.LitemallUserRole" refPropName="user"
-                         tagSet="pub,cascade-delete,insertable,updatable" i18n-en:displayName="RoleMappings">
-                    <join>
-                        <on leftProp="id" rightProp="userId"/>
-                    </join>
-                </to-many>
-            </relations>
-        </entity>
-        <entity className="app.mall.dao.entity.LitemallUserRole" createTimeProp="createTime" createrProp="createdBy"
-                displayName="用户角色" name="app.mall.dao.entity.LitemallUserRole" registerShortName="true"
-                tableName="litemall_user_role" tagSet="no-web,many-to-many" updateTimeProp="updateTime"
-                updaterProp="updatedBy" versionProp="version" i18n-en:displayName="User Role">
-            <columns>
-                <column code="USER_ID" displayName="用户ID" domain="userId" mandatory="true" name="userId" precision="32"
-                        primary="true" propId="1" stdDataType="string" stdSqlType="VARCHAR"
-                        i18n-en:displayName="User ID"/>
-                <column code="ROLE_ID" displayName="角色ID" mandatory="true" name="roleId" precision="50" primary="true"
-                        propId="2" stdDataType="string" stdSqlType="VARCHAR" i18n-en:displayName="Role ID"/>
-                <column code="VERSION" displayName="数据版本" domain="version" mandatory="true" name="version" propId="3"
-                        stdDataType="int" stdSqlType="INTEGER" ui:show="X" i18n-en:displayName="Version"/>
-                <column code="CREATED_BY" displayName="创建人" domain="createdBy" mandatory="true" name="createdBy"
-                        precision="50" propId="4" stdDataType="string" stdSqlType="VARCHAR"
-                        i18n-en:displayName="Created By"/>
-                <column code="CREATE_TIME" displayName="创建时间" domain="createTime" mandatory="true" name="createTime"
-                        propId="5" stdDataType="datetime" stdSqlType="DATETIME" i18n-en:displayName="Create Time"/>
-                <column code="UPDATED_BY" displayName="修改人" domain="updatedBy" mandatory="true" name="updatedBy"
-                        precision="50" propId="6" stdDataType="string" stdSqlType="VARCHAR"
-                        i18n-en:displayName="Updated By"/>
-                <column code="UPDATE_TIME" displayName="修改时间" domain="updateTime" mandatory="true" name="updateTime"
-                        propId="7" stdDataType="datetime" stdSqlType="DATETIME" i18n-en:displayName="Update Time"/>
-                <column code="REMARK" displayName="备注" domain="remark" name="remark" precision="200" propId="8"
-                        stdDataType="string" stdSqlType="VARCHAR" ui:show="S" i18n-en:displayName="Remark"/>
-            </columns>
-            <relations>
-                <to-one displayName="用户" name="user" refDisplayName="角色映射"
-                        refEntityName="app.mall.dao.entity.LitemallUser" refPropName="roleMappings"
-                        tagSet="pub,ref-pub,ref-cascade-delete,ref-insertable,ref-updatable" i18n-en:displayName="User"
-                        ref-i18n-en:displayName="RoleMappings">
-                    <join>
-                        <on leftProp="userId" rightProp="id"/>
-                    </join>
-                </to-one>
-                <to-one displayName="角色" name="role" refEntityName="app.mall.dao.entity.LitemallRole"
-                        refPropName="userMappings" tagSet="pub,ref-pub,ref-cascade-delete,ref-insertable,ref-updatable"
-                        i18n-en:displayName="Role">
-                    <join>
-                        <on leftProp="roleId" rightProp="id"/>
-                    </join>
-                </to-one>
-            </relations>
         </entity>
     </entities>
 </orm>

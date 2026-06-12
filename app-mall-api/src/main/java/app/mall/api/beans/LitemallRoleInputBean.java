@@ -5,7 +5,6 @@
     import io.nop.api.core.annotations.data.DataBean;
     import io.nop.api.core.annotations.meta.PropMeta;
     import io.nop.api.core.api.CrudInputBase;
-    import java.util.List;
     
     @DataBean
     @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -108,40 +107,6 @@
 
         public void setDeleted(Boolean value){
             this._deleted = value;
-        }
-
-
-        private java.util.List<java.lang.String> _relatedUserList_ids;
-
-    
-        public java.util.List<java.lang.String> getRelatedUserList_ids(){
-            return _relatedUserList_ids;
-        }
-
-        public void setRelatedUserList_ids(java.util.List<java.lang.String> value){
-            this._relatedUserList_ids = value;
-        }
-
-
-        private List<LitemallUserRoleInputBean> _userMappings;
-
-        public List<LitemallUserRoleInputBean> getUserMappings(){
-            return _userMappings;
-        }
-
-        public void setUserMappings(List<LitemallUserRoleInputBean> value){
-            this._userMappings = value;
-        }
-
-
-        private List<LitemallUserInputBean> _relatedUserList;
-
-        public List<LitemallUserInputBean> getRelatedUserList(){
-            return _relatedUserList;
-        }
-
-        public void setRelatedUserList(List<LitemallUserInputBean> value){
-            this._relatedUserList = value;
         }
 
 

@@ -24,7 +24,7 @@ public class _LitemallFeedback extends DynamicOrmEntity{
     public static final String PROP_NAME_id = "id";
     public static final int PROP_ID_id = 1;
     
-    /* 用户ID: USER_ID INTEGER */
+    /* 用户ID: USER_ID VARCHAR */
     public static final String PROP_NAME_userId = "userId";
     public static final int PROP_ID_userId = 2;
     
@@ -71,9 +71,6 @@ public class _LitemallFeedback extends DynamicOrmEntity{
 
     private static int _PROP_ID_BOUND = 13;
 
-    
-    /* relation: 客户 */
-    public static final String PROP_NAME_user = "user";
     
     /* component:  */
     public static final String PROP_NAME_picUrlsComponent = "picUrlsComponent";
@@ -729,29 +726,6 @@ public class _LitemallFeedback extends DynamicOrmEntity{
         }
     }
     
-    /**
-     * 客户
-     */
-    public final app.mall.dao.entity.LitemallUser getUser(){
-       return (app.mall.dao.entity.LitemallUser)internalGetRefEntity(PROP_NAME_user);
-    }
-
-    public final void setUser(app.mall.dao.entity.LitemallUser refEntity){
-   
-           if(refEntity == null){
-           
-                   this.setUserId(null);
-               
-           }else{
-           internalSetRefEntity(PROP_NAME_user, refEntity,()->{
-           
-                           this.setUserId(refEntity.getId());
-                       
-           });
-           }
-       
-    }
-       
    private io.nop.orm.component.OrmFileListComponent _picUrlsComponent;
 
    private static Map<String,Integer> COMPONENT_PROP_ID_MAP_picUrlsComponent = new HashMap<>();

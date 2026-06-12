@@ -24,7 +24,7 @@ public class _LitemallFootprint extends DynamicOrmEntity{
     public static final String PROP_NAME_id = "id";
     public static final int PROP_ID_id = 1;
     
-    /* 用户ID: USER_ID INTEGER */
+    /* 用户ID: USER_ID VARCHAR */
     public static final String PROP_NAME_userId = "userId";
     public static final int PROP_ID_userId = 2;
     
@@ -50,9 +50,6 @@ public class _LitemallFootprint extends DynamicOrmEntity{
     
     /* relation: 订单 */
     public static final String PROP_NAME_goods = "goods";
-    
-    /* relation: 客户 */
-    public static final String PROP_NAME_user = "user";
     
 
     protected static final List<String> PK_PROP_NAMES = Arrays.asList(PROP_NAME_id);
@@ -452,29 +449,6 @@ public class _LitemallFootprint extends DynamicOrmEntity{
            internalSetRefEntity(PROP_NAME_goods, refEntity,()->{
            
                            this.setGoodsId(refEntity.getId());
-                       
-           });
-           }
-       
-    }
-       
-    /**
-     * 客户
-     */
-    public final app.mall.dao.entity.LitemallUser getUser(){
-       return (app.mall.dao.entity.LitemallUser)internalGetRefEntity(PROP_NAME_user);
-    }
-
-    public final void setUser(app.mall.dao.entity.LitemallUser refEntity){
-   
-           if(refEntity == null){
-           
-                   this.setUserId(null);
-               
-           }else{
-           internalSetRefEntity(PROP_NAME_user, refEntity,()->{
-           
-                           this.setUserId(refEntity.getId());
                        
            });
            }

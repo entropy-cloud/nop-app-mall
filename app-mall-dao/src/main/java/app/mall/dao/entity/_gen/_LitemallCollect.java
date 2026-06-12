@@ -24,7 +24,7 @@ public class _LitemallCollect extends DynamicOrmEntity{
     public static final String PROP_NAME_id = "id";
     public static final int PROP_ID_id = 1;
     
-    /* 用户ID: USER_ID INTEGER */
+    /* 用户ID: USER_ID VARCHAR */
     public static final String PROP_NAME_userId = "userId";
     public static final int PROP_ID_userId = 2;
     
@@ -51,9 +51,6 @@ public class _LitemallCollect extends DynamicOrmEntity{
 
     private static int _PROP_ID_BOUND = 8;
 
-    
-    /* relation: 客户 */
-    public static final String PROP_NAME_user = "user";
     
 
     protected static final List<String> PK_PROP_NAMES = Arrays.asList(PROP_NAME_id);
@@ -481,28 +478,5 @@ public class _LitemallCollect extends DynamicOrmEntity{
         }
     }
     
-    /**
-     * 客户
-     */
-    public final app.mall.dao.entity.LitemallUser getUser(){
-       return (app.mall.dao.entity.LitemallUser)internalGetRefEntity(PROP_NAME_user);
-    }
-
-    public final void setUser(app.mall.dao.entity.LitemallUser refEntity){
-   
-           if(refEntity == null){
-           
-                   this.setUserId(null);
-               
-           }else{
-           internalSetRefEntity(PROP_NAME_user, refEntity,()->{
-           
-                           this.setUserId(refEntity.getId());
-                       
-           });
-           }
-       
-    }
-       
 }
 // resume CPD analysis - CPD-ON
