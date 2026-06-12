@@ -2,7 +2,17 @@
 <view x:extends="_gen/_LitemallTopic.view.xml" x:schema="/nop/schema/xui/xview.xdef" xmlns:x="/nop/schema/xdsl.xdef">
 
     <grids>
-        <grid id="list"/>
+        <grid id="list">
+            <cols x:override="bounded-merge">
+                <col id="id"/>
+                <col id="title" label="标题"/>
+                <col id="subtitle" label="副标题"/>
+                <col id="picUrl" label="图片"/>
+                <col id="readCount" label="阅读量"/>
+                <col id="price" label="价格" sortable="true"/>
+                <col id="sortOrder" label="排序" sortable="true"/>
+            </cols>
+        </grid>
         <grid id="pick-list"/>
     </grids>
 

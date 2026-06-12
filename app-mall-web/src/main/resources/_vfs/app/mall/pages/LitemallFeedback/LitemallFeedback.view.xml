@@ -2,7 +2,19 @@
 <view x:extends="_gen/_LitemallFeedback.view.xml" x:schema="/nop/schema/xui/xview.xdef" xmlns:x="/nop/schema/xdsl.xdef">
 
     <grids>
-        <grid id="list"/>
+        <grid id="list">
+            <cols x:override="bounded-merge">
+                <col id="id"/>
+                <col id="userId" label="用户ID"/>
+                <col id="username" label="用户名"/>
+                <col id="mobile" label="手机号"/>
+                <col id="feedType" label="反馈类型"/>
+                <col id="content" label="反馈内容"/>
+                <col id="hasPicture" label="含图片"/>
+                <col id="status" label="状态"/>
+                <col id="addTime" label="提交时间" sortable="true"/>
+            </cols>
+        </grid>
         <grid id="pick-list"/>
     </grids>
 

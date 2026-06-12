@@ -2,7 +2,20 @@
 <view x:extends="_gen/_LitemallComment.view.xml" x:schema="/nop/schema/xui/xview.xdef" xmlns:x="/nop/schema/xdsl.xdef">
 
     <grids>
-        <grid id="list"/>
+        <grid id="list">
+            <cols x:override="bounded-merge">
+                <col id="id"/>
+                <col id="type" label="评论类型"/>
+                <col id="valueId" label="商品/专题ID"/>
+                <col id="userId" label="用户ID"/>
+                <col id="content" label="评论内容"/>
+                <col id="star" label="评分" sortable="true"/>
+                <col id="hasPicture" label="含图片"/>
+                <col id="picUrls" label="图片"/>
+                <col id="adminContent" label="管理员回复"/>
+                <col id="addTime" label="评论时间" sortable="true"/>
+            </cols>
+        </grid>
         <grid id="pick-list"/>
     </grids>
 
@@ -10,10 +23,37 @@
         <form id="view"/>
         <form id="edit"/>
         <form id="add"/>
+        <form id="query" editMode="query" title="查询条件">
+            <layout>
+                type valueId userId
+            </layout>
+        </form>
     </forms>
 
     <pages>
-        <crud name="main"/>
+        <crud name="main">
+            <rowActions x:override="bounded-merge">
+                <action id="row-view-button" level="primary" label="查看">
+                    <dialog page="view"/>
+                </action>
+                <action id="admin-reply-button" label="回复" level="primary">
+                    <dialog page="admin-reply"/>
+                </action>
+                <action id="row-delete-button" level="danger" label="删除">
+                    <api url="@mutation:LitemallComment__delete?id=$id"/>
+                    <confirmText>确认删除该评论吗？</confirmText>
+                </action>
+            </rowActions>
+        </crud>
         <picker name="picker"/>
+        <simple name="admin-reply" form="admin-reply-form" title="回复评论">
+            <initApi url="@query:LitemallComment__get?id=$id" gql:selection="{@formSelection}"/>
+            <api url="@mutation:LitemallComment__adminReply"/>
+        </simple>
+        <form id="admin-reply-form" editMode="edit" title="回复评论">
+            <layout>
+                adminContent[回复内容]
+            </layout>
+        </form>
     </pages>
 </view>
