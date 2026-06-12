@@ -1,6 +1,6 @@
 # phase1-user-registration-login 用户注册登录
 
-> Plan Status: in-progress (Phase 0 done, Phase 1A done, Phase 1B done, Phase 1C next)
+> Plan Status: completed (Phase 0/1A/1B/1C/1D all done)
 > Last Reviewed: 2026-06-12
 > Source: `docs/requirements/commercial-baseline.md`, `docs/backlog/implementation-roadmap.md` Phase 1
 > Related: `docs/design/user-and-address.md`（单实体架构决策）

@@ -1,6 +1,6 @@
 # Implementation Roadmap
 
-> Last Updated: 2026-06-10
+> Last Updated: 2026-06-12
 > Source: `docs/requirements/commercial-baseline.md`, `docs/design/*.md`
 
 ## Purpose
@@ -15,14 +15,14 @@
 
 > **这是唯一的动态状态区域。更新状态只改这里，不改 Phase Details 中的状态行。**
 
-- 1. 用户注册登录: `todo`
-- 2. 商品目录管理: `todo`
-- 3. 地址管理: `todo`
+- 1. 用户注册登录: `done`
+- 2. 商品目录管理: `done`
+- 3. 地址管理: `done`
 - 4. 购物车: `done`
 - 5. 订单核心流程: `done`
 - 5b. 支付集成: `done`
 - 5c. 退款与售后: `done`
-- 6. 搜索与发现: `todo`
+- 6. 搜索与发现: `done`
 - 7. 互动（收藏/足迹/评论）: `todo`
 - 8. 优惠券体系: `todo`
 - 9. 团购: `todo`
@@ -256,7 +256,6 @@
 - 分类/品牌过滤 + 排序（价格/上新/默认）
 - 后台搜索（不受上下架限制）
 - 搜索关键字管理（LitemallKeyword：热门/默认）
-- 搜索历史（记录/查看/清空）
 - 前台搜索页面
 - 单元测试
 
@@ -471,7 +470,7 @@ graph TD
 | LitemallOrderGoods | 5 | |
 | LitemallAftersale | 5c | 已有部分逻辑 |
 | LitemallKeyword | 6 | |
-| LitemallSearchHistory | 6 | |
+| LitemallSearchHistory | 7 | |
 | LitemallCollect | 7 | |
 | LitemallFootprint | 7 | |
 | LitemallComment | 7 | |

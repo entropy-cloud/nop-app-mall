@@ -97,4 +97,40 @@ public interface AppMallErrors {
     ErrorCode ERR_USER_USERNAME_TOO_LONG =
             define("nop.err.mall.user.username-too-long",
                     "用户名长度不能超过63个字符");
+
+    ErrorCode ERR_CATEGORY_HAS_CHILDREN =
+            define("nop.err.mall.category.has-children",
+                    "分类下有子分类，不可删除");
+
+    ErrorCode ERR_CATEGORY_HAS_PRODUCTS =
+            define("nop.err.mall.category.has-products",
+                    "分类下有商品，不可删除");
+
+    ErrorCode ERR_CATEGORY_NOT_LEAF =
+            define("nop.err.mall.category.not-leaf",
+                    "非叶子分类不可关联商品");
+
+    ErrorCode ERR_GOODS_NO_SKU =
+            define("nop.err.mall.goods.no-sku",
+                    "商品无SKU不可上架");
+
+    ErrorCode ERR_GOODS_NOT_ON_SALE =
+            define("nop.err.mall.goods.not-on-sale",
+                    "商品未上架");
+
+    ErrorCode ERR_GOODS_NOT_FOUND =
+            define("nop.err.mall.goods.not-found",
+                    "商品不存在");
+
+    ErrorCode ERR_ADDRESS_LIMIT_EXCEEDED =
+            define("nop.err.mall.address.limit-exceeded",
+                    "地址数量超过上限");
+
+    ErrorCode ERR_ADDRESS_NOT_FOUND =
+            define("nop.err.mall.address.not-found",
+                    "地址不存在");
+
+    ErrorCode ERR_ADDRESS_NOT_OWNER =
+            define("nop.err.mall.address.not-owner",
+                    "非本人地址");
 }

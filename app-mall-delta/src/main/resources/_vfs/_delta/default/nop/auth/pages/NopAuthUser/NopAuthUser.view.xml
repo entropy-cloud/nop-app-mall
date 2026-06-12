@@ -1,34 +1,40 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<view x:extends="super" x:schema="/nop/schema/xui/xview.xdef" xmlns:x="/nop/schema/xdsl.xdef" xmlns:feature="feature">
+<view x:extends="super" x:schema="/nop/schema/xui/xview.xdef" xmlns:x="/nop/schema/xdsl.xdef">
+
+    <grids>
+        <grid id="list">
+            <cols x:override="bounded-merge">
+                <col id="userName"/>
+                <col id="nickName"/>
+                <col id="phone"/>
+                <col id="gender"/>
+                <col id="userType"/>
+                <col id="status"/>
+                <col id="createTime"/>
+                <col id="updateTime"/>
+            </cols>
+        </grid>
+    </grids>
 
     <forms>
-        <form id="view" feature:on="!nop.auth.use-ext-info">
+        <form id="edit" size="lg">
             <layout>
-                ===========>baseInfo[基本信息]======
-                userName status[用户状态]
-                nickName[昵称] deptId[部门]
-                userType[用户类型] gender[性别]
-                email[邮件] phone[电话]
-                expireAt[用户过期时间] changePwdAtLogin[登陆后立刻修改密码]
+                userName[用户名] nickName[昵称]
+                phone[电话] gender[性别]
+                birthday[生日] email[邮件]
+                status[用户状态] remark[备注]
             </layout>
         </form>
 
-        <form id="view" feature:on="nop.auth.use-ext-info">
+        <form id="view">
             <layout>
                 ===========>baseInfo[基本信息]======
-                userName status[用户状态]
-                nickName[昵称] deptId[部门]
-                userType[用户类型] gender[性别]
-                email[邮件] phone[电话]
-                expireAt[用户过期时间] changePwdAtLogin[登陆后立刻修改密码]
-
-                ===========>extInfo[扩展信息]=========
-                idType[证件类型] idNbr[证件号]
-                birthday[生日] workNo[工号]
-                positionId[职务] telephone[座机]
+                userName[用户名] nickName[昵称]
+                phone[电话] gender[性别]
+                userType[用户类型] status[用户状态]
+                email[邮件] birthday[生日]
+                createTime[创建时间] updateTime[修改时间]
                 remark[备注]
-                createdBy[创建人] createTime[创建时间]
-                updatedBy[修改人] updateTime[修改时间]
             </layout>
         </form>
     </forms>
