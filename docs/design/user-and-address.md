@@ -7,7 +7,7 @@
 ## 边界
 
 - 本文档负责用户侧和管理员侧账号语义、资料规则以及地址行为。
-- 持久化模型结构、字段集和字典定义以 `model/*.orm.xml` 为准。
+- 持久化模型结构、字段集和字典定义以 `model/*.orm.xml` 和 `model/nop-auth-delta.orm.xml` 为准。
 - 平台认证实现细节属于 `docs/architecture/`。
 
 ## 领域概览
@@ -18,6 +18,65 @@
 - 后台用户：负责店铺运营和业务数据管理
 
 地址领域用于支持结算时的配送信息和地区选择。
+
+## 用户实体架构
+
+### 单实体模型：NopAuthUser（通过 Delta 扩展）
+
+本应用不维护独立的商城用户实体。所有用户（商城用户和后台管理员）统一使用平台 `NopAuthUser` 实体，通过 Delta 扩展添加商城特有字段。
+
+**决策依据：**
+
+- 原 litemall 项目的 `LitemallUser` 与平台 `NopAuthUser` 字段高度重复（userName/username, nickName/nickname, avatar, gender, birthday, status, password 共 9 个字段）
+- `LitemallRole`、`LitemallPermission`、`LitemallUserRole` 已由平台 `NopAuthRole`、`NopAuthResource`、`NopAuthUserRole` 覆盖
+- 单实体模型消除了双实体注册、状态同步、密码一致性等复杂问题
+
+### Delta 扩展字段
+
+在 `model/nop-auth-delta.orm.xml` 的 `NopAuthUserEx` 实体中添加以下商城特有字段（propId >= 102）：
+
+| 字段 | 类型 | 用途 | 字典 |
+|------|------|------|------|
+| `lastLoginTime` | datetime | 最近一次登录时间 | — |
+| `lastLoginIp` | varchar(63) | 最近一次登录 IP | — |
+| `userLevel` | int | 用户等级 | mall/user-level |
+| `sessionKey` | varchar(100) | 微信会话 KEY（Phase 14 使用） | — |
+
+**不需要添加的字段（已由 NopAuthUser 覆盖）：**
+
+| LitemallUser 原字段 | NopAuthUser 对应字段 | 说明 |
+|---------------------|---------------------|------|
+| username | userName | 用户名 |
+| password | password | 密码（由平台 `IPasswordEncoder` 管理） |
+| nickname | nickName | 昵称 |
+| avatar | avatar | 头像 |
+| gender | gender | 性别（dict: auth/gender） |
+| birthday | birthday | 生日 |
+| mobile | phone | 手机号 |
+| status | status | 状态（使用平台语义：0=禁用, 1=正常） |
+| weixinOpenid | openId | 微信标识（平台 `openId` 字段） |
+
+### 用户类型区分
+
+通过 `NopAuthUser.userType` 区分用户类别：
+
+| userType | 含义 | 说明 |
+|----------|------|------|
+| 0 | 系统内置 | 平台默认管理员 |
+| 1 | 普通用户 | 商城注册用户 |
+| 2 | 管理员 | 后台管理用户 |
+
+### 被消除的实体
+
+以下 litemall 原项目实体不再使用，由平台实体覆盖：
+
+| 原实体 | 替代方案 | 说明 |
+|--------|----------|------|
+| `LitemallUser` | `NopAuthUserEx`（Delta 扩展） | 字段通过 Delta 列和平台字段覆盖 |
+| `LitemallRole` | `NopAuthRole` | 平台角色 |
+| `LitemallPermission` | `NopAuthResource` | 平台权限资源 |
+| `LitemallUserRole` | `NopAuthUserRole` | 平台用户-角色映射 |
+| `LitemallAdmin` | `NopAuthUser`（userType=2） | 管理员用户 |
 
 ## 商城用户管理
 
@@ -33,7 +92,7 @@
 ### 业务规则
 
 - 只有已认证用户才能查看或修改自己的资料和地址。
-- 被禁用用户不得继续正常使用商城。
+- 被禁用用户（`status=0`）不得继续正常使用商城。
 - 资料更新过程不得暴露或返回敏感凭证数据。
 - 微信等附加登录渠道在启用时，必须保持与原有商城用户身份和账号安全语义一致。
 
@@ -42,12 +101,14 @@
 ### 业务基线
 
 - 支持用户名/密码登录。
-- 支持商城用户自助注册。
-- 在需要时，也可以存在管理员创建账号的方式。
+- 支持商城用户自助注册（创建 `NopAuthUser` + `userType=1`）。
+- 管理员可通过后台创建账号（`userType=2`）。
+- 注册使用平台 `NopAuthUserBizModel.defaultPrepareSave()` 管道处理密码哈希、salt、userId 生成。
 
 ### 附加登录渠道
 
-- 微信小程序登录和自动注册属于集成能力，但必须映射到同一套商城用户身份规则。
+- 微信小程序登录和自动注册属于集成能力（Phase 14）。
+- 微信 `openid` 存储在 `NopAuthUser.openId` 字段。
 
 ## 地址管理
 
@@ -58,6 +119,7 @@
 - 修改默认地址后，系统中必须仍然且只能存在一条默认地址。
 - 用户只能管理自己名下的地址。
 - 地址数据必须足以支持配送，包括收件人、联系方式、地区和详细地址。
+- `LitemallAddress` 的 `user` 关联指向 `NopAuthUser`（而非已消除的 `LitemallUser`）。
 
 ### 支持行为
 
@@ -92,3 +154,4 @@
 
 - 权限语义还需进一步受 `roles-and-permissions.md` 约束。
 - 订单归属及用户在订单上的动作定义由 `order-and-cart.md` 负责。
+- ORM 模型变更详情见 `model/nop-auth-delta.orm.xml`（Delta 扩展列）和 `model/app-mall.orm.xml`（LitemallUser 消除后的关联修正）。

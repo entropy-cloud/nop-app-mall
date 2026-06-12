@@ -105,7 +105,7 @@ A `Follow-up` item must name the trigger condition that would promote it into sc
 2. **Roadmap update (plan creation):** If this plan implements a roadmap phase in `docs/backlog/implementation-roadmap.md`, update the phase status from `todo` to `planned`. Do this when the plan passes its plan audit and implementation is about to begin.
 3. When you start a slice, update its `Status` to `in progress`.
 4. When you finish a slice, update its `Status` to `completed` and check off all its execution items and exit criteria.
-6. **MANDATORY SKILL LOADING GATE: Before executing ANY phase, load every skill listed in `Required Skill` for that phase.** 见 Minimum Rules #14。此规则适用于所有 agent（主 agent、子 agent、审核 agent）。加载 skill 后读完其路由的文档再写代码。后端代码每写完一个方法用 selfcheck 校验；前端和测试代码在每个文件/类完成后校验。如果 phase 委托给 subagent，prompt 必须包含 `Required Skill` 名称和加载后读文档+自检的指令。
+6. **MANDATORY SKILL LOADING GATE: Before executing ANY phase, load every skill listed in `Required Skill` for that phase.** 见 Minimum Rules #14。此规则适用于所有 agent（主 agent、子 agent、审核 agent）。加载 skill 后必须逐篇读完其 routing table 中标为"必读"的所有文档才能写代码。在 phase 的 skill loading gate 执行项中列出已读文档路径作为证据。后端代码每写完一个方法用 selfcheck 校验；前端和测试代码在每个文件/类完成后校验。如果 phase 委托给 subagent，prompt 必须包含 `Required Skill` 名称和加载后读文档+列出已读文档+自检的指令。
 7. Confirm the listed `Required Skill` still matches the task and available inputs. If not, update the plan before proceeding.
 8. If a slice changes the live baseline or public contract, its exit criteria must include the doc-update step. If no doc update is needed, write `No owner-doc update required` explicitly.
 9. Do not mark a slice complete because the function signature exists. Verify that the behavior, error handling, and test coverage land too. **BizModel `@BizMutation`/`@BizQuery` 方法的测试必须通过 `IGraphQLEngine` 验证（`JunitAutoTestCase` 录制回放），不能只用实体级纯逻辑测试替代。`@BizAction` 方法需要测试时通过 `I*XxxBiz` 接口调用。**
@@ -204,7 +204,8 @@ Required Skill: `<scan available skills, list all whose description/trigger matc
 - Item Types: `Fix | Decision | Proof | Follow-up`
 - Prereqs: <phases or external dependencies that must complete first>
 
-- [ ] **Skill loading gate:** Scan available skills and load every skill listed in `Required Skill` above. Read all docs the skills route you to. After each method/class written, use the selfcheck mechanism provided by the loaded skill(s) to verify no anti-patterns.
+- [ ] **Skill loading gate:** Scan available skills and load every skill listed in `Required Skill` above. Read ALL mandatory docs listed in each skill's routing table. List the docs read below — do not check off this item without listing them. After each method/class written, use the selfcheck mechanism provided by the loaded skill(s) to verify no anti-patterns.
+  - Docs read: <list paths here>
 - [ ] <implementation item>
 - [ ] <Decision: record rationale and alternatives in the item or a referenced doc>
 - [ ] <Proof: specify test strategy (unit/integration/e2e) and exact verification commands>
@@ -231,7 +232,7 @@ Exit Criteria:
 - [ ] no in-scope item downgraded to deferred/follow-up
 - [ ] plan audit passed before implementation
 - [ ] each phase has `Required Skill` listed, and Nop-platform phases do not write `none` without justification
-- [ ] skill loading verification: each phase scanned available skills, loaded all matching skills, read routed docs, and selfchecked after each method/class (no anti-patterns in the output)
+- [ ] skill loading verification: each phase scanned available skills, loaded all matching skills, read ALL mandatory docs listed in skill routing tables (with doc paths listed in the skill loading gate item as evidence), and selfchecked after each method/class (no anti-patterns in the output)
 - [ ] text consistency verified: status, phases, gates, and log all agree
 - [ ] closure audit was independent
 - [ ] closure evidence exists in files

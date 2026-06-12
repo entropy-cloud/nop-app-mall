@@ -18,10 +18,10 @@
 - 1. 用户注册登录: `todo`
 - 2. 商品目录管理: `todo`
 - 3. 地址管理: `todo`
-- 4. 购物车: `todo`
-- 5. 订单核心流程: `todo`
-- 5b. 支付集成: `todo`
-- 5c. 退款与售后: `todo`
+- 4. 购物车: `done`
+- 5. 订单核心流程: `done`
+- 5b. 支付集成: `done`
+- 5c. 退款与售后: `done`
 - 6. 搜索与发现: `todo`
 - 7. 互动（收藏/足迹/评论）: `todo`
 - 8. 优惠券体系: `todo`
@@ -69,7 +69,7 @@
 - 3 个测试类（Goods integration、Cart aggregate、Order aggregate）
 - Admin 后台基础页面框架（AMIS view.xml，大部分为继承默认值）
 
-**核心缺口：** 订单状态机、购物车业务逻辑、支付实现、商城用户注册 Delta、地址管理、优惠券/团购体系、搜索、定时任务、通知、报表
+**核心缺口：** 用户注册 Delta（需消除 LitemallUser）、地址管理、优惠券/团购体系、搜索、定时任务、通知、报表
 
 ---
 
@@ -113,11 +113,16 @@
 
 **目标：** 商城用户可通过用户名/密码注册和登录，查看/更新个人资料，修改密码。
 
+**架构决策：** 取消独立 `LitemallUser` 实体，统一使用平台 `NopAuthUser` 通过 Delta 扩展。理由：字段高度重复（9/15）、角色体系完全由平台覆盖、消除双实体注册/状态同步/密码一致性等复杂问题。
+
 **交付范围：**
-- 商城用户注册 Delta（基于 nop-auth 的 NopAuthUser，通过 Delta 定制注册 mutation）
-- 个人资料查看/更新（非凭证字段）
-- 修改密码
-- 禁用用户拦截
+- Delta 扩展 NopAuthUser：添加商城特有字段（lastLoginTime, lastLoginIp, userLevel, sessionKey）
+- 消除 LitemallUser：ORM 模型中将引用 LitemallUser 的实体改为引用 NopAuthUser
+- 消除 LitemallRole/LitemallPermission/LitemallUserRole/LitemallAdmin（已由平台覆盖）
+- 商城用户注册 Delta（基于 NopAuthUser，通过 LoginApi 补充 BizModel 添加 signUp）
+- 个人资料查看/更新（NopAuthUser 非凭证字段）
+- 修改密码（复用平台 `changeSelfPassword`）
+- 禁用用户拦截（平台已内置，验证即可）
 - 后台用户管理页面
 - 单元测试
 
@@ -125,7 +130,7 @@
 
 **Protected Area：** Auth/permissions delta 变更属于 Protected Area（`plan-first`）
 
-**模块：** app-mall-delta、app-mall-web、app-mall-service
+**模块：** app-mall-delta、app-mall-web、app-mall-service、app-mall-dao（ORM 模型变更）
 
 ### 2. 商品目录管理
 
@@ -452,7 +457,7 @@ graph TD
 
 | 实体 | Phase | 备注 |
 |------|-------|------|
-| LitemallUser | 1 | Delta 定制商城注册 |
+| LitemallUser | 1 | Delta 扩展 NopAuthUser，原实体消除 |
 | LitemallAddress | 3 | |
 | LitemallRegion | 3 | SQL seed |
 | LitemallCategory | 2 | |
@@ -483,10 +488,10 @@ graph TD
 | LitemallNotice | 11 | |
 | LitemallNoticeAdmin | 11 | |
 | LitemallLog | 11 | |
-| LitemallAdmin | — | nop-auth NopAuthUser 覆盖 |
-| LitemallRole | — | nop-auth NopAuthRole 覆盖 |
-| LitemallPermission | — | nop-auth NopAuthResource 覆盖 |
-| LitemallUserRole | — | nop-auth NopAuthUserRole 覆盖 |
+| LitemallAdmin | — | 消除：nop-auth NopAuthUser 覆盖 |
+| LitemallRole | — | 消除：nop-auth NopAuthRole 覆盖 |
+| LitemallPermission | — | 消除：nop-auth NopAuthResource 覆盖 |
+| LitemallUserRole | — | 消除：nop-auth NopAuthUserRole 覆盖 |
 
 ## Cross-Cutting
 
