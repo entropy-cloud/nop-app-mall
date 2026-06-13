@@ -54,6 +54,34 @@
         }
 
 
+        private java.time.LocalDateTime _endTime;
+
+    
+        @PropMeta(propId=17)
+    
+        public java.time.LocalDateTime getEndTime(){
+            return _endTime;
+        }
+
+        public void setEndTime(java.time.LocalDateTime value){
+            this._endTime = value;
+        }
+
+
+        private Boolean _deleted;
+
+    
+        @PropMeta(propId=20)
+    
+        public Boolean getDeleted(){
+            return _deleted;
+        }
+
+        public void setDeleted(Boolean value){
+            this._deleted = value;
+        }
+
+
         private Integer _total;
 
     
@@ -219,34 +247,6 @@
 
         public void setStartTime(java.time.LocalDateTime value){
             this._startTime = value;
-        }
-
-
-        private java.time.LocalDateTime _endTime;
-
-    
-        @PropMeta(propId=17)
-    
-        public java.time.LocalDateTime getEndTime(){
-            return _endTime;
-        }
-
-        public void setEndTime(java.time.LocalDateTime value){
-            this._endTime = value;
-        }
-
-
-        private Boolean _deleted;
-
-    
-        @PropMeta(propId=20)
-    
-        public Boolean getDeleted(){
-            return _deleted;
-        }
-
-        public void setDeleted(Boolean value){
-            this._deleted = value;
         }
 
 

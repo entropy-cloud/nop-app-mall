@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <orm ext:registerShortName="true" ext:appName="nop-auth" ext:entityPackageName="app.mall.delta.dao.entity"
      ext:basePackageName="app.mall.delta" ext:mavenGroupId="io.nop.app" ext:mavenArtifactId="app-mall"
-     ext:mavenVersion="1.0.0-SNAPSHOT" ext:platformVersion="2.0.0-SNAPSHOT" ext:dialect="mysql,oracle,postgresql"
+     ext:mavenVersion="1.0-SNAPSHOT" ext:platformVersion="2.0.0-SNAPSHOT" ext:dialect="mysql,oracle,postgresql"
      ext:deltaDir="default" ext:allowIdAsColName="true" x:schema="/nop/schema/orm/orm.xdef"
      xmlns:x="/nop/schema/xdsl.xdef">
 

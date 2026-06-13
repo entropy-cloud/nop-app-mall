@@ -8,10 +8,6 @@ site:
       displayName: ''
     FNPT:LitemallAddress:query:
       displayName: ''
-    FNPT:LitemallAdmin:mutation:
-      displayName: ''
-    FNPT:LitemallAdmin:query:
-      displayName: ''
     FNPT:LitemallAftersale:mutation:
       displayName: ''
     FNPT:LitemallAftersale:query:
@@ -104,17 +100,13 @@ site:
       displayName: ''
     FNPT:LitemallOrderGoods:query:
       displayName: ''
-    FNPT:LitemallPermission:mutation:
-      displayName: ''
-    FNPT:LitemallPermission:query:
-      displayName: ''
     FNPT:LitemallRegion:mutation:
       displayName: ''
     FNPT:LitemallRegion:query:
       displayName: ''
-    FNPT:LitemallRole:mutation:
+    FNPT:LitemallResetCode:mutation:
       displayName: ''
-    FNPT:LitemallRole:query:
+    FNPT:LitemallResetCode:query:
       displayName: ''
     FNPT:LitemallSearchHistory:mutation:
       displayName: ''
@@ -135,8 +127,6 @@ site:
     LitemallAd-main:
       displayName: ''
     LitemallAddress-main:
-      displayName: ''
-    LitemallAdmin-main:
       displayName: ''
     LitemallAftersale-main:
       displayName: ''
@@ -184,11 +174,9 @@ site:
       displayName: ''
     LitemallOrderGoods-main:
       displayName: ''
-    LitemallPermission-main:
-      displayName: ''
     LitemallRegion-main:
       displayName: ''
-    LitemallRole-main:
+    LitemallResetCode-main:
       displayName: ''
     LitemallSearchHistory-main:
       displayName: ''
@@ -213,8 +201,6 @@ site:
     mall-brand-manage:
       displayName: ''
     mall-category-manage:
-      displayName: ''
-    mall-customer:
       displayName: ''
     mall-customer-addr:
       displayName: ''

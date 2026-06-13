@@ -18,6 +18,7 @@ drop table litemall_search_history;
 drop table litemall_storage;
 drop table litemall_system;
 drop table litemall_topic;
+drop table litemall_reset_code;
 drop table litemall_aftersale;
 drop table litemall_groupon;
 drop table litemall_goods;

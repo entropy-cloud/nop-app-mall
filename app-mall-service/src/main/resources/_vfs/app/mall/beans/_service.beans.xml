@@ -139,6 +139,13 @@
         <property name="bizObjName" value="LitemallTopic"/>
     </bean>
 
+    <bean id="app.mall.service.entity.LitemallResetCodeBizModel" ioc:type="@bean:id" ioc:default="true"/>
+
+    <bean id="biz_LitemallResetCode" class="io.nop.biz.proxy.BizProxyFactoryBean"
+          ioc:type="app.mall.biz.ILitemallResetCodeBiz" ioc:force-lazy-property="true" lazy-init="true" primary="true">
+        <property name="bizObjName" value="LitemallResetCode"/>
+    </bean>
+
     <bean id="app.mall.service.entity.LitemallAftersaleBizModel" ioc:type="@bean:id" ioc:default="true"/>
 
     <bean id="biz_LitemallAftersale" class="io.nop.biz.proxy.BizProxyFactoryBean"

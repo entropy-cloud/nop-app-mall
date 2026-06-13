@@ -2,7 +2,6 @@ entity:
   label:
     LitemallAd: 广告表
     LitemallAddress: 收货地址表
-    LitemallAdmin: 管理员表
     LitemallAftersale: 售后表
     LitemallBrand: 品牌商表
     LitemallCart: 购物车商品表
@@ -26,9 +25,8 @@ entity:
     LitemallNoticeAdmin: 通知管理员表
     LitemallOrder: 订单表
     LitemallOrderGoods: 订单商品表
-    LitemallPermission: 权限表
     LitemallRegion: 行政区域表
-    LitemallRole: 角色表
+    LitemallResetCode: 密码重置验证码
     LitemallSearchHistory: 搜索历史表
     LitemallStorage: 文件存储表
     LitemallSystem: 系统配置表
@@ -64,17 +62,6 @@ prop:
       tel: 手机号码
       updateTime: 更新时间
       userId: 用户ID
-    LitemallAdmin:
-      addTime: 创建时间
-      avatar: 头像图片
-      deleted: 逻辑删除
-      id: Id
-      lastLoginIp: 最近一次登录IP地址
-      lastLoginTime: 最近一次登录时间
-      password: 管理员密码
-      roleIds: 角色列表
-      updateTime: 更新时间
-      username: 管理员名称
     LitemallAftersale:
       addTime: 添加时间
       aftersaleSn: 售后编号
@@ -110,8 +97,8 @@ prop:
       addTime: 创建时间
       checked: 购物车中商品是否选择状态
       deleted: 逻辑删除
-      goods: 订单
-      goods.name: 订单
+      goods: 商品
+      goods.name: 商品
       goodsId: 商品ID
       goodsName: 商品名称
       goodsSn: 商品编号
@@ -222,8 +209,8 @@ prop:
     LitemallFootprint:
       addTime: 创建时间
       deleted: 逻辑删除
-      goods: 订单
-      goods.name: 订单
+      goods: 商品
+      goods.name: 商品
       goodsId: 浏览商品ID
       id: Id
       updateTime: 更新时间
@@ -323,8 +310,8 @@ prop:
       discount: 优惠金额
       discountMember: 达到优惠条件的人数
       expireTime: 团购过期时间
-      goods: 订单
-      goods.name: 订单
+      goods: 商品
+      goods.name: 商品
       goodsId: 商品ID
       goodsName: 商品名称
       id: Id
@@ -437,13 +424,6 @@ prop:
       productId: 货品ID
       specifications: 规格列表
       updateTime: 更新时间
-    LitemallPermission:
-      addTime: 创建时间
-      deleted: 逻辑删除
-      id: Id
-      permission: 权限
-      roleId: 角色ID
-      updateTime: 更新时间
     LitemallRegion:
       children: 子区域
       code: 行政区域编码
@@ -453,13 +433,12 @@ prop:
       pid: 行政区域父ID
       type: 行政区域类型
       type_label: 行政区域类型
-    LitemallRole:
+    LitemallResetCode:
       addTime: 创建时间
+      code: 验证码
       deleted: 逻辑删除
-      desc: 角色描述
-      enabled: 是否启用
-      id: Id
-      name: 角色名称
+      id: null
+      mobile: 手机号
       updateTime: 更新时间
     LitemallSearchHistory:
       addTime: 创建时间

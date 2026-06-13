@@ -177,6 +177,11 @@
                 <column code="DELETED" displayName="逻辑删除" domain="delFlag" name="deleted" propId="14"
                         stdDataType="boolean" stdSqlType="BOOLEAN" ui:show="X"/>
             </columns>
+            <indexes>
+                <index name="idx_address_userId" unique="false">
+                    <column name="userId"/>
+                </index>
+            </indexes>
         </entity>
         <entity className="app.mall.dao.entity.LitemallAftersale" createTimeProp="addTime" deleteFlagProp="deleted"
                 displayName="售后表" name="app.mall.dao.entity.LitemallAftersale" registerShortName="true"
@@ -211,6 +216,14 @@
                 <column code="DELETED" displayName="逻辑删除" domain="delFlag" name="deleted" propId="14"
                         stdDataType="boolean" stdSqlType="BOOLEAN" ui:show="X"/>
             </columns>
+            <indexes>
+                <index name="idx_aftersale_orderId" unique="false">
+                    <column name="orderId"/>
+                </index>
+                <index name="idx_aftersale_userId" unique="false">
+                    <column name="userId"/>
+                </index>
+            </indexes>
             <relations>
                 <to-one displayName="订单" name="order" refEntityName="app.mall.dao.entity.LitemallOrder"
                         tagSet="pub,ref-pub" i18n-en:displayName="Order">
@@ -277,8 +290,16 @@
                 <column code="DELETED" displayName="逻辑删除" domain="delFlag" name="deleted" propId="14"
                         stdDataType="boolean" stdSqlType="BOOLEAN" ui:show="X"/>
             </columns>
+            <indexes>
+                <index name="idx_cart_userId" unique="false">
+                    <column name="userId"/>
+                </index>
+                <index name="idx_cart_goodsId" unique="false">
+                    <column name="goodsId"/>
+                </index>
+            </indexes>
             <relations>
-                <to-one displayName="订单" name="goods" refEntityName="app.mall.dao.entity.LitemallGoods"
+                <to-one displayName="商品" name="goods" refEntityName="app.mall.dao.entity.LitemallGoods"
                         tagSet="pub,ref-pub" i18n-en:displayName="Goods">
                     <join>
                         <on leftProp="goodsId" rightProp="id"/>
@@ -315,6 +336,11 @@
                 <column code="DELETED" displayName="逻辑删除" domain="delFlag" name="deleted" propId="12"
                         stdDataType="boolean" stdSqlType="BOOLEAN" ui:show="X"/>
             </columns>
+            <indexes>
+                <index name="idx_category_pid" unique="false">
+                    <column name="pid"/>
+                </index>
+            </indexes>
             <relations>
                 <to-one displayName="父类目" name="parent" refDisplayName="子类目"
                         refEntityName="app.mall.dao.entity.LitemallCategory" refPropName="children" tagSet="pub,ref-pub"
@@ -350,6 +376,11 @@
                 <column code="DELETED" displayName="逻辑删除" domain="delFlag" name="deleted" propId="7"
                         stdDataType="boolean" stdSqlType="BOOLEAN" ui:show="X"/>
             </columns>
+            <indexes>
+                <index name="idx_collect_userId" unique="false">
+                    <column name="userId"/>
+                </index>
+            </indexes>
         </entity>
         <entity className="app.mall.dao.entity.LitemallComment" createTimeProp="addTime" deleteFlagProp="deleted"
                 displayName="评论表" name="app.mall.dao.entity.LitemallComment" registerShortName="true"
@@ -379,6 +410,11 @@
                 <column code="DELETED" displayName="逻辑删除" domain="delFlag" name="deleted" propId="12"
                         stdDataType="boolean" stdSqlType="BOOLEAN" ui:show="X"/>
             </columns>
+            <indexes>
+                <index name="idx_comment_userId" unique="false">
+                    <column name="userId"/>
+                </index>
+            </indexes>
         </entity>
         <entity className="app.mall.dao.entity.LitemallCoupon" createTimeProp="addTime" deleteFlagProp="deleted"
                 displayName="优惠券信息及规则表" name="app.mall.dao.entity.LitemallCoupon" registerShortName="true"
@@ -453,6 +489,17 @@
                 <column code="DELETED" displayName="逻辑删除" domain="delFlag" name="deleted" propId="11"
                         stdDataType="boolean" stdSqlType="BOOLEAN" ui:show="X"/>
             </columns>
+            <indexes>
+                <index name="idx_couponUser_userId" unique="false">
+                    <column name="userId"/>
+                </index>
+                <index name="idx_couponUser_orderId" unique="false">
+                    <column name="orderId"/>
+                </index>
+                <index name="idx_couponUser_couponId" unique="false">
+                    <column name="couponId"/>
+                </index>
+            </indexes>
             <relations>
                 <to-one displayName="优惠券" name="coupon" refEntityName="app.mall.dao.entity.LitemallCoupon"
                         tagSet="pub,ref-pub" i18n-en:displayName="Coupon">
@@ -491,6 +538,11 @@
                 <column code="DELETED" displayName="逻辑删除" domain="delFlag" name="deleted" propId="12"
                         stdDataType="boolean" stdSqlType="BOOLEAN" ui:show="X"/>
             </columns>
+            <indexes>
+                <index name="idx_feedback_userId" unique="false">
+                    <column name="userId"/>
+                </index>
+            </indexes>
         </entity>
         <entity className="app.mall.dao.entity.LitemallFootprint" createTimeProp="addTime" deleteFlagProp="deleted"
                 displayName="用户浏览足迹表" name="app.mall.dao.entity.LitemallFootprint" registerShortName="true"
@@ -509,8 +561,16 @@
                 <column code="DELETED" displayName="逻辑删除" domain="delFlag" name="deleted" propId="6"
                         stdDataType="boolean" stdSqlType="BOOLEAN" ui:show="X"/>
             </columns>
+            <indexes>
+                <index name="idx_footprint_userId" unique="false">
+                    <column name="userId"/>
+                </index>
+                <index name="idx_footprint_goodsId" unique="false">
+                    <column name="goodsId"/>
+                </index>
+            </indexes>
             <relations>
-                <to-one displayName="订单" name="goods" refEntityName="app.mall.dao.entity.LitemallGoods"
+                <to-one displayName="商品" name="goods" refEntityName="app.mall.dao.entity.LitemallGoods"
                         tagSet="pub,ref-pub" i18n-en:displayName="Goods">
                     <join>
                         <on leftProp="goodsId" rightProp="id"/>
@@ -566,6 +626,14 @@
                 <column code="DELETED" displayName="逻辑删除" domain="delFlag" name="deleted" propId="21"
                         stdDataType="boolean" stdSqlType="BOOLEAN" ui:show="X" i18n-en:displayName="Deleted"/>
             </columns>
+            <indexes>
+                <index name="idx_goods_categoryId" unique="false">
+                    <column name="categoryId"/>
+                </index>
+                <index name="idx_goods_brandId" unique="false">
+                    <column name="brandId"/>
+                </index>
+            </indexes>
             <relations>
                 <to-one displayName="商品类目" name="category" refEntityName="app.mall.dao.entity.LitemallCategory"
                         tagSet="pub,ref-pub" i18n-en:displayName="Category">
@@ -631,6 +699,11 @@
                 <column code="DELETED" displayName="逻辑删除" domain="delFlag" name="deleted" propId="7"
                         stdDataType="boolean" stdSqlType="BOOLEAN" ui:show="X"/>
             </columns>
+            <indexes>
+                <index name="idx_attr_goodsId" unique="false">
+                    <column name="goodsId"/>
+                </index>
+            </indexes>
             <relations>
                 <to-one displayName="商品" name="goods" refDisplayName="商品参数"
                         refEntityName="app.mall.dao.entity.LitemallGoods" refPropName="attributes"
@@ -666,6 +739,11 @@
                 <column code="DELETED" displayName="逻辑删除" domain="delFlag" name="deleted" propId="9"
                         stdDataType="boolean" stdSqlType="BOOLEAN" ui:show="X"/>
             </columns>
+            <indexes>
+                <index name="idx_product_goodsId" unique="false">
+                    <column name="goodsId"/>
+                </index>
+            </indexes>
             <relations>
                 <to-one displayName="所属商品" name="goods" refDisplayName="包含产品"
                         refEntityName="app.mall.dao.entity.LitemallGoods" refPropName="products"
@@ -699,6 +777,11 @@
                 <column code="DELETED" displayName="逻辑删除" domain="delFlag" name="deleted" propId="8"
                         stdDataType="boolean" stdSqlType="BOOLEAN" ui:show="X"/>
             </columns>
+            <indexes>
+                <index name="idx_spec_goodsId" unique="false">
+                    <column name="goodsId"/>
+                </index>
+            </indexes>
             <relations>
                 <to-one displayName="商品" name="goods" refDisplayName="商品规格"
                         refEntityName="app.mall.dao.entity.LitemallGoods" refPropName="specifications"
@@ -740,6 +823,17 @@
                 <column code="DELETED" displayName="逻辑删除" domain="delFlag" name="deleted" propId="12"
                         stdDataType="boolean" stdSqlType="BOOLEAN" ui:show="X"/>
             </columns>
+            <indexes>
+                <index name="idx_groupon_orderId" unique="false">
+                    <column name="orderId"/>
+                </index>
+                <index name="idx_groupon_grouponRulesId" unique="false">
+                    <column name="rulesId"/>
+                </index>
+                <index name="idx_groupon_userId" unique="false">
+                    <column name="userId"/>
+                </index>
+            </indexes>
             <relations>
                 <to-one displayName="订单" name="order" refEntityName="app.mall.dao.entity.LitemallOrder"
                         tagSet="pub,ref-pub" i18n-en:displayName="Order">
@@ -761,8 +855,8 @@
                         propId="3" stdDataType="string" stdSqlType="VARCHAR"/>
                 <column code="PIC_URL" displayName="商品/货品图片" domain="image" name="picUrl" precision="255" propId="4"
                         stdDataType="string" stdDomain="file" stdSqlType="VARCHAR"/>
-                <column code="DISCOUNT" displayName="优惠金额" mandatory="true" name="discount" precision="63" propId="5"
-                        scale="0" stdDataType="decimal" stdSqlType="DECIMAL"/>
+                <column code="DISCOUNT" displayName="优惠金额" mandatory="true" name="discount" precision="10" propId="5"
+                        scale="2" stdDataType="decimal" stdSqlType="DECIMAL"/>
                 <column code="DISCOUNT_MEMBER" displayName="达到优惠条件的人数" mandatory="true" name="discountMember" propId="6"
                         stdDataType="int" stdSqlType="INTEGER"/>
                 <column code="EXPIRE_TIME" displayName="团购过期时间" name="expireTime" propId="7" stdDataType="datetime"
@@ -776,8 +870,13 @@
                 <column code="DELETED" displayName="逻辑删除" domain="delFlag" name="deleted" propId="11"
                         stdDataType="boolean" stdSqlType="BOOLEAN" ui:show="X"/>
             </columns>
+            <indexes>
+                <index name="idx_grouponRules_goodsId" unique="false">
+                    <column name="goodsId"/>
+                </index>
+            </indexes>
             <relations>
-                <to-one displayName="订单" name="goods" refEntityName="app.mall.dao.entity.LitemallGoods"
+                <to-one displayName="商品" name="goods" refEntityName="app.mall.dao.entity.LitemallGoods"
                         tagSet="pub,ref-pub" i18n-en:displayName="Goods">
                     <join>
                         <on leftProp="goodsId" rightProp="id"/>
@@ -965,6 +1064,14 @@
                 <column code="DELETED" displayName="逻辑删除" domain="delFlag" name="deleted" propId="31"
                         stdDataType="boolean" stdSqlType="BOOLEAN" ui:show="X"/>
             </columns>
+            <indexes>
+                <index name="idx_order_userId" unique="false">
+                    <column name="userId"/>
+                </index>
+                <index name="idx_order_status" unique="false">
+                    <column name="orderStatus"/>
+                </index>
+            </indexes>
             <relations>
                 <to-many cascadeDelete="true" displayName="订单商品" name="orderGoods"
                          refEntityName="app.mall.dao.entity.LitemallOrderGoods" refPropName="order"
@@ -1009,6 +1116,17 @@
                 <column code="DELETED" displayName="逻辑删除" domain="delFlag" name="deleted" propId="14"
                         stdDataType="boolean" stdSqlType="BOOLEAN" ui:show="X"/>
             </columns>
+            <indexes>
+                <index name="idx_orderGoods_orderId" unique="false">
+                    <column name="orderId"/>
+                </index>
+                <index name="idx_orderGoods_goodsId" unique="false">
+                    <column name="goodsId"/>
+                </index>
+                <index name="idx_orderGoods_productId" unique="false">
+                    <column name="productId"/>
+                </index>
+            </indexes>
             <relations>
                 <to-one displayName="订单" name="order" refDisplayName="订单商品"
                         refEntityName="app.mall.dao.entity.LitemallOrder" refPropName="orderGoods"
@@ -1048,6 +1166,11 @@
                 <column code="CODE" displayName="行政区域编码" mandatory="true" name="code" propId="5" stdDataType="int"
                         stdSqlType="INTEGER"/>
             </columns>
+            <indexes>
+                <index name="idx_region_pid" unique="false">
+                    <column name="pid"/>
+                </index>
+            </indexes>
             <relations>
                 <to-one displayName="父区域" name="parent" refDisplayName="子区域"
                         refEntityName="app.mall.dao.entity.LitemallRegion" refPropName="children" tagSet="pub,ref-pub"
@@ -1083,6 +1206,11 @@
                 <column code="DELETED" displayName="逻辑删除" domain="delFlag" name="deleted" propId="7"
                         stdDataType="boolean" stdSqlType="BOOLEAN" ui:show="X"/>
             </columns>
+            <indexes>
+                <index name="idx_searchHistory_userId" unique="false">
+                    <column name="userId"/>
+                </index>
+            </indexes>
         </entity>
         <entity className="app.mall.dao.entity.LitemallStorage" createTimeProp="addTime" deleteFlagProp="deleted"
                 displayName="文件存储表" name="app.mall.dao.entity.LitemallStorage" registerShortName="true"
@@ -1140,8 +1268,8 @@
                         precision="65535" propId="4" stdDataType="string" stdSqlType="VARCHAR"/>
                 <column code="PRICE" displayName="专题相关商品最低价" name="price" precision="10" propId="5" scale="2"
                         stdDataType="decimal" stdSqlType="DECIMAL"/>
-                <column code="READ_COUNT" displayName="专题阅读量" name="readCount" precision="255" propId="6"
-                        stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="READ_COUNT" displayName="专题阅读量" name="readCount" propId="6" stdDataType="int"
+                        stdSqlType="INTEGER"/>
                 <column code="PIC_URL" displayName="专题图片" name="picUrl" precision="255" propId="7" stdDataType="string"
                         stdSqlType="VARCHAR"/>
                 <column code="SORT_ORDER" displayName="排序" name="sortOrder" propId="8" stdDataType="int"
@@ -1155,6 +1283,29 @@
                 <column code="DELETED" displayName="逻辑删除" domain="delFlag" name="deleted" propId="12"
                         stdDataType="boolean" stdSqlType="BOOLEAN" ui:show="X"/>
             </columns>
+        </entity>
+        <entity className="app.mall.dao.entity.LitemallResetCode" createTimeProp="addTime" deleteFlagProp="deleted"
+                displayName="密码重置验证码" name="app.mall.dao.entity.LitemallResetCode" registerShortName="true"
+                tableName="litemall_reset_code" updateTimeProp="updateTime" useLogicalDelete="true">
+            <columns>
+                <column code="ID" name="id" precision="50" primary="true" propId="1" stdDataType="string"
+                        stdSqlType="VARCHAR" tagSet="seq"/>
+                <column code="MOBILE" displayName="手机号" name="mobile" precision="50" propId="2" stdDataType="string"
+                        stdSqlType="VARCHAR" tagSet="disp"/>
+                <column code="CODE" displayName="验证码" name="code" precision="10" propId="3" stdDataType="string"
+                        stdSqlType="VARCHAR"/>
+                <column code="ADD_TIME" displayName="创建时间" domain="createTime" name="addTime" propId="4"
+                        stdDataType="datetime" stdSqlType="DATETIME" ui:show="X"/>
+                <column code="UPDATE_TIME" displayName="更新时间" domain="updateTime" name="updateTime" propId="5"
+                        stdDataType="datetime" stdSqlType="DATETIME" ui:show="X"/>
+                <column code="DELETED" displayName="逻辑删除" domain="delFlag" name="deleted" propId="6"
+                        stdDataType="boolean" stdSqlType="BOOLEAN" ui:show="X"/>
+            </columns>
+            <indexes>
+                <index name="idx_resetCode_mobile" unique="false">
+                    <column name="mobile"/>
+                </index>
+            </indexes>
         </entity>
     </entities>
 </orm>

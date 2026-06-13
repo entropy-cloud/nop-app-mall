@@ -13,17 +13,15 @@
     public class LitemallGoodsInputBean extends CrudInputBase {
 
     
-        private String _goodsSn;
+        private java.util.List<java.lang.String> _relatedProductList_ids;
 
     
-        @PropMeta(propId=2)
-    
-        public String getGoodsSn(){
-            return _goodsSn;
+        public java.util.List<java.lang.String> getRelatedProductList_ids(){
+            return _relatedProductList_ids;
         }
 
-        public void setGoodsSn(String value){
-            this._goodsSn = value;
+        public void setRelatedProductList_ids(java.util.List<java.lang.String> value){
+            this._relatedProductList_ids = value;
         }
 
 
@@ -265,15 +263,17 @@
         }
 
 
-        private java.util.List<java.lang.String> _relatedProductList_ids;
+        private String _goodsSn;
 
     
-        public java.util.List<java.lang.String> getRelatedProductList_ids(){
-            return _relatedProductList_ids;
+        @PropMeta(propId=2)
+    
+        public String getGoodsSn(){
+            return _goodsSn;
         }
 
-        public void setRelatedProductList_ids(java.util.List<java.lang.String> value){
-            this._relatedProductList_ids = value;
+        public void setGoodsSn(String value){
+            this._goodsSn = value;
         }
 
 

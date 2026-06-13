@@ -1,2 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<meta x:schema="/nop/schema/xmeta.xdef" xmlns:x="/nop/schema/xdsl.xdef" x:extends="_LitemallCoupon.xmeta"/>
+<meta x:schema="/nop/schema/xmeta.xdef" xmlns:x="/nop/schema/xdsl.xdef" x:extends="_LitemallCoupon.xmeta">
+    <props>
+        <prop name="endTime" allowFilterOp="eq,in,dateBetween,dateTimeBetween,ge,le,gt,lt,isNull" />
+        <prop name="total" allowFilterOp="eq,in,ge,le,gt,lt,isNull" />
+    </props>
+</meta>

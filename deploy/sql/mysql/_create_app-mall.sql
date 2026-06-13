@@ -274,7 +274,7 @@ CREATE TABLE litemall_topic(
   SUBTITLE VARCHAR(255) NULL    COMMENT '专题子标题',
   CONTENT TEXT NULL    COMMENT '专题内容',
   PRICE DECIMAL(10,2) NULL    COMMENT '专题相关商品最低价',
-  READ_COUNT VARCHAR(255) NULL    COMMENT '专题阅读量',
+  READ_COUNT INTEGER NULL    COMMENT '专题阅读量',
   PIC_URL VARCHAR(255) NULL    COMMENT '专题图片',
   SORT_ORDER INTEGER NULL    COMMENT '排序',
   GOODS VARCHAR(1023) NULL    COMMENT '专题相关商品',
@@ -282,6 +282,16 @@ CREATE TABLE litemall_topic(
   UPDATE_TIME DATETIME NULL    COMMENT '更新时间',
   DELETED BOOLEAN NULL    COMMENT '逻辑删除',
   constraint PK_litemall_topic primary key (ID)
+)CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
+
+CREATE TABLE litemall_reset_code(
+  ID VARCHAR(50) NULL    COMMENT 'null',
+  MOBILE VARCHAR(50) NULL    COMMENT '手机号',
+  CODE VARCHAR(10) NULL    COMMENT '验证码',
+  ADD_TIME DATETIME NULL    COMMENT '创建时间',
+  UPDATE_TIME DATETIME NULL    COMMENT '更新时间',
+  DELETED BOOLEAN NULL    COMMENT '逻辑删除',
+  constraint PK_litemall_reset_code primary key (ID)
 )CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
 
 CREATE TABLE litemall_aftersale(
@@ -427,7 +437,7 @@ CREATE TABLE litemall_groupon_rules(
   GOODS_ID INTEGER NOT NULL    COMMENT '商品ID',
   GOODS_NAME VARCHAR(127) NOT NULL    COMMENT '商品名称',
   PIC_URL VARCHAR(255) NULL    COMMENT '商品/货品图片',
-  DISCOUNT DECIMAL(63,0) NOT NULL    COMMENT '优惠金额',
+  DISCOUNT DECIMAL(10,2) NOT NULL    COMMENT '优惠金额',
   DISCOUNT_MEMBER INTEGER NOT NULL    COMMENT '达到优惠条件的人数',
   EXPIRE_TIME DATETIME NULL    COMMENT '团购过期时间',
   STATUS INTEGER NULL    COMMENT '团购规则状态，正常上线则0，到期自动下线则1，管理手动下线则2',
@@ -493,6 +503,8 @@ CREATE TABLE litemall_order_goods(
    ALTER TABLE litemall_system COMMENT '系统配置表';
                 
    ALTER TABLE litemall_topic COMMENT '专题表';
+                
+   ALTER TABLE litemall_reset_code COMMENT '密码重置验证码';
                 
    ALTER TABLE litemall_aftersale COMMENT '售后表';
                 

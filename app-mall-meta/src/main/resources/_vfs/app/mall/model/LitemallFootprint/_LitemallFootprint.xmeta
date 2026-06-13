@@ -42,12 +42,12 @@
               updatable="true" internal="true" ui:show="X">
             <schema domain="delFlag" type="java.lang.Boolean"/>
         </prop>
-        <prop name="goods" displayName="订单" i18n-en:displayName="Goods" tagSet="pub,ref-pub" ext:kind="to-one"
+        <prop name="goods" displayName="商品" i18n-en:displayName="Goods" tagSet="pub,ref-pub" ext:kind="to-one"
               internal="true" queryable="true" ext:joinLeftProp="goodsId" ext:joinRightProp="id"
               ext:joinRightDisplayProp="name" insertable="false" updatable="false" mandatory="true" lazy="true">
             <schema bizObjName="LitemallGoods"/>
         </prop>
-        <prop name="goods.name" displayName="订单" i18n-en:displayName="Goods" internal="true" queryable="true"
+        <prop name="goods.name" displayName="商品" i18n-en:displayName="Goods" internal="true" queryable="true"
               sortable="true" lazy="true">
             <schema type="String"/>
         </prop>

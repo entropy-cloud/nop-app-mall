@@ -2,7 +2,6 @@ entity:
   label:
     LitemallAd: null
     LitemallAddress: null
-    LitemallAdmin: null
     LitemallAftersale: null
     LitemallBrand: null
     LitemallCart: null
@@ -26,9 +25,8 @@ entity:
     LitemallNoticeAdmin: null
     LitemallOrder: null
     LitemallOrderGoods: null
-    LitemallPermission: null
     LitemallRegion: null
-    LitemallRole: null
+    LitemallResetCode: null
     LitemallSearchHistory: null
     LitemallStorage: null
     LitemallSystem: null
@@ -64,17 +62,6 @@ prop:
       addTime: null
       updateTime: null
       deleted: null
-    LitemallAdmin:
-      id: null
-      username: null
-      password: null
-      lastLoginIp: null
-      lastLoginTime: null
-      avatar: null
-      addTime: null
-      updateTime: null
-      deleted: null
-      roleIds: null
     LitemallAftersale:
       id: null
       aftersaleSn: null
@@ -170,6 +157,10 @@ prop:
       name: null
       desc: null
       tag: null
+      endTime: null
+      addTime: null
+      updateTime: null
+      deleted: null
       total: null
       discount: null
       min: null
@@ -186,10 +177,6 @@ prop:
       timeType_label: null
       days: null
       startTime: null
-      endTime: null
-      addTime: null
-      updateTime: null
-      deleted: null
     LitemallCouponUser:
       id: null
       userId: null
@@ -230,7 +217,16 @@ prop:
       goods.name: Goods
     LitemallGoods:
       id: ID
-      goodsSn: Goods SN
+      attributes: Goods Attributes
+      products: Products
+      specifications: Specifications
+      orderGoods: Order Goods
+      galleryComponentFileStatusList: null
+      picUrlComponentFileStatus: null
+      shareUrlComponentFileStatus: null
+      relatedProductList: null
+      relatedProductList_ids: null
+      relatedProductList_label: null
       name: Name
       categoryId: Category
       brandId: Brand
@@ -255,16 +251,7 @@ prop:
       category.name: Category
       brand: Brand
       brand.name: Brand
-      attributes: Goods Attributes
-      products: Products
-      specifications: Specifications
-      orderGoods: Order Goods
-      galleryComponentFileStatusList: null
-      picUrlComponentFileStatus: null
-      shareUrlComponentFileStatus: null
-      relatedProductList: null
-      relatedProductList_ids: null
-      relatedProductList_label: null
+      goodsSn: Goods SN
     LitemallGoodsAttribute:
       id: null
       goodsId: null
@@ -437,13 +424,6 @@ prop:
       goods.name: Order Goods
       product: Order Product
       picUrlComponentFileStatus: null
-    LitemallPermission:
-      id: null
-      roleId: null
-      permission: null
-      addTime: null
-      updateTime: null
-      deleted: null
     LitemallRegion:
       id: null
       pid: null
@@ -453,11 +433,10 @@ prop:
       code: null
       parent: Parent
       children: Children
-    LitemallRole:
+    LitemallResetCode:
       id: null
-      name: null
-      desc: null
-      enabled: null
+      mobile: null
+      code: null
       addTime: null
       updateTime: null
       deleted: null

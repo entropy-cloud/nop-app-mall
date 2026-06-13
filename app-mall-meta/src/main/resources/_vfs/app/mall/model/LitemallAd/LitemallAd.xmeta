@@ -1,2 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<meta x:schema="/nop/schema/xmeta.xdef" xmlns:x="/nop/schema/xdsl.xdef" x:extends="_LitemallAd.xmeta"/>
+<meta x:schema="/nop/schema/xmeta.xdef" xmlns:x="/nop/schema/xdsl.xdef" x:extends="_LitemallAd.xmeta">
+    <props>
+        <prop name="startTime" allowFilterOp="eq,in,dateBetween,dateTimeBetween,ge,le,gt,lt" />
+        <prop name="endTime" allowFilterOp="eq,in,dateBetween,dateTimeBetween,ge,le,gt,lt" />
+    </props>
+</meta>

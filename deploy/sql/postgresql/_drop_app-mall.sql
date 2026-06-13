@@ -18,6 +18,7 @@ drop table  if exists  litemall_search_history;
 drop table  if exists  litemall_storage;
 drop table  if exists  litemall_system;
 drop table  if exists  litemall_topic;
+drop table  if exists  litemall_reset_code;
 drop table  if exists  litemall_aftersale;
 drop table  if exists  litemall_groupon;
 drop table  if exists  litemall_goods;

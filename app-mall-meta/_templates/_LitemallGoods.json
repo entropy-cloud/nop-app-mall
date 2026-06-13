@@ -1,6 +1,15 @@
 {
   "id": "",
-  "goodsSn": "",
+  "attributes": null,
+  "products": null,
+  "specifications": null,
+  "orderGoods": null,
+  "galleryComponentFileStatusList": null,
+  "picUrlComponentFileStatus": null,
+  "shareUrlComponentFileStatus": null,
+  "relatedProductList": null,
+  "relatedProductList_ids": null,
+  "relatedProductList_label": "",
   "name": "",
   "categoryId": "",
   "brandId": "",
@@ -25,14 +34,5 @@
   "category.name": "",
   "brand": null,
   "brand.name": "",
-  "attributes": null,
-  "products": null,
-  "specifications": null,
-  "orderGoods": null,
-  "galleryComponentFileStatusList": null,
-  "picUrlComponentFileStatus": null,
-  "shareUrlComponentFileStatus": null,
-  "relatedProductList": null,
-  "relatedProductList_ids": null,
-  "relatedProductList_label": ""
+  "goodsSn": ""
 }

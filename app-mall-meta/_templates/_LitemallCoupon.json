@@ -3,6 +3,10 @@
   "name": "",
   "desc": "",
   "tag": "",
+  "endTime": "2000-01-01 14:00:00",
+  "addTime": "2000-01-01 14:00:00",
+  "updateTime": "2000-01-01 14:00:00",
+  "deleted": false,
   "total": 0,
   "discount": 0.0,
   "min": 0.0,
@@ -18,9 +22,5 @@
   "timeType": 0,
   "timeType_label": "",
   "days": 0,
-  "startTime": "2000-01-01 14:00:00",
-  "endTime": "2000-01-01 14:00:00",
-  "addTime": "2000-01-01 14:00:00",
-  "updateTime": "2000-01-01 14:00:00",
-  "deleted": false
+  "startTime": "2000-01-01 14:00:00"
 }

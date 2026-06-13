@@ -88,7 +88,6 @@ public class MallLogManager {
         }
 
         log.setType(type);
-        log.setType(type);
         log.setAction(action);
         log.setStatus(succeed);
         log.setResult(result);

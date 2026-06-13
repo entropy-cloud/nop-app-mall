@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<api ext:appName="nop-wf" ext:serviceModuleName="nop-wf-core" ext:servicePackageName="io.nop.wf.core.service"
-     apiPackageName="io.nop.wf.api" ext:apiModuleName="nop-wf-api" ext:mavenGroupId="io.github.entropy-cloud"
-     ext:mavenArtifactId="nop-wf" ext:mavenVersion="2.0.0-SNAPSHOT" ext:platformVersion="2.0.0-SNAPSHOT"
+<api ext:appName="app-mall" ext:serviceModuleName="app-mall-service" ext:servicePackageName="app.mall.service"
+     apiPackageName="app.mall.api" ext:apiModuleName="app-mall-api" ext:mavenGroupId="io.nop.app"
+     ext:mavenArtifactId="app-mall" ext:mavenVersion="1.0-SNAPSHOT" ext:platformVersion="2.0.0-SNAPSHOT"
      x:schema="/nop/schema/api.xdef" xmlns:x="/nop/schema/xdsl.xdef">
 
     <services>
-        <service name="MallService" displayName="工作流服务" i18n-en:displayName="Mall Service">
+        <service name="MallService" displayName="商城服务" i18n-en:displayName="Mall Service">
             <method mutation="true" tagSet="sync" name="findMallProducts" i18n-en:displayName="Find Mall Products"
                     displayName="查找产品" requestMessage="Map"
                     responseMessage="io.nop.api.core.beans.PageBean&lt;app.mall.dao.entity.LitemallGoods&gt;"/>

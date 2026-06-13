@@ -274,7 +274,7 @@ CREATE TABLE litemall_topic(
   SUBTITLE VARCHAR2(255)  ,
   CONTENT CLOB  ,
   PRICE NUMBER(10,2)  ,
-  READ_COUNT VARCHAR2(255)  ,
+  READ_COUNT INTEGER  ,
   PIC_URL VARCHAR2(255)  ,
   SORT_ORDER INTEGER  ,
   GOODS VARCHAR2(1023)  ,
@@ -282,6 +282,16 @@ CREATE TABLE litemall_topic(
   UPDATE_TIME DATE  ,
   DELETED CHAR(1)  ,
   constraint PK_litemall_topic primary key (ID)
+);
+
+CREATE TABLE litemall_reset_code(
+  ID VARCHAR2(50)  ,
+  MOBILE VARCHAR2(50)  ,
+  CODE VARCHAR2(10)  ,
+  ADD_TIME DATE  ,
+  UPDATE_TIME DATE  ,
+  DELETED CHAR(1)  ,
+  constraint PK_litemall_reset_code primary key (ID)
 );
 
 CREATE TABLE litemall_aftersale(
@@ -427,7 +437,7 @@ CREATE TABLE litemall_groupon_rules(
   GOODS_ID INTEGER NOT NULL ,
   GOODS_NAME VARCHAR2(127) NOT NULL ,
   PIC_URL VARCHAR2(255)  ,
-  DISCOUNT NUMBER(63,0) NOT NULL ,
+  DISCOUNT NUMBER(10,2) NOT NULL ,
   DISCOUNT_MEMBER INTEGER NOT NULL ,
   EXPIRE_TIME DATE  ,
   STATUS INTEGER  ,
@@ -911,6 +921,18 @@ CREATE TABLE litemall_order_goods(
       COMMENT ON COLUMN litemall_topic.UPDATE_TIME IS '更新时间';
                     
       COMMENT ON COLUMN litemall_topic.DELETED IS '逻辑删除';
+                    
+      COMMENT ON TABLE litemall_reset_code IS '密码重置验证码';
+                
+      COMMENT ON COLUMN litemall_reset_code.MOBILE IS '手机号';
+                    
+      COMMENT ON COLUMN litemall_reset_code.CODE IS '验证码';
+                    
+      COMMENT ON COLUMN litemall_reset_code.ADD_TIME IS '创建时间';
+                    
+      COMMENT ON COLUMN litemall_reset_code.UPDATE_TIME IS '更新时间';
+                    
+      COMMENT ON COLUMN litemall_reset_code.DELETED IS '逻辑删除';
                     
       COMMENT ON TABLE litemall_aftersale IS '售后表';
                 

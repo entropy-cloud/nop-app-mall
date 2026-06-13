@@ -68,16 +68,16 @@
         }
 
 
-        private String _readCount;
+        private Integer _readCount;
 
     
         @PropMeta(propId=6)
     
-        public String getReadCount(){
+        public Integer getReadCount(){
             return _readCount;
         }
 
-        public void setReadCount(String value){
+        public void setReadCount(Integer value){
             this._readCount = value;
         }
 

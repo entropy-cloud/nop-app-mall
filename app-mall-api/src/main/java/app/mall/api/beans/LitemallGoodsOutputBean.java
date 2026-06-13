@@ -28,17 +28,63 @@
         }
 
 
-        private String _goodsSn;
+        private java.util.List<io.nop.api.core.beans.file.FileStatusBean> _galleryComponentFileStatusList;
 
     
-        @PropMeta(propId=2)
-    
-        public String getGoodsSn(){
-            return _goodsSn;
+        public java.util.List<io.nop.api.core.beans.file.FileStatusBean> getGalleryComponentFileStatusList(){
+            return _galleryComponentFileStatusList;
         }
 
-        public void setGoodsSn(String value){
-            this._goodsSn = value;
+        public void setGalleryComponentFileStatusList(java.util.List<io.nop.api.core.beans.file.FileStatusBean> value){
+            this._galleryComponentFileStatusList = value;
+        }
+
+
+        private io.nop.api.core.beans.file.FileStatusBean _picUrlComponentFileStatus;
+
+    
+        public io.nop.api.core.beans.file.FileStatusBean getPicUrlComponentFileStatus(){
+            return _picUrlComponentFileStatus;
+        }
+
+        public void setPicUrlComponentFileStatus(io.nop.api.core.beans.file.FileStatusBean value){
+            this._picUrlComponentFileStatus = value;
+        }
+
+
+        private io.nop.api.core.beans.file.FileStatusBean _shareUrlComponentFileStatus;
+
+    
+        public io.nop.api.core.beans.file.FileStatusBean getShareUrlComponentFileStatus(){
+            return _shareUrlComponentFileStatus;
+        }
+
+        public void setShareUrlComponentFileStatus(io.nop.api.core.beans.file.FileStatusBean value){
+            this._shareUrlComponentFileStatus = value;
+        }
+
+
+        private java.util.List<java.lang.String> _relatedProductList_ids;
+
+    
+        public java.util.List<java.lang.String> getRelatedProductList_ids(){
+            return _relatedProductList_ids;
+        }
+
+        public void setRelatedProductList_ids(java.util.List<java.lang.String> value){
+            this._relatedProductList_ids = value;
+        }
+
+
+        private String _relatedProductList_label;
+
+    
+        public String getRelatedProductList_label(){
+            return _relatedProductList_label;
+        }
+
+        public void setRelatedProductList_label(String value){
+            this._relatedProductList_label = value;
         }
 
 
@@ -320,85 +366,17 @@
         }
 
 
-        private java.util.List<io.nop.api.core.beans.file.FileStatusBean> _galleryComponentFileStatusList;
+        private String _goodsSn;
 
     
-        public java.util.List<io.nop.api.core.beans.file.FileStatusBean> getGalleryComponentFileStatusList(){
-            return _galleryComponentFileStatusList;
-        }
-
-        public void setGalleryComponentFileStatusList(java.util.List<io.nop.api.core.beans.file.FileStatusBean> value){
-            this._galleryComponentFileStatusList = value;
-        }
-
-
-        private io.nop.api.core.beans.file.FileStatusBean _picUrlComponentFileStatus;
-
+        @PropMeta(propId=2)
     
-        public io.nop.api.core.beans.file.FileStatusBean getPicUrlComponentFileStatus(){
-            return _picUrlComponentFileStatus;
+        public String getGoodsSn(){
+            return _goodsSn;
         }
 
-        public void setPicUrlComponentFileStatus(io.nop.api.core.beans.file.FileStatusBean value){
-            this._picUrlComponentFileStatus = value;
-        }
-
-
-        private io.nop.api.core.beans.file.FileStatusBean _shareUrlComponentFileStatus;
-
-    
-        public io.nop.api.core.beans.file.FileStatusBean getShareUrlComponentFileStatus(){
-            return _shareUrlComponentFileStatus;
-        }
-
-        public void setShareUrlComponentFileStatus(io.nop.api.core.beans.file.FileStatusBean value){
-            this._shareUrlComponentFileStatus = value;
-        }
-
-
-        private java.util.List<java.lang.String> _relatedProductList_ids;
-
-    
-        public java.util.List<java.lang.String> getRelatedProductList_ids(){
-            return _relatedProductList_ids;
-        }
-
-        public void setRelatedProductList_ids(java.util.List<java.lang.String> value){
-            this._relatedProductList_ids = value;
-        }
-
-
-        private String _relatedProductList_label;
-
-    
-        public String getRelatedProductList_label(){
-            return _relatedProductList_label;
-        }
-
-        public void setRelatedProductList_label(String value){
-            this._relatedProductList_label = value;
-        }
-
-
-        private Map<String,Object> _category;
-
-        public Map<String,Object> getCategory(){
-            return _category;
-        }
-
-        public void setCategory(Map<String,Object> value){
-            this._category = value;
-        }
-
-
-        private Map<String,Object> _brand;
-
-        public Map<String,Object> getBrand(){
-            return _brand;
-        }
-
-        public void setBrand(Map<String,Object> value){
-            this._brand = value;
+        public void setGoodsSn(String value){
+            this._goodsSn = value;
         }
 
 
@@ -454,6 +432,28 @@
 
         public void setRelatedProductList(List<Map<String,Object>> value){
             this._relatedProductList = value;
+        }
+
+
+        private Map<String,Object> _category;
+
+        public Map<String,Object> getCategory(){
+            return _category;
+        }
+
+        public void setCategory(Map<String,Object> value){
+            this._category = value;
+        }
+
+
+        private Map<String,Object> _brand;
+
+        public Map<String,Object> getBrand(){
+            return _brand;
+        }
+
+        public void setBrand(Map<String,Object> value){
+            this._brand = value;
         }
 
 

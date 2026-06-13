@@ -40,7 +40,7 @@ public class _LitemallTopic extends DynamicOrmEntity{
     public static final String PROP_NAME_price = "price";
     public static final int PROP_ID_price = 5;
     
-    /* 专题阅读量: READ_COUNT VARCHAR */
+    /* 专题阅读量: READ_COUNT INTEGER */
     public static final String PROP_NAME_readCount = "readCount";
     public static final int PROP_ID_readCount = 6;
     
@@ -138,7 +138,7 @@ public class _LitemallTopic extends DynamicOrmEntity{
     private java.math.BigDecimal _price;
     
     /* 专题阅读量: READ_COUNT */
-    private java.lang.String _readCount;
+    private java.lang.Integer _readCount;
     
     /* 专题图片: PIC_URL */
     private java.lang.String _picUrl;
@@ -330,9 +330,9 @@ public class _LitemallTopic extends DynamicOrmEntity{
             }
         
             case PROP_ID_readCount:{
-               java.lang.String typedValue = null;
+               java.lang.Integer typedValue = null;
                if(value != null){
-                   typedValue = ConvertHelper.toString(value,
+                   typedValue = ConvertHelper.toInteger(value,
                        err-> newTypeConversionError(PROP_NAME_readCount));
                }
                setReadCount(typedValue);
@@ -445,7 +445,7 @@ public class _LitemallTopic extends DynamicOrmEntity{
         
             case PROP_ID_readCount:{
                onInitProp(propId);
-               this._readCount = (java.lang.String)value;
+               this._readCount = (java.lang.Integer)value;
                
                break;
             }
@@ -596,7 +596,7 @@ public class _LitemallTopic extends DynamicOrmEntity{
     /**
      * 专题阅读量: READ_COUNT
      */
-    public final java.lang.String getReadCount(){
+    public final java.lang.Integer getReadCount(){
          onPropGet(PROP_ID_readCount);
          return _readCount;
     }
@@ -604,7 +604,7 @@ public class _LitemallTopic extends DynamicOrmEntity{
     /**
      * 专题阅读量: READ_COUNT
      */
-    public final void setReadCount(java.lang.String value){
+    public final void setReadCount(java.lang.Integer value){
         if(onPropSet(PROP_ID_readCount,value)){
             this._readCount = value;
             internalClearRefs(PROP_ID_readCount);

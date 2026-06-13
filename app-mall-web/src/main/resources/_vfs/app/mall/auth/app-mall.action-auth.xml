@@ -5,10 +5,6 @@
         <resource id="mall-user-manage" displayName="用户管理" icon="ion:grid-outline" resourceType="TOPM"
                   routePath="/mall-user-manage" component="layouts/default/index" orderNo="100">
             <children>
-                <resource id="mall-customer" displayName="会员管理"
-                          icon="ant-design:appstore-twotone" component="AMIS"
-                          resourceType="SUBM" url="/app/mall/pages/LitemallUser/main.page.yaml" orderNo="101"/>
-
                 <resource id="mall-customer-addr" displayName="收货地址" orderNo="102"
                           icon="ant-design:appstore-twotone" component="AMIS"
                           resourceType="SUBM" url="/app/mall/pages/LitemallAddress/main.page.yaml"/>

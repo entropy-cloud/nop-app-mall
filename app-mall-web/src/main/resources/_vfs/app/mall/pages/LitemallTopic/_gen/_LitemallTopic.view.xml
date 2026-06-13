@@ -34,7 +34,7 @@
                 <col id="price" ui:number="true" sortable="true"/>
 
                 <!--专题阅读量-->
-                <col id="readCount" sortable="true"/>
+                <col id="readCount" ui:number="true" sortable="true"/>
 
                 <!--专题图片-->
                 <col id="picUrl" sortable="true"/>

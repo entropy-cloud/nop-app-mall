@@ -37,6 +37,8 @@ alter table litemall_system add NOP_TENANT_ID VARCHAR(32) DEFAULT '0' NOT NULL;
 
 alter table litemall_topic add NOP_TENANT_ID VARCHAR(32) DEFAULT '0' NOT NULL;
 
+alter table litemall_reset_code add NOP_TENANT_ID VARCHAR(32) DEFAULT '0' NOT NULL;
+
 alter table litemall_aftersale add NOP_TENANT_ID VARCHAR(32) DEFAULT '0' NOT NULL;
 
 alter table litemall_groupon add NOP_TENANT_ID VARCHAR(32) DEFAULT '0' NOT NULL;
@@ -115,6 +117,9 @@ alter table litemall_system add constraint PK_litemall_system primary key (NOP_T
 
 alter table litemall_topic drop constraint PK_litemall_topic;
 alter table litemall_topic add constraint PK_litemall_topic primary key (NOP_TENANT_ID, id);
+
+alter table litemall_reset_code drop constraint PK_litemall_reset_code;
+alter table litemall_reset_code add constraint PK_litemall_reset_code primary key (NOP_TENANT_ID, id);
 
 alter table litemall_aftersale drop constraint PK_litemall_aftersale;
 alter table litemall_aftersale add constraint PK_litemall_aftersale primary key (NOP_TENANT_ID, id);

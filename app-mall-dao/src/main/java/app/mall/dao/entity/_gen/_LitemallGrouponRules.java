@@ -68,7 +68,7 @@ public class _LitemallGrouponRules extends DynamicOrmEntity{
     private static int _PROP_ID_BOUND = 12;
 
     
-    /* relation: 订单 */
+    /* relation: 商品 */
     public static final String PROP_NAME_goods = "goods";
     
     /* component:  */
@@ -681,7 +681,7 @@ public class _LitemallGrouponRules extends DynamicOrmEntity{
     }
     
     /**
-     * 订单
+     * 商品
      */
     public final app.mall.dao.entity.LitemallGoods getGoods(){
        return (app.mall.dao.entity.LitemallGoods)internalGetRefEntity(PROP_NAME_goods);
