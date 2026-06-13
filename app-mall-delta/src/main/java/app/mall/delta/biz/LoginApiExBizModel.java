@@ -2,14 +2,15 @@ package app.mall.delta.biz;
 
 import app.mall.biz.ILitemallCouponBiz;
 import app.mall.biz.ILitemallCouponUserBiz;
+import app.mall.biz.ILitemallResetCodeBiz;
 import app.mall.dao.entity.LitemallCoupon;
+import app.mall.dao.entity.LitemallResetCode;
 import io.nop.api.core.annotations.biz.BizMutation;
 import io.nop.api.core.annotations.biz.BizModel;
 import io.nop.api.core.annotations.core.Name;
 import io.nop.api.core.annotations.directive.Auth;
 import io.nop.api.core.beans.FilterBeans;
 import io.nop.api.core.beans.query.QueryBean;
-import io.nop.api.core.context.ContextProvider;
 import io.nop.api.core.exceptions.ErrorCode;
 import io.nop.api.core.exceptions.NopException;
 import io.nop.api.core.time.CoreMetrics;
@@ -24,10 +25,11 @@ import jakarta.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 @BizModel("LoginApi")
 public class LoginApiExBizModel {
@@ -74,18 +76,6 @@ public class LoginApiExBizModel {
             ErrorCode.define("nop.err.mall.user.mobile-not-found",
                     "手机号未注册");
 
-    static final class ResetCodeEntry {
-        final String code;
-        final long createdAt;
-
-        ResetCodeEntry(String code, long createdAt) {
-            this.code = code;
-            this.createdAt = createdAt;
-        }
-    }
-
-    static final ConcurrentHashMap<String, ResetCodeEntry> resetCodeStore = new ConcurrentHashMap<>();
-
     @Inject
     INopAuthUserBiz userBiz;
 
@@ -94,6 +84,9 @@ public class LoginApiExBizModel {
 
     @Inject
     ILitemallCouponUserBiz couponUserBiz;
+
+    @Inject
+    ILitemallResetCodeBiz resetCodeBiz;
 
     @Inject
     @Nullable
@@ -156,13 +149,27 @@ public class LoginApiExBizModel {
             throw new NopException(ERR_USER_MOBILE_NOT_FOUND)
                     .param(ARG_MOBILE, mobile);
 
-        long now = CoreMetrics.currentTimeMillis();
-        ResetCodeEntry existing = resetCodeStore.get(mobile);
-        if (existing != null && (now - existing.createdAt) < CODE_INTERVAL_MS)
-            throw new NopException(ERR_RESET_CODE_SEND_TOO_FREQUENT);
+        QueryBean codeQuery = new QueryBean();
+        codeQuery.addFilter(FilterBeans.eq(LitemallResetCode.PROP_NAME_mobile, mobile));
+        codeQuery.addFilter(FilterBeans.eq(LitemallResetCode.PROP_NAME_deleted, false));
+        codeQuery.addOrderField(LitemallResetCode.PROP_NAME_addTime, true);
+        LitemallResetCode latest = resetCodeBiz.findFirst(codeQuery, null, context);
+        if (latest != null) {
+            long msSinceLast = ChronoUnit.MILLIS.between(latest.getAddTime(), LocalDateTime.now());
+            if (msSinceLast < CODE_INTERVAL_MS)
+                throw new NopException(ERR_RESET_CODE_SEND_TOO_FREQUENT);
+        }
+
+        List<LitemallResetCode> oldCodes = resetCodeBiz.findList(codeQuery, null, context);
+        for (LitemallResetCode old : oldCodes) {
+            resetCodeBiz.delete(old.orm_idString(), context);
+        }
 
         String code = StringHelper.generateUUID().substring(0, 6);
-        resetCodeStore.put(mobile, new ResetCodeEntry(code, now));
+        resetCodeBiz.save(Map.of(
+                LitemallResetCode.PROP_NAME_mobile, mobile,
+                LitemallResetCode.PROP_NAME_code, code
+        ), context);
 
         sendCaptchaSms(mobile, code);
         LOG.info("sendResetCode: mobile={}", mobile);
@@ -181,13 +188,17 @@ public class LoginApiExBizModel {
         if (StringHelper.isEmpty(newPassword))
             throw new NopException(ERR_USER_PASSWORD_EMPTY);
 
-        ResetCodeEntry entry = resetCodeStore.get(mobile);
-        if (entry == null || !entry.code.equals(code))
+        QueryBean codeQuery = new QueryBean();
+        codeQuery.addFilter(FilterBeans.eq(LitemallResetCode.PROP_NAME_mobile, mobile));
+        codeQuery.addFilter(FilterBeans.eq(LitemallResetCode.PROP_NAME_deleted, false));
+        codeQuery.addOrderField(LitemallResetCode.PROP_NAME_addTime, true);
+        LitemallResetCode entry = resetCodeBiz.findFirst(codeQuery, null, context);
+        if (entry == null || !entry.getCode().equals(code))
             throw new NopException(ERR_RESET_CODE_INVALID);
 
-        long now = CoreMetrics.currentTimeMillis();
-        if (now - entry.createdAt > CODE_EXPIRE_MS) {
-            resetCodeStore.remove(mobile);
+        long msElapsed = ChronoUnit.MILLIS.between(entry.getAddTime(), LocalDateTime.now());
+        if (msElapsed > CODE_EXPIRE_MS) {
+            resetCodeBiz.delete(entry.orm_idString(), context);
             throw new NopException(ERR_RESET_CODE_INVALID);
         }
 
@@ -203,7 +214,7 @@ public class LoginApiExBizModel {
                 "password", newPassword
         ), context);
 
-        resetCodeStore.remove(mobile);
+        resetCodeBiz.delete(entry.orm_idString(), context);
         LOG.info("resetPassword: userId={}", user.getUserId());
     }
 
@@ -227,11 +238,9 @@ public class LoginApiExBizModel {
             couponQuery.addFilter(FilterBeans.eq(LitemallCoupon.PROP_NAME_deleted, false));
             List<LitemallCoupon> regCoupons = couponBiz.findList(couponQuery, null, context);
 
-            ContextProvider.getOrCreateContext().setUserId(user.getUserId());
-
             for (LitemallCoupon coupon : regCoupons) {
                 try {
-                    couponUserBiz.claimCoupon(coupon.orm_idString(), context);
+                    couponUserBiz.claimCouponForUser(coupon.orm_idString(), user.getUserId(), context);
                 } catch (Exception e) {
                     LOG.error("Failed to auto-dispatch registration coupon: couponId={}, userId={}",
                             coupon.orm_idString(), user.getUserId(), e);

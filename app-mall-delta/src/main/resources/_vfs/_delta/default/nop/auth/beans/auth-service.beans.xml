@@ -12,9 +12,6 @@
     <bean id="io.nop.auth.service.entity.NopAuthUserBizModel"
           class="app.mall.delta.biz.NopAuthUserExBizModel"/>
 
-    <bean id="nopAuthUserExt2BizModel"
-          class="app.mall.delta.biz.NopAuthUserEx2BizModel"/>
-
     <bean id="loginApiExtBizModel"
           class="app.mall.delta.biz.LoginApiExBizModel"/>
 
