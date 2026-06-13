@@ -12,6 +12,13 @@
                 <col id="status"/>
                 <col id="createTime"/>
                 <col id="updateTime"/>
+                <col id="password" x:override="remove"/>
+                <col id="salt" x:override="remove"/>
+                <col id="openId" x:override="remove"/>
+                <col id="deptId" x:override="remove"/>
+                <col id="workNo" x:override="remove"/>
+                <col id="position" x:override="remove"/>
+                <col id="tenantId" x:override="remove"/>
             </cols>
         </grid>
     </grids>
@@ -28,13 +35,20 @@
 
         <form id="view">
             <layout>
-                ===========>baseInfo[基本信息]======
+                ============>baseInfo[基本信息]======
                 userName[用户名] nickName[昵称]
                 phone[电话] gender[性别]
                 userType[用户类型] status[用户状态]
                 email[邮件] birthday[生日]
                 createTime[创建时间] updateTime[修改时间]
                 remark[备注]
+            </layout>
+        </form>
+
+        <form id="query" layoutMode="horizontal">
+            <layout>
+                userName nickName
+                phone status
             </layout>
         </form>
     </forms>

@@ -2,17 +2,29 @@
 <view x:extends="_gen/_LitemallBrand.view.xml" x:schema="/nop/schema/xui/xview.xdef" xmlns:x="/nop/schema/xdsl.xdef">
 
     <grids>
-        <grid id="list"/>
+        <grid id="list">
+            <cols x:override="bounded-merge">
+                <col id="name"/>
+                <col id="picUrl" type="image"/>
+                <col id="desc"/>
+                <col id="floorPrice"/>
+            </cols>
+        </grid>
         <grid id="pick-list"/>
     </grids>
 
     <forms>
         <form id="view"/>
-        <form id="edit"/>
-        <form id="add"/>
-        <form id="query">
+        <form id="edit">
             <layout>
-                id name
+                name[品牌名] picUrl[品牌图片]
+                desc[品牌简介] floorPrice[底价]
+            </layout>
+        </form>
+        <form id="add" x:prototype="edit"/>
+        <form id="query" layoutMode="horizontal">
+            <layout>
+                name
             </layout>
         </form>
     </forms>

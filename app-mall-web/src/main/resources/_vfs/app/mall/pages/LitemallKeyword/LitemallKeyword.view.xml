@@ -2,14 +2,33 @@
 <view x:extends="_gen/_LitemallKeyword.view.xml" x:schema="/nop/schema/xui/xview.xdef" xmlns:x="/nop/schema/xdsl.xdef">
 
     <grids>
-        <grid id="list"/>
+        <grid id="list">
+            <cols x:override="bounded-merge">
+                <col id="keyword"/>
+                <col id="url"/>
+                <col id="isHot"/>
+                <col id="isDefault"/>
+                <col id="sortOrder"/>
+            </cols>
+        </grid>
         <grid id="pick-list"/>
     </grids>
 
     <forms>
         <form id="view"/>
-        <form id="edit"/>
+        <form id="edit">
+            <layout>
+                keyword[关键字] url[跳转链接]
+                isHot[是否热门] isDefault[是否默认]
+                sortOrder[排序]
+            </layout>
+        </form>
         <form id="add"/>
+        <form id="query" layoutMode="horizontal">
+            <layout>
+                keyword isDefault
+            </layout>
+        </form>
     </forms>
 
     <pages>

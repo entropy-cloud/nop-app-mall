@@ -10,7 +10,6 @@
     <forms>
         <form id="view"/>
         <form id="edit"/>
-        <form id="add"/>
     </forms>
 
     <pages>

@@ -2,18 +2,60 @@
 <view x:extends="_gen/_LitemallOrder.view.xml" x:schema="/nop/schema/xui/xview.xdef" xmlns:x="/nop/schema/xdsl.xdef">
 
     <grids>
-        <grid id="list"/>
+        <grid id="list">
+            <cols x:override="bounded-merge">
+                <col id="orderSn"/>
+                <col id="userId"/>
+                <col id="orderStatus"/>
+                <col id="consignee"/>
+                <col id="mobile"/>
+                <col id="goodsPrice"/>
+                <col id="freightPrice"/>
+                <col id="couponPrice"/>
+                <col id="orderPrice"/>
+                <col id="actualPrice"/>
+                <col id="payTime"/>
+                <col id="shipTime"/>
+            </cols>
+        </grid>
         <grid id="pick-list"/>
     </grids>
 
     <forms>
-        <form id="view"/>
+        <form id="view">
+            <layout>
+                ============>orderInfo[订单信息]======
+                orderSn[订单编号] orderStatus[订单状态]
+                userId[用户ID]
+                consignee[收货人] mobile[手机号]
+                address[收货地址] message[留言]
+                ============>priceInfo[价格信息]======
+                goodsPrice[商品总价] freightPrice[运费]
+                couponPrice[优惠券减免] orderPrice[订单金额]
+                actualPrice[实付金额]
+                ============>shipInfo[物流信息]======
+                shipSn[快递单号] shipChannel[快递公司]
+                shipTime[发货时间] payTime[付款时间]
+                confirmTime[收货时间]
+            </layout>
+        </form>
         <form id="edit"/>
         <form id="add"/>
+        <form id="query" layoutMode="horizontal">
+            <layout>
+                orderSn orderStatus
+            </layout>
+        </form>
     </forms>
 
     <pages>
-        <crud name="main"/>
+        <crud name="main">
+            <rowActions x:prototype-override="bounded-merge">
+                <action id="row-view-button" level="primary" label="查看">
+                    <dialog page="view"/>
+                </action>
+            </rowActions>
+        </crud>
         <picker name="picker"/>
     </pages>
 </view>

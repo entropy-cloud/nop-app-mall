@@ -3,18 +3,46 @@
       xmlns:x="/nop/schema/xdsl.xdef">
 
     <grids>
-        <grid id="list"/>
+        <grid id="list">
+            <cols x:override="bounded-merge">
+                <col id="userId"/>
+                <col id="couponId"/>
+                <col id="status"/>
+                <col id="usedTime"/>
+                <col id="orderId"/>
+                <col id="startTime"/>
+                <col id="endTime"/>
+            </cols>
+        </grid>
         <grid id="pick-list"/>
     </grids>
 
     <forms>
-        <form id="view"/>
+        <form id="view">
+            <layout>
+                userId[用户ID] couponId[优惠券ID]
+                status[使用状态]
+                usedTime[使用时间] orderId[订单ID]
+                startTime[开始时间] endTime[截至时间]
+            </layout>
+        </form>
         <form id="edit"/>
         <form id="add"/>
+        <form id="query" layoutMode="horizontal">
+            <layout>
+                userId status
+            </layout>
+        </form>
     </forms>
 
     <pages>
-        <crud name="main"/>
+        <crud name="main">
+            <rowActions x:prototype-override="bounded-merge">
+                <action id="row-view-button" level="primary" label="查看">
+                    <dialog page="view"/>
+                </action>
+            </rowActions>
+        </crud>
         <picker name="picker"/>
     </pages>
 </view>
