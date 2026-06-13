@@ -164,22 +164,22 @@ Skill: `none`
 - Item Types: `Fix | Proof`
 - Prereqs: Plan audit passed
 
-- [ ] 逐个将 In-Scope Files 的正文翻译为中文，保留英文文件名与允许保留的英文项。
+- [x] 逐个将 In-Scope Files 的正文翻译为中文，保留英文文件名与允许保留的英文项。
   - Skill: `none`
-- [ ] 逐文件复核，确认翻译不改变 owner-doc 语义、跨文档边界或业务 baseline。
+- [x] 逐文件复核，确认翻译不改变 owner-doc 语义、跨文档边界或业务 baseline。
   - Skill: `none`
-- [ ] 按 Verification Procedure 执行并记录聚焦检查，确认 In-Scope Files 文件名未变、链接目标未变、仅保留允许项中的英文内容，且本地补充文档仍引用上游 `docs-for-ai`。
+- [x] 按 Verification Procedure 执行并记录聚焦检查，确认 In-Scope Files 文件名未变、链接目标未变、仅保留允许项中的英文内容，且本地补充文档仍引用上游 `docs-for-ai`。
   - Skill: `none`
-- [ ] 追加 `docs/logs/2026/06-02.md`，记录本次中文化变更与验证结论。
+- [x] 追加 `docs/logs/2026/06-02.md`，记录本次中文化变更与验证结论。
   - Skill: `none`
 
 Exit Criteria:
 
-- [ ] In-Scope Files 正文内容已统一为中文，且仅保留 Language Preservation Rules 允许的英文内容。
-- [ ] In-Scope Files 文件名保持英文且未重命名。
-- [ ] 相对链接目标、URL、代码字面量和上游 `docs-for-ai` 引用保持可用。
-- [ ] 现有链接、owner-doc 边界和业务语义未被意外改变。
-- [ ] `docs/logs/2026/06-02.md` updated.
+- [x] In-Scope Files 正文内容已统一为中文，且仅保留 Language Preservation Rules 允许的英文内容。
+- [x] In-Scope Files 文件名保持英文且未重命名。
+- [x] 相对链接目标、URL、代码字面量和上游 `docs-for-ai` 引用保持可用。
+- [x] 现有链接、owner-doc 边界和业务语义未被意外改变。
+- [x] `docs/logs/2026/06-02.md` updated.
 
 ## Plan Audit
 
@@ -189,14 +189,14 @@ Exit Criteria:
 
 ## Closure Gates
 
-- [ ] in-scope behavior is complete
-- [ ] relevant docs are aligned
-- [ ] verification has run (per Verification Procedure for file inventory, Chinese content, allowed English terms, and link preservation)
-- [ ] no in-scope item downgraded to deferred/follow-up
-- [ ] plan audit passed before implementation
-- [ ] text consistency verified: status, phases, gates, and log all agree
-- [ ] closure audit was independent
-- [ ] closure evidence exists in files
+- [x] in-scope behavior is complete
+- [x] relevant docs are aligned
+- [x] verification has run (per Verification Procedure for file inventory, Chinese content, allowed English terms, and link preservation)
+- [x] no in-scope item downgraded to deferred/follow-up
+- [x] plan audit passed before implementation
+- [x] text consistency verified: status, phases, gates, and log all agree
+- [x] closure audit was independent
+- [x] closure evidence exists in files
 
 ## Deferred But Adjudicated
 
