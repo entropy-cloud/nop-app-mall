@@ -67,9 +67,11 @@ Record the current supported implementation baseline for `nop-app-mall`.
 ## Reporting And Notification Route
 
 - Reporting should prefer the platform `nop-report` module as the default implementation route when the business requirement is already settled and the app needs managed datasets, templates, or exportable report outputs.
+- **Deviation recorded (2026-06-13, Plan Phase 2B):** For the current requirement (admin statistics dashboard with simple aggregation queries + chart display), BizModel statistics methods + AMIS chart components were chosen over `nop-report`. Rationale: lighter weight, faster development, no heavy dependency needed for simple aggregation. Trigger for revisiting: when operations need complex reports with multi-level grouping, cross-tables, or Excel export, introduce `nop-report` at that time.
 - Notification delivery should prefer platform integration capabilities instead of ad hoc channel code. In practice, `nop-integration` is the default route for email, SMS, and similar outbound channels.
+- **Deviation recorded (2026-06-13, Plan Phase 1B):** `MallNotificationService` uses `ISmsSender` for SMS delivery but does not persist notification records (no `NopSysNotice` integration). Rationale: the current notification requirement is fire-and-forget SMS delivery; notification history can be added later when the business requires it. The `NopSysNotice` integration remains the recommended path when audit trail is needed.
 - App-layer design should stay at the business level: who receives which notification, from which business event, and what report view is required. Channel adapters, report-engine configuration, dataset wiring, retry strategy, and delivery integration details belong to architecture and implementation.
-- Current live evidence already shows SMS integration usage in `app-mall-service/src/main/java/app/mall/service/entity/LitemallAftersaleBizModel.java` via `io.nop.integration.api.sms.ISmsSender`. Additional channels such as email should follow the same integration-first pattern instead of introducing parallel bespoke notification infrastructure.
+- Current live evidence already shows SMS integration usage via `MallNotificationService` wrapping `io.nop.integration.api.sms.ISmsSender`. Additional channels such as email should follow the same integration-first pattern instead of introducing parallel bespoke notification infrastructure.
 
 ## Stable Rules
 

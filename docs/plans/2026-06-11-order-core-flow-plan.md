@@ -1,6 +1,6 @@
 # 2026-06-11 订单核心流程开发计划（购物车 + 订单 + 支付 + 售后）
 
-> Plan Status: in-progress
+> Plan Status: completed
 > Last Reviewed: 2026-06-11
 > Source: `docs/design/order-and-cart.md`, `docs/backlog/implementation-roadmap.md` Phase 4, 5, 5b, 5c
 > Related: Phase 1/2/3 (基础设施，非本计划范围)

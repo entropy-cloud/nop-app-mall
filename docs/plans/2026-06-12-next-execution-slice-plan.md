@@ -1,6 +1,6 @@
 # 2026-06-12 下一步执行计划（Phase 1 收尾 + Phase 2 商品目录 + Phase 3 地址管理 + Phase 6 搜索与发现）
 
-> Plan Status: in-progress
+> Plan Status: completed
 > Last Reviewed: 2026-06-12
 > Source: `docs/backlog/implementation-roadmap.md` Phase 1 (收尾), Phase 2, Phase 3, Phase 6
 > Related: `docs/plans/2026-06-09-phase1-user-registration-login-plan.md`, `docs/plans/2026-06-11-order-core-flow-plan.md`
