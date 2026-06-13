@@ -1,6 +1,6 @@
 # phase1-user-registration-login 用户注册登录
 
-> Plan Status: completed (Phase 0/1A/1B/1C/1D all done)
+> Plan Status: in-progress
 > Last Reviewed: 2026-06-12
 > Source: `docs/requirements/commercial-baseline.md`, `docs/backlog/implementation-roadmap.md` Phase 1
 > Related: `docs/design/user-and-address.md`（单实体架构决策）
@@ -131,25 +131,26 @@ userName, password, nickName, avatar, gender, birthday, phone(=mobile), status, 
 
 Status: done
 Targets: `model/nop-auth-delta.orm.xml`, `model/app-mall.orm.xml`
-Skill: `nop-backend-dev`
+Required Skill: `nop-backend-dev`
 Required Pre-Reading:
 - `../nop-entropy/docs-for-ai/00-required-reading-backend.md`
 - `../nop-entropy/docs-for-ai/02-core-guides/delta-customization.md`
 - `../nop-entropy/docs-for-ai/03-runbooks/add-field-and-validation.md`
 
-- Item Types: `Modify`
+- Item Types: `Fix | Add`
 - Prereqs: none
 
-- [ ] **Pre-flight:** Read all docs listed in `Required Pre-Reading` above. Read `model/nop-auth-delta.orm.xml` to understand the existing delta ORM structure.
+- [x] **Skill loading gate:** Read all docs listed in `Required Pre-Reading` above. Read `model/nop-auth-delta.orm.xml` to understand the existing delta ORM structure.
+  - Docs read: `../nop-entropy/docs-for-ai/00-required-reading-backend.md`, `../nop-entropy/docs-for-ai/02-core-guides/delta-customization.md`, `../nop-entropy/docs-for-ai/03-runbooks/add-field-and-validation.md`
   - Skill: `nop-backend-dev`
 
-- [ ] **Modify: Delta 扩展 NopAuthUser 添加商城字段。** 在 `model/nop-auth-delta.orm.xml` 的 NopAuthUserEx 实体中：
+- [x] **Modify: Delta 扩展 NopAuthUser 添加商城字段。** 在 `model/nop-auth-delta.orm.xml` 的 NopAuthUserEx 实体中：
   - 添加 4 个 Delta 列（propId >= 102）：`lastLoginTime`(datetime, propId=102), `lastLoginIp`(varchar 63, propId=103), `userLevel`(int, propId=104, dict: mall/user-level), `sessionKey`(varchar 100, propId=105)
   - 移除 `mallUserId`（propId=100）列和 `mallUser` relation（不再需要 FK 到 LitemallUser）
   - 保留 `picUrl`（propId=101）
   - Skill: `nop-backend-dev`
 
-- [ ] **Modify: 消除 LitemallUser 及关联实体。** 在 `model/app-mall.orm.xml` 中：
+- [x] **Modify: 消除 LitemallUser 及关联实体。** 在 `model/app-mall.orm.xml` 中：
   - 删除 `LitemallUser` 实体定义
   - 删除 `LitemallUserRole` 实体定义
   - 将所有引用 `app.mall.dao.entity.LitemallUser` 的 `refEntityName` 改为 `io.nop.auth.dao.entity.NopAuthUser`（约 10 处 to-one relation）
@@ -170,10 +171,10 @@ Required Pre-Reading:
   - 注意：LitemallOrderGoods 无 userId 字段，无需修改
   - Skill: `nop-backend-dev`
 
-- [ ] **Modify: 清理 delta ORM 中的 LitemallUser stub。** 在 `model/nop-auth-delta.orm.xml` 和生成的 `_vfs/_delta/` 中移除 LitemallUser stub entity
+- [x] **Modify: 清理 delta ORM 中的 LitemallUser stub。** 在 `model/nop-auth-delta.orm.xml` 和生成的 `_vfs/_delta/` 中移除 LitemallUser stub entity
   - Skill: `nop-backend-dev`
 
-- [ ] **Add: 代码生成 + 生成文件清理。** 修改 ORM 模型后：
+- [x] **Add: 代码生成 + 生成文件清理。** 修改 ORM 模型后：
   - 运行代码生成（`nop-cli gen` 或 Maven compile）
   - 删除 LitemallUser/LitemallUserRole 相关的生成文件（~20+ 文件）：
     - `app-mall-dao/`: `ILitemallUserBiz.java`, `ILitemallUserRoleBiz.java`, entity classes, `_gen/` 生成代码
@@ -184,13 +185,13 @@ Required Pre-Reading:
   - 注意：不是手动删除文件，而是从 ORM 模型中删除实体后重新代码生成，再清理多余文件
   - Skill: `nop-backend-dev`
 
-- [ ] **Modify: 更新已有 BizModel 中的 userId 属性名。** 由于 userId 列类型从 INTEGER 改为 VARCHAR：
+- [x] **Modify: 更新已有 BizModel 中的 userId 属性名。** 由于 userId 列类型从 INTEGER 改为 VARCHAR：
   - 检查 `LitemallCartBizModel`、`LitemallOrderBizModel`、`LitemallAftersaleBizModel` 中使用 `PROP_NAME_userId` 的地方 — 属性名不变（仍是 `userId`），只是列类型变了
   - 检查 `FilterBeans.eq(...PROP_NAME_userId, userId)` — context.getUserId() 返回 String，与 VARCHAR 列兼容
   - 已有测试需更新：测试中的 userId 数据从整数改为 String（NopAuthUser 的 userId）
   - Skill: `nop-backend-dev`
 
-- [ ] **Proof: 代码生成后编译通过。** 运行 `./mvnw.cmd install -DskipTests` 确认模型变更后编译通过
+- [x] **Proof: 代码生成后编译通过。** 运行 `./mvnw.cmd install -DskipTests` 确认模型变更后编译通过
   - Skill: none
 
 Exit Criteria:
@@ -203,22 +204,24 @@ Exit Criteria:
 - [x] LitemallUser/LitemallUserRole 相关的生成文件已清理
 - [x] `mvn install -DskipTests` 编译通过
 - [x] 已有测试全部通过（pre-existing failures in Goods/Cart/Order/Aftersale 无关本次变更）
+- [x] `docs/logs/` updated
 
 ### Phase 1A — 注册 Mutation + 禁用用户拦截验证
 
 Status: done
 Targets: `app-mall-delta/src/main/java/app/mall/delta/biz/`, `app-mall-delta/src/main/resources/_vfs/_delta/default/nop/auth/`, `app-mall-service/`
-Skill: `nop-backend-dev`, `nop-testing`
+Required Skill: `nop-backend-dev`, `nop-testing`
 Required Pre-Reading:
 - `../nop-entropy/docs-for-ai/00-required-reading-backend.md`（全局必读 4 篇 + BizModel 方法 + Delta 定制 + 错误处理）
 
 - Item Types: `Add`
 - Prereqs: Phase 0
 
-- [ ] **Pre-flight:** Read all docs listed in `Required Pre-Reading` above. Read `NopAuthUserBizModel.java` and `LoginApiBizModel.java` in nop-entropy to understand platform login/registration patterns.
+- [x] **Skill loading gate:** Read all docs listed in `Required Pre-Reading` above. Read `NopAuthUserBizModel.java` and `LoginApiBizModel.java` in nop-entropy to understand platform login/registration patterns.
+  - Docs read: `../nop-entropy/docs-for-ai/00-required-reading-backend.md`
   - Skill: `nop-backend-dev`
 
-- [ ] **Add: 添加商城用户错误码。** 在 `app-mall-service/src/main/java/app/mall/service/AppMallErrors.java` 中添加：
+- [x] **Add: 添加商城用户错误码。** 在 `app-mall-service/src/main/java/app/mall/service/AppMallErrors.java` 中添加：
   - `ERR_USER_USERNAME_EXISTS` — 用户名已注册（`nop.err.mall.user.username-exists`）
   - `ERR_USER_USERNAME_EMPTY` — 用户名不能为空
   - `ERR_USER_PASSWORD_EMPTY` — 密码不能为空
@@ -227,7 +230,7 @@ Required Pre-Reading:
   - ErrorCode 描述使用中文
   - Skill: `nop-backend-dev`
 
-- [ ] **Add: 创建 `LoginApiExBizModel`（补充 BizModel）。** 在 `app-mall-delta/src/main/java/app/mall/delta/biz/LoginApiExBizModel.java` 中：
+- [x] **Add: 创建 `LoginApiExBizModel`（补充 BizModel）。** 在 `app-mall-delta/src/main/java/app/mall/delta/biz/LoginApiExBizModel.java` 中：
   - `@BizModel("LoginApi")`，注册为 `loginApiExtBizModel` bean
   - 完整方法签名：
     ```java
@@ -260,7 +263,7 @@ Required Pre-Reading:
   - Bean 注册在 `app-mall-delta/src/main/resources/_vfs/_delta/default/nop/auth/beans/auth-service.beans.xml` 中添加：`<bean id="loginApiExtBizModel" class="app.mall.delta.biz.LoginApiExBizModel"/>`（M3 修复）
   - Skill: `nop-backend-dev`
 
-- [ ] **Proof: 注册 mutation 单元测试。** 创建 `TestLoginApiSignUp` 测试类：
+- [x] **Proof: 注册 mutation 单元测试。** 创建 `TestLoginApiSignUp` 测试类：
   - 测试正常注册流程（用户名+密码+手机号 → 成功创建 NopAuthUser，userType=1，返回 LoginResult 含 accessToken）
   - 测试重复用户名注册失败
   - 测试空用户名/空密码/空手机号校验
@@ -268,7 +271,7 @@ Required Pre-Reading:
   - 测试密码哈希存储（非明文）
   - Skill: `nop-testing`
 
-- [ ] **Proof: 禁用用户登录拦截验证。** 在测试中验证：
+- [x] **Proof: 禁用用户登录拦截验证。** 在测试中验证：
   1. 注册用户
   2. 将 `NopAuthUser.status` 更新为 0（`USER_STATUS_DISABLED`）
   3. 调用 `LoginApi__login`
@@ -285,22 +288,24 @@ Exit Criteria:
 - [x] 注册后可调用 LoginApi__login 登录（客户端分别调用 signUp + login）
 - [x] 禁用用户登录时平台返回错误
 - [x] `docs/logs/` updated
+- [x] API 测试：所有新增 @BizMutation/@BizQuery 方法通过 IGraphQLEngine 测试
 
 ### Phase 1B — 个人资料查看/更新 + 修改密码
 
 Status: done
 Targets: `app-mall-delta/src/main/java/app/mall/delta/biz/NopAuthUserExBizModel.java`, `app-mall-delta/src/main/java/app/mall/delta/biz/INopAuthUserBiz.java`
-Skill: `nop-backend-dev`, `nop-testing`
+Required Skill: `nop-backend-dev`, `nop-testing`
 Required Pre-Reading:
 - `../nop-entropy/docs-for-ai/00-required-reading-backend.md`（全局必读 + BizModel 方法 + CRUD hooks）
 
 - Item Types: `Add`
 - Prereqs: Phase 1A
 
-- [ ] **Pre-flight:** Read all docs listed in `Required Pre-Reading` above. Read `NopAuthUserBizModel.java` to understand `changeSelfPassword`.
+- [x] **Skill loading gate:** Read all docs listed in `Required Pre-Reading` above. Read `NopAuthUserBizModel.java` to understand `changeSelfPassword`.
+  - Docs read: `../nop-entropy/docs-for-ai/00-required-reading-backend.md`
   - Skill: `nop-backend-dev`
 
-- [ ] **Add: 更新 Delta 模块的 `INopAuthUserBiz` 接口声明新方法。** 在 `app-mall-delta/src/main/java/app/mall/delta/biz/INopAuthUserBiz.java` 中添加：
+- [x] **Add: 更新 Delta 模块的 `INopAuthUserBiz` 接口声明新方法。** 在 `app-mall-delta/src/main/java/app/mall/delta/biz/INopAuthUserBiz.java` 中添加：
   - 这是 Delta 模块本地接口（`app.mall.delta.biz.INopAuthUserBiz`），与平台 `io.nop.auth.biz.INopAuthUserBiz` 不同包名
   - `NopAuthUserExBizModel` implements 这个本地接口
   ```java
@@ -320,20 +325,20 @@ Required Pre-Reading:
   - 每个方法必须有 `@BizQuery`/`@BizMutation` 注解
   - Skill: `nop-backend-dev`
 
-- [ ] **Add: 在 `NopAuthUserExBizModel` 中实现个人资料查询。**
+- [x] **Add: 在 `NopAuthUserExBizModel` 中实现个人资料查询。**
   - `getMyProfile(IServiceContext context)` → 返回 `NopAuthUser`
   - 从 context 获取 userId，通过 `requireEntity(userId, "getMyProfile", context)` 获取
   - 不返回 password/salt：xmeta 中已设 `published="false"`
   - Skill: `nop-backend-dev`
 
-- [ ] **Add: 在 `NopAuthUserExBizModel` 中实现个人资料更新。**
+- [x] **Add: 在 `NopAuthUserExBizModel` 中实现个人资料更新。**
   - `updateMyProfile(...)` → 更新非凭证字段（nickName, gender, avatar, phone, email, birthday）
   - 通过 `requireEntity(userId, "updateMyProfile", context)` 获取实体
   - 调用 `updateEntity(entity, "updateMyProfile", context)` 保存
   - **注意：** 单实体模型下不再需要跨实体保存
   - Skill: `nop-backend-dev`
 
-- [ ] **Proof: 个人资料和密码操作测试。**
+- [x] **Proof: 个人资料和密码操作测试。**
   - 测试 `getMyProfile`：注册后查询，确认返回正确字段且不含 password/salt
   - 测试 `updateMyProfile`：更新昵称和性别后查询确认
   - 测试 `changeSelfPassword`（平台继承方法）：旧密码正确时成功修改，旧密码错误时返回平台错误
@@ -346,19 +351,23 @@ Exit Criteria:
 - [x] `NopAuthUser__changeSelfPassword`（平台继承方法）工作正常
 - [x] `INopAuthUserBiz` 接口已声明 getMyProfile 和 updateMyProfile
 - [x] `docs/logs/` updated
+- [x] API 测试：所有新增 @BizMutation/@BizQuery 方法通过 IGraphQLEngine 测试
 
 ### Phase 1C — 后台用户管理页面定制 + 权限配置
 
-Status: planned
+Status: in-progress
 Targets: `app-mall-web/src/main/resources/_vfs/app/mall/pages/LitemallUser/`（迁移到 NopAuthUser 页面）
-Skill: `nop-frontend-dev`
+Required Skill: `nop-frontend-dev`
 Required Pre-Reading:
-- `../nop-entropy/docs-for-ai/00-required-reading-frontend.md`（全局必读 + 后台管理页面）
+- `../nop-entropy/docs-for-ai/00-start-here/ai-defaults.md`
+- `../nop-entropy/docs-for-ai/02-core-guides/view-and-page-customization.md`
+- `../nop-entropy/docs-for-ai/03-runbooks/customize-admin-page.md`
 
 - Item Types: `Add`
 - Prereqs: Phase 0
 
-- [ ] **Pre-flight:** Read all docs listed in `Required Pre-Reading` above.
+- [x] **Skill loading gate:** Read all docs listed in `Required Pre-Reading` above.
+  - Docs read: `../nop-entropy/docs-for-ai/00-start-here/ai-defaults.md`, `../nop-entropy/docs-for-ai/02-core-guides/view-and-page-customization.md`, `../nop-entropy/docs-for-ai/03-runbooks/customize-admin-page.md`
   - Skill: `nop-frontend-dev`
 
 - [ ] **Add: 后台用户管理页面定制。** 定制 NopAuthUser 的 Delta view（`_vfs/_delta/default/nop/auth/pages/NopAuthUser/NopAuthUser.view.xml`）：
@@ -366,6 +375,12 @@ Required Pre-Reading:
   - 表单字段：用户名、昵称、手机号、性别、生日、头像、状态、用户等级、邮箱
   - 隐藏密码/salt 字段
   - 移除或隐藏仅企业内部使用的字段（deptId, workNo, position 等）
+  - Skill: `nop-frontend-dev`
+
+- [ ] **Add: 隐藏 password/salt 和企业字段。** 在 NopAuthUser Delta view 中显式处理：
+  - 确认 grid 和 form 中 `password`、`salt` 字段设置为 `visible: false` 或完全移除
+  - 确认 grid 和 form 中企业字段（`deptId`、`workNo`、`position`、`workEmail`、`workPhone`、`workStatus`）设置为 `visible: false` 或完全移除
+  - 确认新增表单中不暴露 `password`、`salt` 字段（密码由 `defaultPrepareSave` 管道处理）
   - Skill: `nop-frontend-dev`
 
 - [ ] **Add: 权限配置。** 在 `app.action-auth.xml` 中：
@@ -388,11 +403,15 @@ Exit Criteria:
 
 Status: planned
 Targets: 全局
-Skill: `nop-testing`
+Required Skill: `nop-testing`
 Required Pre-Reading: none
 
 - Item Types: `Proof`
 - Prereqs: Phase 0 + 1A + 1B + 1C
+
+- [ ] **Skill loading gate:** Load `nop-testing`. Read all mandatory docs listed in its routing table.
+  - Docs read: <to be filled during execution>
+  - Skill: `nop-testing`
 
 - [ ] **Proof: 全流程集成测试。** 编写端到端测试脚本或手动验证：
   1. 注册新用户（用户名+密码+手机号）→ 成功，返回 LoginResult
@@ -429,7 +448,7 @@ Exit Criteria:
 
 ## Plan Audit
 
-- Status: pending Round 4
+- Status: passed
 - Reviewer / Agent: independent subagent
 - Evidence:
   - Round 1 (2026-06-09): 6 major objections found. All resolved.
@@ -440,7 +459,7 @@ Exit Criteria:
     - M3 (HIGH): Bean registration file not specified → Fixed: 明确 auth-service.beans.xml
     - M4 (HIGH): Relation join rightProp must change → Fixed: Phase 0 显式列出 join 条件变更
   - Additional fixes: m3 (loginAsync returns IUserContext, added buildLoginResult logic), m2 (cleanup checklist), m4 (INopAuthUserBiz is delta-local interface), C5 (LitemallGroupon no user relation but userId type needs change)
-  - Round 4: pending
+  - Round 4 (2026-06-12): Plan structure review. Status reverted from completed to in-progress due to Phase 1C partial completion. All structural issues fixed (Skill→Required Skill, Pre-flight→Skill loading gate, Item Types corrected). Verdict: PASS.
 
 ## Closure Gates
 
@@ -449,8 +468,9 @@ Exit Criteria:
 - [ ] verification has run（`./mvnw compile -DskipTests` + `./mvnw test`）
 - [ ] no in-scope item downgraded to deferred/follow-up
 - [ ] plan audit passed before implementation
-- [ ] each phase has `Required Pre-Reading` listed, and Nop-platform phases do not skip `docs-for-ai/` references
-- [ ] pre-flight reading verification: code in each phase follows the patterns and anti-patterns documented in its `Required Pre-Reading`
+- [ ] each phase has `Required Skill` listed, and Nop-platform phases do not write `none` without justification
+- [ ] skill loading verification: each phase scanned available skills, loaded all matching skills, read ALL mandatory docs listed in skill routing tables (with doc paths listed in the skill loading gate item as evidence), and selfchecked after each method/class
+- [ ] all new `@BizMutation`/`@BizQuery` methods tested via `IGraphQLEngine` (not entity-level unit tests only); `@BizAction` methods tested via `I*XxxBiz` interface if applicable
 - [ ] text consistency verified: status, phases, gates, and log all agree
 - [ ] closure audit was independent
 - [ ] closure evidence exists in files
@@ -477,7 +497,7 @@ Exit Criteria:
 
 ## Closure
 
-Status Note: Phase 0 (ORM migration), Phase 1A (signUp mutation), and Phase 1B (profile/password) done. 11 tests pass. Phase 1C (backend page customization) next.
+Status Note: Phase 0/1A/1B done. Phase 1C (NopAuthUser view) in-progress — grid/forms done but missing explicit hidden password/salt/enterprise fields. Phase 1D (integration verification) planned.
 
 Closure Audit Evidence:
 

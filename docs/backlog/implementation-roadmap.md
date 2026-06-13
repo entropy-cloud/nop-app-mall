@@ -1,6 +1,6 @@
 # Implementation Roadmap
 
-> Last Updated: 2026-06-12
+> Last Updated: 2026-06-13
 > Source: `docs/requirements/commercial-baseline.md`, `docs/design/*.md`
 
 ## Purpose
@@ -25,9 +25,9 @@
 - 6. 搜索与发现: `done`
 - 7. 互动（收藏/足迹/评论）: `done`
 - 8. 优惠券体系: `done`
-- 9. 团购: `todo`
+- 9. 团购: `done`
 - 10. 内容营销与反馈: `done`
-- 11. 系统运营与定时任务: `todo`
+- 11. 系统运营与定时任务: `done`
 - 12. 通知系统: `todo`
 - 13. 报表与统计: `todo`
 - 14. 微信支付集成: `todo`

@@ -1,7 +1,7 @@
 # 2026-06-12 扩展能力开发计划（Phase 7 互动 + Phase 8 优惠券 + Phase 10 内容营销）
 
 > Plan Status: completed
-> Last Reviewed: 2026-06-12
+> Last Reviewed: 2026-06-13
 > Source: `docs/backlog/implementation-roadmap.md` Phase 7, Phase 8, Phase 10
 > Related: `docs/plans/2026-06-12-next-execution-slice-plan.md` (completed, Phase 1/2/3/6)
 > Audit: required
@@ -110,11 +110,11 @@ Required Pre-Reading:
 
 Exit Criteria:
 
-- [ ] 收藏/取消收藏/收藏状态查询 API 完整
-- [ ] 商品收藏（type=0）功能完整
-- [ ] API 测试通过 IGraphQLEngine
-- [ ] 后台页面编译通过
-- [ ] `docs/logs/` updated
+- [x] 收藏/取消收藏/收藏状态查询 API 完整
+- [x] 商品收藏（type=0）功能完整
+- [x] API 测试通过 IGraphQLEngine
+- [x] 后台页面编译通过
+- [x] `docs/logs/` updated
 
 ### Phase 7B — 浏览足迹
 
@@ -125,17 +125,17 @@ Required Skill: `nop-backend-dev`, `nop-frontend-dev`, `nop-testing`
 - Item Types: `Add`
 - Prereqs: Phase 2（商品数据）
 
-- [ ] **Skill loading gate:** Load `nop-backend-dev`, `nop-frontend-dev`, `nop-testing`. Read all mandatory docs.
-  - Docs read: <to be filled during execution>
-- [ ] **Add: 扩展 `ILitemallFootprintBiz` 接口。** 添加：
+- [x] **Skill loading gate:** Load `nop-backend-dev`, `nop-frontend-dev`, `nop-testing`. Read all mandatory docs.
+  - Docs read: ibiz-and-bizmodel.java, bizmodel-method-selfcheck.md, crud-bizmodel.md, view-and-page-customization.md
+- [x] **Add: 扩展 `ILitemallFootprintBiz` 接口。** 添加：
   - `recordFootprint(@Name("goodsId") String goodsId, IServiceContext context)` — 记录浏览足迹
   - `listFootprints(@Name("page") int page, @Name("pageSize") int pageSize, IServiceContext context)` — 查看浏览足迹
   - `clearFootprints(IServiceContext context)` — 清空浏览足迹
-- [ ] **Add: `LitemallFootprintBizModel` 实现。**
+- [x] **Add: `LitemallFootprintBizModel` 实现。**
   - `recordFootprint()` — 记录足迹，同用户+同商品同天只保留一条（按 userId + goodsId + DATE(addTime) 去重：如果当天已有记录则更新 addTime 而非新增）
   - `listFootprints()` — 当前用户足迹列表，按 addTime 倒序，支持分页，通过 goods relation 获取商品信息
   - `clearFootprints()` — 逻辑删除当前用户所有足迹记录
-- [ ] **Proof: 测试。** `TestLitemallFootprintBizModel`：
+- [x] **Proof: 测试。** `TestLitemallFootprintBizModel`：
   - 测试记录足迹
   - 测试同商品同天不重复
   - 测试足迹列表（分页）
@@ -143,10 +143,10 @@ Required Skill: `nop-backend-dev`, `nop-frontend-dev`, `nop-testing`
 
 Exit Criteria:
 
-- [ ] 浏览足迹记录/查看/清空完整
-- [ ] 同商品同天不重复
-- [ ] API 测试通过 IGraphQLEngine
-- [ ] `docs/logs/` updated
+- [x] 浏览足迹记录/查看/清空完整
+- [x] 同商品同天不重复
+- [x] API 测试通过 IGraphQLEngine
+- [x] `docs/logs/` updated
 
 ### Phase 7C — 评论/评价
 
@@ -159,14 +159,14 @@ Required Pre-Reading:
 - Item Types: `Add-heavy`
 - Prereqs: Phase 5（订单收货状态判定）
 
-- [ ] **Skill loading gate:** Load `nop-backend-dev`, `nop-frontend-dev`, `nop-testing`. Read all mandatory docs. Selfcheck after each method.
-  - Docs read: <to be filled during execution>
-- [ ] **Add: 扩展 `ILitemallCommentBiz` 接口。** 添加：
+- [x] **Skill loading gate:** Load `nop-backend-dev`, `nop-frontend-dev`, `nop-testing`. Read all mandatory docs. Selfcheck after each method.
+  - Docs read: ibiz-and-bizmodel.java, bizmodel-method-selfcheck.md, crud-bizmodel.md, view-and-page-customization.md
+- [x] **Add: 扩展 `ILitemallCommentBiz` 接口。** 添加：
   - `submitComment(@Name("orderGoodsId") String orderGoodsId, @Name("content") String content, @Name("star") int star, @Name("hasPicture") Boolean hasPicture, @Name("picUrls") String picUrls, IServiceContext context)` — 提交评价
   - `commentList(@Name("type") int type, @Name("valueId") String valueId, @Name("page") int page, @Name("pageSize") int pageSize, IServiceContext context)` — 评论列表（公开访问）
   - `myComments(@Name("page") int page, @Name("pageSize") int pageSize, IServiceContext context)` — 当前用户评价列表
   - `adminReply(@Name("id") String id, @Name("adminContent") String adminContent, IServiceContext context)` — 管理员回复
-- [ ] **Add: `LitemallCommentBizModel` 实现。**
+- [x] **Add: `LitemallCommentBizModel` 实现。**
   - 注入 `ILitemallOrderGoodsBiz` 用于加载/更新 OrderGoods；通过 ORM 关系 `orderGoods.getOrder()` 访问 Order 进行状态和所有权检查
   - `submitComment()` — 校验和创建流程：
     1. 通过 `orderGoodsBiz.get(orderGoodsId)` 加载 OrderGoods
@@ -178,17 +178,17 @@ Required Pre-Reading:
   - `commentList()` — 按 type + valueId 查询评论列表，公开访问，支持分页
   - `myComments()` — 当前用户评论列表
   - `adminReply()` — 管理员回复，设置 adminContent 字段
-- [ ] **Decision: 评价时间窗口。** 当前实现不做时间窗口限制（Phase 11 定时任务实现评价窗口过期后补充校验）。理由：时间窗口需要系统配置支持（Phase 11），且不做窗口限制不影响核心评价功能正确性
-- [ ] **Add: 错误码。** 添加：
+- [x] **Decision: 评价时间窗口。** 当前实现不做时间窗口限制（Phase 11 定时任务实现评价窗口过期后补充校验）。理由：时间窗口需要系统配置支持（Phase 11），且不做窗口限制不影响核心评价功能正确性
+- [x] **Add: 错误码。** 添加：
   - `ERR_COMMENT_ORDER_NOT_RECEIVED` — 订单未收货，不可评价
   - `ERR_COMMENT_ALREADY_EXISTS` — 该订单商品已评价
   - `ERR_COMMENT_EXPIRED` — 评价已过期，不可评价（OrderGoods.comment == -1）
   - `ERR_COMMENT_NOT_OWNER` — 非本人订单，不可评价
   - `ERR_COMMENT_ORDER_GOODS_NOT_FOUND` — 订单商品不存在
-- [ ] **Add: 评论后台页面定制。** 修改 `LitemallComment.view.xml`：
+- [x] **Add: 评论后台页面定制。** 修改 `LitemallComment.view.xml`：
   - 网格列：评论类型、商品/专题ID、用户ID、内容、评分、图片、管理员回复、时间
   - 管理员回复操作按钮
-- [ ] **Proof: 测试。** `TestLitemallCommentBizModel`：
+- [x] **Proof: 测试。** `TestLitemallCommentBizModel`：
   - 测试提交评价（正常流程）
   - 测试未收货订单评价被拒
   - 测试重复评价被拒
@@ -198,13 +198,13 @@ Required Pre-Reading:
 
 Exit Criteria:
 
-- [ ] 评价提交完整（校验订单状态/所有权/唯一性）
-- [ ] 评论列表公开可访问
-- [ ] 管理员回复功能完整
-- [ ] 错误码和校验完整
-- [ ] API 测试通过 IGraphQLEngine
-- [ ] 后台页面编译通过
-- [ ] `docs/logs/` updated
+- [x] 评价提交完整（校验订单状态/所有权/唯一性）
+- [x] 评论列表公开可访问
+- [x] 管理员回复功能完整
+- [x] 错误码和校验完整
+- [x] API 测试通过 IGraphQLEngine
+- [x] 后台页面编译通过
+- [x] `docs/logs/` updated
 
 ### Phase 7D — 搜索历史
 
@@ -215,24 +215,24 @@ Required Skill: `nop-backend-dev`, `nop-frontend-dev`, `nop-testing`
 - Item Types: `Add`
 - Prereqs: Phase 6（搜索功能）
 
-- [ ] **Skill loading gate:** Load `nop-backend-dev`, `nop-frontend-dev`, `nop-testing`. Read all mandatory docs.
-  - Docs read: <to be filled during execution>
-- [ ] **Add: 扩展 `ILitemallSearchHistoryBiz` 接口。** 添加：
+- [x] **Skill loading gate:** Load `nop-backend-dev`, `nop-frontend-dev`, `nop-testing`. Read all mandatory docs.
+  - Docs read: ibiz-and-bizmodel.java, bizmodel-method-selfcheck.md, crud-bizmodel.md, view-and-page-customization.md
+- [x] **Add: 扩展 `ILitemallSearchHistoryBiz` 接口。** 添加：
   - `recordSearch(@Name("keyword") String keyword, @Name("from") String from, IServiceContext context)` — 记录搜索历史（`from` 为搜索来源，如 pc/wx/app，对应 ORM 必填字段）
   - `listSearchHistory(@Name("page") int page, @Name("pageSize") int pageSize, IServiceContext context)` — 查看搜索历史
   - `clearSearchHistory(IServiceContext context)` — 清空搜索历史
-- [ ] **Add: `LitemallSearchHistoryBizModel` 实现。**
+- [x] **Add: `LitemallSearchHistoryBizModel` 实现。**
   - `recordSearch()` — 记录搜索关键字和来源（from 字段为 ORM mandatory），同用户+同关键字同天只保留一条
   - `listSearchHistory()` — 当前用户搜索历史，按 addTime 倒序，支持分页
   - `clearSearchHistory()` — 逻辑删除当前用户所有搜索历史
-- [ ] **Proof: 测试。** 验证搜索历史记录/查看/清空功能
+- [x] **Proof: 测试。** 验证搜索历史记录/查看/清空功能
 
 Exit Criteria:
 
-- [ ] 搜索历史记录/查看/清空完整
-- [ ] 同关键字同天不重复
-- [ ] API 测试通过 IGraphQLEngine
-- [ ] `docs/logs/` updated
+- [x] 搜索历史记录/查看/清空完整
+- [x] 同关键字同天不重复
+- [x] API 测试通过 IGraphQLEngine
+- [x] `docs/logs/` updated
 
 ### Phase 8A — 优惠券规则管理
 
@@ -246,34 +246,34 @@ Required Pre-Reading:
 - Item Types: `Add-heavy`
 - Prereqs: Phase 5b（支付集成完成）
 
-- [ ] **Skill loading gate:** Load `nop-backend-dev`, `nop-frontend-dev`, `nop-testing`. Read all mandatory docs. Selfcheck after each method.
-  - Docs read: <to be filled during execution>
-- [ ] **Add: 扩展 `ILitemallCouponBiz` 接口。** 添加：
+- [x] **Skill loading gate:** Load `nop-backend-dev`, `nop-frontend-dev`, `nop-testing`. Read all mandatory docs. Selfcheck after each method.
+  - Docs read: ibiz-and-bizmodel.java, bizmodel-method-selfcheck.md, crud-bizmodel.md, view-and-page-customization.md
+- [x] **Add: 扩展 `ILitemallCouponBiz` 接口。** 添加：
   - `publishCoupon(@Name("id") String id, IServiceContext context)` — 上架优惠券
   - `unpublishCoupon(@Name("id") String id, IServiceContext context)` — 下架优惠券
   - `listAvailableCoupons(@Name("page") int page, @Name("pageSize") int pageSize, IServiceContext context)` — 前台可领取优惠券列表（公开访问）
   - `listMyCoupons(@Name("status") Integer status, @Name("page") int page, @Name("pageSize") int pageSize, IServiceContext context)` — 当前用户优惠券列表
-- [ ] **Add: `LitemallCouponBizModel` 实现。**
+- [x] **Add: `LitemallCouponBizModel` 实现。**
   - `publishCoupon()` — 设置 status=0（正常可用，对应字典 mall/coupon-status 值 0）
   - `unpublishCoupon()` — 设置 status=2（下架，对应字典 mall/coupon-status 值 2。注意 status=1 是"过期"不是"下架"）
   - `listAvailableCoupons()` — 查询 status=0（正常可用）、未过期（endTime > now 或 timeType=0 时根据 days 计算）、有库存（total=0 或 total > 已领数量）且 type=0（通用领取券，非注册赠券 type=1 或兑换码券 type=2）的优惠券列表，公开访问
   - `listMyCoupons()` — 当前用户持有的优惠券列表（通过 LitemallCouponUser），支持按状态筛选
-- [ ] **Add: 优惠券后台页面定制。** 修改 `LitemallCoupon.view.xml`：
+- [x] **Add: 优惠券后台页面定制。** 修改 `LitemallCoupon.view.xml`：
   - 网格列：名称、标签、类型、优惠金额、最低消费、数量、已领数量、状态、有效期
   - 表单字段：完整优惠券编辑
   - 上架/下架操作按钮
-- [ ] **Proof: 测试。** `TestLitemallCouponBizModel`：
+- [x] **Proof: 测试。** `TestLitemallCouponBizModel`：
   - 测试上架/下架
   - 测试前台可领取优惠券列表
   - 测试当前用户优惠券列表
 
 Exit Criteria:
 
-- [ ] 优惠券上下架完整
-- [ ] 前台可领取优惠券列表公开可访问
-- [ ] 当前用户优惠券列表完整
-- [ ] 后台页面编译通过
-- [ ] `docs/logs/` updated
+- [x] 优惠券上下架完整
+- [x] 前台可领取优惠券列表公开可访问
+- [x] 当前用户优惠券列表完整
+- [x] 后台页面编译通过
+- [x] `docs/logs/` updated
 
 ### Phase 8B — 优惠券领取/兑换/核销
 
@@ -284,22 +284,22 @@ Required Skill: `nop-backend-dev`, `nop-frontend-dev`, `nop-testing`
 - Item Types: `Add-heavy`
 - Prereqs: Phase 8A
 
-- [ ] **Skill loading gate:** Load `nop-backend-dev`, `nop-frontend-dev`, `nop-testing`. Read all mandatory docs. Selfcheck after each method.
-  - Docs read: <to be filled during execution>
-- [ ] **Add: 扩展 `ILitemallCouponUserBiz` 接口。** 添加：
+- [x] **Skill loading gate:** Load `nop-backend-dev`, `nop-frontend-dev`, `nop-testing`. Read all mandatory docs. Selfcheck after each method.
+  - Docs read: ibiz-and-bizmodel.java, bizmodel-method-selfcheck.md, crud-bizmodel.md, view-and-page-customization.md
+- [x] **Add: 扩展 `ILitemallCouponUserBiz` 接口。** 添加：
   - `claimCoupon(@Name("couponId") String couponId, IServiceContext context)` — 通用领取
   - `redeemCoupon(@Name("code") String code, IServiceContext context)` — 兑换码兑换
   - `selectCouponForOrder(@Name("couponUserId") String couponUserId, @Name("goodsPrice") BigDecimal goodsPrice, @Name("goodsIds") List<String> goodsIds, IServiceContext context)` — 结算时选券校验（返回优惠金额）
   - `useCoupon(@Name("couponUserId") String couponUserId, @Name("orderId") String orderId, IServiceContext context)` — 核销优惠券（内部调用）
   - `returnCoupon(@Name("couponUserId") String couponUserId, IServiceContext context)` — 恢复优惠券（取消/退款时）
-- [ ] **Add: `LitemallCouponUserBizModel` 实现。**
+- [x] **Add: `LitemallCouponUserBizModel` 实现。**
   - 注入 `ILitemallCouponBiz` 用于查询优惠券规则
   - `claimCoupon()` — 校验：优惠券上架、有库存（total=0 表示无限）、用户未超限领数量。创建 LitemallCouponUser（status=0 未使用），根据 timeType 计算有效期（固定时间 or 相对天数）。优惠券 total 减 1（total>0 时）
   - `redeemCoupon()` — 根据 code 查找优惠券规则，校验规则后领取
   - `selectCouponForOrder()` — 校验优惠券是否可用：status=0、在有效期内、金额门槛（goodsPrice >= min）、商品范围（goodsType=0 全场 / goodsType=1 分类 / goodsType=2 指定商品）。返回满足条件的优惠金额（discount）
   - `useCoupon()` — 设置 status=1（已使用）、usedTime=now、orderId
   - `returnCoupon()` — 设置 status=0（未使用）、清除 usedTime 和 orderId
-- [ ] **Add: 错误码。** 添加：
+- [x] **Add: 错误码。** 添加：
   - `ERR_COUPON_NOT_FOUND` — 优惠券不存在
   - `ERR_COUPON_NOT_AVAILABLE` — 优惠券不可领取（未上架/已过期/无库存）
   - `ERR_COUPON_LIMIT_EXCEEDED` — 用户领券超限
@@ -308,7 +308,7 @@ Required Skill: `nop-backend-dev`, `nop-frontend-dev`, `nop-testing`
   - `ERR_COUPON_NOT_USABLE` — 优惠券不可使用（已使用/已过期/不满足条件）
   - `ERR_COUPON_MIN_NOT_MET` — 未达到最低消费金额
   - `ERR_COUPON_GOODS_NOT_MATCH` — 商品不在优惠券适用范围
-- [ ] **Proof: 测试。** `TestLitemallCouponUserBizModel`：
+- [x] **Proof: 测试。** `TestLitemallCouponUserBizModel`：
   - 测试通用领取
   - 测试超限领取被拒
   - 测试兑换码兑换
@@ -317,12 +317,12 @@ Required Skill: `nop-backend-dev`, `nop-frontend-dev`, `nop-testing`
 
 Exit Criteria:
 
-- [ ] 通用领取/兑换码兑换完整
-- [ ] 选券校验逻辑完整（金额门槛、有效期、商品范围）
-- [ ] 核销和恢复正常
-- [ ] 错误码和校验完整
-- [ ] API 测试通过 IGraphQLEngine
-- [ ] `docs/logs/` updated
+- [x] 通用领取/兑换码兑换完整
+- [x] 选券校验逻辑完整（金额门槛、有效期、商品范围）
+- [x] 核销和恢复正常
+- [x] 错误码和校验完整
+- [x] API 测试通过 IGraphQLEngine
+- [x] `docs/logs/` updated
 
 ### Phase 8C — 优惠券与订单价格集成
 
@@ -332,36 +332,36 @@ Required Skill: `nop-backend-dev`, `nop-testing`
 Required Pre-Reading:
 - `docs/design/order-and-cart.md`（价格语义）
 
-- Item Types: `Modify`
+- Item Types: `Fix | Add`
 - Prereqs: Phase 8B + Phase 5（订单已实现）
 
-- [ ] **Skill loading gate:** Load `nop-backend-dev`, `nop-testing`. Read all mandatory docs. Selfcheck after each method.
-  - Docs read: <to be filled during execution>
-- [ ] **Modify: 扩展 `ILitemallOrderBiz` 接口。** 在 `submit` 方法签名中添加 `@Optional @Name("couponUserId") String couponUserId` 参数（用户持有的优惠券实例 ID，即 CouponUser.id，非 Coupon.id）
-- [ ] **Modify: `LitemallOrderBizModel.submit()` 集成优惠券。**
+- [x] **Skill loading gate:** Load `nop-backend-dev`, `nop-testing`. Read all mandatory docs. Selfcheck after each method.
+  - Docs read: ibiz-and-bizmodel.java, bizmodel-method-selfcheck.md, crud-bizmodel.md, view-and-page-customization.md
+- [x] **Modify: 扩展 `ILitemallOrderBiz` 接口。** 在 `submit` 方法签名中添加 `@Optional @Name("couponUserId") String couponUserId` 参数（用户持有的优惠券实例 ID，即 CouponUser.id，非 Coupon.id）
+- [x] **Modify: `LitemallOrderBizModel.submit()` 集成优惠券。**
   - 新增 `@Optional @Name("couponUserId") String couponUserId` 参数，与现有 `@Optional @Name("message")` 模式一致
   - 如果 `couponUserId` 不为空：调用 `ILitemallCouponUserBiz.selectCouponForOrder()` 校验并获取优惠金额
   - 计算价格：`couponPrice = 校验通过的优惠金额`；`orderPrice = goodsPrice + freightPrice - couponPrice`
   - 订单创建成功后调用 `ILitemallCouponUserBiz.useCoupon()` 核销优惠券
-- [ ] **Modify: `LitemallOrderBizModel.cancel()` 恢复优惠券。** 通过 `ILitemallCouponUserBiz` 查询 CouponUser 表找到 `orderId=当前订单且 status=1（已使用）` 的记录。如找到，调用 `ILitemallCouponUserBiz.returnCoupon()` 恢复。注意：LitemallOrder 实体没有 couponId 字段，需要通过 CouponUser.orderId 反查。订单取消后 couponPrice/orderPrice/actualPrice 字段保持不变（已取消订单为终态记录，不需要回滚价格字段；关键是恢复优惠券可用性）
-- [ ] **Add: 注入依赖。** 在 `LitemallOrderBizModel` 中注入 `ILitemallCouponUserBiz`
-- [ ] **Proof: 测试。** 在现有订单测试中扩展：
+- [x] **Modify: `LitemallOrderBizModel.cancel()` 恢复优惠券。** 通过 `ILitemallCouponUserBiz` 查询 CouponUser 表找到 `orderId=当前订单且 status=1（已使用）` 的记录。如找到，调用 `ILitemallCouponUserBiz.returnCoupon()` 恢复。注意：LitemallOrder 实体没有 couponId 字段，需要通过 CouponUser.orderId 反查。订单取消后 couponPrice/orderPrice/actualPrice 字段保持不变（已取消订单为终态记录，不需要回滚价格字段；关键是恢复优惠券可用性）
+- [x] **Add: 注入依赖。** 在 `LitemallOrderBizModel` 中注入 `ILitemallCouponUserBiz`
+- [x] **Proof: 测试。** 在现有订单测试中扩展：
   - 测试使用优惠券下单（couponPrice > 0）
   - 测试取消订单后优惠券恢复
   - 测试不满足条件的优惠券下单被拒
 
 Exit Criteria:
 
-- [ ] 订单提交可接受 @Optional couponUserId 参数
-- [ ] couponPrice 正确计算并纳入订单价格
-- [ ] 取消订单后通过 CouponUser.orderId 反查并恢复优惠券
-- [ ] 已有测试不受影响（couponUserId 为空时行为不变）
-- [ ] API 测试通过 IGraphQLEngine
-- [ ] `docs/logs/` updated
+- [x] 订单提交可接受 @Optional couponUserId 参数
+- [x] couponPrice 正确计算并纳入订单价格
+- [x] 取消订单后通过 CouponUser.orderId 反查并恢复优惠券
+- [x] 已有测试不受影响（couponUserId 为空时行为不变）
+- [x] API 测试通过 IGraphQLEngine
+- [x] `docs/logs/` updated
 
 ### Phase 10A — 专题管理
 
-Status: completed
+Status: in-progress
 Targets: `app-mall-service/`, `app-mall-web/`
 Required Skill: `nop-backend-dev`, `nop-frontend-dev`, `nop-testing`
 
@@ -382,6 +382,7 @@ Required Skill: `nop-backend-dev`, `nop-frontend-dev`, `nop-testing`
   - 表单字段：完整专题编辑
 - [ ] **Add: 补充专题收藏。** 验证 Phase 7A 的 `addCollect(type=1)` 对专题收藏功能正常工作
 - [ ] **Proof: 测试。** 验证专题列表/详情和专题收藏
+- [ ] **Missing: IGraphQLEngine test class.** Code is implemented but no automated `IGraphQLEngine` test exists. Must create `TestLitemallTopicBizModel` with tests for frontList, frontDetail, and topic collection before marking completed.
 
 Exit Criteria:
 
@@ -393,7 +394,7 @@ Exit Criteria:
 
 ### Phase 10B — 广告管理
 
-Status: completed
+Status: in-progress
 Targets: `app-mall-service/`, `app-mall-web/`
 Required Skill: `nop-backend-dev`, `nop-frontend-dev`, `nop-testing`
 
@@ -410,6 +411,7 @@ Required Skill: `nop-backend-dev`, `nop-frontend-dev`, `nop-testing`
   - 网格列：名称、链接、位置、图片、内容、启用状态、开始时间、结束时间
   - 表单字段：完整广告编辑
 - [ ] **Proof: 测试。** 验证广告列表和条件过滤
+- [ ] **Missing: IGraphQLEngine test class.** Code is implemented but no automated `IGraphQLEngine` test exists. Must create `TestLitemallAdBizModel` with tests for listActiveAds and time-window filtering before marking completed.
 
 Exit Criteria:
 
@@ -421,7 +423,7 @@ Exit Criteria:
 
 ### Phase 10C — FAQ 与反馈管理
 
-Status: completed
+Status: in-progress
 Targets: `app-mall-service/`, `app-mall-web/`
 Required Skill: `nop-backend-dev`, `nop-frontend-dev`, `nop-testing`
 
@@ -440,6 +442,7 @@ Required Skill: `nop-backend-dev`, `nop-frontend-dev`, `nop-testing`
   - `submitFeedback()` — 创建反馈记录，从 context 获取 userId 和 username
 - [ ] **Add: FAQ 和反馈后台页面定制。** 修改 `LitemallIssue.view.xml` 和 `LitemallFeedback.view.xml`
 - [ ] **Proof: 测试。** 验证 FAQ 列表和反馈提交
+- [ ] **Missing: IGraphQLEngine test classes.** Code is implemented but no automated `IGraphQLEngine` tests exist. Must create `TestLitemallIssueBizModel` (listIssues) and `TestLitemallFeedbackBizModel` (submitFeedback) before marking completed.
 
 Exit Criteria:
 
@@ -451,7 +454,7 @@ Exit Criteria:
 
 ### Phase Final — 收尾与文档更新
 
-Status: completed
+Status: planned
 Targets: 全局
 Required Skill: `nop-testing`
 
@@ -517,6 +520,7 @@ Exit Criteria:
 - [ ] text consistency verified
 - [ ] closure audit was independent
 - [ ] closure evidence exists in files
+- [ ] no in-scope item downgraded to deferred/follow-up
 
 ## Deferred But Adjudicated
 
@@ -571,11 +575,11 @@ Exit Criteria:
 
 ## Closure
 
-Status Note: All phases completed. Build passes (`./mvnw.cmd clean compile -DskipTests` BUILD SUCCESS). 7 new test classes created covering all new BizModel methods.
+Status Note: Phase 7/8 completed with full test coverage. Phase 10 (Topic/Ad/Issue/Feedback) code implemented but missing IGraphQLEngine tests. Plan reopened for test completion.
 
 Closure Audit Evidence:
 
-- Reviewer / Agent: main agent (self-audit)
+- Reviewer / Agent: main agent (self-audit, not independent — needs re-audit by independent subagent before marking complete)
 - Evidence: All checklist items satisfied. Phase 7 (4 entities: Collect/Footprint/Comment/SearchHistory), Phase 8 (2 entities: Coupon/CouponUser + Order integration), Phase 10 (3 entities: Topic/Ad/Issue/Feedback). Total: ~30 new BizModel methods, 15 error codes, 6 view customizations, 7 test classes.
 
 Follow-up:

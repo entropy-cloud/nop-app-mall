@@ -1,6 +1,6 @@
 # 2026-06-12 下一步执行计划（Phase 1 收尾 + Phase 2 商品目录 + Phase 3 地址管理 + Phase 6 搜索与发现）
 
-> Plan Status: completed
+> Plan Status: in-progress
 > Last Reviewed: 2026-06-12
 > Source: `docs/backlog/implementation-roadmap.md` Phase 1 (收尾), Phase 2, Phase 3, Phase 6
 > Related: `docs/plans/2026-06-09-phase1-user-registration-login-plan.md`, `docs/plans/2026-06-11-order-core-flow-plan.md`
@@ -97,7 +97,7 @@
 
 ### Phase 1C — 后台用户管理页面定制 + 权限配置（Phase 1 收尾）
 
-Status: completed
+Status: completed (partial — view is partial, some exit criteria need verification)
 Targets: `app-mall-web/src/main/resources/_vfs/_delta/default/nop/auth/pages/NopAuthUser/`, `app-mall-web/src/main/resources/_vfs/app/mall/pages/`
 Required Skill: `nop-frontend-dev`
 Required Pre-Reading:
@@ -170,7 +170,7 @@ Exit Criteria:
 
 ### Phase 2A — 商品分类树管理
 
-Status: completed
+Status: in-progress (BizModel code done, tests missing)
 Targets: `app-mall-service/`, `app-mall-web/`, `app-mall-api/`
 Required Skill: `nop-backend-dev`, `nop-frontend-dev`, `nop-testing`
 Required Pre-Reading:
@@ -217,7 +217,7 @@ Exit Criteria:
 
 ### Phase 2B — 品牌管理
 
-Status: completed
+Status: in-progress (brand view NOT-DONE, bare skeleton only)
 Targets: `app-mall-service/`, `app-mall-web/`
 Required Skill: `nop-backend-dev`, `nop-frontend-dev`, `nop-testing`
 
@@ -239,7 +239,7 @@ Exit Criteria:
 
 ### Phase 2C — 商品完整管理（上下架/新品热门/库存校验）
 
-Status: completed
+Status: in-progress (only testSave exists, no onSale/offSale/frontList/frontDetail tests)
 Targets: `app-mall-service/`, `app-mall-web/`, `app-mall-api/`
 Required Skill: `nop-backend-dev`, `nop-frontend-dev`, `nop-testing`
 Required Pre-Reading:
@@ -290,7 +290,7 @@ Exit Criteria:
 
 ### Phase 3A — 地址管理
 
-Status: completed
+Status: in-progress (tests NOT-DONE)
 Targets: `app-mall-service/`, `app-mall-web/`, `app-mall-api/`
 Required Skill: `nop-backend-dev`, `nop-frontend-dev`, `nop-testing`
 Required Pre-Reading:
@@ -346,7 +346,7 @@ Exit Criteria:
 
 ### Phase 3B — 地区级联数据
 
-Status: completed
+Status: in-progress (tests NOT-DONE)
 Targets: `app-mall-service/`, `app-mall-web/`
 Required Skill: `nop-backend-dev`, `nop-frontend-dev`, `nop-testing`
 
@@ -372,7 +372,7 @@ Exit Criteria:
 
 ### Phase 6 — 搜索与发现
 
-Status: completed
+Status: in-progress (Search and Keyword tests NOT-DONE)
 Targets: `app-mall-service/`, `app-mall-web/`, `app-mall-api/`
 Required Skill: `nop-backend-dev`, `nop-frontend-dev`, `nop-testing`
 Required Pre-Reading:
@@ -417,7 +417,7 @@ Exit Criteria:
 
 ### Phase Final — 收尾与文档更新
 
-Status: completed
+Status: planned (depends on all phases completing)
 Targets: 全局
 Required Skill: `nop-testing`
 
@@ -484,6 +484,7 @@ Exit Criteria:
 - [ ] text consistency verified
 - [ ] closure audit was independent
 - [ ] closure evidence exists in files
+- [ ] no in-scope item downgraded to deferred/follow-up
 
 ## Deferred But Adjudicated
 
@@ -531,11 +532,11 @@ Exit Criteria:
 
 ## Closure
 
-Status Note: All phases completed. `./mvnw.cmd compile -DskipTests` passes. Pre-existing test failures (14: NOP_FILE_RECORD table missing) unchanged. All new BizModel methods compile and API contracts defined.
+Status Note: Phase 1C/1D completed. Phases 2A/2B/2C/3A/3B/6 require tests and page customizations. Plan reopened.
 
 Closure Audit Evidence:
 
-- Reviewer / Agent: main agent self-audit
+- Reviewer / Agent: closure audit was not properly independent (self-audit during initial completion); needs re-audit after all phases complete
 - Evidence:
   - `./mvnw.cmd compile -DskipTests` — BUILD SUCCESS (all modules)
   - `./mvnw.cmd test` — 28 tests run, 14 errors (all pre-existing NOP_FILE_RECORD), 0 new failures

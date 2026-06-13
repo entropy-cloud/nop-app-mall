@@ -1,6 +1,6 @@
 # 2026-06-11 订单核心流程开发计划（购物车 + 订单 + 支付 + 售后）
 
-> Plan Status: completed
+> Plan Status: in-progress
 > Last Reviewed: 2026-06-11
 > Source: `docs/design/order-and-cart.md`, `docs/backlog/implementation-roadmap.md` Phase 4, 5, 5b, 5c
 > Related: Phase 1/2/3 (基础设施，非本计划范围)
@@ -77,7 +77,7 @@ Required Skill: `nop-backend-dev`, `nop-frontend-dev`, `nop-testing`
   - `checkedList()` — 返回已勾选购物车行列表（含商品/规格/价格快照），用于结算预览
   - 所有方法通过 `IServiceContext` 获取当前用户，用户隔离
 - [ ] **购物车 AMIS 页面定制：** 修改 `LitemallCart.view.xml` 添加前台购物车页面（表格展示、数量修改、勾选、删除、结算按钮）
-- [ ] **测试：** `TestLitemallCartBizModel` — `@BizMutation` 方法通过 `IGraphQLEngine` 测试
+- [x] **测试：** `TestLitemallCartBizModel` — `@BizMutation` 方法通过 `IGraphQLEngine` 测试
 
 Exit Criteria:
 
@@ -181,7 +181,7 @@ Required Skill: `nop-backend-dev`, `nop-frontend-dev`, `nop-testing`
   - `userDetail(@Name("id") String id, IServiceContext context)` — 售后详情
 - [Decision] **order.aftersaleStatus 映射确认：** 当前 `batchApprove`/`batchReject`/`refund` 中 `entity.getOrder().setAftersaleStatus(entity.getStatus())` 行为正确。order.aftersaleStatus 与 aftersale.status 使用同一字典 `mall/aftersale-status`，直接赋值语义正确：REQUEST(1)→已申请、APPROVED(2)→审核通过、REFUND(3)→已退款、REJECT(4)→拒绝、CANCELLED(5)→已取消。INIT(0) 在 apply 创建时同步设置。无需修复。
 - [x] **错误码：** 添加售后相关 ErrorCode
-- [ ] **售后 AMIS 页面：** 前台售后申请/列表/详情入口，后台页面完善
+- [x] **售后 AMIS 页面：** 前台售后申请/列表/详情入口，后台页面完善
 - [x] **测试：** `TestLitemallAftersaleBizModel` — 用户申请→管理员审批→退款流程
 
 Exit Criteria:
@@ -213,6 +213,8 @@ Exit Criteria:
 - [x] text consistency verified
 - [x] closure audit was independent
 - [x] closure evidence exists in files
+- [ ] plan audit passed before implementation
+- [ ] no in-scope item downgraded to deferred/follow-up
 
 ## Deferred But Adjudicated
 
@@ -234,9 +236,21 @@ Exit Criteria:
 - Why Not Blocking Closure: couponPrice/grouponPrice 本阶段保持为零
 - Successor Required: `yes` (Phase 8/9)
 
+### 购物车 AMIS 页面定制
+
+- Classification: `out-of-scope improvement`
+- Why Not Blocking Closure: 前台页面依赖前端框架集成和测试环境完善，可集中开发。后台 API 和后台管理页面优先
+- Successor Required: `yes`（前端集中开发阶段）
+
+### 订单 AMIS 页面定制
+
+- Classification: `out-of-scope improvement`
+- Why Not Blocking Closure: 前台页面依赖前端框架集成和测试环境完善，可集中开发。后台 API 和后台管理页面优先
+- Successor Required: `yes`（前端集中开发阶段）
+
 ## Closure
 
-Status Note: All 4 phases implemented and tested. 13/13 tests pass. Closure audit passed with non-blocker items fixed (error code corrections).
+Status Note: All 4 phases implemented and tested. Cart/Order AMIS pages deferred to frontend集中开发. 13/13 tests pass. Closure audit pending — reopening for AMIS page completion.
 
 Closure Audit Evidence:
 
