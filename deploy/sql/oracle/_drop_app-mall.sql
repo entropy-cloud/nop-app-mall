@@ -1,7 +1,6 @@
 
 drop table litemall_ad;
 drop table litemall_address;
-drop table litemall_admin;
 drop table litemall_order;
 drop table litemall_brand;
 drop table litemall_category;
@@ -14,9 +13,7 @@ drop table litemall_keyword;
 drop table litemall_log;
 drop table litemall_notice;
 drop table litemall_notice_admin;
-drop table litemall_permission;
 drop table litemall_region;
-drop table litemall_role;
 drop table litemall_search_history;
 drop table litemall_storage;
 drop table litemall_system;

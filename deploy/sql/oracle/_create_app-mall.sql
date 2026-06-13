@@ -33,20 +33,6 @@ CREATE TABLE litemall_address(
   constraint PK_litemall_address primary key (ID)
 );
 
-CREATE TABLE litemall_admin(
-  ID INTEGER NOT NULL ,
-  USERNAME VARCHAR2(63) NOT NULL ,
-  PASSWORD VARCHAR2(63) NOT NULL ,
-  LAST_LOGIN_IP VARCHAR2(63)  ,
-  LAST_LOGIN_TIME DATE  ,
-  AVATAR VARCHAR2(255)  ,
-  ADD_TIME DATE  ,
-  UPDATE_TIME DATE  ,
-  DELETED CHAR(1)  ,
-  ROLE_IDS VARCHAR2(127)  ,
-  constraint PK_litemall_admin primary key (ID)
-);
-
 CREATE TABLE litemall_order(
   ID INTEGER NOT NULL ,
   USER_ID VARCHAR2(50) NOT NULL ,
@@ -239,16 +225,6 @@ CREATE TABLE litemall_notice_admin(
   constraint PK_litemall_notice_admin primary key (ID)
 );
 
-CREATE TABLE litemall_permission(
-  ID INTEGER NOT NULL ,
-  ROLE_ID INTEGER  ,
-  PERMISSION VARCHAR2(63)  ,
-  ADD_TIME DATE  ,
-  UPDATE_TIME DATE  ,
-  DELETED CHAR(1)  ,
-  constraint PK_litemall_permission primary key (ID)
-);
-
 CREATE TABLE litemall_region(
   ID INTEGER NOT NULL ,
   PID INTEGER NOT NULL ,
@@ -256,17 +232,6 @@ CREATE TABLE litemall_region(
   TYPE INTEGER NOT NULL ,
   CODE INTEGER NOT NULL ,
   constraint PK_litemall_region primary key (ID)
-);
-
-CREATE TABLE litemall_role(
-  ID INTEGER NOT NULL ,
-  NAME VARCHAR2(63) NOT NULL ,
-  "DESC" VARCHAR2(1023)  ,
-  ENABLED CHAR(1)  ,
-  ADD_TIME DATE  ,
-  UPDATE_TIME DATE  ,
-  DELETED CHAR(1)  ,
-  constraint PK_litemall_role primary key (ID)
 );
 
 CREATE TABLE litemall_search_history(
@@ -546,28 +511,6 @@ CREATE TABLE litemall_order_goods(
       COMMENT ON COLUMN litemall_address.UPDATE_TIME IS '更新时间';
                     
       COMMENT ON COLUMN litemall_address.DELETED IS '逻辑删除';
-                    
-      COMMENT ON TABLE litemall_admin IS '管理员表';
-                
-      COMMENT ON COLUMN litemall_admin.ID IS 'Id';
-                    
-      COMMENT ON COLUMN litemall_admin.USERNAME IS '管理员名称';
-                    
-      COMMENT ON COLUMN litemall_admin.PASSWORD IS '管理员密码';
-                    
-      COMMENT ON COLUMN litemall_admin.LAST_LOGIN_IP IS '最近一次登录IP地址';
-                    
-      COMMENT ON COLUMN litemall_admin.LAST_LOGIN_TIME IS '最近一次登录时间';
-                    
-      COMMENT ON COLUMN litemall_admin.AVATAR IS '头像图片';
-                    
-      COMMENT ON COLUMN litemall_admin.ADD_TIME IS '创建时间';
-                    
-      COMMENT ON COLUMN litemall_admin.UPDATE_TIME IS '更新时间';
-                    
-      COMMENT ON COLUMN litemall_admin.DELETED IS '逻辑删除';
-                    
-      COMMENT ON COLUMN litemall_admin.ROLE_IDS IS '角色列表';
                     
       COMMENT ON TABLE litemall_order IS '订单表';
                 
@@ -881,20 +824,6 @@ CREATE TABLE litemall_order_goods(
                     
       COMMENT ON COLUMN litemall_notice_admin.DELETED IS '逻辑删除';
                     
-      COMMENT ON TABLE litemall_permission IS '权限表';
-                
-      COMMENT ON COLUMN litemall_permission.ID IS 'Id';
-                    
-      COMMENT ON COLUMN litemall_permission.ROLE_ID IS '角色ID';
-                    
-      COMMENT ON COLUMN litemall_permission.PERMISSION IS '权限';
-                    
-      COMMENT ON COLUMN litemall_permission.ADD_TIME IS '创建时间';
-                    
-      COMMENT ON COLUMN litemall_permission.UPDATE_TIME IS '更新时间';
-                    
-      COMMENT ON COLUMN litemall_permission.DELETED IS '逻辑删除';
-                    
       COMMENT ON TABLE litemall_region IS '行政区域表';
                 
       COMMENT ON COLUMN litemall_region.ID IS 'Id';
@@ -906,22 +835,6 @@ CREATE TABLE litemall_order_goods(
       COMMENT ON COLUMN litemall_region.TYPE IS '行政区域类型';
                     
       COMMENT ON COLUMN litemall_region.CODE IS '行政区域编码';
-                    
-      COMMENT ON TABLE litemall_role IS '角色表';
-                
-      COMMENT ON COLUMN litemall_role.ID IS 'Id';
-                    
-      COMMENT ON COLUMN litemall_role.NAME IS '角色名称';
-                    
-      COMMENT ON COLUMN litemall_role."DESC" IS '角色描述';
-                    
-      COMMENT ON COLUMN litemall_role.ENABLED IS '是否启用';
-                    
-      COMMENT ON COLUMN litemall_role.ADD_TIME IS '创建时间';
-                    
-      COMMENT ON COLUMN litemall_role.UPDATE_TIME IS '更新时间';
-                    
-      COMMENT ON COLUMN litemall_role.DELETED IS '逻辑删除';
                     
       COMMENT ON TABLE litemall_search_history IS '搜索历史表';
                 

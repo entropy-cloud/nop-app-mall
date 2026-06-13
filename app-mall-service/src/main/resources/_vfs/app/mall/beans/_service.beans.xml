@@ -19,13 +19,6 @@
         <property name="bizObjName" value="LitemallAddress"/>
     </bean>
 
-    <bean id="app.mall.service.entity.LitemallAdminBizModel" ioc:type="@bean:id" ioc:default="true"/>
-
-    <bean id="biz_LitemallAdmin" class="io.nop.biz.proxy.BizProxyFactoryBean" ioc:type="app.mall.biz.ILitemallAdminBiz"
-          ioc:force-lazy-property="true" lazy-init="true" primary="true">
-        <property name="bizObjName" value="LitemallAdmin"/>
-    </bean>
-
     <bean id="app.mall.service.entity.LitemallOrderBizModel" ioc:type="@bean:id" ioc:default="true"/>
 
     <bean id="biz_LitemallOrder" class="io.nop.biz.proxy.BizProxyFactoryBean" ioc:type="app.mall.biz.ILitemallOrderBiz"
@@ -110,25 +103,11 @@
         <property name="bizObjName" value="LitemallNoticeAdmin"/>
     </bean>
 
-    <bean id="app.mall.service.entity.LitemallPermissionBizModel" ioc:type="@bean:id" ioc:default="true"/>
-
-    <bean id="biz_LitemallPermission" class="io.nop.biz.proxy.BizProxyFactoryBean"
-          ioc:type="app.mall.biz.ILitemallPermissionBiz" ioc:force-lazy-property="true" lazy-init="true" primary="true">
-        <property name="bizObjName" value="LitemallPermission"/>
-    </bean>
-
     <bean id="app.mall.service.entity.LitemallRegionBizModel" ioc:type="@bean:id" ioc:default="true"/>
 
     <bean id="biz_LitemallRegion" class="io.nop.biz.proxy.BizProxyFactoryBean"
           ioc:type="app.mall.biz.ILitemallRegionBiz" ioc:force-lazy-property="true" lazy-init="true" primary="true">
         <property name="bizObjName" value="LitemallRegion"/>
-    </bean>
-
-    <bean id="app.mall.service.entity.LitemallRoleBizModel" ioc:type="@bean:id" ioc:default="true"/>
-
-    <bean id="biz_LitemallRole" class="io.nop.biz.proxy.BizProxyFactoryBean" ioc:type="app.mall.biz.ILitemallRoleBiz"
-          ioc:force-lazy-property="true" lazy-init="true" primary="true">
-        <property name="bizObjName" value="LitemallRole"/>
     </bean>
 
     <bean id="app.mall.service.entity.LitemallSearchHistoryBizModel" ioc:type="@bean:id" ioc:default="true"/>

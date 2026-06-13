@@ -3,8 +3,6 @@
 
 alter table litemall_address add NOP_TENANT_ID VARCHAR(32) DEFAULT '0' NOT NULL;
 
-alter table litemall_admin add NOP_TENANT_ID VARCHAR(32) DEFAULT '0' NOT NULL;
-
 alter table litemall_order add NOP_TENANT_ID VARCHAR(32) DEFAULT '0' NOT NULL;
 
 alter table litemall_brand add NOP_TENANT_ID VARCHAR(32) DEFAULT '0' NOT NULL;
@@ -29,11 +27,7 @@ alter table litemall_notice add NOP_TENANT_ID VARCHAR(32) DEFAULT '0' NOT NULL;
 
 alter table litemall_notice_admin add NOP_TENANT_ID VARCHAR(32) DEFAULT '0' NOT NULL;
 
-alter table litemall_permission add NOP_TENANT_ID VARCHAR(32) DEFAULT '0' NOT NULL;
-
 alter table litemall_region add NOP_TENANT_ID VARCHAR(32) DEFAULT '0' NOT NULL;
-
-alter table litemall_role add NOP_TENANT_ID VARCHAR(32) DEFAULT '0' NOT NULL;
 
 alter table litemall_search_history add NOP_TENANT_ID VARCHAR(32) DEFAULT '0' NOT NULL;
 
@@ -71,9 +65,6 @@ alter table litemall_ad add primary key (NOP_TENANT_ID, ID);
 alter table litemall_address drop primary key;
 alter table litemall_address add primary key (NOP_TENANT_ID, ID);
 
-alter table litemall_admin drop primary key;
-alter table litemall_admin add primary key (NOP_TENANT_ID, ID);
-
 alter table litemall_order drop primary key;
 alter table litemall_order add primary key (NOP_TENANT_ID, ID);
 
@@ -110,14 +101,8 @@ alter table litemall_notice add primary key (NOP_TENANT_ID, ID);
 alter table litemall_notice_admin drop primary key;
 alter table litemall_notice_admin add primary key (NOP_TENANT_ID, ID);
 
-alter table litemall_permission drop primary key;
-alter table litemall_permission add primary key (NOP_TENANT_ID, ID);
-
 alter table litemall_region drop primary key;
 alter table litemall_region add primary key (NOP_TENANT_ID, ID);
-
-alter table litemall_role drop primary key;
-alter table litemall_role add primary key (NOP_TENANT_ID, ID);
 
 alter table litemall_search_history drop primary key;
 alter table litemall_search_history add primary key (NOP_TENANT_ID, ID);

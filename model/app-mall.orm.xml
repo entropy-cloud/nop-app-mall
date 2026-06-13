@@ -167,32 +167,6 @@
                         stdDataType="boolean" stdSqlType="BOOLEAN" ui:show="X"/>
             </columns>
         </entity>
-        <entity className="app.mall.dao.entity.LitemallAdmin" createTimeProp="addTime" deleteFlagProp="deleted"
-                displayName="管理员表" name="app.mall.dao.entity.LitemallAdmin" registerShortName="true"
-                tableName="litemall_admin" updateTimeProp="updateTime" useLogicalDelete="true">
-            <columns>
-                <column code="ID" displayName="Id" mandatory="true" name="id" primary="true" propId="1"
-                        stdDataType="string" stdSqlType="INTEGER" tagSet="seq" ui:show="R"/>
-                <column code="USERNAME" displayName="管理员名称" mandatory="true" name="username" precision="63" propId="2"
-                        stdDataType="string" stdSqlType="VARCHAR" tagSet="disp"/>
-                <column code="PASSWORD" displayName="管理员密码" mandatory="true" name="password" precision="63" propId="3"
-                        stdDataType="string" stdSqlType="VARCHAR" tagSet="masked" ui:show="C"/>
-                <column code="LAST_LOGIN_IP" displayName="最近一次登录IP地址" name="lastLoginIp" precision="63" propId="4"
-                        stdDataType="string" stdSqlType="VARCHAR"/>
-                <column code="LAST_LOGIN_TIME" displayName="最近一次登录时间" name="lastLoginTime" propId="5"
-                        stdDataType="datetime" stdSqlType="DATETIME"/>
-                <column code="AVATAR" displayName="头像图片" name="avatar" precision="255" propId="6" stdDataType="string"
-                        stdSqlType="VARCHAR"/>
-                <column code="ADD_TIME" displayName="创建时间" domain="createTime" name="addTime" propId="7"
-                        stdDataType="datetime" stdSqlType="DATETIME" ui:show="X"/>
-                <column code="UPDATE_TIME" displayName="更新时间" domain="updateTime" name="updateTime" propId="8"
-                        stdDataType="datetime" stdSqlType="DATETIME" ui:show="X"/>
-                <column code="DELETED" displayName="逻辑删除" domain="delFlag" name="deleted" propId="9"
-                        stdDataType="boolean" stdSqlType="BOOLEAN" ui:show="X"/>
-                <column code="ROLE_IDS" displayName="角色列表" name="roleIds" precision="127" propId="10"
-                        stdDataType="string" stdSqlType="VARCHAR"/>
-            </columns>
-        </entity>
         <entity className="app.mall.dao.entity.LitemallAftersale" createTimeProp="addTime" deleteFlagProp="deleted"
                 displayName="售后表" name="app.mall.dao.entity.LitemallAftersale" registerShortName="true"
                 tableName="litemall_aftersale" updateTimeProp="updateTime" useLogicalDelete="true">
@@ -1020,23 +994,6 @@
                 </to-one>
             </relations>
         </entity>
-        <entity className="app.mall.dao.entity.LitemallPermission" createTimeProp="addTime" deleteFlagProp="deleted"
-                displayName="权限表" name="app.mall.dao.entity.LitemallPermission" registerShortName="true"
-                tableName="litemall_permission" updateTimeProp="updateTime" useLogicalDelete="true">
-            <columns>
-                <column code="ID" displayName="Id" mandatory="true" name="id" primary="true" propId="1"
-                        stdDataType="string" stdSqlType="INTEGER" tagSet="seq" ui:show="R"/>
-                <column code="ROLE_ID" displayName="角色ID" name="roleId" propId="2" stdDataType="string" stdSqlType="INTEGER"/>
-                <column code="PERMISSION" displayName="权限" name="permission" precision="63" propId="3"
-                        stdDataType="string" stdSqlType="VARCHAR"/>
-                <column code="ADD_TIME" displayName="创建时间" domain="createTime" name="addTime" propId="4"
-                        stdDataType="datetime" stdSqlType="DATETIME" ui:show="X"/>
-                <column code="UPDATE_TIME" displayName="更新时间" domain="updateTime" name="updateTime" propId="5"
-                        stdDataType="datetime" stdSqlType="DATETIME" ui:show="X"/>
-                <column code="DELETED" displayName="逻辑删除" domain="delFlag" name="deleted" propId="6"
-                        stdDataType="boolean" stdSqlType="BOOLEAN" ui:show="X"/>
-            </columns>
-        </entity>
         <entity className="app.mall.dao.entity.LitemallRegion" displayName="行政区域表"
                 name="app.mall.dao.entity.LitemallRegion" registerShortName="true" tableName="litemall_region">
             <columns>
@@ -1066,25 +1023,6 @@
                     </join>
                 </to-many>
             </relations>
-        </entity>
-        <entity className="app.mall.dao.entity.LitemallRole" displayName="角色表" name="app.mall.dao.entity.LitemallRole"
-                registerShortName="true" tableName="litemall_role">
-            <columns>
-                <column code="ID" displayName="Id" mandatory="true" name="id" primary="true" propId="1"
-                        stdDataType="string" stdSqlType="INTEGER"/>
-                <column code="NAME" displayName="角色名称" mandatory="true" name="name" precision="63" propId="2"
-                        stdDataType="string" stdSqlType="VARCHAR"/>
-                <column code="DESC" displayName="角色描述" name="desc" precision="1023" propId="3" stdDataType="string"
-                        stdSqlType="VARCHAR"/>
-                <column code="ENABLED" displayName="是否启用" name="enabled" propId="4" stdDataType="boolean"
-                        stdSqlType="BOOLEAN"/>
-                <column code="ADD_TIME" displayName="创建时间" name="addTime" propId="5" stdDataType="datetime"
-                        stdSqlType="DATETIME" ui:show="X"/>
-                <column code="UPDATE_TIME" displayName="更新时间" name="updateTime" propId="6" stdDataType="datetime"
-                        stdSqlType="DATETIME" ui:show="X"/>
-                <column code="DELETED" displayName="逻辑删除" name="deleted" propId="7" stdDataType="boolean"
-                        stdSqlType="BOOLEAN" ui:show="X"/>
-            </columns>
         </entity>
         <entity className="app.mall.dao.entity.LitemallSearchHistory" createTimeProp="addTime" deleteFlagProp="deleted"
                 displayName="搜索历史表" name="app.mall.dao.entity.LitemallSearchHistory" registerShortName="true"

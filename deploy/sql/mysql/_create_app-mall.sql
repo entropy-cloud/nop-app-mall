@@ -33,20 +33,6 @@ CREATE TABLE litemall_address(
   constraint PK_litemall_address primary key (ID)
 )CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
 
-CREATE TABLE litemall_admin(
-  ID INTEGER NOT NULL    COMMENT 'Id',
-  USERNAME VARCHAR(63) NOT NULL    COMMENT '管理员名称',
-  PASSWORD VARCHAR(63) NOT NULL    COMMENT '管理员密码',
-  LAST_LOGIN_IP VARCHAR(63) NULL    COMMENT '最近一次登录IP地址',
-  LAST_LOGIN_TIME DATETIME NULL    COMMENT '最近一次登录时间',
-  AVATAR VARCHAR(255) NULL    COMMENT '头像图片',
-  ADD_TIME DATETIME NULL    COMMENT '创建时间',
-  UPDATE_TIME DATETIME NULL    COMMENT '更新时间',
-  DELETED BOOLEAN NULL    COMMENT '逻辑删除',
-  ROLE_IDS VARCHAR(127) NULL    COMMENT '角色列表',
-  constraint PK_litemall_admin primary key (ID)
-)CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
-
 CREATE TABLE litemall_order(
   ID INTEGER NOT NULL    COMMENT 'Id',
   USER_ID VARCHAR(50) NOT NULL    COMMENT '用户ID',
@@ -239,16 +225,6 @@ CREATE TABLE litemall_notice_admin(
   constraint PK_litemall_notice_admin primary key (ID)
 )CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
 
-CREATE TABLE litemall_permission(
-  ID INTEGER NOT NULL    COMMENT 'Id',
-  ROLE_ID INTEGER NULL    COMMENT '角色ID',
-  PERMISSION VARCHAR(63) NULL    COMMENT '权限',
-  ADD_TIME DATETIME NULL    COMMENT '创建时间',
-  UPDATE_TIME DATETIME NULL    COMMENT '更新时间',
-  DELETED BOOLEAN NULL    COMMENT '逻辑删除',
-  constraint PK_litemall_permission primary key (ID)
-)CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
-
 CREATE TABLE litemall_region(
   ID INTEGER NOT NULL    COMMENT 'Id',
   PID INTEGER NOT NULL    COMMENT '行政区域父ID',
@@ -256,17 +232,6 @@ CREATE TABLE litemall_region(
   TYPE INTEGER NOT NULL    COMMENT '行政区域类型',
   CODE INTEGER NOT NULL    COMMENT '行政区域编码',
   constraint PK_litemall_region primary key (ID)
-)CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
-
-CREATE TABLE litemall_role(
-  ID INTEGER NOT NULL    COMMENT 'Id',
-  NAME VARCHAR(63) NOT NULL    COMMENT '角色名称',
-  `DESC` VARCHAR(1023) NULL    COMMENT '角色描述',
-  ENABLED BOOLEAN NULL    COMMENT '是否启用',
-  ADD_TIME DATETIME NULL    COMMENT '创建时间',
-  UPDATE_TIME DATETIME NULL    COMMENT '更新时间',
-  DELETED BOOLEAN NULL    COMMENT '逻辑删除',
-  constraint PK_litemall_role primary key (ID)
 )CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
 
 CREATE TABLE litemall_search_history(
@@ -495,8 +460,6 @@ CREATE TABLE litemall_order_goods(
                 
    ALTER TABLE litemall_address COMMENT '收货地址表';
                 
-   ALTER TABLE litemall_admin COMMENT '管理员表';
-                
    ALTER TABLE litemall_order COMMENT '订单表';
                 
    ALTER TABLE litemall_brand COMMENT '品牌商表';
@@ -521,11 +484,7 @@ CREATE TABLE litemall_order_goods(
                 
    ALTER TABLE litemall_notice_admin COMMENT '通知管理员表';
                 
-   ALTER TABLE litemall_permission COMMENT '权限表';
-                
    ALTER TABLE litemall_region COMMENT '行政区域表';
-                
-   ALTER TABLE litemall_role COMMENT '角色表';
                 
    ALTER TABLE litemall_search_history COMMENT '搜索历史表';
                 

@@ -1,7 +1,6 @@
 
 drop table  if exists  litemall_ad;
 drop table  if exists  litemall_address;
-drop table  if exists  litemall_admin;
 drop table  if exists  litemall_order;
 drop table  if exists  litemall_brand;
 drop table  if exists  litemall_category;
@@ -14,9 +13,7 @@ drop table  if exists  litemall_keyword;
 drop table  if exists  litemall_log;
 drop table  if exists  litemall_notice;
 drop table  if exists  litemall_notice_admin;
-drop table  if exists  litemall_permission;
 drop table  if exists  litemall_region;
-drop table  if exists  litemall_role;
 drop table  if exists  litemall_search_history;
 drop table  if exists  litemall_storage;
 drop table  if exists  litemall_system;

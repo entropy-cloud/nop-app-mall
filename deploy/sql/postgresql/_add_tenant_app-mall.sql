@@ -3,8 +3,6 @@
 
 alter table litemall_address add NOP_TENANT_ID VARCHAR(32) DEFAULT '0' NOT NULL;
 
-alter table litemall_admin add NOP_TENANT_ID VARCHAR(32) DEFAULT '0' NOT NULL;
-
 alter table litemall_order add NOP_TENANT_ID VARCHAR(32) DEFAULT '0' NOT NULL;
 
 alter table litemall_brand add NOP_TENANT_ID VARCHAR(32) DEFAULT '0' NOT NULL;
@@ -29,11 +27,7 @@ alter table litemall_notice add NOP_TENANT_ID VARCHAR(32) DEFAULT '0' NOT NULL;
 
 alter table litemall_notice_admin add NOP_TENANT_ID VARCHAR(32) DEFAULT '0' NOT NULL;
 
-alter table litemall_permission add NOP_TENANT_ID VARCHAR(32) DEFAULT '0' NOT NULL;
-
 alter table litemall_region add NOP_TENANT_ID VARCHAR(32) DEFAULT '0' NOT NULL;
-
-alter table litemall_role add NOP_TENANT_ID VARCHAR(32) DEFAULT '0' NOT NULL;
 
 alter table litemall_search_history add NOP_TENANT_ID VARCHAR(32) DEFAULT '0' NOT NULL;
 
@@ -71,9 +65,6 @@ alter table litemall_ad add constraint PK_litemall_ad primary key (NOP_TENANT_ID
 alter table litemall_address drop constraint PK_litemall_address;
 alter table litemall_address add constraint PK_litemall_address primary key (NOP_TENANT_ID, id);
 
-alter table litemall_admin drop constraint PK_litemall_admin;
-alter table litemall_admin add constraint PK_litemall_admin primary key (NOP_TENANT_ID, id);
-
 alter table litemall_order drop constraint PK_litemall_order;
 alter table litemall_order add constraint PK_litemall_order primary key (NOP_TENANT_ID, id);
 
@@ -110,14 +101,8 @@ alter table litemall_notice add constraint PK_litemall_notice primary key (NOP_T
 alter table litemall_notice_admin drop constraint PK_litemall_notice_admin;
 alter table litemall_notice_admin add constraint PK_litemall_notice_admin primary key (NOP_TENANT_ID, id);
 
-alter table litemall_permission drop constraint PK_litemall_permission;
-alter table litemall_permission add constraint PK_litemall_permission primary key (NOP_TENANT_ID, id);
-
 alter table litemall_region drop constraint PK_litemall_region;
 alter table litemall_region add constraint PK_litemall_region primary key (NOP_TENANT_ID, id);
-
-alter table litemall_role drop constraint PK_litemall_role;
-alter table litemall_role add constraint PK_litemall_role primary key (NOP_TENANT_ID, id);
 
 alter table litemall_search_history drop constraint PK_litemall_search_history;
 alter table litemall_search_history add constraint PK_litemall_search_history primary key (NOP_TENANT_ID, id);
