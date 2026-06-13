@@ -6,9 +6,13 @@ import io.nop.api.core.annotations.autotest.NopTestConfig;
 import io.nop.api.core.annotations.core.OptionalBoolean;
 import io.nop.api.core.beans.ApiRequest;
 import io.nop.api.core.beans.ApiResponse;
+import io.nop.api.core.beans.FilterBeans;
+import io.nop.api.core.beans.query.QueryBean;
 import io.nop.api.core.context.ContextProvider;
 import io.nop.autotest.junit.JunitBaseTestCase;
 import io.nop.dao.api.IDaoProvider;
+import io.nop.orm.IOrmTemplate;
+import io.nop.file.dao.entity.NopFileRecord;
 import io.nop.graphql.core.IGraphQLExecutionContext;
 import io.nop.graphql.core.ast.GraphQLOperationType;
 import io.nop.graphql.core.engine.IGraphQLEngine;
@@ -17,6 +21,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -30,20 +35,44 @@ public class TestLitemallCommentBizModel extends JunitBaseTestCase {
     @Inject
     IDaoProvider daoProvider;
 
+    @Inject
+    IOrmTemplate ormTemplate;
+
     String orderGoodsId;
+
+    private void createFileRecord(String fileId, String bizObjName, String fieldName) {
+        NopFileRecord record = daoProvider.daoFor(NopFileRecord.class).newEntity();
+        record.setFileId(fileId);
+        record.setBizObjName(bizObjName);
+        record.setBizObjId("temp");
+        record.setFieldName(fieldName);
+        record.setOriginFileId(fileId);
+        record.setFileName(fileId + ".png");
+        record.setFilePath("/test/" + fileId + ".png");
+        record.setFileExt("png");
+        record.setMimeType("image/png");
+        record.setIsPublic(true);
+        daoProvider.daoFor(NopFileRecord.class).saveEntity(record);
+    }
 
     @BeforeEach
     void setUp() {
         ContextProvider.getOrCreateContext().setUserId("1");
         ContextProvider.getOrCreateContext().setUserName("test");
 
+        createFileRecord("goods-pic-1", "LitemallGoods", "picUrl");
+        createFileRecord("share-1", "LitemallGoods", "shareUrl");
+        createFileRecord("gallery-1", "LitemallGoods", "gallery");
+        createFileRecord("product-pic-1", "LitemallGoodsProduct", "url");
+        createFileRecord("cart-pic-1", "LitemallCart", "picUrl");
+
         LitemallGoods goods = daoProvider.daoFor(LitemallGoods.class).newEntity();
         goods.setGoodsSn("G001");
         goods.setName("Test Goods");
         goods.setRetailPrice(BigDecimal.valueOf(99));
-        goods.setPicUrl("");
-        goods.setShareUrl("");
-        goods.setGallery("");
+        goods.setPicUrl("http://test.com/goods-pic-1.png");
+        goods.setShareUrl("http://test.com/share-1.png");
+        goods.setGallery("http://test.com/gallery-1.png");
         daoProvider.daoFor(LitemallGoods.class).saveEntity(goods);
 
         LitemallGoodsProduct product = daoProvider.daoFor(LitemallGoodsProduct.class).newEntity();
@@ -51,7 +80,7 @@ public class TestLitemallCommentBizModel extends JunitBaseTestCase {
         product.setNumber(100);
         product.setPrice(BigDecimal.valueOf(99));
         product.setSpecifications("[\"标准\"]");
-        product.setUrl("");
+        product.setUrl("http://test.com/product-pic-1.png");
         daoProvider.daoFor(LitemallGoodsProduct.class).saveEntity(product);
 
         LitemallAddress address = daoProvider.daoFor(LitemallAddress.class).newEntity();
@@ -75,7 +104,7 @@ public class TestLitemallCommentBizModel extends JunitBaseTestCase {
         cart.setGoodsSn(goods.getGoodsSn());
         cart.setGoodsName(goods.getName());
         cart.setSpecifications("[\"标准\"]");
-        cart.setPicUrl("");
+        cart.setPicUrl("http://test.com/cart-pic-1.png");
         daoProvider.daoFor(LitemallCart.class).saveEntity(cart);
 
         // submit order
@@ -87,7 +116,7 @@ public class TestLitemallCommentBizModel extends JunitBaseTestCase {
         IGraphQLExecutionContext submitCtx = graphQLEngine.newRpcContext(
                 GraphQLOperationType.mutation, "LitemallOrder__submit", submitReq);
         ApiResponse<?> submitResult = graphQLEngine.executeRpc(submitCtx);
-        assertEquals(0, submitResult.getStatus());
+        assertEquals(0, submitResult.getStatus(), "submit order failed: " + submitResult);
         @SuppressWarnings("unchecked")
         Map<String, Object> orderData = (Map<String, Object>) submitResult.getData();
         String orderId = (String) orderData.get("id");
@@ -109,8 +138,10 @@ public class TestLitemallCommentBizModel extends JunitBaseTestCase {
                 GraphQLOperationType.mutation, "LitemallOrder__confirm", confirmReq));
 
         // get order goods id
-        LitemallOrder order = daoProvider.daoFor(LitemallOrder.class).getEntityById(orderId);
-        LitemallOrderGoods orderGoods = order.getOrderGoods().stream().findFirst().orElse(null);
+        QueryBean ogQuery = new QueryBean();
+        ogQuery.addFilter(FilterBeans.eq(LitemallOrderGoods.PROP_NAME_orderId, orderId));
+        LitemallOrderGoods orderGoods = daoProvider.daoFor(LitemallOrderGoods.class)
+                .findFirstByQuery(ogQuery);
         orderGoodsId = orderGoods.orm_idString();
     }
 
@@ -134,14 +165,19 @@ public class TestLitemallCommentBizModel extends JunitBaseTestCase {
 
     @Test
     public void testNotReceivedOrderRejected() {
-        // Create a new order that is NOT confirmed
+        createFileRecord("goods-pic-2", "LitemallGoods", "picUrl");
+        createFileRecord("share-2", "LitemallGoods", "shareUrl");
+        createFileRecord("gallery-2", "LitemallGoods", "gallery");
+        createFileRecord("product-pic-2", "LitemallGoodsProduct", "url");
+        createFileRecord("cart-pic-2", "LitemallCart", "picUrl");
+
         LitemallGoods goods2 = daoProvider.daoFor(LitemallGoods.class).newEntity();
         goods2.setGoodsSn("G002");
         goods2.setName("Goods 2");
         goods2.setRetailPrice(BigDecimal.valueOf(50));
-        goods2.setPicUrl("");
-        goods2.setShareUrl("");
-        goods2.setGallery("");
+        goods2.setPicUrl("http://test.com/goods-pic-2.png");
+        goods2.setShareUrl("http://test.com/share-2.png");
+        goods2.setGallery("http://test.com/gallery-2.png");
         daoProvider.daoFor(LitemallGoods.class).saveEntity(goods2);
 
         LitemallGoodsProduct prod2 = daoProvider.daoFor(LitemallGoodsProduct.class).newEntity();
@@ -149,7 +185,7 @@ public class TestLitemallCommentBizModel extends JunitBaseTestCase {
         prod2.setNumber(10);
         prod2.setPrice(BigDecimal.valueOf(50));
         prod2.setSpecifications("[\"默认\"]");
-        prod2.setUrl("");
+        prod2.setUrl("http://test.com/product-pic-2.png");
         daoProvider.daoFor(LitemallGoodsProduct.class).saveEntity(prod2);
 
         LitemallCart cart2 = daoProvider.daoFor(LitemallCart.class).newEntity();
@@ -162,7 +198,7 @@ public class TestLitemallCommentBizModel extends JunitBaseTestCase {
         cart2.setGoodsSn(goods2.getGoodsSn());
         cart2.setGoodsName(goods2.getName());
         cart2.setSpecifications("[\"默认\"]");
-        cart2.setPicUrl("");
+        cart2.setPicUrl("http://test.com/cart-pic-2.png");
         daoProvider.daoFor(LitemallCart.class).saveEntity(cart2);
 
         LitemallAddress addr = daoProvider.daoFor(LitemallAddress.class).newEntity();
@@ -173,18 +209,22 @@ public class TestLitemallCommentBizModel extends JunitBaseTestCase {
         addr.setCity("深圳市");
         addr.setCounty("福田区");
         addr.setAddressDetail("中心区");
+        addr.setIsDefault(false);
         daoProvider.daoFor(LitemallAddress.class).saveEntity(addr);
 
         ApiRequest<Map<String, Object>> submitReq = ApiRequest.build(Map.of(
-                "addressId", addr.getId(), "message", "", "freightPrice", BigDecimal.ZERO));
+                "addressId", addr.getId(), "message", "test2", "freightPrice", BigDecimal.ZERO));
         ApiResponse<?> submitRes = graphQLEngine.executeRpc(graphQLEngine.newRpcContext(
                 GraphQLOperationType.mutation, "LitemallOrder__submit", submitReq));
-        assertEquals(0, submitRes.getStatus());
+        assertEquals(0, submitRes.getStatus(), "submit order 2 failed: " + submitRes);
         @SuppressWarnings("unchecked")
         String orderId2 = (String) ((Map<String, Object>) submitRes.getData()).get("id");
 
-        LitemallOrder order2 = daoProvider.daoFor(LitemallOrder.class).getEntityById(orderId2);
-        String ogId2 = order2.getOrderGoods().stream().findFirst().map(g -> g.orm_idString()).orElse(null);
+        QueryBean ogQuery2 = new QueryBean();
+        ogQuery2.addFilter(FilterBeans.eq(LitemallOrderGoods.PROP_NAME_orderId, orderId2));
+        LitemallOrderGoods og2 = daoProvider.daoFor(LitemallOrderGoods.class)
+                .findFirstByQuery(ogQuery2);
+        String ogId2 = og2.orm_idString();
 
         ApiRequest<Map<String, Object>> req = ApiRequest.build(Map.of(
                 "orderGoodsId", ogId2, "content", "test", "star", 3));
@@ -207,20 +247,13 @@ public class TestLitemallCommentBizModel extends JunitBaseTestCase {
 
     @Test
     public void testExpiredCommentRejected() {
-        // Mark orderGoods as expired comment
-        LitemallOrderGoods og = daoProvider.daoFor(LitemallOrderGoods.class).getEntityById(orderGoodsId);
-        og.setComment(-1);
-        daoProvider.daoFor(LitemallOrderGoods.class).flushSession();
-
-        // Need a fresh orderGoods for this - let's use a different approach
-        // The entity is cached, so let's just test with a non-existent but valid scenario
-        // Actually, let's reset
-        og.setComment(0);
-        daoProvider.daoFor(LitemallOrderGoods.class).flushSession();
-
-        // Now mark as expired
-        og.setComment(-1);
-        daoProvider.daoFor(LitemallOrderGoods.class).flushSession();
+        ormTemplate.runInSession(session -> {
+            LitemallOrderGoods og = daoProvider.daoFor(LitemallOrderGoods.class)
+                    .getEntityById(orderGoodsId);
+            og.setComment(-1);
+            daoProvider.daoFor(LitemallOrderGoods.class).updateEntity(og);
+            return null;
+        });
 
         ApiRequest<Map<String, Object>> req = ApiRequest.build(Map.of(
                 "orderGoodsId", orderGoodsId, "content", "test", "star", 3));

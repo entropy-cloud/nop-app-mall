@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<sql-lib x:schema="/nop/schema/orm/sql-lib.xdef" xmlns:x="/nop/schema/xdsl.xdef">
+    <sqls>
+        <sql name="getOrderStatistics" sqlMethod="findFirst"
+             colNameCamelCase="true"
+             rowType="app.mall.dao.dto.OrderStatisticsBean">
+            <arg name="startDate"/>
+            <arg name="endDate"/>
+            <source>
+                SELECT
+                  COUNT(*) AS TOTAL_COUNT,
+                  COALESCE(SUM(ACTUAL_PRICE), 0) AS TOTAL_AMOUNT,
+                  SUM(CASE WHEN CAST(ORDER_STATUS AS INT) = 101 THEN 1 ELSE 0 END) AS PENDING_COUNT,
+                  SUM(CASE WHEN CAST(ORDER_STATUS AS INT) = 201 THEN 1 ELSE 0 END) AS PAID_COUNT,
+                  SUM(CASE WHEN CAST(ORDER_STATUS AS INT) = 301 THEN 1 ELSE 0 END) AS SHIPPED_COUNT,
+                  SUM(CASE WHEN CAST(ORDER_STATUS AS INT) IN (401, 402) THEN 1 ELSE 0 END) AS COMPLETED_COUNT,
+                  SUM(CASE WHEN CAST(ORDER_STATUS AS INT) IN (102, 103) THEN 1 ELSE 0 END) AS CANCELLED_COUNT
+                FROM litemall_order
+                WHERE CAST(DELETED AS INT) = 0
+                  AND ADD_TIME &gt;= ${startDate}
+                  AND ADD_TIME &lt;= ${endDate}
+            </source>
+        </sql>
+
+        <sql name="getGoodsSalesRanking" sqlMethod="findAll"
+             colNameCamelCase="true"
+             rowType="app.mall.dao.dto.GoodsStatisticsBean">
+            <arg name="startDate"/>
+            <arg name="endDate"/>
+            <arg name="limit"/>
+            <source>
+                SELECT
+                  og.GOODS_ID AS GOODS_ID, og.GOODS_NAME AS GOODS_NAME,
+                  SUM(og.NUMBER) AS SALES_COUNT, SUM(og.PRICE * og.NUMBER) AS SALES_AMOUNT
+                FROM litemall_order_goods og
+                INNER JOIN litemall_order o ON o.ID = og.ORDER_ID
+                WHERE CAST(o.DELETED AS INT) = 0 AND CAST(og.DELETED AS INT) = 0
+                  AND CAST(o.ORDER_STATUS AS INT) NOT IN (102, 103)
+                  AND o.ADD_TIME &gt;= ${startDate}
+                  AND o.ADD_TIME &lt;= ${endDate}
+                GROUP BY og.GOODS_ID, og.GOODS_NAME
+                ORDER BY SALES_COUNT DESC
+                LIMIT ${limit}
+            </source>
+        </sql>
+
+        <sql name="getUserStatistics" sqlMethod="findFirst"
+             colNameCamelCase="true"
+             rowType="app.mall.dao.dto.UserStatisticsBean">
+            <arg name="startDate"/>
+            <arg name="endDate"/>
+            <arg name="todayStart"/>
+            <arg name="weekStart"/>
+            <arg name="monthStart"/>
+            <source>
+                SELECT
+                  COUNT(*) AS TOTAL_USERS,
+                  SUM(CASE WHEN CREATE_TIME &gt;= ${todayStart} THEN 1 ELSE 0 END) AS NEW_USERS_TODAY,
+                  SUM(CASE WHEN CREATE_TIME &gt;= ${weekStart} THEN 1 ELSE 0 END) AS NEW_USERS_THIS_WEEK,
+                  SUM(CASE WHEN CREATE_TIME &gt;= ${monthStart} THEN 1 ELSE 0 END) AS NEW_USERS_THIS_MONTH
+                FROM nop_auth_user
+                WHERE USER_TYPE = 1
+                  AND CREATE_TIME &gt;= ${startDate}
+                  AND CREATE_TIME &lt;= ${endDate}
+            </source>
+        </sql>
+    </sqls>
+</sql-lib>

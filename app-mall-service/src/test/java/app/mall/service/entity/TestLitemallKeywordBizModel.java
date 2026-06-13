@@ -42,7 +42,7 @@ public class TestLitemallKeywordBizModel extends JunitBaseTestCase {
         kw.setKeyword("手机");
         kw.setIsHot(true);
         kw.setIsDefault(true);
-        kw.setUrl("");
+        kw.setUrl("about:blank");
         kw.setSortOrder(0);
         daoProvider.daoFor(LitemallKeyword.class).saveEntity(kw);
 
@@ -66,7 +66,7 @@ public class TestLitemallKeywordBizModel extends JunitBaseTestCase {
         kw.setKeyword("手机");
         kw.setIsHot(true);
         kw.setIsDefault(true);
-        kw.setUrl("");
+        kw.setUrl("about:blank");
         kw.setSortOrder(0);
         daoProvider.daoFor(LitemallKeyword.class).saveEntity(kw);
 

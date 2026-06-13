@@ -34,8 +34,7 @@ public class LitemallFootprintBizModel extends CrudBizModel<LitemallFootprint> i
         QueryBean query = new QueryBean();
         query.addFilter(FilterBeans.eq(LitemallFootprint.PROP_NAME_userId, userId));
         query.addFilter(FilterBeans.eq(LitemallFootprint.PROP_NAME_goodsId, goodsId));
-        query.addFilter(FilterBeans.ge(LitemallFootprint.PROP_NAME_addTime, todayStart));
-        query.addFilter(FilterBeans.le(LitemallFootprint.PROP_NAME_addTime, todayEnd));
+        query.addFilter(FilterBeans.dateTimeBetween(LitemallFootprint.PROP_NAME_addTime, todayStart, todayEnd));
         query.addFilter(FilterBeans.eq(LitemallFootprint.PROP_NAME_deleted, false));
 
         LitemallFootprint existing = findFirst(query, null, context);

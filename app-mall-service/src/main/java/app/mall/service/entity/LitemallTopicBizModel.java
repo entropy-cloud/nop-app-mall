@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static app.mall.service.AppMallErrors.ERR_GOODS_NOT_FOUND;
+import static app.mall.service.AppMallErrors.ERR_TOPIC_NOT_FOUND;
 
 @BizModel("LitemallTopic")
 public class LitemallTopicBizModel extends CrudBizModel<LitemallTopic> implements ILitemallTopicBiz {
@@ -53,7 +54,7 @@ public class LitemallTopicBizModel extends CrudBizModel<LitemallTopic> implement
                                       IServiceContext context) {
         LitemallTopic topic = get(id, false, context);
         if (topic == null || Boolean.TRUE.equals(topic.getDeleted())) {
-            return null;
+            throw new NopException(ERR_TOPIC_NOT_FOUND).param("id", id);
         }
         return topic;
     }

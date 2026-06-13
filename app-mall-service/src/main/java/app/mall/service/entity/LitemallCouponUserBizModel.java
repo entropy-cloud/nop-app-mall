@@ -4,6 +4,7 @@ import app.mall.biz.ILitemallCouponBiz;
 import app.mall.biz.ILitemallCouponUserBiz;
 import app.mall.dao.entity.LitemallCoupon;
 import app.mall.dao.entity.LitemallCouponUser;
+import io.nop.api.core.annotations.biz.BizAction;
 import io.nop.api.core.annotations.biz.BizModel;
 import io.nop.api.core.annotations.biz.BizMutation;
 import io.nop.api.core.annotations.biz.BizQuery;
@@ -65,6 +66,62 @@ public class LitemallCouponUserBizModel extends CrudBizModel<LitemallCouponUser>
             if (userClaimed >= coupon.getLimit()) {
                 throw new NopException(ERR_COUPON_LIMIT_EXCEEDED)
                         .param("couponId", couponId);
+            }
+        }
+
+        LitemallCouponUser couponUser = newEntity();
+        couponUser.setUserId(userId);
+        couponUser.setCouponId(couponId);
+        couponUser.setStatus(0);
+        couponUser.setOrderId("");
+
+        if (coupon.getTimeType() != null && coupon.getTimeType() == 0 && coupon.getDays() != null) {
+            LocalDateTime now = LocalDateTime.now();
+            couponUser.setStartTime(now);
+            couponUser.setEndTime(now.plusDays(coupon.getDays()));
+        } else {
+            couponUser.setStartTime(coupon.getStartTime());
+            couponUser.setEndTime(coupon.getEndTime());
+        }
+
+        saveEntity(couponUser, null, context);
+
+        if (coupon.getTotal() != null && coupon.getTotal() > 0) {
+            coupon.setTotal(coupon.getTotal() - 1);
+        }
+
+        return couponUser;
+    }
+
+    @Override
+    @BizAction
+    public LitemallCouponUser claimCouponForUser(@Name("couponId") String couponId,
+                                                  @Name("userId") String userId,
+                                                  IServiceContext context) {
+        LitemallCoupon coupon = couponBiz.get(couponId, false, context);
+        if (coupon == null || Boolean.TRUE.equals(coupon.getDeleted())) {
+            throw new NopException(ERR_COUPON_NOT_FOUND).param("couponId", couponId);
+        }
+        if (coupon.getStatus() != 0) {
+            throw new NopException(ERR_COUPON_NOT_AVAILABLE).param("couponId", couponId);
+        }
+        if (coupon.getTotal() != null && coupon.getTotal() > 0) {
+            QueryBean usedQuery = new QueryBean();
+            usedQuery.addFilter(FilterBeans.eq(LitemallCouponUser.PROP_NAME_couponId, couponId));
+            usedQuery.addFilter(FilterBeans.eq(LitemallCouponUser.PROP_NAME_deleted, false));
+            long claimed = findCount(usedQuery, context);
+            if (claimed >= coupon.getTotal()) {
+                throw new NopException(ERR_COUPON_NOT_AVAILABLE).param("couponId", couponId);
+            }
+        }
+        if (coupon.getLimit() != null && coupon.getLimit() > 0) {
+            QueryBean userQuery = new QueryBean();
+            userQuery.addFilter(FilterBeans.eq(LitemallCouponUser.PROP_NAME_userId, userId));
+            userQuery.addFilter(FilterBeans.eq(LitemallCouponUser.PROP_NAME_couponId, couponId));
+            userQuery.addFilter(FilterBeans.eq(LitemallCouponUser.PROP_NAME_deleted, false));
+            long userClaimed = findCount(userQuery, context);
+            if (userClaimed >= coupon.getLimit()) {
+                throw new NopException(ERR_COUPON_LIMIT_EXCEEDED).param("couponId", couponId);
             }
         }
 

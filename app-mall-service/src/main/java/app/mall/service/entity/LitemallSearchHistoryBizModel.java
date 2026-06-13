@@ -35,8 +35,7 @@ public class LitemallSearchHistoryBizModel extends CrudBizModel<LitemallSearchHi
         QueryBean query = new QueryBean();
         query.addFilter(FilterBeans.eq(LitemallSearchHistory.PROP_NAME_userId, userId));
         query.addFilter(FilterBeans.eq(LitemallSearchHistory.PROP_NAME_keyword, keyword));
-        query.addFilter(FilterBeans.ge(LitemallSearchHistory.PROP_NAME_addTime, todayStart));
-        query.addFilter(FilterBeans.le(LitemallSearchHistory.PROP_NAME_addTime, todayEnd));
+        query.addFilter(FilterBeans.dateTimeBetween(LitemallSearchHistory.PROP_NAME_addTime, todayStart, todayEnd));
         query.addFilter(FilterBeans.eq(LitemallSearchHistory.PROP_NAME_deleted, false));
 
         LitemallSearchHistory existing = findFirst(query, null, context);

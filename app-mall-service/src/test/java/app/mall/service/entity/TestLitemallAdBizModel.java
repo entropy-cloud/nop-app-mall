@@ -8,6 +8,7 @@ import io.nop.api.core.beans.ApiResponse;
 import io.nop.api.core.context.ContextProvider;
 import io.nop.autotest.junit.JunitBaseTestCase;
 import io.nop.dao.api.IDaoProvider;
+import io.nop.file.dao.entity.NopFileRecord;
 import io.nop.graphql.core.IGraphQLExecutionContext;
 import io.nop.graphql.core.ast.GraphQLOperationType;
 import io.nop.graphql.core.engine.IGraphQLEngine;
@@ -34,6 +35,19 @@ public class TestLitemallAdBizModel extends JunitBaseTestCase {
     void setUp() {
         ContextProvider.getOrCreateContext().setUserId("1");
         ContextProvider.getOrCreateContext().setUserName("test");
+
+        NopFileRecord record = daoProvider.daoFor(NopFileRecord.class).newEntity();
+        record.setFileId("ad-pic");
+        record.setBizObjName("LitemallAd");
+        record.setBizObjId("temp");
+        record.setFieldName("url");
+        record.setOriginFileId("ad-pic");
+        record.setFileName("ad-pic.png");
+        record.setFilePath("/test/ad-pic.png");
+        record.setFileExt("png");
+        record.setMimeType("image/png");
+        record.setIsPublic(true);
+        daoProvider.daoFor(NopFileRecord.class).saveEntity(record);
     }
 
     @SuppressWarnings("unchecked")
@@ -41,7 +55,7 @@ public class TestLitemallAdBizModel extends JunitBaseTestCase {
     public void testListActiveAds() {
         LitemallAd ad = daoProvider.daoFor(LitemallAd.class).newEntity();
         ad.setName("Banner");
-        ad.setUrl("");
+        ad.setUrl("http://test.com/ad-pic.png");
         ad.setLink("about:blank");
         ad.setPosition(1);
         ad.setContent("Ad content");
@@ -68,7 +82,7 @@ public class TestLitemallAdBizModel extends JunitBaseTestCase {
     public void testDisabledAdNotListed() {
         LitemallAd ad = daoProvider.daoFor(LitemallAd.class).newEntity();
         ad.setName("Disabled Banner");
-        ad.setUrl("");
+        ad.setUrl("http://test.com/ad-pic.png");
         ad.setLink("about:blank");
         ad.setPosition(1);
         ad.setContent("Ad content");

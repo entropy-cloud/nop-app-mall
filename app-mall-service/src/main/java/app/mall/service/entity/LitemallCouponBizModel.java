@@ -61,11 +61,6 @@ public class LitemallCouponBizModel extends CrudBizModel<LitemallCoupon> impleme
         query.addFilter(FilterBeans.eq(LitemallCoupon.PROP_NAME_type, 0));
 
         query.addFilter(FilterBeans.or(
-                FilterBeans.gt(LitemallCoupon.PROP_NAME_total, 0),
-                FilterBeans.eq(LitemallCoupon.PROP_NAME_total, 0)
-        ));
-
-        query.addFilter(FilterBeans.or(
                 FilterBeans.isNull(LitemallCoupon.PROP_NAME_endTime),
                 FilterBeans.gt(LitemallCoupon.PROP_NAME_endTime, now)
         ));

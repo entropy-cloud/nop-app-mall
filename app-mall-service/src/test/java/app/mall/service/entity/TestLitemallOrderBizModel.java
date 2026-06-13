@@ -11,6 +11,7 @@ import io.nop.api.core.beans.ApiResponse;
 import io.nop.api.core.context.ContextProvider;
 import io.nop.autotest.junit.JunitBaseTestCase;
 import io.nop.dao.api.IDaoProvider;
+import io.nop.file.dao.entity.NopFileRecord;
 import io.nop.graphql.core.IGraphQLExecutionContext;
 import io.nop.graphql.core.ast.GraphQLOperationType;
 import io.nop.graphql.core.engine.IGraphQLEngine;
@@ -38,15 +39,34 @@ public class TestLitemallOrderBizModel extends JunitBaseTestCase {
     String productId;
     String addressId;
 
+    private void createFileRecord(String fileId, String bizObjName) {
+        NopFileRecord record = daoProvider.daoFor(NopFileRecord.class).newEntity();
+        record.setFileId(fileId);
+        record.setBizObjName(bizObjName);
+        record.setBizObjId("temp");
+        record.setFieldName("temp");
+        record.setOriginFileId(fileId);
+        record.setFileName(fileId + ".png");
+        record.setFilePath("/test/" + fileId + ".png");
+        record.setFileExt("png");
+        record.setMimeType("image/png");
+        record.setIsPublic(true);
+        daoProvider.daoFor(NopFileRecord.class).saveEntity(record);
+    }
+
     @BeforeEach
     void setUp() {
         ContextProvider.getOrCreateContext().setUserId("1");
         ContextProvider.getOrCreateContext().setUserName("test");
 
+        createFileRecord("goods-pic", "LitemallGoods");
+        createFileRecord("product-pic", "LitemallGoodsProduct");
+        createFileRecord("cart-pic", "LitemallCart");
+
         LitemallGoods goods = daoProvider.daoFor(LitemallGoods.class).newEntity();
         goods.setGoodsSn("G001");
         goods.setName("Test Goods");
-        goods.setPicUrl("/test/pic.jpg");
+        goods.setPicUrl("http://test.com/goods-pic.png");
         goods.setCounterPrice(BigDecimal.valueOf(100));
         goods.setRetailPrice(BigDecimal.valueOf(99));
         daoProvider.daoFor(LitemallGoods.class).saveEntity(goods);
@@ -56,7 +76,7 @@ public class TestLitemallOrderBizModel extends JunitBaseTestCase {
         product.setGoodsId(goodsId);
         product.setNumber(100);
         product.setPrice(BigDecimal.valueOf(99));
-        product.setUrl("/test/product.jpg");
+        product.setUrl("http://test.com/product-pic.png");
         product.setSpecifications("[\"标准\"]");
         daoProvider.daoFor(LitemallGoodsProduct.class).saveEntity(product);
         productId = product.getId();
@@ -82,7 +102,7 @@ public class TestLitemallOrderBizModel extends JunitBaseTestCase {
         cart.setChecked(true);
         cart.setGoodsSn(goods.getGoodsSn());
         cart.setGoodsName(goods.getName());
-        cart.setPicUrl(product.getUrl());
+        cart.setPicUrl("http://test.com/cart-pic.png");
         cart.setSpecifications("[\"标准\"]");
         daoProvider.daoFor(LitemallCart.class).saveEntity(cart);
     }

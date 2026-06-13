@@ -1,5 +1,6 @@
 package app.mall.biz;
 
+import io.nop.api.core.annotations.biz.BizAction;
 import io.nop.api.core.annotations.biz.BizMutation;
 import io.nop.api.core.annotations.biz.BizQuery;
 import io.nop.api.core.annotations.core.Name;
@@ -17,6 +18,11 @@ public interface ILitemallCouponUserBiz extends ICrudBiz<LitemallCouponUser> {
     @BizMutation
     LitemallCouponUser claimCoupon(@Name("couponId") String couponId,
                                    IServiceContext context);
+
+    @BizAction
+    LitemallCouponUser claimCouponForUser(@Name("couponId") String couponId,
+                                          @Name("userId") String userId,
+                                          IServiceContext context);
 
     @BizMutation
     LitemallCouponUser redeemCoupon(@Name("code") String code,

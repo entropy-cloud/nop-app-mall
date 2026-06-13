@@ -141,7 +141,7 @@ public class TestLitemallCouponUserBizModel extends JunitBaseTestCase {
         String couponUserId = (String) ((Map<String, Object>) claimRes.getData()).get("id");
 
         ApiRequest<Map<String, Object>> useReq = ApiRequest.build(Map.of(
-                "couponUserId", couponUserId, "orderId", "order-1"));
+                "couponUserId", couponUserId, "orderId", "100"));
         IGraphQLExecutionContext useCtx = graphQLEngine.newRpcContext(
                 GraphQLOperationType.mutation, "LitemallCouponUser__useCoupon", useReq);
         ApiResponse<?> useResult = graphQLEngine.executeRpc(useCtx);

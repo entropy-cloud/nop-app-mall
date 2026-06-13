@@ -251,4 +251,12 @@ public interface AppMallErrors {
     ErrorCode ERR_USER_MOBILE_NOT_FOUND =
             define("nop.err.mall.user.mobile-not-found",
                     "手机号未注册");
+
+    ErrorCode ERR_TOPIC_NOT_FOUND =
+            define("nop.err.mall.topic.not-found",
+                    "专题不存在");
+
+    ErrorCode ERR_ORDER_PRICE_INVALID =
+            define("nop.err.mall.order.price-invalid",
+                    "订单价格无效");
 }

@@ -174,15 +174,6 @@ public class LitemallGrouponBizModel extends CrudBizModel<LitemallGroupon> imple
     @BizQuery
     public LitemallGroupon grouponDetail(@Name("id") String id, IServiceContext context) {
         LitemallGroupon groupon = requireEntity(id, null, context);
-
-        QueryBean query = new QueryBean();
-        query.addFilter(FilterBeans.or(
-                FilterBeans.eq(LitemallGroupon.PROP_NAME_id, id),
-                FilterBeans.eq(LitemallGroupon.PROP_NAME_grouponId, id)
-        ));
-        query.addFilter(FilterBeans.eq(LitemallGroupon.PROP_NAME_deleted, false));
-        findList(query, null, context);
-
         return groupon;
     }
 

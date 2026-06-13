@@ -10,6 +10,7 @@ import io.nop.api.core.beans.ApiResponse;
 import io.nop.api.core.context.ContextProvider;
 import io.nop.autotest.junit.JunitBaseTestCase;
 import io.nop.dao.api.IDaoProvider;
+import io.nop.file.dao.entity.NopFileRecord;
 import io.nop.graphql.core.IGraphQLExecutionContext;
 import io.nop.graphql.core.ast.GraphQLOperationType;
 import io.nop.graphql.core.engine.IGraphQLEngine;
@@ -34,15 +35,33 @@ public class TestLitemallCartBizModel extends JunitBaseTestCase {
     String goodsId;
     String productId;
 
+    private void createFileRecord(String fileId, String bizObjName) {
+        NopFileRecord record = daoProvider.daoFor(NopFileRecord.class).newEntity();
+        record.setFileId(fileId);
+        record.setBizObjName(bizObjName);
+        record.setBizObjId("temp");
+        record.setFieldName("temp");
+        record.setOriginFileId(fileId);
+        record.setFileName(fileId + ".png");
+        record.setFilePath("/test/" + fileId + ".png");
+        record.setFileExt("png");
+        record.setMimeType("image/png");
+        record.setIsPublic(true);
+        daoProvider.daoFor(NopFileRecord.class).saveEntity(record);
+    }
+
     @BeforeEach
     void setup() {
         ContextProvider.getOrCreateContext().setUserId("1");
         ContextProvider.getOrCreateContext().setUserName("test");
 
+        createFileRecord("goods-pic", "LitemallGoods");
+        createFileRecord("product-pic", "LitemallGoodsProduct");
+
         LitemallGoods goods = daoProvider.daoFor(LitemallGoods.class).newEntity();
         goods.setGoodsSn("TEST001");
         goods.setName("测试商品");
-        goods.setPicUrl("http://test.com/pic.png");
+        goods.setPicUrl("http://test.com/goods-pic.png");
         daoProvider.daoFor(LitemallGoods.class).saveEntity(goods);
         goodsId = goods.orm_idString();
 
@@ -51,7 +70,7 @@ public class TestLitemallCartBizModel extends JunitBaseTestCase {
         product.setPrice(new BigDecimal("99.00"));
         product.setNumber(100);
         product.setSpecifications("[\"标准\"]");
-        product.setUrl("http://test.com/product.png");
+        product.setUrl("http://test.com/product-pic.png");
         daoProvider.daoFor(LitemallGoodsProduct.class).saveEntity(product);
         productId = product.orm_idString();
     }
