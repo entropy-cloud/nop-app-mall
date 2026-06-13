@@ -1,7 +1,9 @@
 package app.mall.service.entity;
 
 import app.mall.biz.ILitemallAddressBiz;
+import app.mall.biz.ILitemallSystemBiz;
 import app.mall.dao.entity.LitemallAddress;
+import app.mall.dao.entity.LitemallSystem;
 import io.nop.api.core.annotations.biz.BizModel;
 import io.nop.api.core.annotations.biz.BizMutation;
 import io.nop.api.core.annotations.biz.BizQuery;
@@ -11,6 +13,7 @@ import io.nop.api.core.beans.query.QueryBean;
 import io.nop.api.core.exceptions.NopException;
 import io.nop.biz.crud.CrudBizModel;
 import io.nop.core.context.IServiceContext;
+import jakarta.inject.Inject;
 
 import java.util.List;
 
@@ -18,6 +21,11 @@ import static app.mall.service.AppMallErrors.*;
 
 @BizModel("LitemallAddress")
 public class LitemallAddressBizModel extends CrudBizModel<LitemallAddress> implements ILitemallAddressBiz {
+
+    @Inject
+    ILitemallSystemBiz systemBiz;
+
+    private static final int DEFAULT_ADDRESS_LIMIT = 20;
 
     public LitemallAddressBizModel() {
         setEntityName(LitemallAddress.class.getName());
@@ -57,7 +65,15 @@ public class LitemallAddressBizModel extends CrudBizModel<LitemallAddress> imple
         countQuery.addFilter(FilterBeans.eq(LitemallAddress.PROP_NAME_userId, userId));
         countQuery.addFilter(FilterBeans.eq(LitemallAddress.PROP_NAME_deleted, false));
         long count = dao().countByQuery(countQuery);
-        if (count >= 20) {
+        int limit = DEFAULT_ADDRESS_LIMIT;
+        String limitConfig = systemBiz.getConfig("mall_address_limit", context);
+        if (limitConfig != null) {
+            try {
+                limit = Integer.parseInt(limitConfig);
+            } catch (NumberFormatException ignored) {
+            }
+        }
+        if (count >= limit) {
             throw new NopException(ERR_ADDRESS_LIMIT_EXCEEDED);
         }
 
@@ -109,7 +125,7 @@ public class LitemallAddressBizModel extends CrudBizModel<LitemallAddress> imple
         entity.setAddressDetail(addressDetail);
         entity.setAreaCode(areaCode);
         entity.setIsDefault(isDefault);
-        saveEntity(entity, "updateAddress", context);
+        updateEntity(entity, "updateAddress", context);
 
         return entity;
     }
@@ -137,7 +153,7 @@ public class LitemallAddressBizModel extends CrudBizModel<LitemallAddress> imple
 
         clearDefault(userId, context);
         entity.setIsDefault(true);
-        saveEntity(entity, "setDefault", context);
+        updateEntity(entity, "setDefault", context);
 
         return entity;
     }

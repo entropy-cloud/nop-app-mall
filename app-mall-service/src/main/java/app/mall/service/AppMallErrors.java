@@ -72,6 +72,10 @@ public interface AppMallErrors {
             define("nop.err.mall.aftersale.not-allow-cancel",
                     "当前售后状态不允许取消");
 
+    ErrorCode ERR_AFTERSALE_REFUND_FAILED =
+            define("nop.err.mall.aftersale.refund-failed",
+                    "退款失败");
+
     String ARG_USERNAME = "username";
 
     ErrorCode ERR_USER_USERNAME_EXISTS =
@@ -196,4 +200,37 @@ public interface AppMallErrors {
     ErrorCode ERR_COUPON_GOODS_NOT_MATCH =
             define("nop.err.mall.coupon.goods-not-match",
                     "商品不在优惠券适用范围");
+
+    // 团购错误码
+    ErrorCode ERR_GROUPON_RULES_NOT_FOUND =
+            define("nop.err.mall.groupon-rules.not-found",
+                    "团购规则不存在");
+
+    ErrorCode ERR_GROUPON_RULES_NOT_AVAILABLE =
+            define("nop.err.mall.groupon-rules.not-available",
+                    "团购规则不可用");
+
+    ErrorCode ERR_GROUPON_RULES_GOODS_NOT_ON_SALE =
+            define("nop.err.mall.groupon-rules.goods-not-on-sale",
+                    "团购关联商品未上架");
+
+    ErrorCode ERR_GROUPON_NOT_FOUND =
+            define("nop.err.mall.groupon.not-found",
+                    "团购活动不存在");
+
+    ErrorCode ERR_GROUPON_CANNOT_JOIN_OWN =
+            define("nop.err.mall.groupon.cannot-join-own",
+                    "不能加入自己发起的团购");
+
+    ErrorCode ERR_GROUPON_ALREADY_JOINED =
+            define("nop.err.mall.groupon.already-joined",
+                    "已参加该团购");
+
+    ErrorCode ERR_GROUPON_FULL =
+            define("nop.err.mall.groupon.full",
+                    "团购已满员");
+
+    ErrorCode ERR_GROUPON_NOT_ACTIVE =
+            define("nop.err.mall.groupon.not-active",
+                    "团购已结束");
 }

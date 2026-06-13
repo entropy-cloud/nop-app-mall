@@ -3,12 +3,14 @@ package app.mall.service.entity;
 
 import app.mall.dao.entity.LitemallGoods;
 import app.mall.dao.entity.LitemallGoodsProduct;
+import app.mall.dao.manager.MallLogManager;
 import app.mall.dao.mapper.LitemallGoodsMapper;
 import io.nop.api.core.annotations.biz.BizModel;
 import io.nop.api.core.annotations.biz.BizMutation;
 import io.nop.api.core.annotations.biz.BizQuery;
 import io.nop.api.core.annotations.directive.Auth;
 import io.nop.api.core.annotations.core.Name;
+import io.nop.api.core.annotations.core.Optional;
 import io.nop.api.core.beans.FilterBeans;
 import io.nop.api.core.beans.PageBean;
 import io.nop.api.core.beans.TreeBean;
@@ -32,6 +34,9 @@ public class LitemallGoodsBizModel extends CrudBizModel<LitemallGoods> implement
 
     @Inject
     LitemallGoodsMapper goodsMapper;
+
+    @Inject
+    MallLogManager logManager;
 
     public LitemallGoodsBizModel() {
         setEntityName(LitemallGoods.class.getName());
@@ -79,31 +84,34 @@ public class LitemallGoodsBizModel extends CrudBizModel<LitemallGoods> implement
 
     @Override
     @BizMutation
-    public LitemallGoods onSale(@Name("id") String id) {
-        LitemallGoods goods = requireEntity(id, null, null);
+    public LitemallGoods onSale(@Name("id") String id, IServiceContext context) {
+        LitemallGoods goods = requireEntity(id, null, context);
         if (goods.getProducts() == null || goods.getProducts().isEmpty()) {
             throw new NopException(ERR_GOODS_NO_SKU)
                     .param("goodsId", id);
         }
         goods.setIsOnSale(true);
+        logManager.logGeneralSucceed("商品上架", "商品编号 " + goods.getGoodsSn());
         return goods;
     }
 
     @Override
     @BizMutation
-    public LitemallGoods offSale(@Name("id") String id) {
-        LitemallGoods goods = requireEntity(id, null, null);
+    public LitemallGoods offSale(@Name("id") String id, IServiceContext context) {
+        LitemallGoods goods = requireEntity(id, null, context);
         goods.setIsOnSale(false);
+        logManager.logGeneralSucceed("商品下架", "商品编号 " + goods.getGoodsSn());
         return goods;
     }
 
     @Override
     @BizQuery
     @Auth(publicAccess = true)
-    public PageBean<LitemallGoods> frontList(@Name("categoryId") String categoryId,
-                                             @Name("brandId") String brandId,
+    public PageBean<LitemallGoods> frontList(@Optional @Name("categoryId") String categoryId,
+                                             @Optional @Name("brandId") String brandId,
                                              @Name("page") int page,
-                                             @Name("pageSize") int pageSize) {
+                                             @Name("pageSize") int pageSize,
+                                             IServiceContext context) {
         QueryBean query = new QueryBean();
         query.addFilter(FilterBeans.eq(LitemallGoods.PROP_NAME_isOnSale, true));
         query.addFilter(FilterBeans.eq(LitemallGoods.PROP_NAME_deleted, false));
@@ -120,14 +128,14 @@ public class LitemallGoodsBizModel extends CrudBizModel<LitemallGoods> implement
         query.addOrderField(LitemallGoods.PROP_NAME_sortOrder, true);
         query.addOrderField(LitemallGoods.PROP_NAME_addTime, true);
 
-        return findPage(query, null, null);
+        return findPage(query, null, context);
     }
 
     @Override
     @BizQuery
     @Auth(publicAccess = true)
-    public LitemallGoods frontDetail(@Name("id") String id) {
-        LitemallGoods goods = get(id, false, null);
+    public LitemallGoods frontDetail(@Name("id") String id, IServiceContext context) {
+        LitemallGoods goods = get(id, false, context);
         if (goods == null || !Boolean.TRUE.equals(goods.getIsOnSale())) {
             throw new NopException(ERR_GOODS_NOT_ON_SALE)
                     .param("goodsId", id);
@@ -138,12 +146,13 @@ public class LitemallGoodsBizModel extends CrudBizModel<LitemallGoods> implement
     @Override
     @BizQuery
     @Auth(publicAccess = true)
-    public PageBean<LitemallGoods> search(@Name("keyword") String keyword,
-                                          @Name("categoryId") String categoryId,
-                                          @Name("brandId") String brandId,
-                                          @Name("sortBy") String sortBy,
+    public PageBean<LitemallGoods> search(@Optional @Name("keyword") String keyword,
+                                          @Optional @Name("categoryId") String categoryId,
+                                          @Optional @Name("brandId") String brandId,
+                                          @Optional @Name("sortBy") String sortBy,
                                           @Name("page") int page,
-                                          @Name("pageSize") int pageSize) {
+                                          @Name("pageSize") int pageSize,
+                                          IServiceContext context) {
         QueryBean query = new QueryBean();
         query.addFilter(FilterBeans.eq(LitemallGoods.PROP_NAME_isOnSale, true));
         query.addFilter(FilterBeans.eq(LitemallGoods.PROP_NAME_deleted, false));
@@ -173,7 +182,7 @@ public class LitemallGoodsBizModel extends CrudBizModel<LitemallGoods> implement
             query.addOrderField(LitemallGoods.PROP_NAME_addTime, true);
         }
 
-        return findPage(query, null, null);
+        return findPage(query, null, context);
     }
 
     @Override

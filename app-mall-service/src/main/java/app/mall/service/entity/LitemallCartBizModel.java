@@ -82,8 +82,11 @@ public class LitemallCartBizModel extends CrudBizModel<LitemallCart> implements 
             LitemallGoods goods = product.getGoods();
             cart.setGoodsSn(goods != null ? goods.getGoodsSn() : null);
             cart.setGoodsName(goods != null ? goods.getName() : null);
-            cart.setPicUrl(product.getUrl() != null ? product.getUrl() :
-                    (goods != null ? goods.getPicUrl() : null));
+            if (product.getUrl() != null) {
+                cart.getPicUrlComponent().copyFrom(product.getUrlComponent());
+            } else if (goods != null && goods.getPicUrl() != null) {
+                cart.getPicUrlComponent().copyFrom(goods.getPicUrlComponent());
+            }
             cart.setSpecifications(product.getSpecifications());
 
             saveEntity(cart, "addGoods", context);

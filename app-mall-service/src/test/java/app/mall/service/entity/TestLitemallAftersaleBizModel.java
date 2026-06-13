@@ -2,9 +2,13 @@ package app.mall.service.entity;
 
 import app.mall.dao._AppMallDaoConstants;
 import app.mall.dao.entity.LitemallAddress;
+import app.mall.dao.entity.LitemallAftersale;
 import app.mall.dao.entity.LitemallCart;
 import app.mall.dao.entity.LitemallGoods;
 import app.mall.dao.entity.LitemallGoodsProduct;
+import app.mall.pay.MockPayServiceImpl;
+import app.mall.pay.PayService;
+import app.mall.wx.WxPayServiceImpl;
 import io.nop.api.core.annotations.autotest.NopTestConfig;
 import io.nop.api.core.annotations.core.OptionalBoolean;
 import io.nop.api.core.beans.ApiRequest;
@@ -12,6 +16,7 @@ import io.nop.api.core.beans.ApiResponse;
 import io.nop.api.core.context.ContextProvider;
 import io.nop.autotest.junit.JunitBaseTestCase;
 import io.nop.dao.api.IDaoProvider;
+import io.nop.file.dao.entity.NopFileRecord;
 import io.nop.graphql.core.IGraphQLExecutionContext;
 import io.nop.graphql.core.ast.GraphQLOperationType;
 import io.nop.graphql.core.engine.IGraphQLEngine;
@@ -21,9 +26,11 @@ import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 import java.util.Map;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @NopTestConfig(localDb = true, initDatabaseSchema = OptionalBoolean.TRUE)
 public class TestLitemallAftersaleBizModel extends JunitBaseTestCase {
@@ -34,29 +41,51 @@ public class TestLitemallAftersaleBizModel extends JunitBaseTestCase {
     @Inject
     IDaoProvider daoProvider;
 
+    @Inject
+    PayService payService;
+
     String goodsId;
     String productId;
     String addressId;
+
+    private void createFileRecord(String fileId, String bizObjName) {
+        NopFileRecord record = daoProvider.daoFor(NopFileRecord.class).newEntity();
+        record.setFileId(fileId);
+        record.setBizObjName(bizObjName);
+        record.setBizObjId("temp");
+        record.setFieldName("temp");
+        record.setOriginFileId(fileId);
+        record.setFileName(fileId + ".png");
+        record.setFilePath("/test/" + fileId + ".png");
+        record.setFileExt("png");
+        record.setMimeType("image/png");
+        record.setIsPublic(true);
+        daoProvider.daoFor(NopFileRecord.class).saveEntity(record);
+    }
 
     @BeforeEach
     void setUp() {
         ContextProvider.getOrCreateContext().setUserId("1");
         ContextProvider.getOrCreateContext().setUserName("test");
 
+        createFileRecord("goods-pic", "LitemallGoods");
+
         LitemallGoods goods = daoProvider.daoFor(LitemallGoods.class).newEntity();
         goods.setGoodsSn("G001");
         goods.setName("Test Goods");
-        goods.setPicUrl("/test/pic.jpg");
+        goods.setPicUrl("http://test.com/goods-pic.png");
         goods.setCounterPrice(BigDecimal.valueOf(100));
         goods.setRetailPrice(BigDecimal.valueOf(99));
         daoProvider.daoFor(LitemallGoods.class).saveEntity(goods);
         goodsId = goods.getId();
 
+        createFileRecord("product-pic", "LitemallGoodsProduct");
+
         LitemallGoodsProduct product = daoProvider.daoFor(LitemallGoodsProduct.class).newEntity();
         product.setGoodsId(goodsId);
         product.setNumber(100);
         product.setPrice(BigDecimal.valueOf(99));
-        product.setUrl("/test/product.jpg");
+        product.setUrl("http://test.com/product-pic.png");
         product.setSpecifications("[\"标准\"]");
         daoProvider.daoFor(LitemallGoodsProduct.class).saveEntity(product);
         productId = product.getId();
@@ -73,6 +102,8 @@ public class TestLitemallAftersaleBizModel extends JunitBaseTestCase {
         daoProvider.daoFor(LitemallAddress.class).saveEntity(address);
         addressId = address.getId();
 
+        createFileRecord("cart-pic", "LitemallCart");
+
         LitemallCart cart = daoProvider.daoFor(LitemallCart.class).newEntity();
         cart.setUserId("1");
         cart.setGoodsId(goodsId);
@@ -82,7 +113,7 @@ public class TestLitemallAftersaleBizModel extends JunitBaseTestCase {
         cart.setChecked(true);
         cart.setGoodsSn(goods.getGoodsSn());
         cart.setGoodsName(goods.getName());
-        cart.setPicUrl(product.getUrl());
+        cart.setPicUrl("http://test.com/cart-pic.png");
         cart.setSpecifications("[\"标准\"]");
         daoProvider.daoFor(LitemallCart.class).saveEntity(cart);
     }
@@ -97,7 +128,7 @@ public class TestLitemallAftersaleBizModel extends JunitBaseTestCase {
         IGraphQLExecutionContext ctx = graphQLEngine.newRpcContext(
                 GraphQLOperationType.mutation, "LitemallOrder__submit", submitReq);
         ApiResponse<?> result = graphQLEngine.executeRpc(ctx);
-        assertEquals(0, result.getStatus());
+        assertEquals(0, result.getStatus(), "submit failed: " + result.getMsg() + " / " + result.getData());
         Map<String, Object> data = (Map<String, Object>) result.getData();
         String orderId = (String) data.get("id");
 
@@ -178,5 +209,72 @@ public class TestLitemallAftersaleBizModel extends JunitBaseTestCase {
         Map<String, Object> detail = (Map<String, Object>) detailResult.getData();
         assertNotNull(detail);
         assertEquals(aftersaleId, detail.get("id"));
+    }
+
+    @SuppressWarnings("unchecked")
+    private String createApplyAndApprove() {
+        String orderId = createAndPayOrder();
+
+        ApiRequest<Map<String, Object>> applyReq = ApiRequest.build(Map.of(
+                "orderId", orderId,
+                "type", 0,
+                "reason", "退款测试",
+                "amount", BigDecimal.valueOf(198)
+        ));
+        IGraphQLExecutionContext applyCtx = graphQLEngine.newRpcContext(
+                GraphQLOperationType.mutation, "LitemallAftersale__apply", applyReq);
+        ApiResponse<?> applyResult = graphQLEngine.executeRpc(applyCtx);
+        assertEquals(0, applyResult.getStatus(), "apply failed: " + applyResult);
+        Map<String, Object> aftersale = (Map<String, Object>) applyResult.getData();
+        String aftersaleId = (String) aftersale.get("id");
+
+        ApiRequest<Map<String, Object>> approveReq = ApiRequest.build(Map.of(
+                "ids", Set.of(aftersaleId)
+        ));
+        IGraphQLExecutionContext approveCtx = graphQLEngine.newRpcContext(
+                GraphQLOperationType.mutation, "LitemallAftersale__batchApprove", approveReq);
+        ApiResponse<?> approveResult = graphQLEngine.executeRpc(approveCtx);
+        assertEquals(0, approveResult.getStatus(), "batchApprove failed: " + approveResult);
+
+        return aftersaleId;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testRefundSuccess() {
+        String aftersaleId = createApplyAndApprove();
+
+        ApiRequest<Map<String, Object>> refundReq = ApiRequest.build(Map.of("id", aftersaleId));
+        IGraphQLExecutionContext refundCtx = graphQLEngine.newRpcContext(
+                GraphQLOperationType.mutation, "LitemallAftersale__refund", refundReq);
+        ApiResponse<?> refundResult = graphQLEngine.executeRpc(refundCtx);
+        assertEquals(0, refundResult.getStatus(), "refund failed: " + refundResult);
+
+        LitemallAftersale updated = daoProvider.daoFor(LitemallAftersale.class).getEntityById(aftersaleId);
+        assertEquals(_AppMallDaoConstants.AFTERSALE_STATUS_REFUND, updated.getStatus());
+    }
+
+    @Test
+    public void testRefundFailure() {
+        String aftersaleId = createApplyAndApprove();
+
+        MockPayServiceImpl.setForceRefundFailure(true);
+        WxPayServiceImpl.setForceRefundFailure(true);
+        try {
+            ApiRequest<Map<String, Object>> refundReq = ApiRequest.build(Map.of("id", aftersaleId));
+            IGraphQLExecutionContext refundCtx = graphQLEngine.newRpcContext(
+                    GraphQLOperationType.mutation, "LitemallAftersale__refund", refundReq);
+            ApiResponse<?> refundResult = graphQLEngine.executeRpc(refundCtx);
+            assertTrue(refundResult.getStatus() != 0, "refund should fail");
+            assertTrue(refundResult.getMsg().contains("退款失败") || refundResult.getMsg().contains("refund-failed"),
+                    "error should contain refund-failed: " + refundResult.getMsg());
+
+            LitemallAftersale unchanged = daoProvider.daoFor(LitemallAftersale.class).getEntityById(aftersaleId);
+            assertEquals(_AppMallDaoConstants.AFTERSALE_STATUS_APPROVED, unchanged.getStatus(),
+                    "status should remain APPROVED after refund failure");
+        } finally {
+            MockPayServiceImpl.setForceRefundFailure(false);
+            WxPayServiceImpl.setForceRefundFailure(false);
+        }
     }
 }

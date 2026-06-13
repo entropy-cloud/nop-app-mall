@@ -36,4 +36,7 @@ public interface ILitemallCouponUserBiz extends ICrudBiz<LitemallCouponUser> {
     @BizMutation
     void returnCoupon(@Name("couponUserId") String couponUserId,
                       IServiceContext context);
+
+    @BizMutation
+    int expireCoupons(IServiceContext context);
 }

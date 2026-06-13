@@ -19,6 +19,8 @@ public interface ILitemallOrderBiz extends ICrudBiz<LitemallOrder> {
                          @Optional @Name("message") String message,
                          @Name("freightPrice") BigDecimal freightPrice,
                          @Optional @Name("couponUserId") String couponUserId,
+                         @Optional @Name("grouponRulesId") String grouponRulesId,
+                         @Optional @Name("grouponId") String grouponId,
                          IServiceContext context);
 
     @BizMutation
@@ -49,5 +51,13 @@ public interface ILitemallOrderBiz extends ICrudBiz<LitemallOrder> {
 
     @BizQuery
     LitemallOrder getMyOrder(@Name("orderId") String orderId,
+                             IServiceContext context);
+
+    @BizMutation
+    int cancelExpiredOrders(@Name("timeoutMinutes") int timeoutMinutes,
+                            IServiceContext context);
+
+    @BizMutation
+    int confirmExpiredOrders(@Name("timeoutMinutes") int timeoutMinutes,
                              IServiceContext context);
 }

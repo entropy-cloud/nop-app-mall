@@ -4,15 +4,20 @@ import app.mall.biz.ILitemallAddressBiz;
 import app.mall.biz.ILitemallCartBiz;
 import app.mall.biz.ILitemallCouponUserBiz;
 import app.mall.biz.ILitemallGoodsProductBiz;
+import app.mall.biz.ILitemallGrouponBiz;
+import app.mall.biz.ILitemallGrouponRulesBiz;
 import app.mall.biz.ILitemallOrderBiz;
 import app.mall.biz.ILitemallOrderGoodsBiz;
+import app.mall.biz.ILitemallSystemBiz;
 import app.mall.dao._AppMallDaoConstants;
 import app.mall.dao.entity.LitemallAddress;
 import app.mall.dao.entity.LitemallCart;
 import app.mall.dao.entity.LitemallCouponUser;
 import app.mall.dao.entity.LitemallGoodsProduct;
+import app.mall.dao.entity.LitemallGrouponRules;
 import app.mall.dao.entity.LitemallOrder;
 import app.mall.dao.entity.LitemallOrderGoods;
+import app.mall.dao.manager.MallLogManager;
 import app.mall.dao.mapper.LitemallGoodsProductMapper;
 import io.nop.api.core.annotations.biz.BizModel;
 import io.nop.api.core.annotations.biz.BizMutation;
@@ -31,6 +36,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static app.mall.service.AppMallErrors.ERR_GROUPON_RULES_NOT_AVAILABLE;
 import static app.mall.service.AppMallErrors.ERR_ORDER_ADDRESS_INVALID;
 import static app.mall.service.AppMallErrors.ERR_ORDER_CART_EMPTY;
 import static app.mall.service.AppMallErrors.ERR_ORDER_NOT_ALLOW_CANCEL;
@@ -57,10 +63,22 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
     ILitemallOrderGoodsBiz orderGoodsBiz;
 
     @Inject
-    LitemallGoodsProductMapper goodsProductMapper;
+    LitemallGoodsProductMapper goodsProductMapper; // reduceStock/addStock: atomic SQL UPDATE for concurrent-safe stock deduction
 
     @Inject
     ILitemallCouponUserBiz couponUserBiz;
+
+    @Inject
+    ILitemallGrouponRulesBiz grouponRulesBiz;
+
+    @Inject
+    ILitemallGrouponBiz grouponBiz;
+
+    @Inject
+    ILitemallSystemBiz systemBiz;
+
+    @Inject
+    MallLogManager logManager;
 
     public LitemallOrderBizModel() {
         setEntityName(LitemallOrder.class.getName());
@@ -72,6 +90,8 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
                                  @Optional @Name("message") String message,
                                  @Name("freightPrice") BigDecimal freightPrice,
                                  @Optional @Name("couponUserId") String couponUserId,
+                                 @Optional @Name("grouponRulesId") String grouponRulesId,
+                                 @Optional @Name("grouponId") String grouponId,
                                  IServiceContext context) {
         String userId = context.getUserId();
 
@@ -121,7 +141,12 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
         order.setAddress(fullAddress);
 
         order.setMessage(message != null ? message : "");
-        order.setFreightPrice(freightPrice != null ? freightPrice : BigDecimal.ZERO);
+        BigDecimal effectiveFreightPrice = freightPrice;
+        if (effectiveFreightPrice == null) {
+            String freightConfig = systemBiz.getConfig("mall_freight_price", context);
+            effectiveFreightPrice = freightConfig != null ? new BigDecimal(freightConfig) : BigDecimal.ZERO;
+        }
+        order.setFreightPrice(effectiveFreightPrice);
         order.setCouponPrice(BigDecimal.ZERO);
         order.setIntegralPrice(BigDecimal.ZERO);
         order.setGrouponPrice(BigDecimal.ZERO);
@@ -138,7 +163,7 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
             orderGoods.setNumber(item.getNumber());
             orderGoods.setPrice(item.getPrice());
             orderGoods.setSpecifications(item.getSpecifications());
-            orderGoods.setPicUrl(item.getPicUrl());
+            orderGoods.getPicUrlComponent().copyFrom(item.getPicUrlComponent());
             orderGoods.setComment(0);
             order.getOrderGoods().add(orderGoods);
 
@@ -156,6 +181,21 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
         }
         order.setCouponPrice(couponPrice);
 
+        BigDecimal grouponPrice = BigDecimal.ZERO;
+        if (grouponRulesId != null && !grouponRulesId.isEmpty()) {
+            LitemallGrouponRules rules = grouponRulesBiz.requireEntity(grouponRulesId, null, context);
+            if (rules.getStatus() != 0) {
+                throw new NopException(ERR_GROUPON_RULES_NOT_AVAILABLE)
+                        .param("grouponRulesId", grouponRulesId);
+            }
+            if (rules.getExpireTime() != null && !rules.getExpireTime().isAfter(now)) {
+                throw new NopException(ERR_GROUPON_RULES_NOT_AVAILABLE)
+                        .param("grouponRulesId", grouponRulesId);
+            }
+            grouponPrice = rules.getDiscount() != null ? rules.getDiscount() : BigDecimal.ZERO;
+        }
+        order.setGrouponPrice(grouponPrice);
+
         BigDecimal orderPrice = goodsPriceTotal;
         if (order.getFreightPrice() != null) {
             orderPrice = orderPrice.add(order.getFreightPrice());
@@ -167,12 +207,19 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
         if (order.getIntegralPrice() != null) {
             actualPrice = actualPrice.subtract(order.getIntegralPrice());
         }
-        if (order.getGrouponPrice() != null) {
-            actualPrice = actualPrice.subtract(order.getGrouponPrice());
-        }
+        actualPrice = actualPrice.subtract(grouponPrice);
         order.setActualPrice(actualPrice);
 
         saveEntity(order, "submit", context);
+
+        if (grouponRulesId != null && !grouponRulesId.isEmpty()) {
+            String orderId = order.orm_idString();
+            if (grouponId != null && !grouponId.isEmpty()) {
+                grouponBiz.joinGroupon(grouponId, orderId, context);
+            } else {
+                grouponBiz.openGroupon(grouponRulesId, orderId, context);
+            }
+        }
 
         if (couponUserId != null && !couponUserId.isEmpty() && couponPrice.compareTo(BigDecimal.ZERO) > 0) {
             couponUserBiz.useCoupon(couponUserId, order.orm_idString(), context);
@@ -223,6 +270,7 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
         }
 
         updateEntity(order, "cancel", context);
+        logManager.logOrderSucceed("订单取消", "订单编号 " + order.getOrderSn());
         return order;
     }
 
@@ -269,6 +317,7 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
         order.setShipChannel(shipChannel);
         order.setShipTime(LocalDateTime.now());
         updateEntity(order, "ship", context);
+        logManager.logOrderSucceed("订单发货", "订单编号 " + order.getOrderSn());
         return order;
     }
 
@@ -348,6 +397,66 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
                     .param("orderId", orderId);
         }
         return order;
+    }
+
+    @Override
+    @BizMutation
+    public int cancelExpiredOrders(@Name("timeoutMinutes") int timeoutMinutes,
+                                    IServiceContext context) {
+        LocalDateTime cutoff = LocalDateTime.now().minusMinutes(timeoutMinutes);
+
+        QueryBean query = new QueryBean();
+        query.addFilter(FilterBeans.eq(LitemallOrder.PROP_NAME_orderStatus, _AppMallDaoConstants.ORDER_STATUS_CREATED));
+        query.addFilter(FilterBeans.lt(LitemallOrder.PROP_NAME_addTime, cutoff));
+        query.addFilter(FilterBeans.eq(LitemallOrder.PROP_NAME_deleted, false));
+        query.setLimit(100);
+
+        List<LitemallOrder> orders = doFindListByQueryDirectly(query, context);
+        int count = 0;
+        for (LitemallOrder order : orders) {
+            order.setOrderStatus(_AppMallDaoConstants.ORDER_STATUS_AUTO_CANCEL);
+            order.setEndTime(LocalDateTime.now());
+
+            for (LitemallOrderGoods orderGoods : order.getOrderGoods()) {
+                goodsProductMapper.addStock(orderGoods.getProductId(), orderGoods.getNumber());
+            }
+
+            QueryBean cuQuery = new QueryBean();
+            cuQuery.addFilter(FilterBeans.eq(LitemallCouponUser.PROP_NAME_orderId, order.orm_idString()));
+            cuQuery.addFilter(FilterBeans.eq(LitemallCouponUser.PROP_NAME_status, 1));
+            cuQuery.addFilter(FilterBeans.eq(LitemallCouponUser.PROP_NAME_deleted, false));
+            List<LitemallCouponUser> usedCoupons = couponUserBiz.findList(cuQuery, null, context);
+            for (LitemallCouponUser cu : usedCoupons) {
+                couponUserBiz.returnCoupon(cu.orm_idString(), context);
+            }
+
+            updateEntity(order, "cancelExpiredOrders", context);
+            count++;
+        }
+        return count;
+    }
+
+    @Override
+    @BizMutation
+    public int confirmExpiredOrders(@Name("timeoutMinutes") int timeoutMinutes,
+                                     IServiceContext context) {
+        LocalDateTime cutoff = LocalDateTime.now().minusMinutes(timeoutMinutes);
+
+        QueryBean query = new QueryBean();
+        query.addFilter(FilterBeans.eq(LitemallOrder.PROP_NAME_orderStatus, _AppMallDaoConstants.ORDER_STATUS_SHIP));
+        query.addFilter(FilterBeans.lt(LitemallOrder.PROP_NAME_shipTime, cutoff));
+        query.addFilter(FilterBeans.eq(LitemallOrder.PROP_NAME_deleted, false));
+        query.setLimit(100);
+
+        List<LitemallOrder> orders = doFindListByQueryDirectly(query, context);
+        int count = 0;
+        for (LitemallOrder order : orders) {
+            order.setOrderStatus(_AppMallDaoConstants.ORDER_STATUS_AUTO_CONFIRM);
+            order.setConfirmTime(LocalDateTime.now());
+            updateEntity(order, "confirmExpiredOrders", context);
+            count++;
+        }
+        return count;
     }
 
     private String generateOrderSn() {

@@ -10,6 +10,7 @@ import app.mall.dao.entity.LitemallOrderGoods;
 import app.mall.dao.manager.MallLogManager;
 import app.mall.dao.mapper.LitemallGoodsProductMapper;
 import app.mall.pay.PayRefundRequestBean;
+import app.mall.pay.PayRefundResponseBean;
 import app.mall.pay.PayService;
 import app.mall.service.consts.NotifyType;
 import io.nop.api.core.annotations.biz.BizModel;
@@ -38,6 +39,7 @@ import static app.mall.service.AppMallErrors.ERR_AFTERSALE_NOT_ALLOW_APPLY;
 import static app.mall.service.AppMallErrors.ERR_AFTERSALE_NOT_ALLOW_CANCEL;
 import static app.mall.service.AppMallErrors.ERR_AFTERSALE_NOT_ALLOW_REFUND;
 import static app.mall.service.AppMallErrors.ERR_AFTERSALE_NOT_FOUND;
+import static app.mall.service.AppMallErrors.ERR_AFTERSALE_REFUND_FAILED;
 
 @BizModel("LitemallAftersale")
 public class LitemallAftersaleBizModel extends CrudBizModel<LitemallAftersale> implements ILitemallAftersaleBiz {
@@ -56,7 +58,7 @@ public class LitemallAftersaleBizModel extends CrudBizModel<LitemallAftersale> i
     ILitemallOrderBiz orderBiz;
 
     @Inject
-    LitemallGoodsProductMapper goodsProductMapper;
+    LitemallGoodsProductMapper goodsProductMapper; // addStock: atomic SQL UPDATE for stock replenishment after refund
 
     public LitemallAftersaleBizModel() {
         setEntityName(LitemallAftersale.class.getName());
@@ -111,7 +113,12 @@ public class LitemallAftersaleBizModel extends CrudBizModel<LitemallAftersale> i
         wxPayRefundRequest.setTotalFee(order.getActualPrice());
         wxPayRefundRequest.setRefundFee(entity.getAmount());
 
-        payService.refund(wxPayRefundRequest);
+        PayRefundResponseBean refundResult = payService.refund(wxPayRefundRequest);
+        if (!refundResult.isSuccess()) {
+            throw new NopException(ERR_AFTERSALE_REFUND_FAILED)
+                    .param("aftersaleId", id)
+                    .param("orderSn", order.getOrderSn());
+        }
 
         entity.setStatus(AppMallDaoConstants.AFTERSALE_STATUS_REFUND);
         entity.setHandleTime(DateHelper.currentDateTime());

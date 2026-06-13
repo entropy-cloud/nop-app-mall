@@ -199,6 +199,24 @@ public class LitemallCouponUserBizModel extends CrudBizModel<LitemallCouponUser>
         couponUser.setOrderId("");
     }
 
+    @Override
+    @BizMutation
+    public int expireCoupons(IServiceContext context) {
+        LocalDateTime now = LocalDateTime.now();
+
+        QueryBean query = new QueryBean();
+        query.addFilter(FilterBeans.eq(LitemallCouponUser.PROP_NAME_status, 0));
+        query.addFilter(FilterBeans.lt(LitemallCouponUser.PROP_NAME_endTime, now));
+        query.addFilter(FilterBeans.eq(LitemallCouponUser.PROP_NAME_deleted, false));
+        query.setLimit(500);
+
+        List<LitemallCouponUser> expired = doFindListByQueryDirectly(query, context);
+        for (LitemallCouponUser cu : expired) {
+            cu.setStatus(2);
+        }
+        return expired.size();
+    }
+
     private List<String> parseGoodsValue(String goodsValue) {
         if (goodsValue == null || goodsValue.isEmpty()) {
             return java.util.Collections.emptyList();

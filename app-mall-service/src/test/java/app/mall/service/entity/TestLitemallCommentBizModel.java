@@ -41,6 +41,9 @@ public class TestLitemallCommentBizModel extends JunitBaseTestCase {
         goods.setGoodsSn("G001");
         goods.setName("Test Goods");
         goods.setRetailPrice(BigDecimal.valueOf(99));
+        goods.setPicUrl("");
+        goods.setShareUrl("");
+        goods.setGallery("");
         daoProvider.daoFor(LitemallGoods.class).saveEntity(goods);
 
         LitemallGoodsProduct product = daoProvider.daoFor(LitemallGoodsProduct.class).newEntity();
@@ -48,6 +51,7 @@ public class TestLitemallCommentBizModel extends JunitBaseTestCase {
         product.setNumber(100);
         product.setPrice(BigDecimal.valueOf(99));
         product.setSpecifications("[\"标准\"]");
+        product.setUrl("");
         daoProvider.daoFor(LitemallGoodsProduct.class).saveEntity(product);
 
         LitemallAddress address = daoProvider.daoFor(LitemallAddress.class).newEntity();
@@ -71,6 +75,7 @@ public class TestLitemallCommentBizModel extends JunitBaseTestCase {
         cart.setGoodsSn(goods.getGoodsSn());
         cart.setGoodsName(goods.getName());
         cart.setSpecifications("[\"标准\"]");
+        cart.setPicUrl("");
         daoProvider.daoFor(LitemallCart.class).saveEntity(cart);
 
         // submit order
@@ -105,7 +110,7 @@ public class TestLitemallCommentBizModel extends JunitBaseTestCase {
 
         // get order goods id
         LitemallOrder order = daoProvider.daoFor(LitemallOrder.class).getEntityById(orderId);
-        LitemallOrderGoods orderGoods = order.getOrderGoods().get(0);
+        LitemallOrderGoods orderGoods = order.getOrderGoods().stream().findFirst().orElse(null);
         orderGoodsId = orderGoods.orm_idString();
     }
 
@@ -134,6 +139,9 @@ public class TestLitemallCommentBizModel extends JunitBaseTestCase {
         goods2.setGoodsSn("G002");
         goods2.setName("Goods 2");
         goods2.setRetailPrice(BigDecimal.valueOf(50));
+        goods2.setPicUrl("");
+        goods2.setShareUrl("");
+        goods2.setGallery("");
         daoProvider.daoFor(LitemallGoods.class).saveEntity(goods2);
 
         LitemallGoodsProduct prod2 = daoProvider.daoFor(LitemallGoodsProduct.class).newEntity();
@@ -141,6 +149,7 @@ public class TestLitemallCommentBizModel extends JunitBaseTestCase {
         prod2.setNumber(10);
         prod2.setPrice(BigDecimal.valueOf(50));
         prod2.setSpecifications("[\"默认\"]");
+        prod2.setUrl("");
         daoProvider.daoFor(LitemallGoodsProduct.class).saveEntity(prod2);
 
         LitemallCart cart2 = daoProvider.daoFor(LitemallCart.class).newEntity();
@@ -153,6 +162,7 @@ public class TestLitemallCommentBizModel extends JunitBaseTestCase {
         cart2.setGoodsSn(goods2.getGoodsSn());
         cart2.setGoodsName(goods2.getName());
         cart2.setSpecifications("[\"默认\"]");
+        cart2.setPicUrl("");
         daoProvider.daoFor(LitemallCart.class).saveEntity(cart2);
 
         LitemallAddress addr = daoProvider.daoFor(LitemallAddress.class).newEntity();
@@ -174,7 +184,7 @@ public class TestLitemallCommentBizModel extends JunitBaseTestCase {
         String orderId2 = (String) ((Map<String, Object>) submitRes.getData()).get("id");
 
         LitemallOrder order2 = daoProvider.daoFor(LitemallOrder.class).getEntityById(orderId2);
-        String ogId2 = order2.getOrderGoods().get(0).orm_idString();
+        String ogId2 = order2.getOrderGoods().stream().findFirst().map(g -> g.orm_idString()).orElse(null);
 
         ApiRequest<Map<String, Object>> req = ApiRequest.build(Map.of(
                 "orderGoodsId", ogId2, "content", "test", "star", 3));
