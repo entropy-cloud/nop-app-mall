@@ -16,9 +16,13 @@ import app.mall.dao.entity.LitemallCouponUser;
 import app.mall.dao.entity.LitemallGoodsProduct;
 import app.mall.dao.entity.LitemallGrouponRules;
 import app.mall.dao.entity.LitemallOrder;
+import app.mall.dao.dto.GoodsStatisticsBean;
+import app.mall.dao.dto.OrderStatisticsBean;
+import app.mall.dao.dto.UserStatisticsBean;
 import app.mall.dao.entity.LitemallOrderGoods;
 import app.mall.dao.manager.MallLogManager;
 import app.mall.dao.mapper.LitemallGoodsProductMapper;
+import app.mall.service.notification.MallNotificationService;
 import io.nop.api.core.annotations.biz.BizModel;
 import io.nop.api.core.annotations.biz.BizMutation;
 import io.nop.api.core.annotations.biz.BizQuery;
@@ -28,13 +32,19 @@ import io.nop.api.core.beans.FilterBeans;
 import io.nop.api.core.beans.query.QueryBean;
 import io.nop.api.core.exceptions.NopException;
 import io.nop.biz.crud.CrudBizModel;
+import io.nop.auth.dao.entity.NopAuthUser;
 import io.nop.commons.util.StringHelper;
 import io.nop.core.context.IServiceContext;
 import jakarta.inject.Inject;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static app.mall.service.AppMallErrors.ERR_GROUPON_RULES_NOT_AVAILABLE;
 import static app.mall.service.AppMallErrors.ERR_ORDER_ADDRESS_INVALID;
@@ -79,6 +89,9 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
 
     @Inject
     MallLogManager logManager;
+
+    @Inject
+    MallNotificationService notificationService;
 
     public LitemallOrderBizModel() {
         setEntityName(LitemallOrder.class.getName());
@@ -235,6 +248,8 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
             updateEntity(order, "submit:zeroPay", context);
         }
 
+        notificationService.sendAdminOrderNotification(order.getOrderSn());
+
         return order;
     }
 
@@ -292,6 +307,7 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
         order.setOrderStatus(_AppMallDaoConstants.ORDER_STATUS_PAY);
         order.setPayTime(LocalDateTime.now());
         updateEntity(order, "pay", context);
+        notificationService.sendOrderPaymentNotification(order.getOrderSn(), order.getMobile());
         return order;
     }
 
@@ -317,6 +333,7 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
         order.setShipChannel(shipChannel);
         order.setShipTime(LocalDateTime.now());
         updateEntity(order, "ship", context);
+        notificationService.sendOrderShipNotification(order.getOrderSn(), order.getMobile());
         logManager.logOrderSucceed("订单发货", "订单编号 " + order.getOrderSn());
         return order;
     }
@@ -397,6 +414,151 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
                     .param("orderId", orderId);
         }
         return order;
+    }
+
+    @Override
+    @BizQuery
+    public OrderStatisticsBean getOrderStatistics(@Optional @Name("startDate") String startDate,
+                                                   @Optional @Name("endDate") String endDate,
+                                                   IServiceContext context) {
+        QueryBean query = new QueryBean();
+        query.addFilter(FilterBeans.eq(LitemallOrder.PROP_NAME_deleted, false));
+
+        if (startDate != null && !startDate.isEmpty()) {
+            LocalDateTime start = LocalDate.parse(startDate).atTime(LocalTime.MIN);
+            query.addFilter(FilterBeans.ge(LitemallOrder.PROP_NAME_addTime, start));
+        }
+        if (endDate != null && !endDate.isEmpty()) {
+            LocalDateTime end = LocalDate.parse(endDate).atTime(LocalTime.MAX);
+            query.addFilter(FilterBeans.le(LitemallOrder.PROP_NAME_addTime, end));
+        }
+
+        List<LitemallOrder> orders = findList(query, null, context);
+
+        OrderStatisticsBean stats = new OrderStatisticsBean();
+        stats.setTotalCount(orders.size());
+        BigDecimal totalAmount = BigDecimal.ZERO;
+
+        for (LitemallOrder order : orders) {
+            if (order.getActualPrice() != null) {
+                totalAmount = totalAmount.add(order.getActualPrice());
+            }
+            int status = order.getOrderStatus();
+            if (status == _AppMallDaoConstants.ORDER_STATUS_CREATED) {
+                stats.setPendingCount(stats.getPendingCount() + 1);
+            } else if (status == _AppMallDaoConstants.ORDER_STATUS_PAY) {
+                stats.setPaidCount(stats.getPaidCount() + 1);
+            } else if (status == _AppMallDaoConstants.ORDER_STATUS_SHIP) {
+                stats.setShippedCount(stats.getShippedCount() + 1);
+            } else if (status == _AppMallDaoConstants.ORDER_STATUS_CONFIRM
+                    || status == _AppMallDaoConstants.ORDER_STATUS_AUTO_CONFIRM) {
+                stats.setCompletedCount(stats.getCompletedCount() + 1);
+            } else if (status == _AppMallDaoConstants.ORDER_STATUS_CANCEL
+                    || status == _AppMallDaoConstants.ORDER_STATUS_AUTO_CANCEL) {
+                stats.setCancelledCount(stats.getCancelledCount() + 1);
+            }
+        }
+        stats.setTotalAmount(totalAmount);
+        return stats;
+    }
+
+    @Override
+    @BizQuery
+    public List<GoodsStatisticsBean> getGoodsSalesRanking(@Optional @Name("startDate") String startDate,
+                                                          @Optional @Name("endDate") String endDate,
+                                                          @Optional @Name("limit") Integer limit,
+                                                          IServiceContext context) {
+        if (limit == null || limit <= 0) {
+            limit = 10;
+        }
+
+        QueryBean orderQuery = new QueryBean();
+        orderQuery.addFilter(FilterBeans.eq(LitemallOrder.PROP_NAME_deleted, false));
+        orderQuery.addFilter(FilterBeans.notIn(LitemallOrder.PROP_NAME_orderStatus,
+                List.of(_AppMallDaoConstants.ORDER_STATUS_CANCEL, _AppMallDaoConstants.ORDER_STATUS_AUTO_CANCEL)));
+
+        if (startDate != null && !startDate.isEmpty()) {
+            LocalDateTime start = LocalDate.parse(startDate).atTime(LocalTime.MIN);
+            orderQuery.addFilter(FilterBeans.ge(LitemallOrder.PROP_NAME_addTime, start));
+        }
+        if (endDate != null && !endDate.isEmpty()) {
+            LocalDateTime end = LocalDate.parse(endDate).atTime(LocalTime.MAX);
+            orderQuery.addFilter(FilterBeans.le(LitemallOrder.PROP_NAME_addTime, end));
+        }
+
+        List<LitemallOrder> orders = doFindListByQueryDirectly(orderQuery, context);
+
+        Map<String, GoodsStatisticsBean> goodsMap = new HashMap<>();
+        for (LitemallOrder order : orders) {
+            for (LitemallOrderGoods og : order.getOrderGoods()) {
+                String goodsId = og.getGoodsId();
+                GoodsStatisticsBean bean = goodsMap.computeIfAbsent(goodsId, k -> {
+                    GoodsStatisticsBean b = new GoodsStatisticsBean();
+                    b.setGoodsId(goodsId);
+                    b.setGoodsName(og.getGoodsName());
+                    b.setSalesCount(0);
+                    b.setSalesAmount(BigDecimal.ZERO);
+                    return b;
+                });
+                bean.setSalesCount(bean.getSalesCount() + og.getNumber());
+                bean.setSalesAmount(bean.getSalesAmount().add(
+                        og.getPrice().multiply(BigDecimal.valueOf(og.getNumber()))));
+            }
+        }
+
+        List<GoodsStatisticsBean> result = new ArrayList<>(goodsMap.values());
+        result.sort((a, b) -> b.getSalesCount().compareTo(a.getSalesCount()));
+        if (result.size() > limit) {
+            result = result.subList(0, limit);
+        }
+        return result;
+    }
+
+    @Override
+    @BizQuery
+    public UserStatisticsBean getUserStatistics(@Optional @Name("startDate") String startDate,
+                                                 @Optional @Name("endDate") String endDate,
+                                                 IServiceContext context) {
+        UserStatisticsBean stats = new UserStatisticsBean();
+
+        QueryBean query = new QueryBean();
+        query.addFilter(FilterBeans.eq(NopAuthUser.PROP_NAME_userType, 1));
+
+        if (startDate != null && !startDate.isEmpty()) {
+            query.addFilter(FilterBeans.ge(NopAuthUser.PROP_NAME_createTime,
+                    java.sql.Timestamp.valueOf(LocalDate.parse(startDate).atTime(LocalTime.MIN))));
+        }
+        if (endDate != null && !endDate.isEmpty()) {
+            query.addFilter(FilterBeans.le(NopAuthUser.PROP_NAME_createTime,
+                    java.sql.Timestamp.valueOf(LocalDate.parse(endDate).atTime(LocalTime.MAX))));
+        }
+
+        List<NopAuthUser> users = daoProvider().daoFor(NopAuthUser.class).findAllByQuery(query);
+
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime todayStart = now.toLocalDate().atTime(LocalTime.MIN);
+        LocalDateTime weekStart = now.minusWeeks(1);
+        LocalDateTime monthStart = now.minusMonths(1);
+
+        stats.setTotalUsers(users.size());
+
+        for (NopAuthUser user : users) {
+            java.sql.Timestamp createTime = user.getCreateTime();
+            if (createTime == null)
+                continue;
+            LocalDateTime created = createTime.toLocalDateTime();
+            if (!created.isBefore(todayStart)) {
+                stats.setNewUsersToday(stats.getNewUsersToday() + 1);
+            }
+            if (!created.isBefore(weekStart)) {
+                stats.setNewUsersThisWeek(stats.getNewUsersThisWeek() + 1);
+            }
+            if (!created.isBefore(monthStart)) {
+                stats.setNewUsersThisMonth(stats.getNewUsersThisMonth() + 1);
+            }
+        }
+
+        return stats;
     }
 
     @Override

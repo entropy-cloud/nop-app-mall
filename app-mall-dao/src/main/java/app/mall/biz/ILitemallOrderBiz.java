@@ -7,6 +7,9 @@ import io.nop.api.core.annotations.core.Optional;
 import io.nop.core.context.IServiceContext;
 import io.nop.orm.biz.ICrudBiz;
 
+import app.mall.dao.dto.GoodsStatisticsBean;
+import app.mall.dao.dto.OrderStatisticsBean;
+import app.mall.dao.dto.UserStatisticsBean;
 import app.mall.dao.entity.LitemallOrder;
 
 import java.math.BigDecimal;
@@ -52,6 +55,22 @@ public interface ILitemallOrderBiz extends ICrudBiz<LitemallOrder> {
     @BizQuery
     LitemallOrder getMyOrder(@Name("orderId") String orderId,
                              IServiceContext context);
+
+    @BizQuery
+    OrderStatisticsBean getOrderStatistics(@Optional @Name("startDate") String startDate,
+                                           @Optional @Name("endDate") String endDate,
+                                           IServiceContext context);
+
+    @BizQuery
+    List<GoodsStatisticsBean> getGoodsSalesRanking(@Optional @Name("startDate") String startDate,
+                                                    @Optional @Name("endDate") String endDate,
+                                                    @Optional @Name("limit") Integer limit,
+                                                    IServiceContext context);
+
+    @BizQuery
+    UserStatisticsBean getUserStatistics(@Optional @Name("startDate") String startDate,
+                                          @Optional @Name("endDate") String endDate,
+                                          IServiceContext context);
 
     @BizMutation
     int cancelExpiredOrders(@Name("timeoutMinutes") int timeoutMinutes,

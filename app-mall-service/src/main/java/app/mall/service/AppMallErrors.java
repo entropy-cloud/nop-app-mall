@@ -233,4 +233,22 @@ public interface AppMallErrors {
     ErrorCode ERR_GROUPON_NOT_ACTIVE =
             define("nop.err.mall.groupon.not-active",
                     "团购已结束");
+
+    // 通知错误码
+    ErrorCode ERR_NOTIFICATION_SEND_FAILED =
+            define("nop.err.mall.notification.send-failed",
+                    "通知发送失败");
+
+    // 密码重置错误码
+    ErrorCode ERR_RESET_CODE_INVALID =
+            define("nop.err.mall.reset-code.invalid",
+                    "验证码无效或已过期");
+
+    ErrorCode ERR_RESET_CODE_SEND_TOO_FREQUENT =
+            define("nop.err.mall.reset-code.send-too-frequent",
+                    "发送太频繁");
+
+    ErrorCode ERR_USER_MOBILE_NOT_FOUND =
+            define("nop.err.mall.user.mobile-not-found",
+                    "手机号未注册");
 }

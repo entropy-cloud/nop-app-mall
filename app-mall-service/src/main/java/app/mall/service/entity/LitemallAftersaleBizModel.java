@@ -12,7 +12,7 @@ import app.mall.dao.mapper.LitemallGoodsProductMapper;
 import app.mall.pay.PayRefundRequestBean;
 import app.mall.pay.PayRefundResponseBean;
 import app.mall.pay.PayService;
-import app.mall.service.consts.NotifyType;
+import app.mall.service.notification.MallNotificationService;
 import io.nop.api.core.annotations.biz.BizModel;
 import io.nop.api.core.annotations.biz.BizMutation;
 import io.nop.api.core.annotations.biz.BizQuery;
@@ -25,13 +25,9 @@ import io.nop.biz.crud.CrudBizModel;
 import io.nop.commons.util.DateHelper;
 import io.nop.commons.util.StringHelper;
 import io.nop.core.context.IServiceContext;
-import io.nop.integration.api.sms.ISmsSender;
-import io.nop.integration.api.sms.SmsMessage;
-import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -45,8 +41,7 @@ import static app.mall.service.AppMallErrors.ERR_AFTERSALE_REFUND_FAILED;
 public class LitemallAftersaleBizModel extends CrudBizModel<LitemallAftersale> implements ILitemallAftersaleBiz {
 
     @Inject
-    @Nullable
-    ISmsSender smsSender;
+    MallNotificationService notificationService;
 
     @Inject
     PayService payService;
@@ -133,13 +128,7 @@ public class LitemallAftersaleBizModel extends CrudBizModel<LitemallAftersale> i
             }
         }
 
-        if (smsSender != null) {
-            SmsMessage smsMessage = new SmsMessage();
-            smsMessage.setMobile(order.getMobile());
-            smsMessage.setType(NotifyType.REFUND.ordinal());
-            smsMessage.setParams(Arrays.asList(StringHelper.tail(order.getOrderSn(), 6)));
-            smsSender.sendMessage(smsMessage);
-        }
+        notificationService.sendRefundNotification(order.getOrderSn(), order.getMobile());
 
         logManager.logOrderSucceed("退款", "订单编号 " + order.getOrderSn() + " 售后编号 " + entity.getAftersaleSn());
     }
