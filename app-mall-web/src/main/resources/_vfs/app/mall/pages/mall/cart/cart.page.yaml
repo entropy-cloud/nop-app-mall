@@ -1,0 +1,153 @@
+type: page
+title: 购物车
+body:
+  - type: wrapper
+    className: storefront-header
+    body:
+      type: flex
+      justify: space-between
+      alignItems: center
+      style:
+        padding: 10px 20px
+        backgroundColor: '#fff'
+        borderBottom: 2px solid '#ff6700'
+      items:
+        - type: wrapper
+          body:
+            - type: button
+              label: '<b style="font-size:24px;color:#ff6700">商城</b>'
+              level: link
+              actionType: link
+              link: "/storefront-home"
+        - type: wrapper
+          body:
+            - type: button
+              label: 继续购物
+              level: link
+              actionType: link
+              link: "/storefront-category"
+            - type: button
+              label: 用户中心
+              icon: user
+              level: link
+              actionType: link
+              link: "/storefront-user-center"
+
+  - type: wrapper
+    style:
+      padding: 20px
+    body:
+      - type: service
+        name: cartService
+        api:
+          url: '@query:LitemallCart__checkedList'
+          sendOn: true
+        body:
+          - type: each
+            name: items
+            placeholder: '<div style="padding:60px;text-align:center;color:#999"><p>购物车是空的</p><a href="/storefront-category">去逛逛</a></div>'
+            items:
+              type: card
+              body:
+                type: flex
+                alignItems: center
+                style:
+                  padding: 10px
+                items:
+                  - type: tpl
+                    tpl: '<img src="${item.picUrl}" style="width:60px;height:60px;border-radius:4px"/>'
+                  - type: wrapper
+                    style:
+                      marginLeft: 15px
+                      flex: '1'
+                    body:
+                      - type: tpl
+                        tpl: '<b>${item.goodsName}</b>'
+                      - type: tpl
+                        tpl: '<span style="color:#999;font-size:12px">${item.specifications}</span>'
+                  - type: tpl
+                    tpl: '<span style="color:#ff6700;font-weight:bold;margin:0 15px">¥${item.price}</span>'
+                  - type: input-number
+                    name: "qty_${item.id}"
+                    value: "${item.number}"
+                    min: 1
+                    max: 999
+                    size: sm
+                  - type: button-toolbar
+                    buttons:
+                      - type: button
+                        label: 更新
+                        size: sm
+                        level: primary
+                        actionType: ajax
+                        api:
+                          url: '@mutation:LitemallCart__updateQuantity'
+                          data:
+                            id: "${item.id}"
+                            number: "${qty_${item.id}}"
+                      - type: button
+                        label: 取消选中
+                        size: sm
+                        level: link
+                        actionType: ajax
+                        api:
+                          url: '@mutation:LitemallCart__uncheck'
+                          data:
+                            id: "${item.id}"
+                      - type: button
+                        label: 删除
+                        size: sm
+                        level: danger
+                        actionType: ajax
+                        confirmText: '确定删除这件商品吗？'
+                        api:
+                          url: '@mutation:LitemallCart__deleteCart'
+                          data:
+                            id: "${item.id}"
+
+          - type: wrapper
+            visibleOn: "${items && items.length > 0}"
+            style:
+              marginTop: 20px
+              padding: 15px
+              backgroundColor: '#fafafa'
+              borderRadius: 4px
+            body:
+              type: flex
+              justify: space-between
+              alignItems: center
+              items:
+                - type: wrapper
+                  body:
+                    - type: button
+                      label: 全选
+                      size: sm
+                      level: link
+                      actionType: ajax
+                      api:
+                        url: '@mutation:LitemallCart__checkAll'
+                    - type: button
+                      label: 全不选
+                      size: sm
+                      level: link
+                      actionType: ajax
+                      api:
+                        url: '@mutation:LitemallCart__uncheckAll'
+                    - type: button
+                      label: 清空购物车
+                      size: sm
+                      level: danger
+                      actionType: ajax
+                      confirmText: '确定清空购物车吗？'
+                      api:
+                        url: '@mutation:LitemallCart__clear'
+                - type: wrapper
+                  body:
+                    - type: tpl
+                      tpl: '<span style="font-size:16px">已选商品小计：</span><span style="color:#ff6700;font-size:24px;font-weight:bold">¥${SUM(items, "price * number")}</span>'
+                    - type: button
+                      label: 去结算
+                      level: primary
+                      size: lg
+                      actionType: link
+                      link: "/storefront-checkout"

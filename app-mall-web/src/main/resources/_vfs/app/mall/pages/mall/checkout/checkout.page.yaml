@@ -1,0 +1,197 @@
+type: page
+title: 结算
+body:
+  - type: wrapper
+    className: storefront-header
+    body:
+      type: flex
+      justify: space-between
+      alignItems: center
+      style:
+        padding: 10px 20px
+        backgroundColor: '#fff'
+        borderBottom: 2px solid '#ff6700'
+      items:
+        - type: wrapper
+          body:
+            - type: button
+              label: '<b style="font-size:24px;color:#ff6700">商城</b>'
+              level: link
+              actionType: link
+              link: "/storefront-home"
+        - type: wrapper
+          body:
+            - type: button
+              label: 返回购物车
+              level: link
+              actionType: link
+              link: "/storefront-cart"
+
+  - type: grid
+    style:
+      padding: 20px
+    columns:
+      - md: 8
+        body:
+          type: wrapper
+          body:
+            - type: tpl
+              tpl: '<h3>收货地址</h3>'
+            - type: service
+              name: addressList
+              api:
+                url: '@query:LitemallAddress__list'
+                sendOn: true
+              body:
+                type: form
+                name: selectedAddress
+                title: ''
+                mode: normal
+                body:
+                  - type: select
+                    name: addressId
+                    label: 选择地址
+                    source: '${items}'
+                    labelField: name
+                    valueField: id
+                    required: true
+                    description: "${item ? item.province + item.city + item.county + item.addressDetail : ''}"
+
+            - type: divider
+            - type: tpl
+              tpl: '<h3>商品清单</h3>'
+            - type: service
+              name: cartItems
+              api:
+                url: '@query:LitemallCart__checkedList'
+                sendOn: true
+              body:
+                type: each
+                name: items
+                placeholder: '<div style="padding:20px;color:#999">购物车没有选中商品</div>'
+                items:
+                  type: flex
+                alignItems: center
+                style:
+                  padding: 10px 0
+                  borderBottom: 1px solid '#eee'
+                items:
+                  - type: tpl
+                    tpl: '<img src="${item.picUrl}" style="width:50px;height:50px;border-radius:4px"/>'
+                  - type: wrapper
+                    style:
+                      marginLeft: 10px
+                      flex: '1'
+                    body:
+                      - type: tpl
+                        tpl: '${item.goodsName}'
+                      - type: tpl
+                        tpl: '<span style="color:#999;font-size:12px">${item.specifications} x ${item.number}</span>'
+                  - type: tpl
+                    tpl: '<span style="color:#ff6700">¥${item.price * item.number}</span>'
+
+            - type: divider
+            - type: tpl
+              tpl: '<h3>优惠券</h3>'
+            - type: service
+              name: couponList
+              api:
+                url: '@query:LitemallCoupon__listMyCoupons'
+                data:
+                  status: 0
+                  page: 1
+                  pageSize: 20
+                sendOn: true
+              body:
+                type: form
+                name: couponForm
+                title: ''
+                mode: normal
+                body:
+                  - type: select
+                    name: couponUserId
+                    label: 选择优惠券
+                    source: '${items}'
+                    labelField: description
+                    valueField: id
+                    clearable: true
+                    placeholder: 不使用优惠券
+
+            - type: divider
+            - type: form
+              name: orderForm
+              title: 订单备注
+              mode: normal
+              body:
+                - type: input-text
+                  name: message
+                  label: 留言
+                  placeholder: 选填，给商家留言'
+
+      - md: 4
+        body:
+          type: wrapper
+          style:
+            padding: 15px
+            backgroundColor: '#fafafa'
+            borderRadius: 4px
+          body:
+            - type: tpl
+              tpl: '<h3>价格汇总</h3>'
+            - type: service
+              name: freightService
+              api:
+                url: '@query:LitemallSystem__getFreightPrice'
+                sendOn: true
+              body:
+                type: wrapper
+                body:
+                  - type: flex
+                    justify: space-between
+                    items:
+                      - type: tpl
+                        tpl: '商品金额：'
+                      - type: tpl
+                        tpl: '<span>¥${cartItems.items ? SUM(cartItems.items, "price * number") : "0.00"}</span>'
+                  - type: flex
+                    justify: space-between
+                    style:
+                      margin: 8px 0
+                    items:
+                      - type: tpl
+                        tpl: '运费：'
+                      - type: tpl
+                        tpl: '<span>¥${data}</span>'
+                  - type: flex
+                    justify: space-between
+                    style:
+                      margin: 8px 0
+                    items:
+                      - type: tpl
+                        tpl: '优惠：'
+                      - type: tpl
+                        tpl: '<span style="color:#ff6700">-¥0.00</span>'
+                  - type: divider
+                  - type: flex
+                    justify: space-between
+                    alignItems: center
+                    items:
+                      - type: tpl
+                        tpl: '<b>应付金额：</b>'
+                      - type: tpl
+                        tpl: '<span style="color:#ff6700;font-size:28px;font-weight:bold">¥${(cartItems.items ? SUM(cartItems.items, "price * number") : 0) + (data || 0)}</span>'
+                  - type: button
+                    label: 提交订单
+                    level: primary
+                    size: lg
+                    actionType: ajax
+                    api:
+                      url: '@mutation:LitemallOrder__submit'
+                      data:
+                        addressId: "${selectedAddress.addressId}"
+                        message: "${orderForm.message}"
+                        freightPrice: "${freightService.data}"
+                        couponUserId: "${couponForm.couponUserId}"
+                    redirect: "/storefront-order-result?orderId=${event.data.result.id}"
+                    messages:
+                      success: '订单提交成功'

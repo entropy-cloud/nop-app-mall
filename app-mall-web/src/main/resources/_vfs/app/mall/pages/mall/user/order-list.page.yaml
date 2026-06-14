@@ -1,0 +1,218 @@
+type: page
+title: 我的订单
+body:
+  - type: wrapper
+    className: storefront-header
+    body:
+      type: flex
+      justify: space-between
+      alignItems: center
+      style:
+        padding: 10px 20px
+        backgroundColor: '#fff'
+        borderBottom: 2px solid '#ff6700'
+      items:
+        - type: wrapper
+          body:
+            - type: button
+              label: '<b style="font-size:24px;color:#ff6700">商城</b>'
+              level: link
+              actionType: link
+              link: "/storefront-home"
+        - type: wrapper
+          body:
+            - type: button
+              label: 个人中心
+              level: link
+              actionType: link
+              link: "/storefront-user-center"
+
+  - type: wrapper
+    style:
+      padding: 20px
+    body:
+      - type: tabs
+        tabs:
+          - title: 全部
+            body:
+              type: service
+              name: allOrders
+              api:
+                url: '@query:LitemallOrder__myOrders'
+                sendOn: true
+              body:
+                type: each
+                name: items
+                placeholder: '<div style="padding:40px;text-align:center;color:#999">暂无订单</div>'
+                items:
+                  type: card
+                  body:
+                    type: wrapper
+                    body:
+                      - type: flex
+                        justify: space-between
+                        items:
+                          - type: tpl
+                            tpl: '<b>订单号：${item.orderSn}</b>'
+                          - type: tpl
+                            tpl: '<span style="color:${item.orderStatus == 101 ? "#ff6700" : item.orderStatus >= 401 ? "#52c41a" : "#999"}">${item.orderStatus == 101 ? "待付款" : item.orderStatus == 102 ? "已取消" : item.orderStatus == 201 ? "待发货" : item.orderStatus == 301 ? "待收货" : item.orderStatus >= 401 ? "已完成" : "未知"}</span>'
+                      - type: each
+                        name: item.orderGoods
+                        items:
+                          type: flex
+                          alignItems: center
+                          style:
+                            padding: 5px 0
+                          items:
+                            - type: tpl
+                              tpl: '<img src="${og.picUrl}" style="width:40px;height:40px;border-radius:4px"/>'
+                            - type: wrapper
+                              style:
+                                marginLeft: 10px
+                                flex: '1'
+                              body:
+                                type: tpl
+                                tpl: '${og.goodsName} x ${og.number}'
+                            - type: tpl
+                              tpl: '<span style="color:#ff6700">¥${og.price * og.number}</span>'
+                      - type: flex
+                        justify: flex-end
+                        alignItems: center
+                        style:
+                          marginTop: 10px
+                        items:
+                          - type: tpl
+                            tpl: '<span>共 ${item.orderGoods.length} 件商品 合计：</span><span style="color:#ff6700;font-size:18px;font-weight:bold">¥${item.goodsPrice + item.freightPrice - item.couponPrice}</span>'
+                      - type: button-toolbar
+                        style:
+                          marginTop: 10px
+                        buttons:
+                          - type: button
+                            label: 查看详情
+                            level: link
+                            size: sm
+                            actionType: link
+                            link: "/storefront-order-detail?orderId=${item.id}"
+                          - type: button
+                            label: 立即付款
+                            level: primary
+                            size: sm
+                            visibleOn: "${item.orderStatus == 101}"
+                            actionType: ajax
+                            api:
+                              url: '@mutation:LitemallOrder__pay'
+                              data:
+                                orderId: "${item.id}"
+                          - type: button
+                            label: 取消订单
+                            level: danger
+                            size: sm
+                            visibleOn: "${item.orderStatus == 101}"
+                            actionType: ajax
+                            confirmText: '确定取消此订单吗？'
+                            api:
+                              url: '@mutation:LitemallOrder__cancel'
+                              data:
+                                orderId: "${item.id}"
+                          - type: button
+                            label: 确认收货
+                            level: primary
+                            size: sm
+                            visibleOn: "${item.orderStatus == 301}"
+                            actionType: ajax
+                            confirmText: '确认已收到商品吗？'
+                            api:
+                              url: '@mutation:LitemallOrder__confirm'
+                              data:
+                                orderId: "${item.id}"
+
+          - title: 待付款
+            body:
+              type: service
+              name: pendingPayOrders
+              api:
+                url: '@query:LitemallOrder__myOrders'
+                data:
+                  status: 101
+                sendOn: true
+              body:
+                type: each
+                name: items
+                placeholder: '<div style="padding:40px;text-align:center;color:#999">暂无待付款订单</div>'
+                items:
+                  type: card
+                  body:
+                    type: wrapper
+                    body:
+                      - type: flex
+                        justify: space-between
+                        items:
+                          - type: tpl
+                            tpl: '<b>${item.orderSn}</b>'
+                          - type: tpl
+                            tpl: '<span style="color:#ff6700;font-weight:bold">¥${item.goodsPrice + item.freightPrice - item.couponPrice}</span>'
+                      - type: button-toolbar
+                        style:
+                          marginTop: 10px
+                        buttons:
+                          - type: button
+                            label: 查看详情
+                            level: link
+                            size: sm
+                            actionType: link
+                            link: "/storefront-order-detail?orderId=${item.id}"
+                          - type: button
+                            label: 立即付款
+                            level: primary
+                            size: sm
+                            actionType: ajax
+                            api:
+                              url: '@mutation:LitemallOrder__pay'
+                              data:
+                                orderId: "${item.id}"
+
+          - title: 待收货
+            body:
+              type: service
+              name: pendingReceiveOrders
+              api:
+                url: '@query:LitemallOrder__myOrders'
+                data:
+                  status: 301
+                sendOn: true
+              body:
+                type: each
+                name: items
+                placeholder: '<div style="padding:40px;text-align:center;color:#999">暂无待收货订单</div>'
+                items:
+                  type: card
+                  body:
+                    type: wrapper
+                    body:
+                      - type: flex
+                        justify: space-between
+                        items:
+                          - type: tpl
+                            tpl: '<b>${item.orderSn}</b>'
+                          - type: tpl
+                            tpl: '<span style="color:#ff6700;font-weight:bold">¥${item.goodsPrice + item.freightPrice - item.couponPrice}</span>'
+                      - type: button-toolbar
+                        style:
+                          marginTop: 10px
+                        buttons:
+                          - type: button
+                            label: 查看详情
+                            level: link
+                            size: sm
+                            actionType: link
+                            link: "/storefront-order-detail?orderId=${item.id}"
+                          - type: button
+                            label: 确认收货
+                            level: primary
+                            size: sm
+                            actionType: ajax
+                            confirmText: '确认已收到商品吗？'
+                            api:
+                              url: '@mutation:LitemallOrder__confirm'
+                              data:
+                                orderId: "${item.id}"

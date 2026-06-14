@@ -1,0 +1,202 @@
+type: page
+title: 收货地址管理
+body:
+  - type: wrapper
+    className: storefront-header
+    body:
+      type: flex
+      justify: space-between
+      alignItems: center
+      style:
+        padding: 10px 20px
+        backgroundColor: '#fff'
+        borderBottom: 2px solid '#ff6700'
+      items:
+        - type: wrapper
+          body:
+            - type: button
+              label: '<b style="font-size:24px;color:#ff6700">商城</b>'
+              level: link
+              actionType: link
+              link: "/storefront-home"
+        - type: wrapper
+          body:
+            - type: button
+              label: 个人中心
+              level: link
+              actionType: link
+              link: "/storefront-user-center"
+
+  - type: wrapper
+    style:
+      padding: 20px
+    body:
+      - type: button
+        label: 新增收货地址
+        level: primary
+        icon: plus
+        actionType: dialog
+        dialog:
+          title: 新增收货地址
+          body:
+            type: form
+            name: addAddressForm
+            api:
+              url: '@mutation:LitemallAddress__add'
+              data:
+                name: "${name}"
+                phone: "${phone}"
+                province: "${province}"
+                city: "${city}"
+                county: "${county}"
+                addressDetail: "${addressDetail}"
+                areaCode: "${areaCode}"
+                isDefault: "${isDefault}"
+            body:
+              - type: input-text
+                name: name
+                label: 收货人
+                required: true
+              - type: input-text
+                name: phone
+                label: 手机号
+                required: true
+              - type: input-text
+                name: province
+                label: 省份
+                required: true
+              - type: input-text
+                name: city
+                label: 城市
+                required: true
+              - type: input-text
+                name: county
+                label: 区/县
+                required: true
+              - type: input-text
+                name: addressDetail
+                label: 详细地址
+                required: true
+              - type: input-text
+                name: areaCode
+                label: 区域编码
+                placeholder: 选填
+              - type: switch
+                name: isDefault
+                label: 设为默认地址
+                value: false
+
+      - type: divider
+
+      - type: service
+        name: addressService
+        api:
+          url: '@query:LitemallAddress__list'
+          sendOn: true
+        body:
+          type: each
+          name: items
+          placeholder: '<div style="padding:40px;text-align:center;color:#999">暂无收货地址</div>'
+          items:
+            type: card
+            body:
+              type: wrapper
+              body:
+                - type: flex
+                  justify: space-between
+                  alignItems: center
+                  items:
+                    - type: wrapper
+                      body:
+                        - type: tpl
+                          tpl: '<b>${item.name}</b> <span style="color:#999;margin-left:10px">${item.tel}</span>'
+                        - type: tpl
+                          tpl: '<div style="color:#666;margin-top:5px">${item.province} ${item.city} ${item.county} ${item.addressDetail}</div>'
+                        - type: tpl
+                          visibleOn: "${item.isDefault}"
+                          tpl: '<span style="color:#ff6700;font-size:12px">默认地址</span>'
+                    - type: button-toolbar
+                      buttons:
+                        - type: button
+                          label: 编辑
+                          size: sm
+                          level: link
+                          actionType: dialog
+                          dialog:
+                            title: 编辑地址
+                            body:
+                              type: form
+                              name: editAddressForm
+                              data:
+                                editId: "${item.id}"
+                                editName: "${item.name}"
+                                editPhone: "${item.tel}"
+                                editProvince: "${item.province}"
+                                editCity: "${item.city}"
+                                editCounty: "${item.county}"
+                                editAddressDetail: "${item.addressDetail}"
+                                editAreaCode: "${item.areaCode}"
+                                editIsDefault: "${item.isDefault}"
+                              api:
+                                url: '@mutation:LitemallAddress__updateAddress'
+                                data:
+                                  id: "${editId}"
+                                  name: "${editName}"
+                                  phone: "${editPhone}"
+                                  province: "${editProvince}"
+                                  city: "${editCity}"
+                                  county: "${editCounty}"
+                                  addressDetail: "${editAddressDetail}"
+                                  areaCode: "${editAreaCode}"
+                                  isDefault: "${editIsDefault}"
+                              body:
+                                - type: input-text
+                                  name: editName
+                                  label: 收货人
+                                  required: true
+                                - type: input-text
+                                  name: editPhone
+                                  label: 手机号
+                                  required: true
+                                - type: input-text
+                                  name: editProvince
+                                  label: 省份
+                                  required: true
+                                - type: input-text
+                                  name: editCity
+                                  label: 城市
+                                  required: true
+                                - type: input-text
+                                  name: editCounty
+                                  label: 区/县
+                                  required: true
+                                - type: input-text
+                                  name: editAddressDetail
+                                  label: 详细地址
+                                  required: true
+                                - type: input-text
+                                  name: editAreaCode
+                                  label: 区域编码
+                                - type: switch
+                                  name: editIsDefault
+                                  label: 设为默认地址
+                        - type: button
+                          label: 设为默认
+                          size: sm
+                          level: link
+                          visibleOn: "${!item.isDefault}"
+                          actionType: ajax
+                          api:
+                            url: '@mutation:LitemallAddress__setDefault'
+                            data:
+                              id: "${item.id}"
+                        - type: button
+                          label: 删除
+                          size: sm
+                          level: danger
+                          actionType: ajax
+                          confirmText: '确定删除此地址吗？'
+                          api:
+                            url: '@mutation:LitemallAddress__deleteAddress'
+                            data:
+                              id: "${item.id}"

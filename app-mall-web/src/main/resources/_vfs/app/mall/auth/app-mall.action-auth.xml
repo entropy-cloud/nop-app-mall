@@ -156,6 +156,55 @@
             </children>
         </resource>
 
+        <resource id="storefront" displayName="前台商城" icon="ion:storefront-outline" resourceType="TOPM"
+                  routePath="/storefront" component="layouts/default/index" orderNo="800">
+            <children>
+                <resource id="storefront-home" displayName="商城首页" orderNo="801"
+                          icon="ant-design:home-outlined" component="AMIS"
+                          resourceType="SUBM" url="/app/mall/pages/mall/home/home.page.yaml"/>
+
+                <resource id="storefront-category" displayName="分类浏览" orderNo="802"
+                          icon="ant-design:appstore-outlined" component="AMIS"
+                          resourceType="SUBM" url="/app/mall/pages/mall/category/category.page.yaml"/>
+
+                <resource id="storefront-goods-detail" displayName="商品详情" orderNo="803"
+                          icon="ant-design:shopping-outlined" component="AMIS"
+                          resourceType="SUBM" url="/app/mall/pages/mall/goods/goods-detail.page.yaml"/>
+
+                <resource id="storefront-cart" displayName="购物车" orderNo="804"
+                          icon="ant-design:shopping-cart-outlined" component="AMIS"
+                          resourceType="SUBM" url="/app/mall/pages/mall/cart/cart.page.yaml"/>
+
+                <resource id="storefront-checkout" displayName="结算" orderNo="805"
+                          icon="ant-design:credit-card-outlined" component="AMIS"
+                          resourceType="SUBM" url="/app/mall/pages/mall/checkout/checkout.page.yaml"/>
+
+                <resource id="storefront-order-result" displayName="订单结果" orderNo="806"
+                          icon="ant-design:check-circle-outlined" component="AMIS"
+                          resourceType="SUBM" url="/app/mall/pages/mall/checkout/order-result.page.yaml"/>
+
+                <resource id="storefront-login" displayName="登录注册" orderNo="807"
+                          icon="ant-design:user-outlined" component="AMIS"
+                          resourceType="SUBM" url="/app/mall/pages/mall/user/login.page.yaml"/>
+
+                <resource id="storefront-user-center" displayName="个人中心" orderNo="808"
+                          icon="ant-design:user-switch-outlined" component="AMIS"
+                          resourceType="SUBM" url="/app/mall/pages/mall/user/user-center.page.yaml"/>
+
+                <resource id="storefront-order-list" displayName="我的订单" orderNo="809"
+                          icon="ant-design:profile-outlined" component="AMIS"
+                          resourceType="SUBM" url="/app/mall/pages/mall/user/order-list.page.yaml"/>
+
+                <resource id="storefront-order-detail" displayName="订单详情" orderNo="810"
+                          icon="ant-design:file-text-outlined" component="AMIS"
+                          resourceType="SUBM" url="/app/mall/pages/mall/user/order-detail.page.yaml"/>
+
+                <resource id="storefront-address" displayName="收货地址" orderNo="811"
+                          icon="ant-design:environment-outlined" component="AMIS"
+                          resourceType="SUBM" url="/app/mall/pages/mall/user/address.page.yaml"/>
+            </children>
+        </resource>
+
         <!--
         正式部署的时候应该设置为x:override="remove"
         -->

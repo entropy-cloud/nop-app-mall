@@ -1,0 +1,88 @@
+type: page
+title: 订单提交成功
+body:
+  - type: wrapper
+    style:
+      padding: 60px 20px
+      textAlign: center
+    body:
+      - type: tpl
+        tpl: '<div style="font-size:64px;color:#52c41a">✓</div>'
+      - type: tpl
+        tpl: '<h2 style="color:#333;margin:15px 0">订单提交成功！</h2>'
+
+  - type: service
+    name: orderInfo
+    api:
+      url: '@query:LitemallOrder__getMyOrder'
+      data:
+        orderId: "${orderId}"
+      sendOn: "${orderId}"
+    body:
+      - type: wrapper
+        style:
+          padding: 20px
+          maxWidth: 600px
+          margin: 0 auto
+          backgroundColor: '#fafafa'
+          borderRadius: 4px
+        body:
+          - type: flex
+            justify: space-between
+            style:
+              margin: 8px 0
+            items:
+              - type: tpl
+                tpl: '订单编号：'
+              - type: tpl
+                tpl: '<b>${data.orderSn}</b>'
+          - type: flex
+            justify: space-between
+            style:
+              margin: 8px 0
+            items:
+              - type: tpl
+                tpl: '订单金额：'
+              - type: tpl
+                tpl: '<span style="color:#ff6700;font-size:20px;font-weight:bold">¥${data.goodsPrice + data.freightPrice - data.couponPrice}</span>'
+          - type: flex
+            justify: space-between
+            style:
+              margin: 8px 0
+            items:
+              - type: tpl
+                tpl: '订单状态：'
+              - type: tpl
+                tpl: '<b>${data.orderStatus == 101 ? "待付款" : data.orderStatus == 201 ? "待发货" : data.orderStatus == 301 ? "待收货" : data.orderStatus == 401 ? "已完成" : "未知"}</b>'
+
+      - type: wrapper
+        style:
+          padding: 20px
+          textAlign: center
+        body:
+          - type: button-toolbar
+            buttons:
+              - type: button
+                label: 立即付款
+                level: primary
+                size: lg
+                visibleOn: "${data.orderStatus == 101}"
+                actionType: ajax
+                api:
+                  url: '@mutation:LitemallOrder__pay'
+                  data:
+                    orderId: "${orderId}"
+                messages:
+                  success: '支付成功'
+              - type: button
+                label: 我的订单
+                level: link
+                size: lg
+                actionType: link
+                link: "/storefront-order-list"
+              - type: button
+                label: 继续购物
+                level: link
+                size: lg
+                actionType: link
+                link: "/storefront-home"

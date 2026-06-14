@@ -1,0 +1,215 @@
+type: page
+title: 订单详情
+body:
+  - type: wrapper
+    className: storefront-header
+    body:
+      type: flex
+      justify: space-between
+      alignItems: center
+      style:
+        padding: 10px 20px
+        backgroundColor: '#fff'
+        borderBottom: 2px solid '#ff6700'
+      items:
+        - type: wrapper
+          body:
+            - type: button
+              label: '<b style="font-size:24px;color:#ff6700">商城</b>'
+              level: link
+              actionType: link
+              link: "/storefront-home"
+        - type: wrapper
+          body:
+            - type: button
+              label: 我的订单
+              level: link
+              actionType: link
+              link: "/storefront-order-list"
+
+  - type: service
+    name: orderDetail
+    api:
+      url: '@query:LitemallOrder__getMyOrder'
+      data:
+        orderId: "${orderId}"
+      sendOn: "${orderId}"
+    body:
+      - type: wrapper
+        style:
+          padding: 20px
+        body:
+          - type: alert
+            level: info
+            body: '<b>订单状态：</b>${data.orderStatus == 101 ? "待付款" : data.orderStatus == 102 ? "已取消" : data.orderStatus == 201 ? "待发货" : data.orderStatus == 301 ? "待收货" : data.orderStatus >= 401 ? "已完成" : "未知"}'
+
+          - type: card
+            title: 订单信息
+            body:
+              type: wrapper
+              style:
+                padding: 10px
+              body:
+                - type: flex
+                  justify: space-between
+                  style:
+                    margin: 5px 0
+                  items:
+                    - type: tpl
+                      tpl: '订单编号：'
+                    - type: tpl
+                      tpl: '<b>${data.orderSn}</b>'
+                - type: flex
+                  justify: space-between
+                  style:
+                    margin: 5px 0
+                  items:
+                    - type: tpl
+                      tpl: '下单时间：'
+                    - type: tpl
+                      tpl: '${data.addTime}'
+                - type: flex
+                  justify: space-between
+                  style:
+                    margin: 5px 0
+                  items:
+                    - type: tpl
+                      tpl: '收货人：'
+                    - type: tpl
+                      tpl: '${data.consignee} ${data.mobile}'
+                - type: flex
+                  justify: space-between
+                  style:
+                    margin: 5px 0
+                  items:
+                    - type: tpl
+                      tpl: '收货地址：'
+                    - type: tpl
+                      tpl: '${data.address}'
+                - type: flex
+                  justify: space-between
+                  style:
+                    margin: 5px 0
+                  items:
+                    - type: tpl
+                      tpl: '订单留言：'
+                    - type: tpl
+                      tpl: '${data.message}'
+
+          - type: card
+            title: 商品清单
+            style:
+              marginTop: 15px
+            body:
+              type: wrapper
+              style:
+                padding: 10px
+              body:
+                type: each
+                name: data.orderGoods
+                items:
+                  type: flex
+                  alignItems: center
+                  style:
+                    padding: 10px 0
+                    borderBottom: 1px solid '#eee'
+                  items:
+                    - type: tpl
+                      tpl: '<img src="${og.picUrl}" style="width:60px;height:60px;border-radius:4px"/>'
+                    - type: wrapper
+                      style:
+                        marginLeft: 15px
+                        flex: '1'
+                      body:
+                        - type: tpl
+                          tpl: '<b>${og.goodsName}</b>'
+                        - type: tpl
+                          tpl: '<span style="color:#999;font-size:12px">${og.specifications}</span>'
+                    - type: tpl
+                      tpl: '<span>¥${og.price} x ${og.number}</span>'
+                    - type: tpl
+                      tpl: '<span style="color:#ff6700;margin-left:15px">¥${og.price * og.number}</span>'
+
+          - type: card
+            title: 价格明细
+            style:
+              marginTop: 15px
+            body:
+              type: wrapper
+              style:
+                padding: 10px
+              body:
+                - type: flex
+                  justify: space-between
+                  style:
+                    margin: 5px 0
+                  items:
+                    - type: tpl
+                      tpl: '商品总额：'
+                    - type: tpl
+                      tpl: '¥${data.goodsPrice}'
+                - type: flex
+                  justify: space-between
+                  style:
+                    margin: 5px 0
+                  items:
+                    - type: tpl
+                      tpl: '运费：'
+                    - type: tpl
+                      tpl: '¥${data.freightPrice}'
+                - type: flex
+                  justify: space-between
+                  style:
+                    margin: 5px 0
+                  items:
+                    - type: tpl
+                      tpl: '优惠券抵扣：'
+                    - type: tpl
+                      tpl: '<span style="color:#ff6700">-¥${data.couponPrice}</span>'
+                - type: divider
+                - type: flex
+                  justify: space-between
+                  alignItems: center
+                  items:
+                    - type: tpl
+                      tpl: '<b>实付金额：</b>'
+                    - type: tpl
+                      tpl: '<span style="color:#ff6700;font-size:24px;font-weight:bold">¥${data.goodsPrice + data.freightPrice - data.couponPrice}</span>'
+
+          - type: button-toolbar
+            style:
+              marginTop: 15px
+              textAlign: center
+            buttons:
+              - type: button
+                label: 立即付款
+                level: primary
+                size: lg
+                visibleOn: "${data.orderStatus == 101}"
+                actionType: ajax
+                api:
+                  url: '@mutation:LitemallOrder__pay'
+                  data:
+                    orderId: "${orderId}"
+              - type: button
+                label: 取消订单
+                level: danger
+                size: lg
+                visibleOn: "${data.orderStatus == 101}"
+                actionType: ajax
+                confirmText: '确定取消此订单吗？'
+                api:
+                  url: '@mutation:LitemallOrder__cancel'
+                  data:
+                    orderId: "${orderId}"
+              - type: button
+                label: 确认收货
+                level: primary
+                size: lg
+                visibleOn: "${data.orderStatus == 301}"
+                actionType: ajax
+                confirmText: '确认已收到商品吗？'
+                api:
+                  url: '@mutation:LitemallOrder__confirm'
+                  data:
+                    orderId: "${orderId}"

@@ -1,0 +1,192 @@
+type: page
+title: 分类浏览
+body:
+  - type: wrapper
+    className: storefront-header
+    body:
+      type: flex
+      justify: space-between
+      alignItems: center
+      style:
+        padding: 10px 20px
+        backgroundColor: '#fff'
+        borderBottom: 2px solid '#ff6700'
+      items:
+        - type: wrapper
+          body:
+            - type: button
+              label: '<b style="font-size:24px;color:#ff6700">商城</b>'
+              level: link
+              actionType: link
+              link: "/storefront-home"
+        - type: wrapper
+          body:
+            - type: input-text
+              name: searchKeyword
+              placeholder: 搜索商品
+              value: "${keyword}"
+              style:
+                width: 300px
+            - type: button
+              label: 搜索
+              level: primary
+              actionType: link
+              link: "/storefront-category?keyword=${searchKeyword}"
+        - type: wrapper
+          body:
+            - type: button
+              label: 购物车
+              icon: shopping-cart
+              level: link
+              actionType: link
+              link: "/storefront-cart"
+            - type: button
+              label: 用户中心
+              icon: user
+              level: link
+              actionType: link
+              link: "/storefront-user-center"
+
+  - type: grid
+    className: category-layout
+    columns:
+      - md: 3
+        body:
+          type: wrapper
+          className: category-sidebar
+          style:
+            padding: 15px
+            backgroundColor: '#fafafa'
+            minHeight: 500px
+          body:
+            - type: tpl
+              tpl: '<h4>商品分类</h4>'
+            - type: service
+              name: categoryTree
+              api:
+                url: '@query:LitemallCategory__getCategoryTree'
+                sendOn: true
+              body:
+                type: each
+                name: items
+                items:
+                  type: wrapper
+                  body:
+                    - type: button
+                      label: "${item.name}"
+                      level: link
+                      actionType: link
+                      link: "/storefront-category?categoryId=${item.id}"
+                    - type: each
+                      name: item.children
+                      items:
+                        type: button
+                        label: "　${item.name}"
+                        level: link
+                        size: sm
+                        actionType: link
+                        link: "/storefront-category?categoryId=${item.id}"
+            - type: divider
+            - type: tpl
+              tpl: '<h4>品牌筛选</h4>'
+            - type: service
+              name: brandList
+              api:
+                url: '@query:LitemallBrand__findList'
+                data:
+                  query:
+                    filter:
+                      and:
+                        - eq:
+                            - deleted
+                            - false
+                sendOn: true
+              body:
+                type: each
+                name: items
+                placeholder: 暂无品牌
+                items:
+                  type: button
+                  label: "${item.name}"
+                  level: link
+                  size: sm
+                  actionType: link
+                  link: "/storefront-category?brandId=${item.id}"
+
+      - md: 9
+        body:
+          type: wrapper
+          style:
+            padding: 15px
+          body:
+            - type: flex
+              justify: space-between
+              alignItems: center
+              style:
+                marginBottom: 15px
+              items:
+                - type: wrapper
+                  body:
+                    type: tpl
+                    tpl: '<h3>${keyword ? "搜索: " + keyword : "全部商品"}</h3>'
+                - type: wrapper
+                  body:
+                    - type: button
+                      label: 默认
+                      level: primary
+                      size: sm
+                      actionType: link
+                      link: "/storefront-category?categoryId=${categoryId}&brandId=${brandId}&sortBy="
+                    - type: button
+                      label: 价格
+                      level: link
+                      size: sm
+                      actionType: link
+                      link: "/storefront-category?categoryId=${categoryId}&brandId=${brandId}&sortBy=price"
+                    - type: button
+                      label: 新品
+                      level: link
+                      size: sm
+                      actionType: link
+                      link: "/storefront-category?categoryId=${categoryId}&brandId=${brandId}&sortBy=new"
+
+            - type: service
+              name: goodsList
+              api:
+                url: '@query:LitemallGoods__search'
+                data:
+                  keyword: "${keyword}"
+                  categoryId: "${categoryId}"
+                  brandId: "${brandId}"
+                  sortBy: "${sortBy}"
+                  page: 1
+                  pageSize: 12
+                sendOn: true
+              body:
+                type: grid
+                columns:
+                  - type: each
+                    name: items
+                    placeholder: '<div style="padding:40px;text-align:center;color:#999">暂无商品</div>'
+                    items:
+                      type: card
+                      header:
+                        title: "${item.name}"
+                        avatar: "${item.picUrl}"
+                      body:
+                        type: wrapper
+                        body:
+                          - type: tpl
+                            tpl: '<div style="color:#999;font-size:12px">${item.brief}</div>'
+                          - type: tpl
+                            tpl: '<span style="color:#ff6700;font-size:18px;font-weight:bold">¥${item.retailPrice}</span>'
+                          - type: button
+                            label: 查看详情
+                            level: primary
+                            size: sm
+                            actionType: link
+                            link: "/storefront-goods-detail?id=${item.id}"
+
+css:
+  .category-sidebar:
+    borderRadius: 4px

@@ -222,5 +222,29 @@ site:
       displayName: ''
     mall-user-manage:
       displayName: ''
+    storefront:
+      displayName: ''
+    storefront-address:
+      displayName: ''
+    storefront-cart:
+      displayName: ''
+    storefront-category:
+      displayName: ''
+    storefront-checkout:
+      displayName: ''
+    storefront-goods-detail:
+      displayName: ''
+    storefront-home:
+      displayName: ''
+    storefront-login:
+      displayName: ''
+    storefront-order-detail:
+      displayName: ''
+    storefront-order-list:
+      displayName: ''
+    storefront-order-result:
+      displayName: ''
+    storefront-user-center:
+      displayName: ''
     test-orm-app-mall:
       displayName: Test app-mall

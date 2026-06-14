@@ -1,0 +1,126 @@
+type: page
+title: 个人中心
+body:
+  - type: wrapper
+    className: storefront-header
+    body:
+      type: flex
+      justify: space-between
+      alignItems: center
+      style:
+        padding: 10px 20px
+        backgroundColor: '#fff'
+        borderBottom: 2px solid '#ff6700'
+      items:
+        - type: wrapper
+          body:
+            - type: button
+              label: '<b style="font-size:24px;color:#ff6700">商城</b>'
+              level: link
+              actionType: link
+              link: "/storefront-home"
+        - type: wrapper
+          body:
+            - type: button
+              label: 退出登录
+              level: link
+              actionType: ajax
+              api:
+                url: '@mutation:LoginApi__logout'
+              redirect: "/storefront-home"
+
+  - type: wrapper
+    style:
+      padding: 20px
+    body:
+      - type: service
+        name: userInfo
+        api:
+          url: '@query:LoginApi__getLoginUserInfo'
+          sendOn: true
+        body:
+          - type: card
+            header:
+              title: '${data.nickName || data.userName || "用户"}'
+              avatar: '${data.avatar}'
+              description: '${data.mobile || ""}'
+            body:
+              type: grid
+              columns:
+                - type: wrapper
+                  style:
+                    textAlign: center
+                    padding: 15px
+                  body:
+                    - type: tpl
+                      tpl: '<div style="font-size:24px;color:#ff6700;font-weight:bold">0</div>'
+                    - type: tpl
+                      tpl: '<div style="color:#999">待付款</div>'
+                - type: wrapper
+                  style:
+                    textAlign: center
+                    padding: 15px
+                  body:
+                    - type: tpl
+                      tpl: '<div style="font-size:24px;color:#ff6700;font-weight:bold">0</div>'
+                    - type: tpl
+                      tpl: '<div style="color:#999">待发货</div>'
+                - type: wrapper
+                  style:
+                    textAlign: center
+                    padding: 15px
+                  body:
+                    - type: tpl
+                      tpl: '<div style="font-size:24px;color:#ff6700;font-weight:bold">0</div>'
+                    - type: tpl
+                      tpl: '<div style="color:#999">待收货</div>'
+                - type: wrapper
+                  style:
+                    textAlign: center
+                    padding: 15px
+                  body:
+                    - type: tpl
+                      tpl: '<div style="font-size:24px;color:#ff6700;font-weight:bold">0</div>'
+                    - type: tpl
+                      tpl: '<div style="color:#999">已完成</div>'
+
+      - type: divider
+
+      - type: grid
+        columns:
+          - md: 6
+            body:
+              type: button
+              label: 我的订单
+              icon: profile
+              level: primary
+              block: true
+              actionType: link
+              link: "/storefront-order-list"
+          - md: 6
+            body:
+              type: button
+              label: 收货地址
+              icon: environment
+              level: primary
+              block: true
+              actionType: link
+              link: "/storefront-address"
+          - md: 6
+            body:
+              type: button
+              label: 我的优惠券
+              icon: gift
+              level: primary
+              block: true
+              actionType: link
+              link: "/storefront-category"
+          - md: 6
+            body:
+              type: button
+              label: 继续购物
+              icon: shopping
+              level: primary
+              block: true
+              actionType: link
+              link: "/storefront-category"

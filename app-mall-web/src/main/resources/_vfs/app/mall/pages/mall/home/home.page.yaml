@@ -1,0 +1,206 @@
+type: page
+title: 商城首页
+body:
+  - type: wrapper
+    className: storefront-header
+    body:
+      type: flex
+      justify: space-between
+      alignItems: center
+      style:
+        padding: 10px 20px
+        backgroundColor: '#fff'
+        borderBottom: 2px solid '#ff6700'
+      items:
+        - type: wrapper
+          body:
+            - type: tpl
+              tpl: '<b style="font-size:24px;color:#ff6700">商城</b>'
+        - type: wrapper
+          body:
+            - type: input-text
+              name: searchKeyword
+              placeholder: 搜索商品
+              style:
+                width: 300px
+            - type: button
+              label: 搜索
+              level: primary
+              actionType: link
+              link: "/storefront-category?keyword=${searchKeyword}"
+        - type: wrapper
+          body:
+            - type: button
+              label: 购物车
+              icon: shopping-cart
+              level: link
+              actionType: link
+              link: "/storefront-cart"
+            - type: button
+              label: 用户中心
+              icon: user
+              level: link
+              actionType: link
+              link: "/storefront-user-center"
+
+  - type: flex
+    className: storefront-nav
+    style:
+      padding: 8px 20px
+      backgroundColor: '#fafafa'
+      borderBottom: 1px solid '#eee'
+    items:
+      - type: button
+        label: 首页
+        level: link
+        actionType: link
+        link: "/storefront-home"
+      - type: service
+        name: navCategories
+        api:
+          url: '@query:LitemallCategory__getCategoryList'
+          sendOn: true
+        body:
+          type: each
+          name: items
+          items:
+            type: button
+            label: "${item.name}"
+            level: link
+            actionType: link
+            link: "/storefront-category?categoryId=${item.id}"
+
+  - type: grid
+    columns:
+      - md: 8
+        body:
+          type: service
+          name: adCarousel
+          api:
+            url: '@query:LitemallAd__listActiveAds'
+            data:
+              page: 1
+              pageSize: 5
+            sendOn: true
+          body:
+            type: each
+            name: items
+            placeholder: ''
+            className: ad-banner
+            items:
+              type: tpl
+              tpl: '<a href="${item.link | raw}"><img src="${item.url}" style="width:100%;max-height:350px;object-fit:cover;border-radius:4px"/></a>'
+      - md: 4
+        body:
+          type: service
+          name: noticePanel
+          api:
+            url: '@query:LitemallNotice__listNotices'
+            data:
+              page: 1
+              pageSize: 5
+            sendOn: true
+          body:
+            type: each
+            name: items
+            placeholder: 暂无公告
+            items:
+              type: alert
+              level: info
+              body: "${item.title}"
+              className: mb-1
+
+  - type: wrapper
+    className: storefront-section
+    style:
+      padding: 20px
+    body:
+      - type: tpl
+        tpl: '<h3 style="color:#333;border-left:4px solid #ff6700;padding-left:8px">新品首发</h3>'
+      - type: service
+        name: newGoods
+        api:
+          url: '@query:LitemallGoods__frontList'
+          data:
+            page: 1
+            pageSize: 8
+          sendOn: true
+        body:
+          type: grid
+          columns:
+            - type: each
+              name: items
+              placeholder: 暂无商品
+              items:
+                type: card
+                header:
+                  title: "${item.name}"
+                  avatar: "${item.picUrl}"
+                body:
+                  type: wrapper
+                  body:
+                    - type: tpl
+                      tpl: '<div style="color:#999;font-size:12px">${item.brief}</div>'
+                    - type: tpl
+                      tpl: '<span style="color:#ff6700;font-size:18px;font-weight:bold">¥${item.retailPrice}</span>'
+                    - type: button
+                      label: 查看详情
+                      level: primary
+                      size: sm
+                      actionType: link
+                      link: "/storefront-goods-detail?id=${item.id}"
+
+  - type: wrapper
+    className: storefront-section
+    style:
+      padding: 20px
+    body:
+      - type: tpl
+        tpl: '<h3 style="color:#333;border-left:4px solid #ff6700;padding-left:8px">人气推荐</h3>'
+      - type: service
+        name: hotGoods
+        api:
+          url: '@query:LitemallGoods__search'
+          data:
+            page: 1
+            pageSize: 4
+          sendOn: true
+        body:
+          type: grid
+          columns:
+            - type: each
+              name: items
+              placeholder: 暂无商品
+              items:
+                type: card
+                header:
+                  title: "${item.name}"
+                  avatar: "${item.picUrl}"
+                body:
+                  type: wrapper
+                  body:
+                    - type: tpl
+                      tpl: '<span style="color:#ff6700;font-size:18px;font-weight:bold">¥${item.retailPrice}</span>'
+                    - type: button
+                      label: 查看详情
+                      level: primary
+                      size: sm
+                      actionType: link
+                      link: "/storefront-goods-detail?id=${item.id}"
+
+  - type: wrapper
+    className: storefront-footer
+    style:
+      padding: 20px
+      textAlign: center
+      backgroundColor: '#333'
+      color: '#999'
+    body:
+      type: tpl
+      tpl: '<div><p>商城商城 - 基于Nop平台构建</p><p>Copyright © 2026. All rights reserved.</p></div>'
+
+css:
+  .storefront-section:
+    marginTop: 20px
+  .mb-1:
+    marginBottom: 8px
