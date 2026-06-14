@@ -11,6 +11,8 @@ import io.nop.api.core.beans.query.QueryBean;
 import io.nop.biz.crud.CrudBizModel;
 import io.nop.core.context.IServiceContext;
 
+import java.math.BigDecimal;
+
 @BizModel("LitemallSystem")
 public class LitemallSystemBizModel extends CrudBizModel<LitemallSystem> implements ILitemallSystemBiz {
     public LitemallSystemBizModel() {
@@ -25,5 +27,12 @@ public class LitemallSystemBizModel extends CrudBizModel<LitemallSystem> impleme
         query.addFilter(FilterBeans.eq(LitemallSystem.PROP_NAME_deleted, false));
         LitemallSystem config = findFirst(query, null, context);
         return config != null ? config.getKeyValue() : null;
+    }
+
+    @Override
+    @BizQuery
+    public BigDecimal getFreightPrice(IServiceContext context) {
+        String value = getConfig("mall_freight_price", context);
+        return value != null ? new BigDecimal(value) : BigDecimal.ZERO;
     }
 }
