@@ -476,6 +476,8 @@ prop:
       price: 专题相关商品最低价
       readCount: 专题阅读量
       sortOrder: 排序
+      status: 上下架状态
+      status_label: 上下架状态
       subtitle: 专题子标题
       title: 专题标题
       updateTime: 更新时间

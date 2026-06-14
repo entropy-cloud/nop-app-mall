@@ -44,6 +44,9 @@
 
                 <!--专题相关商品-->
                 <col id="goods" sortable="true"/>
+
+                <!--上下架状态-->
+                <col id="status" ui:number="true" sortable="true"/>
             </cols>
         </grid>
         <grid id="pick-list" x:prototype="list" x:abstract="true"/>
@@ -52,15 +55,11 @@
     <forms>
         <form id="view" editMode="view" title="查看-专题表" i18n-en:title="">
             <layout>
- id[Id]
- title[专题标题]
- subtitle[专题子标题]
- content[专题内容]
- price[专题相关商品最低价]
- readCount[专题阅读量]
- picUrl[专题图片]
- sortOrder[排序]
- goods[专题相关商品]
+ id[Id] title[专题标题]
+ subtitle[专题子标题] content[专题内容]
+ price[专题相关商品最低价] readCount[专题阅读量]
+ picUrl[专题图片] sortOrder[排序]
+ goods[专题相关商品] status[上下架状态]
 </layout>
         </form>
         <form id="add" editMode="add" title="新增-专题表" i18n-en:title="" x:prototype="edit"/>
@@ -74,6 +73,7 @@
  picUrl[专题图片]
  sortOrder[排序]
  goods[专题相关商品]
+ status[上下架状态]
 </layout>
         </form>
         <form id="query" editMode="query" title="查询条件" i18n-en:title="Query Condition" x:abstract="true"/>

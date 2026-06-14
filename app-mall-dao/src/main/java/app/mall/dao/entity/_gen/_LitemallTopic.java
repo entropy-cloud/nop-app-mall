@@ -68,8 +68,12 @@ public class _LitemallTopic extends DynamicOrmEntity{
     public static final String PROP_NAME_deleted = "deleted";
     public static final int PROP_ID_deleted = 12;
     
+    /* 上下架状态: STATUS INTEGER */
+    public static final String PROP_NAME_status = "status";
+    public static final int PROP_ID_status = 13;
+    
 
-    private static int _PROP_ID_BOUND = 13;
+    private static int _PROP_ID_BOUND = 14;
 
     
     /* component:  */
@@ -79,7 +83,7 @@ public class _LitemallTopic extends DynamicOrmEntity{
     protected static final List<String> PK_PROP_NAMES = Arrays.asList(PROP_NAME_id);
     protected static final int[] PK_PROP_IDS = new int[]{PROP_ID_id};
 
-    private static final String[] PROP_ID_TO_NAME = new String[13];
+    private static final String[] PROP_ID_TO_NAME = new String[14];
     private static final Map<String,Integer> PROP_NAME_TO_ID = new HashMap<>();
     static{
       
@@ -119,6 +123,9 @@ public class _LitemallTopic extends DynamicOrmEntity{
           PROP_ID_TO_NAME[PROP_ID_deleted] = PROP_NAME_deleted;
           PROP_NAME_TO_ID.put(PROP_NAME_deleted, PROP_ID_deleted);
       
+          PROP_ID_TO_NAME[PROP_ID_status] = PROP_NAME_status;
+          PROP_NAME_TO_ID.put(PROP_NAME_status, PROP_ID_status);
+      
     }
 
     
@@ -157,6 +164,9 @@ public class _LitemallTopic extends DynamicOrmEntity{
     
     /* 逻辑删除: DELETED */
     private java.lang.Boolean _deleted;
+    
+    /* 上下架状态: STATUS */
+    private java.lang.Integer _status;
     
 
     public _LitemallTopic(){
@@ -267,6 +277,9 @@ public class _LitemallTopic extends DynamicOrmEntity{
         
             case PROP_ID_deleted:
                return getDeleted();
+        
+            case PROP_ID_status:
+               return getStatus();
         
            default:
               return super.orm_propValue(propId);
@@ -399,6 +412,16 @@ public class _LitemallTopic extends DynamicOrmEntity{
                break;
             }
         
+            case PROP_ID_status:{
+               java.lang.Integer typedValue = null;
+               if(value != null){
+                   typedValue = ConvertHelper.toInteger(value,
+                       err-> newTypeConversionError(PROP_NAME_status));
+               }
+               setStatus(typedValue);
+               break;
+            }
+        
            default:
               super.orm_propValue(propId,value);
         }
@@ -488,6 +511,13 @@ public class _LitemallTopic extends DynamicOrmEntity{
             case PROP_ID_deleted:{
                onInitProp(propId);
                this._deleted = (java.lang.Boolean)value;
+               
+               break;
+            }
+        
+            case PROP_ID_status:{
+               onInitProp(propId);
+               this._status = (java.lang.Integer)value;
                
                break;
             }
@@ -722,6 +752,25 @@ public class _LitemallTopic extends DynamicOrmEntity{
         if(onPropSet(PROP_ID_deleted,value)){
             this._deleted = value;
             internalClearRefs(PROP_ID_deleted);
+            
+        }
+    }
+    
+    /**
+     * 上下架状态: STATUS
+     */
+    public final java.lang.Integer getStatus(){
+         onPropGet(PROP_ID_status);
+         return _status;
+    }
+
+    /**
+     * 上下架状态: STATUS
+     */
+    public final void setStatus(java.lang.Integer value){
+        if(onPropSet(PROP_ID_status,value)){
+            this._status = value;
+            internalClearRefs(PROP_ID_status);
             
         }
     }

@@ -1,0 +1,15 @@
+# __XGEN_FORCE_OVERRIDE__
+label: 专题状态
+locale: zh-CN
+valueType: int
+description: 
+options:
+
+  - label: 上架
+    value: 0
+    description: 
+  
+  - label: 下架
+    value: 1
+    description: 
+  

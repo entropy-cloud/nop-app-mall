@@ -79,6 +79,10 @@
             <option label="已过期" value="2"/>
             <option label="已下架" value="3"/>
         </dict>
+        <dict label="专题状态" name="mall/topic-status" valueType="int" i18n-en:label="Topic Status">
+            <option label="上架" value="0"/>
+            <option label="下架" value="1"/>
+        </dict>
     </dicts>
 
     <domains>
@@ -1241,6 +1245,8 @@
                         stdDataType="datetime" stdSqlType="DATETIME" ui:show="X"/>
                 <column code="DELETED" displayName="逻辑删除" domain="delFlag" name="deleted" propId="12"
                         stdDataType="boolean" stdSqlType="BOOLEAN" ui:show="X"/>
+                <column code="STATUS" displayName="上下架状态" ext:dict="mall/topic-status" name="status" propId="13"
+                        stdDataType="int" stdSqlType="INTEGER" defaultValue="0"/>
             </columns>
         </entity>
 

@@ -11,6 +11,7 @@
                 <col id="readCount" label="阅读量"/>
                 <col id="price" label="价格" sortable="true"/>
                 <col id="sortOrder" label="排序" sortable="true"/>
+                <col id="status" label="上下架状态"/>
             </cols>
         </grid>
         <grid id="pick-list"/>
@@ -18,12 +19,33 @@
 
     <forms>
         <form id="view"/>
-        <form id="edit"/>
+        <form id="edit">
+            <layout>
+                title[标题] subtitle[副标题]
+                picUrl[图片]
+                content[内容]
+                price[价格] readCount[阅读量]
+                sortOrder[排序]
+                status[上下架状态]
+                goods[相关商品]
+            </layout>
+        </form>
         <form id="add"/>
     </forms>
 
     <pages>
-        <crud name="main"/>
+        <crud name="main">
+            <rowActions x:override="bounded-merge">
+                <action id="row-update-button" actionType="drawer"/>
+                <action id="row-delete-button"/>
+                <action id="row-on-shelf" label="上架" actionType="ajax"
+                        url="@mutation:LitemallTopic__onShelf?id=$id"
+                        level="primary"/>
+                <action id="row-off-shelf" label="下架" actionType="ajax"
+                        url="@mutation:LitemallTopic__offShelf?id=$id"
+                        level="warning"/>
+            </rowActions>
+        </crud>
         <picker name="picker"/>
     </pages>
 </view>

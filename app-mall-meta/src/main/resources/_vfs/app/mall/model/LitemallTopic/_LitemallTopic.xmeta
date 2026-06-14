@@ -66,6 +66,10 @@
               updatable="true" internal="true" ui:show="X">
             <schema domain="delFlag" type="java.lang.Boolean"/>
         </prop>
+        <prop name="status" displayName="上下架状态" propId="13" queryable="true" sortable="true" insertable="true"
+              updatable="true" defaultValue="0">
+            <schema type="java.lang.Integer" dict="mall/topic-status"/>
+        </prop>
         <prop name="goodsComponent" tagSet="json,pub,edit" ext:kind="component" internal="true" insertable="true"
               updatable="true" lazy="true">
             <schema type="io.nop.orm.component.JsonOrmComponent"/>

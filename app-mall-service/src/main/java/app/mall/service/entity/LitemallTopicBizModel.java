@@ -5,6 +5,7 @@ import app.mall.biz.ILitemallTopicBiz;
 import app.mall.dao.entity.LitemallGoods;
 import app.mall.dao.entity.LitemallTopic;
 import io.nop.api.core.annotations.biz.BizModel;
+import io.nop.api.core.annotations.biz.BizMutation;
 import io.nop.api.core.annotations.biz.BizQuery;
 import io.nop.api.core.annotations.core.Name;
 import io.nop.api.core.annotations.directive.Auth;
@@ -40,6 +41,7 @@ public class LitemallTopicBizModel extends CrudBizModel<LitemallTopic> implement
                                               IServiceContext context) {
         QueryBean query = new QueryBean();
         query.addFilter(FilterBeans.eq(LitemallTopic.PROP_NAME_deleted, false));
+        query.addFilter(FilterBeans.eq("status", 0));
         query.setOffset(page > 0 ? (page - 1) * pageSize : 0);
         query.setLimit(pageSize > 0 ? pageSize : 10);
         query.addOrderField(LitemallTopic.PROP_NAME_sortOrder, true);
@@ -56,6 +58,24 @@ public class LitemallTopicBizModel extends CrudBizModel<LitemallTopic> implement
         if (topic == null || Boolean.TRUE.equals(topic.getDeleted())) {
             throw new NopException(ERR_TOPIC_NOT_FOUND).param("id", id);
         }
+        return topic;
+    }
+
+    @Override
+    @BizMutation
+    public LitemallTopic onShelf(@Name("id") String id, IServiceContext context) {
+        LitemallTopic topic = requireEntity(id, null, context);
+        topic.orm_propValueByName("status", 0);
+        updateEntity(topic, "onShelf", context);
+        return topic;
+    }
+
+    @Override
+    @BizMutation
+    public LitemallTopic offShelf(@Name("id") String id, IServiceContext context) {
+        LitemallTopic topic = requireEntity(id, null, context);
+        topic.orm_propValueByName("status", 1);
+        updateEntity(topic, "offShelf", context);
         return topic;
     }
 }

@@ -1,5 +1,6 @@
 package app.mall.biz;
 
+import io.nop.api.core.annotations.biz.BizMutation;
 import io.nop.api.core.annotations.biz.BizQuery;
 import io.nop.api.core.annotations.core.Name;
 import io.nop.api.core.beans.PageBean;
@@ -18,4 +19,10 @@ public interface ILitemallTopicBiz extends ICrudBiz<LitemallTopic> {
     @BizQuery
     LitemallTopic frontDetail(@Name("id") String id,
                               IServiceContext context);
+
+    @BizMutation
+    LitemallTopic onShelf(@Name("id") String id, IServiceContext context);
+
+    @BizMutation
+    LitemallTopic offShelf(@Name("id") String id, IServiceContext context);
 }

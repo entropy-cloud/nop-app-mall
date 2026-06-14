@@ -181,4 +181,30 @@
         }
 
 
+        private Integer _status;
+
+    
+        @PropMeta(propId=13)
+    
+        public Integer getStatus(){
+            return _status;
+        }
+
+        public void setStatus(Integer value){
+            this._status = value;
+        }
+
+
+        private String _status_label;
+
+    
+        public String getStatus_label(){
+            return _status_label;
+        }
+
+        public void setStatus_label(String value){
+            this._status_label = value;
+        }
+
+
     }

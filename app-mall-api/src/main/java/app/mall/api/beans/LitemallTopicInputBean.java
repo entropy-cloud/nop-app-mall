@@ -138,4 +138,18 @@
         }
 
 
+        private Integer _status;
+
+    
+        @PropMeta(propId=13)
+    
+        public Integer getStatus(){
+            return _status;
+        }
+
+        public void setStatus(Integer value){
+            this._status = value;
+        }
+
+
     }

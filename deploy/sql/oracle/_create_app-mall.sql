@@ -281,6 +281,7 @@ CREATE TABLE litemall_topic(
   ADD_TIME DATE  ,
   UPDATE_TIME DATE  ,
   DELETED CHAR(1)  ,
+  STATUS INTEGER default 0   ,
   constraint PK_litemall_topic primary key (ID)
 );
 
@@ -921,6 +922,8 @@ CREATE TABLE litemall_order_goods(
       COMMENT ON COLUMN litemall_topic.UPDATE_TIME IS '更新时间';
                     
       COMMENT ON COLUMN litemall_topic.DELETED IS '逻辑删除';
+                    
+      COMMENT ON COLUMN litemall_topic.STATUS IS '上下架状态';
                     
       COMMENT ON TABLE litemall_reset_code IS '密码重置验证码';
                 

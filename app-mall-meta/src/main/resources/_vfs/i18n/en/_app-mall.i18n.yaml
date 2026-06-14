@@ -478,4 +478,6 @@ prop:
       addTime: null
       updateTime: null
       deleted: null
+      status: null
+      status_label: null
       goodsComponent: null

@@ -281,6 +281,7 @@ CREATE TABLE litemall_topic(
   ADD_TIME DATETIME NULL    COMMENT '创建时间',
   UPDATE_TIME DATETIME NULL    COMMENT '更新时间',
   DELETED BOOLEAN NULL    COMMENT '逻辑删除',
+  STATUS INTEGER default 0  NULL    COMMENT '上下架状态',
   constraint PK_litemall_topic primary key (ID)
 )CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
 
