@@ -5,7 +5,7 @@
         <grid id="list">
             <cols x:override="bounded-merge">
                 <col id="name"/>
-                <col id="picUrl" type="image"/>
+                <col id="picUrl"/>
                 <col id="desc"/>
                 <col id="floorPrice"/>
             </cols>

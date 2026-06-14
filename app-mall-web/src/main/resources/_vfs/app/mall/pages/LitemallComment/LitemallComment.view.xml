@@ -28,6 +28,11 @@
                 type valueId userId
             </layout>
         </form>
+        <form id="admin-reply-form" editMode="edit" title="回复评论">
+            <layout>
+                adminContent[回复内容]
+            </layout>
+        </form>
     </forms>
 
     <pages>
@@ -50,10 +55,5 @@
             <initApi url="@query:LitemallComment__get?id=$id" gql:selection="{@formSelection}"/>
             <api url="@mutation:LitemallComment__adminReply?id=$id"/>
         </simple>
-        <form id="admin-reply-form" editMode="edit" title="回复评论">
-            <layout>
-                adminContent[回复内容]
-            </layout>
-        </form>
     </pages>
 </view>
