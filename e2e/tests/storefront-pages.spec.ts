@@ -26,6 +26,20 @@ const STOREFRONT_PAGES = [
   'mall/user/order-list',
   'mall/user/order-detail',
   'mall/user/address',
+  // Extension pages (plan 2026-06-15)
+  'mall/search/search',
+  'mall/topic/topic-list',
+  'mall/topic/topic-detail',
+  'mall/coupon/coupon-center',
+  'mall/groupon/groupon-list',
+  'mall/groupon/groupon-rules-detail',
+  'mall/groupon/groupon-activity-detail',
+  'mall/user/collect',
+  'mall/user/footprint',
+  'mall/user/aftersale-list',
+  'mall/user/aftersale-apply',
+  'mall/user/feedback',
+  'mall/help/faq',
 ];
 
 test.describe('Storefront data RPC smoke', () => {
