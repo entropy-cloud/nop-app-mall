@@ -157,7 +157,7 @@ After `Plan Status: completed` has been set and the closure audit has passed:
 
 ## Template
 
-> **文件名规范**: 遵守 `docs/references/document-naming-and-timeliness.md`，使用 `docs/plans/YYYY-MM-DD-topic-plan.md` 格式。不允许无日期前缀的纯主题名。
+> **文件名规范**: 遵守 `docs/references/document-naming-and-timeliness.md`，使用 `docs/plans/YYYY-MM-DD-HHmm-topic-plan.md` 格式（含时分，保证同日多计划按创建顺序排列）。不允许无日期前缀的纯主题名。
 
 ```md
 # <plan-id> <title>

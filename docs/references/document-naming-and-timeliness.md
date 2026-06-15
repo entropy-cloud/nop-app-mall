@@ -108,23 +108,23 @@ Examples:
 
 ### Plans
 
-For small and medium projects, prefer a simple dated plan name:
+For small and medium projects, prefer a dated plan name that includes the time of day so multiple plans created on the same day sort in creation order:
 
-- `docs/plans/YYYY-MM-DD-topic-plan.md`
+- `docs/plans/YYYY-MM-DD-HHmm-topic-plan.md`
 
 Examples:
 
-- `docs/plans/2026-05-21-user-list-plan.md`
-- `docs/plans/2026-05-21-role-permission-alignment-plan.md`
+- `docs/plans/2026-05-21-0930-user-list-plan.md`
+- `docs/plans/2026-05-21-1415-role-permission-alignment-plan.md`
 
 If the project later accumulates many plans and needs stronger indexing, you may add a numeric prefix:
 
-- `docs/plans/NNN-YYYY-MM-DD-topic-plan.md`
+- `docs/plans/NNN-YYYY-MM-DD-HHmm-topic-plan.md`
 
 Examples:
 
-- `docs/plans/012-2026-05-21-user-list-plan.md`
-- `docs/plans/013-2026-05-21-checkout-validation-plan.md`
+- `docs/plans/012-2026-05-21-0930-user-list-plan.md`
+- `docs/plans/013-2026-05-21-1100-checkout-validation-plan.md`
 
 ### One-Off Requirement Synthesis Files
 
@@ -172,7 +172,7 @@ docs/testing/2026/05-21.md
 docs/discussions/2026-05-21-user-management-scope.md
 docs/analysis/2026-05-21-auth-strategy-comparison.md
 docs/audits/2026-05-21-document-audit-user-management.md
-docs/plans/2026-05-21-user-list-plan.md
+docs/plans/2026-05-21-0930-user-list-plan.md
 docs/requirements/2026-05-21-order-refund-flow.md
 docs/retrospectives/2026-05-21-checkout-prototype-gap.md
 docs/bugs/01-order-status-double-submit.md

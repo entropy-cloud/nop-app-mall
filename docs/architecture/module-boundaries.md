@@ -87,3 +87,11 @@ Define the main code ownership boundaries for `nop-app-mall`.
 ## Rule
 
 If a recurring design argument depends on module ownership, write the answer here instead of re-litigating it in chat.
+
+## Deploy DDL vs ORM Model Sync Status
+
+The ORM model `model/app-mall.orm.xml` is the source of truth for schema (columns, types, indexes). Three dialect DDL files under `deploy/sql/{mysql,postgresql,oracle}/_create_app-mall.sql` are used for manual production deployment only (dev/test runtime uses `init-database-schema: true` which builds the schema from the ORM model).
+
+- **Index sync (2026-06-15):** All 31 ORM `<index>` definitions are propagated to each of the three dialect DDL files as `CREATE INDEX` statements (MySQL/Oracle uppercase column names, PostgreSQL lowercase). Done by `docs/plans/2026-06-13-orm-index-and-entity-cleanup-plan.md` Phase 3 via `docs/plans/2026-06-15-1324-plan-closure-and-residual-cleanup-plan.md` Phase 2 (Option B: directed append, no full codegen regen).
+- **Drift watch (non-blocking):** Option B only propagated indexes. Other dimensions (column types, new columns) may still drift between ORM model and DDL. Trigger to fully re-align: next full codegen DDL regeneration.
+- **Deleted entities:** `LitemallAdmin`, `LitemallRole`, `LitemallPermission` are absent from all three DDL files (user/role/permission handled by `nop-auth` tables customized via `app-mall-delta`).

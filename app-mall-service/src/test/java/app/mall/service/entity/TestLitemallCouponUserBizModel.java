@@ -1,12 +1,19 @@
 package app.mall.service.entity;
 
+import app.mall.biz.ILitemallCouponUserBiz;
 import app.mall.dao.entity.LitemallCoupon;
+import app.mall.dao.entity.LitemallCouponUser;
 import io.nop.api.core.annotations.autotest.NopTestConfig;
 import io.nop.api.core.annotations.core.OptionalBoolean;
 import io.nop.api.core.beans.ApiRequest;
 import io.nop.api.core.beans.ApiResponse;
+import io.nop.api.core.beans.FilterBeans;
+import io.nop.api.core.beans.query.QueryBean;
 import io.nop.api.core.context.ContextProvider;
+import io.nop.api.core.exceptions.NopException;
 import io.nop.autotest.junit.JunitBaseTestCase;
+import io.nop.core.context.IServiceContext;
+import io.nop.core.context.ServiceContextImpl;
 import io.nop.dao.api.IDaoProvider;
 import io.nop.graphql.core.IGraphQLExecutionContext;
 import io.nop.graphql.core.ast.GraphQLOperationType;
@@ -30,6 +37,9 @@ public class TestLitemallCouponUserBizModel extends JunitBaseTestCase {
 
     @Inject
     IDaoProvider daoProvider;
+
+    @Inject
+    ILitemallCouponUserBiz couponUserBiz;
 
     String couponId;
 
@@ -152,5 +162,43 @@ public class TestLitemallCouponUserBizModel extends JunitBaseTestCase {
                 GraphQLOperationType.mutation, "LitemallCouponUser__returnCoupon", returnReq);
         ApiResponse<?> returnResult = graphQLEngine.executeRpc(returnCtx);
         assertEquals(0, returnResult.getStatus());
+    }
+
+    @Test
+    public void testClaimCouponForUserSuccess() {
+        IServiceContext ctx = new ServiceContextImpl();
+        String targetUserId = "user-ar10-1";
+        LitemallCouponUser result = couponUserBiz.claimCouponForUser(couponId, targetUserId, ctx);
+
+        assertNotNull(result);
+        assertEquals(targetUserId, result.getUserId());
+        assertEquals(couponId, result.getCouponId());
+        assertEquals(0, result.getStatus());
+
+        QueryBean verifyQuery = new QueryBean();
+        verifyQuery.addFilter(FilterBeans.eq(LitemallCouponUser.PROP_NAME_userId, targetUserId));
+        verifyQuery.addFilter(FilterBeans.eq(LitemallCouponUser.PROP_NAME_couponId, couponId));
+        verifyQuery.addFilter(FilterBeans.eq(LitemallCouponUser.PROP_NAME_deleted, false));
+        long count = couponUserBiz.findCount(verifyQuery, ctx);
+        assertEquals(1, count, "DB should contain exactly one claim record");
+    }
+
+    @Test
+    public void testClaimCouponForUserCouponNotFound() {
+        IServiceContext ctx = new ServiceContextImpl();
+        assertThrows(NopException.class, () ->
+                couponUserBiz.claimCouponForUser("non-existent-coupon-id", "user-ar10-2", ctx));
+    }
+
+    @Test
+    public void testClaimCouponForUserDuplicateRejected() {
+        IServiceContext ctx = new ServiceContextImpl();
+        String targetUserId = "user-ar10-3";
+
+        LitemallCouponUser first = couponUserBiz.claimCouponForUser(couponId, targetUserId, ctx);
+        assertNotNull(first);
+
+        assertThrows(NopException.class, () ->
+                couponUserBiz.claimCouponForUser(couponId, targetUserId, ctx));
     }
 }

@@ -122,7 +122,7 @@ public class LoginApiExBizModel {
                 "password", password,
                 "nickName", username,
                 "phone", mobile,
-                "gender", 1,
+                "gender", 0,
                 "userType", 1,
                 "lastLoginIp", "",
                 "userLevel", 0,
