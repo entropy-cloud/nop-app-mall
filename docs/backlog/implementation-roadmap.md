@@ -1,6 +1,6 @@
 # Implementation Roadmap
 
-> Last Updated: 2026-06-13
+> Last Updated: 2026-06-14
 > Source: `docs/requirements/commercial-baseline.md`, `docs/design/*.md`
 
 ## Purpose
@@ -320,7 +320,7 @@
 **目标：** 管理员管理专题/广告/FAQ；用户浏览和提交反馈。
 
 **交付范围：**
-- 专题管理（关联商品/阅读量）
+- 专题管理（关联商品/阅读量/上下架状态控制：`status` 字段 + `onShelf`/`offShelf`，前台 `frontList` 仅展示上架专题）
 - 广告管理（时间窗口/启停）
 - FAQ 管理
 - 反馈提交与处理
