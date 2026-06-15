@@ -1,0 +1,115 @@
+type: page
+title: 售后列表
+body:
+  - type: wrapper
+    className: storefront-header
+    body:
+      type: flex
+      justify: space-between
+      alignItems: center
+      style:
+        padding: 10px 20px
+        backgroundColor: '#fff'
+        borderBottom: 2px solid '#ff6700'
+      items:
+        - type: wrapper
+          body:
+            - type: button
+              label: '<b style="font-size:24px;color:#ff6700">商城</b>'
+              level: link
+              actionType: link
+              link: "/storefront-home"
+        - type: wrapper
+          body:
+            - type: input-text
+              name: searchKeyword
+              placeholder: 搜索商品
+              style:
+                width: 300px
+            - type: button
+              label: 搜索
+              level: primary
+              actionType: link
+              link: "/storefront-search?keyword=${searchKeyword}"
+        - type: wrapper
+          body:
+            - type: button
+              label: 购物车
+              icon: shopping-cart
+              level: link
+              actionType: link
+              link: "/storefront-cart"
+            - type: button
+              label: 用户中心
+              icon: user
+              level: link
+              actionType: link
+              link: "/storefront-user-center"
+
+  - type: wrapper
+    style:
+      padding: 20px
+    body:
+      - type: flex
+        justify: space-between
+        alignItems: center
+        style:
+          marginBottom: 15px
+        items:
+          - type: tpl
+            tpl: '<h3 style="color:#333;border-left:4px solid #ff6700;padding-left:8px">我的售后申请</h3>'
+          - type: button
+            label: 申请售后
+            icon: plus
+            level: primary
+            actionType: link
+            link: "/storefront-aftersale-apply"
+
+      - type: service
+        name: aftersaleList
+        api:
+          url: '@query:LitemallAftersale__userList'
+          sendOn: true
+        body:
+          type: each
+          name: items
+          placeholder: '<div style="padding:40px;text-align:center;color:#999">暂无售后记录</div>'
+          items:
+            type: card
+            header:
+              title: "售后单：${item.aftersaleSn}"
+              description: "订单号：${item.orderId}"
+            body:
+              type: wrapper
+              body:
+                - type: tpl
+                  tpl: '<div style="margin:5px 0"><span style="color:#999">类型：</span>${item.type == 0 ? "仅退款" : item.type == 1 ? "退货退款" : "其他"}</div>'
+                - type: tpl
+                  tpl: '<div style="margin:5px 0"><span style="color:#999">金额：</span><span style="color:#ff6700;font-weight:bold">¥${item.amount}</span></div>'
+                - type: tpl
+                  tpl: '<div style="margin:5px 0"><span style="color:#999">原因：</span>${item.reason}</div>'
+                - type: tpl
+                  tpl: '<div style="margin:5px 0"><span style="color:#999">状态：</span><b>${item.status == 0 ? "初始" : item.status == 1 ? "已申请" : item.status == 2 ? "已审批" : item.status == 3 ? "已退款" : item.status == 4 ? "已拒绝" : item.status == 5 ? "已取消" : "未知"}</b></div>'
+                - type: divider
+                - type: flex
+                  items:
+                    - type: button
+                      label: 查看详情
+                      level: primary
+                      size: sm
+                      actionType: link
+                      link: "/storefront-order-detail?id=${item.orderId}"
+                    - type: button
+                      label: 撤回申请
+                      level: danger
+                      size: sm
+                      visibleOn: "${item.status == 1}"
+                      actionType: ajax
+                      api:
+                        url: '@mutation:LitemallAftersale__cancel'
+                        data:
+                          id: "${item.id}"
+                      redirect: "/storefront-aftersale-list"
+                      confirmText: 确认撤回该售后申请？
+                      messages:
+                        success: '已撤回'

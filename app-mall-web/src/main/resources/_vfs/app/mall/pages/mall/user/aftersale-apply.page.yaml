@@ -1,0 +1,131 @@
+type: page
+title: 申请售后
+body:
+  - type: wrapper
+    className: storefront-header
+    body:
+      type: flex
+      justify: space-between
+      alignItems: center
+      style:
+        padding: 10px 20px
+        backgroundColor: '#fff'
+        borderBottom: 2px solid '#ff6700'
+      items:
+        - type: wrapper
+          body:
+            - type: button
+              label: '<b style="font-size:24px;color:#ff6700">商城</b>'
+              level: link
+              actionType: link
+              link: "/storefront-home"
+        - type: wrapper
+          body:
+            - type: input-text
+              name: searchKeyword
+              placeholder: 搜索商品
+              style:
+                width: 300px
+            - type: button
+              label: 搜索
+              level: primary
+              actionType: link
+              link: "/storefront-search?keyword=${searchKeyword}"
+        - type: wrapper
+          body:
+            - type: button
+              label: 购物车
+              icon: shopping-cart
+              level: link
+              actionType: link
+              link: "/storefront-cart"
+            - type: button
+              label: 用户中心
+              icon: user
+              level: link
+              actionType: link
+              link: "/storefront-user-center"
+
+  - type: service
+    name: eligibleOrders
+    api:
+      url: '@query:LitemallOrder__myOrders'
+      sendOn: true
+    body:
+      - type: wrapper
+        style:
+          padding: 20px
+          maxWidth: 700px
+          margin: '0 auto'
+        body:
+          - type: tpl
+            tpl: '<h3 style="color:#333;border-left:4px solid #ff6700;padding-left:8px;margin-bottom:15px">申请售后</h3>'
+          - type: tpl
+            tpl: '<div style="color:#999;margin-bottom:15px">仅"已支付"或"已收货"状态的订单可申请售后</div>'
+          - type: form
+            name: aftersaleForm
+            title: 售后信息
+            mode: normal
+            body:
+              - type: select
+                name: orderId
+                label: 选择订单
+                required: true
+                source: '${items}'
+                labelField: orderSn
+                valueField: id
+                placeholder: 请选择要申请售后的订单
+                description: '仅"已支付(201)"或"已收货(401/402)"状态的订单可申请售后'
+              - type: select
+                name: type
+                label: 售后类型
+                required: true
+                options:
+                  - label: 仅退款
+                    value: 0
+                  - label: 退货退款
+                    value: 1
+              - type: textarea
+                name: reason
+                label: 申请原因
+                required: true
+                placeholder: 请详细描述申请售后的原因
+                minLength: 5
+                maxLength: 500
+              - type: input-number
+                name: amount
+                label: 退款金额
+                placeholder: 留空则默认为订单实付金额
+                min: 0
+                step: 0.01
+                precision: 2
+                description: '不超过订单实付金额'
+              - type: textarea
+                name: comment
+                label: 备注
+                placeholder: 选填
+                maxLength: 200
+
+            actions:
+              - type: button
+                label: 提交申请
+                level: primary
+                size: lg
+                actionType: ajax
+                api:
+                  url: '@mutation:LitemallAftersale__apply'
+                  data:
+                    orderId: "${orderId}"
+                    type: "${type}"
+                    reason: "${reason}"
+                    amount: "${amount}"
+                    comment: "${comment}"
+                redirect: "/storefront-aftersale-list"
+                messages:
+                  success: '售后申请已提交'
+              - type: button
+                label: 返回
+                level: link
+                size: lg
+                actionType: link
+                link: "/storefront-aftersale-list"

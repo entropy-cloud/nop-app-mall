@@ -27,7 +27,7 @@ body:
               label: 搜索
               level: primary
               actionType: link
-              link: "/storefront-category?keyword=${searchKeyword}"
+              link: "/storefront-search?keyword=${searchKeyword}"
         - type: wrapper
           body:
             - type: button
@@ -55,6 +55,21 @@ body:
         level: link
         actionType: link
         link: "/storefront-home"
+      - type: button
+        label: 领券中心
+        level: link
+        actionType: link
+        link: "/storefront-coupon-center"
+      - type: button
+        label: 团购
+        level: link
+        actionType: link
+        link: "/storefront-groupon-list"
+      - type: button
+        label: 专题
+        level: link
+        actionType: link
+        link: "/storefront-topic-list"
       - type: service
         name: navCategories
         api:
@@ -196,8 +211,23 @@ body:
       backgroundColor: '#333'
       color: '#999'
     body:
-      type: tpl
-      tpl: '<div><p>商城商城 - 基于Nop平台构建</p><p>Copyright © 2026. All rights reserved.</p></div>'
+      - type: flex
+        justify: center
+        style:
+          marginBottom: 10px
+        items:
+          - type: button
+            label: 常见问题
+            level: link
+            actionType: link
+            link: "/storefront-faq"
+          - type: button
+            label: 意见反馈
+            level: link
+            actionType: link
+            link: "/storefront-feedback"
+      - type: tpl
+        tpl: '<div><p>商城商城 - 基于Nop平台构建</p><p>Copyright © 2026. All rights reserved.</p></div>'
 
 css:
   .storefront-section:

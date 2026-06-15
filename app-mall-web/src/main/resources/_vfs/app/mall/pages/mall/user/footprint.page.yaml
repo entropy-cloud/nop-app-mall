@@ -1,0 +1,111 @@
+type: page
+title: 浏览足迹
+body:
+  - type: wrapper
+    className: storefront-header
+    body:
+      type: flex
+      justify: space-between
+      alignItems: center
+      style:
+        padding: 10px 20px
+        backgroundColor: '#fff'
+        borderBottom: 2px solid '#ff6700'
+      items:
+        - type: wrapper
+          body:
+            - type: button
+              label: '<b style="font-size:24px;color:#ff6700">商城</b>'
+              level: link
+              actionType: link
+              link: "/storefront-home"
+        - type: wrapper
+          body:
+            - type: input-text
+              name: searchKeyword
+              placeholder: 搜索商品
+              style:
+                width: 300px
+            - type: button
+              label: 搜索
+              level: primary
+              actionType: link
+              link: "/storefront-search?keyword=${searchKeyword}"
+        - type: wrapper
+          body:
+            - type: button
+              label: 购物车
+              icon: shopping-cart
+              level: link
+              actionType: link
+              link: "/storefront-cart"
+            - type: button
+              label: 用户中心
+              icon: user
+              level: link
+              actionType: link
+              link: "/storefront-user-center"
+
+  - type: wrapper
+    style:
+      padding: 20px
+    body:
+      - type: flex
+        justify: space-between
+        alignItems: center
+        style:
+          marginBottom: 15px
+        items:
+          - type: tpl
+            tpl: '<h3 style="color:#333;border-left:4px solid #ff6700;padding-left:8px">我的浏览足迹</h3>'
+          - type: button
+            label: 清空足迹
+            icon: delete
+            level: danger
+            size: sm
+            actionType: ajax
+            api:
+              url: '@mutation:LitemallFootprint__clearFootprints'
+            redirect: "/storefront-footprint"
+            confirmText: 确认清空所有浏览足迹？
+            messages:
+              success: '足迹已清空'
+
+      - type: service
+        name: footprints
+        api:
+          url: '@query:LitemallFootprint__listFootprints'
+          data:
+            page: 1
+            pageSize: 20
+          sendOn: true
+        body:
+          type: each
+          name: items
+          placeholder: '<div style="padding:40px;text-align:center;color:#999">暂无浏览记录</div>'
+          items:
+            type: service
+            name: goodsItem
+            api:
+              url: '@query:LitemallGoods__frontDetail'
+              data:
+                id: "${item.goodsId}"
+              sendOn: "${item.goodsId}"
+            body:
+              type: card
+              header:
+                title: "${data.name}"
+                avatar: "${data.picUrl}"
+              body:
+                type: wrapper
+                body:
+                  - type: tpl
+                    tpl: '<span style="color:#ff6700;font-size:18px;font-weight:bold">¥${data.retailPrice}</span>'
+                  - type: tpl
+                    tpl: '<div style="color:#999;font-size:12px;margin-top:5px">浏览时间：${item.addTime}</div>'
+                  - type: button
+                    label: 再次查看
+                    level: primary
+                    size: sm
+                    actionType: link
+                    link: "/storefront-goods-detail?id=${item.goodsId}"

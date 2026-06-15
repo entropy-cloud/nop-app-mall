@@ -1,0 +1,76 @@
+type: page
+title: 常见问题
+body:
+  - type: wrapper
+    className: storefront-header
+    body:
+      type: flex
+      justify: space-between
+      alignItems: center
+      style:
+        padding: 10px 20px
+        backgroundColor: '#fff'
+        borderBottom: 2px solid '#ff6700'
+      items:
+        - type: wrapper
+          body:
+            - type: button
+              label: '<b style="font-size:24px;color:#ff6700">商城</b>'
+              level: link
+              actionType: link
+              link: "/storefront-home"
+        - type: wrapper
+          body:
+            - type: input-text
+              name: searchKeyword
+              placeholder: 搜索商品
+              style:
+                width: 300px
+            - type: button
+              label: 搜索
+              level: primary
+              actionType: link
+              link: "/storefront-search?keyword=${searchKeyword}"
+        - type: wrapper
+          body:
+            - type: button
+              label: 购物车
+              icon: shopping-cart
+              level: link
+              actionType: link
+              link: "/storefront-cart"
+            - type: button
+              label: 用户中心
+              icon: user
+              level: link
+              actionType: link
+              link: "/storefront-user-center"
+
+  - type: wrapper
+    style:
+      padding: 20px
+      maxWidth: 900px
+      margin: '0 auto'
+    body:
+      - type: tpl
+        tpl: '<h3 style="color:#333;border-left:4px solid #ff6700;padding-left:8px;margin-bottom:15px">常见问题</h3>'
+      - type: service
+        name: issues
+        api:
+          url: '@query:LitemallIssue__listIssues'
+          data:
+            page: 1
+            pageSize: 50
+          sendOn: true
+        body:
+          type: each
+          name: items
+          placeholder: '<div style="padding:40px;text-align:center;color:#999">暂无常见问题</div>'
+          items:
+            type: panel
+            title: "${item.question}"
+            body:
+              type: tpl
+              tpl: '<div style="color:#666;line-height:1.6">${item.answer}</div>'
+            collapsible: true
+            initCollapsed: true

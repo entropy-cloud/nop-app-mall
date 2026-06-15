@@ -1,0 +1,155 @@
+type: page
+title: 专题详情
+body:
+  - type: wrapper
+    className: storefront-header
+    body:
+      type: flex
+      justify: space-between
+      alignItems: center
+      style:
+        padding: 10px 20px
+        backgroundColor: '#fff'
+        borderBottom: 2px solid '#ff6700'
+      items:
+        - type: wrapper
+          body:
+            - type: button
+              label: '<b style="font-size:24px;color:#ff6700">商城</b>'
+              level: link
+              actionType: link
+              link: "/storefront-home"
+        - type: wrapper
+          body:
+            - type: input-text
+              name: searchKeyword
+              placeholder: 搜索商品
+              style:
+                width: 300px
+            - type: button
+              label: 搜索
+              level: primary
+              actionType: link
+              link: "/storefront-search?keyword=${searchKeyword}"
+        - type: wrapper
+          body:
+            - type: button
+              label: 购物车
+              icon: shopping-cart
+              level: link
+              actionType: link
+              link: "/storefront-cart"
+            - type: button
+              label: 用户中心
+              icon: user
+              level: link
+              actionType: link
+              link: "/storefront-user-center"
+
+  - type: service
+    name: topicDetail
+    api:
+      url: '@query:LitemallTopic__frontDetail'
+      data:
+        id: "${id}"
+      sendOn: "${id}"
+    body:
+      - type: wrapper
+        style:
+          padding: 20px
+        body:
+          - type: tpl
+            tpl: '<h2>${data.title}</h2>'
+          - type: tpl
+            tpl: '<p style="color:#999">${data.subtitle}</p>'
+          - type: tpl
+            tpl: '<div style="margin:10px 0"><span style="color:#999;font-size:12px">阅读量：${data.readCount || 0}</span></div>'
+          - type: tpl
+            tpl: '<img src="${data.picUrl}" style="width:100%;max-height:400px;object-fit:cover;border-radius:4px;margin:10px 0"/>'
+
+          - type: flex
+            style:
+              margin: '15px 0'
+            items:
+              - type: service
+                name: collectState
+                api:
+                  url: '@query:LitemallCollect__isCollect'
+                  data:
+                    type: 1
+                    valueId: "${id}"
+                  sendOn: "${id}"
+                body:
+                  - type: button
+                    label: 取消收藏
+                    icon: star
+                    level: primary
+                    visibleOn: "${data == true}"
+                    actionType: ajax
+                    api:
+                      url: '@mutation:LitemallCollect__removeCollect'
+                      data:
+                        type: 1
+                        valueId: "${id}"
+                    redirect: "/storefront-topic-detail?id=${id}"
+                    messages:
+                      success: '已取消收藏'
+                  - type: button
+                    label: 收藏专题
+                    icon: star
+                    level: link
+                    visibleOn: "${data != true}"
+                    actionType: ajax
+                    api:
+                      url: '@mutation:LitemallCollect__addCollect'
+                      data:
+                        type: 1
+                        valueId: "${id}"
+                    redirect: "/storefront-topic-detail?id=${id}"
+                    messages:
+                      success: '收藏成功'
+
+          - type: divider
+
+          - type: tpl
+            tpl: '<h4 style="color:#333;border-left:4px solid #ff6700;padding-left:8px;margin:15px 0">专题内容</h4>'
+          - type: wrapper
+            style:
+              padding: 15px
+              backgroundColor: '#fafafa'
+              borderRadius: 4
+            body:
+              type: tpl
+              tpl: '${data.content | raw}'
+
+          - type: divider
+
+          - type: tpl
+            tpl: '<h4 style="color:#333;border-left:4px solid #ff6700;padding-left:8px;margin:15px 0">关联商品</h4>'
+          - type: each
+            name: data.goods
+            placeholder: '<div style="padding:20px;color:#999">暂无关联商品</div>'
+            items:
+              type: service
+              name: goodsItem
+              api:
+                url: '@query:LitemallGoods__frontDetail'
+                data:
+                  id: "${item}"
+                sendOn: "${item}"
+              body:
+                type: card
+                header:
+                  title: "${data.name}"
+                  avatar: "${data.picUrl}"
+                body:
+                  type: wrapper
+                  body:
+                    - type: tpl
+                      tpl: '<span style="color:#ff6700;font-size:18px;font-weight:bold">¥${data.retailPrice}</span>'
+                    - type: button
+                      label: 查看商品
+                      level: primary
+                      size: sm
+                      actionType: link
+                      link: "/storefront-goods-detail?id=${data.id}"

@@ -1,0 +1,196 @@
+type: page
+title: 搜索
+body:
+  - type: wrapper
+    className: storefront-header
+    body:
+      type: flex
+      justify: space-between
+      alignItems: center
+      style:
+        padding: 10px 20px
+        backgroundColor: '#fff'
+        borderBottom: 2px solid '#ff6700'
+      items:
+        - type: wrapper
+          body:
+            - type: button
+              label: '<b style="font-size:24px;color:#ff6700">商城</b>'
+              level: link
+              actionType: link
+              link: "/storefront-home"
+        - type: wrapper
+          body:
+            - type: input-text
+              name: searchKeyword
+              placeholder: 搜索商品
+              value: "${keyword}"
+              style:
+                width: 300px
+            - type: button
+              label: 搜索
+              level: primary
+              actionType: link
+              link: "/storefront-search?keyword=${searchKeyword}"
+        - type: wrapper
+          body:
+            - type: button
+              label: 购物车
+              icon: shopping-cart
+              level: link
+              actionType: link
+              link: "/storefront-cart"
+            - type: button
+              label: 用户中心
+              icon: user
+              level: link
+              actionType: link
+              link: "/storefront-user-center"
+
+  - type: service
+    name: recordSearchSvc
+    api:
+      url: '@mutation:LitemallSearchHistory__recordSearch'
+      data:
+        keyword: "${keyword}"
+        from: "search"
+      sendOn: "${keyword && keyword.length > 0}"
+    body:
+      type: tpl
+      tpl: ''
+
+  - type: wrapper
+    visibleOn: "${!keyword}"
+    style:
+      padding: 20px
+      maxWidth: 900px
+      margin: '0 auto'
+    body:
+      - type: service
+        name: hotKeywords
+        api:
+          url: '@query:LitemallKeyword__getHotKeywords'
+          sendOn: true
+        body:
+          - type: tpl
+            tpl: '<h4 style="color:#333;border-left:4px solid #ff6700;padding-left:8px;margin-bottom:12px">热门搜索</h4>'
+          - type: each
+            name: items
+            placeholder: '<span style="color:#999">暂无热门搜索</span>'
+            items:
+              type: button
+              label: "${item.keyword}"
+              level: default
+              size: sm
+              actionType: link
+              link: "/storefront-search?keyword=${item.keyword}"
+              style:
+                marginRight: 8
+
+      - type: divider
+
+      - type: service
+        name: defaultKeywords
+        api:
+          url: '@query:LitemallKeyword__getDefaultKeywords'
+          sendOn: true
+        body:
+          - type: tpl
+            tpl: '<h4 style="color:#333;border-left:4px solid #ff6700;padding-left:8px;margin-bottom:12px">试试搜索</h4>'
+          - type: each
+            name: items
+            placeholder: '<span style="color:#999">暂无推荐</span>'
+            items:
+              type: button
+              label: "${item.keyword}"
+              level: link
+              size: sm
+              actionType: link
+              link: "/storefront-search?keyword=${item.keyword}"
+              style:
+                marginRight: 8
+
+      - type: divider
+
+      - type: wrapper
+        body:
+          - type: flex
+            justify: space-between
+            alignItems: center
+            items:
+              - type: tpl
+                tpl: '<h4 style="color:#333;border-left:4px solid #ff6700;padding-left:8px;margin-bottom:12px">搜索历史</h4>'
+              - type: button
+                label: 清空历史
+                icon: delete
+                level: link
+                size: sm
+                actionType: ajax
+                api:
+                  url: '@mutation:LitemallSearchHistory__clearSearchHistory'
+                redirect: "/storefront-search"
+                confirmText: 确认清空所有搜索历史？
+                messages:
+                  success: '历史已清空'
+          - type: service
+            name: searchHistory
+            api:
+              url: '@query:LitemallSearchHistory__listSearchHistory'
+              data:
+                page: 1
+                pageSize: 20
+              sendOn: true
+            body:
+              type: each
+              name: items
+              placeholder: '<span style="color:#999">暂无搜索历史</span>'
+              items:
+                type: button
+                label: "${item.keyword}"
+                level: default
+                size: sm
+                actionType: link
+                link: "/storefront-search?keyword=${item.keyword}"
+                style:
+                  marginRight: 8
+
+  - type: wrapper
+    visibleOn: "${keyword && keyword.length > 0}"
+    style:
+      padding: 20px
+    body:
+      - type: tpl
+        tpl: '<h3 style="marginBottom:15px">搜索结果：${keyword}</h3>'
+      - type: service
+        name: searchResults
+        api:
+          url: '@query:LitemallGoods__search'
+          data:
+            keyword: "${keyword}"
+            page: 1
+            pageSize: 12
+          sendOn: "${keyword}"
+        body:
+          type: grid
+          columns:
+            - type: each
+              name: items
+              placeholder: '<div style="padding:40px;text-align:center;color:#999">没有找到相关商品</div>'
+              items:
+                type: card
+                header:
+                  title: "${item.name}"
+                  avatar: "${item.picUrl}"
+                body:
+                  type: wrapper
+                  body:
+                    - type: tpl
+                      tpl: '<div style="color:#999;font-size:12px">${item.brief}</div>'
+                    - type: tpl
+                      tpl: '<span style="color:#ff6700;font-size:18px;font-weight:bold">¥${item.retailPrice}</span>'
+                    - type: button
+                      label: 查看详情
+                      level: primary
+                      size: sm
+                      actionType: link
+                      link: "/storefront-goods-detail?id=${item.id}"

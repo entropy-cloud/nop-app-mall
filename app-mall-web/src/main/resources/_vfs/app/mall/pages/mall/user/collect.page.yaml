@@ -1,0 +1,164 @@
+type: page
+title: 我的收藏
+body:
+  - type: wrapper
+    className: storefront-header
+    body:
+      type: flex
+      justify: space-between
+      alignItems: center
+      style:
+        padding: 10px 20px
+        backgroundColor: '#fff'
+        borderBottom: 2px solid '#ff6700'
+      items:
+        - type: wrapper
+          body:
+            - type: button
+              label: '<b style="font-size:24px;color:#ff6700">商城</b>'
+              level: link
+              actionType: link
+              link: "/storefront-home"
+        - type: wrapper
+          body:
+            - type: input-text
+              name: searchKeyword
+              placeholder: 搜索商品
+              style:
+                width: 300px
+            - type: button
+              label: 搜索
+              level: primary
+              actionType: link
+              link: "/storefront-search?keyword=${searchKeyword}"
+        - type: wrapper
+          body:
+            - type: button
+              label: 购物车
+              icon: shopping-cart
+              level: link
+              actionType: link
+              link: "/storefront-cart"
+            - type: button
+              label: 用户中心
+              icon: user
+              level: link
+              actionType: link
+              link: "/storefront-user-center"
+
+  - type: wrapper
+    style:
+      padding: 20px
+    body:
+      - type: tabs
+        tabs:
+          - title: 商品收藏
+            body:
+              - type: service
+                name: goodsCollects
+                api:
+                  url: '@query:LitemallCollect__listByType'
+                  data:
+                    type: 0
+                    page: 1
+                    pageSize: 20
+                  sendOn: true
+                body:
+                  type: each
+                  name: items
+                  placeholder: '<div style="padding:40px;text-align:center;color:#999">暂无商品收藏</div>'
+                  items:
+                    type: service
+                    name: goodsItem
+                    api:
+                      url: '@query:LitemallGoods__frontDetail'
+                      data:
+                        id: "${item.valueId}"
+                      sendOn: "${item.valueId}"
+                    body:
+                      type: card
+                      header:
+                        title: "${data.name}"
+                        avatar: "${data.picUrl}"
+                      body:
+                        type: wrapper
+                        body:
+                          - type: tpl
+                            tpl: '<span style="color:#ff6700;font-size:18px;font-weight:bold">¥${data.retailPrice}</span>'
+                          - type: flex
+                            style:
+                              marginTop: 10px
+                            items:
+                              - type: button
+                                label: 查看商品
+                                level: primary
+                                size: sm
+                                actionType: link
+                                link: "/storefront-goods-detail?id=${item.valueId}"
+                              - type: button
+                                label: 取消收藏
+                                level: link
+                                size: sm
+                                actionType: ajax
+                                api:
+                                  url: '@mutation:LitemallCollect__removeCollect'
+                                  data:
+                                    type: 0
+                                    valueId: "${item.valueId}"
+                                redirect: "/storefront-collect"
+                                messages:
+                                  success: '已取消收藏'
+
+          - title: 专题收藏
+            body:
+              - type: service
+                name: topicCollects
+                api:
+                  url: '@query:LitemallCollect__listByType'
+                  data:
+                    type: 1
+                    page: 1
+                    pageSize: 20
+                  sendOn: true
+                body:
+                  type: each
+                  name: items
+                  placeholder: '<div style="padding:40px;text-align:center;color:#999">暂无专题收藏</div>'
+                  items:
+                    type: service
+                    name: topicItem
+                    api:
+                      url: '@query:LitemallTopic__frontDetail'
+                      data:
+                        id: "${item.valueId}"
+                      sendOn: "${item.valueId}"
+                    body:
+                      type: card
+                      header:
+                        title: "${data.title}"
+                        avatar: "${data.picUrl}"
+                        description: "${data.subtitle}"
+                      body:
+                        type: wrapper
+                        body:
+                          - type: flex
+                            items:
+                              - type: button
+                                label: 查看专题
+                                level: primary
+                                size: sm
+                                actionType: link
+                                link: "/storefront-topic-detail?id=${item.valueId}"
+                              - type: button
+                                label: 取消收藏
+                                level: link
+                                size: sm
+                                actionType: ajax
+                                api:
+                                  url: '@mutation:LitemallCollect__removeCollect'
+                                  data:
+                                    type: 1
+                                    valueId: "${item.valueId}"
+                                redirect: "/storefront-collect"
+                                messages:
+                                  success: '已取消收藏'

@@ -226,13 +226,33 @@ site:
       displayName: ''
     storefront-address:
       displayName: ''
+    storefront-aftersale-apply:
+      displayName: ''
+    storefront-aftersale-list:
+      displayName: ''
     storefront-cart:
       displayName: ''
     storefront-category:
       displayName: ''
     storefront-checkout:
       displayName: ''
+    storefront-collect:
+      displayName: ''
+    storefront-coupon-center:
+      displayName: ''
+    storefront-faq:
+      displayName: ''
+    storefront-feedback:
+      displayName: ''
+    storefront-footprint:
+      displayName: ''
     storefront-goods-detail:
+      displayName: ''
+    storefront-groupon-activity-detail:
+      displayName: ''
+    storefront-groupon-list:
+      displayName: ''
+    storefront-groupon-rules-detail:
       displayName: ''
     storefront-home:
       displayName: ''
@@ -243,6 +263,12 @@ site:
     storefront-order-list:
       displayName: ''
     storefront-order-result:
+      displayName: ''
+    storefront-search:
+      displayName: ''
+    storefront-topic-detail:
+      displayName: ''
+    storefront-topic-list:
       displayName: ''
     storefront-user-center:
       displayName: ''

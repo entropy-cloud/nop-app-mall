@@ -1,0 +1,122 @@
+type: page
+title: 团购活动
+body:
+  - type: wrapper
+    className: storefront-header
+    body:
+      type: flex
+      justify: space-between
+      alignItems: center
+      style:
+        padding: 10px 20px
+        backgroundColor: '#fff'
+        borderBottom: 2px solid '#ff6700'
+      items:
+        - type: wrapper
+          body:
+            - type: button
+              label: '<b style="font-size:24px;color:#ff6700">商城</b>'
+              level: link
+              actionType: link
+              link: "/storefront-home"
+        - type: wrapper
+          body:
+            - type: input-text
+              name: searchKeyword
+              placeholder: 搜索商品
+              style:
+                width: 300px
+            - type: button
+              label: 搜索
+              level: primary
+              actionType: link
+              link: "/storefront-search?keyword=${searchKeyword}"
+        - type: wrapper
+          body:
+            - type: button
+              label: 购物车
+              icon: shopping-cart
+              level: link
+              actionType: link
+              link: "/storefront-cart"
+            - type: button
+              label: 用户中心
+              icon: user
+              level: link
+              actionType: link
+              link: "/storefront-user-center"
+
+  - type: wrapper
+    style:
+      padding: 20px
+    body:
+      - type: tabs
+        tabs:
+          - title: 团购规则
+            body:
+              - type: tpl
+                tpl: '<h3 style="color:#333;border-left:4px solid #ff6700;padding-left:8px;margin-bottom:15px">正在进行</h3>'
+              - type: service
+                name: rulesList
+                api:
+                  url: '@query:LitemallGrouponRules__listAvailableRules'
+                  data:
+                    page: 1
+                    pageSize: 12
+                  sendOn: true
+                body:
+                  type: each
+                  name: items
+                  placeholder: '<div style="padding:40px;text-align:center;color:#999">暂无团购活动</div>'
+                  items:
+                    type: card
+                    header:
+                      title: "${item.goodsName}"
+                      avatar: "${item.picUrl}"
+                    body:
+                      type: wrapper
+                      body:
+                        - type: tpl
+                          tpl: '<div style="background:#fff8f0;padding:10px;border-radius:4px;margin:8px 0"><span style="color:#999">团购立减：</span><span style="color:#ff6700;font-size:20px;font-weight:bold">¥${item.discount}</span></div>'
+                        - type: tpl
+                          tpl: '<div style="color:#999;font-size:12px">成团人数：${item.discountMember} 人 · 截止：${item.expireTime}</div>'
+                        - type: button
+                          label: 查看详情
+                          level: primary
+                          size: sm
+                          actionType: link
+                          link: "/storefront-groupon-rules-detail?id=${item.id}"
+
+          - title: 我的团购
+            body:
+              - type: tpl
+                tpl: '<h3 style="color:#333;border-left:4px solid #ff6700;padding-left:8px;margin-bottom:15px">我参与的活动</h3>'
+              - type: service
+                name: myGroupons
+                api:
+                  url: '@query:LitemallGroupon__myGroupons'
+                  data:
+                    page: 1
+                    pageSize: 20
+                  sendOn: true
+                body:
+                  type: each
+                  name: items
+                  placeholder: '<div style="padding:40px;text-align:center;color:#999">暂无团购记录</div>'
+                  items:
+                    type: card
+                    header:
+                      title: "团购编号：${item.id}"
+                    body:
+                      type: wrapper
+                      body:
+                        - type: tpl
+                          tpl: '<div style="color:#999;font-size:12px">开团时间：${item.creatorUserTime}</div>'
+                        - type: tpl
+                          tpl: '<div style="margin:5px 0">状态：${item.status == 0 ? "开团未支付" : item.status == 1 ? "开团中" : item.status == 2 ? "开团失败" : "未知"}</div>'
+                        - type: button
+                          label: 查看活动
+                          level: primary
+                          size: sm
+                          actionType: link
+                          link: "/storefront-groupon-activity-detail?id=${item.id}"

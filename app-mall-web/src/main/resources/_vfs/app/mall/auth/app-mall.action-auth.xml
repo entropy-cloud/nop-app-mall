@@ -202,6 +202,58 @@
                 <resource id="storefront-address" displayName="收货地址" orderNo="811"
                           icon="ant-design:environment-outlined" component="AMIS"
                           resourceType="SUBM" url="/app/mall/pages/mall/user/address.page.yaml"/>
+
+                <resource id="storefront-search" displayName="搜索" orderNo="812"
+                          icon="ant-design:search-outlined" component="AMIS"
+                          resourceType="SUBM" url="/app/mall/pages/mall/search/search.page.yaml"/>
+
+                <resource id="storefront-topic-list" displayName="专题列表" orderNo="813"
+                          icon="ant-design:appstore-outlined" component="AMIS"
+                          resourceType="SUBM" url="/app/mall/pages/mall/topic/topic-list.page.yaml"/>
+
+                <resource id="storefront-topic-detail" displayName="专题详情" orderNo="814"
+                          icon="ant-design:appstore-outlined" component="AMIS"
+                          resourceType="SUBM" url="/app/mall/pages/mall/topic/topic-detail.page.yaml"/>
+
+                <resource id="storefront-coupon-center" displayName="领券中心" orderNo="815"
+                          icon="ant-design:gift-outlined" component="AMIS"
+                          resourceType="SUBM" url="/app/mall/pages/mall/coupon/coupon-center.page.yaml"/>
+
+                <resource id="storefront-groupon-list" displayName="团购列表" orderNo="816"
+                          icon="ant-design:team-outlined" component="AMIS"
+                          resourceType="SUBM" url="/app/mall/pages/mall/groupon/groupon-list.page.yaml"/>
+
+                <resource id="storefront-groupon-rules-detail" displayName="团购规则详情" orderNo="817"
+                          icon="ant-design:team-outlined" component="AMIS"
+                          resourceType="SUBM" url="/app/mall/pages/mall/groupon/groupon-rules-detail.page.yaml"/>
+
+                <resource id="storefront-groupon-activity-detail" displayName="团购活动详情" orderNo="818"
+                          icon="ant-design:team-outlined" component="AMIS"
+                          resourceType="SUBM" url="/app/mall/pages/mall/groupon/groupon-activity-detail.page.yaml"/>
+
+                <resource id="storefront-collect" displayName="我的收藏" orderNo="819"
+                          icon="ant-design:star-outlined" component="AMIS"
+                          resourceType="SUBM" url="/app/mall/pages/mall/user/collect.page.yaml"/>
+
+                <resource id="storefront-footprint" displayName="浏览足迹" orderNo="820"
+                          icon="ant-design:history-outlined" component="AMIS"
+                          resourceType="SUBM" url="/app/mall/pages/mall/user/footprint.page.yaml"/>
+
+                <resource id="storefront-aftersale-list" displayName="售后列表" orderNo="821"
+                          icon="ant-design:rollback-outlined" component="AMIS"
+                          resourceType="SUBM" url="/app/mall/pages/mall/user/aftersale-list.page.yaml"/>
+
+                <resource id="storefront-aftersale-apply" displayName="售后申请" orderNo="822"
+                          icon="ant-design:rollback-outlined" component="AMIS"
+                          resourceType="SUBM" url="/app/mall/pages/mall/user/aftersale-apply.page.yaml"/>
+
+                <resource id="storefront-feedback" displayName="提交反馈" orderNo="823"
+                          icon="ant-design:message-outlined" component="AMIS"
+                          resourceType="SUBM" url="/app/mall/pages/mall/user/feedback.page.yaml"/>
+
+                <resource id="storefront-faq" displayName="常见问题" orderNo="824"
+                          icon="ant-design:question-circle-outlined" component="AMIS"
+                          resourceType="SUBM" url="/app/mall/pages/mall/help/faq.page.yaml"/>
             </children>
         </resource>
 

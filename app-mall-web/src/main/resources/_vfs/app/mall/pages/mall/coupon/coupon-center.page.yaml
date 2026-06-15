@@ -1,0 +1,197 @@
+type: page
+title: 领券中心
+body:
+  - type: wrapper
+    className: storefront-header
+    body:
+      type: flex
+      justify: space-between
+      alignItems: center
+      style:
+        padding: 10px 20px
+        backgroundColor: '#fff'
+        borderBottom: 2px solid '#ff6700'
+      items:
+        - type: wrapper
+          body:
+            - type: button
+              label: '<b style="font-size:24px;color:#ff6700">商城</b>'
+              level: link
+              actionType: link
+              link: "/storefront-home"
+        - type: wrapper
+          body:
+            - type: input-text
+              name: searchKeyword
+              placeholder: 搜索商品
+              style:
+                width: 300px
+            - type: button
+              label: 搜索
+              level: primary
+              actionType: link
+              link: "/storefront-search?keyword=${searchKeyword}"
+        - type: wrapper
+          body:
+            - type: button
+              label: 购物车
+              icon: shopping-cart
+              level: link
+              actionType: link
+              link: "/storefront-cart"
+            - type: button
+              label: 用户中心
+              icon: user
+              level: link
+              actionType: link
+              link: "/storefront-user-center"
+
+  - type: wrapper
+    style:
+      padding: 20px
+    body:
+      - type: tabs
+        tabs:
+          - title: 可领取优惠券
+            body:
+              - type: service
+                name: availableCoupons
+                api:
+                  url: '@query:LitemallCoupon__listAvailableCoupons'
+                  data:
+                    page: 1
+                    pageSize: 20
+                  sendOn: true
+                body:
+                  type: each
+                  name: items
+                  placeholder: '<div style="padding:40px;text-align:center;color:#999">暂无可领取的优惠券</div>'
+                  items:
+                    type: card
+                    header:
+                      title: "${item.name}"
+                      description: "${item.tag}"
+                    body:
+                      type: wrapper
+                      body:
+                        - type: tpl
+                          tpl: '<div style="background:#fff8f0;padding:15px;border-radius:4px;margin:10px 0"><span style="color:#ff6700;font-size:24px;font-weight:bold">¥${item.discount}</span><span style="color:#999;margin-left:10px">满 ${item.min} 元可用</span></div>'
+                        - type: tpl
+                          tpl: '<div style="color:#999;font-size:12px">${item.desc || ""}</div>'
+                        - type: tpl
+                          tpl: '<div style="color:#999;font-size:12px">有效期：${item.startTime || ""} 至 ${item.endTime || ""}</div>'
+                        - type: button
+                          label: 立即领取
+                          level: primary
+                          size: sm
+                          actionType: ajax
+                          api:
+                            url: '@mutation:LitemallCouponUser__claimCoupon'
+                            data:
+                              couponId: "${item.id}"
+                          redirect: "/storefront-coupon-center"
+                          messages:
+                            success: '领取成功'
+
+              - type: divider
+              - type: tpl
+                tpl: '<h4 style="margin:15px 0">兑换码领取</h4>'
+              - type: form
+                name: redeemForm
+                title: ''
+                mode: normal
+                body:
+                  - type: input-text
+                    name: code
+                    label: 兑换码
+                    placeholder: 请输入优惠券兑换码
+                    required: true
+                actions:
+                  - type: button
+                    label: 兑换
+                    level: primary
+                    actionType: ajax
+                    api:
+                      url: '@mutation:LitemallCouponUser__redeemCoupon'
+                      data:
+                        code: "${code}"
+                    redirect: "/storefront-coupon-center"
+                    messages:
+                      success: '兑换成功'
+
+          - title: 我的优惠券
+            body:
+              - type: tpl
+                tpl: '<h4 style="color:#333;border-left:4px solid #ff6700;padding-left:8px;margin:10px 0">未使用</h4>'
+              - type: service
+                name: myCouponsUnused
+                api:
+                  url: '@query:LitemallCoupon__listMyCoupons'
+                  data:
+                    status: 0
+                    page: 1
+                    pageSize: 20
+                  sendOn: true
+                body:
+                  type: each
+                  name: items
+                  placeholder: '<div style="color:#999;padding:10px">暂无未使用优惠券</div>'
+                  items:
+                    type: card
+                    header:
+                      title: "${item.coupon.name}"
+                    body:
+                      type: wrapper
+                      body:
+                        - type: tpl
+                          tpl: '<span style="color:#ff6700;font-size:18px;font-weight:bold">¥${item.coupon.discount}</span><span style="color:#999;margin-left:10px">满 ${item.coupon.min} 元可用</span>'
+                        - type: tpl
+                          tpl: '<div style="color:#999;font-size:12px">有效期：${item.startTime} 至 ${item.endTime}</div>'
+
+              - type: divider
+              - type: tpl
+                tpl: '<h4 style="color:#333;border-left:4px solid #ff6700;padding-left:8px;margin:10px 0">已使用</h4>'
+              - type: service
+                name: myCouponsUsed
+                api:
+                  url: '@query:LitemallCoupon__listMyCoupons'
+                  data:
+                    status: 1
+                    page: 1
+                    pageSize: 20
+                  sendOn: true
+                body:
+                  type: each
+                  name: items
+                  placeholder: '<div style="color:#999;padding:10px">暂无已使用优惠券</div>'
+                  items:
+                    type: card
+                    header:
+                      title: "${item.coupon.name}"
+                    body:
+                      type: tpl
+                      tpl: '<span style="color:#999">已使用 · 使用时间：${item.usedTime}</span>'
+
+              - type: divider
+              - type: tpl
+                tpl: '<h4 style="color:#333;border-left:4px solid #ff6700;padding-left:8px;margin:10px 0">已过期</h4>'
+              - type: service
+                name: myCouponsExpired
+                api:
+                  url: '@query:LitemallCoupon__listMyCoupons'
+                  data:
+                    status: 2
+                    page: 1
+                    pageSize: 20
+                  sendOn: true
+                body:
+                  type: each
+                  name: items
+                  placeholder: '<div style="color:#999;padding:10px">暂无已过期优惠券</div>'
+                  items:
+                    type: card
+                    header:
+                      title: "${item.coupon.name}"
+                    body:
+                      type: tpl
+                      tpl: '<span style="color:#999">已过期 · 截止时间：${item.endTime}</span>'

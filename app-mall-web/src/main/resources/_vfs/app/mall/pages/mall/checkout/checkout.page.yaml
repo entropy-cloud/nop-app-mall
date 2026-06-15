@@ -192,6 +192,8 @@ body:
                         message: "${orderForm.message}"
                         freightPrice: "${freightService.data}"
                         couponUserId: "${couponForm.couponUserId}"
+                        grouponRulesId: "${grouponRulesId}"
+                        grouponId: "${grouponId}"
                     redirect: "/storefront-order-result?orderId=${event.data.result.id}"
                     messages:
                       success: '订单提交成功'

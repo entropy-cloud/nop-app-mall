@@ -114,7 +114,52 @@ body:
               level: primary
               block: true
               actionType: link
-              link: "/storefront-category"
+              link: "/storefront-coupon-center"
+          - md: 6
+            body:
+              type: button
+              label: 我的收藏
+              icon: star
+              level: primary
+              block: true
+              actionType: link
+              link: "/storefront-collect"
+          - md: 6
+            body:
+              type: button
+              label: 浏览足迹
+              icon: history
+              level: primary
+              block: true
+              actionType: link
+              link: "/storefront-footprint"
+          - md: 6
+            body:
+              type: button
+              label: 售后管理
+              icon: rollback
+              level: primary
+              block: true
+              actionType: link
+              link: "/storefront-aftersale-list"
+          - md: 6
+            body:
+              type: button
+              label: 我的团购
+              icon: team
+              level: primary
+              block: true
+              actionType: link
+              link: "/storefront-groupon-list"
+          - md: 6
+            body:
+              type: button
+              label: 提交反馈
+              icon: message
+              level: primary
+              block: true
+              actionType: link
+              link: "/storefront-feedback"
           - md: 6
             body:
               type: button
@@ -123,4 +168,4 @@ body:
               level: primary
               block: true
               actionType: link
-              link: "/storefront-category"
+              link: "/storefront-home"

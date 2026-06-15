@@ -1,0 +1,155 @@
+type: page
+title: 团购活动详情
+body:
+  - type: wrapper
+    className: storefront-header
+    body:
+      type: flex
+      justify: space-between
+      alignItems: center
+      style:
+        padding: 10px 20px
+        backgroundColor: '#fff'
+        borderBottom: 2px solid '#ff6700'
+      items:
+        - type: wrapper
+          body:
+            - type: button
+              label: '<b style="font-size:24px;color:#ff6700">商城</b>'
+              level: link
+              actionType: link
+              link: "/storefront-home"
+        - type: wrapper
+          body:
+            - type: input-text
+              name: searchKeyword
+              placeholder: 搜索商品
+              style:
+                width: 300px
+            - type: button
+              label: 搜索
+              level: primary
+              actionType: link
+              link: "/storefront-search?keyword=${searchKeyword}"
+        - type: wrapper
+          body:
+            - type: button
+              label: 购物车
+              icon: shopping-cart
+              level: link
+              actionType: link
+              link: "/storefront-cart"
+            - type: button
+              label: 用户中心
+              icon: user
+              level: link
+              actionType: link
+              link: "/storefront-user-center"
+
+  - type: service
+    name: grouponDetail
+    api:
+      url: '@query:LitemallGroupon__grouponDetail'
+      data:
+        id: "${id}"
+      sendOn: "${id}"
+    body:
+      - type: wrapper
+        style:
+          padding: 20px
+        body:
+          - type: tpl
+            tpl: '<h2>团购活动 #${data.id}</h2>'
+          - type: tpl
+            tpl: '<div style="margin:5px 0"><span style="color:#999">当前状态：</span><b>${data.status == 0 ? "开团未支付" : data.status == 1 ? "开团中" : data.status == 2 ? "开团失败" : "未知"}</b></div>'
+          - type: tpl
+            tpl: '<div style="margin:5px 0"><span style="color:#999">开团时间：</span>${data.creatorUserTime}</div>'
+
+      - type: service
+        name: rulesDetail
+        api:
+          url: '@query:LitemallGrouponRules__findList'
+          data:
+            query:
+              filter:
+                eq:
+                  - id
+                  - "${grouponDetail.data.rulesId}"
+          sendOn: "${grouponDetail.data.rulesId}"
+        body:
+          type: each
+          name: items
+          placeholder: '<div style="padding:20px;color:#999">关联团购规则不存在</div>'
+          items:
+            type: grid
+            style:
+              padding: 20px
+            columns:
+              - md: 5
+                body:
+                  type: wrapper
+                  style:
+                    padding: 20px
+                  body:
+                    type: tpl
+                    tpl: '<img src="${item.picUrl}" style="width:100%;border-radius:4px"/>'
+              - md: 7
+                body:
+                  type: wrapper
+                  style:
+                    padding: 20px
+                  body:
+                    - type: tpl
+                      tpl: '<h2>${item.goodsName}</h2>'
+                    - type: divider
+                    - type: tpl
+                      tpl: '<div style="background:#fff8f0;padding:15px;border-radius:4px;margin:10px 0"><span style="color:#999">团购立减：</span><span style="color:#ff6700;font-size:28px;font-weight:bold">¥${item.discount}</span></div>'
+                    - type: tpl
+                      tpl: '<div style="margin:5px 0"><span style="color:#999">成团人数：</span><b>${item.discountMember} 人</b></div>'
+                    - type: tpl
+                      tpl: '<div style="margin:5px 0"><span style="color:#999">截止时间：</span>${item.expireTime}</div>'
+
+                    - type: form
+                      name: joinForm
+                      title: 选择规格
+                      mode: normal
+                      body:
+                        - type: select
+                          name: productId
+                          label: 规格
+                          required: true
+                          source:
+                            url: '@query:LitemallGoodsProduct__findList'
+                            data:
+                              query:
+                                filter:
+                                  eq:
+                                    - goodsId
+                                    - "${item.goodsId}"
+                            valueField: id
+                            labelField: specifications
+                        - type: input-number
+                          name: quantity
+                          label: 数量
+                          value: 1
+                          min: 1
+                          max: 99
+
+                      actions:
+                        - type: button
+                          label: 参与团购
+                          level: primary
+                          size: lg
+                          visibleOn: "${grouponDetail.data.status == 1}"
+                          actionType: ajax
+                          api:
+                            url: '@mutation:LitemallCart__addGoods'
+                            data:
+                              goodsId: "${item.goodsId}"
+                              productId: "${productId}"
+                              number: "${quantity}"
+                          redirect: "/storefront-checkout?grouponRulesId=${grouponDetail.data.rulesId}&grouponId=${id}"
+                          messages:
+                            success: '正在跳转结算...'
+                        - type: tpl
+                          tpl: '<div style="color:#999;padding:10px" visibleOn="${grouponDetail.data.status != 1}">当前团购活动不在进行中，无法参与</div>'
