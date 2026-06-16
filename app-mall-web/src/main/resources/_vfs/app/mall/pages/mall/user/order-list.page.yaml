@@ -98,11 +98,8 @@ body:
                             level: primary
                             size: sm
                             visibleOn: "${item.orderStatus == 101}"
-                            actionType: ajax
-                            api:
-                              url: '@mutation:LitemallOrder__pay'
-                              data:
-                                orderId: "${item.id}"
+                            actionType: link
+                            link: "/storefront-pay?orderId=${item.id}"
                           - type: button
                             label: 取消订单
                             level: danger
@@ -165,11 +162,8 @@ body:
                             label: 立即付款
                             level: primary
                             size: sm
-                            actionType: ajax
-                            api:
-                              url: '@mutation:LitemallOrder__pay'
-                              data:
-                                orderId: "${item.id}"
+                            actionType: link
+                            link: "/storefront-pay?orderId=${item.id}"
 
           - title: 待收货
             body:

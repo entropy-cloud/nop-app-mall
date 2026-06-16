@@ -4,6 +4,7 @@ import app.mall.dao.entity.LitemallAddress;
 import app.mall.dao.entity.LitemallCart;
 import app.mall.dao.entity.LitemallGoods;
 import app.mall.dao.entity.LitemallGoodsProduct;
+import app.mall.dao.entity.LitemallOrder;
 import io.nop.api.core.annotations.autotest.NopTestConfig;
 import io.nop.api.core.annotations.core.OptionalBoolean;
 import io.nop.api.core.beans.ApiRequest;
@@ -206,6 +207,39 @@ public class TestLitemallOrderBizModel extends JunitBaseTestCase {
                 "cancel failed: " + cancelResult);
         Map<String, Object> cancelledOrder = (Map<String, Object>) cancelResult.getData();
         assertEquals(102, cancelledOrder.get("orderStatus"));
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testPrepay() {
+        ApiRequest<Map<String, Object>> submitReq = ApiRequest.build(Map.of(
+                "addressId", addressId,
+                "message", "prepay test",
+                "freightPrice", BigDecimal.TEN
+        ));
+        IGraphQLExecutionContext gqlCtx = graphQLEngine.newRpcContext(
+                GraphQLOperationType.mutation, "LitemallOrder__submit", submitReq);
+        ApiResponse<?> submitResult = graphQLEngine.executeRpc(gqlCtx);
+        assertEquals(0, submitResult.getStatus(), "submit failed: " + submitResult);
+        Map<String, Object> orderData = (Map<String, Object>) submitResult.getData();
+        String orderId = (String) orderData.get("id");
+        assertNotNull(orderId);
+        assertEquals(101, orderData.get("orderStatus"));
+
+        ApiRequest<Map<String, Object>> prepayReq = ApiRequest.build(Map.of(
+                "orderId", orderId
+        ));
+        IGraphQLExecutionContext prepayCtx = graphQLEngine.newRpcContext(
+                GraphQLOperationType.mutation, "LitemallOrder__prepay", prepayReq);
+        ApiResponse<?> prepayResult = graphQLEngine.executeRpc(prepayCtx);
+        assertEquals(0, prepayResult.getStatus(), "prepay failed: " + prepayResult);
+        Map<String, Object> prepayData = (Map<String, Object>) prepayResult.getData();
+        assertNotNull(prepayData.get("order"), "order should be in response");
+        LitemallOrder order = (LitemallOrder) prepayData.get("order");
+        assertEquals(101, order.getOrderStatus(),
+                "order status should still be CREATED");
+        assertNotNull(prepayData.get("codeUrl"), "codeUrl should be present");
+        assertNotNull(order.getPayId(), "payId should be written after prepay");
     }
 
     @SuppressWarnings("unchecked")

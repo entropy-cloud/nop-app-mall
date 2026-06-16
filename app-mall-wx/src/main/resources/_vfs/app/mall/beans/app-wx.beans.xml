@@ -4,6 +4,20 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
 
-    <bean id="wxPayService" class="app.mall.wx.WxPayServiceImpl"/>
+    <bean id="wxPayService" class="app.mall.wx.WxPayServiceImpl">
+        <property name="enabled" value="@cfg:wxpay.enabled|false"/>
+        <property name="appId" value="@cfg:wxpay.app-id|"/>
+        <property name="mchId" value="@cfg:wxpay.mch-id|"/>
+        <property name="apiV3Key" value="@cfg:wxpay.api-v3-key|"/>
+        <property name="privateKeyPath" value="@cfg:wxpay.private-key-path|./certs/apiclient_key_sample.pem"/>
+        <property name="publicKeyPath" value="@cfg:wxpay.public-key-path|./certs/wechatpay_public_key_sample.pem"/>
+        <property name="publicKeyId" value="@cfg:wxpay.public-key-id|"/>
+        <property name="merchantSerialNumber" value="@cfg:wxpay.merchant-serial-number|"/>
+        <property name="notifyUrl" value="@cfg:wxpay.notify-url|http://localhost:8080/wxpay/notify"/>
+    </bean>
+
+    <bean id="wxPayNotifyResource" class="app.mall.wx.WxPayNotifyResource">
+        <property name="wxPayService" ref="wxPayService"/>
+    </bean>
 
 </beans>

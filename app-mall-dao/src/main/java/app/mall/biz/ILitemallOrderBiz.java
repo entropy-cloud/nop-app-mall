@@ -12,6 +12,8 @@ import app.mall.dao.dto.OrderStatisticsBean;
 import app.mall.dao.dto.UserStatisticsBean;
 import app.mall.dao.entity.LitemallOrder;
 
+import java.util.Map;
+
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -29,6 +31,10 @@ public interface ILitemallOrderBiz extends ICrudBiz<LitemallOrder> {
     @BizMutation
     LitemallOrder cancel(@Name("orderId") String orderId,
                          IServiceContext context);
+
+    @BizMutation
+    Map<String, Object> prepay(@Name("orderId") String orderId,
+                               IServiceContext context);
 
     @BizMutation
     LitemallOrder pay(@Name("orderId") String orderId,

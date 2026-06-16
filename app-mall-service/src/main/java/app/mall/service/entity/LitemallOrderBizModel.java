@@ -23,6 +23,9 @@ import app.mall.dao.entity.LitemallOrderGoods;
 import app.mall.dao.manager.MallLogManager;
 import app.mall.dao.mapper.LitemallGoodsProductMapper;
 import app.mall.dao.mapper.LitemallOrderMapper;
+import app.mall.pay.PayPrepayRequestBean;
+import app.mall.pay.PayPrepayResponseBean;
+import app.mall.pay.PayService;
 import app.mall.service.notification.MallNotificationService;
 import io.nop.api.core.annotations.biz.BizModel;
 import io.nop.api.core.annotations.biz.BizMutation;
@@ -43,7 +46,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static app.mall.service.AppMallErrors.ERR_GROUPON_RULES_NOT_AVAILABLE;
 import static app.mall.service.AppMallErrors.ERR_ORDER_ADDRESS_INVALID;
@@ -95,6 +100,9 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
 
     @Inject
     LitemallOrderMapper orderMapper;
+
+    @Inject
+    PayService payService;
 
     public LitemallOrderBizModel() {
         setEntityName(LitemallOrder.class.getName());
@@ -293,6 +301,37 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
         updateEntity(order, "cancel", context);
         logManager.logOrderSucceed("订单取消", "订单编号 " + order.getOrderSn());
         return order;
+    }
+
+    @Override
+    @BizMutation
+    public Map<String, Object> prepay(@Name("orderId") String orderId,
+                                       IServiceContext context) {
+        LitemallOrder order = get(orderId, false, context);
+        if (order == null) {
+            throw new NopException(ERR_ORDER_NOT_FOUND)
+                    .param("orderId", orderId);
+        }
+        if (order.getOrderStatus() != _AppMallDaoConstants.ORDER_STATUS_CREATED) {
+            throw new NopException(ERR_ORDER_NOT_ALLOW_PAY)
+                    .param("orderId", orderId)
+                    .param("status", order.getOrderStatus());
+        }
+
+        PayPrepayRequestBean payReq = new PayPrepayRequestBean();
+        payReq.setOutTradeNo(order.getOrderSn());
+        payReq.setTotalFee(order.getActualPrice());
+        payReq.setDescription("商城订单 " + order.getOrderSn());
+
+        PayPrepayResponseBean payResp = payService.createPayment(payReq);
+
+        order.setPayId(payResp.getPayId());
+        updateEntity(order, "prepay", context);
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("order", order);
+        result.put("codeUrl", payResp.getCodeUrl());
+        return result;
     }
 
     @Override

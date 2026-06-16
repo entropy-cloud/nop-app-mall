@@ -40,6 +40,7 @@ const STOREFRONT_PAGES = [
   'mall/user/aftersale-apply',
   'mall/user/feedback',
   'mall/help/faq',
+  'mall/pay/pay',
 ];
 
 test.describe('Storefront data RPC smoke', () => {

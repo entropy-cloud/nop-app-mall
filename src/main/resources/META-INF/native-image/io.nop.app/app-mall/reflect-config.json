@@ -1061,6 +1061,56 @@
     "allPublicMethods": true,
     "fields": [],
     "methods": [],
+    "name": "app.mall.pay.PayPrepayRequestBean"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [],
+    "name": "app.mall.pay.PayPrepayResponseBean"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [],
+    "name": "app.mall.pay.PayRefundRequestBean"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [],
+    "name": "app.mall.pay.PayRefundResponseBean"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [],
+    "name": "app.mall.pay.PayStatusResponseBean"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [],
     "name": "app.mall.service.entity.LitemallAdBizModel"
   },
   {
@@ -1456,6 +1506,10 @@
       },
       {
         "allowWrite": true,
+        "name": "payService"
+      },
+      {
+        "allowWrite": true,
         "name": "systemBiz"
       }
     ],
@@ -1551,6 +1605,16 @@
     ],
     "methods": [],
     "name": "app.mall.service.notification.MallNotificationService"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [],
+    "name": "app.mall.wx.WxPayNotifyResource"
   },
   {
     "allDeclaredConstructors": true,

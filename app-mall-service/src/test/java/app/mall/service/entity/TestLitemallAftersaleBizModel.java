@@ -6,7 +6,6 @@ import app.mall.dao.entity.LitemallAftersale;
 import app.mall.dao.entity.LitemallCart;
 import app.mall.dao.entity.LitemallGoods;
 import app.mall.dao.entity.LitemallGoodsProduct;
-import app.mall.pay.MockPayServiceImpl;
 import app.mall.pay.PayService;
 import app.mall.wx.WxPayServiceImpl;
 import io.nop.api.core.annotations.autotest.NopTestConfig;
@@ -258,7 +257,6 @@ public class TestLitemallAftersaleBizModel extends JunitBaseTestCase {
     public void testRefundFailure() {
         String aftersaleId = createApplyAndApprove();
 
-        MockPayServiceImpl.setForceRefundFailure(true);
         WxPayServiceImpl.setForceRefundFailure(true);
         try {
             ApiRequest<Map<String, Object>> refundReq = ApiRequest.build(Map.of("id", aftersaleId));
@@ -273,7 +271,6 @@ public class TestLitemallAftersaleBizModel extends JunitBaseTestCase {
             assertEquals(_AppMallDaoConstants.AFTERSALE_STATUS_APPROVED, unchanged.getStatus(),
                     "status should remain APPROVED after refund failure");
         } finally {
-            MockPayServiceImpl.setForceRefundFailure(false);
             WxPayServiceImpl.setForceRefundFailure(false);
         }
     }

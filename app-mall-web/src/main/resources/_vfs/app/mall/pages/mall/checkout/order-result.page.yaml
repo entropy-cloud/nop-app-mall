@@ -67,13 +67,8 @@ body:
                 level: primary
                 size: lg
                 visibleOn: "${data.orderStatus == 101}"
-                actionType: ajax
-                api:
-                  url: '@mutation:LitemallOrder__pay'
-                  data:
-                    orderId: "${orderId}"
-                messages:
-                  success: '支付成功'
+                actionType: link
+                link: "/storefront-pay?orderId=${orderId}"
               - type: button
                 label: 我的订单
                 level: link

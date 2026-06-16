@@ -23,6 +23,17 @@
             <groupId>io.github.entropy-cloud</groupId>
             <artifactId>nop-core</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>com.github.wechatpay-apiv3</groupId>
+            <artifactId>wechatpay-java</artifactId>
+            <version>0.2.17</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-resteasy-jackson</artifactId>
+        </dependency>
     </dependencies>
 
 </project>

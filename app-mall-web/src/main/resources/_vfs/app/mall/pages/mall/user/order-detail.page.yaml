@@ -186,11 +186,8 @@ body:
                 level: primary
                 size: lg
                 visibleOn: "${data.orderStatus == 101}"
-                actionType: ajax
-                api:
-                  url: '@mutation:LitemallOrder__pay'
-                  data:
-                    orderId: "${orderId}"
+                actionType: link
+                link: "/storefront-pay?orderId=${orderId}"
               - type: button
                 label: 取消订单
                 level: danger

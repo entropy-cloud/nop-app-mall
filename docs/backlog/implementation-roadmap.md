@@ -1,6 +1,6 @@
 # Implementation Roadmap
 
-> Last Updated: 2026-06-14
+> Last Updated: 2026-06-15
 > Source: `docs/requirements/commercial-baseline.md`, `docs/design/*.md`
 
 ## Purpose
@@ -30,7 +30,7 @@
 - 11. 系统运营与定时任务: `done`
 - 12. 通知系统: `done`
 - 13. 报表与统计: `done`
-- 14. 微信支付集成: `planned`
+- 14. 微信支付集成: `done`
 
 ## Status Values
 
@@ -66,7 +66,8 @@
 - `LitemallGoodsBizModel`：关键字查询 hook、保存/更新时的零售价同步和购物车同步
 - `LitemallAftersaleBizModel`：批量审核、退款（含 PayService 调用、SMS 通知、库存回补）
 - `NopAuthUserExBizModel`（delta）：日志记录、extAction1 查询
-- 3 个测试类（Goods integration、Cart aggregate、Order aggregate）
+- `PayService` 微信支付集成（app-mall-wx 模块）：Native 扫码下单、支付回调、退款
+- 4 个测试类（Goods integration、Cart aggregate、Order aggregate、PayService BizModel）
 - Admin 后台基础页面框架（AMIS view.xml，大部分为继承默认值）
 
 **核心缺口：** 用户注册 Delta（需消除 LitemallUser）、地址管理、优惠券/团购体系、搜索、定时任务、通知、报表
@@ -392,10 +393,13 @@
 **Protected Area：** ask-first
 
 **交付范围：**
-- PayService 微信支付实现 + 支付回调
-- 退款接口对接
-- 微信支付配置管理
-- 集成测试
+- PayService 微信支付实现（Native 扫码）+ 支付回调
+- 退款接口对接（同步退款）
+- 微信支付配置管理（`WxPayConfig.enabled` 切换）
+- 模拟支付保底（`enabled=false`）
+- 集成测试（IGraphQLEngine × 3）
+
+**不在范围内（预留）：** JSAPI/H5/App 支付场景、退款异步通知、真实沙箱联调、前端二维码渲染页面
 
 **模块：** app-mall-wx、app-mall-service
 

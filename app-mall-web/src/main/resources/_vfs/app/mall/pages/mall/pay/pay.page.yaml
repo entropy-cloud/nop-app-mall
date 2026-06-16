@@ -1,0 +1,183 @@
+type: page
+title: 订单支付
+body:
+  - type: wrapper
+    className: storefront-header
+    body:
+      type: flex
+      justify: space-between
+      alignItems: center
+      style:
+        padding: 10px 20px
+        backgroundColor: '#fff'
+        borderBottom: 2px solid '#ff6700'
+      items:
+        - type: wrapper
+          body:
+            - type: button
+              label: '<b style="font-size:24px;color:#ff6700">商城</b>'
+              level: link
+              actionType: link
+              link: "/storefront-home"
+        - type: wrapper
+          body:
+            - type: button
+              label: 我的订单
+              level: link
+              actionType: link
+              link: "/storefront-order-list"
+
+  - type: service
+    name: orderLoad
+    api:
+      url: '@query:LitemallOrder__getMyOrder'
+      data:
+        orderId: "${orderId}"
+      sendOn: "${orderId}"
+    body:
+      - type: wrapper
+        visibleOn: "${data.actualPrice == 0 && data.orderStatus == 101}"
+        style:
+          padding: 60px 20px
+          textAlign: center
+        body:
+          - type: tpl
+            tpl: '<div style="font-size:64px;color:#52c41a">¥0</div>'
+          - type: tpl
+            tpl: '<h2 style="color:#333;margin:15px 0">零金额订单</h2>'
+          - type: tpl
+            tpl: '<p style="color:#999">该订单无需在线支付，点击下方按钮直接确认完成。</p>'
+          - type: button
+            label: 确认支付
+            level: primary
+            size: lg
+            actionType: ajax
+            api:
+              url: '@mutation:LitemallOrder__pay'
+              data:
+                orderId: "${orderId}"
+            redirect: "/storefront-order-detail?orderId=${orderId}"
+            messages:
+              success: '支付成功'
+
+      - type: wrapper
+        visibleOn: "${data.actualPrice > 0 && data.orderStatus == 101}"
+        style:
+          padding: 20px
+        body:
+          - type: wrapper
+            style:
+              padding: 20px
+              maxWidth: 600px
+              margin: 0 auto
+              backgroundColor: '#fafafa'
+              borderRadius: 4px
+            body:
+              - type: flex
+                justify: space-between
+                style:
+                  margin: 8px 0
+                items:
+                  - type: tpl
+                    tpl: '订单编号：'
+                  - type: tpl
+                    tpl: '<b>${data.orderSn}</b>'
+              - type: flex
+                justify: space-between
+                style:
+                  margin: 8px 0
+                items:
+                  - type: tpl
+                    tpl: '实付金额：'
+                  - type: tpl
+                    tpl: '<span style="color:#ff6700;font-size:20px;font-weight:bold">¥${data.actualPrice}</span>'
+
+          - type: service
+            name: payPrepare
+            api:
+              url: '@mutation:LitemallOrder__prepay'
+              data:
+                orderId: "${orderId}"
+            body:
+              - type: wrapper
+                style:
+                  padding: 20px
+                  textAlign: center
+                body:
+                  - type: tpl
+                    tpl: '<p style="color:#333;margin-bottom:15px">请使用微信扫码支付</p>'
+                  - type: qr-code
+                    value: "${data.codeUrl}"
+                    codeSize: 200
+                    level: M
+                    placeholder: '二维码生成中...'
+
+          - type: service
+            name: payStatus
+            api:
+              url: '@query:PayService__queryPayment'
+              data:
+                outTradeNo: "${data.orderSn}"
+              interval: 3000
+              silentPolling: true
+              stopAutoRefreshWhen: "${tradeState == 'SUCCESS' || data.tradeState == 'SUCCESS'}"
+            body:
+              - type: alert
+                visibleOn: "${data.tradeState == 'SUCCESS'}"
+                level: success
+                body: '<b>支付成功！</b>您的订单已支付完成。'
+              - type: button
+                visibleOn: "${data.tradeState == 'SUCCESS'}"
+                label: 查看订单
+                level: primary
+                actionType: link
+                link: "/storefront-order-detail?orderId=${orderId}"
+
+          - type: wrapper
+            style:
+              padding: 20px
+              textAlign: center
+            body:
+              - type: alert
+                level: warning
+                body: '示例模式下微信扫码不会真实回调。可点击下方按钮模拟支付完成（开发测试用）。'
+              - type: button
+                label: 模拟支付完成（开发测试用）
+                level: primary
+                actionType: ajax
+                api:
+                  url: '@mutation:LitemallOrder__pay'
+                  data:
+                    orderId: "${orderId}"
+                redirect: "/storefront-order-detail?orderId=${orderId}"
+                messages:
+                  success: '支付成功'
+
+          - type: wrapper
+            style:
+              padding: 10px 20px 20px
+              textAlign: center
+            body:
+              - type: button
+                label: 返回订单
+                level: link
+                actionType: link
+                link: "/storefront-order-detail?orderId=${orderId}"
+
+      - type: wrapper
+        visibleOn: "${data.orderStatus != 101}"
+        style:
+          padding: 60px 20px
+          textAlign: center
+        body:
+          - type: tpl
+            tpl: '<div style="font-size:64px">ℹ</div>'
+          - type: tpl
+            tpl: '<h2 style="color:#333;margin:15px 0">订单状态：${data.orderStatus == 102 ? "已取消" : data.orderStatus == 201 ? "已支付，待发货" : data.orderStatus == 301 ? "已发货，待收货" : data.orderStatus >= 401 ? "已完成" : "不可支付"}</h2>'
+          - type: tpl
+            tpl: '<p style="color:#999;margin-bottom:20px">该订单当前不可进入支付流程。</p>'
+          - type: button
+            label: 查看订单详情
+            level: primary
+            actionType: link
+            link: "/storefront-order-detail?orderId=${orderId}"

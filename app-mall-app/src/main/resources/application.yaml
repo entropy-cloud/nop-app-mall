@@ -37,6 +37,16 @@ nop:
     schema-introspection:
       enabled: false
 
+  wxpay:
+    enabled: ${WXPAY_ENABLED:false}
+    app-id: ${WXPAY_APP_ID:wx_sample_appid_0000000000}
+    mch-id: ${WXPAY_MCH_ID:1900000000}
+    api-v3-key: ${WXPAY_API_V3_KEY:00000000000000000000000000000000}
+    private-key-path: ${WXPAY_PRIVATE_KEY_PATH:./certs/apiclient_key_sample.pem}
+    public-key-path: ${WXPAY_PUBLIC_KEY_PATH:./certs/wechatpay_public_key_sample.pem}
+    public-key-id: ${WXPAY_PUBLIC_KEY_ID:PUB_KEY_ID_SAMPLE}
+    merchant-serial-number: ${WXPAY_MERCHANT_SERIAL:0000000000000000000000000000000000}
+    notify-url: ${WXPAY_NOTIFY_URL:http://localhost:8080/wxpay/notify}
 
 # 开发模式配置
 "%dev":

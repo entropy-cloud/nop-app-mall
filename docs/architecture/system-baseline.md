@@ -62,6 +62,12 @@ Record the current supported implementation baseline for `nop-app-mall`.
 ## External Platforms Or Enterprise Systems
 
 - WeChat Pay (`app-mall-wx` module)
+  - SDK: `wechatpay-java` 0.2.17 (官方 SDK, 公钥模式)
+  - 支付场景: Native 扫码（已验证），JSAPI/H5/App 预留架构
+  - 配置驱动: `WxPayServiceImpl.enabled` 控制是否启用微信支付；`enabled=false` 时走模拟支付路径（日志 + 模拟响应）
+  - 回调端点: `POST /wxpay/notify`（通过 `app-mall-wx` JAX-RS 资源）
+  - IoC 绑定: `PayService` 接口 — `WxPayServiceImpl` 为 `app-wx.beans.xml` 中注册的唯一活跃 bean；`enabled=false` 时内部退化为演示模式（模拟响应），不涉及 bean 切换或 `MockPayServiceImpl`
+  - 模块构成: `app-mall-api`（请求/响应 bean 与接口）、`app-mall-wx`（微信实现与回调端点）
 - File storage (local or cloud)
 
 ## Reporting And Notification Route

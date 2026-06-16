@@ -354,6 +354,7 @@
 /app/mall/pages/mall/groupon/groupon-rules-detail.page.yaml
 /app/mall/pages/mall/help/faq.page.yaml
 /app/mall/pages/mall/home/home.page.yaml
+/app/mall/pages/mall/pay/pay.page.yaml
 /app/mall/pages/mall/search/search.page.yaml
 /app/mall/pages/mall/topic/topic-detail.page.yaml
 /app/mall/pages/mall/topic/topic-list.page.yaml

@@ -8,6 +8,8 @@ import java.math.BigDecimal;
 public class PayPrepayRequestBean {
     private String outTradeNo;
     private BigDecimal totalFee;
+    private String description;
+    private String notifyUrl;
 
     public String getOutTradeNo() {
         return outTradeNo;
@@ -23,5 +25,21 @@ public class PayPrepayRequestBean {
 
     public void setTotalFee(BigDecimal totalFee) {
         this.totalFee = totalFee;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getNotifyUrl() {
+        return notifyUrl;
+    }
+
+    public void setNotifyUrl(String notifyUrl) {
+        this.notifyUrl = notifyUrl;
     }
 }

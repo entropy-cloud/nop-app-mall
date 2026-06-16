@@ -254,6 +254,10 @@
                 <resource id="storefront-faq" displayName="常见问题" orderNo="824"
                           icon="ant-design:question-circle-outlined" component="AMIS"
                           resourceType="SUBM" url="/app/mall/pages/mall/help/faq.page.yaml"/>
+
+                <resource id="storefront-pay" displayName="订单支付" orderNo="825"
+                          icon="ant-design:qrcode-outlined" component="AMIS"
+                          resourceType="SUBM" url="/app/mall/pages/mall/pay/pay.page.yaml"/>
             </children>
         </resource>
 

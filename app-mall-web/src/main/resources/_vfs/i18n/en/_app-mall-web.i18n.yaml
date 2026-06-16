@@ -264,6 +264,8 @@ site:
       displayName: ''
     storefront-order-result:
       displayName: ''
+    storefront-pay:
+      displayName: ''
     storefront-search:
       displayName: ''
     storefront-topic-detail:

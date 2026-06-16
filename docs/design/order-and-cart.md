@@ -137,6 +137,37 @@
 - 生产环境支付行为属于集成能力；微信支付细节应放在对应的集成架构和代码中。
 - 开发或本地测试中的支付替代机制必须明确标注为非生产行为，且不能重定义正式商业支付语义。
 
+### 微信支付流程（Native 扫码）
+
+微信支付（Native 扫码）的集成流程如下：
+
+1. **prepay**（`ILitemallOrderBiz.prepay()`）— 订单发货前，用户触发支付。`prepay` 方法校验订单状态为待支付，调用 `PayService.createPayment()`。
+2. **createPayment**（`PayService.createPayment()`）— 构造微信 Native 下单请求，调用微信 Native API 获取 `codeUrl`（支付二维码链接），返回给前端。
+3. **前端二维码渲染** — 前台支付页根据 `codeUrl` 渲染二维码供用户扫码（详见下方「前台支付消费者」）。
+4. **支付回调** — 微信服务器异步通知 `POST /wxpay/notify`，验证签名后更新订单支付状态。
+5. **pay()**（`ILitemallOrderBiz.pay()`）— 确认支付完成后的订单状态推进（model-level 确认，与外部支付渠道无关）。零金额订单直接走此路径，无需经过微信支付。
+
+### 前台支付消费者
+
+前台支付页（`/storefront-pay`，`mall/pay/pay.page.yaml`）是 Phase 14 微信支付后端在前台的唯一消费者页面，串起 prepay → 二维码 → 轮询 → pay 的完整前台流程：
+
+1. **订单加载与三分支路由** — 进入页面先 `getMyOrder(orderId)` 加载订单，按 `actualPrice` 与 `orderStatus` 路由三个互斥分支：
+   - 零金额且待支付（`actualPrice==0 && orderStatus==101`）：不进入 prepay，直接调用 `pay()` 完成零金额确认并跳转订单详情。
+   - 非零金额且待支付（`actualPrice>0 && orderStatus==101`）：进入 prepay + 二维码 + 轮询流程。
+   - 异常（`orderStatus!=101`）：展示当前状态文案并正向引导跳转订单详情。
+2. **prepay 获取 codeUrl** — 非零分支调用 `prepay(orderId)`，仅取返回的 `codeUrl`（订单摘要复用 orderLoad 的实体字段，实付金额直接用 `actualPrice`，含积分/团购抵扣也准确）。
+3. **二维码渲染** — 使用 amis 原生 `qr-code` 渲染器渲染 `codeUrl`（无新依赖、无后端端点）。
+4. **轮询支付状态** — 轮询 `queryPayment(outTradeNo=orderSn)`，`tradeState==SUCCESS` 时展示支付成功并跳转订单详情（真实模式路径）。
+5. **模拟支付入口（开发测试用）** — 示例模式（`wxpay.enabled=false`）下微信扫码不会真实回调，轮询永不 SUCCESS，因此保留「模拟支付完成」按钮调用 `pay()`，成功后跳转订单详情。
+
+**支付入口接线：** 订单提交结果页、订单详情页、订单列表页（全部 tab 与待付款 tab）共 4 处「立即付款」按钮均跳转 `/storefront-pay?orderId=...`，不再直接调用 `pay()` 模拟确认。
+
+**轮询停止机制：** 真实模式由轮询服务的 `stopAutoRefreshWhen`（`tradeState==SUCCESS`）停止；示例模式由模拟支付成功后页面跳转、组件卸载从而停止 interval。prepay 每次页面加载都会重新发起（微信 Native 预支付单 2 小时过期，危害低），页面接受此行为。
+
+退款流程：
+
+6. **refund**（`PayService.refund()`）— 管理员对已支付订单发起退款，调用微信退款 API 进行原路退款。同步返回退款结果。退款异步通知（微信 → 服务器）预留为后续对账功能。
+
 ### 发货
 
 - 只有已支付订单才能发货。
