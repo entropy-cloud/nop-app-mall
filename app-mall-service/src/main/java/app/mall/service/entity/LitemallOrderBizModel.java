@@ -479,7 +479,8 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
                 && status != _AppMallDaoConstants.ORDER_STATUS_AUTO_CANCEL
                 && status != _AppMallDaoConstants.ORDER_STATUS_CONFIRM
                 && status != _AppMallDaoConstants.ORDER_STATUS_AUTO_CONFIRM
-                && status != _AppMallDaoConstants.ORDER_STATUS_REFUND_CONFIRM) {
+                && status != _AppMallDaoConstants.ORDER_STATUS_REFUND_CONFIRM
+                && status != _AppMallDaoConstants.ORDER_STATUS_GROUPON_EXPIRED) {
             throw new NopException(ERR_ORDER_NOT_ALLOW_DELETE)
                     .param("orderId", orderId)
                     .param("status", status);

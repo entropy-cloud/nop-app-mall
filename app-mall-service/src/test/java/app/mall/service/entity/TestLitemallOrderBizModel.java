@@ -5,6 +5,7 @@ import app.mall.dao.entity.LitemallCart;
 import app.mall.dao.entity.LitemallGoods;
 import app.mall.dao.entity.LitemallGoodsProduct;
 import app.mall.dao.entity.LitemallOrder;
+import app.mall.dao._AppMallDaoConstants;
 import io.nop.api.core.annotations.autotest.NopTestConfig;
 import io.nop.api.core.annotations.core.OptionalBoolean;
 import io.nop.api.core.beans.ApiRequest;
@@ -16,6 +17,7 @@ import io.nop.file.dao.entity.NopFileRecord;
 import io.nop.graphql.core.IGraphQLExecutionContext;
 import io.nop.graphql.core.ast.GraphQLOperationType;
 import io.nop.graphql.core.engine.IGraphQLEngine;
+import io.nop.orm.IOrmTemplate;
 import jakarta.inject.Inject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -35,6 +37,9 @@ public class TestLitemallOrderBizModel extends JunitBaseTestCase {
 
     @Inject
     IDaoProvider daoProvider;
+
+    @Inject
+    IOrmTemplate ormTemplate;
 
     String goodsId;
     String productId;
@@ -345,5 +350,60 @@ public class TestLitemallOrderBizModel extends JunitBaseTestCase {
         Map<String, Object> detail = (Map<String, Object>) detailResult.getData();
         assertNotNull(detail);
         assertEquals(orderId, detail.get("id"));
+    }
+
+    @Test
+    public void testDeleteGrouponExpiredOrder() {
+        // submit + pay -> order at PAY(201)
+        ApiRequest<Map<String, Object>> submitReq = ApiRequest.build(Map.of(
+                "addressId", addressId,
+                "message", "groupon expired delete test",
+                "freightPrice", BigDecimal.ZERO
+        ));
+        IGraphQLExecutionContext submitCtx = graphQLEngine.newRpcContext(
+                GraphQLOperationType.mutation, "LitemallOrder__submit", submitReq);
+        ApiResponse<?> submitResult = graphQLEngine.executeRpc(submitCtx);
+        assertEquals(0, submitResult.getStatus(), "submit failed: " + submitResult);
+        String orderId = (String) ((Map<String, Object>) submitResult.getData()).get("id");
+
+        ApiRequest<Map<String, Object>> payReq = ApiRequest.build(Map.of("orderId", orderId));
+        IGraphQLExecutionContext payCtx = graphQLEngine.newRpcContext(
+                GraphQLOperationType.mutation, "LitemallOrder__pay", payReq);
+        assertEquals(0, graphQLEngine.executeRpc(payCtx).getStatus(), "pay failed");
+
+        ApiRequest<Map<String, Object>> delReq = ApiRequest.build(Map.of("orderId", orderId));
+        IGraphQLExecutionContext delCtx = graphQLEngine.newRpcContext(
+                GraphQLOperationType.mutation, "LitemallOrder__deleteOrder", delReq);
+
+        // Reverse 1: PAY(201) — upstream of 204, most likely to be wrongly whitelisted — must be rejected
+        ApiResponse<?> delPay = graphQLEngine.executeRpc(delCtx);
+        assertTrue(delPay.getStatus() != 0, "PAY(201) order must not be deletable");
+
+        // Reverse 2: SHIP(301) — also non-whitelisted — must be rejected
+        setOrderStatusDirect(orderId, _AppMallDaoConstants.ORDER_STATUS_SHIP);
+        ApiResponse<?> delShip = graphQLEngine.executeRpc(delCtx);
+        assertTrue(delShip.getStatus() != 0, "SHIP(301) order must not be deletable");
+
+        // Forward: GROUPON_EXPIRED(204) now deletable (simulating groupon timeout having occurred)
+        setOrderStatusDirect(orderId, _AppMallDaoConstants.ORDER_STATUS_GROUPON_EXPIRED);
+        ApiResponse<?> del204 = graphQLEngine.executeRpc(delCtx);
+        assertEquals(0, del204.getStatus(), "GROUPON_EXPIRED(204) order should be deletable: " + del204);
+
+        // verify soft-delete via DAO direct; deleteOrder does not change orderStatus
+        LitemallOrder deleted = daoProvider.daoFor(LitemallOrder.class).getEntityById(orderId);
+        assertNotNull(deleted, "order row must still exist after soft delete");
+        assertTrue(deleted.getDeleted(), "order should be soft-deleted");
+        assertEquals(_AppMallDaoConstants.ORDER_STATUS_GROUPON_EXPIRED, deleted.getOrderStatus(),
+                "orderStatus must stay 204 after delete");
+    }
+
+    private void setOrderStatusDirect(String orderId, int status) {
+        ormTemplate.runInSession(session -> {
+            LitemallOrder o = daoProvider.daoFor(LitemallOrder.class).getEntityById(orderId);
+            assertNotNull(o);
+            o.setOrderStatus(status);
+            daoProvider.daoFor(LitemallOrder.class).updateEntity(o);
+            return null;
+        });
     }
 }
