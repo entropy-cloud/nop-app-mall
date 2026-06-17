@@ -91,6 +91,8 @@
 - 已发货订单可以进入用户已收货或系统已收货。
 - 终态订单支持通过软删除语义从用户可见列表中移除。
 
+> **实现说明（2026-06-16）：** 退款流程合并到售后路径（`LitemallAftersaleBizModel.apply/refund`），退款进度由 `aftersaleStatus`（REQUEST→APPROVED→REFUND）表达。订单主状态 `orderStatus` 的迁移：未发货(201)订单的售后退款成功 → 直接进入已退款(203)，不经过 202；已收货(401/402)订单的售后退款保持原收货状态（履约已完成），仅 `aftersaleStatus=REFUND` 反映退款。因此 202(退款中) 当前无写入点（保留为未来"订单级退款审批"独立路径的状态位）。团购超时由 `LitemallGrouponBizModel.refundGrouponOrder` 触发 201→204。
+
 ### 状态叙述
 
 ```text
@@ -144,8 +146,8 @@
 1. **prepay**（`ILitemallOrderBiz.prepay()`）— 订单发货前，用户触发支付。`prepay` 方法校验订单状态为待支付，调用 `PayService.createPayment()`。
 2. **createPayment**（`PayService.createPayment()`）— 构造微信 Native 下单请求，调用微信 Native API 获取 `codeUrl`（支付二维码链接），返回给前端。
 3. **前端二维码渲染** — 前台支付页根据 `codeUrl` 渲染二维码供用户扫码（详见下方「前台支付消费者」）。
-4. **支付回调** — 微信服务器异步通知 `POST /wxpay/notify`，验证签名后更新订单支付状态。
-5. **pay()**（`ILitemallOrderBiz.pay()`）— 确认支付完成后的订单状态推进（model-level 确认，与外部支付渠道无关）。零金额订单直接走此路径，无需经过微信支付。
+4. **支付回调** — 微信服务器异步通知 `POST /wxpay/notify`，`WxPayNotifyResource` 验签解析后调用 `IPaymentCallback.onPaymentSuccess(outTradeNo, transactionId)`（`PaymentCallbackImpl` 实现），由 `LitemallOrderBizModel.confirmPaidByNotify` 幂等推进订单到已支付（已支付则跳过；系统上下文执行，回调无用户会话）。仅 `tradeState==SUCCESS` 触发推进。
+5. **pay()**（`ILitemallOrderBiz.pay()`）— model-level 确认，与外部支付渠道无关。接受边界：**零金额订单（actualPrice==0）任意模式直接确认**；**示例模式（`wxpay.enabled=false`）任意金额由「模拟支付完成」按钮调用**；**真实模式非零金额一律拒绝（`ERR_ORDER_USE_REAL_PAYMENT`），必须经回调 confirmPaidByNotify 推进**。
 
 ### 前台支付消费者
 
