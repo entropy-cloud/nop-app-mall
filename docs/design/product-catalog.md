@@ -123,5 +123,15 @@
 
 ## 邻接范围
 
-- 搜索历史、收藏和浏览足迹由 `marketing-and-promotions.md` 负责。
-- 优惠券和团购等促销定价影响由 `order-and-cart.md` 和 `marketing-and-promotions.md` 共同负责。
+商品目录是购买主链路的起点，其下游交接点：
+
+| 交接点 | 方向 | 目标文档 | 说明 |
+|--------|------|---------|------|
+| 加入购物车 | → 出 | `order-and-cart.md` | SKU 选择进入购物车行 |
+| 结算可售性校验 | → 出 | `order-and-cart.md` | 结算/下单基于当前价格与库存约束 |
+| 订单商品快照 | → 出 | `order-and-cart.md` | 订单固化商品与 SKU 原始含义，目录后续变化不影响订单 |
+| 搜索历史、收藏、足迹 | → 出 | `marketing-and-promotions.md` | 商品相关的互动能力归属营销域 |
+| 评论 | ← 入 | `marketing-and-promotions.md` | 评论依附于订单商品快照，不改商品资料 |
+| 文件素材 | ← 入 | `system-configuration.md` | 商品图片、品牌图片依赖文件存储能力 |
+
+全局流程视图见 `flow-overview.md`。

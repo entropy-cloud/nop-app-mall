@@ -29,6 +29,7 @@
 ## 起始文档
 
 - `app-overview.md`
+- `flow-overview.md`
 - `feature-inventory.md`
 - `domain-design-guidelines.md`
 - `domain-glossary.md`
@@ -38,6 +39,7 @@
 
 | 文档 | 领域 |
 |-----|------|
+| `flow-overview.md` | 全局流程总览：购买主链路、订单/售后状态机、状态-域-文档-页面映射、跨域公共规则 |
 | `product-catalog.md` | 商品、分类、品牌、SKU、规格、搜索 |
 | `order-and-cart.md` | 购物车、订单生命周期、状态机、结算、支付、发货、退款、售后 |
 | `user-and-address.md` | 用户资料、认证、地址管理、地区 |

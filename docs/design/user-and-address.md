@@ -156,6 +156,14 @@
 
 ## 与其他 Owner Docs 的关系
 
-- 权限语义还需进一步受 `roles-and-permissions.md` 约束。
-- 订单归属及用户在订单上的动作定义由 `order-and-cart.md` 负责。
-- ORM 模型变更详情见 `model/nop-auth-delta.orm.xml`（Delta 扩展列）和 `model/app-mall.orm.xml`（LitemallUser 消除后的关联修正）。
+用户与地址域向主链路提供前置条件：
+
+| 交接点 | 方向 | 目标文档 | 说明 |
+|--------|------|---------|------|
+| 认证前置 | → 出 | `order-and-cart.md` | 购物车、结算、订单、售后均要求已认证用户 |
+| 收货地址归属 | → 出 | `order-and-cart.md` | 结算要求地址归属于当前用户 |
+| 地址数量上限 | ← 入 | `system-configuration.md` | 每用户地址数量上限由系统配置控制 |
+| 权限语义 | ← 入 | `roles-and-permissions.md` | 后台用户权限边界进一步约束 |
+| ORM Delta 扩展 | — | `model/nop-auth-delta.orm.xml` | 商城特有字段通过 Delta 扩展 NopAuthUser |
+
+全局流程视图见 `flow-overview.md`。

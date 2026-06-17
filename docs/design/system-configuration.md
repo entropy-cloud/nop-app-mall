@@ -135,6 +135,16 @@
 
 ## 与其他 Owner Docs 的关系
 
-- 运费和超时配置效果会被 `order-and-cart.md` 使用。
-- 订单支付、发货、退款等事件语义由 `order-and-cart.md` 负责；本文件只负责这些事件如何成为通知和报表消费结果。
-- 评论、团购、优惠券等营销事件进入通知或统计时，其业务含义仍由 `marketing-and-promotions.md` 负责。
+系统配置域向主链路提供配置开关与运营消费能力：
+
+| 交接点 | 方向 | 目标文档 | 说明 |
+|--------|------|---------|------|
+| 运费/包邮门槛 | → 出 | `order-and-cart.md` | 结算时运费计算依据 |
+| 订单超时/自动收货时长 | → 出 | `order-and-cart.md` | 系统取消、系统收货的触发阈值 |
+| 支付开关 | → 出 | `order-and-cart.md` | 决定真实模式与示例模式分流 |
+| 地址数量上限 | → 出 | `user-and-address.md` | 每用户地址上限 |
+| 营销过期任务 | ← 入 | `marketing-and-promotions.md` | 优惠券、团购、评价窗口过期处理 |
+| 事件通知/报表 | ← 入 | `order-and-cart.md` / `marketing-and-promotions.md` | 支付、发货、退款等事件转化为通知与报表 |
+| 文件素材 | → 出 | `product-catalog.md` / `user-and-address.md` | 商品图片、品牌图片、头像依赖文件存储 |
+
+全局流程视图见 `flow-overview.md`。
