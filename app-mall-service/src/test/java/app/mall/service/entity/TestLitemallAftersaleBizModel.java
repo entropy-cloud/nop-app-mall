@@ -6,6 +6,7 @@ import app.mall.dao.entity.LitemallAftersale;
 import app.mall.dao.entity.LitemallCart;
 import app.mall.dao.entity.LitemallGoods;
 import app.mall.dao.entity.LitemallGoodsProduct;
+import app.mall.dao.entity.LitemallOrder;
 import app.mall.pay.PayService;
 import app.mall.wx.WxPayServiceImpl;
 import io.nop.api.core.annotations.autotest.NopTestConfig;
@@ -173,6 +174,38 @@ public class TestLitemallAftersaleBizModel extends JunitBaseTestCase {
 
     @SuppressWarnings("unchecked")
     @Test
+    public void testApplyAmountExceedsActualPrice() {
+        String orderId = createAndPayOrder();
+
+        // amount 99999 exceeds the order's actualPrice (~198) -> apply must be rejected (P0-4)
+        ApiRequest<Map<String, Object>> applyReq = ApiRequest.build(Map.of(
+                "orderId", orderId,
+                "type", 0,
+                "reason", "attempt over-refund",
+                "amount", BigDecimal.valueOf(99999)
+        ));
+        IGraphQLExecutionContext applyCtx = graphQLEngine.newRpcContext(
+                GraphQLOperationType.mutation, "LitemallAftersale__apply", applyReq);
+        ApiResponse<?> applyResult = graphQLEngine.executeRpc(applyCtx);
+        assertEquals(-1, applyResult.getStatus(),
+                "apply with amount exceeding actualPrice should be rejected: " + applyResult);
+
+        // zero / negative amount is also invalid
+        ApiRequest<Map<String, Object>> zeroReq = ApiRequest.build(Map.of(
+                "orderId", orderId,
+                "type", 0,
+                "reason", "zero amount",
+                "amount", BigDecimal.ZERO
+        ));
+        IGraphQLExecutionContext zeroCtx = graphQLEngine.newRpcContext(
+                GraphQLOperationType.mutation, "LitemallAftersale__apply", zeroReq);
+        ApiResponse<?> zeroResult = graphQLEngine.executeRpc(zeroCtx);
+        assertEquals(-1, zeroResult.getStatus(),
+                "apply with zero amount should be rejected: " + zeroResult);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
     public void testUserListAndDetail() throws Exception {
         String orderId = createAndPayOrder();
 
@@ -243,6 +276,11 @@ public class TestLitemallAftersaleBizModel extends JunitBaseTestCase {
     public void testRefundSuccess() {
         String aftersaleId = createApplyAndApprove();
 
+        LitemallAftersale before = daoProvider.daoFor(LitemallAftersale.class).getEntityById(aftersaleId);
+        String orderId = before.getOrderId();
+        LitemallGoodsProduct productBefore = daoProvider.daoFor(LitemallGoodsProduct.class).getEntityById(productId);
+        int stockBeforeRefund = productBefore.getNumber();
+
         ApiRequest<Map<String, Object>> refundReq = ApiRequest.build(Map.of("id", aftersaleId));
         IGraphQLExecutionContext refundCtx = graphQLEngine.newRpcContext(
                 GraphQLOperationType.mutation, "LitemallAftersale__refund", refundReq);
@@ -251,6 +289,16 @@ public class TestLitemallAftersaleBizModel extends JunitBaseTestCase {
 
         LitemallAftersale updated = daoProvider.daoFor(LitemallAftersale.class).getEntityById(aftersaleId);
         assertEquals(_AppMallDaoConstants.AFTERSALE_STATUS_REFUND, updated.getStatus());
+
+        // P0-5: unshipped PAY order with type=GOODS_MISS(0) must roll back stock AND push order to 203.
+        LitemallOrder order = daoProvider.daoFor(LitemallOrder.class).getEntityById(orderId);
+        assertEquals(_AppMallDaoConstants.ORDER_STATUS_REFUND_CONFIRM, order.getOrderStatus(),
+                "unshipped PAY order should be pushed to REFUND_CONFIRM(203) after refund: " + order.getOrderStatus());
+
+        LitemallGoodsProduct productAfter = daoProvider.daoFor(LitemallGoodsProduct.class).getEntityById(productId);
+        assertEquals(stockBeforeRefund + 2, productAfter.getNumber(),
+                "stock should be restored (+2 units) after unshipped refund: before="
+                        + stockBeforeRefund + " after=" + productAfter.getNumber());
     }
 
     @Test

@@ -39,6 +39,8 @@ import io.nop.biz.crud.CrudBizModel;
 import io.nop.commons.util.StringHelper;
 import io.nop.core.context.IServiceContext;
 import jakarta.inject.Inject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
@@ -61,9 +63,12 @@ import static app.mall.service.AppMallErrors.ERR_ORDER_NOT_ALLOW_SHIP;
 import static app.mall.service.AppMallErrors.ERR_ORDER_NOT_FOUND;
 import static app.mall.service.AppMallErrors.ERR_ORDER_PRICE_INVALID;
 import static app.mall.service.AppMallErrors.ERR_ORDER_STOCK_INSUFFICIENT;
+import static app.mall.service.AppMallErrors.ERR_ORDER_USE_REAL_PAYMENT;
 
 @BizModel("LitemallOrder")
 public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implements ILitemallOrderBiz {
+
+    static final Logger LOG = LoggerFactory.getLogger(LitemallOrderBizModel.class);
 
     @Inject
     ILitemallCartBiz cartBiz;
@@ -194,7 +199,13 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
             BigDecimal lineTotal = item.getPrice().multiply(BigDecimal.valueOf(item.getNumber()));
             goodsPriceTotal = goodsPriceTotal.add(lineTotal);
 
-            goodsProductMapper.reduceStock(item.getProductId(), item.getNumber());
+            int stockAffected = goodsProductMapper.reduceStock(item.getProductId(), item.getNumber());
+            if (stockAffected == 0) {
+                // Concurrent deduction exhausted stock between pre-check and atomic UPDATE
+                throw new NopException(ERR_ORDER_STOCK_INSUFFICIENT)
+                        .param("productId", item.getProductId())
+                        .param("requested", item.getNumber());
+            }
         }
 
         order.setGoodsPrice(goodsPriceTotal);
@@ -262,7 +273,8 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
             updateEntity(order, "submit:zeroPay", context);
         }
 
-        notificationService.sendAdminOrderNotification(order.getOrderSn());
+        final String adminNotifyOrderSn = order.getOrderSn();
+        txn().afterCommit(null, () -> notificationService.sendAdminOrderNotification(adminNotifyOrderSn));
 
         return order;
     }
@@ -271,18 +283,22 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
     @BizMutation
     public LitemallOrder cancel(@Name("orderId") String orderId,
                                  IServiceContext context) {
-        LitemallOrder order = get(orderId, false, context);
-        if (order == null) {
-            throw new NopException(ERR_ORDER_NOT_FOUND)
-                    .param("orderId", orderId);
-        }
-        if (order.getOrderStatus() != _AppMallDaoConstants.ORDER_STATUS_CREATED) {
+        // Atomic status guard: win the CREATED→CANCEL transition before loading the entity into the session,
+        // preventing concurrent double stock-rollback and double coupon-return (cancel vs cancelExpiredOrders).
+        int affected = orderMapper.updateStatusIfMatch(
+                orderId, _AppMallDaoConstants.ORDER_STATUS_CANCEL, _AppMallDaoConstants.ORDER_STATUS_CREATED);
+        if (affected == 0) {
+            LitemallOrder existing = get(orderId, false, context);
+            if (existing == null || Boolean.TRUE.equals(existing.getDeleted())) {
+                throw new NopException(ERR_ORDER_NOT_FOUND)
+                        .param("orderId", orderId);
+            }
             throw new NopException(ERR_ORDER_NOT_ALLOW_CANCEL)
                     .param("orderId", orderId)
-                    .param("status", order.getOrderStatus());
+                    .param("status", existing.getOrderStatus());
         }
 
-        order.setOrderStatus(_AppMallDaoConstants.ORDER_STATUS_CANCEL);
+        LitemallOrder order = get(orderId, false, context);
         order.setEndTime(LocalDateTime.now());
 
         for (LitemallOrderGoods orderGoods : order.getOrderGoods()) {
@@ -348,12 +364,55 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
                     .param("orderId", orderId)
                     .param("status", order.getOrderStatus());
         }
+        // pay() is the manual/demo confirmation path. In real WeChat Pay mode, non-zero orders
+        // MUST go through prepay -> WeChat scan -> async notify -> confirmPaidByNotify.
+        if (order.getActualPrice() != null
+                && order.getActualPrice().compareTo(BigDecimal.ZERO) > 0
+                && payService.isEnabled()) {
+            throw new NopException(ERR_ORDER_USE_REAL_PAYMENT)
+                    .param("orderId", orderId)
+                    .param("actualPrice", order.getActualPrice());
+        }
 
         order.setOrderStatus(_AppMallDaoConstants.ORDER_STATUS_PAY);
         order.setPayTime(LocalDateTime.now());
         updateEntity(order, "pay", context);
-        notificationService.sendOrderPaymentNotification(order.getOrderSn(), order.getMobile());
+        final String payOrderSn = order.getOrderSn();
+        final String payMobile = order.getMobile();
+        txn().afterCommit(null, () -> notificationService.sendOrderPaymentNotification(payOrderSn, payMobile));
         return order;
+    }
+
+    @Override
+    @BizMutation
+    public void confirmPaidByNotify(@Name("outTradeNo") String outTradeNo,
+                                     @Name("transactionId") String transactionId,
+                                     IServiceContext context) {
+        // Trusted entry invoked by WxPayNotifyResource after signature verification.
+        // Find order by orderSn (== outTradeNo); orderSn is unique per order.
+        QueryBean query = new QueryBean();
+        query.addFilter(FilterBeans.eq(LitemallOrder.PROP_NAME_orderSn, outTradeNo));
+        query.addFilter(FilterBeans.eq(LitemallOrder.PROP_NAME_deleted, false));
+        LitemallOrder order = findFirst(query, null, context);
+        if (order == null) {
+            LOG.warn("confirmPaidByNotify: no order found for outTradeNo={}", outTradeNo);
+            return;
+        }
+        // Idempotent: duplicate/replayed WeChat notifies for an already-paid order are a no-op
+        if (order.getOrderStatus() != _AppMallDaoConstants.ORDER_STATUS_CREATED) {
+            LOG.info("confirmPaidByNotify: order {} already in status {}, skip",
+                    order.getOrderSn(), order.getOrderStatus());
+            return;
+        }
+        order.setOrderStatus(_AppMallDaoConstants.ORDER_STATUS_PAY);
+        order.setPayTime(LocalDateTime.now());
+        if (transactionId != null && !transactionId.isEmpty()) {
+            order.setPayId(transactionId);
+        }
+        updateEntity(order, "confirmPaidByNotify", context);
+        final String orderSn = order.getOrderSn();
+        final String mobile = order.getMobile();
+        txn().afterCommit(null, () -> notificationService.sendOrderPaymentNotification(orderSn, mobile));
     }
 
     @Override
@@ -378,7 +437,9 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
         order.setShipChannel(shipChannel);
         order.setShipTime(LocalDateTime.now());
         updateEntity(order, "ship", context);
-        notificationService.sendOrderShipNotification(order.getOrderSn(), order.getMobile());
+        final String shipOrderSn = order.getOrderSn();
+        final String shipMobile = order.getMobile();
+        txn().afterCommit(null, () -> notificationService.sendOrderShipNotification(shipOrderSn, shipMobile));
         logManager.logOrderSucceed("订单发货", "订单编号 " + order.getOrderSn());
         return order;
     }
@@ -521,9 +582,27 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
         query.setLimit(100);
 
         List<LitemallOrder> orders = doFindListByQueryDirectly(query, context);
+
+        // Collect IDs then detach from session so the conditional UPDATE executes as real SQL
+        // (a conditional update on a session-managed entity is routed in-memory and reports 0).
+        List<String> orderIds = new ArrayList<>();
+        for (LitemallOrder o : orders) {
+            orderIds.add(o.orm_idString());
+        }
+        dao().clearEntitySessionCache();
+
         int count = 0;
-        for (LitemallOrder order : orders) {
-            order.setOrderStatus(_AppMallDaoConstants.ORDER_STATUS_AUTO_CANCEL);
+        for (String orderId : orderIds) {
+            // Atomic status guard: skip orders already transitioned by a concurrent cancel/refund path
+            int affected = orderMapper.updateStatusIfMatch(
+                    orderId,
+                    _AppMallDaoConstants.ORDER_STATUS_AUTO_CANCEL,
+                    _AppMallDaoConstants.ORDER_STATUS_CREATED);
+            if (affected == 0) {
+                continue;
+            }
+
+            LitemallOrder order = get(orderId, false, context);
             order.setEndTime(LocalDateTime.now());
 
             for (LitemallOrderGoods orderGoods : order.getOrderGoods()) {
@@ -531,7 +610,7 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
             }
 
             QueryBean cuQuery = new QueryBean();
-            cuQuery.addFilter(FilterBeans.eq(LitemallCouponUser.PROP_NAME_orderId, order.orm_idString()));
+            cuQuery.addFilter(FilterBeans.eq(LitemallCouponUser.PROP_NAME_orderId, orderId));
             cuQuery.addFilter(FilterBeans.eq(LitemallCouponUser.PROP_NAME_status, 1));
             cuQuery.addFilter(FilterBeans.eq(LitemallCouponUser.PROP_NAME_deleted, false));
             List<LitemallCouponUser> usedCoupons = couponUserBiz.findList(cuQuery, null, context);

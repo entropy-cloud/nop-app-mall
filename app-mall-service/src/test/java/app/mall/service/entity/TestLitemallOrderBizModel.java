@@ -181,6 +181,47 @@ public class TestLitemallOrderBizModel extends JunitBaseTestCase {
         assertEquals(401, confirmedOrder.get("orderStatus"));
     }
 
+    @Test
+    public void testConfirmPaidByNotify() {
+        // Submit a CREATED order, then simulate a verified WeChat SUCCESS notify driving it to PAY
+        // via the trusted internal confirmPaidByNotify entry (P0-1: callback must advance order).
+        ApiRequest<Map<String, Object>> submitReq = ApiRequest.build(Map.of(
+                "addressId", addressId,
+                "message", "notify confirm test",
+                "freightPrice", BigDecimal.TEN
+        ));
+        IGraphQLExecutionContext submitCtx = graphQLEngine.newRpcContext(
+                GraphQLOperationType.mutation, "LitemallOrder__submit", submitReq);
+        ApiResponse<?> submitResult = graphQLEngine.executeRpc(submitCtx);
+        assertEquals(0, submitResult.getStatus(), "submit failed: " + submitResult);
+        Map<String, Object> orderData = (Map<String, Object>) submitResult.getData();
+        String orderId = (String) orderData.get("id");
+        String orderSn = (String) orderData.get("orderSn");
+
+        // Trusted notify path: outTradeNo == orderSn
+        ApiRequest<Map<String, Object>> notifyReq = ApiRequest.build(Map.of(
+                "outTradeNo", orderSn,
+                "transactionId", "wx-txn-4200000000001"
+        ));
+        IGraphQLExecutionContext notifyCtx = graphQLEngine.newRpcContext(
+                GraphQLOperationType.mutation, "LitemallOrder__confirmPaidByNotify", notifyReq);
+        ApiResponse<?> notifyResult = graphQLEngine.executeRpc(notifyCtx);
+        assertEquals(0, notifyResult.getStatus(), "confirmPaidByNotify failed: " + notifyResult);
+
+        // Order advanced CREATED(101) -> PAY(201)
+        ApiRequest<Map<String, Object>> getReq = ApiRequest.build(Map.of("orderId", orderId));
+        IGraphQLExecutionContext getCtx = graphQLEngine.newRpcContext(
+                GraphQLOperationType.query, "LitemallOrder__getMyOrder", getReq);
+        ApiResponse<?> getResult = graphQLEngine.executeRpc(getCtx);
+        assertEquals(0, getResult.getStatus(), "getMyOrder failed: " + getResult);
+        Map<String, Object> paid = (Map<String, Object>) getResult.getData();
+        assertEquals(201, paid.get("orderStatus"), "order should be PAY after notify confirmation");
+
+        // Idempotency: a replayed notify on an already-PAY order is a no-op (no error)
+        ApiResponse<?> replay = graphQLEngine.executeRpc(notifyCtx);
+        assertEquals(0, replay.getStatus(), "replayed notify should be idempotent: " + replay);
+    }
+
     @SuppressWarnings("unchecked")
     @Test
     public void testSubmitCancel() {
@@ -207,6 +248,43 @@ public class TestLitemallOrderBizModel extends JunitBaseTestCase {
                 "cancel failed: " + cancelResult);
         Map<String, Object> cancelledOrder = (Map<String, Object>) cancelResult.getData();
         assertEquals(102, cancelledOrder.get("orderStatus"));
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testCancelExpiredOrders() {
+        // Submit a CREATED order (deducts 2 units: stock 100 -> 98)
+        ApiRequest<Map<String, Object>> submitReq = ApiRequest.build(Map.of(
+                "addressId", addressId,
+                "message", "expire test",
+                "freightPrice", BigDecimal.TEN
+        ));
+        IGraphQLExecutionContext submitCtx = graphQLEngine.newRpcContext(
+                GraphQLOperationType.mutation, "LitemallOrder__submit", submitReq);
+        ApiResponse<?> submitResult = graphQLEngine.executeRpc(submitCtx);
+        assertEquals(0, submitResult.getStatus(), "submit failed: " + submitResult);
+        Map<String, Object> orderData = (Map<String, Object>) submitResult.getData();
+        String orderId = (String) orderData.get("id");
+
+        // timeoutMinutes=0 -> cutoff=now, catches the just-created CREATED order
+        ApiRequest<Map<String, Object>> cancelReq = ApiRequest.build(Map.of(
+                "timeoutMinutes", 0
+        ));
+        IGraphQLExecutionContext cancelCtx = graphQLEngine.newRpcContext(
+                GraphQLOperationType.mutation, "LitemallOrder__cancelExpiredOrders", cancelReq);
+        ApiResponse<?> cancelResult = graphQLEngine.executeRpc(cancelCtx);
+        assertEquals(0, cancelResult.getStatus(), "cancelExpiredOrders failed: " + cancelResult);
+        int count = ((Number) cancelResult.getData()).intValue();
+        assertTrue(count >= 1, "cancelExpiredOrders should process the submitted order, got count=" + count);
+
+        // Order transitioned CREATED(101) -> AUTO_CANCEL(103) via the atomic status guard
+        ApiRequest<Map<String, Object>> getReq = ApiRequest.build(Map.of("orderId", orderId));
+        IGraphQLExecutionContext getCtx = graphQLEngine.newRpcContext(
+                GraphQLOperationType.query, "LitemallOrder__getMyOrder", getReq);
+        ApiResponse<?> getResult = graphQLEngine.executeRpc(getCtx);
+        assertEquals(0, getResult.getStatus(), "getMyOrder failed: " + getResult);
+        Map<String, Object> cancelled = (Map<String, Object>) getResult.getData();
+        assertEquals(103, cancelled.get("orderStatus"), "order should be AUTO_CANCEL after batch");
     }
 
     @SuppressWarnings("unchecked")

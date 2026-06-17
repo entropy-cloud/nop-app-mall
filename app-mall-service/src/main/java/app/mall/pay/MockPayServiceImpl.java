@@ -9,6 +9,11 @@ public class MockPayServiceImpl implements PayService {
     }
 
     @Override
+    public boolean isEnabled() {
+        return false;
+    }
+
+    @Override
     public PayPrepayResponseBean createPayment(PayPrepayRequestBean req) {
         PayPrepayResponseBean resp = new PayPrepayResponseBean();
         resp.setPayId("mock-" + req.getOutTradeNo());

@@ -2,6 +2,7 @@ package app.mall.service.entity;
 
 import app.mall.dao.entity.LitemallGoods;
 import app.mall.dao.entity.LitemallGoodsProduct;
+import app.mall.dao.entity.LitemallOrderGoods;
 import io.nop.api.core.annotations.autotest.NopTestConfig;
 import io.nop.api.core.annotations.core.OptionalBoolean;
 import io.nop.api.core.beans.ApiRequest;
@@ -9,6 +10,7 @@ import io.nop.api.core.beans.ApiResponse;
 import io.nop.api.core.context.ContextProvider;
 import io.nop.autotest.junit.JunitBaseTestCase;
 import io.nop.dao.api.IDaoProvider;
+import io.nop.file.dao.entity.NopFileRecord;
 import io.nop.graphql.core.IGraphQLExecutionContext;
 import io.nop.graphql.core.ast.GraphQLOperationType;
 import io.nop.graphql.core.engine.IGraphQLEngine;
@@ -129,6 +131,52 @@ public class TestLitemallGoodsExtendedBizModel extends JunitBaseTestCase {
         assertNotNull(pageData);
         List<Map<String, Object>> items = (List<Map<String, Object>>) pageData.get("items");
         assertFalse(items.isEmpty());
+    }
+
+    @Test
+    public void testDeleteGoodsWithOrderHistoryRejected() {
+        NopFileRecord file = daoProvider.daoFor(NopFileRecord.class).newEntity();
+        file.setFileId("og-pic");
+        file.setBizObjName("LitemallOrderGoods");
+        file.setBizObjId("temp");
+        file.setFieldName("temp");
+        file.setOriginFileId("og-pic");
+        file.setFileName("og-pic.png");
+        file.setFilePath("/test/og-pic.png");
+        file.setFileExt("png");
+        file.setMimeType("image/png");
+        file.setIsPublic(true);
+        daoProvider.daoFor(NopFileRecord.class).saveEntity(file);
+
+        LitemallGoods goods = daoProvider.daoFor(LitemallGoods.class).newEntity();
+        goods.setGoodsSn("G_DEL");
+        goods.setName("Delete Me");
+        goods.setRetailPrice(BigDecimal.valueOf(99));
+        goods.setIsOnSale(true);
+        goods.setPicUrl("");
+        goods.setShareUrl("");
+        goods.setGallery("");
+        daoProvider.daoFor(LitemallGoods.class).saveEntity(goods);
+
+        LitemallOrderGoods og = daoProvider.daoFor(LitemallOrderGoods.class).newEntity();
+        og.setOrderId("1");
+        og.setGoodsId(goods.getId());
+        og.setGoodsSn("G_DEL");
+        og.setGoodsName("Delete Me");
+        og.setProductId("1");
+        og.setNumber(1);
+        og.setPrice(BigDecimal.valueOf(99));
+        og.setSpecifications("[]");
+        og.setPicUrl("og-pic");
+        og.setComment(0);
+        daoProvider.daoFor(LitemallOrderGoods.class).saveEntity(og);
+
+        ApiRequest<Map<String, Object>> delReq = ApiRequest.build(Map.of("id", goods.getId()));
+        IGraphQLExecutionContext ctx = graphQLEngine.newRpcContext(
+                GraphQLOperationType.mutation, "LitemallGoods__delete", delReq);
+        ApiResponse<?> result = graphQLEngine.executeRpc(ctx);
+        assertEquals(-1, result.getStatus(),
+                "delete of goods with order history should be rejected: " + result);
     }
 
     @SuppressWarnings("unchecked")

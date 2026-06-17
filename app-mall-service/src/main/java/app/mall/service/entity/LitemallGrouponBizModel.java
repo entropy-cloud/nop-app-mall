@@ -31,6 +31,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -190,6 +191,7 @@ public class LitemallGrouponBizModel extends CrudBizModel<LitemallGroupon> imple
         List<LitemallGroupon> activeGroupons = doFindListByQueryDirectly(query, context);
         int count = 0;
         Set<String> processedRulesIds = new HashSet<>();
+        List<String> refundFailures = new ArrayList<>();
         for (LitemallGroupon groupon : activeGroupons) {
             LitemallGrouponRules rules = grouponRulesBiz.get(groupon.getRulesId(), false, context);
             if (rules != null && rules.getExpireTime() != null && !rules.getExpireTime().isAfter(now)) {
@@ -197,7 +199,7 @@ public class LitemallGrouponBizModel extends CrudBizModel<LitemallGroupon> imple
                 updateEntity(groupon, "expireGroupons", context);
                 count++;
 
-                refundGrouponOrder(groupon, context);
+                refundGrouponOrder(groupon, context, refundFailures);
                 processedRulesIds.add(groupon.getRulesId());
             }
         }
@@ -206,10 +208,17 @@ public class LitemallGrouponBizModel extends CrudBizModel<LitemallGroupon> imple
             expireRulesIfAllExpired(rulesId, context);
         }
 
+        // Failed refunds are NOT auto-retried: status is already 2 so expireGroupons won't re-scan them.
+        // Surface a summary alert for manual intervention; outRefundNo idempotency guards against double refund on retry.
+        if (!refundFailures.isEmpty()) {
+            LOG.error("expireGroupons: {} groupon refund(s) failed and require manual intervention: {}",
+                    refundFailures.size(), refundFailures);
+        }
+
         return count;
     }
 
-    private void refundGrouponOrder(LitemallGroupon groupon, IServiceContext context) {
+    private void refundGrouponOrder(LitemallGroupon groupon, IServiceContext context, List<String> refundFailures) {
         LitemallOrder order = orderBiz.get(groupon.getOrderId(), false, context);
         if (order == null) {
             LOG.warn("refundGrouponOrder: order not found for groupon {}, orderId={}",
@@ -231,10 +240,13 @@ public class LitemallGrouponBizModel extends CrudBizModel<LitemallGroupon> imple
             PayRefundResponseBean resp = payService.refund(req);
             if (!resp.isSuccess()) {
                 LOG.error("refundGrouponOrder: refund failed for order {}", order.getOrderSn());
+                refundFailures.add(order.getOrderSn());
                 return;
             }
         } catch (Exception e) {
+            // Do not silently swallow: record for batch summary alert. Batch continues so other groupons still process.
             LOG.error("refundGrouponOrder: refund exception for order {}", order.getOrderSn(), e);
+            refundFailures.add(order.getOrderSn());
             return;
         }
 
@@ -256,7 +268,10 @@ public class LitemallGrouponBizModel extends CrudBizModel<LitemallGroupon> imple
 
         orderBiz.updateEntity(order, "expireGroupons:refundOrder", context);
 
-        notificationService.sendGrouponFailRefundNotification(order.getOrderSn(), order.getMobile());
+        // Notification is a fire-and-forget side effect: run after commit so its failure cannot roll back the refund.
+        final String orderSn = order.getOrderSn();
+        final String mobile = order.getMobile();
+        txn().afterCommit(null, () -> notificationService.sendGrouponFailRefundNotification(orderSn, mobile));
     }
 
     private void expireRulesIfAllExpired(String rulesId, IServiceContext context) {

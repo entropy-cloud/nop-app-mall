@@ -55,6 +55,10 @@ public interface AppMallErrors {
             define("nop.err.mall.order.not-allow-pay",
                     "当前订单状态不允许支付");
 
+    ErrorCode ERR_ORDER_USE_REAL_PAYMENT =
+            define("nop.err.mall.order.use-real-payment",
+                    "真实支付模式非零金额订单必须通过微信扫码支付，不可直接确认");
+
     ErrorCode ERR_ORDER_NOT_ALLOW_DELETE =
             define("nop.err.mall.order.not-allow-delete",
                     "当前订单状态不允许删除");
@@ -75,6 +79,10 @@ public interface AppMallErrors {
     ErrorCode ERR_AFTERSALE_REFUND_FAILED =
             define("nop.err.mall.aftersale.refund-failed",
                     "退款失败");
+
+    ErrorCode ERR_AFTERSALE_AMOUNT_EXCEED =
+            define("nop.err.mall.aftersale.amount-exceed",
+                    "退款金额超过订单实付金额");
 
     String ARG_USERNAME = "username";
 
@@ -125,6 +133,10 @@ public interface AppMallErrors {
     ErrorCode ERR_GOODS_NOT_FOUND =
             define("nop.err.mall.goods.not-found",
                     "商品不存在");
+
+    ErrorCode ERR_GOODS_HAS_ORDER_HISTORY =
+            define("nop.err.mall.goods.has-order-history",
+                    "商品存在历史订单商品记录，不可删除，请改用下架");
 
     ErrorCode ERR_ADDRESS_LIMIT_EXCEEDED =
             define("nop.err.mall.address.limit-exceeded",

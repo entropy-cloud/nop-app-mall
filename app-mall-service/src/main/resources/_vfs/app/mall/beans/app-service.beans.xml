@@ -8,4 +8,6 @@
     <import resource="_service.beans.xml"/>
 
     <bean id="app.mall.service.notification.MallNotificationService" ioc:type="@bean:id" ioc:default="true"/>
+
+    <bean id="app.mall.service.pay.PaymentCallbackImpl" ioc:type="@bean:id" ioc:default="true"/>
 </beans>

@@ -1,8 +1,11 @@
 
 package app.mall.service.entity;
 
+import app.mall.biz.ILitemallGoodsBiz;
+import app.mall.biz.ILitemallOrderGoodsBiz;
 import app.mall.dao.entity.LitemallGoods;
 import app.mall.dao.entity.LitemallGoodsProduct;
+import app.mall.dao.entity.LitemallOrderGoods;
 import app.mall.dao.manager.MallLogManager;
 import app.mall.dao.mapper.LitemallGoodsMapper;
 import io.nop.api.core.annotations.biz.BizModel;
@@ -17,7 +20,6 @@ import io.nop.api.core.beans.TreeBean;
 import io.nop.api.core.beans.query.QueryBean;
 import io.nop.api.core.exceptions.NopException;
 import io.nop.biz.crud.CrudBizModel;
-import app.mall.biz.ILitemallGoodsBiz;
 import io.nop.biz.crud.EntityData;
 import io.nop.core.context.IServiceContext;
 
@@ -37,6 +39,9 @@ public class LitemallGoodsBizModel extends CrudBizModel<LitemallGoods> implement
 
     @Inject
     MallLogManager logManager;
+
+    @Inject
+    ILitemallOrderGoodsBiz orderGoodsBiz;
 
     public LitemallGoodsBizModel() {
         setEntityName(LitemallGoods.class.getName());
@@ -79,6 +84,24 @@ public class LitemallGoodsBizModel extends CrudBizModel<LitemallGoods> implement
         // 目前这些字段是goods_sn, goods_name, price, pic_url
         for (LitemallGoodsProduct product : changedProducts) {
             goodsMapper.syncCartProduct(product);
+        }
+    }
+
+    @Override
+    protected void defaultPrepareDelete(LitemallGoods entity, IServiceContext context) {
+        // Goods is shared by orders/carts/collects/footprint/comments. Deleting a goods that has
+        // historical order-goods rows would break order snapshots and sales statistics. The
+        // goods→orderGoods cascadeDelete has been removed from the ORM model, so this guard is the
+        // hard protection: refuse delete if any non-deleted order-goods references this goods.
+        // Operators must use offSale() to retire a goods instead.
+        QueryBean orderGoodsQuery = new QueryBean();
+        orderGoodsQuery.addFilter(FilterBeans.eq(LitemallOrderGoods.PROP_NAME_goodsId, entity.getId()));
+        orderGoodsQuery.addFilter(FilterBeans.eq(LitemallOrderGoods.PROP_NAME_deleted, false));
+        long orderGoodsCount = orderGoodsBiz.findCount(orderGoodsQuery, context);
+        if (orderGoodsCount > 0) {
+            throw new NopException(ERR_GOODS_HAS_ORDER_HISTORY)
+                    .param("goodsId", entity.getId())
+                    .param("orderGoodsCount", orderGoodsCount);
         }
     }
 
