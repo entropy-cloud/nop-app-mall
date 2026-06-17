@@ -672,9 +672,8 @@
                         <on leftProp="id" rightProp="goodsId"/>
                     </join>
                 </to-many>
-                <to-many cascadeDelete="true" displayName="订单商品" name="orderGoods"
-                         refEntityName="app.mall.dao.entity.LitemallOrderGoods" refPropName="goods"
-                         tagSet="pub,cascade-delete,updatable,insertable" i18n-en:displayName="Order Goods">
+                <to-many displayName="订单商品" name="orderGoods" refEntityName="app.mall.dao.entity.LitemallOrderGoods"
+                         refPropName="goods" tagSet="pub,updatable,insertable" i18n-en:displayName="Order Goods">
                     <join>
                         <on leftProp="id" rightProp="goodsId"/>
                     </join>

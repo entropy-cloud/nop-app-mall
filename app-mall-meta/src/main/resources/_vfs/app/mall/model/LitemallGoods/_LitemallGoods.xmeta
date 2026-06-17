@@ -152,9 +152,9 @@
                 <item bizObjName="LitemallGoodsSpecification"/>
             </schema>
         </prop>
-        <prop name="orderGoods" displayName="订单商品" i18n-en:displayName="Order Goods"
-              tagSet="pub,cascade-delete,updatable,insertable" ext:kind="to-many" internal="true" ext:joinLeftProp="id"
-              ext:joinRightProp="goodsId" orm:manyToManyRefProp="orderId" insertable="true" updatable="true" lazy="true">
+        <prop name="orderGoods" displayName="订单商品" i18n-en:displayName="Order Goods" tagSet="pub,updatable,insertable"
+              ext:kind="to-many" internal="true" ext:joinLeftProp="id" ext:joinRightProp="goodsId"
+              orm:manyToManyRefProp="orderId" insertable="true" updatable="true" lazy="true">
             <schema>
                 <item bizObjName="LitemallOrderGoods"/>
             </schema>
@@ -170,7 +170,7 @@
             <schema type="io.nop.api.core.beans.file.FileStatusBean"/>
         </prop>
         <prop name="relatedProductList" displayName="relatedProductList" insertable="true" updatable="true"
-              tagSet="pub,cascade-delete,updatable,insertable" depends="~orderGoods" internal="true" lazy="true">
+              tagSet="pub,updatable,insertable" depends="~orderGoods" internal="true" lazy="true">
             <schema>
                 <item bizObjName="LitemallGoodsProduct"/>
             </schema>
