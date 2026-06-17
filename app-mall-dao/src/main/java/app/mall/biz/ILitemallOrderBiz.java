@@ -40,6 +40,17 @@ public interface ILitemallOrderBiz extends ICrudBiz<LitemallOrder> {
     LitemallOrder pay(@Name("orderId") String orderId,
                       IServiceContext context);
 
+    /**
+     * Trusted internal entry: drive a CREATED order to PAY after WeChat Pay async notify
+     * signature verification succeeds. Idempotent — already-PAY orders are skipped.
+     * Invoked by {@code WxPayNotifyResource} via {@code IPaymentCallback}; not a user-facing
+     * confirmation (untrusted client pay() is gated separately).
+     */
+    @BizMutation
+    void confirmPaidByNotify(@Name("outTradeNo") String outTradeNo,
+                             @Name("transactionId") String transactionId,
+                             IServiceContext context);
+
     @BizMutation
     LitemallOrder ship(@Name("orderId") String orderId,
                        @Name("shipSn") String shipSn,

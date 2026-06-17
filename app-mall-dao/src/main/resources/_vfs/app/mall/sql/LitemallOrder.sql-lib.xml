@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <sql-lib x:schema="/nop/schema/orm/sql-lib.xdef" xmlns:x="/nop/schema/xdsl.xdef">
     <sqls>
+        <eql name="updateStatusIfMatch" sqlMethod="execute">
+            <arg name="orderId"/>
+            <arg name="newStatus"/>
+            <arg name="expectedStatus"/>
+
+            <source>
+                update LitemallOrder
+                set orderStatus = ${newStatus}
+                where id = ${orderId} and orderStatus = ${expectedStatus}
+            </source>
+        </eql>
+
         <sql name="getOrderStatistics" sqlMethod="findFirst"
              colNameCamelCase="true"
              rowType="app.mall.dao.dto.OrderStatisticsBean">

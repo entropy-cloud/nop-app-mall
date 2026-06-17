@@ -12,6 +12,11 @@ import java.util.List;
 @SqlLibMapper("/app/mall/sql/LitemallOrder.sql-lib.xml")
 public interface LitemallOrderMapper {
 
+    // Atomic conditional status transition; returns affected row count (0 = lost race or status mismatch)
+    int updateStatusIfMatch(@Name("orderId") String orderId,
+                            @Name("newStatus") int newStatus,
+                            @Name("expectedStatus") int expectedStatus);
+
     OrderStatisticsBean getOrderStatistics(@Name("startDate") Timestamp startDate,
                                             @Name("endDate") Timestamp endDate);
 
