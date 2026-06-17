@@ -1,6 +1,8 @@
 package app.mall.wx;
 
+import app.mall.pay.IPaymentCallback;
 import io.nop.api.core.exceptions.NopException;
+import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
@@ -19,6 +21,12 @@ public class WxPayNotifyResource {
 
     private WxPayServiceImpl wxPayService;
 
+    // Bridge into the order service (app-mall-service) so a signature-verified SUCCESS payment
+    // drives the order state machine. app-mall-wx cannot depend on the order service/dao directly,
+    // so this goes through the api-layer IPaymentCallback contract, injected by type.
+    @Inject
+    IPaymentCallback paymentCallback;
+
     public void setWxPayService(WxPayServiceImpl wxPayService) {
         this.wxPayService = wxPayService;
     }
@@ -36,13 +44,23 @@ public class WxPayNotifyResource {
                 wechatpayTimestamp, wechatpayNonce, wechatpaySerial);
 
         try {
-            wxPayService.parseNotifyBody(body, wechatpaySerial, wechatpayNonce,
+            String outTradeNo = wxPayService.parseNotifyBody(body, wechatpaySerial, wechatpayNonce,
                     wechatpaySignature, wechatpayTimestamp, wechatpaySignatureType);
+            // parseNotifyBody returns the order's outTradeNo only for a verified SUCCESS payment
+            // (null/empty for non-success states or demo mode where there is no real payment).
+            if (outTradeNo != null && !outTradeNo.isEmpty() && paymentCallback != null) {
+                paymentCallback.onPaymentSuccess(outTradeNo, null);
+            }
             return Response.ok("<xml><return_code><![CDATA[SUCCESS]]></return_code><return_msg><![CDATA[OK]]></return_msg></xml>").build();
         } catch (NopException e) {
-            LOG.error("Failed to process wxpay notify", e);
-            return Response.status(Response.Status.UNAUTHORIZED)
-                    .entity("<xml><return_code><![CDATA[FAIL]]></return_code><return_msg><![CDATA[签名验证失败]]></return_msg></xml>")
+            // A NopException here means either signature verification failed or order processing
+            // (confirmPaidByNotify) failed. Return 500 (not 401) so WeChat retries the notify:
+            // confirmPaidByNotify is idempotent, so a retry is always safe. A genuinely tampered
+            // notify will keep failing verification and WeChat will give up after its retry budget.
+            LOG.error("Failed to process wxpay notify (errorCode={}, params={})",
+                    e.getErrorCode(), e.getParams(), e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("<xml><return_code><![CDATA[FAIL]]></return_code><return_msg><![CDATA[处理失败]]></return_msg></xml>")
                     .build();
         } catch (Exception e) {
             LOG.error("Unexpected error processing wxpay notify", e);

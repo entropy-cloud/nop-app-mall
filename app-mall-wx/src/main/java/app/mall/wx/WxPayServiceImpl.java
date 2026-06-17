@@ -130,6 +130,12 @@ public class WxPayServiceImpl implements PayService {
     }
 
     @Override
+    @BizQuery("isEnabled")
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    @Override
     @BizMutation("createPayment")
     public PayPrepayResponseBean createPayment(@RequestBean PayPrepayRequestBean req) {
         if (!enabled) {
@@ -247,7 +253,7 @@ public class WxPayServiceImpl implements PayService {
                                   String wechatpaySignatureType) {
         if (!enabled) {
             LOG.warn("WxPay disabled, skipping notify verification");
-            return body;
+            return null;
         }
 
         try {
@@ -263,7 +269,12 @@ public class WxPayServiceImpl implements PayService {
             Transaction transaction = notificationParser.parse(requestParam, Transaction.class);
             LOG.info("Notify verified: outTradeNo={}, tradeState={}",
                     transaction.getOutTradeNo(), transaction.getTradeState());
-            return transaction.getOutTradeNo();
+            // Only signal SUCCESS to the callback; other trade states (e.g. USERPAYING, NOTPAY)
+            // must not drive the order into PAY.
+            if (Transaction.TradeStateEnum.SUCCESS.equals(transaction.getTradeState())) {
+                return transaction.getOutTradeNo();
+            }
+            return null;
         } catch (ValidationException e) {
             LOG.error("Notify signature verification failed", e);
             throw new NopException(ERR_WXPAY_NOTIFY_VERIFY_FAILED, e)
