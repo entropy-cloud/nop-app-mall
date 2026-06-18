@@ -68,7 +68,7 @@
             <listActions x:prototype-override="remove" />
             <rowActions x:prototype-override="bounded-merge">
                 <action id="row-view-button" />
-                <action id="refund-button" label="退款" batch="true" level="primary">
+                <action id="refund-button" label="退款" level="primary">
                     <api url="@mutation:LitemallAftersale__refund">
                         <data>
                             <id>$id</id>

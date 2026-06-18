@@ -41,7 +41,7 @@ body:
         body:
           - type: alert
             level: info
-            body: '<b>订单状态：</b>${data.orderStatus == 101 ? "待付款" : data.orderStatus == 102 ? "已取消" : data.orderStatus == 201 ? "待发货" : data.orderStatus == 301 ? "待收货" : data.orderStatus >= 401 ? "已完成" : "未知"}'
+            body: '<b>订单状态：</b>${data.orderStatus == 101 ? "待付款" : data.orderStatus == 102 ? "已取消" : data.orderStatus == 103 ? "系统取消" : data.orderStatus == 201 ? "待发货" : data.orderStatus == 202 ? "退款中" : data.orderStatus == 203 ? "已退款" : data.orderStatus == 204 ? "团购超时" : data.orderStatus == 301 ? "待收货" : data.orderStatus >= 401 ? "已完成" : "未知"}'
 
           - type: card
             title: 订单信息
@@ -174,7 +174,7 @@ body:
                     - type: tpl
                       tpl: '<b>实付金额：</b>'
                     - type: tpl
-                      tpl: '<span style="color:#ff6700;font-size:24px;font-weight:bold">¥${data.goodsPrice + data.freightPrice - data.couponPrice}</span>'
+                      tpl: '<span style="color:#ff6700;font-size:24px;font-weight:bold">¥${data.actualPrice}</span>'
 
           - type: button-toolbar
             style:

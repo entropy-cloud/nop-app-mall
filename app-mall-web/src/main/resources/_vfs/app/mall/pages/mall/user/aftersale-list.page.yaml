@@ -83,7 +83,7 @@ body:
               type: wrapper
               body:
                 - type: tpl
-                  tpl: '<div style="margin:5px 0"><span style="color:#999">类型：</span>${item.type == 0 ? "仅退款" : item.type == 1 ? "退货退款" : "其他"}</div>'
+                  tpl: '<div style="margin:5px 0"><span style="color:#999">类型：</span>${item.type == 0 ? "仅退款" : item.type == 1 ? "已收货无需退货" : item.type == 2 ? "退货退款" : "其他"}</div>'
                 - type: tpl
                   tpl: '<div style="margin:5px 0"><span style="color:#999">金额：</span><span style="color:#ff6700;font-weight:bold">¥${item.amount}</span></div>'
                 - type: tpl
@@ -98,7 +98,7 @@ body:
                       level: primary
                       size: sm
                       actionType: link
-                      link: "/storefront-order-detail?id=${item.orderId}"
+                      link: "/storefront-order-detail?orderId=${item.orderId}"
                     - type: button
                       label: 撤回申请
                       level: danger

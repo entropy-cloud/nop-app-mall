@@ -47,87 +47,83 @@ body:
               link: "/storefront-user-center"
 
   - type: service
-    name: rulesList
+    name: rulesDetail
     api:
-      url: '@query:LitemallGrouponRules__listAvailableRules'
+      url: '@query:LitemallGrouponRules__getAvailableRulesById'
       data:
-        page: 1
-        pageSize: 100
+        id: "${id}"
+        strict: false
       sendOn: "${id}"
     body:
-      type: each
-      name: items
+      type: wrapper
       placeholder: '<div style="padding:40px;text-align:center;color:#999">团购规则不存在或已结束</div>'
-      items:
-        type: wrapper
-        hiddenOn: "${item.id != id}"
-        body:
-          - type: grid
-            style:
-              padding: 20px
-            columns:
-              - md: 5
+      body:
+        - type: grid
+          style:
+            padding: 20px
+          columns:
+            - md: 5
+              body:
+                type: wrapper
+                style:
+                  padding: 20px
                 body:
-                  type: wrapper
-                  style:
-                    padding: 20px
-                  body:
-                    type: tpl
-                    tpl: '<img src="${item.picUrl}" style="width:100%;border-radius:4px"/>'
-              - md: 7
+                  type: tpl
+                  tpl: '<img src="${picUrl}" style="width:100%;border-radius:4px"/>'
+            - md: 7
+              body:
+                type: wrapper
+                style:
+                  padding: 20px
                 body:
-                  type: wrapper
-                  style:
-                    padding: 20px
-                  body:
-                    - type: tpl
-                      tpl: '<h2>${item.goodsName}</h2>'
-                    - type: divider
-                    - type: tpl
-                      tpl: '<div style="background:#fff8f0;padding:15px;border-radius:4px;margin:10px 0"><span style="color:#999">团购立减：</span><span style="color:#ff6700;font-size:28px;font-weight:bold">¥${item.discount}</span></div>'
-                    - type: tpl
-                      tpl: '<div style="margin:5px 0"><span style="color:#999">成团人数：</span><b>${item.discountMember} 人</b></div>'
-                    - type: tpl
-                      tpl: '<div style="margin:5px 0"><span style="color:#999">截止时间：</span>${item.expireTime}</div>'
+                  - type: tpl
+                    tpl: '<h2>${goodsName}</h2>'
+                  - type: divider
+                  - type: tpl
+                    tpl: '<div style="background:#fff8f0;padding:15px;border-radius:4px;margin:10px 0"><span style="color:#999">团购立减：</span><span style="color:#ff6700;font-size:28px;font-weight:bold">¥${discount}</span></div>'
+                  - type: tpl
+                    tpl: '<div style="margin:5px 0"><span style="color:#999">成团人数：</span><b>${discountMember} 人</b></div>'
+                  - type: tpl
+                    tpl: '<div style="margin:5px 0"><span style="color:#999">截止时间：</span>${expireTime}</div>'
 
-                    - type: form
-                      name: grouponForm
-                      title: 选择规格
-                      mode: normal
-                      body:
-                        - type: select
-                          name: productId
-                          label: 规格
-                          required: true
-                          source:
-                            url: '@query:LitemallGoodsProduct__findList'
-                            data:
-                              query:
-                                filter:
-                                  eq:
-                                    - goodsId
-                                    - "${item.goodsId}"
-                            valueField: id
-                            labelField: specifications
-                        - type: input-number
-                          name: quantity
-                          label: 数量
-                          value: 1
-                          min: 1
-                          max: 99
+                  - type: form
+                    name: grouponForm
+                    title: 选择规格
+                    mode: normal
+                    body:
+                      - type: select
+                        name: productId
+                        label: 规格
+                        required: true
+                        source:
+                          url: '@query:LitemallGoodsProduct__findList'
+                          data:
+                            query:
+                              filter:
+                                eq:
+                                  - goodsId
+                                  - "${goodsId}"
+                          valueField: id
+                          labelField: specifications
+                      - type: input-number
+                        name: quantity
+                        label: 数量
+                        value: 1
+                        min: 1
+                        max: 99
 
-                      actions:
-                        - type: button
-                          label: 发起团购
-                          level: primary
-                          size: lg
-                          actionType: ajax
-                          api:
-                            url: '@mutation:LitemallCart__addGoods'
-                            data:
-                              goodsId: "${item.goodsId}"
-                              productId: "${productId}"
-                              number: "${quantity}"
-                          redirect: "/storefront-checkout?grouponRulesId=${id}"
-                          messages:
-                            success: '正在跳转结算...'
+                    actions:
+                      - type: button
+                        label: 发起团购
+                        level: primary
+                        size: lg
+                        actionType: ajax
+                        api:
+                          url: '@mutation:LitemallCart__addGoods'
+                          data:
+                            goodsId: "${goodsId}"
+                            productId: "${productId}"
+                            number: "${quantity}"
+                        redirect: "/storefront-checkout?grouponRulesId=${id}"
+                        messages:
+                          success: '正在跳转结算...'

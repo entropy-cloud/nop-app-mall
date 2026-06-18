@@ -17,6 +17,9 @@
                 <col id="payTime"/>
                 <col id="shipTime"/>
             </cols>
+            <filter>
+                <eq name="deleted" value="false"/>
+            </filter>
         </grid>
         <grid id="pick-list"/>
     </grids>
@@ -46,6 +49,11 @@
                 orderSn orderStatus
             </layout>
         </form>
+        <form id="ship" editMode="add" layoutMode="horizontal">
+            <layout>
+                shipSn[快递单号] shipChannel[快递公司]
+            </layout>
+        </form>
     </forms>
 
     <pages>
@@ -54,8 +62,15 @@
                 <action id="row-view-button" level="primary" label="查看">
                     <dialog page="view"/>
                 </action>
+                <action id="ship-button" label="发货" level="primary" actionType="dialog">
+                    <visibleOn>${orderStatus == 201}</visibleOn>
+                    <dialog page="ship" title="订单发货" size="md"/>
+                </action>
             </rowActions>
         </crud>
         <picker name="picker"/>
+        <simple name="ship" form="ship">
+            <api url="@mutation:LitemallOrder__ship?orderId=$id" withFormData="true"/>
+        </simple>
     </pages>
 </view>

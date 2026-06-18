@@ -135,8 +135,9 @@ body:
       - type: service
         name: newGoods
         api:
-          url: '@query:LitemallGoods__frontList'
+          url: '@query:LitemallGoods__frontListByFlags'
           data:
+            isNew: true
             page: 1
             pageSize: 8
           sendOn: true
@@ -175,8 +176,9 @@ body:
       - type: service
         name: hotGoods
         api:
-          url: '@query:LitemallGoods__search'
+          url: '@query:LitemallGoods__frontListByFlags'
           data:
+            isHot: true
             page: 1
             pageSize: 4
           sendOn: true

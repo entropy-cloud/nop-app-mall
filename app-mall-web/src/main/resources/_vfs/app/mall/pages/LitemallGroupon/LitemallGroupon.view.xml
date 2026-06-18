@@ -2,7 +2,11 @@
 <view x:extends="_gen/_LitemallGroupon.view.xml" x:schema="/nop/schema/xui/xview.xdef" xmlns:x="/nop/schema/xdsl.xdef">
 
     <grids>
-        <grid id="list"/>
+        <grid id="list">
+            <filter>
+                <eq name="deleted" value="false"/>
+            </filter>
+        </grid>
         <grid id="pick-list"/>
     </grids>
 
@@ -13,7 +17,13 @@
     </forms>
 
     <pages>
-        <crud name="main"/>
+        <crud name="main">
+            <rowActions x:override="bounded-merge">
+                <action id="row-view-button" level="primary" label="查看">
+                    <dialog page="view"/>
+                </action>
+            </rowActions>
+        </crud>
         <picker name="picker"/>
     </pages>
 </view>

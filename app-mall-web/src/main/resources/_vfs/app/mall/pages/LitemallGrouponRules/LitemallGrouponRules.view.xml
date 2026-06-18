@@ -3,7 +3,11 @@
       xmlns:x="/nop/schema/xdsl.xdef">
 
     <grids>
-        <grid id="list"/>
+        <grid id="list">
+            <filter>
+                <eq name="deleted" value="false"/>
+            </filter>
+        </grid>
         <grid id="pick-list"/>
     </grids>
 
@@ -14,7 +18,34 @@
     </forms>
 
     <pages>
-        <crud name="main"/>
+        <crud name="main">
+            <rowActions x:override="bounded-merge">
+                <action id="row-view-button" level="primary" label="查看">
+                    <dialog page="view"/>
+                </action>
+                <action id="row-update-button" level="primary" label="编辑">
+                    <dialog page="update"/>
+                </action>
+                <action id="publish-button" label="发布" level="success">
+                    <visibleOn>${status != 0}</visibleOn>
+                    <api url="@mutation:LitemallGrouponRules__publishRules">
+                        <data>
+                            <id>$id</id>
+                        </data>
+                    </api>
+                    <confirmText>确认发布该团购规则吗？</confirmText>
+                </action>
+                <action id="unpublish-button" label="下架" level="warning">
+                    <visibleOn>${status == 0}</visibleOn>
+                    <api url="@mutation:LitemallGrouponRules__unpublishRules">
+                        <data>
+                            <id>$id</id>
+                        </data>
+                    </api>
+                    <confirmText>确认下架该团购规则吗？</confirmText>
+                </action>
+            </rowActions>
+        </crud>
         <picker name="picker"/>
     </pages>
 </view>

@@ -2,6 +2,8 @@ package app.mall.service.notification;
 
 import app.mall.service.consts.NotifyType;
 import io.nop.commons.util.StringHelper;
+import io.nop.integration.api.email.EmailMessage;
+import io.nop.integration.api.email.IEmailSender;
 import io.nop.integration.api.sms.ISmsSender;
 import io.nop.integration.api.sms.SmsMessage;
 import jakarta.annotation.Nullable;
@@ -10,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
+import java.util.Collections;
 
 @jakarta.inject.Named
 public class MallNotificationService {
@@ -18,6 +21,10 @@ public class MallNotificationService {
     @Inject
     @Nullable
     ISmsSender smsSender;
+
+    @Inject
+    @Nullable
+    IEmailSender emailSender;
 
     public void sendOrderPaymentNotification(String orderSn, String mobile) {
         sendSms(mobile, NotifyType.PAY_SUCCEED, Arrays.asList(StringHelper.tail(orderSn, 6)),
@@ -30,6 +37,7 @@ public class MallNotificationService {
     }
 
     public void sendAdminOrderNotification(String orderSn) {
+        sendAdminEmail(orderSn);
         LOG.info("sendAdminOrderNotification: new order created, orderSn={}", orderSn);
     }
 
@@ -63,6 +71,24 @@ public class MallNotificationService {
             LOG.info("{}: context={}", methodName, contextKey);
         } catch (Exception e) {
             LOG.error("{}: SMS send failed. context={}", methodName, contextKey, e);
+        }
+    }
+
+    private void sendAdminEmail(String orderSn) {
+        if (emailSender == null) {
+            LOG.info("sendAdminOrderNotification: IEmailSender is null, skip email. orderSn={}", orderSn);
+            return;
+        }
+        try {
+            EmailMessage email = new EmailMessage();
+            email.setTo(Collections.singletonList("ops@example.com"));
+            email.setSubject("Mall new order " + StringHelper.tail(orderSn, 6));
+            email.setText("A new order is submitted. orderSn=" + orderSn);
+            email.setHtml(false);
+            emailSender.sendEmail(email);
+            LOG.info("sendAdminOrderNotification: email sent. orderSn={}", orderSn);
+        } catch (Exception e) {
+            LOG.error("sendAdminOrderNotification: email send failed. orderSn={}", orderSn, e);
         }
     }
 }

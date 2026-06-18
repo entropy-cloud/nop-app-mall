@@ -42,7 +42,7 @@
                 <!--开团时间-->
                 <col id="creatorUserTime" sortable="true"/>
 
-                <!--团购活动状态，开团未支付则0，开团中则1，开团失败则2-->
+                <!--团购活动状态-->
                 <col id="status" ui:number="true" sortable="true"/>
             </cols>
         </grid>
@@ -60,7 +60,7 @@
  shareUrl[团购分享图片地址]
  creatorUserId[开团用户ID]
  creatorUserTime[开团时间]
- status[团购活动状态，开团未支付则0，开团中则1，开团失败则2]
+ status[团购活动状态]
 </layout>
         </form>
         <form id="add" editMode="add" title="新增-团购活动表" i18n-en:title="" x:prototype="edit"/>
@@ -73,7 +73,7 @@
  shareUrl[团购分享图片地址]
  creatorUserId[开团用户ID]
  creatorUserTime[开团时间]
- status[团购活动状态，开团未支付则0，开团中则1，开团失败则2]
+ status[团购活动状态]
 </layout>
         </form>
         <form id="query" editMode="query" title="查询条件" i18n-en:title="Query Condition" x:abstract="true"/>

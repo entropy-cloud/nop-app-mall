@@ -83,8 +83,10 @@ body:
                 options:
                   - label: 仅退款
                     value: 0
-                  - label: 退货退款
+                  - label: 已收货无需退货
                     value: 1
+                  - label: 退货退款
+                    value: 2
               - type: textarea
                 name: reason
                 label: 申请原因

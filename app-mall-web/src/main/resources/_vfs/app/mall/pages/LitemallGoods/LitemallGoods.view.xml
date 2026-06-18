@@ -175,6 +175,16 @@
                 -->
                 <action id="row-update-button" actionType="drawer"/>
 
+                <action id="row-on-sale-button" label="上架" actionType="ajax"
+                        url="@mutation:LitemallGoods__onSale?id=$id" level="primary">
+                    <visibleOn>${!isOnSale}</visibleOn>
+                </action>
+
+                <action id="row-off-sale-button" label="下架" actionType="ajax"
+                        url="@mutation:LitemallGoods__offSale?id=$id" level="warning">
+                    <visibleOn>${isOnSale}</visibleOn>
+                </action>
+
                 <action id="row-delete-button"/>
 
             </rowActions>

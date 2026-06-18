@@ -112,7 +112,7 @@ body:
                     name: couponUserId
                     label: 选择优惠券
                     source: '${items}'
-                    labelField: description
+                    labelTpl: '${coupon.name} - 满${coupon.min}减${coupon.discount}'
                     valueField: id
                     clearable: true
                     placeholder: 不使用优惠券

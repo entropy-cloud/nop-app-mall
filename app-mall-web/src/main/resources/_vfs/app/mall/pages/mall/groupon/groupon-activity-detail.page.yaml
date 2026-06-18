@@ -61,7 +61,7 @@ body:
           - type: tpl
             tpl: '<h2>团购活动 #${data.id}</h2>'
           - type: tpl
-            tpl: '<div style="margin:5px 0"><span style="color:#999">当前状态：</span><b>${data.status == 0 ? "开团未支付" : data.status == 1 ? "开团中" : data.status == 2 ? "开团失败" : "未知"}</b></div>'
+            tpl: '<div style="margin:5px 0"><span style="color:#999">当前状态：</span><b>${data.status == 0 ? "开团未支付" : data.status == 1 ? "开团中" : data.status == 2 ? "开团失败" : data.status == 3 ? "开团成功" : "未知"}</b></div>'
           - type: tpl
             tpl: '<div style="margin:5px 0"><span style="color:#999">开团时间：</span>${data.creatorUserTime}</div>'
 
@@ -152,4 +152,5 @@ body:
                           messages:
                             success: '正在跳转结算...'
                         - type: tpl
-                          tpl: '<div style="color:#999;padding:10px" visibleOn="${grouponDetail.data.status != 1}">当前团购活动不在进行中，无法参与</div>'
+                          tpl: '<div style="color:#999;padding:10px">当前团购活动不在进行中，无法参与</div>'
+                          visibleOn: "${grouponDetail.data.status != 1}"

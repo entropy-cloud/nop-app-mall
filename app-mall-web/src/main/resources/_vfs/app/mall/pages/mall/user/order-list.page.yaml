@@ -55,7 +55,7 @@ body:
                           - type: tpl
                             tpl: '<b>订单号：${item.orderSn}</b>'
                           - type: tpl
-                            tpl: '<span style="color:${item.orderStatus == 101 ? "#ff6700" : item.orderStatus >= 401 ? "#52c41a" : "#999"}">${item.orderStatus == 101 ? "待付款" : item.orderStatus == 102 ? "已取消" : item.orderStatus == 201 ? "待发货" : item.orderStatus == 301 ? "待收货" : item.orderStatus >= 401 ? "已完成" : "未知"}</span>'
+                            tpl: '<span style="color:${item.orderStatus == 101 ? "#ff6700" : item.orderStatus >= 401 ? "#52c41a" : item.orderStatus == 202 || item.orderStatus == 203 || item.orderStatus == 204 ? "#1890ff" : "#999"}">${item.orderStatus == 101 ? "待付款" : item.orderStatus == 102 ? "已取消" : item.orderStatus == 103 ? "系统取消" : item.orderStatus == 201 ? "待发货" : item.orderStatus == 202 ? "退款中" : item.orderStatus == 203 ? "已退款" : item.orderStatus == 204 ? "团购超时" : item.orderStatus == 301 ? "待收货" : item.orderStatus >= 401 ? "已完成" : "未知"}</span>'
                       - type: each
                         name: item.orderGoods
                         items:
@@ -82,7 +82,7 @@ body:
                           marginTop: 10px
                         items:
                           - type: tpl
-                            tpl: '<span>共 ${item.orderGoods.length} 件商品 合计：</span><span style="color:#ff6700;font-size:18px;font-weight:bold">¥${item.goodsPrice + item.freightPrice - item.couponPrice}</span>'
+                            tpl: '<span>共 ${item.orderGoods.length} 件商品 合计：</span><span style="color:#ff6700;font-size:18px;font-weight:bold">¥${item.actualPrice}</span>'
                       - type: button-toolbar
                         style:
                           marginTop: 10px
@@ -147,7 +147,7 @@ body:
                           - type: tpl
                             tpl: '<b>${item.orderSn}</b>'
                           - type: tpl
-                            tpl: '<span style="color:#ff6700;font-weight:bold">¥${item.goodsPrice + item.freightPrice - item.couponPrice}</span>'
+                            tpl: '<span style="color:#ff6700;font-weight:bold">¥${item.actualPrice}</span>'
                       - type: button-toolbar
                         style:
                           marginTop: 10px
@@ -189,7 +189,7 @@ body:
                           - type: tpl
                             tpl: '<b>${item.orderSn}</b>'
                           - type: tpl
-                            tpl: '<span style="color:#ff6700;font-weight:bold">¥${item.goodsPrice + item.freightPrice - item.couponPrice}</span>'
+                            tpl: '<span style="color:#ff6700;font-weight:bold">¥${item.actualPrice}</span>'
                       - type: button-toolbar
                         style:
                           marginTop: 10px
