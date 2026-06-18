@@ -140,7 +140,6 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
         QueryBean cartQuery = new QueryBean();
         cartQuery.addFilter(FilterBeans.eq(LitemallCart.PROP_NAME_userId, userId));
         cartQuery.addFilter(FilterBeans.eq(LitemallCart.PROP_NAME_checked, true));
-        cartQuery.addFilter(FilterBeans.eq(LitemallCart.PROP_NAME_deleted, false));
         List<LitemallCart> checkedItems = cartBiz.findList(cartQuery, null, context);
 
         if (checkedItems == null || checkedItems.isEmpty()) {
@@ -329,7 +328,6 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
         QueryBean cuQuery = new QueryBean();
         cuQuery.addFilter(FilterBeans.eq(LitemallCouponUser.PROP_NAME_orderId, order.orm_idString()));
         cuQuery.addFilter(FilterBeans.eq(LitemallCouponUser.PROP_NAME_status, 1));
-        cuQuery.addFilter(FilterBeans.eq(LitemallCouponUser.PROP_NAME_deleted, false));
         List<LitemallCouponUser> usedCoupons = couponUserBiz.findList(cuQuery, null, context);
         for (LitemallCouponUser cu : usedCoupons) {
             couponUserBiz.returnCoupon(cu.orm_idString(), context);
@@ -415,7 +413,6 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
         // Find order by orderSn (== outTradeNo); orderSn is unique per order.
         QueryBean query = new QueryBean();
         query.addFilter(FilterBeans.eq(LitemallOrder.PROP_NAME_orderSn, outTradeNo));
-        query.addFilter(FilterBeans.eq(LitemallOrder.PROP_NAME_deleted, false));
         LitemallOrder order = findFirst(query, null, context);
         if (order == null) {
             LOG.warn("confirmPaidByNotify: no order found for outTradeNo={}", outTradeNo);
@@ -520,7 +517,6 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
         String userId = context.getUserId();
         QueryBean query = new QueryBean();
         query.addFilter(FilterBeans.eq(LitemallOrder.PROP_NAME_userId, userId));
-        query.addFilter(FilterBeans.eq(LitemallOrder.PROP_NAME_deleted, false));
         if (status != null) {
             if (status == -1) {
                 query.addFilter(FilterBeans.eq(LitemallOrder.PROP_NAME_orderStatus, _AppMallDaoConstants.ORDER_STATUS_CREATED));
@@ -604,7 +600,6 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
         QueryBean query = new QueryBean();
         query.addFilter(FilterBeans.eq(LitemallOrder.PROP_NAME_orderStatus, _AppMallDaoConstants.ORDER_STATUS_CREATED));
         query.addFilter(FilterBeans.lt(LitemallOrder.PROP_NAME_addTime, cutoff));
-        query.addFilter(FilterBeans.eq(LitemallOrder.PROP_NAME_deleted, false));
         query.setLimit(100);
 
         List<LitemallOrder> orders = doFindListByQueryDirectly(query, context);
@@ -638,7 +633,6 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
             QueryBean cuQuery = new QueryBean();
             cuQuery.addFilter(FilterBeans.eq(LitemallCouponUser.PROP_NAME_orderId, orderId));
             cuQuery.addFilter(FilterBeans.eq(LitemallCouponUser.PROP_NAME_status, 1));
-            cuQuery.addFilter(FilterBeans.eq(LitemallCouponUser.PROP_NAME_deleted, false));
             List<LitemallCouponUser> usedCoupons = couponUserBiz.findList(cuQuery, null, context);
             for (LitemallCouponUser cu : usedCoupons) {
                 couponUserBiz.returnCoupon(cu.orm_idString(), context);
@@ -659,7 +653,6 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
         QueryBean query = new QueryBean();
         query.addFilter(FilterBeans.eq(LitemallOrder.PROP_NAME_orderStatus, _AppMallDaoConstants.ORDER_STATUS_SHIP));
         query.addFilter(FilterBeans.lt(LitemallOrder.PROP_NAME_shipTime, cutoff));
-        query.addFilter(FilterBeans.eq(LitemallOrder.PROP_NAME_deleted, false));
         query.setLimit(100);
 
         List<LitemallOrder> orders = doFindListByQueryDirectly(query, context);

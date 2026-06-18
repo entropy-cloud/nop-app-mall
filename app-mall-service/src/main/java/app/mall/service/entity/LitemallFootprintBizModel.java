@@ -35,7 +35,6 @@ public class LitemallFootprintBizModel extends CrudBizModel<LitemallFootprint> i
         query.addFilter(FilterBeans.eq(LitemallFootprint.PROP_NAME_userId, userId));
         query.addFilter(FilterBeans.eq(LitemallFootprint.PROP_NAME_goodsId, goodsId));
         query.addFilter(FilterBeans.dateTimeBetween(LitemallFootprint.PROP_NAME_addTime, todayStart, todayEnd));
-        query.addFilter(FilterBeans.eq(LitemallFootprint.PROP_NAME_deleted, false));
 
         LitemallFootprint existing = findFirst(query, null, context);
         if (existing != null) {
@@ -59,7 +58,6 @@ public class LitemallFootprintBizModel extends CrudBizModel<LitemallFootprint> i
 
         QueryBean query = new QueryBean();
         query.addFilter(FilterBeans.eq(LitemallFootprint.PROP_NAME_userId, userId));
-        query.addFilter(FilterBeans.eq(LitemallFootprint.PROP_NAME_deleted, false));
         query.setOffset(page > 0 ? (page - 1) * pageSize : 0);
         query.setLimit(pageSize > 0 ? pageSize : 10);
         query.addOrderField(LitemallFootprint.PROP_NAME_addTime, true);
@@ -74,7 +72,6 @@ public class LitemallFootprintBizModel extends CrudBizModel<LitemallFootprint> i
 
         QueryBean query = new QueryBean();
         query.addFilter(FilterBeans.eq(LitemallFootprint.PROP_NAME_userId, userId));
-        query.addFilter(FilterBeans.eq(LitemallFootprint.PROP_NAME_deleted, false));
 
         for (LitemallFootprint fp : findList(query, null, context)) {
             delete(fp.orm_idString(), context);

@@ -3,11 +3,8 @@
       xmlns:x="/nop/schema/xdsl.xdef">
 
     <grids>
-        <grid id="list">
-            <filter>
-                <eq name="deleted" value="false"/>
-            </filter>
-        </grid>
+        <grid id="list"/>
+
         <grid id="pick-list"/>
     </grids>
 

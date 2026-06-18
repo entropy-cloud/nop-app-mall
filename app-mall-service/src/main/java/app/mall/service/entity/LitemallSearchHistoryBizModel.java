@@ -36,7 +36,6 @@ public class LitemallSearchHistoryBizModel extends CrudBizModel<LitemallSearchHi
         query.addFilter(FilterBeans.eq(LitemallSearchHistory.PROP_NAME_userId, userId));
         query.addFilter(FilterBeans.eq(LitemallSearchHistory.PROP_NAME_keyword, keyword));
         query.addFilter(FilterBeans.dateTimeBetween(LitemallSearchHistory.PROP_NAME_addTime, todayStart, todayEnd));
-        query.addFilter(FilterBeans.eq(LitemallSearchHistory.PROP_NAME_deleted, false));
 
         LitemallSearchHistory existing = findFirst(query, null, context);
         if (existing != null) {
@@ -61,7 +60,6 @@ public class LitemallSearchHistoryBizModel extends CrudBizModel<LitemallSearchHi
 
         QueryBean query = new QueryBean();
         query.addFilter(FilterBeans.eq(LitemallSearchHistory.PROP_NAME_userId, userId));
-        query.addFilter(FilterBeans.eq(LitemallSearchHistory.PROP_NAME_deleted, false));
         query.setOffset(page > 0 ? (page - 1) * pageSize : 0);
         query.setLimit(pageSize > 0 ? pageSize : 10);
         query.addOrderField(LitemallSearchHistory.PROP_NAME_addTime, true);
@@ -76,7 +74,6 @@ public class LitemallSearchHistoryBizModel extends CrudBizModel<LitemallSearchHi
 
         QueryBean query = new QueryBean();
         query.addFilter(FilterBeans.eq(LitemallSearchHistory.PROP_NAME_userId, userId));
-        query.addFilter(FilterBeans.eq(LitemallSearchHistory.PROP_NAME_deleted, false));
 
         for (LitemallSearchHistory h : findList(query, null, context)) {
             delete(h.orm_idString(), context);

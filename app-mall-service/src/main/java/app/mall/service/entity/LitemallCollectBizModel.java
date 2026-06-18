@@ -33,7 +33,6 @@ public class LitemallCollectBizModel extends CrudBizModel<LitemallCollect> imple
         query.addFilter(FilterBeans.eq(LitemallCollect.PROP_NAME_userId, userId));
         query.addFilter(FilterBeans.eq(LitemallCollect.PROP_NAME_type, type));
         query.addFilter(FilterBeans.eq(LitemallCollect.PROP_NAME_valueId, valueId));
-        query.addFilter(FilterBeans.eq(LitemallCollect.PROP_NAME_deleted, false));
         LitemallCollect existing = findFirst(query, null, context);
         if (existing != null) {
             throw new NopException(ERR_COLLECT_ALREADY_EXISTS)
@@ -60,7 +59,6 @@ public class LitemallCollectBizModel extends CrudBizModel<LitemallCollect> imple
         query.addFilter(FilterBeans.eq(LitemallCollect.PROP_NAME_userId, userId));
         query.addFilter(FilterBeans.eq(LitemallCollect.PROP_NAME_type, type));
         query.addFilter(FilterBeans.eq(LitemallCollect.PROP_NAME_valueId, valueId));
-        query.addFilter(FilterBeans.eq(LitemallCollect.PROP_NAME_deleted, false));
         LitemallCollect existing = findFirst(query, null, context);
         if (existing == null) {
             throw new NopException(ERR_COLLECT_NOT_FOUND)
@@ -82,7 +80,6 @@ public class LitemallCollectBizModel extends CrudBizModel<LitemallCollect> imple
         query.addFilter(FilterBeans.eq(LitemallCollect.PROP_NAME_userId, userId));
         query.addFilter(FilterBeans.eq(LitemallCollect.PROP_NAME_type, type));
         query.addFilter(FilterBeans.eq(LitemallCollect.PROP_NAME_valueId, valueId));
-        query.addFilter(FilterBeans.eq(LitemallCollect.PROP_NAME_deleted, false));
         return findCount(query, context) > 0;
     }
 
@@ -97,7 +94,6 @@ public class LitemallCollectBizModel extends CrudBizModel<LitemallCollect> imple
         QueryBean query = new QueryBean();
         query.addFilter(FilterBeans.eq(LitemallCollect.PROP_NAME_userId, userId));
         query.addFilter(FilterBeans.eq(LitemallCollect.PROP_NAME_type, type));
-        query.addFilter(FilterBeans.eq(LitemallCollect.PROP_NAME_deleted, false));
         query.setOffset(page > 0 ? (page - 1) * pageSize : 0);
         query.setLimit(pageSize > 0 ? pageSize : 10);
         query.addOrderField(LitemallCollect.PROP_NAME_addTime, true);

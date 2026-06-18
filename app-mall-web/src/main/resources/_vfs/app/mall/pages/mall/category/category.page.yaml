@@ -94,12 +94,7 @@ body:
               api:
                 url: '@query:LitemallBrand__findList'
                 data:
-                  query:
-                    filter:
-                      and:
-                        - eq:
-                            - deleted
-                            - false
+                  query: {}
                 sendOn: true
               body:
                 type: each

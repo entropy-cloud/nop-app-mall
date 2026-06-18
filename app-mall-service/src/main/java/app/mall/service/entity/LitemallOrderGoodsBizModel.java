@@ -29,7 +29,6 @@ public class LitemallOrderGoodsBizModel extends CrudBizModel<LitemallOrderGoods>
         QueryBean query = new QueryBean();
         query.addFilter(FilterBeans.eq(LitemallOrderGoods.PROP_NAME_comment, 0));
         query.addFilter(FilterBeans.lt(LitemallOrderGoods.PROP_NAME_addTime, cutoff));
-        query.addFilter(FilterBeans.eq(LitemallOrderGoods.PROP_NAME_deleted, false));
         query.setLimit(500);
 
         List<LitemallOrderGoods> expired = doFindListByQueryDirectly(query, context);

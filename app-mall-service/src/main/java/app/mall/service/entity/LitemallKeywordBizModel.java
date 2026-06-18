@@ -25,7 +25,6 @@ public class LitemallKeywordBizModel extends CrudBizModel<LitemallKeyword> imple
     public List<LitemallKeyword> getHotKeywords(IServiceContext context) {
         QueryBean query = new QueryBean();
         query.addFilter(FilterBeans.eq(LitemallKeyword.PROP_NAME_isHot, true));
-        query.addFilter(FilterBeans.eq(LitemallKeyword.PROP_NAME_deleted, false));
         return findList(query, null, context);
     }
 
@@ -35,7 +34,6 @@ public class LitemallKeywordBizModel extends CrudBizModel<LitemallKeyword> imple
     public List<LitemallKeyword> getDefaultKeywords(IServiceContext context) {
         QueryBean query = new QueryBean();
         query.addFilter(FilterBeans.eq(LitemallKeyword.PROP_NAME_isDefault, true));
-        query.addFilter(FilterBeans.eq(LitemallKeyword.PROP_NAME_deleted, false));
         return findList(query, null, context);
     }
 }

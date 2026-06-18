@@ -163,7 +163,6 @@ public class LitemallAftersaleBizModel extends CrudBizModel<LitemallAftersale> i
         QueryBean cuQuery = new QueryBean();
         cuQuery.addFilter(FilterBeans.eq(LitemallCouponUser.PROP_NAME_orderId, order.orm_idString()));
         cuQuery.addFilter(FilterBeans.eq(LitemallCouponUser.PROP_NAME_status, 1));
-        cuQuery.addFilter(FilterBeans.eq(LitemallCouponUser.PROP_NAME_deleted, false));
         List<LitemallCouponUser> usedCoupons = couponUserBiz.findList(cuQuery, null, context);
         for (LitemallCouponUser cu : usedCoupons) {
             couponUserBiz.returnCoupon(cu.orm_idString(), context);
@@ -270,7 +269,6 @@ public class LitemallAftersaleBizModel extends CrudBizModel<LitemallAftersale> i
         String userId = context.getUserId();
         QueryBean query = new QueryBean();
         query.addFilter(FilterBeans.eq(LitemallAftersale.PROP_NAME_userId, userId));
-        query.addFilter(FilterBeans.eq(LitemallAftersale.PROP_NAME_deleted, false));
         query.addOrderField(LitemallAftersale.PROP_NAME_addTime, true);
         return findList(query, null, context);
     }

@@ -17,9 +17,6 @@
                 <col id="payTime"/>
                 <col id="shipTime"/>
             </cols>
-            <filter>
-                <eq name="deleted" value="false"/>
-            </filter>
         </grid>
         <grid id="pick-list"/>
     </grids>

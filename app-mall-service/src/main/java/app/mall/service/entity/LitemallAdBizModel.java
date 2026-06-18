@@ -31,7 +31,6 @@ public class LitemallAdBizModel extends CrudBizModel<LitemallAd> implements ILit
 
         QueryBean query = new QueryBean();
         query.addFilter(FilterBeans.eq(LitemallAd.PROP_NAME_enabled, true));
-        query.addFilter(FilterBeans.eq(LitemallAd.PROP_NAME_deleted, false));
         query.addFilter(FilterBeans.le(LitemallAd.PROP_NAME_startTime, now));
         query.addFilter(FilterBeans.ge(LitemallAd.PROP_NAME_endTime, now));
         query.setOffset(page > 0 ? (page - 1) * pageSize : 0);

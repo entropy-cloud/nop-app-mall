@@ -35,7 +35,6 @@ public class LitemallCategoryBizModel extends CrudBizModel<LitemallCategory> imp
     @Auth(publicAccess = true)
     public List<Map<String, Object>> getCategoryTree() {
         QueryBean query = new QueryBean();
-        query.addFilter(FilterBeans.eq(LitemallCategory.PROP_NAME_deleted, false));
         List<LitemallCategory> all = dao().findAllByQuery(query);
 
         Map<String, List<LitemallCategory>> grouped = all.stream()
@@ -74,7 +73,6 @@ public class LitemallCategoryBizModel extends CrudBizModel<LitemallCategory> imp
     @BizQuery
     public List<LitemallCategory> getCategoryList() {
         QueryBean query = new QueryBean();
-        query.addFilter(FilterBeans.eq(LitemallCategory.PROP_NAME_deleted, false));
         return dao().findAllByQuery(query);
     }
 
@@ -82,7 +80,6 @@ public class LitemallCategoryBizModel extends CrudBizModel<LitemallCategory> imp
     protected void defaultPrepareDelete(LitemallCategory entity, IServiceContext context) {
         QueryBean childQuery = new QueryBean();
         childQuery.addFilter(FilterBeans.eq(LitemallCategory.PROP_NAME_pid, entity.getId()));
-        childQuery.addFilter(FilterBeans.eq(LitemallCategory.PROP_NAME_deleted, false));
         long childCount = dao().countByQuery(childQuery);
         if (childCount > 0) {
             throw new NopException(ERR_CATEGORY_HAS_CHILDREN)
@@ -91,7 +88,6 @@ public class LitemallCategoryBizModel extends CrudBizModel<LitemallCategory> imp
 
         QueryBean goodsQuery = new QueryBean();
         goodsQuery.addFilter(FilterBeans.eq(LitemallGoods.PROP_NAME_categoryId, entity.getId()));
-        goodsQuery.addFilter(FilterBeans.eq(LitemallGoods.PROP_NAME_deleted, false));
         long goodsCount = goodsBiz.findCount(goodsQuery, context);
         if (goodsCount > 0) {
             throw new NopException(ERR_CATEGORY_HAS_PRODUCTS)

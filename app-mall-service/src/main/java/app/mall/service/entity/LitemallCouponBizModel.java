@@ -57,7 +57,6 @@ public class LitemallCouponBizModel extends CrudBizModel<LitemallCoupon> impleme
 
         QueryBean query = new QueryBean();
         query.addFilter(FilterBeans.eq(LitemallCoupon.PROP_NAME_status, 0));
-        query.addFilter(FilterBeans.eq(LitemallCoupon.PROP_NAME_deleted, false));
         query.addFilter(FilterBeans.eq(LitemallCoupon.PROP_NAME_type, 0));
 
         query.addFilter(FilterBeans.or(
@@ -85,7 +84,6 @@ public class LitemallCouponBizModel extends CrudBizModel<LitemallCoupon> impleme
         if (status != null) {
             cuQuery.addFilter(FilterBeans.eq(LitemallCouponUser.PROP_NAME_status, status));
         }
-        cuQuery.addFilter(FilterBeans.eq(LitemallCouponUser.PROP_NAME_deleted, false));
 
         return couponUserBiz.findPage(cuQuery, null, context);
     }

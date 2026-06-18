@@ -37,7 +37,6 @@ public class LitemallAddressBizModel extends CrudBizModel<LitemallAddress> imple
         String userId = context.getUserId();
         QueryBean query = new QueryBean();
         query.addFilter(FilterBeans.eq(LitemallAddress.PROP_NAME_userId, userId));
-        query.addFilter(FilterBeans.eq(LitemallAddress.PROP_NAME_deleted, false));
         return findList(query, null, context);
     }
 
@@ -63,7 +62,6 @@ public class LitemallAddressBizModel extends CrudBizModel<LitemallAddress> imple
 
         QueryBean countQuery = new QueryBean();
         countQuery.addFilter(FilterBeans.eq(LitemallAddress.PROP_NAME_userId, userId));
-        countQuery.addFilter(FilterBeans.eq(LitemallAddress.PROP_NAME_deleted, false));
         long count = dao().countByQuery(countQuery);
         int limit = DEFAULT_ADDRESS_LIMIT;
         String limitConfig = systemBiz.getConfig("mall_address_limit", context);
@@ -162,7 +160,6 @@ public class LitemallAddressBizModel extends CrudBizModel<LitemallAddress> imple
         QueryBean query = new QueryBean();
         query.addFilter(FilterBeans.eq(LitemallAddress.PROP_NAME_userId, userId));
         query.addFilter(FilterBeans.eq(LitemallAddress.PROP_NAME_isDefault, true));
-        query.addFilter(FilterBeans.eq(LitemallAddress.PROP_NAME_deleted, false));
         List<LitemallAddress> defaults = findList(query, null, context);
         for (LitemallAddress addr : defaults) {
             addr.setIsDefault(false);

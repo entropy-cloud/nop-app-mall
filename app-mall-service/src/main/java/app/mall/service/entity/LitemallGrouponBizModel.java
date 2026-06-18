@@ -121,7 +121,6 @@ public class LitemallGrouponBizModel extends CrudBizModel<LitemallGroupon> imple
         QueryBean joinedQuery = new QueryBean();
         joinedQuery.addFilter(FilterBeans.eq(LitemallGroupon.PROP_NAME_grouponId, grouponId));
         joinedQuery.addFilter(FilterBeans.eq(LitemallGroupon.PROP_NAME_userId, userId));
-        joinedQuery.addFilter(FilterBeans.eq(LitemallGroupon.PROP_NAME_deleted, false));
         long joinedCount = findCount(joinedQuery, context);
         if (joinedCount > 0) {
             throw new NopException(ERR_GROUPON_ALREADY_JOINED)
@@ -136,7 +135,6 @@ public class LitemallGrouponBizModel extends CrudBizModel<LitemallGroupon> imple
                 FilterBeans.eq(LitemallGroupon.PROP_NAME_id, grouponId),
                 FilterBeans.eq(LitemallGroupon.PROP_NAME_grouponId, grouponId)
         ));
-        participantsQuery.addFilter(FilterBeans.eq(LitemallGroupon.PROP_NAME_deleted, false));
         long participantsCount = findCount(participantsQuery, context);
         if (participantsCount >= rules.getDiscountMember()) {
             throw new NopException(ERR_GROUPON_FULL)
@@ -170,7 +168,6 @@ public class LitemallGrouponBizModel extends CrudBizModel<LitemallGroupon> imple
         QueryBean query = new QueryBean();
         query.addFilter(FilterBeans.eq(LitemallGroupon.PROP_NAME_userId, userId));
         query.addFilter(FilterBeans.eq(LitemallGroupon.PROP_NAME_status, 1));
-        query.addFilter(FilterBeans.eq(LitemallGroupon.PROP_NAME_deleted, false));
 
         query.setOffset(page > 0 ? (page - 1) * pageSize : 0);
         query.setLimit(pageSize > 0 ? pageSize : 10);
@@ -193,7 +190,6 @@ public class LitemallGrouponBizModel extends CrudBizModel<LitemallGroupon> imple
 
         QueryBean query = new QueryBean();
         query.addFilter(FilterBeans.eq(LitemallGroupon.PROP_NAME_status, 1));
-        query.addFilter(FilterBeans.eq(LitemallGroupon.PROP_NAME_deleted, false));
         query.setLimit(500);
 
         List<LitemallGroupon> activeGroupons = doFindListByQueryDirectly(query, context);
@@ -274,7 +270,6 @@ public class LitemallGrouponBizModel extends CrudBizModel<LitemallGroupon> imple
         QueryBean cuQuery = new QueryBean();
         cuQuery.addFilter(FilterBeans.eq(LitemallCouponUser.PROP_NAME_orderId, order.orm_idString()));
         cuQuery.addFilter(FilterBeans.eq(LitemallCouponUser.PROP_NAME_status, 1));
-        cuQuery.addFilter(FilterBeans.eq(LitemallCouponUser.PROP_NAME_deleted, false));
         List<LitemallCouponUser> usedCoupons = couponUserBiz.findList(cuQuery, null, context);
         for (LitemallCouponUser cu : usedCoupons) {
             couponUserBiz.returnCoupon(cu.orm_idString(), context);
@@ -292,7 +287,6 @@ public class LitemallGrouponBizModel extends CrudBizModel<LitemallGroupon> imple
         QueryBean activeQuery = new QueryBean();
         activeQuery.addFilter(FilterBeans.eq(LitemallGroupon.PROP_NAME_rulesId, rulesId));
         activeQuery.addFilter(FilterBeans.eq(LitemallGroupon.PROP_NAME_status, 1));
-        activeQuery.addFilter(FilterBeans.eq(LitemallGroupon.PROP_NAME_deleted, false));
         long activeCount = findCount(activeQuery, context);
         if (activeCount == 0) {
             LitemallGrouponRules rules = grouponRulesBiz.get(rulesId, false, context);
@@ -321,7 +315,6 @@ public class LitemallGrouponBizModel extends CrudBizModel<LitemallGroupon> imple
                 FilterBeans.eq(LitemallGroupon.PROP_NAME_id, grouponId),
                 FilterBeans.eq(LitemallGroupon.PROP_NAME_grouponId, grouponId)
         ));
-        query.addFilter(FilterBeans.eq(LitemallGroupon.PROP_NAME_deleted, false));
         for (LitemallGroupon item : findList(query, null, context)) {
             item.setStatus(3);
         }

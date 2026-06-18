@@ -67,7 +67,6 @@ public class LitemallCouponUserBizModel extends CrudBizModel<LitemallCouponUser>
                 if (coupon.getTotal() != null) {
                     QueryBean usedQuery = new QueryBean();
                     usedQuery.addFilter(FilterBeans.eq(LitemallCouponUser.PROP_NAME_couponId, couponId));
-                    usedQuery.addFilter(FilterBeans.eq(LitemallCouponUser.PROP_NAME_deleted, false));
                     long claimed = findCount(usedQuery, context);
                     if (claimed >= coupon.getTotal()) {
                         throw new NopException(ERR_COUPON_NOT_AVAILABLE).param("couponId", couponId);
@@ -77,7 +76,6 @@ public class LitemallCouponUserBizModel extends CrudBizModel<LitemallCouponUser>
                     QueryBean userQuery = new QueryBean();
                     userQuery.addFilter(FilterBeans.eq(LitemallCouponUser.PROP_NAME_userId, userId));
                     userQuery.addFilter(FilterBeans.eq(LitemallCouponUser.PROP_NAME_couponId, couponId));
-                    userQuery.addFilter(FilterBeans.eq(LitemallCouponUser.PROP_NAME_deleted, false));
                     long userClaimed = findCount(userQuery, context);
                     if (userClaimed >= coupon.getLimit()) {
                         throw new NopException(ERR_COUPON_LIMIT_EXCEEDED).param("couponId", couponId);
@@ -116,7 +114,6 @@ public class LitemallCouponUserBizModel extends CrudBizModel<LitemallCouponUser>
 
         QueryBean couponQuery = new QueryBean();
         couponQuery.addFilter(FilterBeans.eq(LitemallCoupon.PROP_NAME_code, code));
-        couponQuery.addFilter(FilterBeans.eq(LitemallCoupon.PROP_NAME_deleted, false));
         LitemallCoupon coupon = couponBiz.findFirst(couponQuery, null, context);
         if (coupon == null) {
             throw new NopException(ERR_COUPON_CODE_INVALID)
@@ -232,7 +229,6 @@ public class LitemallCouponUserBizModel extends CrudBizModel<LitemallCouponUser>
         QueryBean query = new QueryBean();
         query.addFilter(FilterBeans.eq(LitemallCouponUser.PROP_NAME_status, 0));
         query.addFilter(FilterBeans.lt(LitemallCouponUser.PROP_NAME_endTime, now));
-        query.addFilter(FilterBeans.eq(LitemallCouponUser.PROP_NAME_deleted, false));
         query.setLimit(500);
 
         List<LitemallCouponUser> expired = doFindListByQueryDirectly(query, context);

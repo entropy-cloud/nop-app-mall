@@ -114,7 +114,6 @@ public class LitemallCommentBizModel extends CrudBizModel<LitemallComment> imple
         QueryBean query = new QueryBean();
         query.addFilter(FilterBeans.eq(LitemallComment.PROP_NAME_type, type));
         query.addFilter(FilterBeans.eq(LitemallComment.PROP_NAME_valueId, valueId));
-        query.addFilter(FilterBeans.eq(LitemallComment.PROP_NAME_deleted, false));
         query.setOffset(page > 0 ? (page - 1) * pageSize : 0);
         query.setLimit(pageSize > 0 ? pageSize : 10);
         query.addOrderField(LitemallComment.PROP_NAME_addTime, true);
@@ -131,7 +130,6 @@ public class LitemallCommentBizModel extends CrudBizModel<LitemallComment> imple
 
         QueryBean query = new QueryBean();
         query.addFilter(FilterBeans.eq(LitemallComment.PROP_NAME_userId, userId));
-        query.addFilter(FilterBeans.eq(LitemallComment.PROP_NAME_deleted, false));
         query.setOffset(page > 0 ? (page - 1) * pageSize : 0);
         query.setLimit(pageSize > 0 ? pageSize : 10);
         query.addOrderField(LitemallComment.PROP_NAME_addTime, true);

@@ -55,7 +55,6 @@ public class LitemallCartBizModel extends CrudBizModel<LitemallCart> implements 
         QueryBean query = new QueryBean();
         query.addFilter(FilterBeans.eq(LitemallCart.PROP_NAME_userId, userId));
         query.addFilter(FilterBeans.eq(LitemallCart.PROP_NAME_productId, productId));
-        query.addFilter(FilterBeans.eq(LitemallCart.PROP_NAME_deleted, false));
         List<LitemallCart> existing = findList(query, null, context);
 
         LitemallCart cart;
@@ -150,7 +149,6 @@ public class LitemallCartBizModel extends CrudBizModel<LitemallCart> implements 
         String userId = context.getUserId();
         QueryBean query = new QueryBean();
         query.addFilter(FilterBeans.eq(LitemallCart.PROP_NAME_userId, userId));
-        query.addFilter(FilterBeans.eq(LitemallCart.PROP_NAME_deleted, false));
         List<LitemallCart> list = findList(query, null, context);
         for (LitemallCart cart : list) {
             cart.setChecked(true);
@@ -163,7 +161,6 @@ public class LitemallCartBizModel extends CrudBizModel<LitemallCart> implements 
         String userId = context.getUserId();
         QueryBean query = new QueryBean();
         query.addFilter(FilterBeans.eq(LitemallCart.PROP_NAME_userId, userId));
-        query.addFilter(FilterBeans.eq(LitemallCart.PROP_NAME_deleted, false));
         List<LitemallCart> list = findList(query, null, context);
         for (LitemallCart cart : list) {
             cart.setChecked(false);
@@ -187,7 +184,6 @@ public class LitemallCartBizModel extends CrudBizModel<LitemallCart> implements 
         String userId = context.getUserId();
         QueryBean query = new QueryBean();
         query.addFilter(FilterBeans.eq(LitemallCart.PROP_NAME_userId, userId));
-        query.addFilter(FilterBeans.eq(LitemallCart.PROP_NAME_deleted, false));
         List<LitemallCart> list = findList(query, null, context);
         for (LitemallCart cart : list) {
             delete(cart.orm_idString(), context);
@@ -201,7 +197,6 @@ public class LitemallCartBizModel extends CrudBizModel<LitemallCart> implements 
         QueryBean query = new QueryBean();
         query.addFilter(FilterBeans.eq(LitemallCart.PROP_NAME_userId, userId));
         query.addFilter(FilterBeans.eq(LitemallCart.PROP_NAME_checked, true));
-        query.addFilter(FilterBeans.eq(LitemallCart.PROP_NAME_deleted, false));
         return findList(query, null, context);
     }
 }

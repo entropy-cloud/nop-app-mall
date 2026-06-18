@@ -96,7 +96,6 @@ public class LitemallGoodsBizModel extends CrudBizModel<LitemallGoods> implement
         // Operators must use offSale() to retire a goods instead.
         QueryBean orderGoodsQuery = new QueryBean();
         orderGoodsQuery.addFilter(FilterBeans.eq(LitemallOrderGoods.PROP_NAME_goodsId, entity.getId()));
-        orderGoodsQuery.addFilter(FilterBeans.eq(LitemallOrderGoods.PROP_NAME_deleted, false));
         long orderGoodsCount = orderGoodsBiz.findCount(orderGoodsQuery, context);
         if (orderGoodsCount > 0) {
             throw new NopException(ERR_GOODS_HAS_ORDER_HISTORY)
@@ -150,7 +149,6 @@ public class LitemallGoodsBizModel extends CrudBizModel<LitemallGoods> implement
                                                      IServiceContext context) {
         QueryBean query = new QueryBean();
         query.addFilter(FilterBeans.eq(LitemallGoods.PROP_NAME_isOnSale, true));
-        query.addFilter(FilterBeans.eq(LitemallGoods.PROP_NAME_deleted, false));
 
         if (isHot != null) {
             query.addFilter(FilterBeans.eq(LitemallGoods.PROP_NAME_isHot, isHot));
@@ -198,7 +196,6 @@ public class LitemallGoodsBizModel extends CrudBizModel<LitemallGoods> implement
                                           IServiceContext context) {
         QueryBean query = new QueryBean();
         query.addFilter(FilterBeans.eq(LitemallGoods.PROP_NAME_isOnSale, true));
-        query.addFilter(FilterBeans.eq(LitemallGoods.PROP_NAME_deleted, false));
 
         if (keyword != null && !keyword.isEmpty()) {
             query.addFilter(or(
@@ -237,7 +234,6 @@ public class LitemallGoodsBizModel extends CrudBizModel<LitemallGoods> implement
                                                @Name("page") int page,
                                                @Name("pageSize") int pageSize) {
         QueryBean query = new QueryBean();
-        query.addFilter(FilterBeans.eq(LitemallGoods.PROP_NAME_deleted, false));
 
         if (keyword != null && !keyword.isEmpty()) {
             query.addFilter(or(

@@ -65,7 +65,6 @@ public class LitemallGrouponRulesBizModel extends CrudBizModel<LitemallGrouponRu
         QueryBean query = new QueryBean();
         query.addFilter(FilterBeans.eq(LitemallGrouponRules.PROP_NAME_status, 0));
         query.addFilter(FilterBeans.gt(LitemallGrouponRules.PROP_NAME_expireTime, now));
-        query.addFilter(FilterBeans.eq(LitemallGrouponRules.PROP_NAME_deleted, false));
 
         query.setOffset(page > 0 ? (page - 1) * pageSize : 0);
         query.setLimit(pageSize > 0 ? pageSize : 10);

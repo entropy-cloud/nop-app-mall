@@ -24,7 +24,6 @@ public class LitemallSystemBizModel extends CrudBizModel<LitemallSystem> impleme
     public String getConfig(@Name("keyName") String keyName, IServiceContext context) {
         QueryBean query = new QueryBean();
         query.addFilter(FilterBeans.eq(LitemallSystem.PROP_NAME_keyName, keyName));
-        query.addFilter(FilterBeans.eq(LitemallSystem.PROP_NAME_deleted, false));
         LitemallSystem config = findFirst(query, null, context);
         return config != null ? config.getKeyValue() : null;
     }

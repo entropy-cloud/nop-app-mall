@@ -40,7 +40,6 @@ public class LitemallTopicBizModel extends CrudBizModel<LitemallTopic> implement
                                               @Name("pageSize") int pageSize,
                                               IServiceContext context) {
         QueryBean query = new QueryBean();
-        query.addFilter(FilterBeans.eq(LitemallTopic.PROP_NAME_deleted, false));
         query.addFilter(FilterBeans.eq("status", 0));
         query.setOffset(page > 0 ? (page - 1) * pageSize : 0);
         query.setLimit(pageSize > 0 ? pageSize : 10);
