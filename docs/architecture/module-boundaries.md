@@ -95,3 +95,10 @@ The ORM model `model/app-mall.orm.xml` is the source of truth for schema (column
 - **Index sync (updated 2026-06-16):** The platform DDL template `_create_{appName}.sql.xgen` (nop-entropy `ddl.xlib` `CreateTables`) does **not** emit `CREATE INDEX`, so `_create_app-mall.sql` contains only table definitions and primary keys — **zero indexes**. All 31 ORM `<index>` definitions are instead propagated to a separate, regen-safe file `deploy/sql/{dialect}/_create_index.sql` (MySQL/Oracle uppercase column names, PostgreSQL lowercase). Run `_create_index.sql` **after** `_create_app-mall.sql` during manual production deployment. Root cause lives in the platform (`CreateTables` does not call `AddIndex`); the project-side `_create_index.sql` is the mitigation.
 - **Drift watch (non-blocking):** `_create_index.sql` covers only indexes. Other dimensions (column types, new columns) may still drift between ORM model and `_create_app-mall.sql`. Trigger to fully re-align: next full codegen DDL regeneration once the platform template emits indexes.
 - **Deleted entities:** `LitemallAdmin`, `LitemallRole`, `LitemallPermission` are absent from all three DDL files (user/role/permission handled by `nop-auth` tables customized via `app-mall-delta`).
+
+## Logical Delete Convention
+
+- `model/app-mall.orm.xml` 30 个实体配置 `useLogicalDelete="true" deleteFlagProp="deleted"`（BOOLEAN 方案 B，litemall 原始表兼容）
+- 框架在 EQL 编译阶段自动追加 `deleted = false` 过滤，覆盖所有 QueryBean / Example / 集合加载路径
+- **BizModel 与 view.xml/page.yaml 禁止手动 `addFilter(deleted, false)` 或 `<eq name="deleted" value="false"/>`**（详见 `../nop-entropy/docs-for-ai/02-core-guides/logical-deletion.md`）
+- 例外：`daoProvider().daoFor()` 绕过管道的场景（需注释说明原因）

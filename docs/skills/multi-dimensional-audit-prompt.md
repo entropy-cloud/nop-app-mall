@@ -465,6 +465,7 @@ docs/audits/{year}-{month}-{day}-{HHMM}-multi-dim-audit-{对象}-{简短标识}/
 - model/nop-auth-delta.orm.xml（delta 源真值）
 - docs/design/domain-design-guidelines.md
 - ../nop-entropy/docs-for-ai/02-core-guides/model-first-development.md
+- ../nop-entropy/docs-for-ai/02-core-guides/logical-deletion.md（逻辑删除方案 A/B 选择规则）
 - .opencode/skills/nop-database-design/SKILL.md（数据库设计规范，如存在）
 
 执行步骤：
@@ -483,6 +484,11 @@ docs/audits/{year}-{month}-{day}-{HHMM}-multi-dim-audit-{对象}-{简短标识}/
 7. 检查 model/*.api.xml 定义的接口是否与 service 实现的方法一致。
 8. 检查是否有定义了完整表结构但从未被使用的实体（死实体）。
 9. 检查已完成阶段声称消除的实体是否仍残留在模型中。
+10. **逻辑删除字段方案合规性**：
+    - 对每个 `useLogicalDelete="true"` 的实体，检查字段方案是否符合 `logical-deletion.md` 方案选择规则
+    - 默认推荐方案 A（`delVersion` BIGINT + `deleteVersionProp` 同字段）；只有数据模型已给定、不便修改的场景才用方案 B（BOOLEAN `deleted`，不设 `deleteVersionProp`）
+    - 新设计的实体直接采用方案 B（BOOLEAN）但缺乏兼容理由，记为 P2（可改进项）
+    - 既有表用方案 A 但漏配 `deleteVersionProp`（与 `deleteFlagProp` 同字段），或方案 B 错配了 `deleteVersionProp`，记为 P1
 
 输出格式：同标准发现格式。
 ```
@@ -503,6 +509,7 @@ docs/audits/{year}-{month}-{day}-{HHMM}-multi-dim-audit-{对象}-{简短标识}/
 必读文档：
 - ../nop-entropy/docs-for-ai/02-core-guides/service-layer.md
 - ../nop-entropy/docs-for-ai/02-core-guides/error-handling.md
+- ../nop-entropy/docs-for-ai/02-core-guides/logical-deletion.md（查询时不要手动过滤逻辑删除字段）
 - ../nop-entropy/docs-for-ai/00-start-here/ai-defaults.md（跨实体访问规则、反模式表）
 - docs/design/app-overview.md
 - app-mall-service/src/main/java/ 下 BizModel 类
@@ -514,6 +521,7 @@ docs/audits/{year}-{month}-{day}-{HHMM}-multi-dim-audit-{对象}-{简短标识}/
 - 公共 API（GraphQL/跨模块）：必须用 ErrorCode + NopException + .param()，错误码格式 nop.err.mall.{domain}.{specific}
 - 内部实现：可用模块异常类 + 英文字符串
 - @BizMutation 自动包裹事务，不重复加 @Transactional（除非需显式传播控制）
+- **逻辑删除字段由框架自动过滤**：实体配置了 `useLogicalDelete="true"` 后，EQL 编译阶段已自动追加 `deleted = false`（或 `delVersion = 0`），覆盖 `findPage` / `findList` / `findCount` / `findAllByQuery` 等所有 QueryBean 路径。BizModel 中**禁止**手动 `query.addFilter(FilterBeans.eq(Xxx.PROP_NAME_deleted, false))`
 
 执行步骤：
 1. 收集所有 @BizModel 类。
@@ -534,6 +542,10 @@ docs/audits/{year}-{month}-{day}-{HHMM}-multi-dim-audit-{对象}-{简短标识}/
 6. 检查事务边界：txn().afterCommit() 是否在事务上下文；是否有长事务（事务内远程调用）。
 7. 检查是否有 BizModel 方法应属于另一聚合根。
 8. 检查错误码命名是否一致（nop.err.mall.{domain}.{specific}）。
+9. **逻辑删除手动过滤反模式**（高危，必须报告为 P1）：
+   - 搜索 `PROP_NAME_deleted` / `FilterBeans.eq(...deleted...)` / `addFilter(...deleted...)` 等模式
+   - 凡是针对 `useLogicalDelete="true"` 实体的 QueryBean 手动追加 `deleted = false` 过滤，一律记为 P1：框架已自动过滤，手动追加产生冗余 SQL 条件，且会误导后来者
+   - 例外：调用 `daoProvider().daoFor()` 绕过管道的场景（应已注释说明），手动过滤可保留
 
 注：BizModel 返回实体对象是平台标准模式，不算问题。
 
@@ -630,6 +642,7 @@ docs/audits/{year}-{month}-{day}-{HHMM}-multi-dim-audit-{对象}-{简短标识}/
 
 必读文档：
 - ../nop-entropy/docs-for-ai/02-core-guides/（页面定制相关指南）
+- ../nop-entropy/docs-for-ai/02-core-guides/logical-deletion.md（grid 中不要手动过滤 deleted）
 - docs/design/app-overview.md、feature-inventory.md
 - model/*.api.xml（页面绑定的 API 契约）
 - app-mall-web/src/main/resources/_vfs/app/mall/pages/ 下所有 .view.xml
@@ -646,6 +659,10 @@ docs/audits/{year}-{month}-{day}-{HHMM}-multi-dim-audit-{对象}-{简短标识}/
 5. 检查 Delta 覆盖的页面是否用正确 x:extends/x:override。
 6. 检查是否有页面引用了不存在的实体或字段。
 7. 检查 admin 面与 mall 面是否正确分离（无共享 UI 组件越界）。
+8. **grid/form 过滤器中手动追加 `deleted = false` 反模式**（P1）：
+   - 搜索所有 `.view.xml` 中的 `<eq name="deleted" value="false"/>` / `name="deleted"` 过滤条件
+   - 实体配置了 `useLogicalDelete="true"` 后，后台 AMIS grid 的默认查询已通过 EQL 自动过滤，**不需要**在 `<filter>` 中手动追加
+   - 凡是手动追加的，一律记为 P1：与 BizModel 反模式同源
 
 注：未开始阶段（todo）的空壳 view.xml 是预期状态，不报告。已完成阶段的空壳页才是 P1/P2 发现。
 
