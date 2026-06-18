@@ -985,7 +985,7 @@ CREATE TABLE litemall_order_goods(
                     
       COMMENT ON COLUMN litemall_groupon.creator_user_time IS '开团时间';
                     
-      COMMENT ON COLUMN litemall_groupon.status IS '团购活动状态，开团未支付则0，开团中则1，开团失败则2';
+      COMMENT ON COLUMN litemall_groupon.status IS '团购活动状态';
                     
       COMMENT ON COLUMN litemall_groupon.add_time IS '创建时间';
                     
