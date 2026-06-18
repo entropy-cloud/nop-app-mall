@@ -1,0 +1,85 @@
+type: page
+title: 统计看板
+body:
+  - type: form
+    title: 查询条件
+    mode: inline
+    wrapWithPanel: false
+    body:
+      - type: input-date-range
+        name: dateRange
+        label: 时间范围
+        format: X
+      - type: button
+        label: 刷新
+        level: primary
+        actionType: reload
+        target: orderStat,userStat,goodsRank
+
+  - type: grid
+    columns:
+      - md: 6
+        body:
+          - type: service
+            name: orderStat
+            api:
+              url: '@query:LitemallOrder__getOrderStatistics'
+              data:
+                startDate: "${dateRange[0] ? dateRange[0] | date : ''}"
+                endDate: "${dateRange[1] ? dateRange[1] | date : ''}"
+              sendOn: true
+            body:
+              - type: panel
+                title: 订单统计
+                body:
+                  - type: tpl
+                    tpl: '订单总数：<b>${totalCount}</b>'
+                  - type: tpl
+                    tpl: '订单总金额：<b>¥${totalAmount}</b>'
+                  - type: tpl
+                    tpl: '待付款：${pendingCount}，已支付：${paidCount}'
+                  - type: tpl
+                    tpl: '已发货：${shippedCount}，已完成：${completedCount}，已取消：${cancelledCount}'
+      - md: 6
+        body:
+          - type: service
+            name: userStat
+            api:
+              url: '@query:LitemallOrder__getUserStatistics'
+              data:
+                startDate: "${dateRange[0] ? dateRange[0] | date : ''}"
+                endDate: "${dateRange[1] ? dateRange[1] | date : ''}"
+              sendOn: true
+            body:
+              - type: panel
+                title: 用户统计
+                body:
+                  - type: tpl
+                    tpl: '用户总数：<b>${totalUsers}</b>'
+                  - type: tpl
+                    tpl: '今日新增：<b>${newUsersToday}</b>'
+                  - type: tpl
+                    tpl: '本周新增：${newUsersThisWeek}，本月新增：${newUsersThisMonth}'
+
+  - type: service
+    name: goodsRank
+    api:
+      url: '@query:LitemallOrder__getGoodsSalesRanking'
+      data:
+        startDate: "${dateRange[0] ? dateRange[0] | date : ''}"
+        endDate: "${dateRange[1] ? dateRange[1] | date : ''}"
+        limit: 10
+      sendOn: true
+    body:
+      - type: panel
+        title: 商品销量排行 TOP10
+        body:
+          - type: table
+            source: ${data}
+            columns:
+              - name: goodsName
+                label: 商品
+              - name: salesCount
+                label: 销量
+              - name: salesAmount
+                label: 销售额

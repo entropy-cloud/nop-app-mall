@@ -196,11 +196,15 @@ site:
       displayName: ''
     links-manage:
       displayName: ''
+    mall-ad-manage:
+      displayName: ''
     mall-aftersales-manage:
       displayName: ''
     mall-brand-manage:
       displayName: ''
     mall-category-manage:
+      displayName: ''
+    mall-coupon-manage:
       displayName: ''
     mall-customer-addr:
       displayName: ''
@@ -214,13 +218,29 @@ site:
       displayName: ''
     mall-goods-list:
       displayName: ''
+    mall-groupon-activity:
+      displayName: ''
+    mall-groupon-rule:
+      displayName: ''
+    mall-issue-manage:
+      displayName: ''
+    mall-keyword-manage:
+      displayName: ''
     mall-manage:
       displayName: ''
     mall-order-manage:
       displayName: ''
     mall-search-history:
       displayName: ''
+    mall-stat-dashboard:
+      displayName: ''
+    mall-topic-manage:
+      displayName: ''
     mall-user-manage:
+      displayName: ''
+    promotion-manage:
+      displayName: ''
+    stat-manage:
       displayName: ''
     storefront:
       displayName: ''

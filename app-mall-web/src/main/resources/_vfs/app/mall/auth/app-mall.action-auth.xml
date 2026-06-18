@@ -23,7 +23,7 @@
 
                 <resource id="mall-feedback" displayName="意见反馈" orderNo="106"
                           icon="ant-design:appstore-twotone" component="AMIS"
-                          resourceType="SUBM" url="/app/mall/pages/LitemallIssue/main.page.yaml"/>
+                          resourceType="SUBM" url="/app/mall/pages/LitemallFeedback/main.page.yaml"/>
 
             </children>
         </resource>
@@ -51,13 +51,13 @@
                           icon="ant-design:appstore-twotone" component="AMIS"
                           resourceType="SUBM" url="/app/mall/pages/LitemallAftersale/all.page.yaml"/>
 
-<!--                <resource id="mall-issue-manage" displayName="通用问题" orderNo="206"-->
-<!--                          icon="ant-design:appstore-twotone" component="AMIS"-->
-<!--                          resourceType="SUBM" url="/app/mall/pages/LitemallIssue/main.page.yaml"/>-->
+                <resource id="mall-issue-manage" displayName="通用问题" orderNo="206"
+                          icon="ant-design:appstore-twotone" component="AMIS"
+                          resourceType="SUBM" url="/app/mall/pages/LitemallIssue/main.page.yaml"/>
 
-<!--                <resource id="mall-keyword-manage" displayName="关键词" orderNo="207"-->
-<!--                          icon="ant-design:appstore-twotone" component="AMIS"-->
-<!--                          resourceType="SUBM" url="/app/mall/pages/LitemallKeyword/main.page.yaml"/>-->
+                <resource id="mall-keyword-manage" displayName="关键词" orderNo="207"
+                          icon="ant-design:appstore-twotone" component="AMIS"
+                          resourceType="SUBM" url="/app/mall/pages/LitemallKeyword/main.page.yaml"/>
 
             </children>
         </resource>
@@ -77,28 +77,28 @@
             </children>
         </resource>
 
-<!--        <resource id="promotion-manage" displayName="推广管理" icon="ion:grid-outline" resourceType="TOPM"-->
-<!--                  routePath="/promotion-manage" component="layouts/default/index" orderNo="401">-->
-<!--            <children>-->
-<!--                <resource id="mall-ad-manage" displayName="广告列表" orderNo="402"-->
-<!--                          icon="ant-design:appstore-twotone" component="AMIS"-->
-<!--                          resourceType="SUBM" url="/app/mall/pages/LitemallAd/main.page.yaml"/>-->
-<!--                <resource id="mall-coupon-manage" displayName="优惠券管理" orderNo="403"-->
-<!--                          icon="ant-design:appstore-twotone" component="AMIS"-->
-<!--                          resourceType="SUBM" url="/app/mall/pages/LitemallCoupon/main.page.yaml"/>-->
-<!--                <resource id="mall-topic-manage" displayName="专题管理" orderNo="404"-->
-<!--                          icon="ant-design:appstore-twotone" component="AMIS"-->
-<!--                          resourceType="SUBM" url="/app/mall/pages/LitemallTopic/main.page.yaml"/>-->
+        <resource id="promotion-manage" displayName="推广管理" icon="ion:grid-outline" resourceType="TOPM"
+                  routePath="/promotion-manage" component="layouts/default/index" orderNo="401">
+            <children>
+                <resource id="mall-ad-manage" displayName="广告列表" orderNo="402"
+                          icon="ant-design:appstore-twotone" component="AMIS"
+                          resourceType="SUBM" url="/app/mall/pages/LitemallAd/main.page.yaml"/>
+                <resource id="mall-coupon-manage" displayName="优惠券管理" orderNo="403"
+                          icon="ant-design:appstore-twotone" component="AMIS"
+                          resourceType="SUBM" url="/app/mall/pages/LitemallCoupon/main.page.yaml"/>
+                <resource id="mall-topic-manage" displayName="专题管理" orderNo="404"
+                          icon="ant-design:appstore-twotone" component="AMIS"
+                          resourceType="SUBM" url="/app/mall/pages/LitemallTopic/main.page.yaml"/>
 
-<!--                <resource id="mall-groupon-rule" displayName="团购规则" orderNo="405"-->
-<!--                          icon="ant-design:appstore-twotone" component="AMIS"-->
-<!--                          resourceType="SUBM" url="/app/mall/pages/LitemallGrouponRules/main.page.yaml"/>-->
+                <resource id="mall-groupon-rule" displayName="团购规则" orderNo="405"
+                          icon="ant-design:appstore-twotone" component="AMIS"
+                          resourceType="SUBM" url="/app/mall/pages/LitemallGrouponRules/main.page.yaml"/>
 
-<!--                <resource id="mall-groupon-activity" displayName="团购活动" orderNo="406"-->
-<!--                          icon="ant-design:appstore-twotone" component="AMIS"-->
-<!--                          resourceType="SUBM" url="/app/mall/pages/LitemallGroupon/main.page.yaml"/>-->
-<!--            </children>-->
-<!--        </resource>-->
+                <resource id="mall-groupon-activity" displayName="团购活动" orderNo="406"
+                          icon="ant-design:appstore-twotone" component="AMIS"
+                          resourceType="SUBM" url="/app/mall/pages/LitemallGroupon/main.page.yaml"/>
+            </children>
+        </resource>
 
 <!--        <resource id="config-manage" displayName="配置管理" icon="ion:grid-outline" resourceType="TOPM"-->
 <!--                  routePath="/config-manage" component="layouts/default/index" orderNo="500">-->
@@ -122,22 +122,14 @@
 <!--            </children>-->
 <!--        </resource>-->
 
-<!--        <resource id="stat-manage" displayName="统计报表" icon="ion:grid-outline" resourceType="TOPM"-->
-<!--                  routePath="/stat-manage" component="layouts/default/index" orderNo="600">-->
-<!--            <children>-->
-<!--                <resource id="mall-stat-user" displayName="用户统计" orderNo="601"-->
-<!--                          icon="ant-design:appstore-twotone" component="AMIS"-->
-<!--                          resourceType="SUBM" url="/app/mall/pages/LitemallAd/main.page.yaml"/>-->
-
-<!--                <resource id="mall-stat-order" displayName="订单统计" orderNo="602"-->
-<!--                          icon="ant-design:appstore-twotone" component="AMIS"-->
-<!--                          resourceType="SUBM" url="/app/mall/pages/LitemallCoupon/main.page.yaml"/>-->
-
-<!--                <resource id="mall-goods-stat" displayName="商品统计" orderNo="603"-->
-<!--                          icon="ant-design:appstore-twotone" component="AMIS"-->
-<!--                          resourceType="SUBM" url="/app/mall/pages/LitemallTopic/main.page.yaml"/>-->
-<!--            </children>-->
-<!--        </resource>-->
+        <resource id="stat-manage" displayName="统计报表" icon="ion:grid-outline" resourceType="TOPM"
+                  routePath="/stat-manage" component="layouts/default/index" orderNo="600">
+            <children>
+                <resource id="mall-stat-dashboard" displayName="经营看板" orderNo="601"
+                          icon="ant-design:bar-chart-outlined" component="AMIS"
+                          resourceType="SUBM" url="/app/mall/pages/mall/stat/stat-dashboard.page.yaml"/>
+            </children>
+        </resource>
 
         <resource id="links-manage" displayName="外链管理" icon="ion:grid-outline" resourceType="TOPM"
                   routePath="/links-manage" component="layouts/default/index" orderNo="700">

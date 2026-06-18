@@ -1,6 +1,9 @@
 
 nop:
   debug: false
+  job:
+    scheduler:
+      config-path: /nop/job/conf/scheduler.yaml
   auth:
     login:
       allow-create-default-user: false

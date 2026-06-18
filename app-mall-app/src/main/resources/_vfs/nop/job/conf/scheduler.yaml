@@ -1,0 +1,56 @@
+enabled: true
+jobs:
+  - jobName: cancel-expired-orders
+    displayName: Cancel Expired Orders
+    description: Auto-cancel unpaid orders past timeout
+    trigger:
+      repeatInterval: 900000
+      repeatFixedDelay: true
+      maxExecutionCount: 0
+    invoker:
+      bean: app.mall.service.scheduler.MallJobInvoker
+      method: cancelExpiredOrders
+
+  - jobName: confirm-expired-orders
+    displayName: Confirm Expired Orders
+    description: Auto-confirm shipped orders past timeout
+    trigger:
+      repeatInterval: 3600000
+      repeatFixedDelay: true
+      maxExecutionCount: 0
+    invoker:
+      bean: app.mall.service.scheduler.MallJobInvoker
+      method: confirmExpiredOrders
+
+  - jobName: expire-coupons
+    displayName: Expire Coupons
+    description: Mark unused coupons as expired
+    trigger:
+      repeatInterval: 3600000
+      repeatFixedDelay: true
+      maxExecutionCount: 0
+    invoker:
+      bean: app.mall.service.scheduler.MallJobInvoker
+      method: expireCoupons
+
+  - jobName: expire-groupons
+    displayName: Expire Groupons
+    description: Expire overdue groupon activities
+    trigger:
+      repeatInterval: 1800000
+      repeatFixedDelay: true
+      maxExecutionCount: 0
+    invoker:
+      bean: app.mall.service.scheduler.MallJobInvoker
+      method: expireGroupons
+
+  - jobName: expire-comment-window
+    displayName: Expire Comment Window
+    description: Close comment window for overdue order goods
+    trigger:
+      repeatInterval: 3600000
+      repeatFixedDelay: true
+      maxExecutionCount: 0
+    invoker:
+      bean: app.mall.service.scheduler.MallJobInvoker
+      method: expireCommentWindow
