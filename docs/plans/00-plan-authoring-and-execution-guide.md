@@ -83,6 +83,7 @@ If unsure, use a full plan. If the task is clearly docs-only and the real risk i
     - **Independent subagent adversarial review.** The plan audit must use an independent subagent (not the same session/context that wrote the plan). The reviewer must challenge the plan against live repo evidence, not trust the plan's own claims. Audit scope includes: baseline accuracy, goal clarity, dependency ordering, missing considerations, protected-area compliance, Reference Docs completeness, and anti-slacking compliance.
     - **Consensus before implementation.** If the audit finds blockers or major objections, revise the plan and re-audit. Repeat until the independent reviewer reports no blocker and no major objection. Two consecutive clean audit rounds after the latest substantive revision constitute consensus. Only then may implementation begin.
     - Record normal plan-audit and closure-audit evidence inside the plan by default.
+    - **Closure audit mandatory auto-trigger.** After the last implementation slice's verification passes, the implementing agent MUST launch an independent subagent (different session/context) to perform closure audit before setting `Plan Status: completed`. Do not self-certify closure. Do not check off `closure audit was independent` unless a different agent performed the review. The closure audit must: (a) re-verify all `Exit Criteria` and `Closure Gates` against live repo evidence, (b) confirm all execution items are ticked or properly deferred, (c) confirm verification commands produce baseline-consistent results, (d) confirm text consistency across status/phases/gates/log, (e) record its verdict and task id in the plan's `Closure` section under `Closure Audit Evidence`. If the audit finds blockers, reopen the plan.
     - Do not create `docs/audits/` files for ordinary plan-audit or closure-audit failures; revise the plan or work and audit again.
     - Use `docs/audits/` only for specialized, complex, disputed, reusable, or future-replay-worthy audit records.
     - For docs-only `analysis / audit` work, one sanity-check review of the brief is usually enough when a brief exists at all.
@@ -234,7 +235,7 @@ Exit Criteria:
 - [ ] each phase has `Required Skill` listed, and Nop-platform phases do not write `none` without justification
 - [ ] skill loading verification: each phase scanned available skills, loaded all matching skills, read ALL mandatory docs listed in skill routing tables (with doc paths listed in the skill loading gate item as evidence), and selfchecked after each method/class (no anti-patterns in the output)
 - [ ] text consistency verified: status, phases, gates, and log all agree
-- [ ] closure audit was independent
+- [ ] closure audit was performed by a different agent/session than implementation
 - [ ] closure evidence exists in files
 
 ## Deferred But Adjudicated
@@ -248,11 +249,14 @@ Exit Criteria:
 
 ## Closure
 
+<!-- IMPORTANT: Closure audit MUST be performed by an independent subagent (different session/context).
+     Do NOT fill this section yourself — leave it for the dedicated closure auditor. -->
+
 Status Note: <why the plan can close>
 
 Closure Audit Evidence:
 
-- Reviewer / Agent: <independent reviewer or cold-replay proxy>
+- Reviewer / Agent: <independent reviewer or cold-replay proxy — MUST NOT be the implementing agent>
 - Evidence: <task id / log link / walkthrough record; link audit file only when separately justified>
 
 Follow-up:

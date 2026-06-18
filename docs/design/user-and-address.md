@@ -40,7 +40,7 @@
 | `lastLoginTime` | datetime | 最近一次登录时间 | — |
 | `lastLoginIp` | varchar(63) | 最近一次登录 IP | — |
 | `userLevel` | int | 用户等级 | mall/user-level |
-| `sessionKey` | varchar(100) | 微信会话 KEY（Phase 14 使用） | — |
+| `sessionKey` | varchar(100) | 微信会话 KEY（预留字段，微信登录当前不在产品范围内） | — |
 
 **不需要添加的字段（已由 NopAuthUser 覆盖）：**
 
@@ -111,8 +111,8 @@
 
 ### 附加登录渠道
 
-- 微信小程序登录和自动注册属于集成能力（Phase 14）。
-- 微信 `openid` 存储在 `NopAuthUser.openId` 字段。
+- 微信小程序登录和自动注册不在当前产品范围内（见 `docs/backlog/implementation-roadmap.md` Phase 1 明确「不在范围内：微信登录、外部登录渠道」）。产品定位为 H5/Web 商城，未交付微信小程序前端；Phase 14 仅覆盖微信支付（Native 扫码），不含微信登录。
+- `NopAuthUser.openId` 与扩展字段 `sessionKey` 作为预留保留，未来启用微信登录时可直接复用，无需再改模型。
 
 ## 地址管理
 
