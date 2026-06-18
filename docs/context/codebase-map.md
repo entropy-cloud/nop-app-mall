@@ -10,17 +10,21 @@ Keep it current enough to route common work. Do not turn it into a full architec
 
 | Area              | Path                                        | Notes                                              | Last Verified | Confidence |
 | ----------------- | ------------------------------------------- | -------------------------------------------------- | ------------- | ---------- |
-| Frontend app      | `app-mall-web/src/main/resources/`          | AMIS JSON views in `_vfs/app/mall/pages/`          | 2026-06-02    | high       |
-| Backend app entry | `app-mall-app/`                             | Quarkus uber-jar, `quarkus-maven-plugin`           | 2026-06-02    | high       |
-| API layer         | `app-mall-api/src/main/java/`               | External API interfaces                            | 2026-06-02    | high       |
-| Service layer     | `app-mall-service/src/main/java/`           | BizModel classes, business logic                   | 2026-06-02    | high       |
-| DAO layer         | `app-mall-dao/src/main/java/`               | Entity classes, ORM mappers                        | 2026-06-02    | high       |
-| Code generation   | `app-mall-codegen/src/main/java/`           | Code generator from XML models                     | 2026-06-02    | high       |
-| Tests             | `*/src/test/java/`                          | Unit tests per module                              | 2026-06-02    | medium     |
-| Config            | `app-mall-app/src/main/resources/`          | Quarkus config, application.yaml                   | 2026-06-02    | high       |
-| SQL deploy        | `deploy/sql/`                               | MySQL, PostgreSQL, Oracle DDL scripts              | 2026-06-02    | high       |
-| Engineering tools | `tools/`                                    | Node.js scripts for docs/code quality checks       | 2026-06-02    | medium     |
-| XML models        | `model/app-mall.orm.xml`, `model/app-mall.api.xml`, `model/nop-auth-delta.orm.xml` | ORM, API, and delta code generation source | 2026-06-02    | high       |
+| Frontend app      | `app-mall-web/src/main/resources/`          | AMIS JSON views in `_vfs/app/mall/pages/`          | 2026-06-17    | high       |
+| Backend app entry | `app-mall-app/`                             | Quarkus uber-jar, `quarkus-maven-plugin`           | 2026-06-17    | high       |
+| API layer         | `app-mall-api/src/main/java/`               | External API interfaces                            | 2026-06-17    | high       |
+| Service layer     | `app-mall-service/src/main/java/`           | BizModel classes, business logic                   | 2026-06-17    | high       |
+| DAO layer         | `app-mall-dao/src/main/java/`               | Entity classes, ORM mappers                        | 2026-06-17    | high       |
+| Code generation   | `app-mall-codegen/src/main/java/`           | Code generator from XML models                     | 2026-06-17    | high       |
+| Tests             | `app-mall-service/src/test/java/`           | Unit/integration tests via IGraphQLEngine           | 2026-06-17    | high       |
+| E2E tests         | `e2e/tests/`                                | Playwright TypeScript storefront smoke tests        | 2026-06-17    | high       |
+| Config            | `app-mall-app/src/main/resources/`          | Quarkus config, application.yaml                   | 2026-06-17    | high       |
+| SQL deploy        | `deploy/sql/`                               | MySQL, PostgreSQL, Oracle DDL scripts              | 2026-06-17    | high       |
+| Engineering tools | `tools/`                                    | Node.js scripts for docs/code quality checks       | 2026-06-17    | medium     |
+| XML models        | `model/app-mall.orm.xml`, `model/app-mall.api.xml`, `model/nop-auth-delta.orm.xml` | ORM, API, and delta code generation source | 2026-06-17    | high       |
+| Delta module      | `app-mall-delta/`                           | Overrides nop-auth via delta mechanism              | 2026-06-17    | high       |
+| WeChat Pay module | `app-mall-wx/`                              | WxPayServiceImpl, WxPayNotifyResource              | 2026-06-17    | high       |
+| Meta module       | `app-mall-meta/`                            | i18n, xmeta generated resources                     | 2026-06-17    | high       |
 
 ## Common Change Routes
 

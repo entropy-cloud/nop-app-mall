@@ -250,6 +250,11 @@ docs/audits/{year}-{month}-{day}-{HHMM}-multi-dim-audit-{对象}-{简短标识}/
 8. 初审输出只是线索，不是最终事实；最终结论必须经过独立复核。
 9. 如果某条发现看起来像历史上的高频误报模式，必须明确写出"为什么这次不是同类误报"。
 10. 区分"已完成阶段"与"未开始阶段"。未开始阶段（todo）的空壳实现（如 stub BizModel、空 view.xml）是预期状态，不报告；已完成阶段（done）的空壳才是问题。
+11. 如果发现 `roadmap`、`project-context`、`codebase-map`、`docs/design/*` 与 live code 漂移，不能只把它记为普通文档问题；必须同时判断它是否已经破坏了 `done` / `completed` / `current baseline` 的可信度。
+12. 如果发现某 Phase 被虚标为 `done`，最终汇总必须同时提供：
+   - 需要处置的状态可信度问题
+   - 必须修改或审议的 owner docs / roadmap 文件
+   - 对应 remediation plan / adjudication 责任
 
 严重程度判级（针对应用层）：
 - P0: 当前已构成错误行为、资金/数据完整性风险、安全违约、或违反 AI 阻断条件（见 project-context.md 的支付/数据删除/XML 模型/数据库 schema 保护区域）。
@@ -324,6 +329,7 @@ docs/audits/{year}-{month}-{day}-{HHMM}-multi-dim-audit-{对象}-{简短标识}/
 4. **复核结论引用发现编号**：不独立重写，引用上方已有发现编号。
 5. **最终保留项有文件路径和严重程度**：不是纯文字列表。
 6. **零发现维度也需说明检查范围**：列出读过的关键文件和检查过什么，不能只写"零发现"。
+7. **若保留项包含状态虚标、closure 证据造假或高频文档漂移**：`summary.md` 必须单列"可信度处置"段，明确后续需要通过哪个 plan / adjudication 来回退、冻结或重审相关 `done/completed` 结论。
 
 ---
 
@@ -934,6 +940,8 @@ docs/audits/{year}-{month}-{day}-{HHMM}-multi-dim-audit-{对象}-{简短标识}/
 ### 单阶段闭合审计
 
 优先维度：01, 09, 10, 11, 13（需求/域逻辑/验证/回归/文档）
+
+补充规则：若维度 12 或维度 13 发现高频文档漂移、状态虚标、closure audit 虚假勾选，则单阶段闭合审计不得把这些问题当作已关闭；必须把它们路由到明确的 remediation plan / adjudication 中。
 
 ### 变更集审计（某次改动）
 

@@ -58,6 +58,16 @@
 - order price：叠加运费与优惠后的支付前金额
 - actual price：用户最终需要支付的金额
 
+### 计算公式
+
+订单提交时按以下公式计算各价格构件：
+
+- `goods price` = 所有结算项 SKU 当前零售价 × 数量的总和（使用提交时的实时价格，不沿用购物车快照）
+- `order price` = `goods price` + `freight price` - `coupon price`
+- `actual price` = `order price` - `integral price` - `groupon price`
+
+其中 `coupon price` 受券范围校验（全场/类目/指定商品）约束，`groupon price` 仅在团购成功后成立。这些公式的定义以 `model/app-mall.orm.xml` 字段注释和 `LitemallOrderBizModel.submit()` 实现为准。
+
 ### 运费规则
 
 - 运费策略统一配置。

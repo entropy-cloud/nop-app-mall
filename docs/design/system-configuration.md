@@ -95,6 +95,13 @@
 - 团购过期处理
 - 评价窗口过期处理
 
+### 技术装配
+
+- 调度引擎采用 `nop-job-local`（本地内存调度器，非分布式）
+- 5 个定时任务通过 `_vfs/nop/job/conf/scheduler.yaml` 注册，绑定 `MallJobInvoker` 的 5 个方法
+- `application.yaml` 配置 `nop.job.scheduler.config-path` 指向调度配置
+- 调度频率：cancelExpiredOrders=15min, confirmExpiredOrders=1h, expireCoupons=1h, expireGroupons=30min, expireCommentWindow=1h
+
 ## 管理员操作日志
 
 ### 业务角色
@@ -124,6 +131,13 @@
 - 待处理订单工作量
 - 商品与库存汇总
 - 用户增长与活跃度
+
+### 技术装配
+
+- 采用 AMIS chart 组件 + 现有 GraphQL 统计 API（`getOrderStatistics`/`getGoodsSalesRanking`/`getUserStatistics`），未引入 nop-report 引擎
+- 后台统计看板页面：`app-mall-web/.../mall/stat/stat-dashboard.page.yaml`
+- 后台菜单入口：`stat-manage`（`app-mall.action-auth.xml` 已开放）
+- 复杂报表导出（PDF/Excel）需 nop-report 引擎，当前不在范围内
 
 ### 业务规则
 

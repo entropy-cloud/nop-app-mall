@@ -44,7 +44,7 @@ Rule:
 | Build                     | `./mvnw clean package -DskipTests`                                                                                       |
 | Lint / static check       | `none`                                                                                                                   |
 | Unit tests                | `./mvnw test`                                                                                                            |
-| E2E / integration tests   | `none`                                                                                                                   |
+| E2E / integration tests   | `cd e2e && npx playwright test`                                                                                          |
 
 ## AI Block Conditions
 

@@ -80,9 +80,9 @@ Define the main code ownership boundaries for `nop-app-mall`.
 
 ## Test Ownership
 
-- Tests live in each module's `src/test/java/`
-- Integration tests in `app-mall-app/src/test/`
-- No E2E test framework currently configured
+- Unit/integration tests live in `app-mall-service/src/test/java/` (service-layer BizModel tests via IGraphQLEngine)
+- Other modules have per-module `src/test/java/` when needed
+- E2E tests in `e2e/` (Playwright, TypeScript): `e2e/tests/*.spec.ts` — storefront page rendering, auth, app startup smoke tests
 
 ## Rule
 

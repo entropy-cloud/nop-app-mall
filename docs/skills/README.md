@@ -4,6 +4,33 @@ Use this directory for reusable prompts and workflow playbooks.
 
 These are not one-off chat messages. They are reusable repo memory.
 
+## Skill Sources
+
+This project has two skill sources, each with a distinct role:
+
+| Source | Location | Purpose | Loaded by |
+|--------|----------|---------|-----------|
+| Implementation skills | `.opencode/skills/*/SKILL.md` | Nop platform development patterns, code generation, testing, debugging, ORM modeling, Git workflows, frontend/backend dev | opencode `skill` tool (single source of truth for "available skills") |
+| Audit/review prompts | `docs/skills/*.md` (this directory) | Document auditing, plan auditing, closure auditing, code quality review, refactor discovery | Manual reference or subagent prompt |
+
+**The `.opencode/skills/` directory is the authoritative "available skills list"** referenced by `AGENTS.md` Mandatory Skill Loading rule. The table below covers only the audit/review prompts in this directory.
+
+## Current Implementation Skills (`.opencode/skills/`)
+
+| Skill | Use when |
+|-------|----------|
+| `nop-backend-dev` | BizModel / IBiz / Processor / ErrorCode development |
+| `nop-frontend-dev` | AMIS view.xml / page.yaml frontend development |
+| `nop-testing` | JunitAutoTestCase / IGraphQLEngine / snapshot testing |
+| `nop-orm-modeler` | ORM model creation, modification, validation |
+| `nop-database-design` | Database/table design conventions |
+| `nop-codegen-master` | nop-cli gen project scaffolding |
+| `nop-file-converter` | XDSL model file format conversion |
+| `nop-debugging` | Systematic debugging for bugs, test failures |
+| `nop-git-master` | Git commit, rebase, history search |
+| `nop-git-worktree` | Git bare repo and worktree management |
+| `nop-deep-interview` | Socratic requirement clarification |
+
 Skills should primarily capture reusable work methods, review methods, or audit methods. Do not use a skill as a substitute for requirement truth, design truth, or architecture truth.
 
 A skill library is not the attractor. Without routing through `AGENTS.md`, `docs/index.md`, relevant requirements, and owner docs, a large skill library usually degenerates into structured vibe coding.

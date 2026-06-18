@@ -75,6 +75,15 @@ Check for:
 - no in-scope item was downgraded to a vague follow-up
 - verification failures are not being treated as non-blocking without explicit adjudication
 
+Additional rule for this project:
+
+- if an audit finds roadmap status drift, owner-doc drift, or document-code inconsistency in a high-frequency routing file (`docs/context/*`, `docs/backlog/implementation-roadmap.md`, `docs/design/*`), the finding must not stay as chat-only advice. It must be routed into files through one of the normal governance paths:
+  - update an existing remediation plan, or
+  - create a remediation plan, or
+  - record an explicit adjudication in the owning plan/roadmap/docs file
+
+- status changes in `docs/backlog/implementation-roadmap.md` remain plan-lifecycle decisions. An audit may prove the current status is not credible, but the roadmap status itself should be changed when the corresponding remediation plan executes or records the adjudicated rollback.
+
 ## Output Rule
 
 Plan audit and closure audit results should be written back into the corresponding plan file by default.
