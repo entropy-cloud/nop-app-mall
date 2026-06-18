@@ -1,6 +1,6 @@
 # Implementation Roadmap
 
-> Last Updated: 2026-06-15
+> Last Updated: 2026-06-18
 > Source: `docs/requirements/commercial-baseline.md`, `docs/design/*.md`
 
 ## Purpose
@@ -27,9 +27,9 @@
 - 8. 优惠券体系: `done`
 - 9. 团购: `done`
 - 10. 内容营销与反馈: `done`
-- 11. 系统运营与定时任务: `done`
+- 11. 系统运营与定时任务: `done`（nop-job-local 调度装配已引入，5 个定时任务自动执行）
 - 12. 通知系统: `done`
-- 13. 报表与统计: `done`
+- 13. 报表与统计: `done`（AMIS chart 看板 + 3 统计 API + SQL 数据集）
 - 14. 微信支付集成: `done`
 
 ## Status Values
@@ -61,16 +61,18 @@
 ## Current Baseline
 
 **已有实现：**
-- ORM 模型（35 实体，含字典、关系、i18n）
-- 全部实体的代码生成脚手架（Entity、BizModel stub、API interface、I/O bean、generated view、custom view stub）
-- `LitemallGoodsBizModel`：关键字查询 hook、保存/更新时的零售价同步和购物车同步
-- `LitemallAftersaleBizModel`：批量审核、退款（含 PayService 调用、SMS 通知、库存回补）
-- `NopAuthUserExBizModel`（delta）：日志记录、extAction1 查询
-- `PayService` 微信支付集成（app-mall-wx 模块）：Native 扫码下单、支付回调、退款
-- 4 个测试类（Goods integration、Cart aggregate、Order aggregate、PayService BizModel）
-- Admin 后台基础页面框架（AMIS view.xml，大部分为继承默认值）
+- ORM 模型（32 活跃实体，含字典、关系、i18n；已消除 LitemallUser/Admin/Role/Permission/UserRole）
+- 全部实体的代码生成脚手架（Entity、BizModel、API interface、I/O bean、generated view、custom view stub）
+- 商城前台 25+ 页面（首页、分类、商品详情、购物车、结算、支付、订单、地址、搜索、专题、团购、优惠券、收藏/足迹、售后、反馈/FAQ）
+- 订单全流程（submit→pay→ship→confirm→cancel/refund/aftersale）含状态机闭环
+- 微信支付集成（app-mall-wx 模块：Native 扫码下单、支付回调、退款；含示例模式保底）
+- 31 Java 测试类 + 38 e2e 用例（Playwright storefront 冒烟）
+- Admin 后台管理页面（订单/商品/售后/团购/优惠券/广告/专题/反馈等实体管理 + 业务按钮）
+- Delta 定制（app-mall-delta：注册 signUp、密码重置、注册赠券、profile 管理）
 
-**核心缺口：** 用户注册 Delta（需消除 LitemallUser）、地址管理、优惠券/团购体系、搜索、定时任务、通知、报表
+**Phase 11/13 partial 说明：**
+- Phase 11：系统配置/日志/公告/文件已交付；`nop-job` 调度引擎未引入，5 个定时方法（cancelExpiredOrders/confirmExpiredOrders/expireCoupons/expireGroupons/commentWindowExpire）仅有手动 BizMutation 入口，无自动调度装配
+- Phase 13：3 个统计 API（getOrderStatistics/getGoodsSalesRanking/getUserStatistics）+ SQL 数据集已交付；`nop-report` 引擎未引入，无看板模板和导出能力
 
 ---
 
@@ -456,23 +458,22 @@ graph TD
 
 ## Entity Coverage
 
-35 个 ORM 实体：
+32 个活跃 ORM 实体（4 个已消除：LitemallUser/Admin/Role/Permission/UserRole 由 nop-auth 覆盖）：
 
 | 实体 | Phase | 备注 |
 |------|-------|------|
-| LitemallUser | 1 | Delta 扩展 NopAuthUser，原实体消除 |
 | LitemallAddress | 3 | |
 | LitemallRegion | 3 | SQL seed |
 | LitemallCategory | 2 | |
 | LitemallBrand | 2 | |
-| LitemallGoods | 2 | 已有部分逻辑 |
+| LitemallGoods | 2 | |
 | LitemallGoodsProduct | 2 | |
 | LitemallGoodsSpecification | 2 | |
 | LitemallGoodsAttribute | 2 | |
 | LitemallCart | 4 | |
 | LitemallOrder | 5 | |
 | LitemallOrderGoods | 5 | |
-| LitemallAftersale | 5c | 已有部分逻辑 |
+| LitemallAftersale | 5c | |
 | LitemallKeyword | 6 | |
 | LitemallSearchHistory | 7 | |
 | LitemallCollect | 7 | |
@@ -486,15 +487,12 @@ graph TD
 | LitemallAd | 10 | |
 | LitemallIssue | 10 | |
 | LitemallFeedback | 10 | |
-| LitemallSystem | 11 | 评估是否迁移到 NopSysVariable |
-| LitemallStorage | 11 | 评估是否迁移到 nop-integration-file-* |
+| LitemallSystem | 11 | |
+| LitemallStorage | 11 | |
 | LitemallNotice | 11 | |
 | LitemallNoticeAdmin | 11 | |
 | LitemallLog | 11 | |
-| LitemallAdmin | — | 消除：nop-auth NopAuthUser 覆盖 |
-| LitemallRole | — | 消除：nop-auth NopAuthRole 覆盖 |
-| LitemallPermission | — | 消除：nop-auth NopAuthResource 覆盖 |
-| LitemallUserRole | — | 消除：nop-auth NopAuthUserRole 覆盖 |
+| LitemallResetCode | 1 | 密码重置验证码 |
 
 ## Cross-Cutting
 

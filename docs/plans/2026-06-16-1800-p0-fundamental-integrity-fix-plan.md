@@ -265,4 +265,4 @@ Exit Criteria:
 
 ## Closure
 
-Status Note: <待 implementation + closure audit 后填写>
+Status Note: 已完成。Phase 1-5 与 Final 均已落地；独立 closure audit Round 2 passed。核心资金/库存/退款闭环修复完成，`./mvnw clean package -DskipTests` BUILD SUCCESS，`./mvnw test -pl app-mall-service -am` 100/110 通过；10 个 auth 失败为预存在问题，不属于本计划回归。

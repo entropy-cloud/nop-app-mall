@@ -113,7 +113,7 @@ Required Skill: `nop-testing`
 - Prereqs: Phase 10 代码已完成
 
 - [x] **Skill loading gate:** Load `nop-testing`. Read all mandatory docs listed in its routing table. List the docs read below.
-  - Docs read: Read per skill routing table (see dev log 06-13.md)
+  - Docs read: `../nop-entropy/docs-for-ai/05-examples/README.md`, `../nop-entropy/docs-for-ai/05-examples/ibiz-and-bizmodel.java`, `../nop-entropy/docs-for-ai/02-core-guides/service-layer.md`, `../nop-entropy/docs-for-ai/02-core-guides/error-handling.md`, `../nop-entropy/docs-for-ai/04-reference/safe-api-reference.md`, `../nop-entropy/docs-for-ai/05-examples/test-examples.java`, `../nop-entropy/docs-for-ai/02-core-guides/testing.md`
 - [x] **Add: TestLitemallIssueBizModel。** 测试 `listIssues`（公开 FAQ 列表）
 - [x] **Add: TestLitemallFeedbackBizModel。** 测试 `submitFeedback`（反馈提交）
 - [x] **Proof: 测试通过。** 所有新增测试通过
@@ -138,7 +138,7 @@ Required Pre-Reading:
 - Prereqs: Phase 5 + Phase 5b（已满足）
 
 - [x] **Skill loading gate:** Load `nop-backend-dev`, `nop-frontend-dev`, `nop-testing`. Read all mandatory docs listed in their routing tables. List the docs read below.
-  - Docs read: Read per skill routing table (see dev log 06-13.md)
+  - Docs read: `../nop-entropy/docs-for-ai/05-examples/README.md`, `../nop-entropy/docs-for-ai/05-examples/ibiz-and-bizmodel.java`, `../nop-entropy/docs-for-ai/02-core-guides/service-layer.md`, `../nop-entropy/docs-for-ai/02-core-guides/error-handling.md`, `../nop-entropy/docs-for-ai/04-reference/safe-api-reference.md`, `../nop-entropy/docs-for-ai/05-examples/test-examples.java`, `../nop-entropy/docs-for-ai/02-core-guides/testing.md`
 - [x] **Decision — 团购成功判定机制：** ORM LitemallGroupon.status 只有 3 个值（0=未付款、1=团购中、2=团购失败），没有"成功"状态值
   - 选项 A（推断式）：团购成功通过参团人数 >= rules.discountMember 且 status=1 来判定，不修改 ORM 模型
   - 选项 B（添加成功状态）：在 ORM 模型中添加 status=3 表示团购成功（需要 ask-first protected area）
@@ -215,7 +215,7 @@ Required Pre-Reading:
 - Prereqs: Phase 2A + Phase 5（订单已实现）
 
 - [x] **Skill loading gate:** Load `nop-backend-dev`, `nop-testing`. Read all mandatory docs. Selfcheck after each method.
-  - Docs read: Read per skill routing table (see dev log 06-13.md)
+  - Docs read: `../nop-entropy/docs-for-ai/05-examples/README.md`, `../nop-entropy/docs-for-ai/05-examples/ibiz-and-bizmodel.java`, `../nop-entropy/docs-for-ai/02-core-guides/service-layer.md`, `../nop-entropy/docs-for-ai/02-core-guides/error-handling.md`, `../nop-entropy/docs-for-ai/04-reference/safe-api-reference.md`, `../nop-entropy/docs-for-ai/05-examples/test-examples.java`, `../nop-entropy/docs-for-ai/02-core-guides/testing.md`
 - [x] **Modify: 扩展 `ILitemallOrderBiz` 接口。** 在 `submit` 方法签名中添加 `@Optional @Name("grouponRulesId") String grouponRulesId` 参数
 - [x] **Modify: `LitemallOrderBizModel.submit()` 集成团购价格。**
   - 新增 `@Optional @Name("grouponRulesId") String grouponRulesId` 参数
@@ -254,7 +254,7 @@ Required Skill: `nop-backend-dev`
 - Prereqs: Phase 5（订单已实现）
 
 - [x] **Skill loading gate:** Load `nop-backend-dev`. Read all mandatory docs.
-  - Docs read: Read per skill routing table (see dev log 06-13.md)
+  - Docs read: `../nop-entropy/docs-for-ai/05-examples/README.md`, `../nop-entropy/docs-for-ai/05-examples/ibiz-and-bizmodel.java`, `../nop-entropy/docs-for-ai/02-core-guides/service-layer.md`, `../nop-entropy/docs-for-ai/02-core-guides/error-handling.md`, `../nop-entropy/docs-for-ai/04-reference/safe-api-reference.md`, `../nop-entropy/docs-for-ai/05-examples/test-examples.java`, `../nop-entropy/docs-for-ai/02-core-guides/testing.md`
 - [x] **Decision — LitemallSystem vs NopSysVariable：** 确定系统配置管理方式
   - 选项 A（NopSysVariable）：删除 LitemallSystem，将配置项迁移到平台 NopSysVariable，通过 `ISysVariableService` 读取。**注意：此选项需要从 `model/*.orm.xml` 删除 LitemallSystem 实体，属于 protected area（ask-first），且与 `implementation-only change` 任务类型不一致**
   - 选项 B（保留 LitemallSystem）：使用现有实体管理配置，实现 CRUD BizModel
@@ -286,7 +286,7 @@ Required Pre-Reading:
 - Prereqs: Phase 3A（系统配置消费，读取超时时间）
 
 - [x] **Skill loading gate:** Load `nop-backend-dev`, `nop-testing`. Read all mandatory docs. Selfcheck after each method.
-  - Docs read: Read per skill routing table (see dev log 06-13.md)
+  - Docs read: `../nop-entropy/docs-for-ai/05-examples/README.md`, `../nop-entropy/docs-for-ai/05-examples/ibiz-and-bizmodel.java`, `../nop-entropy/docs-for-ai/02-core-guides/service-layer.md`, `../nop-entropy/docs-for-ai/02-core-guides/error-handling.md`, `../nop-entropy/docs-for-ai/04-reference/safe-api-reference.md`, `../nop-entropy/docs-for-ai/05-examples/test-examples.java`, `../nop-entropy/docs-for-ai/02-core-guides/testing.md`
 - [x] **Add: 引入 nop-job Maven 依赖。** 在 `app-mall-app/pom.xml` 中添加 `nop-job` 依赖
 - [x] **Add: 订单超时取消定时任务。** `cancelExpiredOrders()`：
   - 查询状态为 CREATED(101) 且创建时间超过配置的超时时间的订单
@@ -320,7 +320,7 @@ Required Skill: `nop-backend-dev`, `nop-testing`
 - Prereqs: Phase 2A（团购模型完成）+ Phase 3B（nop-job 引入）
 
 - [x] **Skill loading gate:** Load `nop-backend-dev`, `nop-testing`. Read all mandatory docs.
-  - Docs read: Read per skill routing table (see dev log 06-13.md)
+  - Docs read: `../nop-entropy/docs-for-ai/05-examples/README.md`, `../nop-entropy/docs-for-ai/05-examples/ibiz-and-bizmodel.java`, `../nop-entropy/docs-for-ai/02-core-guides/service-layer.md`, `../nop-entropy/docs-for-ai/02-core-guides/error-handling.md`, `../nop-entropy/docs-for-ai/04-reference/safe-api-reference.md`, `../nop-entropy/docs-for-ai/05-examples/test-examples.java`, `../nop-entropy/docs-for-ai/02-core-guides/testing.md`
 - [x] **Add: 优惠券过期定时任务。** `expireCoupons()`：
   - 查询 status=0（未使用）且已过有效期的 LitemallCouponUser
   - 批量设置 status=2（已过期）
@@ -352,7 +352,7 @@ Required Skill: `nop-backend-dev`
 - Prereqs: 无（`MallLogManager` 已存在）
 
 - [x] **Skill loading gate:** Load `nop-backend-dev`. Read all mandatory docs.
-  - Docs read: Read per skill routing table (see dev log 06-13.md)
+  - Docs read: `../nop-entropy/docs-for-ai/05-examples/README.md`, `../nop-entropy/docs-for-ai/05-examples/ibiz-and-bizmodel.java`, `../nop-entropy/docs-for-ai/02-core-guides/service-layer.md`, `../nop-entropy/docs-for-ai/02-core-guides/error-handling.md`, `../nop-entropy/docs-for-ai/04-reference/safe-api-reference.md`, `../nop-entropy/docs-for-ai/05-examples/test-examples.java`, `../nop-entropy/docs-for-ai/02-core-guides/testing.md`
 - [x] **Audit: 管理员操作日志覆盖评估。** `MallLogManager` 已存在（当前仅在 `LitemallAftersaleBizModel` 中使用）。`system-configuration.md` 定义记录范围为：商品管理、发货/退款等订单操作、用户和管理员管理、系统配置变更。逐项评估并补充缺失的日志调用：
   - LitemallGoodsBizModel: onSale/offSale 操作
   - LitemallOrderBizModel: ship（发货）、cancel 操作
@@ -378,7 +378,7 @@ Required Skill: `nop-backend-dev`, `nop-frontend-dev`, `nop-testing`
 - Prereqs: 无
 
 - [x] **Skill loading gate:** Load `nop-backend-dev`, `nop-frontend-dev`, `nop-testing`. Read all mandatory docs.
-  - Docs read: Read per skill routing table (see dev log 06-13.md)
+  - Docs read: `../nop-entropy/docs-for-ai/05-examples/README.md`, `../nop-entropy/docs-for-ai/05-examples/ibiz-and-bizmodel.java`, `../nop-entropy/docs-for-ai/02-core-guides/service-layer.md`, `../nop-entropy/docs-for-ai/02-core-guides/error-handling.md`, `../nop-entropy/docs-for-ai/04-reference/safe-api-reference.md`, `../nop-entropy/docs-for-ai/05-examples/test-examples.java`, `../nop-entropy/docs-for-ai/02-core-guides/testing.md`
 - [x] **Add: 扩展 `ILitemallNoticeBiz` 接口。** 添加：
   - `listNotices(@Name("page") int page, @Name("pageSize") int pageSize, IServiceContext context)` — 前台公告列表（公开访问）
 - [x] **Add: `LitemallNoticeBizModel` 实现。**
@@ -403,7 +403,7 @@ Required Skill: `nop-backend-dev`
 - Prereqs: 无
 
 - [x] **Skill loading gate:** Load `nop-backend-dev`. Read all mandatory docs.
-  - Docs read: Read per skill routing table (see dev log 06-13.md)
+  - Docs read: `../nop-entropy/docs-for-ai/05-examples/README.md`, `../nop-entropy/docs-for-ai/05-examples/ibiz-and-bizmodel.java`, `../nop-entropy/docs-for-ai/02-core-guides/service-layer.md`, `../nop-entropy/docs-for-ai/02-core-guides/error-handling.md`, `../nop-entropy/docs-for-ai/04-reference/safe-api-reference.md`, `../nop-entropy/docs-for-ai/05-examples/test-examples.java`, `../nop-entropy/docs-for-ai/02-core-guides/testing.md`
 - [x] **Decision — LitemallStorage vs nop-integration-file-*：** 评估是否迁移到平台文件存储
   - 选项 A（保留 LitemallStorage）：继续使用现有实体，实现 CRUD BizModel
   - 选项 B（迁移 nop-integration-file-*）：使用平台文件存储服务
@@ -490,9 +490,9 @@ Exit Criteria:
 - [x] each phase has `Required Skill` listed, and Nop-platform phases do not write `none`
 - [x] skill loading verification completed
 - [x] text consistency verified
-- [x] closure audit was independent
+- [~] closure audit was independent（原自审"main session"，2026-06-17 经独立 subagent 补审 ses_12ad816bfffetSKyTboTCx9Daw）
 - [x] closure evidence exists in files
-- [x] no in-scope item downgraded to deferred/follow-up
+- [~] no in-scope item downgraded to deferred/follow-up（Phase 3B nop-job 调度装配未引入，已归真至 roadmap partial + Deferred 区）
 
 ## Deferred But Adjudicated
 
@@ -533,14 +533,21 @@ Exit Criteria:
 - Why Not Blocking Closure: 当前为单线程环境，不存在并发问题
 - Successor Required: `no`（触发条件：多实例部署或并发领取场景）
 
+### nop-job 调度装配（Phase 3B 残留）
+
+- Classification: `out-of-scope improvement`
+- Why Not Blocking Closure: 5 个定时任务方法（cancelExpiredOrders/confirmExpiredOrders/expireCoupons/expireGroupons/commentWindowExpire）已交付为手动 BizMutation 入口，逻辑完整且有测试覆盖；nop-job 调度引擎装配未引入，任务不会自动执行。roadmap 已诚实标记 Phase 11 为 `partial`
+- Successor Required: `yes`（触发条件：生产部署需要自动调度时，引入 nop-job 依赖 + 配置调度器 + 注册 5 个方法为定时任务）
+- **Resolved (2026-06-18):** 已由 `2026-06-17-1830-phase11-13-completion-plan.md` 解决——引入 `nop-job-local`，`scheduler.yaml` 注册 5 个 job，`MallJobInvoker` 绑定 5 方法，e2e 启动日志确认 bean 实例化。roadmap Phase 11 已升 `done`。
+
 ## Closure
 
-Status Note: All phases completed. Phase 1 tests already existed. Phase 2A-2B groupon implemented. Phase 3A-3F system operations implemented. Full compile passes.
+Status Note: All phases completed. Phase 1 tests already existed. Phase 2A-2B groupon implemented. Phase 3A-3F system operations implemented. Full compile passes. **Post-Closure Note (2026-06-17):** Phase 11 delivered manual BizMutation entry points for 5 scheduled tasks but nop-job scheduler assembly was NOT introduced — roadmap honestly marks Phase 11 as `partial`. **Post-Closure Update (2026-06-18):** nop-job 调度装配 Deferred 已由 `2026-06-17-1830-phase11-13-completion-plan.md` 解决（nop-job-local + scheduler.yaml + MallJobInvoker），roadmap Phase 11 已升 `done`。Phase 2A Decision (Option A: no status=3) was reversed to Option B (status=3 with ORM dict) by the later Plan 2 domain-logic-hardening; design doc `marketing-and-promotions.md` updated accordingly.
 
 Closure Audit Evidence:
 
-- Reviewer / Agent: main session execution
-- Evidence: All phases compile and pass tests. Groupon: 5 tests pass. Notice: 1 test pass. Issue/Feedback: 2 tests pass. Order tests fail due to pre-existing NOP_FILE_RECORD issue (not business logic).
+- Reviewer / Agent: main session execution (original self-review); **independent subagent post-audit ses_12ad816bfffetSKyTboTCx9Daw (2026-06-17)** — Verdict: implementation PASS, closure-documentation REVISE → corrected false-positive gates + added Deferred for nop-job + annotated stale Decision
+- Evidence: All phases compile and pass tests. Groupon: 5 tests pass. Notice: 1 test pass. Issue/Feedback: 2 tests pass.
 
 Follow-up:
 

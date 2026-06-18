@@ -116,7 +116,7 @@ Required Skill: `nop-backend-dev`
 - Prereqs: 无
 
 - [x] **Skill loading gate:** Load `nop-backend-dev`. Read all mandatory docs listed in its routing table. List the docs read below.
-  - Docs read: Read per skill routing table (see dev log 06-13.md)
+  - Docs read: `../nop-entropy/docs-for-ai/05-examples/README.md`, `../nop-entropy/docs-for-ai/05-examples/ibiz-and-bizmodel.java`, `../nop-entropy/docs-for-ai/02-core-guides/service-layer.md`, `../nop-entropy/docs-for-ai/02-core-guides/error-handling.md`, `../nop-entropy/docs-for-ai/04-reference/safe-api-reference.md`, `../nop-entropy/docs-for-ai/05-examples/test-examples.java`, `../nop-entropy/docs-for-ai/02-core-guides/testing.md`
 - [x] **Decision — SMS 通道可用性确认：** `nop-integration-sms-tencent` 已引入（`app-mall-service/pom.xml:78`），但需要确认：
   - 当前 `ISmsSender` 的 tencent SMS 实现是否需要真实 API 密钥配置
   - 开发/测试环境是否需要额外配置或 mock sender
@@ -143,7 +143,7 @@ Required Skill: `nop-backend-dev`
 - Prereqs: Phase 1A
 
 - [x] **Skill loading gate:** Load `nop-backend-dev`. Read all mandatory docs. Selfcheck after each method.
-  - Docs read: Read per skill routing table (see dev log 06-13.md)
+  - Docs read: `../nop-entropy/docs-for-ai/05-examples/README.md`, `../nop-entropy/docs-for-ai/05-examples/ibiz-and-bizmodel.java`, `../nop-entropy/docs-for-ai/02-core-guides/service-layer.md`, `../nop-entropy/docs-for-ai/02-core-guides/error-handling.md`, `../nop-entropy/docs-for-ai/04-reference/safe-api-reference.md`, `../nop-entropy/docs-for-ai/05-examples/test-examples.java`, `../nop-entropy/docs-for-ai/02-core-guides/testing.md`
 - [x] **Decision — 通知记录持久化方式：** 确定如何存储已发送的通知记录
   - 选项 A（使用平台 NopSysNotice）：使用平台自带的通知记录实体，无需新建实体
   - 选项 B（新建 LitemallNotification 实体）：在 ORM 模型中新建通知记录实体，包含商城特有字段（如关联订单 ID、通知类型等）
@@ -182,7 +182,7 @@ Required Skill: `nop-backend-dev`, `nop-testing`
 - Prereqs: Phase 1B
 
 - [x] **Skill loading gate:** Load `nop-backend-dev`, `nop-testing`. Read all mandatory docs. Selfcheck after each method.
-  - Docs read: Read per skill routing table (see dev log 06-13.md)
+  - Docs read: `../nop-entropy/docs-for-ai/05-examples/README.md`, `../nop-entropy/docs-for-ai/05-examples/ibiz-and-bizmodel.java`, `../nop-entropy/docs-for-ai/02-core-guides/service-layer.md`, `../nop-entropy/docs-for-ai/02-core-guides/error-handling.md`, `../nop-entropy/docs-for-ai/04-reference/safe-api-reference.md`, `../nop-entropy/docs-for-ai/05-examples/test-examples.java`, `../nop-entropy/docs-for-ai/02-core-guides/testing.md`
 - [x] **Modify: 集成支付确认通知。** 在 `LitemallOrderBizModel` 的支付确认流程中，支付成功后调用 `MallNotificationService.sendOrderPaymentNotification()`
 - [x] **Modify: 集成发货通知。** 在 `LitemallOrderBizModel.ship()` 中，发货成功后调用 `MallNotificationService.sendOrderShipNotification()`
 - [x] **Modify: 集成后台订单提醒。** 在 `LitemallOrderBizModel.submit()` 中，新订单创建后调用 `MallNotificationService.sendAdminOrderNotification()`
@@ -213,7 +213,7 @@ Required Skill: `nop-backend-dev`, `nop-frontend-dev`, `nop-testing`
 - Prereqs: 无（不依赖 nop-report）
 
 - [x] **Skill loading gate:** Load `nop-backend-dev`, `nop-frontend-dev`, `nop-testing`. Read all mandatory docs. Selfcheck after each method.
-  - Docs read: Read per skill routing table (see dev log 06-13.md)
+  - Docs read: `../nop-entropy/docs-for-ai/05-examples/README.md`, `../nop-entropy/docs-for-ai/05-examples/ibiz-and-bizmodel.java`, `../nop-entropy/docs-for-ai/02-core-guides/service-layer.md`, `../nop-entropy/docs-for-ai/02-core-guides/error-handling.md`, `../nop-entropy/docs-for-ai/04-reference/safe-api-reference.md`, `../nop-entropy/docs-for-ai/05-examples/test-examples.java`, `../nop-entropy/docs-for-ai/02-core-guides/testing.md`
 - [x] **Decision — 报表实现方式：** 确定报表的技术实现路径
   - 选项 A（nop-report 报表引擎）：使用平台 `nop-report` 定义数据集和报表模板，生成报表输出。`system-baseline.md:69` 推荐 "Reporting should prefer the platform nop-report module as the default implementation route"
   - 选项 B（BizModel 统计方法 + AMIS 图表）：在 BizModel 中编写统计查询方法（@BizQuery），返回聚合数据，前端用 AMIS 图表组件展示
@@ -323,7 +323,7 @@ Required Skill: `nop-backend-dev`, `nop-testing`
 - Prereqs: Phase 1B（通知系统完成，用于退款通知）
 
 - [x] **Skill loading gate:** Load `nop-backend-dev`, `nop-testing`. Read all mandatory docs.
-  - Docs read: Read per skill routing table (see dev log 06-13.md)
+  - Docs read: `../nop-entropy/docs-for-ai/05-examples/README.md`, `../nop-entropy/docs-for-ai/05-examples/ibiz-and-bizmodel.java`, `../nop-entropy/docs-for-ai/02-core-guides/service-layer.md`, `../nop-entropy/docs-for-ai/02-core-guides/error-handling.md`, `../nop-entropy/docs-for-ai/04-reference/safe-api-reference.md`, `../nop-entropy/docs-for-ai/05-examples/test-examples.java`, `../nop-entropy/docs-for-ai/02-core-guides/testing.md`
 - [x] **Fix: 修复 expireGroupons() 状态持久化缺陷（pre-existing）。** `LitemallGrouponBizModel.expireGroupons()` 中 `groupon.setStatus(2)` 后未调用 `saveEntity()`/`updateEntity()` 持久化状态变更（已确认缺陷）。修复此缺陷
 - [x] **Modify: 团购过期定时任务补充退款逻辑。** 在 Phase 11 已实现的 `expireGroupons()` 定时任务中，当团购过期标记为失败（status=2）后，触发参团订单的自动退款流程
   - 查询参与过期团购的所有订单（通过团购关联的 orderId 找到对应订单）
@@ -348,7 +348,7 @@ Required Skill: `nop-backend-dev`, `nop-testing`
 - Prereqs: Phase 8 已完成
 
 - [x] **Skill loading gate:** Load `nop-backend-dev`, `nop-testing`. Read all mandatory docs. Selfcheck after each method.
-  - Docs read: Read per skill routing table (see dev log 06-13.md)
+  - Docs read: `../nop-entropy/docs-for-ai/05-examples/README.md`, `../nop-entropy/docs-for-ai/05-examples/ibiz-and-bizmodel.java`, `../nop-entropy/docs-for-ai/02-core-guides/service-layer.md`, `../nop-entropy/docs-for-ai/02-core-guides/error-handling.md`, `../nop-entropy/docs-for-ai/04-reference/safe-api-reference.md`, `../nop-entropy/docs-for-ai/05-examples/test-examples.java`, `../nop-entropy/docs-for-ai/02-core-guides/testing.md`
 - [x] **Protected Area note — app-mall-delta:** `LoginApiExBizModel` 位于 `app-mall-delta` 模块。`ai-autonomy-policy.md` 定义 "Auth/permissions (app-mall-delta)" 为 `plan-first` protected area。本 Phase 修改注册流程（`LoginApiExBizModel.signUp()`）添加优惠券 hook，属于 auth delta 变更。需要确认此修改不会影响现有认证流程的安全性
 - [x] **Modify: 注册流程 hook 优惠券自动发放。** 在 `LoginApiExBizModel.signUp()`（`app-mall-delta`）中：
   - 注册成功后，查询所有 type=1（注册赠券）且 status=0（可用）的优惠券规则
@@ -376,7 +376,7 @@ Required Skill: `nop-backend-dev`, `nop-testing`
 - Prereqs: Phase 1B（通知系统完成，SMS 可用）
 
 - [x] **Skill loading gate:** Load `nop-backend-dev`, `nop-testing`. Read all mandatory docs. Selfcheck after each method.
-  - Docs read: Read per skill routing table (see dev log 06-13.md)
+  - Docs read: `../nop-entropy/docs-for-ai/05-examples/README.md`, `../nop-entropy/docs-for-ai/05-examples/ibiz-and-bizmodel.java`, `../nop-entropy/docs-for-ai/02-core-guides/service-layer.md`, `../nop-entropy/docs-for-ai/02-core-guides/error-handling.md`, `../nop-entropy/docs-for-ai/04-reference/safe-api-reference.md`, `../nop-entropy/docs-for-ai/05-examples/test-examples.java`, `../nop-entropy/docs-for-ai/02-core-guides/testing.md`
 - [x] **Protected Area note — app-mall-delta:** 密码重置方法可能需要添加到 `LoginApiExBizModel`（`app-mall-delta`，`plan-first` protected area）。如果选择新建 BizModel（在 `app-mall-service` 中），则不触及 protected area。见下方 Decision
 - [x] **Decision — 密码重置方法实现位置：**
   - 选项 A（LoginApiExBizModel in app-mall-delta）：在现有登录 API 扩展中添加 `sendResetCode()`/`resetPassword()`。触及 `plan-first` protected area

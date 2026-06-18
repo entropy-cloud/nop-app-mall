@@ -1,6 +1,6 @@
 # 2026-06-13 前台页面集中开发与技术债务清理计划
 
-> Plan Status: done
+> Plan Status: completed
 > Last Reviewed: 2026-06-14
 > Source: `docs/backlog/implementation-roadmap.md`（所有 Phase 1-13 done，Phase 14 planned/blocked），各已完成计划的 Deferred But Adjudicated 区
 > Related: `docs/plans/2026-06-13-adversarial-audit-remediation-plan.md`（planned，未执行），`docs/plans/2026-06-13-orm-index-and-entity-cleanup-plan.md`（planned，未执行），`docs/plans/2026-06-13-next-phase-notification-report-wxpay-plan.md`（completed，Phase 14 skipped）
