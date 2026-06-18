@@ -1,0 +1,23 @@
+# __XGEN_FORCE_OVERRIDE__
+label: 团购活动状态
+locale: zh-CN
+valueType: int
+description: 
+options:
+
+  - label: 开团未支付
+    value: 0
+    description: 
+  
+  - label: 开团中
+    value: 1
+    description: 
+  
+  - label: 开团失败
+    value: 2
+    description: 
+  
+  - label: 开团成功
+    value: 3
+    description: 
+  

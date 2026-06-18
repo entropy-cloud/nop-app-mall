@@ -1,5 +1,11 @@
 [
   [
+    "app.mall.dao.mapper.LitemallCouponUserMapper"
+  ],
+  [
+    "app.mall.dao.mapper.LitemallOrderGoodsMapper"
+  ],
+  [
     "app.mall.dao.mapper.LitemallOrderMapper"
   ]
 ]

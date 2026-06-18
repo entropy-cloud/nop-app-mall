@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<sql-lib x:schema="/nop/schema/orm/sql-lib.xdef" xmlns:x="/nop/schema/xdsl.xdef">
+
+    <sqls>
+        <eql name="updateCommentFlagIfUnused" sqlMethod="execute">
+            <arg name="orderGoodsId"/>
+            <arg name="commentId"/>
+
+            <source>
+                update LitemallOrderGoods
+                set comment = ${commentId}
+                where id = ${orderGoodsId} and comment = 0
+            </source>
+        </eql>
+    </sqls>
+</sql-lib>

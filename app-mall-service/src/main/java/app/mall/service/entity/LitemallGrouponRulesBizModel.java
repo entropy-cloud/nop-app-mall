@@ -9,6 +9,7 @@ import io.nop.api.core.annotations.biz.BizModel;
 import io.nop.api.core.annotations.biz.BizMutation;
 import io.nop.api.core.annotations.biz.BizQuery;
 import io.nop.api.core.annotations.core.Name;
+import io.nop.api.core.annotations.core.Optional;
 import io.nop.api.core.annotations.directive.Auth;
 import io.nop.api.core.beans.FilterBeans;
 import io.nop.api.core.beans.PageBean;
@@ -71,5 +72,29 @@ public class LitemallGrouponRulesBizModel extends CrudBizModel<LitemallGrouponRu
         query.addOrderField(LitemallGrouponRules.PROP_NAME_addTime, true);
 
         return doFindPageByQueryDirectly(query, null, context);
+    }
+
+    @Override
+    @BizQuery
+    @Auth(publicAccess = true)
+    public LitemallGrouponRules getAvailableRulesById(@Name("id") String id,
+                                                       @Optional @Name("strict") Boolean strict,
+                                                       IServiceContext context) {
+        LitemallGrouponRules rules = get(id, false, context);
+        if (rules == null || Boolean.TRUE.equals(rules.getDeleted())) {
+            throw new NopException(ERR_GROUPON_RULES_NOT_FOUND)
+                    .param("rulesId", id);
+        }
+
+        LocalDateTime now = LocalDateTime.now();
+        boolean available = rules.getStatus() != null && rules.getStatus() == 0
+                && rules.getExpireTime() != null
+                && rules.getExpireTime().isAfter(now);
+        if (!available && Boolean.TRUE.equals(strict)) {
+            throw new NopException(ERR_GROUPON_RULES_NOT_AVAILABLE)
+                    .param("rulesId", id);
+        }
+
+        return rules;
     }
 }

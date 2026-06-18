@@ -301,7 +301,8 @@ prop:
       rulesId: 团购规则ID
       shareUrl: 团购分享图片地址
       shareUrlComponentFileStatus: null
-      status: 团购活动状态，开团未支付则0，开团中则1，开团失败则2
+      status: 团购活动状态
+      status_label: 团购活动状态
       updateTime: 更新时间
       userId: 用户ID
     LitemallGrouponRules:

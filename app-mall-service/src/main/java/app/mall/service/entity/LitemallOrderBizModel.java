@@ -32,6 +32,7 @@ import io.nop.api.core.annotations.biz.BizMutation;
 import io.nop.api.core.annotations.biz.BizQuery;
 import io.nop.api.core.annotations.core.Name;
 import io.nop.api.core.annotations.core.Optional;
+import io.nop.api.core.annotations.directive.Auth;
 import io.nop.api.core.beans.FilterBeans;
 import io.nop.api.core.beans.query.QueryBean;
 import io.nop.api.core.exceptions.NopException;
@@ -51,6 +52,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import static app.mall.service.AppMallErrors.ERR_GROUPON_RULES_NOT_AVAILABLE;
 import static app.mall.service.AppMallErrors.ERR_ORDER_ADDRESS_INVALID;
@@ -129,6 +131,11 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
             throw new NopException(ERR_ORDER_ADDRESS_INVALID)
                     .param("addressId", addressId);
         }
+        if (!Objects.equals(userId, address.getUserId())) {
+            throw new NopException(ERR_ORDER_ADDRESS_INVALID)
+                    .param("addressId", addressId)
+                    .param("userId", userId);
+        }
 
         QueryBean cartQuery = new QueryBean();
         cartQuery.addFilter(FilterBeans.eq(LitemallCart.PROP_NAME_userId, userId));
@@ -183,21 +190,27 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
         order.setDeleted(false);
 
         BigDecimal goodsPriceTotal = BigDecimal.ZERO;
+        List<String> couponScopeIds = new ArrayList<>();
         for (LitemallCart item : checkedItems) {
             LitemallOrderGoods orderGoods = orderGoodsBiz.newEntity();
+            LitemallGoodsProduct product = goodsProductBiz.requireEntity(item.getProductId(), null, context);
             orderGoods.setGoodsId(item.getGoodsId());
             orderGoods.setGoodsName(item.getGoodsName());
             orderGoods.setGoodsSn(item.getGoodsSn());
             orderGoods.setProductId(item.getProductId());
             orderGoods.setNumber(item.getNumber());
-            orderGoods.setPrice(item.getPrice());
+            orderGoods.setPrice(product.getPrice());
             orderGoods.setSpecifications(item.getSpecifications());
             orderGoods.getPicUrlComponent().copyFrom(item.getPicUrlComponent());
             orderGoods.setComment(0);
             order.getOrderGoods().add(orderGoods);
 
-            BigDecimal lineTotal = item.getPrice().multiply(BigDecimal.valueOf(item.getNumber()));
+            BigDecimal lineTotal = product.getPrice().multiply(BigDecimal.valueOf(item.getNumber()));
             goodsPriceTotal = goodsPriceTotal.add(lineTotal);
+            couponScopeIds.add(item.getGoodsId());
+            if (product.getGoods() != null && product.getGoods().getCategoryId() != null) {
+                couponScopeIds.add(product.getGoods().getCategoryId());
+            }
 
             int stockAffected = goodsProductMapper.reduceStock(item.getProductId(), item.getNumber());
             if (stockAffected == 0) {
@@ -212,7 +225,7 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
 
         BigDecimal couponPrice = BigDecimal.ZERO;
         if (couponUserId != null && !couponUserId.isEmpty()) {
-            couponPrice = couponUserBiz.selectCouponForOrder(couponUserId, goodsPriceTotal, null, context);
+            couponPrice = couponUserBiz.selectCouponForOrder(couponUserId, goodsPriceTotal, couponScopeIds, context);
         }
         order.setCouponPrice(couponPrice);
 
@@ -226,6 +239,13 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
             if (rules.getExpireTime() != null && !rules.getExpireTime().isAfter(now)) {
                 throw new NopException(ERR_GROUPON_RULES_NOT_AVAILABLE)
                         .param("grouponRulesId", grouponRulesId);
+            }
+            boolean matchedGoods = checkedItems.stream()
+                    .anyMatch(item -> Objects.equals(item.getGoodsId(), rules.getGoodsId()));
+            if (!matchedGoods) {
+                throw new NopException(ERR_GROUPON_RULES_NOT_AVAILABLE)
+                        .param("grouponRulesId", grouponRulesId)
+                        .param("goodsId", rules.getGoodsId());
             }
             grouponPrice = rules.getDiscount() != null ? rules.getDiscount() : BigDecimal.ZERO;
         }
@@ -299,6 +319,7 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
         }
 
         LitemallOrder order = get(orderId, false, context);
+        requireUserIdMatch(order, context);
         order.setEndTime(LocalDateTime.now());
 
         for (LitemallOrderGoods orderGoods : order.getOrderGoods()) {
@@ -333,6 +354,7 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
                     .param("orderId", orderId)
                     .param("status", order.getOrderStatus());
         }
+        requireUserIdMatch(order, context);
 
         PayPrepayRequestBean payReq = new PayPrepayRequestBean();
         payReq.setOutTradeNo(order.getOrderSn());
@@ -353,7 +375,7 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
     @Override
     @BizMutation
     public LitemallOrder pay(@Name("orderId") String orderId,
-                              IServiceContext context) {
+                               IServiceContext context) {
         LitemallOrder order = get(orderId, false, context);
         if (order == null) {
             throw new NopException(ERR_ORDER_NOT_FOUND)
@@ -364,6 +386,7 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
                     .param("orderId", orderId)
                     .param("status", order.getOrderStatus());
         }
+        requireUserIdMatch(order, context);
         // pay() is the manual/demo confirmation path. In real WeChat Pay mode, non-zero orders
         // MUST go through prepay -> WeChat scan -> async notify -> confirmPaidByNotify.
         if (order.getActualPrice() != null
@@ -417,9 +440,10 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
 
     @Override
     @BizMutation
+    @Auth(roles = "admin")
     public LitemallOrder ship(@Name("orderId") String orderId,
-                               @Name("shipSn") String shipSn,
-                               @Name("shipChannel") String shipChannel,
+                                @Name("shipSn") String shipSn,
+                                @Name("shipChannel") String shipChannel,
                                IServiceContext context) {
         LitemallOrder order = get(orderId, false, context);
         if (order == null) {
@@ -447,7 +471,7 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
     @Override
     @BizMutation
     public LitemallOrder confirm(@Name("orderId") String orderId,
-                                  IServiceContext context) {
+                                   IServiceContext context) {
         LitemallOrder order = get(orderId, false, context);
         if (order == null) {
             throw new NopException(ERR_ORDER_NOT_FOUND)
@@ -458,6 +482,7 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
                     .param("orderId", orderId)
                     .param("status", order.getOrderStatus());
         }
+        requireUserIdMatch(order, context);
 
         order.setOrderStatus(_AppMallDaoConstants.ORDER_STATUS_CONFIRM);
         order.setConfirmTime(LocalDateTime.now());
@@ -650,5 +675,12 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
 
     private String generateOrderSn() {
         return StringHelper.generateUUID();
+    }
+
+    private void requireUserIdMatch(LitemallOrder order, IServiceContext context) {
+        if (!Objects.equals(order.getUserId(), context.getUserId())) {
+            throw new NopException(ERR_ORDER_NOT_FOUND)
+                    .param("orderId", order.orm_idString());
+        }
     }
 }

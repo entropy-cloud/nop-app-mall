@@ -1137,6 +1137,10 @@
     "fields": [
       {
         "allowWrite": true,
+        "name": "couponUserBiz"
+      },
+      {
+        "allowWrite": true,
         "name": "goodsProductMapper"
       },
       {
@@ -1227,6 +1231,10 @@
       {
         "allowWrite": true,
         "name": "orderGoodsBiz"
+      },
+      {
+        "allowWrite": true,
+        "name": "orderGoodsMapper"
       }
     ],
     "methods": [],
@@ -1257,6 +1265,10 @@
       {
         "allowWrite": true,
         "name": "couponBiz"
+      },
+      {
+        "allowWrite": true,
+        "name": "couponUserMapper"
       }
     ],
     "methods": [],
@@ -1306,9 +1318,20 @@
       {
         "allowWrite": true,
         "name": "logManager"
+      },
+      {
+        "allowWrite": true,
+        "name": "orderGoodsBiz"
       }
     ],
     "methods": [
+      {
+        "name": "defaultPrepareDelete",
+        "parameterTypes": [
+          "app.mall.dao.entity.LitemallGoods",
+          "io.nop.core.context.IServiceContext"
+        ]
+      },
       {
         "name": "defaultPrepareQuery",
         "parameterTypes": [
@@ -1600,6 +1623,10 @@
     "fields": [
       {
         "allowWrite": true,
+        "name": "emailSender"
+      },
+      {
+        "allowWrite": true,
         "name": "smsSender"
       }
     ],
@@ -1612,7 +1639,54 @@
     "allPublicConstructors": true,
     "allPublicFields": true,
     "allPublicMethods": true,
-    "fields": [],
+    "fields": [
+      {
+        "allowWrite": true,
+        "name": "orderBiz"
+      }
+    ],
+    "methods": [],
+    "name": "app.mall.service.pay.PaymentCallbackImpl"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [
+      {
+        "allowWrite": true,
+        "name": "couponUserBiz"
+      },
+      {
+        "allowWrite": true,
+        "name": "grouponBiz"
+      },
+      {
+        "allowWrite": true,
+        "name": "orderBiz"
+      },
+      {
+        "allowWrite": true,
+        "name": "orderGoodsBiz"
+      }
+    ],
+    "methods": [],
+    "name": "app.mall.service.scheduler.MallJobInvoker"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [
+      {
+        "allowWrite": true,
+        "name": "paymentCallback"
+      }
+    ],
     "methods": [],
     "name": "app.mall.wx.WxPayNotifyResource"
   },
@@ -4352,6 +4426,36 @@
     "allPublicMethods": true,
     "fields": [],
     "methods": [],
+    "name": "io.nop.commons.concurrent.executor.BaseThreadPoolConfig"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [],
+    "name": "io.nop.commons.concurrent.executor.DefaultScheduledExecutor"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [],
+    "name": "io.nop.commons.concurrent.executor.ThreadPoolConfig"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [],
     "name": "io.nop.commons.functional.ChainedAsyncFunctionInvoker"
   },
   {
@@ -6802,6 +6906,91 @@
     "fields": [],
     "methods": [],
     "name": "io.nop.ioc.support.UtilFactoryBean"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [],
+    "name": "io.nop.job.api.config.LocalInvokerConfig"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [],
+    "name": "io.nop.job.api.config.LocalJobConfig"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [],
+    "name": "io.nop.job.api.config.LocalSchedulerConfig"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [],
+    "name": "io.nop.job.api.spec.TriggerSpec"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [
+      {
+        "name": "currentTime",
+        "parameterTypes": []
+      }
+    ],
+    "name": "io.nop.job.core.LocalJobScheduler"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [],
+    "name": "io.nop.job.local.config.BeanContainerInvokerResolver"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [],
+    "name": "io.nop.job.local.config.LocalJobConfigLoader"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [],
+    "name": "io.nop.job.local.executor.BeanMethodJobInvoker"
   },
   {
     "allDeclaredConstructors": true,

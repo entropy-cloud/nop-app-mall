@@ -93,6 +93,12 @@
             <option label="上架" value="0"/>
             <option label="下架" value="1"/>
         </dict>
+        <dict label="团购活动状态" name="mall/groupon-status" valueType="int" i18n-en:label="Groupon Status">
+            <option code="UNPAID" label="开团未支付" value="0"/>
+            <option code="OPEN" label="开团中" value="1"/>
+            <option code="FAILED" label="开团失败" value="2"/>
+            <option code="SUCCESS" label="开团成功" value="3"/>
+        </dict>
     </dicts>
 
     <domains>
@@ -817,8 +823,8 @@
                         name="creatorUserId" precision="50" propId="7" stdDataType="string" stdSqlType="VARCHAR"/>
                 <column code="CREATOR_USER_TIME" displayName="开团时间" name="creatorUserTime" propId="8"
                         stdDataType="datetime" stdSqlType="DATETIME"/>
-                <column code="STATUS" displayName="团购活动状态，开团未支付则0，开团中则1，开团失败则2" name="status" propId="9"
-                        stdDataType="int" stdSqlType="INTEGER"/>
+                <column code="STATUS" comment="团购活动状态：0=开团未支付，1=开团中，2=开团失败，3=开团成功（参团人数达标时由系统置为成功）" displayName="团购活动状态"
+                        name="status" propId="9" stdDataType="int" stdSqlType="INTEGER" ext:dict="mall/groupon-status"/>
                 <column code="ADD_TIME" displayName="创建时间" domain="createTime" mandatory="true" name="addTime"
                         propId="10" stdDataType="datetime" stdSqlType="DATETIME" ui:show="X"/>
                 <column code="UPDATE_TIME" displayName="更新时间" domain="updateTime" name="updateTime" propId="11"
@@ -1033,8 +1039,8 @@
                 <column code="ORDER_PRICE" comment="goods_price + freight_price - coupon_price" displayName="订单费用"
                         mandatory="true" name="orderPrice" precision="10" propId="15" scale="2" stdDataType="decimal"
                         stdSqlType="DECIMAL"/>
-                <column code="ACTUAL_PRICE" comment="order_price - integral_price" displayName="实付费用" mandatory="true"
-                        name="actualPrice" precision="10" propId="16" scale="2" stdDataType="decimal"
+                <column code="ACTUAL_PRICE" comment="order_price - integral_price - groupon_price" displayName="实付费用"
+                        mandatory="true" name="actualPrice" precision="10" propId="16" scale="2" stdDataType="decimal"
                         stdSqlType="DECIMAL"/>
                 <column code="PAY_ID" displayName="微信付款编号" name="payId" precision="63" propId="17" stdDataType="string"
                         stdSqlType="VARCHAR"/>

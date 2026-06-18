@@ -6,6 +6,7 @@ import app.mall.dao._AppMallDaoConstants;
 import app.mall.dao.entity.LitemallComment;
 import app.mall.dao.entity.LitemallOrder;
 import app.mall.dao.entity.LitemallOrderGoods;
+import app.mall.dao.mapper.LitemallOrderGoodsMapper;
 import io.nop.api.core.annotations.biz.BizModel;
 import io.nop.api.core.annotations.biz.BizMutation;
 import io.nop.api.core.annotations.biz.BizQuery;
@@ -27,6 +28,9 @@ public class LitemallCommentBizModel extends CrudBizModel<LitemallComment> imple
 
     @Inject
     ILitemallOrderGoodsBiz orderGoodsBiz;
+
+    @Inject
+    LitemallOrderGoodsMapper orderGoodsMapper;
 
     public LitemallCommentBizModel() {
         setEntityName(LitemallComment.class.getName());
@@ -84,8 +88,13 @@ public class LitemallCommentBizModel extends CrudBizModel<LitemallComment> imple
         }
         saveEntity(comment, null, context);
 
-        orderGoods.setComment(Integer.parseInt(comment.orm_idString()));
-        orderGoodsBiz.updateEntity(orderGoods, null, context);
+        // Atomic conditional UPDATE: win the "first comment" race only if orderGoods.comment is still 0.
+        // Affects 0 means a concurrent submission already claimed this slot.
+        int affected = orderGoodsMapper.updateCommentFlagIfUnused(orderGoodsId, comment.orm_idString());
+        if (affected == 0) {
+            throw new NopException(ERR_COMMENT_ALREADY_EXISTS)
+                    .param("orderGoodsId", orderGoodsId);
+        }
 
         if (order.getComments() != null && order.getComments() > 0) {
             order.setComments(order.getComments() - 1);

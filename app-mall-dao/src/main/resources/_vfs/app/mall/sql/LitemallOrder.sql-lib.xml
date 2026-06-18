@@ -72,6 +72,7 @@
                   SUM(CASE WHEN CREATE_TIME &gt;= ${monthStart} THEN 1 ELSE 0 END) AS NEW_USERS_THIS_MONTH
                 FROM nop_auth_user
                 WHERE USER_TYPE = 1
+                  AND CAST(DEL_FLAG AS INT) = 0
                   AND CREATE_TIME &gt;= ${startDate}
                   AND CREATE_TIME &lt;= ${endDate}
             </source>

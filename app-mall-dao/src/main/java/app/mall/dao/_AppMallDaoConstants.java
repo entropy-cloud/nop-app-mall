@@ -108,4 +108,24 @@ public interface _AppMallDaoConstants {
      */
     String CATEGORY_LEVEL_L2 = "L2";
                     
+    /**
+     * 团购活动状态: 开团未支付 
+     */
+    int GROUPON_STATUS_UNPAID = 0;
+                    
+    /**
+     * 团购活动状态: 开团中 
+     */
+    int GROUPON_STATUS_OPEN = 1;
+                    
+    /**
+     * 团购活动状态: 开团失败 
+     */
+    int GROUPON_STATUS_FAILED = 2;
+                    
+    /**
+     * 团购活动状态: 开团成功 
+     */
+    int GROUPON_STATUS_SUCCESS = 3;
+                    
 }

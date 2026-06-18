@@ -264,4 +264,48 @@ public class TestLitemallGoodsExtendedBizModel extends JunitBaseTestCase {
         List<Map<String, Object>> items = (List<Map<String, Object>>) pageData.get("items");
         assertFalse(items.isEmpty());
     }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testFrontListByFlags() {
+        LitemallGoods hotAndNew = daoProvider.daoFor(LitemallGoods.class).newEntity();
+        hotAndNew.setGoodsSn("G007");
+        hotAndNew.setName("Hot New Goods");
+        hotAndNew.setRetailPrice(BigDecimal.valueOf(199));
+        hotAndNew.setIsOnSale(true);
+        hotAndNew.setIsHot(true);
+        hotAndNew.setIsNew(true);
+        hotAndNew.setPicUrl("");
+        hotAndNew.setShareUrl("");
+        hotAndNew.setGallery("");
+        daoProvider.daoFor(LitemallGoods.class).saveEntity(hotAndNew);
+
+        LitemallGoods normal = daoProvider.daoFor(LitemallGoods.class).newEntity();
+        normal.setGoodsSn("G008");
+        normal.setName("Normal Goods");
+        normal.setRetailPrice(BigDecimal.valueOf(299));
+        normal.setIsOnSale(true);
+        normal.setIsHot(false);
+        normal.setIsNew(false);
+        normal.setPicUrl("");
+        normal.setShareUrl("");
+        normal.setGallery("");
+        daoProvider.daoFor(LitemallGoods.class).saveEntity(normal);
+
+        ApiRequest<Map<String, Object>> req = ApiRequest.build(Map.of(
+                "isHot", true,
+                "isNew", true,
+                "page", 1,
+                "pageSize", 20
+        ));
+        IGraphQLExecutionContext ctx = graphQLEngine.newRpcContext(
+                GraphQLOperationType.query, "LitemallGoods__frontListByFlags", req);
+        ApiResponse<?> result = graphQLEngine.executeRpc(ctx);
+        assertEquals(0, result.getStatus(), "frontListByFlags failed: " + result);
+
+        Map<String, Object> pageData = (Map<String, Object>) result.getData();
+        List<Map<String, Object>> items = (List<Map<String, Object>>) pageData.get("items");
+        assertTrue(items.stream().anyMatch(i -> hotAndNew.getId().equals(i.get("id"))));
+        assertFalse(items.stream().anyMatch(i -> normal.getId().equals(i.get("id"))));
+    }
 }

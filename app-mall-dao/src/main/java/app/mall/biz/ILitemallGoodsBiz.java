@@ -27,6 +27,15 @@ public interface ILitemallGoodsBiz extends ICrudBiz<LitemallGoods>{
                                       IServiceContext context);
 
     @BizQuery
+    PageBean<LitemallGoods> frontListByFlags(@Optional @Name("isHot") Boolean isHot,
+                                             @Optional @Name("isNew") Boolean isNew,
+                                             @Optional @Name("categoryId") String categoryId,
+                                             @Optional @Name("brandId") String brandId,
+                                             @Name("page") int page,
+                                             @Name("pageSize") int pageSize,
+                                             IServiceContext context);
+
+    @BizQuery
     LitemallGoods frontDetail(@Name("id") String id, IServiceContext context);
 
     @BizQuery

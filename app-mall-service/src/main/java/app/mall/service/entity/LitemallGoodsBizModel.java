@@ -131,13 +131,33 @@ public class LitemallGoodsBizModel extends CrudBizModel<LitemallGoods> implement
     @BizQuery
     @Auth(publicAccess = true)
     public PageBean<LitemallGoods> frontList(@Optional @Name("categoryId") String categoryId,
-                                             @Optional @Name("brandId") String brandId,
-                                             @Name("page") int page,
-                                             @Name("pageSize") int pageSize,
-                                             IServiceContext context) {
+                                              @Optional @Name("brandId") String brandId,
+                                              @Name("page") int page,
+                                              @Name("pageSize") int pageSize,
+                                              IServiceContext context) {
+        return frontListByFlags(null, null, categoryId, brandId, page, pageSize, context);
+    }
+
+    @Override
+    @BizQuery
+    @Auth(publicAccess = true)
+    public PageBean<LitemallGoods> frontListByFlags(@Optional @Name("isHot") Boolean isHot,
+                                                     @Optional @Name("isNew") Boolean isNew,
+                                                     @Optional @Name("categoryId") String categoryId,
+                                                     @Optional @Name("brandId") String brandId,
+                                                     @Name("page") int page,
+                                                     @Name("pageSize") int pageSize,
+                                                     IServiceContext context) {
         QueryBean query = new QueryBean();
         query.addFilter(FilterBeans.eq(LitemallGoods.PROP_NAME_isOnSale, true));
         query.addFilter(FilterBeans.eq(LitemallGoods.PROP_NAME_deleted, false));
+
+        if (isHot != null) {
+            query.addFilter(FilterBeans.eq(LitemallGoods.PROP_NAME_isHot, isHot));
+        }
+        if (isNew != null) {
+            query.addFilter(FilterBeans.eq(LitemallGoods.PROP_NAME_isNew, isNew));
+        }
 
         if (categoryId != null && !categoryId.isEmpty()) {
             query.addFilter(FilterBeans.eq(LitemallGoods.PROP_NAME_categoryId, categoryId));

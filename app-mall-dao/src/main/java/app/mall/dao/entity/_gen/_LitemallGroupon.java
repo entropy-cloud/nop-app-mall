@@ -52,7 +52,7 @@ public class _LitemallGroupon extends DynamicOrmEntity{
     public static final String PROP_NAME_creatorUserTime = "creatorUserTime";
     public static final int PROP_ID_creatorUserTime = 8;
     
-    /* 团购活动状态，开团未支付则0，开团中则1，开团失败则2: STATUS INTEGER */
+    /* 团购活动状态: STATUS INTEGER */
     public static final String PROP_NAME_status = "status";
     public static final int PROP_ID_status = 9;
     
@@ -149,7 +149,7 @@ public class _LitemallGroupon extends DynamicOrmEntity{
     /* 开团时间: CREATOR_USER_TIME */
     private java.time.LocalDateTime _creatorUserTime;
     
-    /* 团购活动状态，开团未支付则0，开团中则1，开团失败则2: STATUS */
+    /* 团购活动状态: STATUS */
     private java.lang.Integer _status;
     
     /* 创建时间: ADD_TIME */
@@ -654,7 +654,7 @@ public class _LitemallGroupon extends DynamicOrmEntity{
     }
     
     /**
-     * 团购活动状态，开团未支付则0，开团中则1，开团失败则2: STATUS
+     * 团购活动状态: STATUS
      */
     public final java.lang.Integer getStatus(){
          onPropGet(PROP_ID_status);
@@ -662,7 +662,7 @@ public class _LitemallGroupon extends DynamicOrmEntity{
     }
 
     /**
-     * 团购活动状态，开团未支付则0，开团中则1，开团失败则2: STATUS
+     * 团购活动状态: STATUS
      */
     public final void setStatus(java.lang.Integer value){
         if(onPropSet(PROP_ID_status,value)){

@@ -34,6 +34,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 import static app.mall.service.AppMallErrors.*;
@@ -79,6 +80,7 @@ public class LitemallGrouponBizModel extends CrudBizModel<LitemallGroupon> imple
             throw new NopException(ERR_GROUPON_RULES_NOT_AVAILABLE)
                     .param("rulesId", rulesId);
         }
+        requireOrderContainsRuleGoods(orderId, rules, context);
 
         String userId = context.getUserId();
 
@@ -127,6 +129,7 @@ public class LitemallGrouponBizModel extends CrudBizModel<LitemallGroupon> imple
         }
 
         LitemallGrouponRules rules = grouponRulesBiz.requireEntity(openGroupon.getRulesId(), null, context);
+        requireOrderContainsRuleGoods(orderId, rules, context);
 
         QueryBean participantsQuery = new QueryBean();
         participantsQuery.addFilter(FilterBeans.or(
@@ -149,6 +152,11 @@ public class LitemallGrouponBizModel extends CrudBizModel<LitemallGroupon> imple
         groupon.setCreatorUserTime(openGroupon.getCreatorUserTime());
         groupon.setStatus(1);
         saveEntity(groupon, null, context);
+
+        long totalParticipants = participantsCount + 1;
+        if (totalParticipants >= rules.getDiscountMember()) {
+            markGrouponSuccess(openGroupon.orm_idString(), context);
+        }
         return groupon;
     }
 
@@ -230,11 +238,17 @@ public class LitemallGrouponBizModel extends CrudBizModel<LitemallGroupon> imple
                     order.getOrderSn(), order.getOrderStatus());
             return;
         }
+        if (order.getAftersaleStatus() != null
+                && order.getAftersaleStatus() != _AppMallDaoConstants.AFTERSALE_STATUS_INIT) {
+            LOG.info("refundGrouponOrder: order {} aftersaleStatus is {}, skip refund",
+                    order.getOrderSn(), order.getAftersaleStatus());
+            return;
+        }
 
         try {
             PayRefundRequestBean req = new PayRefundRequestBean();
             req.setOutTradeNo(order.getOrderSn());
-            req.setOutRefundNo("groupon_refund_" + order.getOrderSn());
+            req.setOutRefundNo("refund_" + order.getOrderSn());
             req.setTotalFee(order.getActualPrice());
             req.setRefundFee(order.getActualPrice());
             PayRefundResponseBean resp = payService.refund(req);
@@ -286,6 +300,30 @@ public class LitemallGrouponBizModel extends CrudBizModel<LitemallGroupon> imple
                 rules.setStatus(1);
                 grouponRulesBiz.updateEntity(rules, "expireGroupons:expireRules", context);
             }
+        }
+    }
+
+    private void requireOrderContainsRuleGoods(String orderId, LitemallGrouponRules rules, IServiceContext context) {
+        LitemallOrder order = orderBiz.requireEntity(orderId, null, context);
+        boolean matched = order.getOrderGoods().stream()
+                .anyMatch(orderGoods -> Objects.equals(orderGoods.getGoodsId(), rules.getGoodsId()));
+        if (!matched) {
+            throw new NopException(ERR_GROUPON_RULES_NOT_AVAILABLE)
+                    .param("rulesId", rules.orm_idString())
+                    .param("goodsId", rules.getGoodsId())
+                    .param("orderId", orderId);
+        }
+    }
+
+    private void markGrouponSuccess(String grouponId, IServiceContext context) {
+        QueryBean query = new QueryBean();
+        query.addFilter(FilterBeans.or(
+                FilterBeans.eq(LitemallGroupon.PROP_NAME_id, grouponId),
+                FilterBeans.eq(LitemallGroupon.PROP_NAME_grouponId, grouponId)
+        ));
+        query.addFilter(FilterBeans.eq(LitemallGroupon.PROP_NAME_deleted, false));
+        for (LitemallGroupon item : findList(query, null, context)) {
+            item.setStatus(3);
         }
     }
 }

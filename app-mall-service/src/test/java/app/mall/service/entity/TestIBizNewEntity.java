@@ -13,6 +13,8 @@ import jakarta.inject.Inject;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 @NopTestConfig(localDb = true, initDatabaseSchema = OptionalBoolean.TRUE)
 public class TestIBizNewEntity extends JunitBaseTestCase {
@@ -30,17 +32,23 @@ public class TestIBizNewEntity extends JunitBaseTestCase {
     void testOrderBizNewEntity() {
         LitemallOrder entity = orderBiz.newEntity();
         assertNotNull(entity);
+        assertNull(entity.getOrderStatus(), "new order should have null orderStatus before initialization");
+        assertNull(entity.getOrderSn(), "new order should have null orderSn before initialization");
     }
 
     @Test
     void testOrderGoodsBizNewEntity() {
         LitemallOrderGoods entity = orderGoodsBiz.newEntity();
         assertNotNull(entity);
+        assertNull(entity.getOrderId(), "new orderGoods should have null orderId");
+        assertNull(entity.getComment(), "new orderGoods should have null comment flag");
     }
 
     @Test
     void testCartBizNewEntity() {
         LitemallCart entity = cartBiz.newEntity();
         assertNotNull(entity);
+        assertNull(entity.getUserId(), "new cart should have null userId");
+        assertFalse(Boolean.TRUE.equals(entity.getChecked()), "new cart should not be checked by default");
     }
 }

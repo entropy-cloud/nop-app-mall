@@ -298,6 +298,7 @@ prop:
       creatorUserId: null
       creatorUserTime: null
       status: null
+      status_label: null
       addTime: null
       updateTime: null
       deleted: null

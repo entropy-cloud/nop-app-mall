@@ -356,6 +356,7 @@
 /app/mall/pages/mall/home/home.page.yaml
 /app/mall/pages/mall/pay/pay.page.yaml
 /app/mall/pages/mall/search/search.page.yaml
+/app/mall/pages/mall/stat/stat-dashboard.page.yaml
 /app/mall/pages/mall/topic/topic-detail.page.yaml
 /app/mall/pages/mall/topic/topic-list.page.yaml
 /app/mall/pages/mall/user/address.page.yaml
@@ -370,9 +371,11 @@
 /app/mall/pages/mall/user/user-center.page.yaml
 /app/mall/qrcode/back.png
 /app/mall/qrcode/back_groupon.png
+/app/mall/sql/LitemallCouponUser.sql-lib.xml
 /app/mall/sql/LitemallGoods.sql-lib.xml
 /app/mall/sql/LitemallGoodsProduct.sql-lib.xml
 /app/mall/sql/LitemallOrder.sql-lib.xml
+/app/mall/sql/LitemallOrderGoods.sql-lib.xml
 /dict/auth/gender.dict.yaml
 /dict/auth/login-status.dict.yaml
 /dict/auth/login-type.dict.yaml
@@ -405,6 +408,7 @@
 /dict/mall/coupon-type.dict.yaml
 /dict/mall/coupon-use-status.dict.yaml
 /dict/mall/gender.dict.yaml
+/dict/mall/groupon-status.dict.yaml
 /dict/mall/order-status.dict.yaml
 /dict/mall/region-type.dict.yaml
 /dict/mall/topic-status.dict.yaml
@@ -731,6 +735,9 @@
 /nop/graphql/introspection.graphql
 /nop/http/beans/http-api.beans.xml
 /nop/http/beans/http-client-jdk.beans.xml
+/nop/job/_module
+/nop/job/beans/app-local-scheduler.beans.xml
+/nop/job/conf/scheduler.yaml
 /nop/message/beans/message-core-defaults.beans.xml
 /nop/orm/beans/orm-defaults.beans.xml
 /nop/orm/defaults/crud-defaults.orm.xml
