@@ -1,0 +1,6 @@
+ID,NAME,PIC_URL,DESC,SORT_ORDER,FLOOR_PRICE,ADD_TIME,UPDATE_TIME,DELETED
+1001000,MUJI制造商,http://example.com/brand/muji.png,严选精选MUJI制造商和生产原料以零利润价格剔除品牌溢价,1,12.90,2018-02-01 00:00:00,2018-02-01 00:00:00,false
+1001002,内野制造商,http://example.com/brand/uchi.png,严选从世界各地挑选毛巾追求柔软度与功能性,2,29.00,2018-02-01 00:00:00,2018-02-01 00:00:00,false
+1001003,Adidas制造商,http://example.com/brand/adidas.png,严选找到Adidas等品牌制造商选取优质原材料,3,49.00,2018-02-01 00:00:00,2018-02-01 00:00:00,false
+1001007,优衣库制造商,http://example.com/brand/uniqlo.png,严选找到日本知名服装UNIQLO的制造商选取优质长绒棉,4,29.00,2018-02-01 00:00:00,2018-02-01 00:00:00,false
+1001008,膳魔师制造商,http://example.com/brand/thermos.png,严选深入保温行业内部找到德国膳魔师制造商的代工厂,5,45.00,2018-02-01 00:00:00,2018-02-01 00:00:00,false

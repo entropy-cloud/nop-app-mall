@@ -1,0 +1,5 @@
+ID,GOODS_ID,SPECIFICATION,VALUE,PIC_URL,ADD_TIME,UPDATE_TIME,DELETED
+1,1006002,规格,1.5m床,http://example.com/spec/default.png,2018-02-01 00:00:00,2018-02-01 00:00:00,false
+2,1006002,规格,1.8m床,http://example.com/spec/default.png,2018-02-01 00:00:00,2018-02-01 00:00:00,false
+3,1006002,颜色,浅杏粉,http://example.com/spec/color1.png,2018-02-01 00:00:00,2018-02-01 00:00:00,false
+4,1009009,尺寸,32cm,http://example.com/spec/default.png,2018-02-01 00:00:00,2018-02-01 00:00:00,false
