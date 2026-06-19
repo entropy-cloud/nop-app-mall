@@ -159,6 +159,32 @@ public class TestLitemallGrouponBizModel extends JunitBaseTestCase {
         assertEquals(2, ((Number) unpubData.get("status")).intValue());
     }
 
+    @Test
+    public void testPublishRulesGoodsNotOnSale() {
+        LitemallGoods offGoods = daoProvider.daoFor(LitemallGoods.class).newEntity();
+        offGoods.setGoodsSn("GR-OFF-001");
+        offGoods.setName("下架团购商品");
+        offGoods.setRetailPrice(new BigDecimal("100.00"));
+        offGoods.setIsOnSale(false);
+        daoProvider.daoFor(LitemallGoods.class).saveEntity(offGoods);
+
+        LitemallGrouponRules rules = daoProvider.daoFor(LitemallGrouponRules.class).newEntity();
+        rules.setGoodsId(offGoods.getId());
+        rules.setGoodsName("下架团购商品");
+        rules.setDiscount(new BigDecimal("20.00"));
+        rules.setDiscountMember(3);
+        rules.setExpireTime(LocalDateTime.now().plusDays(7));
+        rules.setStatus(2);
+        daoProvider.daoFor(LitemallGrouponRules.class).saveEntity(rules);
+
+        ApiRequest<Map<String, Object>> req = ApiRequest.build(Map.of("id", rules.orm_idString()));
+        IGraphQLExecutionContext ctx = graphQLEngine.newRpcContext(
+                GraphQLOperationType.mutation, "LitemallGrouponRules__publishRules", req);
+        ApiResponse<?> result = graphQLEngine.executeRpc(ctx);
+        assertNotEquals(0, result.getStatus(),
+                "publishRules should fail when goods is not on sale");
+    }
+
     @SuppressWarnings("unchecked")
     @Test
     public void testListAvailableRules() {

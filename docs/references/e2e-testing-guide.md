@@ -31,6 +31,12 @@ Playwright 的 `webServer` 配置（`e2e/playwright.config.ts`）会自动启动
 |------|---------|
 | `e2e/tests/app-startup.spec.ts` | 根页面加载、GraphQL 端点响应 |
 | `e2e/tests/storefront-pages.spec.ts` | 商城前台各页面 JSON 是否正常返回 |
+| `e2e/tests/storefront-happy-path.spec.ts` | 商城下单 happy-path（地址→加购→下单→支付→订单列表） |
+| `e2e/tests/order-fulfillment.spec.ts` | 订单履约后半段（pay→ship→confirm） |
+| `e2e/tests/aftersale-refund.spec.ts` | 售后申请→审核→退款 + 订单取消 |
+| `e2e/tests/marketing.spec.ts` | 优惠券领用→下单抵扣 + 拼团开团 |
+| `e2e/tests/admin-pages.spec.ts` | admin 后台实体 findPage RPC 冒烟 + main.page.yaml 页面渲染冒烟 |
+| `e2e/tests/admin-ui.spec.ts` | admin 后台浏览器 UI 交互（API 登录→token 注入→SPA 导航→AMIS 页面渲染断言） |
 
 ## 常见问题
 

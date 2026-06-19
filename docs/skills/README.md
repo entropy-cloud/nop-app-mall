@@ -64,6 +64,7 @@ Do not add broad business-scenario skills as a replacement for project-specific 
 | `index-routing-audit-prompt.md`          | a docs index or directory structure needs routing effectiveness review             | the index has no routing role or is trivial   | top-level index, sub-indexes, target files                                   | coverage table, persona test results, structural findings |
 | `bug-diagnosis-prompt.md`                 | a bug is real but the root cause is not yet proven                                | the defect is already obvious and local       | bug report, owner docs, reproduction path, verification command              | confirmed cause and proof path                 |
 | `code-quality-audit-prompt.md`            | reviewing code for behavioral risk and implementation quality                      | only formatting or trivial nits are needed    | changed files, owner docs, tests or verification evidence                    | severity-ordered findings                      |
+| `test-coverage-audit-prompt.md`           | unit/integration/e2e test coverage and quality need a deep dedicated audit          | only a quick smoke check is needed             | test sources, BizModel methods, known-good-baselines, roadmap stage status   | coverage matrix, severity-ordered findings, hardening backlog |
 | `code-refactor-discovery-prompt.md`       | structural cleanup candidates need discovery before refactoring                    | the structural target is already agreed       | target area, owner docs, current code                                        | ranked refactor candidates                     |
 | `code-refactor-prompt.md`                 | behavior-preserving structural refactor work is the task                           | the task changes supported behavior           | target area, invariants, verification commands                               | safe refactor execution and proof              |
 
@@ -79,5 +80,6 @@ Do not add broad business-scenario skills as a replacement for project-specific 
 - `index-routing-audit-prompt.md`
 - `bug-diagnosis-prompt.md`
 - `code-quality-audit-prompt.md`
+- `test-coverage-audit-prompt.md`
 - `code-refactor-discovery-prompt.md`
 - `code-refactor-prompt.md`
