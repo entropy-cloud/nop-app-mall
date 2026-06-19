@@ -1,0 +1,7 @@
+FILE_ID,FILE_NAME,FILE_PATH,FILE_EXT,MIME_TYPE,FILE_LENGTH,FILE_LAST_MODIFIED,BIZ_OBJ_NAME,BIZ_OBJ_ID,FIELD_NAME,FILE_HASH,ORIGIN_FILE_ID,IS_PUBLIC,DEL_FLAG,CREATED_BY,CREATE_TIME,REMARK
+goods-1006002,1006002.png,/upload/goods/1006002.png,png,image/png,1024,2018-02-01 00:00:00,LitemallGoods,1006002,picUrl,,goods-1006002,true,0,nop,2018-02-01 00:00:00,
+goods-1006007,1006007.png,/upload/goods/1006007.png,png,image/png,1024,2018-02-01 00:00:00,LitemallGoods,1006007,picUrl,,goods-1006007,true,0,nop,2018-02-01 00:00:00,
+goods-1006010,1006010.png,/upload/goods/1006010.png,png,image/png,1024,2018-02-01 00:00:00,LitemallGoods,1006010,picUrl,,goods-1006010,true,0,nop,2018-02-01 00:00:00,
+goods-1009009,1009009.png,/upload/goods/1009009.png,png,image/png,1024,2018-02-01 00:00:00,LitemallGoods,1009009,picUrl,,goods-1009009,true,0,nop,2018-02-01 00:00:00,
+goods-1009012,1009012.png,/upload/goods/1009012.png,png,image/png,1024,2018-02-01 00:00:00,LitemallGoods,1009012,picUrl,,goods-1009012,true,0,nop,2018-02-01 00:00:00,
+goods-1009013,1009013.png,/upload/goods/1009013.png,png,image/png,1024,2018-02-01 00:00:00,LitemallGoods,1009013,picUrl,,goods-1009013,true,0,nop,2018-02-01 00:00:00,

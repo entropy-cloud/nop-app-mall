@@ -23,7 +23,7 @@ export default defineConfig({
   webServer: process.env.SKIP_WEBSERVER
     ? undefined
     : {
-        command: `java -Dfile.encoding=UTF8 -Dquarkus.profile=dev -Dquarkus.http.port=${port} -Dnop.datasource.jdbc-url=jdbc:h2:mem:e2e -Dnop.orm.init-database-schema=true -jar app-mall-app/target/quarkus-app/quarkus-run.jar`,
+        command: `java -Dfile.encoding=UTF8 -Dquarkus.profile=dev -Dquarkus.http.port=${port} -Dnop.datasource.jdbc-url=jdbc:h2:mem:e2e -Dnop.orm.init-database-schema=true -Dnop.orm.init-database-data=true -jar app-mall-app/target/quarkus-app/quarkus-run.jar`,
         cwd: '..',
         port,
         timeout: 180_000,

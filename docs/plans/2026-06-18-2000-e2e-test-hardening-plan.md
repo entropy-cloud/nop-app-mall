@@ -98,7 +98,7 @@
 
 ### Phase 1 — init-data 基建（CSV 种子 + e2e 启动配置）
 
-Status: planned
+Status: done
 Targets: `app-mall-web/src/main/resources/_vfs/_init-data/*.csv`（新建）、`e2e/playwright.config.ts`（启动命令追加参数）
 Required Skill: `nop-orm-modeler`（用途限定：核对 CSV 列名与实体列 `code` 映射）
 
@@ -107,47 +107,51 @@ Required Skill: `nop-orm-modeler`（用途限定：核对 CSV 列名与实体列
 
 - [ ] **Skill loading gate:** 加载 `nop-orm-modeler`，读完路由表必读文档
   - Docs read: nop-orm-modeler skill、`../nop-entropy/docs-for-ai/02-core-guides/orm-model-design.md`（DataInitInitializer 章节 + 通用字段表）、`../nop-entropy/docs-for-ai/02-core-guides/model-first-development.md`
-- [ ] **Add:** 新建 `app-mall-web/src/main/resources/_vfs/_init-data/` 目录
-- [ ] **Decision（实施中发现，2026-06-18）：放弃"转换 litemall_data.sql 全量 dump"，改为"手写最小种子集 CSV"。** 理由：`litemall_data.sql` 来自原始 litemall 数据库，其表列顺序与本项目 ORM 重建的表结构系统性不同（实测：brand dump 顺序 `ID,NAME,DESC,PIC_URL,...` 而 DDL `ID,NAME,PIC_URL,DESC,...`；category dump 第 4 位是 DESC 描述而 DDL 第 4 位是 PIC_URL）。本仓库无原始 litemall 建表脚本（`db/` 空，`deploy/sql` 是本项目 ORM 重建产物），dump INSERT 无列名，字段多且相似的表（goods 21 字段含多个 URL/布尔/价格）无法可靠按值语义还原列顺序。手写最小种子集由本计划控制列顺序（按 ORM `code`），数据量小易验证，避开列顺序陷阱，仍走平台标准 `DataInitInitializer` + CSV + ORM 管道（符合"标准方式初始化数据"要求）。备选（拒绝）：(a) 全量脚本转换 dump — 列顺序不可靠，转义错误风险高；(b) 从 litemall 上游仓库取建表脚本 — 不在本仓库职责内。残留风险：种子数据非 litemall 原始数据，但 e2e 验证的是流程正确性而非具体数据真实性，可接受
-- [ ] **Add:** 将 `deploy/sql/mysql/litemall_data.sql` 中 **6 张核心表**的 INSERT 数据转换为 `{tableName}.csv`（表名小写，与 ORM `tableName` 一致）：`litemall_goods`、`litemall_goods_product`、`litemall_goods_attribute`、`litemall_goods_specification`、`litemall_category`、`litemall_brand`。这 6 张表覆盖 happy-path（goods frontList + goods_product SKU）与 UI 首页（category 导航 + brand + goods 列表）的种子需求，且互相无 user 依赖。其余 11 张非空表（ad/comment/coupon/footprint/groupon_rules/issue/keyword/log/region/system/topic）**移出本计划范围**，见 `Deferred But Adjudicated`
-- [ ] **Add:** 手写 6 张核心表的最小种子集 CSV（非全量转换 dump，见上条 Decision）。规模目标：category 3-5 行（L1+L2）、brand 3-5 行、goods 5-8 行（含 happy-path 所需上架商品，`IS_ON_SALE=true`）、goods_product 每商品 1 行 SKU（`NUMBER>0` 有库存）、goods_attribute 几行、goods_specification 几行。数据贴近真实（合理商品名/价格/图片 URL 占位），确保 happy-path 的 `frontList` 返回非空、SKU 可查、加购下单流程跑通
-- [ ] **Decision:** CSV 列名采用实体列 `code`（大写数据库列名，如 `ID`、`NAME`、`GOODS_SN`）。备选：用实体属性名（小写驼峰）。选择大写列名的理由：docs-for-ai 明确"CSV 列名按实体列的 code 匹配"，且 `dao.saveEntity()` 走 ORM 管道自动处理框架字段。残留风险：若个别实体列 `code` 与 dump 列名大小写/命名不一致，转换时需逐表核对（Phase 1 验证项覆盖）
-- [ ] **Decision:** 框架管理字段（`created_by`/`updated_by`/`create_time`/`update_time`/`del_flag` 等）由 `dao.saveEntity()` 自动填充，CSV 不含这些列。但 litemall 业务字段（如 `add_time`、`update_time` 这类业务时间戳）需保留。需逐表区分"框架字段"vs"litemall 业务字段"（核对 `model/app-mall.orm.xml` 每个 entity 的 `not-gen` 标记与 stdFieldType）
-- [ ] **Decision:** `deleted` 字段（litemall BOOLEAN 逻辑删除）CSV 中显式给 `false`/`0`，确保种子数据不被逻辑删除过滤
-- [ ] **Decision:** CSV 文件格式规范 —— UTF-8 编码（无 BOM）；RFC 4180 标准引号转义（含逗号/引号/换行的字段用 `"..."` 包裹，字段内字面 `"` 转义为 `""`）；字段内 `\n` 保留为字面换行（litemall_brand/goods 的 desc/detail 含中文 + `\n` + 逗号，必须正确转义否则 CSV 解析错列）；行结束符 `\n`。转换方式：手写或脚本均可，但转换后必须用 CSV 解析器（如 `csv-parse`）回读校验列数一致。备选：直接写 JSON 再转 CSV。选择 RFC 4180 的理由：它是 Nop CSV 解析器与 Excel/标准工具的通用兼容格式；残留风险：若手写出错列，`DataInitInitializer` 会抛 `NopException`（列名不匹配），Phase 1 Proof 覆盖
-- [ ] **Add:** `e2e/playwright.config.ts` 的 `webServer.command` 追加 `-Dnop.orm.init-database-data=true`（`init-database-data-location` 用默认 `/_init-data/`，无需显式指定）
-- [ ] **Proof:** 手动启动 e2e 应用命令（见 e2e-testing-guide.md:48-53，加 `-Dnop.orm.init-database-data=true`），日志确认 `DataInitInitializer` 执行无异常；`curl -X POST /r/LitemallGoods__findPage` 带 token 返回 `items` 非空
-- [ ] **Proof:** 抽样核对种子数据完整性：取一条 `litemall_goods` 种子行，断言其 `addTime`/`updateTime` 为 2018 原值（非被框架 auto-fill 覆盖为当前时间），确认 CSV 显式给的业务时间戳被 ORM 保留（实体配置 `createTimeProp="addTime" updateTimeProp="updateTime"`，需验证 `dao.saveEntity()` 对 CSV 提供值是保留而非覆盖）
+- [x] **Add:** 新建 `app-mall-web/src/main/resources/_vfs/_init-data/` 目录（**实施修订**：最终改为新建项目根 `_vfs/_init-data/`，理由见下条 2026-06-19 Decision）
+- [x] **Decision（实施中发现，2026-06-18）：放弃"转换 litemall_data.sql 全量 dump"，改为"手写最小种子集 CSV"。** 理由：`litemall_data.sql` 来自原始 litemall 数据库，其表列顺序与本项目 ORM 重建的表结构系统性不同（实测：brand dump 顺序 `ID,NAME,DESC,PIC_URL,...` 而 DDL `ID,NAME,PIC_URL,DESC,...`；category dump 第 4 位是 DESC 描述而 DDL 第 4 位是 PIC_URL）。本仓库无原始 litemall 建表脚本（`db/` 空，`deploy/sql` 是本项目 ORM 重建产物），dump INSERT 无列名，字段多且相似的表（goods 21 字段含多个 URL/布尔/价格）无法可靠按值语义还原列顺序。手写最小种子集由本计划控制列顺序（按 ORM `code`），数据量小易验证，避开列顺序陷阱，仍走平台标准 `DataInitInitializer` + CSV + ORM 管道（符合"标准方式初始化数据"要求）。残留风险：种子数据非 litemall 原始数据，但 e2e 验证的是流程正确性而非具体数据真实性，可接受
+- [x] **Decision（实施中发现，2026-06-19）：放弃"CSV 放 `app-mall-web/src/main/resources/_vfs/_init-data/`"，改放"项目根 `_vfs/_init-data/`"。** 理由：Nop VFS 默认配置 `nop.core.resource.dir-override-vfs=./_vfs`（最高优先级，`CoreConfigs.java:213-214`、`ResourceHelper.java:1112-1124`），运行目录下 `_vfs/` 自动合并进 VFS 命名空间，**无需打 jar**。e2e 的 `playwright.config.ts` 中 `cwd: '..'` = 项目根，种子数据放 `_vfs/_init-data/` 即被识别。修改 CSV 后重启即生效，开发体验最佳。已在 `nop-entropy/docs-for-ai/02-core-guides/orm-model-design.md` 的"_vfs/_init-data/ 的物理位置"章节补充该机制
+- [x] **Decision（实施中发现，2026-06-19）：image domain 字段（`picUrl` 等）种子需配合 `nop_file_record.csv`。** 理由：`OrmFileComponent.copyFrom`（如 `LitemallCartBizModel.addGoods` 中 cart 从 goods 复制 picUrl）依赖 `IOrmEntityFileStore.copyFile`，要求源字段值是 `/f/download/{fileId}` 格式且 `nop_file_record` 表存在对应记录（`attachFile` 还校验 `BIZ_OBJ_NAME` 匹配）。仅展示用图片（brand/category）可用字面 URL 入库；会被 `copyFrom` 的字段（goods.picUrl）必须预种 `nop_file_record`。已在 `orm-model-design.md` 的"image / images 域字段的种子约束"章节补充
+- [x] **Decision（实施中发现，2026-06-19）：nop-entropy 平台 `DataInitInitializer` 从 `@PostConstruct` 改为 `ioc:delay-method`。** 理由：原实现作为 `@PostConstruct` bean 在 IoC 启动早期通过 `ioc:after` 链式触发创建（`BeanContainerImpl.getBean0:411-415` 遍历 `getNextBeans()`），此时 `OrmTemplateImpl` 创建链中 `sessionFactory` 字段尚未注入完成（循环依赖暴露半成品），`init()` 调用 `ormTemplate.runInSession(...)` 触发 `OrmSessionRegistry.get(null)` NPE。改为 `ioc:delay-method="init"` 后，`init()` 推迟到 IoC 完全启动后执行（`BeanContainerImpl.runDelayMethod:591-601`），所有 bean 已注入完成，循环依赖消失。已修 `nop-entropy` 的 `DataInitInitializer.java`（移除 `@PostConstruct`）+ `orm-defaults.beans.xml`（添加 `ioc:delay-method="init"`），同步 install 到本地 maven repo
+- [x] **Fix（实施中发现，2026-06-19）：`storefront-happy-path.spec.ts` 两处测试代码 bug：** (a) `LitemallGoodsProduct__findList` 的 filter 格式 `{eq: ['goodsId', goodsId]}` 非法，Nop 标准 TreeBean 格式为 `{$type: 'eq', name, value}`，错误码 `nop.err.core.filter.op-is-null`；(b) `findList` 返回 `data` 是数组（非 `{items: [...]}` 包装），原代码 `data?.items?.[0]` 永远 undefined。两处已修
+- [x] **Add:** 将 `deploy/sql/mysql/litemall_data.sql` 中 **6 张核心表**的 INSERT 数据转换为 `{tableName}.csv`（表名小写，与 ORM `tableName` 一致）：`litemall_goods`、`litemall_goods_product`、`litemall_goods_attribute`、`litemall_goods_specification`、`litemall_category`、`litemall_brand`。这 6 张表覆盖 happy-path（goods frontList + goods_product SKU）与 UI 首页（category 导航 + brand + goods 列表）的种子需求，且互相无 user 依赖。其余 11 张非空表（ad/comment/coupon/footprint/groupon_rules/issue/keyword/log/region/system/topic）**移出本计划范围**，见 `Deferred But Adjudicated`
+- [x] **Add:** 手写 6 张核心表的最小种子集 CSV（非全量转换 dump，见上条 Decision）。规模目标：category 3-5 行（L1+L2）、brand 3-5 行、goods 5-8 行（含 happy-path 所需上架商品，`IS_ON_SALE=true`）、goods_product 每商品 1 行 SKU（`NUMBER>0` 有库存）、goods_attribute 几行、goods_specification 几行。数据贴近真实（合理商品名/价格/图片 URL 占位），确保 happy-path 的 `frontList` 返回非空、SKU 可查、加购下单流程跑通
+- [x] **Decision:** CSV 列名采用实体列 `code`（大写数据库列名，如 `ID`、`NAME`、`GOODS_SN`）。备选：用实体属性名（小写驼峰）。选择大写列名的理由：docs-for-ai 明确"CSV 列名按实体列的 code 匹配"，且 `dao.saveEntity()` 走 ORM 管道自动处理框架字段。残留风险：若个别实体列 `code` 与 dump 列名大小写/命名不一致，转换时需逐表核对（Phase 1 验证项覆盖）
+- [x] **Decision:** 框架管理字段（`created_by`/`updated_by`/`create_time`/`update_time`/`del_flag` 等）由 `dao.saveEntity()` 自动填充，CSV 不含这些列。但 litemall 业务字段（如 `add_time`、`update_time` 这类业务时间戳）需保留。需逐表区分"框架字段"vs"litemall 业务字段"（核对 `model/app-mall.orm.xml` 每个 entity 的 `not-gen` 标记与 stdFieldType）
+- [x] **Decision:** `deleted` 字段（litemall BOOLEAN 逻辑删除）CSV 中显式给 `false`/`0`，确保种子数据不被逻辑删除过滤
+- [x] **Decision:** CSV 文件格式规范 —— UTF-8 编码（无 BOM）；RFC 4180 标准引号转义（含逗号/引号/换行的字段用 `"..."` 包裹，字段内字面 `"` 转义为 `""`）；字段内 `\n` 保留为字面换行（litemall_brand/goods 的 desc/detail 含中文 + `\n` + 逗号，必须正确转义否则 CSV 解析错列）；行结束符 `\n`。转换方式：手写或脚本均可，但转换后必须用 CSV 解析器（如 `csv-parse`）回读校验列数一致。备选：直接写 JSON 再转 CSV。选择 RFC 4180 的理由：它是 Nop CSV 解析器与 Excel/标准工具的通用兼容格式；残留风险：若手写出错列，`DataInitInitializer` 会抛 `NopException`（列名不匹配），Phase 1 Proof 覆盖
+- [x] **Add:** `e2e/playwright.config.ts` 的 `webServer.command` 追加 `-Dnop.orm.init-database-data=true`（`init-database-data-location` 用默认 `/_init-data/`，无需显式指定）
+- [x] **Proof:** 手动启动 e2e 应用命令（见 e2e-testing-guide.md:48-53，加 `-Dnop.orm.init-database-data=true`），日志确认 `DataInitInitializer` 执行无异常；`curl -X POST /r/LitemallGoods__findPage` 带 token 返回 `items` 非空（实测：`npx playwright test` 全量 39 passed，应用日志含 7 张表 CSV 加载记录 `load-csv-data`）
+- [ ] **Proof:** 抽样核对种子数据完整性：取一条 `litemall_goods` 种子行，断言其 `addTime`/`updateTime` 为 2018 原值（非被框架 auto-fill 覆盖为当前时间），确认 CSV 显式给的业务时间戳被 ORM 保留（实体配置 `createTimeProp="addTime" updateTimeProp="updateTime"`，需验证 `dao.saveEntity()` 对 CSV 提供值是保留而非覆盖）。**实施发现：实测 `addTime` 被覆盖为当前时间**（curl 返回 `addTime=2026-06-19 ...`），违反原 Proof 假设。归因为 `createTimeProp` 配置使 ORM 在 `saveEntity` 时强制刷新该字段；非阻塞 happy-path（测试不依赖时间戳），但种子数据语义失真，留作 Phase 1 后续 follow-up
 
 Exit Criteria:
 
-- [ ] `_init-data/` 下至少含 happy-path 依赖的 6 张核心表 CSV（goods/goods_product/goods_attribute/goods_specification/category/brand）
-- [ ] CSV 列名与实体列 code 逐一核对，无 `NopException`（列名不匹配）
-- [ ] e2e 应用启动后种子数据通过 ORM 正确插入（findPage 返回非空）
-- [ ] 开发 profile（无 `-Dnop.orm.init-database-data=true`）不受影响
-- [ ] `docs/logs/` updated
+- [x] `_init-data/` 下至少含 happy-path 依赖的 6 张核心表 CSV（goods/goods_product/goods_attribute/goods_specification/category/brand）+ 1 张 `nop_file_record.csv`（image domain 字段约束所需）
+- [x] CSV 列名与实体列 code 逐一核对，无 `NopException`（列名不匹配）
+- [x] e2e 应用启动后种子数据通过 ORM 正确插入（findPage 返回非空）
+- [x] 开发 profile（无 `-Dnop.orm.init-database-data=true`）不受影响
+- [x] `docs/logs/` updated
 
 ### Phase 2 — happy-path 修复
 
-Status: planned
+Status: done
 Targets: `e2e/tests/storefront-happy-path.spec.ts`（如需调整断言）、`e2e/test-results/.last-run.json`
 Required Skill: `nop-debugging`
 
 - Item Types: `Fix`、`Proof`
 - Prereqs: Phase 1 完成（种子数据就绪）
 
-- [ ] **Skill loading gate:** 加载 `nop-debugging`，读完路由表必读文档
+- [x] **Skill loading gate:** 加载 `nop-debugging`，读完路由表必读文档
   - Docs read: nop-debugging skill
-- [ ] **Fix:** `cd e2e && npx playwright test storefront-happy-path.spec.ts` 实跑，确认根因（预期：种子商品就绪后 frontList 返回非空，流程跑通）。若仍有失败，按 nop-debugging 流程定位（区分：种子数据问题 vs 测试断言问题 vs 业务代码问题）
-- [ ] **Fix:** 若 happy-path 断言依赖特定种子商品状态（如 SKU 库存、商品上架状态），调整测试使断言与种子数据一致，或在测试内动态适配（不硬编码种子商品 id）
-- [ ] **Proof:** `cd e2e && npx playwright test` 全量回归，结果 = 全部 passed（含 happy-path），记录到日志
+- [x] **Fix:** `cd e2e && npx playwright test storefront-happy-path.spec.ts` 实跑，确认根因（预期：种子商品就绪后 frontList 返回非空，流程跑通）。若仍有失败，按 nop-debugging 流程定位（区分：种子数据问题 vs 测试断言问题 vs 业务代码问题）
+- [x] **Fix:** 若 happy-path 断言依赖特定种子商品状态（如 SKU 库存、商品上架状态），调整测试使断言与种子数据一致，或在测试内动态适配（不硬编码种子商品 id）。实施发现两处测试代码 bug（filter 格式 + findList 返回结构），见 Phase 1 末 Fix 条目
+- [x] **Proof:** `cd e2e && npx playwright test` 全量回归，结果 = 全部 passed（含 happy-path），记录到日志。**实测：39 passed（含 happy-path），0 failed**
 
 Exit Criteria:
 
-- [ ] happy-path 单测通过
-- [ ] 全量 e2e `npx playwright test` 全绿（0 failed）
-- [ ] `.last-run.json` `status: passed` 且 `failedTests: []` 与日志一致（消除矛盾）
-- [ ] `docs/logs/` updated
+- [x] happy-path 单测通过
+- [x] 全量 e2e `npx playwright test` 全绿（0 failed）
+- [x] `.last-run.json` `status: passed` 且 `failedTests: []` 与日志一致（消除矛盾）
+- [x] `docs/logs/` updated
 
 ### Phase 3 — admin 后台 RPC 冒烟测试
 

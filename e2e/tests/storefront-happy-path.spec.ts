@@ -38,7 +38,9 @@ test.describe('Storefront happy-path flow', () => {
           offset: 0,
           limit: 1,
           filter: {
-            eq: ['goodsId', goodsId],
+            $type: 'eq',
+            name: 'goodsId',
+            value: goodsId,
           },
         },
       },
@@ -46,7 +48,7 @@ test.describe('Storefront happy-path flow', () => {
     expect(skuResp.status()).toBe(200);
     const skuBody = await skuResp.json();
     expect(skuBody.status).toBe(0);
-    const product = skuBody.data?.items?.[0];
+    const product = skuBody.data?.[0];
     expect(product).toBeTruthy();
 
     const addCartResp = await request.post('/r/LitemallCart__addGoods', {
