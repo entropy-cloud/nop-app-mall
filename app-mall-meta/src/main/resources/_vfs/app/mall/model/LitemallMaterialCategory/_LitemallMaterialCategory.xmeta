@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<meta x:schema="/nop/schema/xmeta.xdef" xmlns:x="/nop/schema/xdsl.xdef" xmlns:i18n-en="i18n-en" xmlns:ext="ext"
+      xmlns:xpl="xpl" ext:model="orm" xmlns:c="c" xmlns:graphql="graphql" xmlns:meta-gen="meta-gen" xmlns:biz="biz"
+      displayName="素材分类表" xmlns:ui="ui" xmlns:orm="orm">
+
+    <entityName>app.mall.dao.entity.LitemallMaterialCategory</entityName>
+
+    <primaryKey>id</primaryKey>
+
+    <displayProp>name</displayProp>
+
+    <x:gen-extends>
+        <meta-gen:DefaultMetaGenExtends xpl:lib="/nop/core/xlib/meta-gen.xlib"/>
+    </x:gen-extends>
+
+    <x:post-extends>
+        <meta-gen:DefaultMetaPostExtends xpl:lib="/nop/core/xlib/meta-gen.xlib"/>
+    </x:post-extends>
+
+    <keys/>
+
+    <props>
+        <prop name="id" displayName="Id" propId="1" tagSet="seq" mandatory="true" queryable="true" sortable="true"
+              insertable="false" updatable="false" ui:show="R">
+            <schema type="java.lang.String"/>
+        </prop>
+        <prop name="name" displayName="分类名称" propId="2" tagSet="disp" mandatory="true" queryable="true" sortable="true"
+              insertable="true" updatable="true">
+            <schema type="java.lang.String" precision="127"/>
+        </prop>
+        <prop name="parentId" displayName="父分类ID" propId="3" queryable="true" sortable="true" insertable="true"
+              updatable="true" ext:relation="parent">
+            <schema type="java.lang.String"/>
+        </prop>
+        <prop name="sortOrder" displayName="排序" propId="4" queryable="true" sortable="true" insertable="true"
+              updatable="true">
+            <schema type="java.lang.Integer"/>
+        </prop>
+        <prop name="addTime" displayName="创建时间" propId="5" queryable="true" sortable="true" insertable="false"
+              updatable="false" internal="true" ui:show="X">
+            <schema domain="createTime" type="java.time.LocalDateTime"/>
+        </prop>
+        <prop name="updateTime" displayName="更新时间" propId="6" queryable="true" sortable="true" insertable="false"
+              updatable="false" internal="true" ui:show="X">
+            <schema domain="updateTime" type="java.time.LocalDateTime"/>
+        </prop>
+        <prop name="deleted" displayName="逻辑删除" propId="7" queryable="true" sortable="true" insertable="false"
+              updatable="true" internal="true" ui:show="X">
+            <schema domain="delFlag" type="java.lang.Boolean"/>
+        </prop>
+        <prop name="parent" displayName="父分类" i18n-en:displayName="Parent" tagSet="pub,ref-pub" ext:kind="to-one"
+              internal="true" queryable="true" ext:joinLeftProp="parentId" ext:joinRightProp="id"
+              ext:joinRightDisplayProp="name" insertable="false" updatable="false" lazy="true">
+            <schema bizObjName="LitemallMaterialCategory"/>
+        </prop>
+        <prop name="parent.name" displayName="父分类" i18n-en:displayName="Parent" internal="true" queryable="true"
+              sortable="true" lazy="true">
+            <schema type="String"/>
+        </prop>
+        <prop name="children" displayName="子分类" i18n-en:displayName="Children" tagSet="pub" ext:kind="to-many"
+              internal="true" ext:joinLeftProp="id" ext:joinRightProp="parentId" ext:joinRightDisplayProp="name"
+              insertable="false" updatable="false" lazy="true">
+            <schema>
+                <item bizObjName="LitemallMaterialCategory"/>
+            </schema>
+        </prop>
+    </props>
+</meta>

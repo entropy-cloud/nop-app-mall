@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<meta x:schema="/nop/schema/xmeta.xdef" xmlns:x="/nop/schema/xdsl.xdef" xmlns:i18n-en="i18n-en" xmlns:ext="ext"
+      xmlns:xpl="xpl" ext:model="orm" xmlns:c="c" xmlns:graphql="graphql" xmlns:meta-gen="meta-gen" xmlns:biz="biz"
+      displayName="促销活动表（满减送）" xmlns:ui="ui" xmlns:orm="orm">
+
+    <entityName>app.mall.dao.entity.LitemallPromotionActivity</entityName>
+
+    <primaryKey>id</primaryKey>
+
+    <displayProp>name</displayProp>
+
+    <x:gen-extends>
+        <meta-gen:DefaultMetaGenExtends xpl:lib="/nop/core/xlib/meta-gen.xlib"/>
+    </x:gen-extends>
+
+    <x:post-extends>
+        <meta-gen:DefaultMetaPostExtends xpl:lib="/nop/core/xlib/meta-gen.xlib"/>
+    </x:post-extends>
+
+    <keys/>
+
+    <props>
+        <prop name="id" displayName="Id" propId="1" tagSet="seq" mandatory="true" queryable="true" sortable="true"
+              insertable="false" updatable="false" ui:show="R">
+            <schema type="java.lang.String"/>
+        </prop>
+        <prop name="name" displayName="活动名称" propId="2" tagSet="disp" mandatory="true" queryable="true" sortable="true"
+              insertable="true" updatable="true">
+            <schema type="java.lang.String" precision="63"/>
+        </prop>
+        <prop name="discountType" displayName="折扣类型" propId="3" queryable="true" sortable="true" insertable="true"
+              updatable="true">
+            <schema type="java.lang.Integer" dict="mall/discount-type"/>
+        </prop>
+        <prop name="startTime" displayName="开始时间" propId="4" queryable="true" sortable="true" insertable="true"
+              updatable="true">
+            <schema type="java.time.LocalDateTime"/>
+        </prop>
+        <prop name="endTime" displayName="结束时间" propId="5" queryable="true" sortable="true" insertable="true"
+              updatable="true">
+            <schema type="java.time.LocalDateTime"/>
+        </prop>
+        <prop name="status" displayName="活动状态" propId="6" queryable="true" sortable="true" insertable="true"
+              updatable="true">
+            <schema type="java.lang.Integer" dict="mall/promotion-status"/>
+        </prop>
+        <prop name="goodsScope" displayName="商品范围类型" propId="7" queryable="true" sortable="true" insertable="true"
+              updatable="true">
+            <schema type="java.lang.Integer" dict="mall/goods-scope"/>
+        </prop>
+        <prop name="goodsScopeValue" displayName="商品范围值(JSON)" propId="8" queryable="true" sortable="true"
+              insertable="true" updatable="true">
+            <schema type="java.lang.String" precision="1023"/>
+        </prop>
+        <prop name="priority" displayName="优先级" propId="9" queryable="true" sortable="true" insertable="true"
+              updatable="true">
+            <schema type="java.lang.Integer"/>
+        </prop>
+        <prop name="maxPerUser" displayName="每人限参与次数(0不限)" propId="10" queryable="true" sortable="true"
+              insertable="true" updatable="true">
+            <schema type="java.lang.Integer"/>
+        </prop>
+        <prop name="remark" displayName="备注" propId="11" queryable="true" sortable="true" insertable="true"
+              updatable="true">
+            <schema type="java.lang.String" precision="255"/>
+        </prop>
+        <prop name="addTime" displayName="创建时间" propId="12" queryable="true" sortable="true" insertable="false"
+              updatable="false" internal="true" ui:show="X">
+            <schema domain="createTime" type="java.time.LocalDateTime"/>
+        </prop>
+        <prop name="updateTime" displayName="更新时间" propId="13" queryable="true" sortable="true" insertable="false"
+              updatable="false" internal="true" ui:show="X">
+            <schema domain="updateTime" type="java.time.LocalDateTime"/>
+        </prop>
+        <prop name="deleted" displayName="逻辑删除" propId="14" queryable="true" sortable="true" insertable="false"
+              updatable="true" internal="true" ui:show="X">
+            <schema domain="delFlag" type="java.lang.Boolean"/>
+        </prop>
+        <prop name="tiers" displayName="满减档位" i18n-en:displayName="Tiers"
+              tagSet="pub,cascade-delete,insertable,updatable,grid" ext:kind="to-many" internal="true"
+              ui:editGrid="sub-grid-edit" ui:viewGrid="sub-grid-view" ext:joinLeftProp="id"
+              ext:joinRightProp="activityId" insertable="true" updatable="true" lazy="true">
+            <schema>
+                <item bizObjName="LitemallPromotionTier"/>
+            </schema>
+        </prop>
+    </props>
+</meta>

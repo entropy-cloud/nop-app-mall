@@ -74,6 +74,10 @@
               updatable="true" internal="true" ui:show="X">
             <schema domain="delFlag" type="java.lang.Boolean"/>
         </prop>
+        <prop name="actualPayAmount" displayName="实付金额" propId="15" queryable="true" sortable="true" insertable="true"
+              updatable="true">
+            <schema type="java.math.BigDecimal" precision="10" scale="2"/>
+        </prop>
         <prop name="order" displayName="订单" i18n-en:displayName="Order"
               tagSet="pub,ref-pub,ref-cascade-delete,ref-updatable,ref-insertable" ext:kind="to-one" internal="true"
               queryable="true" ext:joinLeftProp="orderId" ext:joinRightProp="id" ext:joinRightDisplayProp="orderSn"

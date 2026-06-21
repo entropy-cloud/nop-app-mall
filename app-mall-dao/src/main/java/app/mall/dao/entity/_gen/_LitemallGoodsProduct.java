@@ -56,8 +56,12 @@ public class _LitemallGoodsProduct extends DynamicOrmEntity{
     public static final String PROP_NAME_deleted = "deleted";
     public static final int PROP_ID_deleted = 9;
     
+    /* 安全库存预警线: SAFE_STOCK INTEGER */
+    public static final String PROP_NAME_safeStock = "safeStock";
+    public static final int PROP_ID_safeStock = 10;
+    
 
-    private static int _PROP_ID_BOUND = 10;
+    private static int _PROP_ID_BOUND = 11;
 
     
     /* relation: 所属商品 */
@@ -73,7 +77,7 @@ public class _LitemallGoodsProduct extends DynamicOrmEntity{
     protected static final List<String> PK_PROP_NAMES = Arrays.asList(PROP_NAME_id);
     protected static final int[] PK_PROP_IDS = new int[]{PROP_ID_id};
 
-    private static final String[] PROP_ID_TO_NAME = new String[10];
+    private static final String[] PROP_ID_TO_NAME = new String[11];
     private static final Map<String,Integer> PROP_NAME_TO_ID = new HashMap<>();
     static{
       
@@ -104,6 +108,9 @@ public class _LitemallGoodsProduct extends DynamicOrmEntity{
           PROP_ID_TO_NAME[PROP_ID_deleted] = PROP_NAME_deleted;
           PROP_NAME_TO_ID.put(PROP_NAME_deleted, PROP_ID_deleted);
       
+          PROP_ID_TO_NAME[PROP_ID_safeStock] = PROP_NAME_safeStock;
+          PROP_NAME_TO_ID.put(PROP_NAME_safeStock, PROP_ID_safeStock);
+      
     }
 
     
@@ -133,6 +140,9 @@ public class _LitemallGoodsProduct extends DynamicOrmEntity{
     
     /* 逻辑删除: DELETED */
     private java.lang.Boolean _deleted;
+    
+    /* 安全库存预警线: SAFE_STOCK */
+    private java.lang.Integer _safeStock;
     
 
     public _LitemallGoodsProduct(){
@@ -235,6 +245,9 @@ public class _LitemallGoodsProduct extends DynamicOrmEntity{
             case PROP_ID_deleted:
                return getDeleted();
         
+            case PROP_ID_safeStock:
+               return getSafeStock();
+        
            default:
               return super.orm_propValue(propId);
         }
@@ -336,6 +349,16 @@ public class _LitemallGoodsProduct extends DynamicOrmEntity{
                break;
             }
         
+            case PROP_ID_safeStock:{
+               java.lang.Integer typedValue = null;
+               if(value != null){
+                   typedValue = ConvertHelper.toInteger(value,
+                       err-> newTypeConversionError(PROP_NAME_safeStock));
+               }
+               setSafeStock(typedValue);
+               break;
+            }
+        
            default:
               super.orm_propValue(propId,value);
         }
@@ -404,6 +427,13 @@ public class _LitemallGoodsProduct extends DynamicOrmEntity{
             case PROP_ID_deleted:{
                onInitProp(propId);
                this._deleted = (java.lang.Boolean)value;
+               
+               break;
+            }
+        
+            case PROP_ID_safeStock:{
+               onInitProp(propId);
+               this._safeStock = (java.lang.Integer)value;
                
                break;
             }
@@ -581,6 +611,25 @@ public class _LitemallGoodsProduct extends DynamicOrmEntity{
         if(onPropSet(PROP_ID_deleted,value)){
             this._deleted = value;
             internalClearRefs(PROP_ID_deleted);
+            
+        }
+    }
+    
+    /**
+     * 安全库存预警线: SAFE_STOCK
+     */
+    public final java.lang.Integer getSafeStock(){
+         onPropGet(PROP_ID_safeStock);
+         return _safeStock;
+    }
+
+    /**
+     * 安全库存预警线: SAFE_STOCK
+     */
+    public final void setSafeStock(java.lang.Integer value){
+        if(onPropSet(PROP_ID_safeStock,value)){
+            this._safeStock = value;
+            internalClearRefs(PROP_ID_safeStock);
             
         }
     }

@@ -10,13 +10,14 @@
 
 | 能力区域 | Owner Doc | 说明 |
 | -------- | --------- | ---- |
-| 用户与后台账号管理 | `docs/design/user-and-address.md` | 注册、登录、个人资料、后台账号、地址、地区数据 |
+| 用户与后台账号管理 | `docs/design/user-and-address.md` | 注册、登录、个人资料、后台账号、地址、地区数据、会员等级、登录方式扩展 |
 | 角色与权限 | `docs/design/roles-and-permissions.md` | 业务角色含义、可见性、受保护操作 |
-| 商品目录 | `docs/design/product-catalog.md` | 分类、品牌、商品、SKU、规格、属性、目录搜索 |
-| 购物车与结算 | `docs/design/order-and-cart.md` | 购物车行、结算前置条件、价格构成、订单提交 |
-| 订单生命周期 | `docs/design/order-and-cart.md` | 支付、发货、收货、取消、退款、售后状态含义 |
-| 营销与促销 | `docs/design/marketing-and-promotions.md` | 优惠券、团购、互动能力、营销内容、反馈界面 |
-| 系统配置与运营 | `docs/design/system-configuration.md` | 业务配置、存储、公告、运营任务、管理员日志、统计 |
+| 商品目录 | `docs/design/product-catalog.md` | 分类、品牌、商品、SKU、规格、属性、目录搜索、库存语义化、营销价拼接、首页运营打标 |
+| 购物车与结算 | `docs/design/order-and-cart.md` | 购物车行、结算前置条件、价格构成、订单提交、积分抵扣、多支付通道 |
+| 订单生命周期 | `docs/design/order-and-cart.md` | 支付、发货、收货、取消、退款、售后状态含义、配送方式扩展、自提核销 |
+| 营销与促销 | `docs/design/marketing-and-promotions.md` | 优惠券、团购、满减送、限时折扣、秒杀、拼团、积分商城、签到、互动能力、营销内容、反馈界面、结构化评价 |
+| 系统配置与运营 | `docs/design/system-configuration.md` | 业务配置、存储、公告、运营任务、管理员日志、统计、Dashboard、用户运营工作台、订单运营工作台、营销活动管理后台 |
+| 钱包与资产 | `docs/design/wallet-and-assets.md` | 钱包余额、充值交易、钱包流水、积分账户与流水 |
 
 ## 规则
 

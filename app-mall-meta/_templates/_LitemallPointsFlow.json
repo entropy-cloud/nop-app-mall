@@ -1,0 +1,17 @@
+{
+  "id": "",
+  "accountId": "",
+  "userId": "",
+  "changeType": 0,
+  "changeType_label": "",
+  "changeAmount": 0,
+  "balanceAfter": 0,
+  "sourceType": "",
+  "sourceId": "",
+  "remark": "",
+  "addTime": "2000-01-01 14:00:00",
+  "updateTime": "2000-01-01 14:00:00",
+  "account": null,
+  "user": null,
+  "user.username": ""
+}

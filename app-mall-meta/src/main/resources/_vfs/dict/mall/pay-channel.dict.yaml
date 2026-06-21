@@ -1,0 +1,19 @@
+# __XGEN_FORCE_OVERRIDE__
+label: 支付通道
+locale: zh-CN
+valueType: int
+description: 
+options:
+
+  - label: 微信支付
+    value: 0
+    description: 
+  
+  - label: 支付宝
+    value: 10
+    description: 
+  
+  - label: 余额支付
+    value: 20
+    description: 
+  

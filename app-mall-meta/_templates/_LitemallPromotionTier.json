@@ -1,0 +1,11 @@
+{
+  "id": "",
+  "activityId": "",
+  "meetAmount": 0.0,
+  "discountValue": 0.0,
+  "addTime": "2000-01-01 14:00:00",
+  "updateTime": "2000-01-01 14:00:00",
+  "deleted": false,
+  "activity": null,
+  "activity.name": ""
+}

@@ -1,0 +1,19 @@
+# __XGEN_FORCE_OVERRIDE__
+label: 拼团状态
+locale: zh-CN
+valueType: int
+description: 
+options:
+
+  - label: 进行中
+    value: 0
+    description: 
+  
+  - label: 拼团成功
+    value: 10
+    description: 
+  
+  - label: 拼团失败
+    value: 20
+    description: 
+  

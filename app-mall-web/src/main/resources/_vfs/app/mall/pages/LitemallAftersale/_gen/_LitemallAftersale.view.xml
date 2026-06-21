@@ -50,6 +50,15 @@
 
                 <!--管理员操作时间-->
                 <col id="handleTime" sortable="true"/>
+
+                <!--订单商品项ID-->
+                <col id="orderItemId" sortable="true"/>
+
+                <!--处理备注-->
+                <col id="processNote" sortable="true"/>
+
+                <!--处理时间-->
+                <col id="processTime" sortable="true"/>
             </cols>
         </grid>
         <grid id="pick-list" x:prototype="list" x:abstract="true"/>
@@ -63,7 +72,8 @@
  type[售后类型] reason[退款原因]
  amount[退款金额] pictures[退款凭证图片链接数组]
  comment[退款说明] status[售后状态]
- handleTime[管理员操作时间] 
+ handleTime[管理员操作时间] orderItemId[订单商品项ID]
+ processNote[处理备注] processTime[处理时间]
 </layout>
         </form>
         <form id="add" editMode="add" title="新增-售后表" i18n-en:title="" x:prototype="edit"/>
@@ -74,6 +84,8 @@
  reason[退款原因] amount[退款金额]
  pictures[退款凭证图片链接数组] comment[退款说明]
  status[售后状态] handleTime[管理员操作时间]
+ orderItemId[订单商品项ID] processNote[处理备注]
+ processTime[处理时间] 
 </layout>
         </form>
         <form id="query" editMode="query" title="查询条件" i18n-en:title="Query Condition" x:abstract="true"/>

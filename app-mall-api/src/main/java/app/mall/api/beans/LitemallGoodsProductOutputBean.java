@@ -139,6 +139,20 @@
         }
 
 
+        private Integer _safeStock;
+
+    
+        @PropMeta(propId=10)
+    
+        public Integer getSafeStock(){
+            return _safeStock;
+        }
+
+        public void setSafeStock(Integer value){
+            this._safeStock = value;
+        }
+
+
         private io.nop.api.core.beans.file.FileStatusBean _urlComponentFileStatus;
 
     

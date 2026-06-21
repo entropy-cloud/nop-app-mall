@@ -138,4 +138,46 @@
         }
 
 
+        private String _pros;
+
+    
+        @PropMeta(propId=13)
+    
+        public String getPros(){
+            return _pros;
+        }
+
+        public void setPros(String value){
+            this._pros = value;
+        }
+
+
+        private String _cons;
+
+    
+        @PropMeta(propId=14)
+    
+        public String getCons(){
+            return _cons;
+        }
+
+        public void setCons(String value){
+            this._cons = value;
+        }
+
+
+        private Integer _semanticRating;
+
+    
+        @PropMeta(propId=15)
+    
+        public Integer getSemanticRating(){
+            return _semanticRating;
+        }
+
+        public void setSemanticRating(Integer value){
+            this._semanticRating = value;
+        }
+
+
     }

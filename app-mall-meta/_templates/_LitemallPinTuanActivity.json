@@ -1,0 +1,17 @@
+{
+  "id": "",
+  "goodsId": "",
+  "productId": "",
+  "pinTuanPrice": 0.0,
+  "minUserCount": 0,
+  "maxUserCount": 0,
+  "expireHours": 0,
+  "status": 0,
+  "status_label": "",
+  "remark": "",
+  "addTime": "2000-01-01 14:00:00",
+  "updateTime": "2000-01-01 14:00:00",
+  "deleted": false,
+  "goods": null,
+  "goods.name": ""
+}

@@ -50,6 +50,9 @@
 
                 <!--订单商品评论，如果是-1，则超期不能评价；如果是0，则可以评价；如果其他值，则是comment表里面的评论ID。-->
                 <col id="comment" ui:number="true" sortable="true"/>
+
+                <!--实付金额-->
+                <col id="actualPayAmount" ui:number="true" sortable="true"/>
             </cols>
         </grid>
         <grid id="pick-list" x:prototype="list" x:abstract="true"/>
@@ -63,7 +66,7 @@
  goodsSn[商品编号] productId[货品ID]
  number[购买数量] price[售价]
  specifications[规格列表] picUrl[商品/货品图片]
- comment[订单商品评论，如果是-1，则超期不能评价；如果是0，则可以评价；如果其他值，则是comment表里面的评论ID。] 
+ comment[订单商品评论，如果是-1，则超期不能评价；如果是0，则可以评价；如果其他值，则是comment表里面的评论ID。] actualPayAmount[实付金额]
 </layout>
         </form>
         <form id="add" editMode="add" title="新增-订单商品表" i18n-en:title="" x:prototype="edit"/>
@@ -74,6 +77,7 @@
  productId[货品ID] number[购买数量]
  price[售价] specifications[规格列表]
  picUrl[商品/货品图片] comment[订单商品评论，如果是-1，则超期不能评价；如果是0，则可以评价；如果其他值，则是comment表里面的评论ID。]
+ actualPayAmount[实付金额] 
 </layout>
         </form>
         <form id="query" editMode="query" title="查询条件" i18n-en:title="Query Condition" x:abstract="true"/>

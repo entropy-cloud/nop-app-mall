@@ -472,6 +472,156 @@
         }
 
 
+        private Integer _deliveryType;
+
+    
+        @PropMeta(propId=32)
+    
+        public Integer getDeliveryType(){
+            return _deliveryType;
+        }
+
+        public void setDeliveryType(Integer value){
+            this._deliveryType = value;
+        }
+
+
+        private String _deliveryType_label;
+
+    
+        public String getDeliveryType_label(){
+            return _deliveryType_label;
+        }
+
+        public void setDeliveryType_label(String value){
+            this._deliveryType_label = value;
+        }
+
+
+        private String _pickupStoreId;
+
+    
+        @PropMeta(propId=33)
+    
+        public String getPickupStoreId(){
+            return _pickupStoreId;
+        }
+
+        public void setPickupStoreId(String value){
+            this._pickupStoreId = value;
+        }
+
+
+        private String _pickupCode;
+
+    
+        @PropMeta(propId=34)
+    
+        public String getPickupCode(){
+            return _pickupCode;
+        }
+
+        public void setPickupCode(String value){
+            this._pickupCode = value;
+        }
+
+
+        private java.time.LocalDateTime _pickupTime;
+
+    
+        @PropMeta(propId=35)
+    
+        public java.time.LocalDateTime getPickupTime(){
+            return _pickupTime;
+        }
+
+        public void setPickupTime(java.time.LocalDateTime value){
+            this._pickupTime = value;
+        }
+
+
+        private java.math.BigDecimal _promotionPrice;
+
+    
+        @PropMeta(propId=36)
+    
+        public java.math.BigDecimal getPromotionPrice(){
+            return _promotionPrice;
+        }
+
+        public void setPromotionPrice(java.math.BigDecimal value){
+            this._promotionPrice = value;
+        }
+
+
+        private java.math.BigDecimal _pinTuanPrice;
+
+    
+        @PropMeta(propId=37)
+    
+        public java.math.BigDecimal getPinTuanPrice(){
+            return _pinTuanPrice;
+        }
+
+        public void setPinTuanPrice(java.math.BigDecimal value){
+            this._pinTuanPrice = value;
+        }
+
+
+        private Integer _payChannel;
+
+    
+        @PropMeta(propId=38)
+    
+        public Integer getPayChannel(){
+            return _payChannel;
+        }
+
+        public void setPayChannel(Integer value){
+            this._payChannel = value;
+        }
+
+
+        private String _payChannel_label;
+
+    
+        public String getPayChannel_label(){
+            return _payChannel_label;
+        }
+
+        public void setPayChannel_label(String value){
+            this._payChannel_label = value;
+        }
+
+
+        private java.math.BigDecimal _walletPayAmount;
+
+    
+        @PropMeta(propId=39)
+    
+        public java.math.BigDecimal getWalletPayAmount(){
+            return _walletPayAmount;
+        }
+
+        public void setWalletPayAmount(java.math.BigDecimal value){
+            this._walletPayAmount = value;
+        }
+
+
+        private String _adminRemark;
+
+    
+        @PropMeta(propId=40)
+    
+        public String getAdminRemark(){
+            return _adminRemark;
+        }
+
+        public void setAdminRemark(String value){
+            this._adminRemark = value;
+        }
+
+
         private java.util.List<java.lang.String> _relatedProductList_ids;
 
     
@@ -504,6 +654,17 @@
 
         public void setOrderGoods(List<Map<String,Object>> value){
             this._orderGoods = value;
+        }
+
+
+        private Map<String,Object> _pickupStore;
+
+        public Map<String,Object> getPickupStore(){
+            return _pickupStore;
+        }
+
+        public void setPickupStore(Map<String,Object> value){
+            this._pickupStore = value;
         }
 
 

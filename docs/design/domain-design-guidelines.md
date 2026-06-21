@@ -28,12 +28,13 @@
 
 | 领域区域 | Owner Doc | 负责内容 |
 | -------- | --------- | -------- |
-| 商品目录 | `product-catalog.md` | 分类、品牌、商品、SKU、规格、属性、目录搜索、前台展示 |
-| 交易领域 | `order-and-cart.md` | 购物车、结算、订单生命周期、支付状态、发货状态、取消、退款、售后 |
-| 身份与地址 | `user-and-address.md` | 商城用户、后台用户、个人资料、认证基线、地址、地区 |
-| 营销与互动 | `marketing-and-promotions.md` | 优惠券、团购、收藏、评论、专题、广告、反馈、足迹、搜索历史、关键词 |
-| 运营配置 | `system-configuration.md` | 业务配置、存储、公告、运营任务、管理员日志、统计 |
+| 商品目录 | `product-catalog.md` | 分类、品牌、商品、SKU、规格、属性、目录搜索、前台展示、库存语义化、营销价拼接到列表、首页运营打标 |
+| 交易领域 | `order-and-cart.md` | 购物车、结算、订单生命周期、支付状态、发货状态、取消、退款、售后、配送方式扩展、自提核销、积分抵扣、多支付通道 |
+| 身份与地址 | `user-and-address.md` | 商城用户、后台用户、个人资料、认证基线、地址、地区、会员等级、登录方式扩展 |
+| 营销与互动 | `marketing-and-promotions.md` | 优惠券、团购、满减送、限时折扣、秒杀、拼团、积分商城、签到、收藏、评论、专题、广告、反馈、足迹、搜索历史、关键词 |
+| 运营配置 | `system-configuration.md` | 业务配置、存储、公告、运营任务、管理员日志、统计、Dashboard、用户运营工作台、订单运营工作台、营销活动管理后台、素材管理 |
 | 角色与权限 | `roles-and-permissions.md` | 跨领域的业务角色含义、可见性与受保护操作 |
+| 钱包与资产 | `wallet-and-assets.md` | 钱包余额、充值交易、钱包流水、积分账户与流水 |
 
 ## 跨领域归属
 
@@ -43,6 +44,10 @@
 - 用户身份与地址归属由 `user-and-address.md` 负责；订单配送与收货结果由 `order-and-cart.md` 负责。
 - 角色含义和受保护操作的可见性由 `roles-and-permissions.md` 负责；各领域文档仅在业务流程说明需要时提及角色参与。
 - 存储、公告、定时运营效果、管理员日志和统计语义由 `system-configuration.md` 负责；技术调度、存储适配器、通知投递和报表实现属于 `docs/architecture/`。
+- 会员等级规则和权益由 `user-and-address.md` 负责；会员价（vipPrice）在订单价格构成中的影响由 `order-and-cart.md` 负责。
+- 积分获取规则（签到、购物赠送、评价奖励）由 `marketing-and-promotions.md` 负责；积分账户和流水由 `wallet-and-assets.md` 负责；积分在结算页的抵扣行为由 `order-and-cart.md` 负责。
+- 满减送、限时折扣、秒杀和拼团的业务规则由 `marketing-and-promotions.md` 负责；这些活动在订单价格构成中的影响由 `order-and-cart.md` 负责；后管活动配置界面由 `system-configuration.md` 负责。
+- 钱包余额的用户侧管理由 `wallet-and-assets.md` 负责；余额在收银台的支付行为由 `order-and-cart.md` 负责。
 
 ## 商城特有编写规则
 

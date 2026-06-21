@@ -1,0 +1,12 @@
+{
+  "id": "",
+  "flashSaleId": "",
+  "sessionStart": "2000-01-01 14:00:00",
+  "sessionEnd": "2000-01-01 14:00:00",
+  "sessionStock": 0,
+  "sessionStatus": 0,
+  "addTime": "2000-01-01 14:00:00",
+  "updateTime": "2000-01-01 14:00:00",
+  "deleted": false,
+  "flashSale": null
+}

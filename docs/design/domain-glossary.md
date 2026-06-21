@@ -37,7 +37,23 @@
 | Refund | 退款 | 已支付订单在履约前后退回款项的过程 |
 | After-sale | 售后 | 收货后或特定履约节点后的退款、退货退款等服务流程 |
 | Coupon | 优惠券 | 基于规则提供优惠的营销对象 |
-| Groupon | 团购 | 依赖多人参与条件成立后生效的营销交易模式 |
+| Groupon | 团购 | 依赖多人参与条件成立后生效的营销交易模式；用户直接参团，商家预设规则 |
+| Pin-tuan | 拼团 | 团长发起、好友参团的社交裂变模式；与团购（Groupon）数据模型不同，可并行共存 |
+| Flash sale / Seckill | 秒杀 | 短期、限量、低价的强促销形式，按场次组织，不走购物车 |
+| Time-limited discount | 限时折扣 | 商品级或 SKU 级的短期降价促销 |
+| Multi-tier promotion | 满减送 | 基于订单金额门槛自动触发的阶梯优惠，多档规则 |
+| Points | 积分 | 用户在商城内获得的虚拟资产，可用于抵扣或兑换 |
+| Points mall | 积分商城 | 用户使用积分兑换商品或权益的入口 |
+| Check-in | 签到 | 每日签到获取积分等奖励的日活运营工具 |
+| Wallet | 钱包 | 用户余额账户，支持充值和支付 |
+| Recharge | 充值 | 用户通过支付渠道向钱包存入资金 |
+| VIP level / Member tier | 会员等级 | 基于消费行为划分的用户分层体系 |
+| Structured review | 结构化评价 | 评价表单包含优点/缺点列表和语义化评级的评价模式 |
+| Inventory semantics | 库存语义化 | 将库存数字转化为三档语义色彩（充足/紧张/缺货）展示 |
+| Self-pickup / Store pickup | 自提核销 | 用户到店出示核销码完成提货的履约模式 |
+| Order-item after-sale | 订单项级售后 | 以订单内单个商品为单位申请售后 |
+| DIY decoration | DIY 装修 | 可视化拖拽编辑商城页面的运营能力 |
+| Distribution / Affiliate | 分销 | 通过分享推广建立上下级关系并计算佣金的营销模式 |
 | Search history | 搜索历史 | 用户历史搜索记录 |
 | Favorite / Collect | 收藏 | 用户主动标记商品或内容以便后续查看的行为 |
 | Footprint | 浏览足迹 | 用户近期浏览记录 |

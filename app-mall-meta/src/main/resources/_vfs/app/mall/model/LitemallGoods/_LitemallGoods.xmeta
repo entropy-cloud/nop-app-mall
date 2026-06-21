@@ -110,6 +110,14 @@
               sortable="true" insertable="false" updatable="true" internal="true" ui:show="X">
             <schema domain="delFlag" type="java.lang.Boolean"/>
         </prop>
+        <prop name="isRecommend" displayName="是否推荐" propId="22" i18n-en:displayName="Is Recommend" queryable="true"
+              sortable="true" insertable="true" updatable="true">
+            <schema type="java.lang.Boolean"/>
+        </prop>
+        <prop name="videoUrl" displayName="商品视频链接" propId="23" i18n-en:displayName="Video Url" queryable="true"
+              sortable="true" insertable="true" updatable="true">
+            <schema stdDomain="file" domain="image" type="java.lang.String" precision="255"/>
+        </prop>
         <prop name="category" displayName="商品类目" i18n-en:displayName="Category" tagSet="pub,ref-pub" ext:kind="to-one"
               internal="true" queryable="true" ext:joinLeftProp="categoryId" ext:joinRightProp="id"
               ext:joinRightDisplayProp="name" insertable="false" updatable="false" lazy="true">
@@ -167,6 +175,9 @@
             <schema type="io.nop.api.core.beans.file.FileStatusBean"/>
         </prop>
         <prop name="shareUrlComponentFileStatus" mapToProp="shareUrlComponent.fileStatus" internal="true" lazy="true">
+            <schema type="io.nop.api.core.beans.file.FileStatusBean"/>
+        </prop>
+        <prop name="videoUrlComponentFileStatus" mapToProp="videoUrlComponent.fileStatus" internal="true" lazy="true">
             <schema type="io.nop.api.core.beans.file.FileStatusBean"/>
         </prop>
         <prop name="relatedProductList" displayName="relatedProductList" insertable="true" updatable="true"

@@ -1,0 +1,19 @@
+# __XGEN_FORCE_OVERRIDE__
+label: 消息类型
+locale: zh-CN
+valueType: int
+description: 
+options:
+
+  - label: 订单消息
+    value: 0
+    description: 
+  
+  - label: 营销消息
+    value: 10
+    description: 
+  
+  - label: 系统消息
+    value: 20
+    description: 
+  

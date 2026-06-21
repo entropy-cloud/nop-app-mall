@@ -76,8 +76,20 @@ public class _LitemallAftersale extends DynamicOrmEntity{
     public static final String PROP_NAME_deleted = "deleted";
     public static final int PROP_ID_deleted = 14;
     
+    /* 订单商品项ID: ORDER_ITEM_ID INTEGER */
+    public static final String PROP_NAME_orderItemId = "orderItemId";
+    public static final int PROP_ID_orderItemId = 15;
+    
+    /* 处理备注: PROCESS_NOTE VARCHAR */
+    public static final String PROP_NAME_processNote = "processNote";
+    public static final int PROP_ID_processNote = 16;
+    
+    /* 处理时间: PROCESS_TIME DATETIME */
+    public static final String PROP_NAME_processTime = "processTime";
+    public static final int PROP_ID_processTime = 17;
+    
 
-    private static int _PROP_ID_BOUND = 15;
+    private static int _PROP_ID_BOUND = 18;
 
     
     /* relation: 订单 */
@@ -90,7 +102,7 @@ public class _LitemallAftersale extends DynamicOrmEntity{
     protected static final List<String> PK_PROP_NAMES = Arrays.asList(PROP_NAME_id);
     protected static final int[] PK_PROP_IDS = new int[]{PROP_ID_id};
 
-    private static final String[] PROP_ID_TO_NAME = new String[15];
+    private static final String[] PROP_ID_TO_NAME = new String[18];
     private static final Map<String,Integer> PROP_NAME_TO_ID = new HashMap<>();
     static{
       
@@ -136,6 +148,15 @@ public class _LitemallAftersale extends DynamicOrmEntity{
           PROP_ID_TO_NAME[PROP_ID_deleted] = PROP_NAME_deleted;
           PROP_NAME_TO_ID.put(PROP_NAME_deleted, PROP_ID_deleted);
       
+          PROP_ID_TO_NAME[PROP_ID_orderItemId] = PROP_NAME_orderItemId;
+          PROP_NAME_TO_ID.put(PROP_NAME_orderItemId, PROP_ID_orderItemId);
+      
+          PROP_ID_TO_NAME[PROP_ID_processNote] = PROP_NAME_processNote;
+          PROP_NAME_TO_ID.put(PROP_NAME_processNote, PROP_ID_processNote);
+      
+          PROP_ID_TO_NAME[PROP_ID_processTime] = PROP_NAME_processTime;
+          PROP_NAME_TO_ID.put(PROP_NAME_processTime, PROP_ID_processTime);
+      
     }
 
     
@@ -180,6 +201,15 @@ public class _LitemallAftersale extends DynamicOrmEntity{
     
     /* 逻辑删除: DELETED */
     private java.lang.Boolean _deleted;
+    
+    /* 订单商品项ID: ORDER_ITEM_ID */
+    private java.lang.String _orderItemId;
+    
+    /* 处理备注: PROCESS_NOTE */
+    private java.lang.String _processNote;
+    
+    /* 处理时间: PROCESS_TIME */
+    private java.time.LocalDateTime _processTime;
     
 
     public _LitemallAftersale(){
@@ -296,6 +326,15 @@ public class _LitemallAftersale extends DynamicOrmEntity{
         
             case PROP_ID_deleted:
                return getDeleted();
+        
+            case PROP_ID_orderItemId:
+               return getOrderItemId();
+        
+            case PROP_ID_processNote:
+               return getProcessNote();
+        
+            case PROP_ID_processTime:
+               return getProcessTime();
         
            default:
               return super.orm_propValue(propId);
@@ -448,6 +487,36 @@ public class _LitemallAftersale extends DynamicOrmEntity{
                break;
             }
         
+            case PROP_ID_orderItemId:{
+               java.lang.String typedValue = null;
+               if(value != null){
+                   typedValue = ConvertHelper.toString(value,
+                       err-> newTypeConversionError(PROP_NAME_orderItemId));
+               }
+               setOrderItemId(typedValue);
+               break;
+            }
+        
+            case PROP_ID_processNote:{
+               java.lang.String typedValue = null;
+               if(value != null){
+                   typedValue = ConvertHelper.toString(value,
+                       err-> newTypeConversionError(PROP_NAME_processNote));
+               }
+               setProcessNote(typedValue);
+               break;
+            }
+        
+            case PROP_ID_processTime:{
+               java.time.LocalDateTime typedValue = null;
+               if(value != null){
+                   typedValue = ConvertHelper.toLocalDateTime(value,
+                       err-> newTypeConversionError(PROP_NAME_processTime));
+               }
+               setProcessTime(typedValue);
+               break;
+            }
+        
            default:
               super.orm_propValue(propId,value);
         }
@@ -551,6 +620,27 @@ public class _LitemallAftersale extends DynamicOrmEntity{
             case PROP_ID_deleted:{
                onInitProp(propId);
                this._deleted = (java.lang.Boolean)value;
+               
+               break;
+            }
+        
+            case PROP_ID_orderItemId:{
+               onInitProp(propId);
+               this._orderItemId = (java.lang.String)value;
+               
+               break;
+            }
+        
+            case PROP_ID_processNote:{
+               onInitProp(propId);
+               this._processNote = (java.lang.String)value;
+               
+               break;
+            }
+        
+            case PROP_ID_processTime:{
+               onInitProp(propId);
+               this._processTime = (java.time.LocalDateTime)value;
                
                break;
             }
@@ -823,6 +913,63 @@ public class _LitemallAftersale extends DynamicOrmEntity{
         if(onPropSet(PROP_ID_deleted,value)){
             this._deleted = value;
             internalClearRefs(PROP_ID_deleted);
+            
+        }
+    }
+    
+    /**
+     * 订单商品项ID: ORDER_ITEM_ID
+     */
+    public final java.lang.String getOrderItemId(){
+         onPropGet(PROP_ID_orderItemId);
+         return _orderItemId;
+    }
+
+    /**
+     * 订单商品项ID: ORDER_ITEM_ID
+     */
+    public final void setOrderItemId(java.lang.String value){
+        if(onPropSet(PROP_ID_orderItemId,value)){
+            this._orderItemId = value;
+            internalClearRefs(PROP_ID_orderItemId);
+            
+        }
+    }
+    
+    /**
+     * 处理备注: PROCESS_NOTE
+     */
+    public final java.lang.String getProcessNote(){
+         onPropGet(PROP_ID_processNote);
+         return _processNote;
+    }
+
+    /**
+     * 处理备注: PROCESS_NOTE
+     */
+    public final void setProcessNote(java.lang.String value){
+        if(onPropSet(PROP_ID_processNote,value)){
+            this._processNote = value;
+            internalClearRefs(PROP_ID_processNote);
+            
+        }
+    }
+    
+    /**
+     * 处理时间: PROCESS_TIME
+     */
+    public final java.time.LocalDateTime getProcessTime(){
+         onPropGet(PROP_ID_processTime);
+         return _processTime;
+    }
+
+    /**
+     * 处理时间: PROCESS_TIME
+     */
+    public final void setProcessTime(java.time.LocalDateTime value){
+        if(onPropSet(PROP_ID_processTime,value)){
+            this._processTime = value;
+            internalClearRefs(PROP_ID_processTime);
             
         }
     }

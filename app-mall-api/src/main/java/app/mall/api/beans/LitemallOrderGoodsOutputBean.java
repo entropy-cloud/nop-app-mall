@@ -209,6 +209,20 @@
         }
 
 
+        private java.math.BigDecimal _actualPayAmount;
+
+    
+        @PropMeta(propId=15)
+    
+        public java.math.BigDecimal getActualPayAmount(){
+            return _actualPayAmount;
+        }
+
+        public void setActualPayAmount(java.math.BigDecimal value){
+            this._actualPayAmount = value;
+        }
+
+
         private io.nop.api.core.beans.file.FileStatusBean _picUrlComponentFileStatus;
 
     

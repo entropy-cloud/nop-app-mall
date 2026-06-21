@@ -233,6 +233,48 @@
         }
 
 
+        private String _orderItemId;
+
+    
+        @PropMeta(propId=15)
+    
+        public String getOrderItemId(){
+            return _orderItemId;
+        }
+
+        public void setOrderItemId(String value){
+            this._orderItemId = value;
+        }
+
+
+        private String _processNote;
+
+    
+        @PropMeta(propId=16)
+    
+        public String getProcessNote(){
+            return _processNote;
+        }
+
+        public void setProcessNote(String value){
+            this._processNote = value;
+        }
+
+
+        private java.time.LocalDateTime _processTime;
+
+    
+        @PropMeta(propId=17)
+    
+        public java.time.LocalDateTime getProcessTime(){
+            return _processTime;
+        }
+
+        public void setProcessTime(java.time.LocalDateTime value){
+            this._processTime = value;
+        }
+
+
         private java.util.List<io.nop.api.core.beans.file.FileStatusBean> _picturesComponentFileStatusList;
 
     

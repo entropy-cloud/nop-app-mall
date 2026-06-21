@@ -1,0 +1,17 @@
+{
+  "id": "",
+  "userId": "",
+  "walletId": "",
+  "amount": 0.0,
+  "giftAmount": 0.0,
+  "payChannel": 0,
+  "payChannel_label": "",
+  "payStatus": 0,
+  "payStatus_label": "",
+  "addTime": "2000-01-01 14:00:00",
+  "updateTime": "2000-01-01 14:00:00",
+  "deleted": false,
+  "wallet": null,
+  "user": null,
+  "user.username": ""
+}

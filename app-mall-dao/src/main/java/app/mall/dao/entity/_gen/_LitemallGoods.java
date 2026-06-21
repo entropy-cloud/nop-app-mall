@@ -104,8 +104,16 @@ public class _LitemallGoods extends DynamicOrmEntity{
     public static final String PROP_NAME_deleted = "deleted";
     public static final int PROP_ID_deleted = 21;
     
+    /* 是否推荐: IS_RECOMMEND BOOLEAN */
+    public static final String PROP_NAME_isRecommend = "isRecommend";
+    public static final int PROP_ID_isRecommend = 22;
+    
+    /* 商品视频链接: VIDEO_URL VARCHAR */
+    public static final String PROP_NAME_videoUrl = "videoUrl";
+    public static final int PROP_ID_videoUrl = 23;
+    
 
-    private static int _PROP_ID_BOUND = 22;
+    private static int _PROP_ID_BOUND = 24;
 
     
     /* relation: 商品类目 */
@@ -135,11 +143,14 @@ public class _LitemallGoods extends DynamicOrmEntity{
     /* component:  */
     public static final String PROP_NAME_shareUrlComponent = "shareUrlComponent";
     
+    /* component:  */
+    public static final String PROP_NAME_videoUrlComponent = "videoUrlComponent";
+    
 
     protected static final List<String> PK_PROP_NAMES = Arrays.asList(PROP_NAME_id);
     protected static final int[] PK_PROP_IDS = new int[]{PROP_ID_id};
 
-    private static final String[] PROP_ID_TO_NAME = new String[22];
+    private static final String[] PROP_ID_TO_NAME = new String[24];
     private static final Map<String,Integer> PROP_NAME_TO_ID = new HashMap<>();
     static{
       
@@ -206,6 +217,12 @@ public class _LitemallGoods extends DynamicOrmEntity{
           PROP_ID_TO_NAME[PROP_ID_deleted] = PROP_NAME_deleted;
           PROP_NAME_TO_ID.put(PROP_NAME_deleted, PROP_ID_deleted);
       
+          PROP_ID_TO_NAME[PROP_ID_isRecommend] = PROP_NAME_isRecommend;
+          PROP_NAME_TO_ID.put(PROP_NAME_isRecommend, PROP_ID_isRecommend);
+      
+          PROP_ID_TO_NAME[PROP_ID_videoUrl] = PROP_NAME_videoUrl;
+          PROP_NAME_TO_ID.put(PROP_NAME_videoUrl, PROP_ID_videoUrl);
+      
     }
 
     
@@ -271,6 +288,12 @@ public class _LitemallGoods extends DynamicOrmEntity{
     
     /* 逻辑删除: DELETED */
     private java.lang.Boolean _deleted;
+    
+    /* 是否推荐: IS_RECOMMEND */
+    private java.lang.Boolean _isRecommend;
+    
+    /* 商品视频链接: VIDEO_URL */
+    private java.lang.String _videoUrl;
     
 
     public _LitemallGoods(){
@@ -408,6 +431,12 @@ public class _LitemallGoods extends DynamicOrmEntity{
         
             case PROP_ID_deleted:
                return getDeleted();
+        
+            case PROP_ID_isRecommend:
+               return getIsRecommend();
+        
+            case PROP_ID_videoUrl:
+               return getVideoUrl();
         
            default:
               return super.orm_propValue(propId);
@@ -630,6 +659,26 @@ public class _LitemallGoods extends DynamicOrmEntity{
                break;
             }
         
+            case PROP_ID_isRecommend:{
+               java.lang.Boolean typedValue = null;
+               if(value != null){
+                   typedValue = ConvertHelper.toBoolean(value,
+                       err-> newTypeConversionError(PROP_NAME_isRecommend));
+               }
+               setIsRecommend(typedValue);
+               break;
+            }
+        
+            case PROP_ID_videoUrl:{
+               java.lang.String typedValue = null;
+               if(value != null){
+                   typedValue = ConvertHelper.toString(value,
+                       err-> newTypeConversionError(PROP_NAME_videoUrl));
+               }
+               setVideoUrl(typedValue);
+               break;
+            }
+        
            default:
               super.orm_propValue(propId,value);
         }
@@ -782,6 +831,20 @@ public class _LitemallGoods extends DynamicOrmEntity{
             case PROP_ID_deleted:{
                onInitProp(propId);
                this._deleted = (java.lang.Boolean)value;
+               
+               break;
+            }
+        
+            case PROP_ID_isRecommend:{
+               onInitProp(propId);
+               this._isRecommend = (java.lang.Boolean)value;
+               
+               break;
+            }
+        
+            case PROP_ID_videoUrl:{
+               onInitProp(propId);
+               this._videoUrl = (java.lang.String)value;
                
                break;
             }
@@ -1192,6 +1255,44 @@ public class _LitemallGoods extends DynamicOrmEntity{
     }
     
     /**
+     * 是否推荐: IS_RECOMMEND
+     */
+    public final java.lang.Boolean getIsRecommend(){
+         onPropGet(PROP_ID_isRecommend);
+         return _isRecommend;
+    }
+
+    /**
+     * 是否推荐: IS_RECOMMEND
+     */
+    public final void setIsRecommend(java.lang.Boolean value){
+        if(onPropSet(PROP_ID_isRecommend,value)){
+            this._isRecommend = value;
+            internalClearRefs(PROP_ID_isRecommend);
+            
+        }
+    }
+    
+    /**
+     * 商品视频链接: VIDEO_URL
+     */
+    public final java.lang.String getVideoUrl(){
+         onPropGet(PROP_ID_videoUrl);
+         return _videoUrl;
+    }
+
+    /**
+     * 商品视频链接: VIDEO_URL
+     */
+    public final void setVideoUrl(java.lang.String value){
+        if(onPropSet(PROP_ID_videoUrl,value)){
+            this._videoUrl = value;
+            internalClearRefs(PROP_ID_videoUrl);
+            
+        }
+    }
+    
+    /**
      * 商品类目
      */
     public final app.mall.dao.entity.LitemallCategory getCategory(){
@@ -1326,6 +1427,23 @@ public class _LitemallGoods extends DynamicOrmEntity{
           _shareUrlComponent.bindToEntity(this, COMPONENT_PROP_ID_MAP_shareUrlComponent);
       }
       return _shareUrlComponent;
+   }
+
+   private io.nop.orm.component.OrmFileComponent _videoUrlComponent;
+
+   private static Map<String,Integer> COMPONENT_PROP_ID_MAP_videoUrlComponent = new HashMap<>();
+   static{
+      
+         COMPONENT_PROP_ID_MAP_videoUrlComponent.put(io.nop.orm.component.OrmFileComponent.PROP_NAME_filePath,PROP_ID_videoUrl);
+      
+   }
+
+   public final io.nop.orm.component.OrmFileComponent getVideoUrlComponent(){
+      if(_videoUrlComponent == null){
+          _videoUrlComponent = new io.nop.orm.component.OrmFileComponent();
+          _videoUrlComponent.bindToEntity(this, COMPONENT_PROP_ID_MAP_videoUrlComponent);
+      }
+      return _videoUrlComponent;
    }
 
         public final List<app.mall.dao.entity.LitemallGoodsProduct> getRelatedProductList(){

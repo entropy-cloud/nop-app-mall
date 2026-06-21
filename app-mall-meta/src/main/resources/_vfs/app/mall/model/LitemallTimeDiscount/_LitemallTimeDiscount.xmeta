@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<meta x:schema="/nop/schema/xmeta.xdef" xmlns:x="/nop/schema/xdsl.xdef" xmlns:i18n-en="i18n-en" xmlns:ext="ext"
+      xmlns:xpl="xpl" ext:model="orm" xmlns:c="c" xmlns:graphql="graphql" xmlns:meta-gen="meta-gen" xmlns:biz="biz"
+      displayName="限时折扣表" xmlns:ui="ui" xmlns:orm="orm">
+
+    <entityName>app.mall.dao.entity.LitemallTimeDiscount</entityName>
+
+    <primaryKey>id</primaryKey>
+
+    <x:gen-extends>
+        <meta-gen:DefaultMetaGenExtends xpl:lib="/nop/core/xlib/meta-gen.xlib"/>
+    </x:gen-extends>
+
+    <x:post-extends>
+        <meta-gen:DefaultMetaPostExtends xpl:lib="/nop/core/xlib/meta-gen.xlib"/>
+    </x:post-extends>
+
+    <keys/>
+
+    <props>
+        <prop name="id" displayName="Id" propId="1" tagSet="seq" mandatory="true" queryable="true" sortable="true"
+              insertable="false" updatable="false" ui:show="R">
+            <schema type="java.lang.String"/>
+        </prop>
+        <prop name="goodsId" displayName="商品ID" propId="2" mandatory="true" queryable="true" sortable="true"
+              insertable="true" updatable="true" ext:relation="goods">
+            <schema type="java.lang.String"/>
+        </prop>
+        <prop name="productId" displayName="SKU ID（null表示全部SKU）" propId="3" queryable="true" sortable="true"
+              insertable="true" updatable="true">
+            <schema type="java.lang.String"/>
+        </prop>
+        <prop name="discountType" displayName="折扣类型" propId="4" queryable="true" sortable="true" insertable="true"
+              updatable="true">
+            <schema type="java.lang.Integer" dict="mall/discount-type"/>
+        </prop>
+        <prop name="discountValue" displayName="折扣值（金额或折扣率）" propId="5" queryable="true" sortable="true"
+              insertable="true" updatable="true">
+            <schema type="java.math.BigDecimal" precision="10" scale="2"/>
+        </prop>
+        <prop name="startTime" displayName="开始时间" propId="6" queryable="true" sortable="true" insertable="true"
+              updatable="true">
+            <schema type="java.time.LocalDateTime"/>
+        </prop>
+        <prop name="endTime" displayName="结束时间" propId="7" queryable="true" sortable="true" insertable="true"
+              updatable="true">
+            <schema type="java.time.LocalDateTime"/>
+        </prop>
+        <prop name="status" displayName="状态" propId="8" queryable="true" sortable="true" insertable="true"
+              updatable="true">
+            <schema type="java.lang.Integer" dict="mall/promotion-status"/>
+        </prop>
+        <prop name="stockLimit" displayName="折扣库存（0不限）" propId="9" queryable="true" sortable="true" insertable="true"
+              updatable="true">
+            <schema type="java.lang.Integer"/>
+        </prop>
+        <prop name="remark" displayName="备注" propId="10" queryable="true" sortable="true" insertable="true"
+              updatable="true">
+            <schema type="java.lang.String" precision="255"/>
+        </prop>
+        <prop name="addTime" displayName="创建时间" propId="11" queryable="true" sortable="true" insertable="false"
+              updatable="false" internal="true" ui:show="X">
+            <schema domain="createTime" type="java.time.LocalDateTime"/>
+        </prop>
+        <prop name="updateTime" displayName="更新时间" propId="12" queryable="true" sortable="true" insertable="false"
+              updatable="false" internal="true" ui:show="X">
+            <schema domain="updateTime" type="java.time.LocalDateTime"/>
+        </prop>
+        <prop name="deleted" displayName="逻辑删除" propId="13" queryable="true" sortable="true" insertable="false"
+              updatable="true" internal="true" ui:show="X">
+            <schema domain="delFlag" type="java.lang.Boolean"/>
+        </prop>
+        <prop name="goods" displayName="商品" i18n-en:displayName="Goods" tagSet="pub,ref-pub" ext:kind="to-one"
+              internal="true" queryable="true" ext:joinLeftProp="goodsId" ext:joinRightProp="id"
+              ext:joinRightDisplayProp="name" insertable="false" updatable="false" mandatory="true" lazy="true">
+            <schema bizObjName="LitemallGoods"/>
+        </prop>
+        <prop name="goods.name" displayName="商品" i18n-en:displayName="Goods" internal="true" queryable="true"
+              sortable="true" lazy="true">
+            <schema type="String"/>
+        </prop>
+    </props>
+</meta>

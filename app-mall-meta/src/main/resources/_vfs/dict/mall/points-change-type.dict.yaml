@@ -1,0 +1,19 @@
+# __XGEN_FORCE_OVERRIDE__
+label: 积分变动类型
+locale: zh-CN
+valueType: int
+description: 
+options:
+
+  - label: 获取
+    value: 0
+    description: 
+  
+  - label: 消耗
+    value: 10
+    description: 
+  
+  - label: 过期
+    value: 20
+    description: 
+  

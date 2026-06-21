@@ -13,6 +13,7 @@
   "addTime": "2000-01-01 14:00:00",
   "updateTime": "2000-01-01 14:00:00",
   "deleted": false,
+  "actualPayAmount": 0.0,
   "order": null,
   "order.orderSn": "",
   "goods": null,

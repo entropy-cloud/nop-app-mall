@@ -35,6 +35,9 @@
 
                 <!--商品货品图片-->
                 <col id="url" sortable="true"/>
+
+                <!--安全库存预警线-->
+                <col id="safeStock" ui:number="true" sortable="true"/>
             </cols>
         </grid>
         <grid id="pick-list" x:prototype="list" x:abstract="true"/>
@@ -60,6 +63,7 @@
  price[商品货品价格]
  number[商品货品数量]
  url[商品货品图片]
+ safeStock[安全库存预警线]
 </layout>
         </form>
         <form id="add" editMode="add" title="新增-商品货品表" i18n-en:title="" x:prototype="edit"/>
@@ -70,6 +74,7 @@
  price[商品货品价格]
  number[商品货品数量]
  url[商品货品图片]
+ safeStock[安全库存预警线]
 </layout>
         </form>
         <form id="query" editMode="query" title="查询条件" i18n-en:title="Query Condition" x:abstract="true"/>

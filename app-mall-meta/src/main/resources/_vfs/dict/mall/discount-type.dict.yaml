@@ -1,0 +1,15 @@
+# __XGEN_FORCE_OVERRIDE__
+label: 折扣类型
+locale: zh-CN
+valueType: int
+description: 
+options:
+
+  - label: 减金额
+    value: 0
+    description: 
+  
+  - label: 打折
+    value: 10
+    description: 
+  

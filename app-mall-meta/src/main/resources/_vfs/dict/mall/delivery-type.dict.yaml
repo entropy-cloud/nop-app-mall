@@ -1,0 +1,15 @@
+# __XGEN_FORCE_OVERRIDE__
+label: 配送方式
+locale: zh-CN
+valueType: int
+description: 
+options:
+
+  - label: 快递
+    value: 0
+    description: 
+  
+  - label: 门店自提
+    value: 10
+    description: 
+  

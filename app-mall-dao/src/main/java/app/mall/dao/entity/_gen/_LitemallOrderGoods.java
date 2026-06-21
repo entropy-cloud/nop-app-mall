@@ -76,8 +76,12 @@ public class _LitemallOrderGoods extends DynamicOrmEntity{
     public static final String PROP_NAME_deleted = "deleted";
     public static final int PROP_ID_deleted = 14;
     
+    /* 实付金额: ACTUAL_PAY_AMOUNT DECIMAL */
+    public static final String PROP_NAME_actualPayAmount = "actualPayAmount";
+    public static final int PROP_ID_actualPayAmount = 15;
+    
 
-    private static int _PROP_ID_BOUND = 15;
+    private static int _PROP_ID_BOUND = 16;
 
     
     /* relation: 订单 */
@@ -96,7 +100,7 @@ public class _LitemallOrderGoods extends DynamicOrmEntity{
     protected static final List<String> PK_PROP_NAMES = Arrays.asList(PROP_NAME_id);
     protected static final int[] PK_PROP_IDS = new int[]{PROP_ID_id};
 
-    private static final String[] PROP_ID_TO_NAME = new String[15];
+    private static final String[] PROP_ID_TO_NAME = new String[16];
     private static final Map<String,Integer> PROP_NAME_TO_ID = new HashMap<>();
     static{
       
@@ -142,6 +146,9 @@ public class _LitemallOrderGoods extends DynamicOrmEntity{
           PROP_ID_TO_NAME[PROP_ID_deleted] = PROP_NAME_deleted;
           PROP_NAME_TO_ID.put(PROP_NAME_deleted, PROP_ID_deleted);
       
+          PROP_ID_TO_NAME[PROP_ID_actualPayAmount] = PROP_NAME_actualPayAmount;
+          PROP_NAME_TO_ID.put(PROP_NAME_actualPayAmount, PROP_ID_actualPayAmount);
+      
     }
 
     
@@ -186,6 +193,9 @@ public class _LitemallOrderGoods extends DynamicOrmEntity{
     
     /* 逻辑删除: DELETED */
     private java.lang.Boolean _deleted;
+    
+    /* 实付金额: ACTUAL_PAY_AMOUNT */
+    private java.math.BigDecimal _actualPayAmount;
     
 
     public _LitemallOrderGoods(){
@@ -302,6 +312,9 @@ public class _LitemallOrderGoods extends DynamicOrmEntity{
         
             case PROP_ID_deleted:
                return getDeleted();
+        
+            case PROP_ID_actualPayAmount:
+               return getActualPayAmount();
         
            default:
               return super.orm_propValue(propId);
@@ -454,6 +467,16 @@ public class _LitemallOrderGoods extends DynamicOrmEntity{
                break;
             }
         
+            case PROP_ID_actualPayAmount:{
+               java.math.BigDecimal typedValue = null;
+               if(value != null){
+                   typedValue = ConvertHelper.toBigDecimal(value,
+                       err-> newTypeConversionError(PROP_NAME_actualPayAmount));
+               }
+               setActualPayAmount(typedValue);
+               break;
+            }
+        
            default:
               super.orm_propValue(propId,value);
         }
@@ -557,6 +580,13 @@ public class _LitemallOrderGoods extends DynamicOrmEntity{
             case PROP_ID_deleted:{
                onInitProp(propId);
                this._deleted = (java.lang.Boolean)value;
+               
+               break;
+            }
+        
+            case PROP_ID_actualPayAmount:{
+               onInitProp(propId);
+               this._actualPayAmount = (java.math.BigDecimal)value;
                
                break;
             }
@@ -829,6 +859,25 @@ public class _LitemallOrderGoods extends DynamicOrmEntity{
         if(onPropSet(PROP_ID_deleted,value)){
             this._deleted = value;
             internalClearRefs(PROP_ID_deleted);
+            
+        }
+    }
+    
+    /**
+     * 实付金额: ACTUAL_PAY_AMOUNT
+     */
+    public final java.math.BigDecimal getActualPayAmount(){
+         onPropGet(PROP_ID_actualPayAmount);
+         return _actualPayAmount;
+    }
+
+    /**
+     * 实付金额: ACTUAL_PAY_AMOUNT
+     */
+    public final void setActualPayAmount(java.math.BigDecimal value){
+        if(onPropSet(PROP_ID_actualPayAmount,value)){
+            this._actualPayAmount = value;
+            internalClearRefs(PROP_ID_actualPayAmount);
             
         }
     }

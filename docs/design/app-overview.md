@@ -44,16 +44,18 @@
 - 商品管理：分类 -> 品牌 -> 商品 -> 商品规格项（SKU） -> 前台展示 -> [product-catalog.md](product-catalog.md)
 - 订单流程：购物车 -> 结算 -> 支付 -> 发货 -> 完成 -> 符合条件时退款/售后 -> [order-and-cart.md](order-and-cart.md)
 - 用户管理：注册 -> 资料 -> 地址 -> 订单 -> [user-and-address.md](user-and-address.md)
-- 营销与内容运营：优惠券、团购、互动能力、营销内容 -> [marketing-and-promotions.md](marketing-and-promotions.md)
-- 系统运营：配置、存储、通知、运营任务、日志、报表 -> [system-configuration.md](system-configuration.md)
+- 营销与内容运营：优惠券、团购、满减送、限时折扣、秒杀、拼团、积分商城、签到、互动能力、营销内容 -> [marketing-and-promotions.md](marketing-and-promotions.md)
+- 钱包与资产：钱包余额、充值、积分账户 -> [wallet-and-assets.md](wallet-and-assets.md)
+- 系统运营：配置、存储、通知、运营任务、日志、报表、Dashboard、运营工作台、营销管理后台 -> [system-configuration.md](system-configuration.md)
 
 ## 关键领域区域
 
 - 身份与访问：User、Address、Admin、Role、Permission
 - 商品目录：Category、Brand、Goods、GoodsProduct（SKU）、GoodsSpecification、GoodsAttribute
 - 交易领域：Cart、Order、OrderGoods、支付状态、发货状态、退款与售后状态
-- 营销与互动：Coupon、CouponUser、GrouponRules、Groupon、Comment、Collect、Footprint、SearchHistory、Keyword
-- 内容与运营：Topic、Ad、Issue、Feedback、Notice、Storage、Region、配置、管理员日志、统计
+- 营销与互动：Coupon、CouponUser、GrouponRules、Groupon、Promotion（满减/限时折扣/秒杀）、PinTuan（拼团）、PointsMall、CheckIn、Comment、Collect、Footprint、SearchHistory、Keyword
+- 钱包与资产：Wallet、Recharge、WalletFlow、PointsAccount、PointsFlow
+- 内容与运营：Topic、Ad、Issue、Feedback、Notice、Storage、Region、配置、管理员日志、统计、Dashboard、运营工作台
 
 ## 集成点
 

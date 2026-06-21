@@ -1,0 +1,19 @@
+# __XGEN_FORCE_OVERRIDE__
+label: 商品范围类型
+locale: zh-CN
+valueType: int
+description: 
+options:
+
+  - label: 全商品
+    value: 0
+    description: 
+  
+  - label: 指定分类
+    value: 10
+    description: 
+  
+  - label: 指定商品
+    value: 20
+    description: 
+  
