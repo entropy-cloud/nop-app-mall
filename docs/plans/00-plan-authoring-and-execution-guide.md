@@ -163,7 +163,7 @@ After `Plan Status: completed` has been set and the closure audit has passed:
 ```md
 # <plan-id> <title>
 
-> Plan Status: planned
+> Plan Status: active
 > Last Reviewed: YYYY-MM-DD
 > Source: <requirement / bug / analysis / request>
 > Related: <related plans, optional>
