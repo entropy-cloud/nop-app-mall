@@ -221,7 +221,7 @@ Exit Criteria:
 ## Plan Audit
 
 - Status: <pending | passed>
-- Reviewer / Agent: <independent reviewer, subagent, or cold-replay proxy>
+- Auditor / Agent: <independent auditor, subagent, or cold-replay proxy>
 - Evidence: <task id and short findings/disposition summary; link audit file only when separately justified>
 
 ## Closure Gates
