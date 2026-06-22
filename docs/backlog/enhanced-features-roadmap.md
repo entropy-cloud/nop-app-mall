@@ -9,6 +9,8 @@
 
 本文是 `docs/backlog/implementation-roadmap.md` 的补充，不替代原有 14 个阶段的商业闭环路线。**原有 14 个阶段（Phase 1-14）是实施本 roadmap 的前置条件。**
 
+**范围边界：** 本文仅覆盖 **后端 API + AMIS Web 前台 + AMIS Admin 后台**。移动端前端（基于 nop-chaos-flux）有独立的 roadmap：`docs/backlog/mobile-frontend-roadmap.md`。两者共享同一套后端 API。
+
 **核心用途：** AI 读完本文后即可知道哪些增强能力尚未实现、哪些已有计划、哪些已经完成，无需重新遍历分析报告和设计文档。
 
 ## Phase Status

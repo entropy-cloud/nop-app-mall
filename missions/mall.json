@@ -1,7 +1,7 @@
 {
   "name": "mall",
-  "description": "nop-app-mall 商城后端（Nop platform + Quarkus，Maven 多模块）。驱动 docs/plans 下的计划起草、审查、执行、closure 校验与构建验证。",
-  "roadmapPath": "docs/backlog/implementation-roadmap.md",
+  "description": "nop-app-mall 商城后端 + AMIS Web/Admin（Nop platform + Quarkus，Maven 多模块）。当前活跃路线：enhanced-features-roadmap（Phase 15-38 运营能力增强和后台完善）。移动端前端见 mall-mobile mission。",
+  "roadmapPath": "docs/backlog/enhanced-features-roadmap.md",
   "plansDir": "docs/plans",
   "planGuide": "docs/plans/00-plan-authoring-and-execution-guide.md",
   "auditsDir": "docs/audits",

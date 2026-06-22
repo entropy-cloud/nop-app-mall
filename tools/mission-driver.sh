@@ -1,5 +1,5 @@
 #!/bin/bash
-# tools/mission-driver.sh — Mission driver launcher
+# tools/mission-driver.sh - Mission driver launcher
 #
 # Usage:
 #   ./mission-driver.sh <mission>                  Run full mission-driver flow
@@ -13,8 +13,8 @@
 # The mission-driver engine lives in the AGE template; this launcher only points
 # to it. Override the location with MISSION_DRIVER_HOME if needed.
 
-MISSION_DRIVER_HOME="${MISSION_DRIVER_HOME:-$HOME/app/attractor-guided-engineering-template/tools/mission-driver}"
-DIR="$(cd "$(dirname "$0")" && pwd)"
+DIR="$(cd "$(dirname "$0")" && pwd | tr -d '\r')"
+MISSION_DRIVER_HOME="${MISSION_DRIVER_HOME:-$DIR/../../attractor-guided-engineering-template/tools/mission-driver}"
 
 exec node "$MISSION_DRIVER_HOME/src/main.js" \
   --dir "$DIR/.." \

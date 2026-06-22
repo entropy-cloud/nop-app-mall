@@ -15,6 +15,8 @@ The backlog is not a replacement for requirements, design owner docs, architectu
 | P0 | Commercial baseline alignment | `docs/requirements/commercial-baseline.md` | `docs/design/app-overview.md` | Stable docs now use commercial baseline framing |
 | P1 | Design-to-code gap implementation | `docs/requirements/commercial-baseline.md` | `docs/design/*.md` | Roadmap: `docs/backlog/implementation-roadmap.md`; First Commercial Loop = Phase 1-5c + 6; start with Phase 1 |
 | P2 | Feature gap analysis | `docs/input/litemall-requirements.md` | `docs/design/feature-inventory.md` | Synthesize missing commercial capability gaps |
+| P3 | Enhanced features (backend + AMIS) | `docs/design/*.md` | `docs/design/*.md` | Roadmap: `docs/backlog/enhanced-features-roadmap.md`; Phase 15-38 |
+| P4 | Mobile frontend (nop-chaos-flux) | `docs/design/*.md` | `docs/design/*.md` | Roadmap: `docs/backlog/mobile-frontend-roadmap.md`; M1-M9 |
 
 ## Selection Rule
 
