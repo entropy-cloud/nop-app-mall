@@ -42,3 +42,6 @@ db/
 
 # Windows artifact
 nul
+
+# Mission driver runtime
+_tmp/
