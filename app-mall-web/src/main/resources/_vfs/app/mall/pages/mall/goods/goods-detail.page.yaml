@@ -199,31 +199,191 @@ body:
               style:
                 padding: 20px
               body:
-                type: service
-                name: comments
-                api:
-                  url: '@query:LitemallComment__commentList'
-                  data:
-                    type: 0
-                    valueId: "${id}"
-                    page: 1
-                    pageSize: 10
-                  sendOn: "${id}"
-                body:
-                  type: each
-                  name: items
-                  placeholder: '<div style="padding:40px;text-align:center;color:#999">暂无评论</div>'
-                  items:
-                    type: wrapper
-                    style:
-                      padding: 10px 0
-                      borderBottom: 1px solid '#eee'
+                # P33 structured comment submission form (drawer dialog)
+                - type: button
+                  label: 我要评价
+                  level: primary
+                  icon: pencil
+                  actionType: dialog
+                  dialog:
+                    title: 商品评价
+                    size: md
                     body:
-                      - type: flex
-                        items:
-                          - type: tpl
-                            tpl: '<b>${item.nickname || "匿名用户"}</b>'
-                          - type: tpl
-                            tpl: '<span style="color:#999;margin-left:10px">${item.addTime}</span>'
-                      - type: tpl
-                        tpl: '<p style="margin:5px 0">${item.content}</p>'
+                      type: form
+                      api:
+                        url: '@mutation:LitemallComment__submitComment'
+                        data:
+                          orderGoodsId: '${orderGoodsId}'
+                          content: '${content}'
+                          star: '${star}'
+                          hasPicture: '${hasPicture}'
+                          picUrls: '${picUrls}'
+                          pros: '${pros}'
+                          cons: '${cons}'
+                          semanticRating: '${semanticRating}'
+                      body:
+                        - type: input-text
+                          name: orderGoodsId
+                          label: 订单商品ID
+                          required: true
+                          description: '请填写已收货未评价的订单商品ID（在订单详情页查看）'
+                        - type: input-number
+                          name: star
+                          label: 星级评分
+                          value: 5
+                          min: 1
+                          max: 5
+                          required: true
+                        - type: select
+                          name: semanticRating
+                          label: 整体评价
+                          value: 5
+                          options:
+                            - {label: 非常满意, value: 5}
+                            - {label: 满意, value: 4}
+                            - {label: 一般, value: 3}
+                            - {label: 不太满意, value: 2}
+                            - {label: 非常不满意, value: 1}
+                        - type: input-tag
+                          name: pros
+                          label: 优点
+                          description: '可添加多个优点标签'
+                          placeholder: '如：质量好、物流快'
+                        - type: input-tag
+                          name: cons
+                          label: 缺点
+                          description: '可添加多个缺点标签'
+                          placeholder: '如：包装一般'
+                        - type: switch
+                          name: hasPicture
+                          label: 含图片
+                          value: false
+                        - type: input-image
+                          name: picUrls
+                          label: 上传图片
+                          receiver:
+                            url: '/f/upload/LitemallComment/picUrls'
+                          visibleOn: '${hasPicture}'
+                        - type: textarea
+                          name: content
+                          label: 评价内容
+                          required: true
+                          minLength: 5
+                          maxLength: 500
+                  messages:
+                    success: '评价提交成功，感谢您的反馈'
+
+                # P33 structured comment summary header (good rate + tag cloud)
+                - type: service
+                  name: commentSummary
+                  api:
+                    url: '@query:LitemallComment__getCommentSummary'
+                    data:
+                      type: 0
+                      valueId: "${id}"
+                    sendOn: "${id}"
+                  body:
+                    - type: flex
+                      justify: space-between
+                      alignItems: center
+                      style:
+                        background: '#fff8f0'
+                        padding: 12px 15px
+                        borderRadius: 4px
+                        marginBottom: 10px
+                      items:
+                        - type: tpl
+                          tpl: '<div><div style="color:#999;font-size:12px">好评率</div><div style="color:#ff6700;font-size:28px;font-weight:bold">${commentSummary.data.goodRate}%</div><div style="color:#999;font-size:12px">共 ${commentSummary.data.totalCount} 条评价</div></div>'
+                        - type: wrapper
+                          style:
+                            flex: 1
+                            marginLeft: 20px
+                          body:
+                            - type: each
+                              name: commentSummary.data.prosTags
+                              placeholder: ''
+                              items:
+                                type: tpl
+                                tpl: '<span style="display:inline-block;background:#e8f5e9;color:#2e7d32;padding:2px 10px;border-radius:12px;margin:2px;font-size:12px">优 ${item.tag} ${item.count}</span>'
+                            - type: each
+                              name: commentSummary.data.consTags
+                              placeholder: ''
+                              items:
+                                type: tpl
+                                tpl: '<span style="display:inline-block;background:#ffebee;color:#c62828;padding:2px 10px;border-radius:12px;margin:2px;font-size:12px">缺 ${item.tag} ${item.count}</span>'
+
+                - type: divider
+
+                # P33 filter tabs (all / hasPicture / good / bad)
+                - type: button-group
+                  active: '${showType || "all"}'
+                  buttons:
+                    - type: button
+                      label: 全部
+                      actionType: reload
+                      target: 'comments'
+                      level: '${showType == "all" || showType == null ? "primary" : "link"}'
+                      data:
+                        showType: all
+                    - type: button
+                      label: 有图
+                      actionType: reload
+                      target: 'comments'
+                      level: '${showType == "hasPicture" ? "primary" : "link"}'
+                      data:
+                        showType: hasPicture
+                    - type: button
+                      label: 好评
+                      actionType: reload
+                      target: 'comments'
+                      level: '${showType == "good" ? "primary" : "link"}'
+                      data:
+                        showType: good
+                    - type: button
+                      label: 差评
+                      actionType: reload
+                      target: 'comments'
+                      level: '${showType == "bad" ? "primary" : "link"}'
+                      data:
+                        showType: bad
+
+                # Comment list with P33 structured fields (pros/cons tags + semantic rating)
+                - type: service
+                  name: comments
+                  api:
+                    url: '@query:LitemallComment__commentList'
+                    data:
+                      type: 0
+                      valueId: "${id}"
+                      showType: "${showType || 'all'}"
+                      page: 1
+                      pageSize: 10
+                    sendOn: "${id}"
+                  body:
+                    type: each
+                    name: items
+                    placeholder: '<div style="padding:40px;text-align:center;color:#999">暂无评论</div>'
+                    items:
+                      type: wrapper
+                      style:
+                        padding: 10px 0
+                        borderBottom: 1px solid '#eee'
+                      body:
+                        - type: flex
+                          items:
+                            - type: tpl
+                              tpl: '<b>${item.nickname || "匿名用户"}</b>'
+                            - type: tpl
+                              tpl: '<span style="color:#999;margin-left:10px">${item.addTime}</span>'
+                        # P33 structured: star + semantic rating label
+                        - type: tpl
+                          tpl: '<div style="margin:5px 0"><span style="color:#ff6700">${item.star | repeat:"★"}</span><span style="color:#999;margin-left:8px">${item.semanticRating == 5 ? "非常满意" : (item.semanticRating == 4 ? "满意" : (item.semanticRating == 3 ? "一般" : (item.semanticRating == 2 ? "不太满意" : (item.semanticRating == 1 ? "非常不满意" : ""))))}</span></div>'
+                        # pros/cons shown as colored badges (JSON text shown as-is)
+                        - type: tpl
+                          visibleOn: "${item.pros}"
+                          tpl: '<div style="margin:4px 0"><span style="color:#2e7d32;font-size:12px">优点：</span><span style="display:inline-block;background:#e8f5e9;color:#2e7d32;padding:1px 8px;border-radius:10px;font-size:12px">${item.pros}</span></div>'
+                        - type: tpl
+                          visibleOn: "${item.cons}"
+                          tpl: '<div style="margin:4px 0"><span style="color:#c62828;font-size:12px">缺点：</span><span style="display:inline-block;background:#ffebee;color:#c62828;padding:1px 8px;border-radius:10px;font-size:12px">${item.cons}</span></div>'
+                        - type: tpl
+                          tpl: '<p style="margin:5px 0">${item.content}</p>'

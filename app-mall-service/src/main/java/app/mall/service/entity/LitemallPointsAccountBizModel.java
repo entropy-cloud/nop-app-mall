@@ -40,6 +40,7 @@ public class LitemallPointsAccountBizModel extends CrudBizModel<LitemallPointsAc
     public static final String SOURCE_TYPE_COMMENT_REWARD = "comment-reward";
 
     public static final String CONFIG_POINTS_EARN_PER_YUAN = "mall_points_earn_per_yuan";
+    public static final String CONFIG_POINTS_COMMENT_REWARD = "mall_points_comment_reward";
     public static final String CONFIG_POINTS_TO_YUAN_RATIO = "mall_points_to_yuan_ratio";
     public static final String CONFIG_POINTS_DEDUCT_MAX_RATIO = "mall_points_deduct_max_ratio";
 

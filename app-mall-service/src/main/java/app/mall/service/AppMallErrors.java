@@ -196,6 +196,14 @@ public interface AppMallErrors {
             define("nop.err.mall.comment.order-goods-not-found",
                     "订单商品不存在");
 
+    ErrorCode ERR_COMMENT_SEMANTIC_RATING_INVALID =
+            define("nop.err.mall.comment.semantic-rating-invalid",
+                    "语义评级必须在 1-5 之间");
+
+    ErrorCode ERR_COMMENT_SHOW_TYPE_INVALID =
+            define("nop.err.mall.comment.show-type-invalid",
+                    "筛选类型不合法");
+
     // 优惠券错误码
     ErrorCode ERR_COUPON_NOT_FOUND =
             define("nop.err.mall.coupon.not-found",

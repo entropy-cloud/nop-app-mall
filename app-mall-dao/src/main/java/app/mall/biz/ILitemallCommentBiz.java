@@ -8,6 +8,8 @@ import io.nop.api.core.beans.PageBean;
 import io.nop.core.context.IServiceContext;
 import io.nop.orm.biz.ICrudBiz;
 
+import java.util.Map;
+
 import app.mall.dao.entity.LitemallComment;
 
 public interface ILitemallCommentBiz extends ICrudBiz<LitemallComment> {
@@ -18,13 +20,22 @@ public interface ILitemallCommentBiz extends ICrudBiz<LitemallComment> {
                                   @Name("star") int star,
                                   @Optional @Name("hasPicture") Boolean hasPicture,
                                   @Optional @Name("picUrls") String picUrls,
+                                  @Optional @Name("pros") String pros,
+                                  @Optional @Name("cons") String cons,
+                                  @Optional @Name("semanticRating") Integer semanticRating,
                                   IServiceContext context);
 
     @BizQuery
     PageBean<LitemallComment> commentList(@Name("type") int type,
                                           @Name("valueId") String valueId,
+                                          @Optional @Name("showType") String showType,
                                           @Name("page") int page,
                                           @Name("pageSize") int pageSize,
+                                          IServiceContext context);
+
+    @BizQuery
+    Map<String, Object> getCommentSummary(@Name("type") int type,
+                                          @Name("valueId") String valueId,
                                           IServiceContext context);
 
     @BizQuery

@@ -21,6 +21,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -300,5 +301,295 @@ public class TestLitemallCommentBizModel extends JunitBaseTestCase {
         assertEquals(0, result.getStatus());
         Map<String, Object> data = (Map<String, Object>) result.getData();
         assertEquals("感谢您的评价", data.get("adminContent"));
+    }
+
+    // ---------- P33 structured-comment tests ----------
+
+    /**
+     * Submit a second order on the SAME goods as the setUp orderGoods, run it through to CONFIRM,
+     * and return the new orderGoodsId. Used by P33 aggregation/filter tests that need two comments
+     * with the same valueId.
+     */
+    private String seedSecondOrderGoodsForSameGoods() {
+        LitemallOrderGoods firstOg = daoProvider.daoFor(LitemallOrderGoods.class)
+                .getEntityById(orderGoodsId);
+        String goodsId = firstOg.getGoodsId();
+
+        LitemallGoods goods = daoProvider.daoFor(LitemallGoods.class).getEntityById(goodsId);
+        // find existing product on this goods
+        QueryBean prodQuery = new QueryBean();
+        prodQuery.addFilter(FilterBeans.eq(LitemallGoodsProduct.PROP_NAME_goodsId, goodsId));
+        LitemallGoodsProduct product = daoProvider.daoFor(LitemallGoodsProduct.class)
+                .findFirstByQuery(prodQuery);
+
+        LitemallCart cart2 = daoProvider.daoFor(LitemallCart.class).newEntity();
+        cart2.setUserId("1");
+        cart2.setGoodsId(goodsId);
+        cart2.setProductId(product.getId());
+        cart2.setNumber(1);
+        cart2.setPrice(BigDecimal.valueOf(20));
+        cart2.setChecked(true);
+        cart2.setGoodsSn(goods.getGoodsSn());
+        cart2.setGoodsName(goods.getName());
+        cart2.setSpecifications(product.getSpecifications());
+        cart2.setPicUrl("/f/download/cart-pic-1");
+        daoProvider.daoFor(LitemallCart.class).saveEntity(cart2);
+
+        LitemallAddress addr = daoProvider.daoFor(LitemallAddress.class).newEntity();
+        addr.setUserId("1");
+        addr.setName("P33");
+        addr.setTel("13800138099");
+        addr.setProvince("广东省");
+        addr.setCity("深圳市");
+        addr.setCounty("南山区");
+        addr.setAddressDetail("P33");
+        addr.setIsDefault(false);
+        daoProvider.daoFor(LitemallAddress.class).saveEntity(addr);
+
+        ApiRequest<Map<String, Object>> submitReq = ApiRequest.build(Map.of(
+                "addressId", addr.getId(), "message", "p33", "freightPrice", BigDecimal.ZERO));
+        ApiResponse<?> submitRes = graphQLEngine.executeRpc(graphQLEngine.newRpcContext(
+                GraphQLOperationType.mutation, "LitemallOrder__submit", submitReq));
+        assertEquals(0, submitRes.getStatus(), "submit p33 order failed: " + submitRes);
+        @SuppressWarnings("unchecked")
+        String orderId2 = (String) ((Map<String, Object>) submitRes.getData()).get("id");
+
+        graphQLEngine.executeRpc(graphQLEngine.newRpcContext(GraphQLOperationType.mutation,
+                "LitemallOrder__pay", ApiRequest.build(Map.of("orderId", orderId2))));
+        graphQLEngine.executeRpc(graphQLEngine.newRpcContext(GraphQLOperationType.mutation,
+                "LitemallOrder__ship", ApiRequest.build(Map.of(
+                        "orderId", orderId2, "shipSn", "P33", "shipChannel", "P33"))));
+        graphQLEngine.executeRpc(graphQLEngine.newRpcContext(GraphQLOperationType.mutation,
+                "LitemallOrder__confirm", ApiRequest.build(Map.of("orderId", orderId2))));
+
+        QueryBean ogQuery2 = new QueryBean();
+        ogQuery2.addFilter(FilterBeans.eq(LitemallOrderGoods.PROP_NAME_orderId, orderId2));
+        LitemallOrderGoods og2 = daoProvider.daoFor(LitemallOrderGoods.class)
+                .findFirstByQuery(ogQuery2);
+        return og2.orm_idString();
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testSubmitCommentStructuredFields() {
+        ApiRequest<Map<String, Object>> req = ApiRequest.build(Map.of(
+                "orderGoodsId", orderGoodsId,
+                "content", "结构化评价",
+                "star", 5,
+                "pros", "[\"质量好\",\"物流快\"]",
+                "cons", "[\"包装一般\"]",
+                "semanticRating", 5
+        ));
+        IGraphQLExecutionContext ctx = graphQLEngine.newRpcContext(
+                GraphQLOperationType.mutation, "LitemallComment__submitComment", req);
+        ApiResponse<?> result = graphQLEngine.executeRpc(ctx);
+        assertEquals(0, result.getStatus(), "submitComment structured failed: " + result);
+        Map<String, Object> data = (Map<String, Object>) result.getData();
+        assertEquals("[\"质量好\",\"物流快\"]", data.get("pros"));
+        assertEquals("[\"包装一般\"]", data.get("cons"));
+        assertEquals(5, ((Number) data.get("semanticRating")).intValue());
+
+        // verify persisted
+        String commentId = (String) data.get("id");
+        LitemallComment persisted = daoProvider.daoFor(LitemallComment.class).getEntityById(commentId);
+        assertNotNull(persisted);
+        assertEquals("[\"质量好\",\"物流快\"]", persisted.getPros());
+        assertEquals("[\"包装一般\"]", persisted.getCons());
+        assertEquals(5, persisted.getSemanticRating());
+    }
+
+    @Test
+    public void testSemanticRatingOutOfRangeRejected() {
+        ApiRequest<Map<String, Object>> req = ApiRequest.build(Map.of(
+                "orderGoodsId", orderGoodsId,
+                "content", "bad-rating",
+                "star", 3,
+                "semanticRating", 6
+        ));
+        ApiResponse<?> result = graphQLEngine.executeRpc(graphQLEngine.newRpcContext(
+                GraphQLOperationType.mutation, "LitemallComment__submitComment", req));
+        assertEquals(-1, result.getStatus());
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testCommentListFilterByShowType() {
+        // first comment: star=5 (good), has picture
+        graphQLEngine.executeRpc(graphQLEngine.newRpcContext(
+                GraphQLOperationType.mutation, "LitemallComment__submitComment",
+                ApiRequest.build(Map.of(
+                        "orderGoodsId", orderGoodsId,
+                        "content", "first", "star", 5,
+                        "hasPicture", true, "picUrls", "http://x"))));
+        // second comment on a new orderGoods: star=2 (bad), no picture
+        String ogId2 = seedSecondOrderGoodsForSameGoods();
+        graphQLEngine.executeRpc(graphQLEngine.newRpcContext(
+                GraphQLOperationType.mutation, "LitemallComment__submitComment",
+                ApiRequest.build(Map.of(
+                        "orderGoodsId", ogId2, "content", "second", "star", 2))));
+
+        LitemallOrderGoods og = daoProvider.daoFor(LitemallOrderGoods.class).getEntityById(orderGoodsId);
+        String goodsId = og.getGoodsId();
+
+        // all = 2
+        ApiResponse<?> allRes = graphQLEngine.executeRpc(graphQLEngine.newRpcContext(
+                GraphQLOperationType.query, "LitemallComment__commentList",
+                ApiRequest.build(Map.of("type", 0, "valueId", goodsId,
+                        "showType", "all", "page", 1, "pageSize", 10))));
+        assertEquals(0, allRes.getStatus());
+        assertEquals(2, ((List<?>) ((Map<String, Object>) allRes.getData()).get("items")).size());
+
+        // hasPicture = 1
+        ApiResponse<?> picRes = graphQLEngine.executeRpc(graphQLEngine.newRpcContext(
+                GraphQLOperationType.query, "LitemallComment__commentList",
+                ApiRequest.build(Map.of("type", 0, "valueId", goodsId,
+                        "showType", "hasPicture", "page", 1, "pageSize", 10))));
+        // note: hasPicture filter on DB requires the value actually persisted; submitComment coerced
+        // hasPicture=true via Boolean.TRUE.equals for the first comment.
+        assertEquals(0, picRes.getStatus());
+        List<?> picItems = (List<?>) ((Map<String, Object>) picRes.getData()).get("items");
+        assertEquals(1, picItems.size());
+
+        // good (star>=4) = 1
+        ApiResponse<?> goodRes = graphQLEngine.executeRpc(graphQLEngine.newRpcContext(
+                GraphQLOperationType.query, "LitemallComment__commentList",
+                ApiRequest.build(Map.of("type", 0, "valueId", goodsId,
+                        "showType", "good", "page", 1, "pageSize", 10))));
+        assertEquals(0, goodRes.getStatus());
+        assertEquals(1, ((List<?>) ((Map<String, Object>) goodRes.getData()).get("items")).size());
+
+        // bad (star<=2) = 1
+        ApiResponse<?> badRes = graphQLEngine.executeRpc(graphQLEngine.newRpcContext(
+                GraphQLOperationType.query, "LitemallComment__commentList",
+                ApiRequest.build(Map.of("type", 0, "valueId", goodsId,
+                        "showType", "bad", "page", 1, "pageSize", 10))));
+        assertEquals(0, badRes.getStatus());
+        assertEquals(1, ((List<?>) ((Map<String, Object>) badRes.getData()).get("items")).size());
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testGetCommentSummaryAggregation() {
+        // comment 1: star=5, pros=[质量好, 物流快], cons=[包装一般]
+        graphQLEngine.executeRpc(graphQLEngine.newRpcContext(
+                GraphQLOperationType.mutation, "LitemallComment__submitComment",
+                ApiRequest.build(Map.of(
+                        "orderGoodsId", orderGoodsId,
+                        "content", "c1", "star", 5,
+                        "pros", "[\"质量好\",\"物流快\"]",
+                        "cons", "[\"包装一般\"]"))));
+        // comment 2 on new orderGoods: star=2, pros=[], cons=[包装一般]
+        String ogId2 = seedSecondOrderGoodsForSameGoods();
+        graphQLEngine.executeRpc(graphQLEngine.newRpcContext(
+                GraphQLOperationType.mutation, "LitemallComment__submitComment",
+                ApiRequest.build(Map.of(
+                        "orderGoodsId", ogId2,
+                        "content", "c2", "star", 2,
+                        "pros", "[]",
+                        "cons", "[\"包装一般\"]"))));
+
+        LitemallOrderGoods og = daoProvider.daoFor(LitemallOrderGoods.class).getEntityById(orderGoodsId);
+        String goodsId = og.getGoodsId();
+
+        ApiResponse<?> res = graphQLEngine.executeRpc(graphQLEngine.newRpcContext(
+                GraphQLOperationType.query, "LitemallComment__getCommentSummary",
+                ApiRequest.build(Map.of("type", 0, "valueId", goodsId))));
+        assertEquals(0, res.getStatus(), "getCommentSummary failed: " + res);
+        Map<String, Object> summary = (Map<String, Object>) res.getData();
+        assertEquals(2, ((Number) summary.get("totalCount")).intValue());
+        // good = star>=4, so 1 of 2 = 50%
+        assertEquals(50, ((Number) summary.get("goodRate")).intValue());
+
+        Map<String, Object> starDist = (Map<String, Object>) summary.get("starDistribution");
+        assertEquals(1, ((Number) starDist.get("5")).intValue());
+        assertEquals(1, ((Number) starDist.get("2")).intValue());
+        assertEquals(0, ((Number) starDist.get("3")).intValue());
+
+        List<Map<String, Object>> prosTags = (List<Map<String, Object>>) summary.get("prosTags");
+        // comment-1 had 质量好 + 物流快, comment-2 had []; counter has 2 entries each count=1
+        assertEquals(2, prosTags.size());
+        List<Map<String, Object>> consTags = (List<Map<String, Object>>) summary.get("consTags");
+        // 包装一般 appears twice
+        assertEquals(1, consTags.size());
+        assertEquals("包装一般", consTags.get(0).get("tag"));
+        assertEquals(2, ((Number) consTags.get(0).get("count")).intValue());
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testGetCommentSummaryEmpty() {
+        // fresh goods with no comments
+        LitemallGoods g = daoProvider.daoFor(LitemallGoods.class).newEntity();
+        g.setGoodsSn("G-EMPTY");
+        g.setName("Empty Goods");
+        g.setRetailPrice(BigDecimal.ONE);
+        daoProvider.daoFor(LitemallGoods.class).saveEntity(g);
+
+        ApiResponse<?> res = graphQLEngine.executeRpc(graphQLEngine.newRpcContext(
+                GraphQLOperationType.query, "LitemallComment__getCommentSummary",
+                ApiRequest.build(Map.of("type", 0, "valueId", g.getId()))));
+        assertEquals(0, res.getStatus());
+        Map<String, Object> summary = (Map<String, Object>) res.getData();
+        assertEquals(0, ((Number) summary.get("totalCount")).intValue());
+        assertEquals(0, ((Number) summary.get("goodRate")).intValue());
+        assertTrue(((List<?>) summary.get("prosTags")).isEmpty());
+        assertTrue(((List<?>) summary.get("consTags")).isEmpty());
+    }
+
+    @Test
+    public void testCommentPointsRewardWhenConfigured() {
+        // configure reward = 10
+        LitemallSystem cfg = daoProvider.daoFor(LitemallSystem.class).newEntity();
+        cfg.orm_propValueByName("keyName",
+                LitemallPointsAccountBizModel.CONFIG_POINTS_COMMENT_REWARD);
+        cfg.orm_propValueByName("keyValue", "10");
+        daoProvider.daoFor(LitemallSystem.class).saveEntity(cfg);
+
+        ApiRequest<Map<String, Object>> req = ApiRequest.build(Map.of(
+                "orderGoodsId", orderGoodsId, "content", "rewarded", "star", 5));
+        ApiResponse<?> submitRes = graphQLEngine.executeRpc(graphQLEngine.newRpcContext(
+                GraphQLOperationType.mutation, "LitemallComment__submitComment", req));
+        assertEquals(0, submitRes.getStatus(), "submitComment w/ reward failed: " + submitRes);
+
+        // Verify a points flow row with sourceType=comment-reward exists for user "1".
+        QueryBean q = new QueryBean();
+        q.addFilter(FilterBeans.eq(LitemallPointsFlow.PROP_NAME_sourceType,
+                LitemallPointsAccountBizModel.SOURCE_TYPE_COMMENT_REWARD));
+        q.addFilter(FilterBeans.eq(LitemallPointsFlow.PROP_NAME_userId, "1"));
+        long count = daoProvider.daoFor(LitemallPointsFlow.class).findAllByQuery(q).size();
+        assertEquals(1, count, "one comment-reward points flow must be written");
+    }
+
+    @Test
+    public void testCommentPointsRewardDefaultOff() {
+        // No config seeded in setUp; submitComment must NOT emit any comment-reward flow.
+        ApiRequest<Map<String, Object>> req = ApiRequest.build(Map.of(
+                "orderGoodsId", orderGoodsId, "content", "no-reward", "star", 4));
+        ApiResponse<?> submitRes = graphQLEngine.executeRpc(graphQLEngine.newRpcContext(
+                GraphQLOperationType.mutation, "LitemallComment__submitComment", req));
+        assertEquals(0, submitRes.getStatus());
+
+        QueryBean q = new QueryBean();
+        q.addFilter(FilterBeans.eq(LitemallPointsFlow.PROP_NAME_sourceType,
+                LitemallPointsAccountBizModel.SOURCE_TYPE_COMMENT_REWARD));
+        long count = daoProvider.daoFor(LitemallPointsFlow.class).findAllByQuery(q).size();
+        assertEquals(0, count, "default config 0 must NOT earn points");
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testCommentListBackwardCompatNoShowType() {
+        graphQLEngine.executeRpc(graphQLEngine.newRpcContext(
+                GraphQLOperationType.mutation, "LitemallComment__submitComment",
+                ApiRequest.build(Map.of(
+                        "orderGoodsId", orderGoodsId, "content", "compat", "star", 4))));
+        LitemallOrderGoods og = daoProvider.daoFor(LitemallOrderGoods.class).getEntityById(orderGoodsId);
+        // omit showType entirely — must be backward compatible
+        ApiResponse<?> res = graphQLEngine.executeRpc(graphQLEngine.newRpcContext(
+                GraphQLOperationType.query, "LitemallComment__commentList",
+                ApiRequest.build(Map.of("type", 0, "valueId", og.getGoodsId(),
+                        "page", 1, "pageSize", 10))));
+        assertEquals(0, res.getStatus());
+        assertEquals(1, ((List<?>) ((Map<String, Object>) res.getData()).get("items")).size());
     }
 }
