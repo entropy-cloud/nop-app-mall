@@ -121,7 +121,7 @@
 
 - **购物赠送**（主触发源，已落地）：用户确认收货（`LitemallOrderBizModel.confirm`）时，系统按 `mall_points_earn_per_yuan`（每元赠 X 积分，默认 1）× 订单 `actualPrice` 计算应赠积分并调用账户 earn API。**备选「支付即赠送」被否**——退款刷分风险（确认收货前退款的订单不发积分，已由 P16 item 级退款守卫覆盖）。
 - 赠送为幂等：同一 `orderId` 不重复赠送，按 `sourceType=order-confirm-earn` + `sourceId=orderId` 查重。
-- 签到得积分（P28）、评价得积分（P33）、分享得积分（不在基线）作为后续接入源复用同一账户 earn API，不在本计划实现触发逻辑。
+- 签到得积分（P28，已落地，见本章「签到 / Daily Check-In」）、评价得积分（P33）、分享得积分（不在基线）作为接入源复用同一账户 earn API。
 
 ### 获取规则配置项
 
@@ -167,6 +167,88 @@
 
 - 积分获取资格、抵扣规则、上限配置、返还语义由本文件负责。
 - 积分如何接入订单价格构成（`integralPrice` 作用于 `actualPrice` 减项层）由 `order-and-cart.md` 价格语义负责引用结果，不在本文件重复维护订单价格公式。
+
+## 签到 / Daily Check-In
+
+### 业务意图
+
+- 签到是商城日活运营工具：用户每日主动签到，按规则表（`LitemallCheckInRule`）获得对应档位积分，连续签到天数越长奖励越高，用于提升用户黏性与积分发放频次。
+- 签到积分联动积分账户（P27 `earnPoints`，`sourceType=check-in`），不重复造积分写入逻辑。
+
+### 业务规则
+
+- 用户每日最多签到一次（以 `checkInDate` 当日为粒度）。
+- 签到按规则表档位匹配发放积分，写入 `LitemallCheckInRecord` 并联动积分账户写一条 `EARN` 流水。
+- 签到规则由运营在后台维护（`daySeq`/`pointReward`/`resetCycle`），可随时增删档位。
+- 签到记录与积分流水一一对应（`sourceId=CheckInRecord.id`），幂等性继承积分账户的 `(sourceType, sourceId)` 查重。
+
+### 连续天数算法（Decision A：即时计算）
+
+**抉择：** 签到即时计算 `consecutiveDays`，无需定时任务扫描。
+
+- 算法：查该用户**昨日** `CheckInRecord`，存在则 `consecutiveDays = prev.consecutiveDays + 1`；不存在（断签/首签）则 `consecutiveDays = 1`。
+- 备选 B（定时任务每日扫描）被否——即时计算无延迟、无额外调度负担、与签到原子事务一致；定时扫描反而引入跨事务一致性问题。
+- 该抉择消解了 roadmap 中「签到周期重置需引入 nop-job」的陈述——Phase 11 已引入 `nop-job-local`，但本特性按 Decision A 不依赖它。
+
+### 周期重置语义（Decision A：循环发奖）
+
+**抉择：** `resetCycle` 语义为「循环发奖」。
+
+- `resetCycle=0`：不循环，按 `daySeq` 线性发奖，达到规则表最大 `daySeq` 后保持顶档。
+- `resetCycle>0`：达到 `resetCycle` 天后下一次签到 `consecutiveDays` 归 1 循环（即 `consecutiveDays = ((prev + 1 - 1) % resetCycle) + 1`，当 `prev + 1 > resetCycle` 时归 1）。
+- 备选 B（周期满当天发顶档后自然停）被否——循环发奖更符合签到运营意图（持续激励日活），自然停会使用户在满周期后失去签到动机。
+- 残留风险：循环重置使用户永远拿低档，需运营结合 `resetCycle` 与档位梯度合理配置；属运营决策非缺陷。
+
+### 防同日重复签到（Decision A：应用层查）
+
+**抉择：** 应用层查 `(userId, checkInDate=今日)`，存在则拒绝（`ERR_CHECK_IN_ALREADY_TODAY`）。
+
+- 备选 B（DB 唯一键 `(userId, checkInDate)`）作为 successor（model-gap，触发条件见对应计划 Deferred）。理由：模型当前无该唯一键，应用层查询足以保证正确性，签到非高并发路径；DB 唯一键为强一致兜底，非阻塞。
+
+### 奖励档位匹配（Decision B：阶梯累进）
+
+**抉择：** 取 `≤consecutiveDays` 的最大 `daySeq` 档的 `pointReward`。
+
+- 例：规则表有 `daySeq=1→5`、`daySeq=3→15`、`daySeq=7→50`。用户 `consecutiveDays=5` 时命中 `daySeq=3` 档（15 积分）；`consecutiveDays=7` 时命中 `daySeq=7` 档（50 积分）。
+- 备选 A（精确匹配 `daySeq`）被否——阶梯累进符合运营习惯（连续签到奖励递增），断签后从低档重启；精确匹配会导致无对应 `daySeq` 时无奖励。
+- 无规则兜底（分两档）：
+  - **规则表完全为空**（管理员未配置任何档位）：签到拒绝（`ERR_CHECK_IN_RULE_MISSING`）——属系统未配置的 fail-fast，提示运营补配规则，避免所有用户签到均得 0 积分的静默异常。
+  - **规则存在但无 `≤consecutiveDays` 的档位**（如规则从 `daySeq=3` 起，用户 `consecutiveDays=1`）：签到成功但不发积分（`pointReward=0`），记录仍写入（保留签到行为轨迹，次日达档即发奖）。
+
+### 积分联动（Decision：复用 P27 earnPoints）
+
+- 签到写入 `CheckInRecord` 后调用 `pointsAccountBiz.earnPoints(userId, pointReward, changeType=EARN, sourceType="check-in", sourceId=record.id, remark)`。
+- `sourceType` 复用 P27 已部署常量 `SOURCE_TYPE_CHECK_IN = "check-in"`（`LitemallPointsAccountBizModel.java:39`）。
+- 幂等性继承 P27 `(sourceType, sourceId)` 查重（`LitemallPointsAccountBizModel.java:88-94`）：同一 `CheckInRecord.id` 不会重复发积分。与 P27 PointsFlow `(sourceType, sourceId)` DB 唯一键 deferred 一致（同一 model-gap）。
+- `pointReward=0` 时不调 `earnPoints`（避免无意义流水），签到记录仍写入。
+
+### 状态语义
+
+- `LitemallCheckInRecord` 为追加型记录，无状态机（签到即终态）。
+- `LitemallCheckInRule` 为配置表，无状态字段（运营增删档位即时生效）。
+
+### 管理员与用户动作
+
+- 商城用户：在个人中心查看签到状态（今日是否已签、连续天数、累计天数、未来奖励预览），点击「立即签到」领取当日积分。
+- 管理员：在后台维护签到规则（`daySeq`/`pointReward`/`resetCycle`），无审批流。
+
+### 生命周期
+
+- 管理员配置签到规则档位。
+- 用户每日进入个人中心签到入口，查看状态并签到。
+- 系统即时计算连续天数、匹配档位、写记录、发积分。
+- 用户次日再签，连续天数 +1（断签则归 1）；周期满按 `resetCycle` 循环。
+
+### 与积分账户的关系
+
+- 签到仅为积分**获取触发源**之一，账户/流水/抵扣语义由 `wallet-and-assets.md` 持有。
+- 签到写入的 PointsFlow `changeType=EARN`、`sourceType=check-in`、`sourceId=CheckInRecord.id`，与购物赠送、退款返还等同属积分账户分类法（见 `wallet-and-assets.md` changeType × sourceType 表）。
+
+### 已知约束
+
+- 防重签 DB 唯一键为 model-gap（见上 Decision A 与对应计划 Deferred）。
+- 签到补签/请假超出 P28 范围。
+- 签到提醒推送（站内信/消息中心属 P35），本特性仅发积分。
 
 ## 满减送 / Full-Discount Promotion
 

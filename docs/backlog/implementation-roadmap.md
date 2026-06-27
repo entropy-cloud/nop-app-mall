@@ -51,7 +51,7 @@
 | 系统配置（全局 key-value 变量） | `nop-sys` | `NopSysVariable`；已引入依赖 |
 | 字典管理 | `nop-sys` | `NopSysDict` + `NopSysDictOption`；已引入依赖 |
 | 通知模板 | `nop-sys` | `NopSysNoticeTemplate`；已引入依赖 |
-| 定时任务调度 | `nop-job` | CRON/fixed-rate/fixed-delay 调度引擎；**未引入依赖** |
+| 定时任务调度 | `nop-job-local` | CRON/fixed-rate/fixed-delay 调度引擎；已引入依赖（Phase 11 done） |
 | 报表引擎 | `nop-report` | 报表定义/数据集/数据源/权限/导出；**未引入依赖** |
 | SMS/Email 通道 | `nop-integration` | `ISmsSender` / `IEmailSender` 接口 + 多供应商实现；**未引入依赖** |
 | 文件存储 | `nop-integration-file-*` | 本地/OSS/SFTP 后端；**未引入依赖** |
@@ -71,7 +71,7 @@
 - Delta 定制（app-mall-delta：注册 signUp、密码重置、注册赠券、profile 管理）
 
 **Phase 11/13 partial 说明：**
-- Phase 11：系统配置/日志/公告/文件已交付；`nop-job` 调度引擎未引入，5 个定时方法（cancelExpiredOrders/confirmExpiredOrders/expireCoupons/expireGroupons/commentWindowExpire）仅有手动 BizMutation 入口，无自动调度装配
+- Phase 11：系统配置/日志/公告/文件已交付；`nop-job-local` 调度引擎已引入（5 个定时任务自动执行：cancelExpiredOrders/confirmExpiredOrders/expireCoupons/expireGroupons/commentWindowExpire）
 - Phase 13：3 个统计 API（getOrderStatistics/getGoodsSalesRanking/getUserStatistics）+ SQL 数据集已交付；`nop-report` 引擎未引入，无看板模板和导出能力
 
 ---
@@ -101,7 +101,7 @@
 | 8 | 优惠券体系 | `marketing-and-promotions.md` | Phase 5b | — |
 | 9 | 团购 | `marketing-and-promotions.md` | Phase 5 + Phase 5b | — |
 | 10 | 内容营销与反馈 | `marketing-and-promotions.md` | Phase 2 | — |
-| 11 | 系统运营与定时任务 | `system-configuration.md` | Phase 5；Phase 8/9（可选延后） | nop-sys NopSysVariable; nop-job（需引入）; nop-integration-file-*（需引入） |
+| 11 | 系统运营与定时任务 | `system-configuration.md` | Phase 5；Phase 8/9（可选延后） | nop-sys NopSysVariable; nop-job-local（已引入）; nop-integration-file-*（需引入） |
 | 12 | 通知系统 | `system-configuration.md` | Phase 5b + Phase 5c | nop-integration ISmsSender/IEmailSender（需引入）; nop-sys NopSysNoticeTemplate |
 | 13 | 报表与统计 | `system-configuration.md` | Phase 5 + Phase 8/9 | nop-report（需引入）；仅需 SQL 数据集和报表模板 |
 | 14 | 微信支付集成 | `system-baseline.md` | Phase 5b | Protected Area (ask-first) |

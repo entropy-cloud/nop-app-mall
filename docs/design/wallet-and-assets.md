@@ -103,7 +103,7 @@
 积分获取规则配置详见 `marketing-and-promotions.md`「积分体系」章节；本文件仅持有账户/流水语义。主要触发源：
 
 - **购物赠送**（主触发源，已落地）：订单确认收货（confirm）时按 `mall_points_earn_per_yuan` × `actualPrice` 赠送；幂等（同 orderId 不重复赠送，按 `sourceType=order-confirm-earn` + `sourceId=orderId` 查重）。
-- 签到（P28，依赖本计划 earn API）、评价（P33，依赖本计划 earn API）、分享（不在基线）作为后续接入源复用同一 earn API。
+- 签到（P28，已落地）：每日签到按规则档位发积分，调用 earn API（`sourceType=check-in`, `sourceId=CheckInRecord.id`），业务设计见 `marketing-and-promotions.md`「签到 / Daily Check-In」。评价（P33）、分享（不在基线）作为后续接入源复用同一 earn API。
 
 ### 抵扣与返还语义
 

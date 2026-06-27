@@ -30,12 +30,12 @@
 - 25. 拼团: `todo`
 - 26. 会员等级体系: `done`（`docs/plans/2026-06-27-1742-2-phase26-member-level-system-plan.md`）
 - 27. 积分体系: `done`（`docs/plans/2026-06-27-2029-1-phase27-points-system-plan.md`）
-- 28. 签到: `todo`
+- 28. 签到: `done`（`docs/plans/2026-06-27-2321-1-phase28-check-in-plan.md`）
 - 29. 钱包余额与充值: `todo`
 - 30. 多支付通道: `todo`
 - 31. 配送方式扩展（自提）: `todo`
-- 32. 优惠券体系增强: `todo`
-- 33. 商品评价结构化: `todo`
+- 32. 优惠券体系增强: `planned`（`docs/plans/2026-06-27-2321-3-phase32-coupon-center-plan.md`）
+- 33. 商品评价结构化: `planned`（`docs/plans/2026-06-27-2321-2-phase33-structured-comment-plan.md`）
 - 34. 首页运营打标: `done`（`docs/plans/2026-06-27-2029-3-phase34-homepage-operation-tagging-plan.md`）
 - 35. 站内信/消息中心: `todo`
 - 36. 商品运营增强: `todo`
@@ -61,7 +61,7 @@
 | 系统配置（全局 key-value） | nop-sys NopSysVariable | 已引入 | 满减/秒杀/签到等活动配置参数存储 |
 | 字典管理 | nop-sys | 已引入 | 售后原因字典化（仅退款/退货退款两类） |
 | 通知模板 | nop-sys NopSysNoticeTemplate | 已引入 | 站内信/消息中心的模板复用 |
-| 定时任务调度 | nop-job | 未引入 | 秒杀场次状态切换、拼团超时失败、签到重置 |
+| 定时任务调度 | nop-job-local | 已引入（Phase 11） | 秒杀场次状态切换、拼团超时失败、订单超时取消；签到采用即时计算无需调度 |
 | 报表引擎 | nop-report | 未引入 | Dashboard 看板、报表体系扩展 |
 | SMS/Email 通道 | nop-integration | 未引入 | 站内信可扩展为多渠道通知 |
 | 文件存储 | nop-integration-file-* | 未引入 | 素材库的文件管理 |
@@ -106,7 +106,7 @@
 | 25 | 拼团 | `marketing-and-promotions.md` | Phase 5 + Phase 5b | nop-job（需引入，拼团超时失败） |
 | 26 | 会员等级体系 | `user-and-address.md` | Phase 1 | nop-auth Delta |
 | 27 | 积分体系 | `marketing-and-promotions.md`, `wallet-and-assets.md` | Phase 5 + Phase 5b + Phase 26 | — |
-| 28 | 签到 | `marketing-and-promotions.md` | Phase 27 | nop-job（需引入，签到周期重置） |
+| 28 | 签到 | `marketing-and-promotions.md` | Phase 27 | 即时计算（Decision A，无需定时任务；nop-job-local 已引入但本特性不依赖） |
 | 29 | 钱包余额与充值 | `wallet-and-assets.md` | Phase 5b + Phase 30 | — |
 | 30 | 多支付通道 | `order-and-cart.md` | Phase 5b | Protected Area (ask-first) |
 | 31 | 配送方式扩展（自提） | `order-and-cart.md` | Phase 5 + Phase 5b | — |
