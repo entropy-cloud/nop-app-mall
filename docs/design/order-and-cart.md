@@ -53,7 +53,7 @@
 - goods price：商品金额小计
 - freight price：基于当前运费策略计算出的配送费
 - coupon price：订单在满足优惠券条件时形成的优惠金额构件
-- promotion price：订单在满足满减活动条件时由系统自动判定形成的优惠金额构件（满减/限时折扣共用此价格槽位）
+- promotion price：订单在满足满减活动条件时由系统自动判定形成的优惠金额构件（满减专属此价格槽位；限时折扣裁决为商品单价层，不复用此槽位，见 `marketing-and-promotions.md` 限时折扣）
 - groupon price：订单在满足团购条件时形成的优惠金额构件
 - integral price：积分抵扣金额；用户在结算页勾选使用 N 积分时，按 `mall_points_to_yuan_ratio`（X 积分=¥1）换算，受 `orderPrice × mall_points_deduct_max_ratio` 抵扣上限约束（详见 `marketing-and-promotions.md` 积分体系）。作用于 `actualPrice` 减项层
 - order price：叠加运费与优惠后的支付前金额
@@ -63,7 +63,7 @@
 
 订单提交时按以下公式计算各价格构件：
 
-- `goods price` = 所有结算项 SKU 当前零售价 × 数量的总和（使用提交时的实时价格，不沿用购物车快照）。会员用户（`userLevel >= 1`）的 SKU 若配置了 `vipPrice`，则该行单价取 `min(retailPrice, vipPrice)`（SKU 单价级会员价，见 `user-and-address.md` 会员等级体系）
+- `goods price` = 所有结算项 SKU 当前零售价 × 数量的总和（使用提交时的实时价格，不沿用购物车快照）。命中限时折扣的 SKU 行单价取 `min(retailPrice, vipPrice, timeDiscountPrice)`（限时折扣作用于商品单价层，见 `marketing-and-promotions.md` 限时折扣）；会员用户（`userLevel >= 1`）的 SKU 若配置了 `vipPrice`，则该行单价取 `min(retailPrice, vipPrice)`（SKU 单价级会员价，见 `user-and-address.md` 会员等级体系）
 - `order price` = `goods price` + `freight price` - `coupon price` - `promotion price`
 - `actual price` = `order price` - `integral price` - `groupon price`
 
@@ -71,8 +71,8 @@
 
 ### 价格计算顺序约定
 
-- 满减门槛 `meetAmount` 以 `goods price` 为判定基准。若启用会员等级价（P26），会员价作用于 SKU 单价层（降低 `goods price` 汇总），会间接拉低满减门槛命中判定。
-- 因此价格计算顺序为：**先计算会员价后的 `goods price` → 再据 `goods price` 判定满减门槛与最优档位 → 再计算 coupon / orderPrice → 再计算 integral price（积分抵扣，actualPrice 减项层）**。该顺序在 `LitemallOrderBizModel.submit()` 实现中保持。
+- 满减门槛 `meetAmount` 以 `goods price` 为判定基准。若启用会员等级价（P26），会员价作用于 SKU 单价层（降低 `goods price` 汇总），会间接拉低满减门槛命中判定。限时折扣（P23）同样作用于 SKU 单价层（命中折扣的 SKU 行单价取 `min(retail, vip, timeDiscount)`），会进一步间接拉低满减门槛命中判定。
+- 因此价格计算顺序为：**先计算限时折扣 + 会员价后的行单价 → 汇总 `goods price` → 再据 `goods price` 判定满减门槛与最优档位 → 再计算 coupon / orderPrice → 再计算 integral price（积分抵扣，actualPrice 减项层）**。该顺序在 `LitemallOrderBizModel.submit()` 实现中保持。
 - **积分抵扣（P27）作用层位：** `integral price` 在 `orderPrice` 汇总完成后的 `actualPrice` 减项层，与满减 `promotionPrice`（`orderPrice` 减项层）、团购 `grouponPrice`（`actualPrice` 减项层，与积分同层）层位不同，天然不冲突。计算顺序天然正确。
 - **积分抵扣公式：** 用户结算勾选 N 积分 → `integralPrice = N / mall_points_to_yuan_ratio`，上限 `min(N 对应金额, orderPrice × mall_points_deduct_max_ratio)`；同时调用积分账户 spend API 扣减用户积分（`sourceType=order-deduct`）。
 
@@ -334,6 +334,7 @@ item 级退款时三个订单级副作用策略：
 | SKU 可售性与库存 | ← 入 | `product-catalog.md` | 结算/下单基于当前可售价格与库存；订单保留商品快照 |
 | 优惠券价格构件 | ← 入 | `marketing-and-promotions.md` | 结算校验可用券，影响 coupon price；取消/退款后恢复 |
 | 满减价格构件 | ← 入 | `marketing-and-promotions.md` | 结算自动判定满减最优档位，影响 promotion price（orderPrice 减项层）；自动触发、不可恢复 |
+| 限时折扣价格构件 | ← 入 | `marketing-and-promotions.md` | 命中折扣的 SKU 行单价取 min(retail,vip,timeDiscount)，作用于商品单价层（降低 goodsPrice 汇总），不进 promotion price；自动触发、不可恢复 |
 | 积分抵扣构件 | ← 入 | `marketing-and-promotions.md` | 结算勾选积分抵扣，影响 integral price（actualPrice 减项层）；取消/整单退款返还积分，item 级部分退款不返还 |
 | 团购上下文 | ← 入 | `marketing-and-promotions.md` | grouponRulesId/grouponId 透传到 submit；团购超时触发 204 |
 | 评价资格 | → 出 | `marketing-and-promotions.md` | 收货完成(401/402)是评价资格边界 |
