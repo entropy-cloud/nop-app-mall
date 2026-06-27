@@ -203,6 +203,30 @@
 - 按运营职责应用对应的权限边界。
 - 记录重要管理员操作，满足审计和排障需要。
 
+## 用户标签与黑名单
+
+> 持久化字段、索引与唯一键以 `model/app-mall.orm.xml` 为准。本节描述用户运营工作台（P20）的标签/黑名单建模决策与业务语义。
+
+### 建模决策
+
+- **抉择：标签与黑名单各自独立建表**，不复用 `NopAuthUser.status` 或 `NopAuthUserEx` 的 JSON/布尔扩展列。
+  - `LitemallUserTag`（表 `litemall_user_tag`，列 id/userId/tag/name/addTime/updateTime/deleted，索引 `(userId,tag)`）：多对多自由打标，一个用户可持有多条标签记录。`tag` 为运营维护的标签码（自由文本，去重），`name` 为展示名。
+  - `LitemallUserBlacklist`（表 `litemall_user_blacklist`，列 id/userId/reason(511)/operatorId/addTime/updateTime/deleted，唯一键 `userId`）：每用户至多一条封禁记录，记录原因与操作员便于审计。封禁/解禁时随表增删。
+- **被否备选 A（在 `NopAuthUserEx` Delta 加 `tags` JSON + `blacklisted` bool）：** JSON 标签无法高效分群查询；黑名单审计需要操作员/原因/时间独立记录，布尔标记承载不了。
+- **被否备选 B（黑名单直接复用 `NopAuthUser.status=disabled` 不建表）：** status 是平台通用态，无法承载商城黑名单的封禁原因与操作审计；运营工作台需要可追溯的封禁记录。
+- 残留风险：双新表增加 regen 量（model-first 流程已接受）。
+
+### 业务语义
+
+- 封禁/解禁：杠杆平台 `NopAuthUser.status`（0=禁用、1=正常）并同步写 `LitemallUserBlacklist`，二者保持一致。封禁用户登录由平台 status 机制拒绝，下单由订单 `submit` 增加 `ERR_USER_BANNED` 守卫拒绝。
+- 标签：运营对用户打标/去标，并按标签分群查询（`findUsersByTag`）。本基线为简单标签集合（非算法画像/RFM，后者归 P19 报表扩展 successor）。
+- 权益手工发放：运营工作台提供用户级直达入口（手工调级 `setUserLevel`、手工发券 `dispatchCoupon`、手工加积分复用既有 `adjustPoints`），覆盖 P26/P32 自动化发放 deferred 的手动路径。
+
+### 与其他 Owner Docs 的关系
+
+- 封禁状态对下单的影响见 `order-and-cart.md`。
+- 会员等级调级语义见本文档「会员等级体系」；优惠券/积分发放语义见 `marketing-and-promotions.md`、`wallet-and-assets.md`。
+
 ## 与其他 Owner Docs 的关系
 
 用户与地址域向主链路提供前置条件：

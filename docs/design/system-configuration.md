@@ -225,6 +225,48 @@
 - 营销活动业务语义（玩法、状态字典、上下架规则、效果口径、冲突口径）由 `marketing-and-promotions.md` 持有。
 - 本文件仅持有「后台菜单结构与运营可达性」语义。
 
+## 用户运营工作台
+
+### 业务角色
+
+- 用户运营工作台为运营提供单用户全貌聚合视图与行级运营动作，把用户管理从只读列表升级为可操作工具（P20）。
+
+### 运营动作
+
+| 动作 | BizModel 方法 | 语义 |
+| ---- | ------------- | ---- |
+| 封禁 / 解禁 | `LitemallUserBlacklist__banUser` / `unbanUser` | 杠杆 `NopAuthUser.status`（0=禁用、1=正常）并同步写 `LitemallUserBlacklist`（记录原因/操作员），二者保持一致。封禁用户登录由平台 status 机制拒绝，下单由订单 `submit` 的 `ERR_USER_BANNED` 守卫拒绝 |
+| 手工调级 | `LitemallMemberLevel__setUserLevel` | 运营直接设定 `userLevel`（0/1/2），校验目标值在 `mall/user-level` 字典内，变更写入管理员操作日志（不进积分流水） |
+| 手工发券 | `LitemallCouponUser__dispatchCoupon` | 包装既有 `claimCouponForUser`，复用全部 total/limit/status 校验，记录运营操作日志。关闭 P26/P32 自动发券 deferred 的手动路径 |
+| 手工加积分 | `LitemallPointsAccount__adjustPoints` | 既有方法，用户工作台提供用户级直达入口（积分账户页已接线，本工作台补用户维度入口） |
+
+### 用户详情聚合查询
+
+- `LitemallUserBlacklist__getUserWorkbenchSummary(userId)`：聚合该用户的订单数/累计消费、积分余额、优惠券数（按状态）、足迹数、反馈数、当前等级/标签/黑名单态，供用户详情聚合页消费。跨实体经各自 `I*Biz`。
+
+### 用户标签与分群
+
+- `LitemallUserTag__addUserTag` / `removeUserTag`：运营对用户打标/去标，`(userId, tag)` 去重。
+- `LitemallUserTag__findUsersByTag`：按标签分群查询。本基线为简单标签集合分群，非算法画像/RFM（后者归 P19 报表扩展 successor）。
+
+### 权限与审计
+
+- 所有运营动作标注 `@Auth(roles="admin")`，仅管理员可达。
+- 封禁/调级/发券写入 `LitemallLog` 管理员操作日志，满足审计排障需要。
+
+### 后台菜单结构
+
+- `mall-user-manage`(100) 下新增子项：
+  - `mall-user-workbench`(101) 用户运营工作台 → 平台 `NopAuthUser` 列表（经 app-mall-delta 增加行级运营动作：封禁/解禁/调级/发券/加积分/查看详情）。
+  - `mall-user-tag`(107) 用户标签管理 → `LitemallUserTag` CRUD + 「按标签分群」入口。
+  - `mall-user-blacklist`(108) 用户黑名单管理 → `LitemallUserBlacklist` CRUD。
+- 用户详情聚合页 `mall/user-ops/user-detail.page.yaml`：经工作台行「详情」按钮（带 userId）进入，消费 `getUserWorkbenchSummary`，不在菜单直接暴露。
+
+### 与其他 Owner Docs 的关系
+
+- 标签/黑名单建模决策与会员等级/权益手工发放语义见 `user-and-address.md`「用户标签与黑名单」「会员等级体系」。
+- 封禁状态对下单的影响见 `order-and-cart.md`。
+
 ## 与其他 Owner Docs 的关系
 
 系统配置域向主链路提供配置开关与运营消费能力：
