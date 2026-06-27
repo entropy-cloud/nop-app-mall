@@ -198,6 +198,39 @@
 - 支持按有图/好评/差评等维度筛选。
 - 优点和缺点标签在评价列表中以色块高亮展示，提升信息提取效率。
 
+### 聚合查询规则（P33 细化）
+
+- **聚合查询入口：** `LitemallComment__getCommentSummary(type, valueId)` 返回结构化 summary：
+  - `totalCount` — 该 `valueId`+`type` 下的评论总数（不含已逻辑删除）
+  - `goodRate` — 好评率百分比（0–100 整数）
+  - `starDistribution` — 星级分布（1–5 各档计数）
+  - `prosTags` — 高频优点标签 Top N（`{tag, count}` 数组）
+  - `consTags` — 高频缺点标签 Top N（`{tag, count}` 数组）
+- **好评率定义（Decision A）：** `好评 = star ≥ 4`，`goodRate = round(好评数 × 100 / totalCount)`。备选 B（按 `semanticRating ≥ 4`）被否——`star` 为既有口径且全量覆盖，`semanticRating` 为 P33 新增可选字段（旧评论为 null，按 star 口径统计对历史数据无破坏）。`totalCount == 0` 时 `goodRate` 返回 0（不除零）。
+- **标签云聚合（Decision A，应用层）：** 服务端拉取该商品全量评论的 `pros`/`cons` JSON 字段，应用层解析、按标签归并计数，按计数倒序取 Top N（默认 N=10）。备选 B（MySQL `JSON_TABLE` + `GROUP BY`）被否——H2 测试库不支持 `JSON_TABLE`，且评论量非超大；备选 B 的触发条件：单品评论数稳定 > 1 万且聚合查询成为热点时，再迁 SQL 聚合并加 `(valueId, type)` 复合索引。
+- **Top N 上限：** 默认 10；客户端可在展示侧自行截断。聚合超过 10 个标签时仅返回 Top 10（计数相同按标签字典序兜底）。
+- **空标签：** `pros`/`cons` 为 null 或空数组的评论不参与标签云聚合（不影响 `totalCount`/`goodRate`）。
+- **语义评级展示文案：** 1=非常不满意、2=不太满意、3=一般、4=满意、5=非常满意。展示侧由前端文案映射表渲染（后端仅存 1–5 数字）。
+
+### 筛选维度（P33 细化）
+
+- `commentList` 新增 `@Optional` 筛选参数（向后兼容，省略即「全部」）：
+  - `showType` — `all`(默认) | `hasPicture`(仅图) | `good`(star≥4) | `bad`(star≤2)
+  - 单值枚举，互斥（不开放自由组合，避免 UI 复杂度；标签云展示足够覆盖分面需求）
+- 服务端按枚举翻译为 QueryBean filter（`hasPicture=true` / `star ge 4` / `star le 2`）。
+
+### 评价得积分联动（P33 闭合 P27 评价子项残留）
+
+- **触发：** `submitComment` 成功落库 + 占位成功后，按全局配置 `mall_points_comment_reward`（默认 `0`，即关闭）发放固定积分。
+- **接入点：** 复用 P27 `LitemallPointsAccountBizModel.earnPoints`：
+  - `changeType = POINTS_CHANGE_TYPE_EARN`
+  - `sourceType = SOURCE_TYPE_COMMENT_REWARD`（值 `"comment-reward"`，已部署于 `LitemallPointsAccountBizModel.java:40`）
+  - `sourceId = comment.id`（每条评价唯一，幂等继承 P27 `(sourceType, sourceId)` 查重）
+  - `remark = "商品评价奖励"`
+- **默认关闭：** `mall_points_comment_reward` 默认 `0`（不发放），运营需主动配置才生效，避免在未确认策略的项目中默认产生积分。配置为 `0` 或非法值时不调 `earnPoints`，也不产生流水。
+- **失败处理：** 积分写入失败应抛 `NopException`，`@BizMutation` 事务回滚，评价与积分原子（同 P27/P28 模式：评价占位+积分写入在同一 `@BizMutation` 事务内）。重复评价触发 `ERR_COMMENT_ALREADY_EXISTS` 在评价占位阶段就拦截，不会走到积分步骤。
+- **共享 deferred：** 与签到/购物赠送同样的 `(sourceType, sourceId)` DB 唯一键 deferred model-gap 风险对齐——应用层查重在当前并发量下足够。
+
 ## 首页运营打标
 
 ### 业务意图

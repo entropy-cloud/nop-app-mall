@@ -121,7 +121,8 @@
 
 - **购物赠送**（主触发源，已落地）：用户确认收货（`LitemallOrderBizModel.confirm`）时，系统按 `mall_points_earn_per_yuan`（每元赠 X 积分，默认 1）× 订单 `actualPrice` 计算应赠积分并调用账户 earn API。**备选「支付即赠送」被否**——退款刷分风险（确认收货前退款的订单不发积分，已由 P16 item 级退款守卫覆盖）。
 - 赠送为幂等：同一 `orderId` 不重复赠送，按 `sourceType=order-confirm-earn` + `sourceId=orderId` 查重。
-- 签到得积分（P28，已落地，见本章「签到 / Daily Check-In」）、评价得积分（P33）、分享得积分（不在基线）作为接入源复用同一账户 earn API。
+- 签到得积分（P28，已落地，见本章「签到 / Daily Check-In」）、评价得积分（P33，已落地，见 `docs/design/product-catalog.md` 结构化评价章节「评价得积分联动」段）、分享得积分（不在基线）作为接入源复用同一账户 earn API。
+  - **评价得积分交接确认：** 评价提交（`LitemallCommentBizModel.submitComment`）成功后，按 `mall_points_comment_reward` 配置（默认 `0` 关闭）发放固定积分。复用 P27 `earnPoints`，`sourceType="comment-reward"`、`sourceId=comment.id`，幂等继承 `(sourceType, sourceId)` 查重。
 
 ### 获取规则配置项
 
@@ -130,6 +131,7 @@
 | 配置项 key | 含义 | 默认值 |
 | ---------- | ---- | ------ |
 | `mall_points_earn_per_yuan` | 购物赠送：每实付 1 元赠 N 积分 | 1 |
+| `mall_points_comment_reward` | 评价奖励：每次成功评价固定发放 N 积分（0=关闭） | 0 |
 | `mall_points_to_yuan_ratio` | 兑换比例：X 积分 = ¥1（结算抵扣换算） | 100 |
 | `mall_points_deduct_max_ratio` | 抵扣上限：占 `orderPrice` 的最大比例 | 0.3 |
 
