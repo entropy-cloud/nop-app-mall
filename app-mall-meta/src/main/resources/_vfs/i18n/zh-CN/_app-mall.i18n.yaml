@@ -27,6 +27,7 @@ entity:
     LitemallLog: 操作日志表
     LitemallMaterial: 素材资源表
     LitemallMaterialCategory: 素材分类表
+    LitemallMemberLevel: 会员等级规则表
     LitemallNotice: 通知表
     LitemallNoticeAdmin: 通知管理员表
     LitemallOrder: 订单表
@@ -351,6 +352,7 @@ prop:
       updateTime: 更新时间
       url: 商品货品图片
       urlComponentFileStatus: null
+      vipPrice: 会员价
     LitemallGoodsSpecification:
       addTime: 创建时间
       deleted: 逻辑删除
@@ -448,6 +450,20 @@ prop:
       parentId: 父分类ID
       sortOrder: 排序
       updateTime: 更新时间
+    LitemallMemberLevel:
+      addTime: 创建时间
+      benefits: 权益配置(JSON)
+      benefitsComponent: null
+      deleted: 逻辑删除
+      downgradeThreshold: 保级阈值(周期内累计消费)
+      id: Id
+      level: 等级
+      level_label: 等级
+      name: 等级名称
+      remark: 备注
+      sortOrder: 排序
+      updateTime: 更新时间
+      upgradeThreshold: 升级阈值(累计消费)
     LitemallNotice:
       addTime: 创建时间
       adminId: 创建通知的管理员ID
@@ -538,6 +554,7 @@ prop:
       productId: 货品ID
       specifications: 规格列表
       updateTime: 更新时间
+      vipPrice: 会员价快照
     LitemallPickupStore:
       addTime: 创建时间
       address: 门店地址

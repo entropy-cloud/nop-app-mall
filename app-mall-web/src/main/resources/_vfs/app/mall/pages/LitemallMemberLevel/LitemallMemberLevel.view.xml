@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<view x:extends="_gen/_LitemallMemberLevel.view.xml" x:schema="/nop/schema/xui/xview.xdef"
+      xmlns:x="/nop/schema/xdsl.xdef">
+
+    <grids>
+        <grid id="list">
+            <cols x:override="bounded-merge">
+                <col id="id"/>
+                <col id="level"/>
+                <col id="name"/>
+                <col id="upgradeThreshold"/>
+                <col id="downgradeThreshold"/>
+                <col id="sortOrder"/>
+            </cols>
+        </grid>
+        <grid id="pick-list"/>
+    </grids>
+
+    <forms>
+        <form id="query">
+            <layout>
+                name level
+            </layout>
+        </form>
+        <form id="view"/>
+        <form id="edit" size="lg">
+            <layout>
+                ========== base[等级规则] ================
+                level[等级] name[等级名称]
+                upgradeThreshold[升级阈值(累计消费)] downgradeThreshold[保级阈值(周期内累计消费)]
+                sortOrder[排序] remark[备注]
+
+                =========benefits[权益配置(JSON)]=======
+                !benefits
+            </layout>
+            <cells>
+                <cell id="upgradeThreshold">
+                    <placeholder>累计消费达到此金额即升级到该等级（单位：元）</placeholder>
+                </cell>
+                <cell id="downgradeThreshold">
+                    <placeholder>评估周期内累计消费低于此金额则降一级（单位：元）</placeholder>
+                </cell>
+                <cell id="benefits">
+                    <placeholder>权益配置 JSON，如 {&quot;exclusiveCoupon&quot;:true,&quot;birthdayGift&quot;:true}（专属价由 vipPrice 控制，此处预留专属券/礼包/客服权益）</placeholder>
+                </cell>
+            </cells>
+        </form>
+
+        <form id="add" x:prototype="edit">
+            <layout x:override="remove"/>
+        </form>
+    </forms>
+
+    <pages>
+        <crud name="main">
+            <rowActions x:override="bounded-merge">
+                <action id="row-view-button"/>
+                <action id="row-update-button" actionType="drawer"/>
+                <action id="row-delete-button"/>
+            </rowActions>
+        </crud>
+        <picker name="picker"/>
+    </pages>
+</view>

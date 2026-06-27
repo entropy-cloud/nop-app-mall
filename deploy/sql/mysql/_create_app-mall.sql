@@ -279,6 +279,21 @@ CREATE TABLE litemall_promotion_activity(
   constraint PK_litemall_promotion_activity primary key (ID)
 )CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
 
+CREATE TABLE litemall_member_level(
+  ID INTEGER NOT NULL    COMMENT 'Id',
+  LEVEL INTEGER NOT NULL    COMMENT '等级',
+  NAME VARCHAR(63) NOT NULL    COMMENT '等级名称',
+  UPGRADE_THRESHOLD DECIMAL(10,2) NULL    COMMENT '升级阈值(累计消费)',
+  DOWNGRADE_THRESHOLD DECIMAL(10,2) NULL    COMMENT '保级阈值(周期内累计消费)',
+  BENEFITS VARCHAR(1023) NULL    COMMENT '权益配置(JSON)',
+  SORT_ORDER INTEGER NULL    COMMENT '排序',
+  REMARK VARCHAR(255) NULL    COMMENT '备注',
+  ADD_TIME DATETIME NULL    COMMENT '创建时间',
+  UPDATE_TIME DATETIME NULL    COMMENT '更新时间',
+  DELETED BOOLEAN NULL    COMMENT '逻辑删除',
+  constraint PK_litemall_member_level primary key (ID)
+)CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
+
 CREATE TABLE litemall_check_in_rule(
   ID INTEGER NOT NULL    COMMENT 'Id',
   DAY_SEQ INTEGER NOT NULL    COMMENT '连续第N天',
@@ -573,6 +588,7 @@ CREATE TABLE litemall_goods_product(
   UPDATE_TIME DATETIME NULL    COMMENT '更新时间',
   DELETED BOOLEAN NULL    COMMENT '逻辑删除',
   SAFE_STOCK INTEGER NULL    COMMENT '安全库存预警线',
+  VIP_PRICE DECIMAL(10,2) NULL    COMMENT '会员价',
   constraint PK_litemall_goods_product primary key (ID)
 )CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
 
@@ -704,6 +720,7 @@ CREATE TABLE litemall_order_goods(
   UPDATE_TIME DATETIME NULL    COMMENT '更新时间',
   DELETED BOOLEAN NULL    COMMENT '逻辑删除',
   ACTUAL_PAY_AMOUNT DECIMAL(10,2) NULL    COMMENT '实付金额',
+  VIP_PRICE DECIMAL(10,2) NULL    COMMENT '会员价快照',
   constraint PK_litemall_order_goods primary key (ID)
 )CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
 
@@ -784,6 +801,8 @@ CREATE TABLE litemall_pin_tuan_member(
    ALTER TABLE litemall_reset_code COMMENT '密码重置验证码';
                 
    ALTER TABLE litemall_promotion_activity COMMENT '促销活动表（满减送）';
+                
+   ALTER TABLE litemall_member_level COMMENT '会员等级规则表';
                 
    ALTER TABLE litemall_check_in_rule COMMENT '签到规则表';
                 

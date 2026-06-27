@@ -19,6 +19,7 @@ drop table litemall_storage;
 drop table litemall_system;
 drop table litemall_reset_code;
 drop table litemall_promotion_activity;
+drop table litemall_member_level;
 drop table litemall_check_in_rule;
 drop table litemall_check_in_record;
 drop table litemall_points_account;

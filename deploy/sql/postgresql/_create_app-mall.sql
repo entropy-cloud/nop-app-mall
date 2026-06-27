@@ -279,6 +279,21 @@ CREATE TABLE litemall_promotion_activity(
   constraint PK_litemall_promotion_activity primary key (id)
 );
 
+CREATE TABLE litemall_member_level(
+  id INT4 NOT NULL ,
+  level INT4 NOT NULL ,
+  name VARCHAR(63) NOT NULL ,
+  upgrade_threshold NUMERIC(10,2)  ,
+  downgrade_threshold NUMERIC(10,2)  ,
+  benefits VARCHAR(1023)  ,
+  sort_order INT4  ,
+  remark VARCHAR(255)  ,
+  add_time TIMESTAMP  ,
+  update_time TIMESTAMP  ,
+  deleted BOOLEAN  ,
+  constraint PK_litemall_member_level primary key (id)
+);
+
 CREATE TABLE litemall_check_in_rule(
   id INT4 NOT NULL ,
   day_seq INT4 NOT NULL ,
@@ -573,6 +588,7 @@ CREATE TABLE litemall_goods_product(
   update_time TIMESTAMP  ,
   deleted BOOLEAN  ,
   safe_stock INT4  ,
+  vip_price NUMERIC(10,2)  ,
   constraint PK_litemall_goods_product primary key (id)
 );
 
@@ -704,6 +720,7 @@ CREATE TABLE litemall_order_goods(
   update_time TIMESTAMP  ,
   deleted BOOLEAN  ,
   actual_pay_amount NUMERIC(10,2)  ,
+  vip_price NUMERIC(10,2)  ,
   constraint PK_litemall_order_goods primary key (id)
 );
 
@@ -1182,6 +1199,30 @@ CREATE TABLE litemall_pin_tuan_member(
       COMMENT ON COLUMN litemall_promotion_activity.update_time IS '更新时间';
                     
       COMMENT ON COLUMN litemall_promotion_activity.deleted IS '逻辑删除';
+                    
+      COMMENT ON TABLE litemall_member_level IS '会员等级规则表';
+                
+      COMMENT ON COLUMN litemall_member_level.id IS 'Id';
+                    
+      COMMENT ON COLUMN litemall_member_level.level IS '等级';
+                    
+      COMMENT ON COLUMN litemall_member_level.name IS '等级名称';
+                    
+      COMMENT ON COLUMN litemall_member_level.upgrade_threshold IS '升级阈值(累计消费)';
+                    
+      COMMENT ON COLUMN litemall_member_level.downgrade_threshold IS '保级阈值(周期内累计消费)';
+                    
+      COMMENT ON COLUMN litemall_member_level.benefits IS '权益配置(JSON)';
+                    
+      COMMENT ON COLUMN litemall_member_level.sort_order IS '排序';
+                    
+      COMMENT ON COLUMN litemall_member_level.remark IS '备注';
+                    
+      COMMENT ON COLUMN litemall_member_level.add_time IS '创建时间';
+                    
+      COMMENT ON COLUMN litemall_member_level.update_time IS '更新时间';
+                    
+      COMMENT ON COLUMN litemall_member_level.deleted IS '逻辑删除';
                     
       COMMENT ON TABLE litemall_check_in_rule IS '签到规则表';
                 
@@ -1663,6 +1704,8 @@ CREATE TABLE litemall_pin_tuan_member(
                     
       COMMENT ON COLUMN litemall_goods_product.safe_stock IS '安全库存预警线';
                     
+      COMMENT ON COLUMN litemall_goods_product.vip_price IS '会员价';
+                    
       COMMENT ON TABLE litemall_goods_specification IS '商品规格表';
                 
       COMMENT ON COLUMN litemall_goods_specification.id IS 'Id';
@@ -1876,6 +1919,8 @@ CREATE TABLE litemall_pin_tuan_member(
       COMMENT ON COLUMN litemall_order_goods.deleted IS '逻辑删除';
                     
       COMMENT ON COLUMN litemall_order_goods.actual_pay_amount IS '实付金额';
+                    
+      COMMENT ON COLUMN litemall_order_goods.vip_price IS '会员价快照';
                     
       COMMENT ON TABLE litemall_flash_sale_session IS '秒杀场次表';
                 

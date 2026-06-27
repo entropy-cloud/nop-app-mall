@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<view x:schema="/nop/schema/xui/xview.xdef" bizObjName="LitemallGoodsProduct" xmlns:i18n-en="i18n-en"
+<view x:schema="/nop/schema/xui/xview.xdef" bizObjName="LitemallMemberLevel" xmlns:i18n-en="i18n-en"
       xmlns:x="/nop/schema/xdsl.xdef" xmlns:j="j" xmlns:c="c" xmlns:gql="gql" xmlns:view-gen="view-gen" xmlns:xpl="xpl">
 
-    <objMeta>/app/mall/model/LitemallGoodsProduct/LitemallGoodsProduct.xmeta</objMeta>
+    <objMeta>/app/mall/model/LitemallMemberLevel/LitemallMemberLevel.xmeta</objMeta>
 
     <controlLib>/nop/web/xlib/control.xlib</controlLib>
 
@@ -21,85 +21,74 @@
                 <!--Id-->
                 <col id="id" mandatory="true" sortable="true"/>
 
-                <!--商品ID-->
-                <col id="goodsId" mandatory="true" sortable="true"/>
+                <!--等级-->
+                <col id="level" mandatory="true" ui:number="true" sortable="true"/>
 
-                <!--商品规格值-->
-                <col id="specifications" mandatory="true" sortable="true"/>
+                <!--等级名称-->
+                <col id="name" mandatory="true" sortable="true"/>
 
-                <!--商品货品价格-->
-                <col id="price" mandatory="true" ui:number="true" sortable="true"/>
+                <!--升级阈值(累计消费)-->
+                <col id="upgradeThreshold" ui:number="true" sortable="true"/>
 
-                <!--商品货品数量-->
-                <col id="number" mandatory="true" ui:number="true" sortable="true"/>
+                <!--保级阈值(周期内累计消费)-->
+                <col id="downgradeThreshold" ui:number="true" sortable="true"/>
 
-                <!--商品货品图片-->
-                <col id="url" sortable="true"/>
+                <!--权益配置(JSON)-->
+                <col id="benefits" sortable="true"/>
 
-                <!--安全库存预警线-->
-                <col id="safeStock" ui:number="true" sortable="true"/>
+                <!--排序-->
+                <col id="sortOrder" ui:number="true" sortable="true"/>
 
-                <!--会员价-->
-                <col id="vipPrice" ui:number="true" sortable="true"/>
+                <!--备注-->
+                <col id="remark" sortable="true"/>
             </cols>
         </grid>
         <grid id="pick-list" x:prototype="list" x:abstract="true"/>
-        <grid id="sub-grid-edit" x:prototype="list" editMode="list-edit">
-            <cols>
-                <col id="id" x:abstract="true"/>
-                <col id="goodsId" x:abstract="true"/>
-            </cols>
-        </grid>
-        <grid id="sub-grid-view" x:prototype="list" editMode="list-view">
-            <cols>
-                <col id="goodsId" x:abstract="true"/>
-            </cols>
-        </grid>
     </grids>
 
     <forms>
-        <form id="view" editMode="view" title="查看-商品货品表" i18n-en:title="">
+        <form id="view" editMode="view" title="查看-会员等级规则表" i18n-en:title="">
             <layout>
  id[Id]
- goodsId[商品ID]
- specifications[商品规格值]
- price[商品货品价格]
- number[商品货品数量]
- url[商品货品图片]
- safeStock[安全库存预警线]
- vipPrice[会员价]
+ level[等级]
+ name[等级名称]
+ upgradeThreshold[升级阈值(累计消费)]
+ downgradeThreshold[保级阈值(周期内累计消费)]
+ benefits[权益配置(JSON)]
+ sortOrder[排序]
+ remark[备注]
 </layout>
         </form>
-        <form id="add" editMode="add" title="新增-商品货品表" i18n-en:title="" x:prototype="edit"/>
-        <form id="edit" editMode="edit" title="编辑-商品货品表" i18n-en:title="">
+        <form id="add" editMode="add" title="新增-会员等级规则表" i18n-en:title="" x:prototype="edit"/>
+        <form id="edit" editMode="edit" title="编辑-会员等级规则表" i18n-en:title="">
             <layout>
- goodsId[商品ID]
- specifications[商品规格值]
- price[商品货品价格]
- number[商品货品数量]
- url[商品货品图片]
- safeStock[安全库存预警线]
- vipPrice[会员价]
+ level[等级]
+ name[等级名称]
+ upgradeThreshold[升级阈值(累计消费)]
+ downgradeThreshold[保级阈值(周期内累计消费)]
+ benefits[权益配置(JSON)]
+ sortOrder[排序]
+ remark[备注]
 </layout>
         </form>
         <form id="query" editMode="query" title="查询条件" i18n-en:title="Query Condition" x:abstract="true"/>
         <form id="asideFilter" editMode="query" x:abstract="true" submitOnChange="true"/>
-        <form id="batchUpdate" editMode="edit" x:abstract="true" title="修改-商品货品表" i18n-en:title=""/>
+        <form id="batchUpdate" editMode="edit" x:abstract="true" title="修改-会员等级规则表" i18n-en:title=""/>
     </forms>
 
     <pages>
         <crud name="view-list" grid="list" asideFilterForm="asideFilter" filterForm="query" x:abstract="true">
             <table autoFillHeight="true">
-                <api url="@query:LitemallGoodsProduct__findPage" gql:selection="{@pageSelection}"/>
+                <api url="@query:LitemallMemberLevel__findPage" gql:selection="{@pageSelection}"/>
             </table>
         </crud>
         <crud name="main" grid="list" asideFilterForm="asideFilter" filterForm="query" x:abstract="true">
             <table autoFillHeight="true">
-                <api url="@query:LitemallGoodsProduct__findPage" gql:selection="{@pageSelection}"/>
+                <api url="@query:LitemallMemberLevel__findPage" gql:selection="{@pageSelection}"/>
             </table>
             <listActions>
                 <action id="batch-delete-button" label="@i18n:common.batchDelete" batch="true">
-                    <api url="@mutation:LitemallGoodsProduct__batchDelete?ids=$ids"/>
+                    <api url="@mutation:LitemallMemberLevel__batchDelete?ids=$ids"/>
                     <confirmText>@i18n:common.confirmBatchDelete</confirmText>
                 </action>
                 <action id="add-button" level="primary" label="@i18n:common.add" icon="fa fa-plus pull-left">
@@ -114,7 +103,7 @@
                     <dialog page="update"/>
                 </action>
                 <action id="row-delete-button" level="danger" label="@i18n:common.delete" x:abstract="true">
-                    <api url="@mutation:LitemallGoodsProduct__delete?id=$id"/>
+                    <api url="@mutation:LitemallMemberLevel__delete?id=$id"/>
                     <confirmText>@i18n:common.confirmDelete</confirmText>
                 </action>
                 <actionGroup id="row-more-button" label="@i18n:common.more" level="primary">
@@ -122,7 +111,7 @@
                         <dialog page="update"/>
                     </action>
                     <action id="row-delete-button" label="@i18n:common.delete">
-                        <api url="@mutation:LitemallGoodsProduct__delete?id=$id"/>
+                        <api url="@mutation:LitemallMemberLevel__delete?id=$id"/>
                         <confirmText>@i18n:common.confirmDelete</confirmText>
                     </action>
                 </actionGroup>
@@ -130,18 +119,18 @@
         </crud>
         <picker name="picker" grid="pick-list" asideFilterForm="asideFilter" filterForm="query" x:abstract="true">
             <table noOperations="true">
-                <api url="@query:LitemallGoodsProduct__findPage" gql:selection="{@pageSelection}"/>
+                <api url="@query:LitemallMemberLevel__findPage" gql:selection="{@pageSelection}"/>
             </table>
         </picker>
         <simple name="add" form="add">
-            <api url="@mutation:LitemallGoodsProduct__save/id"/>
+            <api url="@mutation:LitemallMemberLevel__save/id"/>
         </simple>
         <simple name="view" form="view">
-            <initApi url="@query:LitemallGoodsProduct__get?id=$id" gql:selection="{@formSelection}"/>
+            <initApi url="@query:LitemallMemberLevel__get?id=$id" gql:selection="{@formSelection}"/>
         </simple>
         <simple name="update" form="edit">
-            <initApi url="@query:LitemallGoodsProduct__get?id=$id" gql:selection="{@formSelection}"/>
-            <api url="@mutation:LitemallGoodsProduct__update/id?id=$id" withFormData="true"/>
+            <initApi url="@query:LitemallMemberLevel__get?id=$id" gql:selection="{@formSelection}"/>
+            <api url="@mutation:LitemallMemberLevel__update/id?id=$id" withFormData="true"/>
         </simple>
     </pages>
 </view>

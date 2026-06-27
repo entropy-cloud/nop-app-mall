@@ -288,4 +288,21 @@ public interface AppMallErrors {
     ErrorCode ERR_PROMOTION_STACKING_NOT_ALLOWED =
             define("nop.err.mall.promotion.stacking-not-allowed",
                     "满减与优惠券不可叠加，满减已自动生效，请取消优惠券");
+
+    // 会员等级错误码
+    ErrorCode ERR_MEMBER_LEVEL_RULE_NOT_FOUND =
+            define("nop.err.mall.member-level.rule-not-found",
+                    "会员等级规则不存在");
+
+    ErrorCode ERR_MEMBER_LEVEL_RULE_DUPLICATE =
+            define("nop.err.mall.member-level.rule-duplicate",
+                    "该等级的规则已存在");
+
+    ErrorCode ERR_MEMBER_LEVEL_USER_NOT_FOUND =
+            define("nop.err.mall.member-level.user-not-found",
+                    "用户不存在");
+
+    ErrorCode ERR_MEMBER_LEVEL_NOT_CONFIGURED =
+            define("nop.err.mall.member-level.not-configured",
+                    "未配置会员等级规则");
 }

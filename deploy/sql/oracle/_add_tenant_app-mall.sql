@@ -39,6 +39,8 @@ alter table litemall_reset_code add NOP_TENANT_ID VARCHAR2(32) DEFAULT '0' NOT N
 
 alter table litemall_promotion_activity add NOP_TENANT_ID VARCHAR2(32) DEFAULT '0' NOT NULL;
 
+alter table litemall_member_level add NOP_TENANT_ID VARCHAR2(32) DEFAULT '0' NOT NULL;
+
 alter table litemall_check_in_rule add NOP_TENANT_ID VARCHAR2(32) DEFAULT '0' NOT NULL;
 
 alter table litemall_check_in_record add NOP_TENANT_ID VARCHAR2(32) DEFAULT '0' NOT NULL;
@@ -158,6 +160,9 @@ alter table litemall_reset_code add constraint PK_litemall_reset_code primary ke
 
 alter table litemall_promotion_activity drop constraint PK_litemall_promotion_activity;
 alter table litemall_promotion_activity add constraint PK_litemall_promotion_activity primary key (NOP_TENANT_ID, ID);
+
+alter table litemall_member_level drop constraint PK_litemall_member_level;
+alter table litemall_member_level add constraint PK_litemall_member_level primary key (NOP_TENANT_ID, ID);
 
 alter table litemall_check_in_rule drop constraint PK_litemall_check_in_rule;
 alter table litemall_check_in_rule add constraint PK_litemall_check_in_rule primary key (NOP_TENANT_ID, ID);

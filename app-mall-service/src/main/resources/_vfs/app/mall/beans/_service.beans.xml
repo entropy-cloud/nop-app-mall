@@ -147,6 +147,13 @@
         <property name="bizObjName" value="LitemallPromotionActivity"/>
     </bean>
 
+    <bean id="app.mall.service.entity.LitemallMemberLevelBizModel" ioc:type="@bean:id" ioc:default="true"/>
+
+    <bean id="biz_LitemallMemberLevel" class="io.nop.biz.proxy.BizProxyFactoryBean"
+          ioc:type="app.mall.biz.ILitemallMemberLevelBiz" ioc:force-lazy-property="true" lazy-init="true" primary="true">
+        <property name="bizObjName" value="LitemallMemberLevel"/>
+    </bean>
+
     <bean id="app.mall.service.entity.LitemallCheckInRuleBizModel" ioc:type="@bean:id" ioc:default="true"/>
 
     <bean id="biz_LitemallCheckInRule" class="io.nop.biz.proxy.BizProxyFactoryBean"

@@ -19,6 +19,7 @@ drop table  if exists  litemall_storage;
 drop table  if exists  litemall_system;
 drop table  if exists  litemall_reset_code;
 drop table  if exists  litemall_promotion_activity;
+drop table  if exists  litemall_member_level;
 drop table  if exists  litemall_check_in_rule;
 drop table  if exists  litemall_check_in_record;
 drop table  if exists  litemall_points_account;

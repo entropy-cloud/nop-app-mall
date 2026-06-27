@@ -84,6 +84,32 @@ body:
                     - type: tpl
                       tpl: '<div style="color:#999">已完成</div>'
 
+      - type: service
+        name: memberLevel
+        api:
+          url: '@query:LitemallMemberLevel__getMyLevelProgress'
+          sendOn: true
+        body:
+          - type: card
+            header:
+              title: 会员等级
+            body:
+              - type: wrapper
+                style:
+                  display: flex
+                  alignItems: center
+                  justifyContent: space-between
+                  padding: '5px 0'
+                body:
+                  - type: tpl
+                    tpl: '<span style="font-size:16px;font-weight:bold;color:#ff6700">${data.currentLevelName || "普通用户"}</span>'
+                  - type: tpl
+                    visibleOn: '${!!data.nextLevel}'
+                    tpl: '<span style="color:#999">距 <b>${data.nextLevelName}</b> 还需 <b style="color:#ff6700">¥${data.remaining}</b>（已累计消费 ¥${data.totalSpending}）</span>'
+                  - type: tpl
+                    visibleOn: '${!data.nextLevel}'
+                    tpl: '<span style="color:#999">已达最高等级（已累计消费 ¥${data.totalSpending}）</span>'
+
       - type: divider
 
       - type: grid

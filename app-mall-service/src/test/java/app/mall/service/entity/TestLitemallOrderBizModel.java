@@ -6,6 +6,7 @@ import app.mall.dao.entity.LitemallCoupon;
 import app.mall.dao.entity.LitemallGoods;
 import app.mall.dao.entity.LitemallGoodsProduct;
 import app.mall.dao.entity.LitemallOrder;
+import app.mall.dao.entity.LitemallOrderGoods;
 import app.mall.dao.entity.LitemallPromotionActivity;
 import app.mall.dao.entity.LitemallPromotionTier;
 import app.mall.dao.entity.LitemallSystem;
@@ -14,7 +15,10 @@ import io.nop.api.core.annotations.autotest.NopTestConfig;
 import io.nop.api.core.annotations.core.OptionalBoolean;
 import io.nop.api.core.beans.ApiRequest;
 import io.nop.api.core.beans.ApiResponse;
+import io.nop.api.core.beans.FilterBeans;
+import io.nop.api.core.beans.query.QueryBean;
 import io.nop.api.core.context.ContextProvider;
+import io.nop.auth.dao.entity.NopAuthUser;
 import io.nop.autotest.junit.JunitBaseTestCase;
 import io.nop.dao.api.IDaoProvider;
 import io.nop.file.dao.entity.NopFileRecord;
@@ -28,10 +32,12 @@ import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @NopTestConfig(localDb = true, initDatabaseSchema = OptionalBoolean.TRUE)
@@ -531,5 +537,149 @@ public class TestLitemallOrderBizModel extends JunitBaseTestCase {
         ApiResponse<?> submitResult = graphQLEngine.executeRpc(gqlCtx);
         assertTrue(submitResult.getStatus() != 0,
                 "submit should be rejected when stacking disabled and both promotion and coupon apply: " + submitResult);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testSubmitWithVipPriceForMember() {
+        String userId = signUpMember("vipmember01", 1);
+
+        // configure vipPrice on the existing SKU (retail 99 -> vip 80) via a committed RPC update,
+        // so the submit RPC sees the configured vipPrice.
+        setProductVipPrice(productId, new BigDecimal("80"));
+
+        String memberAddress = createMemberAddress(userId);
+        createMemberCart(userId);
+
+        ContextProvider.getOrCreateContext().setUserId(userId);
+
+        ApiRequest<Map<String, Object>> submitReq = ApiRequest.build(Map.of(
+                "addressId", memberAddress,
+                "message", "会员价订单",
+                "freightPrice", BigDecimal.ZERO
+        ));
+        IGraphQLExecutionContext gqlCtx = graphQLEngine.newRpcContext(
+                GraphQLOperationType.mutation, "LitemallOrder__submit", submitReq);
+        ApiResponse<?> submitResult = graphQLEngine.executeRpc(gqlCtx);
+        assertEquals(0, submitResult.getStatus(), "member submit failed: " + submitResult);
+        Map<String, Object> orderData = (Map<String, Object>) submitResult.getData();
+        // member price 80 * 2 = 160 (instead of retail 99 * 2 = 198)
+        assertEquals(160, ((Number) orderData.get("goodsPrice")).intValue(),
+                "member should pay vipPrice-based goodsPrice");
+
+        String orderId = (String) orderData.get("id");
+        LitemallOrderGoods og = daoProvider.daoFor(LitemallOrderGoods.class).findAllByQuery(
+                queryByOrder(orderId)).get(0);
+        assertEquals(0, new BigDecimal("80").compareTo(og.getPrice()), "orderGoods unit price should be vip 80");
+        assertEquals(0, new BigDecimal("80").compareTo(og.getVipPrice()), "orderGoods should snapshot vipPrice 80");
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testSubmitVipPriceIgnoredForNonMember() {
+        String userId = signUpMember("normaluser01", 0);
+
+        setProductVipPrice(productId, new BigDecimal("80"));
+
+        String memberAddress = createMemberAddress(userId);
+        createMemberCart(userId);
+
+        ContextProvider.getOrCreateContext().setUserId(userId);
+
+        ApiRequest<Map<String, Object>> submitReq = ApiRequest.build(Map.of(
+                "addressId", memberAddress,
+                "message", "非会员订单",
+                "freightPrice", BigDecimal.ZERO
+        ));
+        IGraphQLExecutionContext gqlCtx = graphQLEngine.newRpcContext(
+                GraphQLOperationType.mutation, "LitemallOrder__submit", submitReq);
+        ApiResponse<?> submitResult = graphQLEngine.executeRpc(gqlCtx);
+        assertEquals(0, submitResult.getStatus(), "non-member submit failed: " + submitResult);
+        Map<String, Object> orderData = (Map<String, Object>) submitResult.getData();
+        // non-member pays retail 99 * 2 = 198, vipPrice ignored
+        assertEquals(198, ((Number) orderData.get("goodsPrice")).intValue(),
+                "non-member should pay retail goodsPrice");
+
+        String orderId = (String) orderData.get("id");
+        LitemallOrderGoods og = daoProvider.daoFor(LitemallOrderGoods.class).findAllByQuery(
+                queryByOrder(orderId)).get(0);
+        assertEquals(0, new BigDecimal("99").compareTo(og.getPrice()), "orderGoods unit price should be retail 99");
+        assertNull(og.getVipPrice(), "non-member orderGoods should not snapshot vipPrice");
+    }
+
+    private String signUpMember(String username, int level) {
+        ApiRequest<Map<String, Object>> req = ApiRequest.build(Map.of(
+                "username", username,
+                "password", "Pass@1234",
+                "mobile", "139" + username.substring(username.length() - 4)
+        ));
+        IGraphQLExecutionContext ctx = graphQLEngine.newRpcContext(
+                GraphQLOperationType.mutation, "LoginApi__signUp", req);
+        ApiResponse<?> result = graphQLEngine.executeRpc(ctx);
+        assertEquals(0, result.getStatus(), "signUp helper failed: " + result.getMsg());
+
+        QueryBean q = new QueryBean();
+        q.addFilter(FilterBeans.eq("userName", username));
+        NopAuthUser user = (NopAuthUser) daoProvider.daoFor(NopAuthUser.class).findAllByQuery(q).stream()
+                .findFirst().orElse(null);
+        assertNotNull(user, "signed-up member must exist");
+        // Set userLevel via a committed GraphQL update so the submit RPC sees the member level.
+        setUserLevel(user.getUserId(), level);
+        return user.getUserId();
+    }
+
+    private void setUserLevel(String userId, int level) {
+        Map<String, Object> entity = new HashMap<>();
+        entity.put("id", userId);
+        entity.put("userLevel", level);
+        IGraphQLExecutionContext ctx = graphQLEngine.newRpcContext(
+                GraphQLOperationType.mutation, "NopAuthUser__update", ApiRequest.build(Map.of("data", entity)));
+        ApiResponse<?> result = graphQLEngine.executeRpc(ctx);
+        assertEquals(0, result.getStatus(), "NopAuthUser__update userLevel failed: " + result.getMsg());
+    }
+
+    private void setProductVipPrice(String prodId, BigDecimal vipPrice) {
+        Map<String, Object> entity = new HashMap<>();
+        entity.put("id", prodId);
+        entity.put("vipPrice", vipPrice);
+        IGraphQLExecutionContext ctx = graphQLEngine.newRpcContext(
+                GraphQLOperationType.mutation, "LitemallGoodsProduct__update", ApiRequest.build(Map.of("data", entity)));
+        ApiResponse<?> result = graphQLEngine.executeRpc(ctx);
+        assertEquals(0, result.getStatus(), "LitemallGoodsProduct__update vipPrice failed: " + result.getMsg());
+    }
+
+    private String createMemberAddress(String userId) {
+        LitemallAddress address = daoProvider.daoFor(LitemallAddress.class).newEntity();
+        address.setUserId(userId);
+        address.setName("会员用户");
+        address.setTel("13800138000");
+        address.setProvince("广东省");
+        address.setCity("深圳市");
+        address.setCounty("南山区");
+        address.setAddressDetail("科技园");
+        address.setIsDefault(true);
+        daoProvider.daoFor(LitemallAddress.class).saveEntity(address);
+        return address.getId();
+    }
+
+    private void createMemberCart(String userId) {
+        LitemallCart cart = daoProvider.daoFor(LitemallCart.class).newEntity();
+        cart.setUserId(userId);
+        cart.setGoodsId(goodsId);
+        cart.setProductId(productId);
+        cart.setNumber(2);
+        cart.setPrice(BigDecimal.valueOf(99));
+        cart.setChecked(true);
+        cart.setGoodsSn("G001");
+        cart.setGoodsName("Test Goods");
+        cart.setPicUrl("/f/download/cart-pic");
+        cart.setSpecifications("[\"标准\"]");
+        daoProvider.daoFor(LitemallCart.class).saveEntity(cart);
+    }
+
+    private QueryBean queryByOrder(String orderId) {
+        QueryBean q = new QueryBean();
+        q.addFilter(FilterBeans.eq(LitemallOrderGoods.PROP_NAME_orderId, orderId));
+        return q;
     }
 }

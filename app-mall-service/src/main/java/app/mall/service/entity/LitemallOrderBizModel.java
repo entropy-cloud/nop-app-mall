@@ -38,9 +38,12 @@ import io.nop.api.core.beans.FilterBeans;
 import io.nop.api.core.beans.query.QueryBean;
 import io.nop.api.core.exceptions.NopException;
 import io.nop.api.core.time.CoreMetrics;
+import io.nop.auth.dao.entity.NopAuthUser;
 import io.nop.biz.crud.CrudBizModel;
 import io.nop.commons.util.StringHelper;
 import io.nop.core.context.IServiceContext;
+import io.nop.orm.IOrmEntity;
+import io.nop.orm.IOrmTemplate;
 import jakarta.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -106,6 +109,9 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
     ILitemallSystemBiz systemBiz;
 
     @Inject
+    IOrmTemplate ormTemplate;
+
+    @Inject
     MallLogManager logManager;
 
     @Inject
@@ -131,6 +137,16 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
                                  @Optional @Name("grouponId") String grouponId,
                                  IServiceContext context) {
         String userId = context.getUserId();
+
+        // Member-level pricing: vipPrice is a SKU unit-price discount applied at the goodsPrice
+        // aggregation layer (min(retail, vip) * number), not an order-level deduction. It therefore
+        // indirectly lowers the promotion (P15) meetAmount base — see order-and-cart.md calc order.
+        // Only users with userLevel >= 1 (VIP / VIP_SENIOR) are eligible. userLevel is a Delta
+        // extension column accessed via IOrmTemplate (app-mall-delta is test-scoped here, so I*Biz
+        // is unavailable and we use the documented IOrmTemplate fallback).
+        IOrmEntity memberUser = ormTemplate.get(NopAuthUser.class.getName(), userId);
+        Object levelRaw = memberUser != null ? memberUser.orm_propValueByName("userLevel") : null;
+        boolean isMember = levelRaw instanceof Integer && (Integer) levelRaw >= 1;
 
         LitemallAddress address = addressBiz.get(addressId, false, context);
         if (address == null || Boolean.TRUE.equals(address.getDeleted())) {
@@ -206,13 +222,21 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
             orderGoods.setGoodsSn(item.getGoodsSn());
             orderGoods.setProductId(item.getProductId());
             orderGoods.setNumber(item.getNumber());
-            orderGoods.setPrice(product.getPrice());
+            // Effective unit price: members pay min(retail, vip) when a positive vipPrice is configured.
+            BigDecimal unitPrice = product.getPrice();
+            if (isMember && product.getVipPrice() != null
+                    && product.getVipPrice().compareTo(BigDecimal.ZERO) > 0
+                    && product.getVipPrice().compareTo(unitPrice) < 0) {
+                unitPrice = product.getVipPrice();
+                orderGoods.setVipPrice(product.getVipPrice());
+            }
+            orderGoods.setPrice(unitPrice);
             orderGoods.setSpecifications(item.getSpecifications());
             orderGoods.getPicUrlComponent().copyFrom(item.getPicUrlComponent());
             orderGoods.setComment(0);
             order.getOrderGoods().add(orderGoods);
 
-            BigDecimal lineTotal = product.getPrice().multiply(BigDecimal.valueOf(item.getNumber()));
+            BigDecimal lineTotal = unitPrice.multiply(BigDecimal.valueOf(item.getNumber()));
             goodsPriceTotal = goodsPriceTotal.add(lineTotal);
             couponScopeIds.add(item.getGoodsId());
             if (product.getGoods() != null && product.getGoods().getCategoryId() != null) {

@@ -153,6 +153,20 @@
         }
 
 
+        private java.math.BigDecimal _vipPrice;
+
+    
+        @PropMeta(propId=11)
+    
+        public java.math.BigDecimal getVipPrice(){
+            return _vipPrice;
+        }
+
+        public void setVipPrice(java.math.BigDecimal value){
+            this._vipPrice = value;
+        }
+
+
         private io.nop.api.core.beans.file.FileStatusBean _urlComponentFileStatus;
 
     

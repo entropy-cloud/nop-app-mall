@@ -16,6 +16,9 @@
                 <!--商品货品价格-->
                 <col id="price" mandatory="true" sortable="true"/>
 
+                <!--会员价（空或0表示无会员价）-->
+                <col id="vipPrice" sortable="true"/>
+
                 <!--商品货品数量-->
                 <col id="number" mandatory="true" sortable="true"/>
 

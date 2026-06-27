@@ -61,8 +61,12 @@ public class _LitemallGoodsProduct extends DynamicOrmEntity{
     public static final String PROP_NAME_safeStock = "safeStock";
     public static final int PROP_ID_safeStock = 10;
     
+    /* 会员价: VIP_PRICE DECIMAL */
+    public static final String PROP_NAME_vipPrice = "vipPrice";
+    public static final int PROP_ID_vipPrice = 11;
+    
 
-    private static int _PROP_ID_BOUND = 11;
+    private static int _PROP_ID_BOUND = 12;
 
     
     /* relation: 所属商品 */
@@ -78,7 +82,7 @@ public class _LitemallGoodsProduct extends DynamicOrmEntity{
     protected static final List<String> PK_PROP_NAMES = Arrays.asList(PROP_NAME_id);
     protected static final int[] PK_PROP_IDS = new int[]{PROP_ID_id};
 
-    private static final String[] PROP_ID_TO_NAME = new String[11];
+    private static final String[] PROP_ID_TO_NAME = new String[12];
     private static final Map<String,Integer> PROP_NAME_TO_ID = new HashMap<>();
     static{
       
@@ -112,6 +116,9 @@ public class _LitemallGoodsProduct extends DynamicOrmEntity{
           PROP_ID_TO_NAME[PROP_ID_safeStock] = PROP_NAME_safeStock;
           PROP_NAME_TO_ID.put(PROP_NAME_safeStock, PROP_ID_safeStock);
       
+          PROP_ID_TO_NAME[PROP_ID_vipPrice] = PROP_NAME_vipPrice;
+          PROP_NAME_TO_ID.put(PROP_NAME_vipPrice, PROP_ID_vipPrice);
+      
     }
 
     
@@ -144,6 +151,9 @@ public class _LitemallGoodsProduct extends DynamicOrmEntity{
     
     /* 安全库存预警线: SAFE_STOCK */
     private java.lang.Integer _safeStock;
+    
+    /* 会员价: VIP_PRICE */
+    private java.math.BigDecimal _vipPrice;
     
 
     public _LitemallGoodsProduct(){
@@ -248,6 +258,9 @@ public class _LitemallGoodsProduct extends DynamicOrmEntity{
         
             case PROP_ID_safeStock:
                return getSafeStock();
+        
+            case PROP_ID_vipPrice:
+               return getVipPrice();
         
            default:
               return super.orm_propValue(propId);
@@ -360,6 +373,16 @@ public class _LitemallGoodsProduct extends DynamicOrmEntity{
                break;
             }
         
+            case PROP_ID_vipPrice:{
+               java.math.BigDecimal typedValue = null;
+               if(value != null){
+                   typedValue = ConvertHelper.toBigDecimal(value,
+                       err-> newTypeConversionError(PROP_NAME_vipPrice));
+               }
+               setVipPrice(typedValue);
+               break;
+            }
+        
            default:
               super.orm_propValue(propId,value);
         }
@@ -435,6 +458,13 @@ public class _LitemallGoodsProduct extends DynamicOrmEntity{
             case PROP_ID_safeStock:{
                onInitProp(propId);
                this._safeStock = (java.lang.Integer)value;
+               
+               break;
+            }
+        
+            case PROP_ID_vipPrice:{
+               onInitProp(propId);
+               this._vipPrice = (java.math.BigDecimal)value;
                
                break;
             }
@@ -631,6 +661,25 @@ public class _LitemallGoodsProduct extends DynamicOrmEntity{
         if(onPropSet(PROP_ID_safeStock,value)){
             this._safeStock = value;
             internalClearRefs(PROP_ID_safeStock);
+            
+        }
+    }
+    
+    /**
+     * 会员价: VIP_PRICE
+     */
+    public final java.math.BigDecimal getVipPrice(){
+         onPropGet(PROP_ID_vipPrice);
+         return _vipPrice;
+    }
+
+    /**
+     * 会员价: VIP_PRICE
+     */
+    public final void setVipPrice(java.math.BigDecimal value){
+        if(onPropSet(PROP_ID_vipPrice,value)){
+            this._vipPrice = value;
+            internalClearRefs(PROP_ID_vipPrice);
             
         }
     }

@@ -796,6 +796,8 @@
                 <column code="DELETED" displayName="逻辑删除" domain="delFlag" name="deleted" propId="9"
                         stdDataType="boolean" stdSqlType="BOOLEAN" ui:show="X"/>
                 <column code="SAFE_STOCK" displayName="安全库存预警线" name="safeStock" propId="10" stdDataType="int" stdSqlType="INTEGER"/>
+                <column code="VIP_PRICE" comment="会员价(空或0表示无会员价)" displayName="会员价" name="vipPrice" precision="10"
+                        propId="11" scale="2" stdDataType="decimal" stdSqlType="DECIMAL"/>
             </columns>
             <relations>
                 <to-one displayName="所属商品" name="goods" refDisplayName="包含产品"
@@ -1181,6 +1183,8 @@
                 <column code="DELETED" displayName="逻辑删除" domain="delFlag" name="deleted" propId="14"
                         stdDataType="boolean" stdSqlType="BOOLEAN" ui:show="X"/>
                 <column code="ACTUAL_PAY_AMOUNT" displayName="实付金额" name="actualPayAmount" precision="10" propId="15" scale="2" stdDataType="decimal" stdSqlType="DECIMAL"/>
+                <column code="VIP_PRICE" comment="会员价快照(空表示本行非会员价)" displayName="会员价快照" name="vipPrice" precision="10"
+                        propId="16" scale="2" stdDataType="decimal" stdSqlType="DECIMAL"/>
             </columns>
             <relations>
                 <to-one displayName="订单" name="order" refDisplayName="订单商品"
@@ -1454,6 +1458,38 @@
                     </join>
                 </to-one>
             </relations>
+        </entity>
+        <entity className="app.mall.dao.entity.LitemallMemberLevel" createTimeProp="addTime"
+                deleteFlagProp="deleted" displayName="会员等级规则表" name="app.mall.dao.entity.LitemallMemberLevel"
+                registerShortName="true" tableName="litemall_member_level" updateTimeProp="updateTime"
+                useLogicalDelete="true">
+            <columns>
+                <column code="ID" displayName="Id" mandatory="true" name="id" primary="true" propId="1"
+                        stdDataType="string" stdSqlType="INTEGER" tagSet="seq" ui:show="R"/>
+                <column code="LEVEL" displayName="等级" mandatory="true" name="level" propId="2"
+                        stdDataType="int" stdSqlType="INTEGER" ext:dict="mall/user-level" tagSet="disp"/>
+                <column code="NAME" displayName="等级名称" mandatory="true" name="name" precision="63" propId="3"
+                        stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="UPGRADE_THRESHOLD" displayName="升级阈值(累计消费)" name="upgradeThreshold" precision="10"
+                        propId="4" scale="2" stdDataType="decimal" stdSqlType="DECIMAL"/>
+                <column code="DOWNGRADE_THRESHOLD" displayName="保级阈值(周期内累计消费)" name="downgradeThreshold"
+                        precision="10" propId="5" scale="2" stdDataType="decimal" stdSqlType="DECIMAL"/>
+                <column code="BENEFITS" comment="权益配置(JSON)" displayName="权益配置(JSON)" name="benefits" precision="1023"
+                        propId="6" stdDataType="string" stdDomain="json" stdSqlType="VARCHAR"/>
+                <column code="SORT_ORDER" displayName="排序" name="sortOrder" propId="7"
+                        stdDataType="int" stdSqlType="INTEGER"/>
+                <column code="REMARK" displayName="备注" name="remark" precision="255" propId="8"
+                        stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="ADD_TIME" displayName="创建时间" domain="createTime" name="addTime" propId="9"
+                        stdDataType="datetime" stdSqlType="DATETIME" ui:show="X"/>
+                <column code="UPDATE_TIME" displayName="更新时间" domain="updateTime" name="updateTime" propId="10"
+                        stdDataType="datetime" stdSqlType="DATETIME" ui:show="X"/>
+                <column code="DELETED" displayName="逻辑删除" domain="delFlag" name="deleted" propId="11"
+                        stdDataType="boolean" stdSqlType="BOOLEAN" ui:show="X"/>
+            </columns>
+            <unique-keys>
+                <unique-key columns="level" name="uk_litemall_member_level_level"/>
+            </unique-keys>
         </entity>
         <entity className="app.mall.dao.entity.LitemallTimeDiscount" createTimeProp="addTime"
                 deleteFlagProp="deleted" displayName="限时折扣表" name="app.mall.dao.entity.LitemallTimeDiscount"

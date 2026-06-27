@@ -108,6 +108,10 @@ site:
       displayName: ''
     FNPT:LitemallMaterialCategory:query:
       displayName: ''
+    FNPT:LitemallMemberLevel:mutation:
+      displayName: ''
+    FNPT:LitemallMemberLevel:query:
+      displayName: ''
     FNPT:LitemallNotice:mutation:
       displayName: ''
     FNPT:LitemallNotice:query:
@@ -253,6 +257,8 @@ site:
     LitemallMaterial-main:
       displayName: ''
     LitemallMaterialCategory-main:
+      displayName: ''
+    LitemallMemberLevel-main:
       displayName: ''
     LitemallNotice-main:
       displayName: ''

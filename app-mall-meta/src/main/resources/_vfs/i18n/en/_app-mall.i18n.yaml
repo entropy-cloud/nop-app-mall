@@ -27,6 +27,7 @@ entity:
     LitemallLog: null
     LitemallMaterial: null
     LitemallMaterialCategory: null
+    LitemallMemberLevel: null
     LitemallNotice: null
     LitemallNoticeAdmin: null
     LitemallOrder: null
@@ -347,6 +348,7 @@ prop:
       updateTime: null
       deleted: null
       safeStock: null
+      vipPrice: null
       goods: Goods
       goods.name: Goods
       specificationsComponent: null
@@ -448,6 +450,20 @@ prop:
       parent: Parent
       parent.name: Parent
       children: Children
+    LitemallMemberLevel:
+      id: null
+      level: null
+      level_label: null
+      name: null
+      upgradeThreshold: null
+      downgradeThreshold: null
+      benefits: null
+      sortOrder: null
+      remark: null
+      addTime: null
+      updateTime: null
+      deleted: null
+      benefitsComponent: null
     LitemallNotice:
       id: null
       title: null
@@ -532,6 +548,7 @@ prop:
       updateTime: null
       deleted: null
       actualPayAmount: null
+      vipPrice: null
       order: Order
       order.orderSn: Order
       goods: Order Goods

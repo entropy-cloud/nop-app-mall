@@ -1,0 +1,15 @@
+{
+  "id": "",
+  "level": 0,
+  "level_label": "",
+  "name": "",
+  "upgradeThreshold": 0.0,
+  "downgradeThreshold": 0.0,
+  "benefits": "",
+  "sortOrder": 0,
+  "remark": "",
+  "addTime": "2000-01-01 14:00:00",
+  "updateTime": "2000-01-01 14:00:00",
+  "deleted": false,
+  "benefitsComponent": null
+}
