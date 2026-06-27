@@ -57,6 +57,65 @@
 - 优惠券资格和发放逻辑由本文件负责。
 - 优惠券最终如何进入订单价格构成、如何与退款/取消联动恢复，由 `order-and-cart.md` 负责引用结果，不在本文件重复维护订单价格公式。
 
+### 领券入口展示规则（P32）
+
+业务意图：用户进入商品详情页时，应能看到当前商品可领取的优惠券，减少跳转、提升领券转化。
+
+**入口分布（Decision A：详情页展示「本商品可用券」列表）：**
+
+- **领券中心页**（`coupon-center.page.yaml`）：聚合所有公开券与兑换码入口，承担「全量券浏览」职能。
+- **商品详情页领券入口**（`goods-detail.page.yaml`）：按 `goodsType`/`goodsValue` 商品范围过滤，只展示「本商品可用」的券 + 当前用户已领/可领状态 + 一键领取按钮。
+- **抉择 A**（详情页直接展示可用券列表）vs **备选 B**（仅展示「有券可领」徽标 + 跳转领券中心）。**A 胜**——减少跳转、提升转化。**残留风险：** 商品详情页增加一次查询调用；若券量大需在 API 侧分页/限数（当前基线按 pageSize 限数）。
+
+**`listCouponsForGoods(goodsId)` 鉴权与状态模型（Decision A）：**
+
+- API 鉴权：`@Auth(publicAccess=true)`（与 `listAvailableCoupons` 一致），匿名用户可查看商品可用券。
+- **`claimedByMe` 标记在匿名上下文（userId=null）下恒为 false**（未登录视为未领），登录后才查 `LitemallCouponUser`。
+- **`claimable` 标记**受 `limit`（用户限领）约束：登录用户按已领数与 `limit` 推算（精确）；匿名用户按总量推算（非用户级精确），仅作展示，实际领取时以 `claimCoupon` 的强校验为准。
+- **抉择 A**（一次查询返回 `claimedByMe` + `claimable`）vs **备选 B**（前端二次查询「我的券」）。**A 胜**——一次查询性能优。**残留风险：** 匿名→登录切换时已领状态需前端刷新；`claimable` 在匿名下非精确。
+
+**商品范围过滤语义（与兑换侧自洽）：**
+
+- `goodsType=0`（ALL）：本商品始终命中。
+- `goodsType=1`（CATEGORY）：经 `ILitemallGoodsBiz` 取商品 `categoryId`，与 `goodsValue`（逗号分隔的分类 ID 列表）匹配。
+- `goodsType=2`（GOODS）：本商品 `id` 在 `goodsValue`（逗号分隔的商品 ID 列表）中。
+- 公开券（`type=0`）、上架券（`status=0`）、未过期（`endTime` 为空或晚于当前）才进入候选池。
+
+### DIY 投放配置语义（P32）
+
+业务意图：运营在后台完成「指定商品范围 + 限领 + 有效期」的优惠券投放配置，无需开发介入。
+
+**配置维度：**
+
+| 字段 | 字典/类型 | 配置语义 |
+| ---- | --------- | -------- |
+| `goodsType` | `mall/coupon-goods-type`（0=ALL/1=CATEGORY/2=GOODS） | 商品范围类型 |
+| `goodsValue` | 字符串（逗号分隔 ID 列表） | 商品范围值：`goodsType=1` 时为分类 ID 列表；`goodsType=2` 时为商品 ID 列表；`goodsType=0` 时忽略 |
+| `limit` | int（0=不限，默认 1） | 用户领券限制数量 |
+| `tag` | 字符串（如「新人专用」） | 人群标签，**纯展示**，不参与会员级路由（当前无会员级范围机制，会员专属券自动发放属 P26 successor） |
+| `type` | `mall/coupon-type`（0=COMMON/1=REGISTER/2=EXCHANGE） | 优惠券赠送类型 |
+| `timeType` | `mall/coupon-time-type`（0=DAYS/1=RANGE） | 有效期类型 |
+| `days` | int | 当 `timeType=0` 时生效：领后 N 天有效 |
+| `startTime` / `endTime` | datetime | 当 `timeType=1` 时生效：固定时间段 |
+
+**抉择与残留风险（Decision A：固化既有字典语义）：**
+
+- **抉择**：本计划固化 `goodsType`/`limit`/`tag`/`timeType` 的运营配置语义，写入字典与后台表单。**备选「引入会员级（member-level）范围机制」被否**——超出 P32 范围（属 P26 successor），且需新增模型字段。
+- **残留风险 1**：`tag` 当前为纯展示，不参与会员级路由；会员专属券仍需 P26 successor 自动发放能力。
+- **残留风险 2**：DIY 投放仅支持商品/分类维度（无品牌、无人群标签路由），更复杂的人群定向投放不在当前基线。
+- **残留风险 3**：`limit=0`（不限领）与 `total=0`（无限量）叠加时存在被刷风险，由运营在配置时合理设置上限控制（非系统强约束）。
+
+### 分类范围券兑换自洽（P32 修复）
+
+**修复前缺陷：** `LitemallCouponUserBizModel.selectCouponForOrder` 以 `goodsType != 0` 作「是否限范围」标志，未区分 CATEGORY(1) vs GOODS(2)；`parseGoodsValue` 只做逗号分割成 ID 列表，随后将商品 `goodsId` 与该列表逐项比较。对 `goodsType=1`，`goodsValue` 存的是**分类 ID**，却被当**商品 ID** 比较 → 永不命中 → 抛 `ERR_COUPON_GOODS_NOT_MATCH`。
+
+**修复后语义：**
+
+- `goodsType=0`（ALL）：不校验商品范围。
+- `goodsType=1`（CATEGORY）：经 `ILitemallGoodsBiz` 取订单各商品的 `categoryId` 集合，与 `goodsValue` 分类 ID 列表取交集；存在交集即命中。
+- `goodsType=2`（GOODS）：保持既有逻辑，订单每个 `goodsId` 都必须在 `goodsValue` 商品 ID 列表中。
+- 展示侧（`listCouponsForGoods`）与兑换侧（`selectCouponForOrder`）使用同一套 CATEGORY 匹配逻辑，确保用户在详情页看到的可用券，在结算时不会被错误拒绝。
+
 ## 团购 / Groupon
 
 ### 业务意图

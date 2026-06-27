@@ -82,6 +82,49 @@
 - 公告是一种内容对象。
 - 公告不同于支付确认、发货更新这类由事件触发的通知消息。
 
+## 优惠券 DIY 投放配置
+
+### 业务角色
+
+- 优惠券 DIY 投放配置由运营在后台管理（`LitemallCoupon.view.xml`），通过表单编辑优惠券的商品范围、限领数量、人群标签与有效期，无需开发介入。
+
+### 配置维度
+
+| 字段 | 字典/类型 | 配置语义 |
+| ---- | --------- | -------- |
+| `name` / `desc` | 字符串 | 优惠券名称与介绍（展示文案） |
+| `tag` | 字符串 | 人群标签（如「新人专用」），**纯展示**，不参与会员级路由 |
+| `type` | `mall/coupon-type` | 赠送类型（0=通用领取/1=注册赠/2=兑换码） |
+| `discount` / `min` | decimal | 优惠金额与最低消费门槛 |
+| `total` | int（0=无限） | 优惠券总数量 |
+| `limit` | int（0=不限，默认 1） | 用户领券限制数量 |
+| `goodsType` | `mall/coupon-goods-type` | 商品范围类型（0=ALL/1=CATEGORY/2=GOODS） |
+| `goodsValue` | 字符串（逗号分隔 ID 列表） | 商品范围值：分类 ID 或商品 ID 列表 |
+| `code` | 字符串 | 兑换码（type=2 时使用） |
+| `timeType` | `mall/coupon-time-type` | 有效期类型（0=DAYS/1=RANGE） |
+| `days` | int | timeType=0 时：领后 N 天有效 |
+| `startTime` / `endTime` | datetime | timeType=1 时：固定时间段 |
+| `status` | `mall/coupon-status` | 优惠券状态（0=正常/1=过期/2=下架），由 publish/unpublish 动作切换 |
+
+### 业务规则
+
+- 后台 Coupon 表单（`edit`/`add`/`view`）需充分暴露 `goodsType`/`goodsValue`/`limit`/`tag`/`timeType`/`days`/`startTime`-`endTime` 等投放配置字段，使运营可独立完成 DIY 配置。
+- 后台列表（grid）应包含 `goodsType`/`goodsValue` 列，便于运营浏览已有投放范围。
+- 业务语义（包括 `goodsType`/`timeType`/`limit` 等字段的取值含义与分类范围兑换自洽）由 `marketing-and-promotions.md` 持有，本文件仅持有「后台可配置性」语义。
+- 上下架动作（`publishCoupon`/`unpublishCoupon`）切换 `status`：上架=0（正常）、下架=2（下架）；过期=1 由系统定时任务（`expireCoupons`）扫描置位。
+- 兑换码（`code`）字段仅在 `type=2`（EXCHANGE）时有业务含义；其他类型应留空。
+
+### 管理员动作
+
+- 管理员可以创建、编辑优惠券投放配置（商品范围、限领、有效期、标签等）。
+- 管理员可以上下架优惠券（控制 `status`）。
+- 管理员可以查看优惠券列表（含商品范围列），跟踪已有投放。
+
+### 与其他 Owner Docs 的关系
+
+- 优惠券业务规则（领取/使用/范围匹配语义）由 `marketing-and-promotions.md` 持有。
+- 字段定义与字典以 `model/app-mall.orm.xml` 为准（受保护区域，改动须人工确认）。
+
 ## 定时运营任务
 
 ### 业务基线
@@ -171,6 +214,7 @@
 | 支付开关 | → 出 | `order-and-cart.md` | 决定真实模式与示例模式分流 |
 | 地址数量上限 | → 出 | `user-and-address.md` | 每用户地址上限 |
 | 营销过期任务 | ← 入 | `marketing-and-promotions.md` | 优惠券、团购、评价窗口过期处理 |
+| 优惠券 DIY 投放 | ← 入 | `marketing-and-promotions.md` | 后台投放配置（商品范围/限领/有效期）的业务语义由营销域持有 |
 | 事件通知/报表 | ← 入 | `order-and-cart.md` / `marketing-and-promotions.md` | 支付、发货、退款等事件转化为通知与报表 |
 | 文件素材 | → 出 | `product-catalog.md` / `user-and-address.md` | 商品图片、品牌图片、头像依赖文件存储 |
 
