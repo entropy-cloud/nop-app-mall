@@ -55,6 +55,7 @@
 - coupon price：订单在满足优惠券条件时形成的优惠金额构件
 - promotion price：订单在满足满减活动条件时由系统自动判定形成的优惠金额构件（满减专属此价格槽位；限时折扣裁决为商品单价层，不复用此槽位，见 `marketing-and-promotions.md` 限时折扣）
 - groupon price：订单在满足团购条件时形成的优惠金额构件
+- pin tuan price：拼团优惠金额；订单按拼团活动下单时，按 `(retailPrice − activity.pinTuanPrice) × number` 汇总形成的减免额。作用于 `actualPrice` 减项层（与 `grouponPrice` 同层），单订单与团购互斥（详见 `marketing-and-promotions.md` 拼团）
 - integral price：积分抵扣金额；用户在结算页勾选使用 N 积分时，按 `mall_points_to_yuan_ratio`（X 积分=¥1）换算，受 `orderPrice × mall_points_deduct_max_ratio` 抵扣上限约束（详见 `marketing-and-promotions.md` 积分体系）。作用于 `actualPrice` 减项层
 - order price：叠加运费与优惠后的支付前金额
 - actual price：用户最终需要支付的金额
@@ -65,9 +66,9 @@
 
 - `goods price` = 所有结算项 SKU 当前零售价 × 数量的总和（使用提交时的实时价格，不沿用购物车快照）。命中限时折扣的 SKU 行单价取 `min(retailPrice, vipPrice, timeDiscountPrice)`（限时折扣作用于商品单价层，见 `marketing-and-promotions.md` 限时折扣）；会员用户（`userLevel >= 1`）的 SKU 若配置了 `vipPrice`，则该行单价取 `min(retailPrice, vipPrice)`（SKU 单价级会员价，见 `user-and-address.md` 会员等级体系）
 - `order price` = `goods price` + `freight price` - `coupon price` - `promotion price`
-- `actual price` = `order price` - `integral price` - `groupon price`
+- `actual price` = `order price` - `integral price` - `groupon price` - `pin tuan price`
 
-其中 `coupon price` 受券范围校验（全场/类目/指定商品）约束，`promotion price` 由满减活动自动判定最优档位生成（订单级优惠，与 coupon 同处 orderPrice 减项层），`groupon price` 仅在团购成功后成立。这些公式的定义以 `model/app-mall.orm.xml` 字段注释和 `LitemallOrderBizModel.submit()` 实现为准。
+其中 `coupon price` 受券范围校验（全场/类目/指定商品）约束，`promotion price` 由满减活动自动判定最优档位生成（订单级优惠，与 coupon 同处 orderPrice 减项层），`groupon price` 仅在团购成功后成立，`pin tuan price` 为拼团减免额（`actualPrice` 减项层，与 groupon/integral 同层；拼团与团购单订单互斥，同时传入则拒绝）。这些公式的定义以 `model/app-mall.orm.xml` 字段注释和 `LitemallOrderBizModel.submit()` 实现为准。
 
 ### 价格计算顺序约定
 
@@ -345,6 +346,7 @@ item 级退款时三个订单级副作用策略：
 | 秒杀独立下单路径 | ← 入 | `marketing-and-promotions.md` | 秒杀走独立 `flashSaleBuy` `@BizMutation` 路径（不进 `submit()`），秒杀价（flashPrice）为成交单价（商品单价层）；不走购物车、不挂券、不与满减/限时折扣/会员价/积分/团购叠加；场次状态由 nop-job 翻转 |
 | 积分抵扣构件 | ← 入 | `marketing-and-promotions.md` | 结算勾选积分抵扣，影响 integral price（actualPrice 减项层）；取消/整单退款返还积分，item 级部分退款不返还 |
 | 团购上下文 | ← 入 | `marketing-and-promotions.md` | grouponRulesId/grouponId 透传到 submit；团购超时触发 204 |
+| 拼团上下文 | ← 入 | `marketing-and-promotions.md` | pinTuanActivityId/pinTuanGroupId 透传到 submit；拼团超时失败全单退款；拼团×团购单订单互斥（同时传则拒绝） |
 | 评价资格 | → 出 | `marketing-and-promotions.md` | 收货完成(401/402)是评价资格边界 |
 | 售后资格 | → 出 | 本文件（退款与售后章节） | 已支付未发货(201)或已完成收货(401/402)+售后状态可申请(INIT) |
 | 运费/超时配置 | ← 入 | `system-configuration.md` | 运费策略、包邮门槛、订单超时、自动收货时长 |

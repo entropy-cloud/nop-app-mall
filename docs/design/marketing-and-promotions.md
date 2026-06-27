@@ -584,6 +584,7 @@
 | 积分抵扣构件 | → 出 | `order-and-cart.md` | 结算勾选积分抵扣，影响 integral price（actualPrice 减项层）；取消/整单退款返还，item 级不返还 |
 | 团购上下文透传 | → 出 | `order-and-cart.md` | grouponRulesId/grouponId 经加购→结算透传；团购超时触发订单 204 |
 | 团购优惠结果 | → 出 | `order-and-cart.md` | 团购成功后由订单侧价格语义消费 |
+| 拼团价格构件 | → 出 | `order-and-cart.md` | 结算拼团下单，影响 pinTuan price（actualPrice 减项层，与 grouponPrice 同层）；拼团×团购单订单互斥；超时失败全单退款 |
 | 评价资格 | ← 入 | `order-and-cart.md` | 收货完成是评价资格边界 |
 | 售后不替代评价 | ← 入 | `order-and-cart.md` | 履约不满应进入售后流程，而非通过评论改订单状态 |
 | 优惠券/团购/评价过期任务 | → 出 | `system-configuration.md` | 进入定时运营任务 |
@@ -690,6 +691,113 @@
 
 - **`maxPerUser` 强一致执行为 model-gap**：缺 `Order↔FlashSaleSession` 关联列，本计划仅执行 `maxPerOrder`。`maxPerUser` 强一致执行（含按场次计数查询）由 successor 计划落地关联列后实现，触发条件：限购强一致需求或 P22 秒杀效果报表。参照 P15 满减 `maxPerUser` 同样的 model-gap 先例。
 - 秒杀场次库存无 DB 唯一键约束（`session_stock` 为可减为 0 的普通整数列），并发安全完全依赖应用层条件 UPDATE，已足够。
+
+## 拼团 / Pin-Tuan（社交裂变拼团）
+
+### 业务意图
+
+- 拼团是一种社交裂变型促销：团长（发起人）发起拼团活动，邀请好友参团，在有效时间内凑满足团人数即以拼团专享价成交，否则超时失败并退款。
+- 拼团与团购（Groupon）为**不同数据模型、不同价格槽位**的两种活动，可并行存在为不同活动，但**单订单二选一**（同一订单不能既是团购又是拼团）。两者并存不冲突（详见「与团购的区别与并存」）。
+
+### 业务规则
+
+- 一条拼团活动（`LitemallPinTuanActivity`）绑定到具体商品（`goodsId`），可选绑定到具体 SKU（`productId`，null 表示该商品全部 SKU 均参与）。
+- 拼团活动配置拼团专享单价（`pinTuanPrice`，低于零售价）、成团人数门槛（`minUserCount`）、最多人数上限（`maxUserCount`，可选）、有效时间（`expireHours`，小时）。
+- 拼团活动状态 `status` 复用 `mall/promotion-status` 字典（草稿 0 / 进行中 10 / 已结束 20 / 已关闭 30）。只有「进行中」(10) 的活动才允许开团/参团。
+- 用户不能以参团身份加入自己发起的团（不能加入自己的团）。
+- 用户不能重复加入同一个进行中的团。
+- 拼团优惠（`pinTuanPrice` 减免额）只有在拼团业务条件成立（成团 SUCCESS）时才正式生效；超时失败时全额退款。
+
+### 三实体结构（区别于团购扁平单表）
+
+拼团采用三实体结构，区别于团购（Groupon）的扁平单表：
+
+| 实体 | 职责 | 关键字段 |
+| ---- | ---- | -------- |
+| `LitemallPinTuanActivity` | 拼团活动配置（运营维护） | `goodsId`、`productId`、`pinTuanPrice`（拼团专享单价）、`minUserCount`、`maxUserCount`、`expireHours`、`status` |
+| `LitemallPinTuanGroup` | 一次开团记录（团长发起） | `activityId`、`creatorUserId`、`orderId`（团长订单）、`status`（团状态）、`expireTime`（过期时间） |
+| `LitemallPinTuanMember` | 参团成员记录 | `groupId`、`userId`、`orderId` |
+
+成团人数 = Group 的 members 数（含团长 Member）≥ `activity.minUserCount` 时自动成团。
+
+### 团状态语义
+
+团状态（`LitemallPinTuanGroup.status`）由 `mall/pin-tuan-group-status` 字典定义：
+
+| 团状态 | 状态码 | 含义 |
+| ------ | ------ | ---- |
+| 进行中 | 0 | 团已开，等待参团凑齐人数 |
+| 拼团成功 | 10 | 成团人数达 `minUserCount`，拼团优惠正式成立 |
+| 拼团失败 | 20 | 超时未凑齐人数，全员退款 |
+
+- 团长 `openPinTuan` 创建 Group（status=进行中）+ 团长 Member。
+- 每次有效 `joinPinTuan` 增加一个 Member；当成员数达 `minUserCount` 时系统自动将 Group.status 置为「拼团成功」(10)。
+- `expirePinTuans`（定时任务）扫描 status=进行中 且 `expireTime` 已过的 Group，置为「拼团失败」(20) 并对全员已支付订单退款。
+
+### pinTuanPrice 计算语义（Decision）
+
+- **`LitemallPinTuanActivity.pinTuanPrice`**（displayName「拼团价」）为**拼团专享单价**；**`LitemallOrder.pinTuanPrice`**（displayName「拼团优惠金额」）为**减免额**。
+- 计算公式：`order.pinTuanPrice = (retailPrice − activity.pinTuanPrice) × number`（按订单匹配 SKU 的行拼团减免汇总）。
+- 校验 `activity.pinTuanPrice < retailPrice`（拼团价须低于零售价才有优惠，否则抛 ErrorCode `nop.err.mall.pin-tuan.price-invalid`）。
+- 参照团购 `grouponPrice = rules.getDiscount()` 为减免额语义，`order.pinTuanPrice` 同样为减免额（非单价），保持一致。
+- 当 `activity.productId = null`（全 SKU）时，按订单匹配该 `goodsId` 的 SKU 行的 retailPrice 计算。
+
+### 价格层位与共存（Decision）
+
+- `pinTuanPrice` 作用于 **actualPrice 减项层**（与 `grouponPrice`、`integralPrice` 同层）：`actualPrice = orderPrice - integralPrice - grouponPrice - pinTuanPrice`。
+- 计算顺序天然正确：先 goodsPrice（含限时折扣/会员价单价层）→ orderPrice（满减/券减项）→ actualPrice（积分/团购/拼团减项）。
+- 限时折扣为商品单价层，拼团减免以折扣后 goodsPrice 衍生——天然可共存，无需额外选择逻辑。
+
+### 拼团 × 团购（Groupon）互斥（Decision）
+
+- 拼团与团购为不同模型、不同价格槽位（`grouponPrice` vs `pinTuanPrice`），可并行存在为不同活动。
+- **单订单二选一**：同一订单不能既是团购又是拼团。订单提交时若同时传 `grouponRulesId` 与 `pinTuanActivityId`，则抛 ErrorCode `nop.err.mall.pin-tuan.groupon-mutex` 拒绝。
+- 理由：避免双重团购类优惠、价格语义混乱。
+
+### 成团判定（Decision）
+
+- 抉择：团长 `openPinTuan` 创建 Group（status=进行中）+ 团长 Member；每 `joinPinTuan` 增一 Member；当 `Group.members.size() ≥ activity.minUserCount` 时自动置 Group.status=SUCCESS。
+- `maxUserCount`（最多人数，若设）为参团上限，达之拒绝新参团（抛 ErrorCode `nop.err.mall.pin-tuan.full`）。
+- 团长计入成员数（团长是成团必要参与方）。
+- 残留风险：并发参团下成团判定的计数竞争——通过「先 count 再 insert Member」+ 事务隔离处理（参照团购既有容忍度，READ_COMMITTED 下并发参团仍存在越界残隙，由 `maxUserCount` 上限兜底）。
+
+### 超时失败 + 退款语义（Decision）
+
+- `Group.expireTime = 创建时间 + activity.expireHours`。
+- `expirePinTuans()`（job，参照 `expireGroupons`）扫描 status=进行中 且 `expireTime` 已过的 Group → 置 FAILED → 对每个 Member 的已支付订单全单退款。
+- 退款链路（参照 `refundGrouponOrder`）：`PayService.refund` + 还库存 `goodsProductMapper.addStock` + 还券 `couponUserBiz.returnCoupon` + 还积分（`sourceType=refund-return`）+ 通知。退款失败不静默吞（汇总 LOG 等待人工干预），通知在 `txn().afterCommit` 执行。
+- 成团（SUCCESS）的团**不退款**，拼团优惠正式成立。
+- 退款前提校验：成员 orderId 对应订单已支付（`orderStatus=PAY` 且 `aftersaleStatus=INIT`），参照团购双重守卫。
+
+### 管理员与用户动作
+
+- 管理员可以创建、编辑、上下架拼团活动，配置拼团价、成团人数门槛、最多人数、有效时间。
+- 商城用户可以浏览有效拼团活动、发起开团、参与他人拼团、查看拼团详情与我的拼团列表。
+- 系统在成员数达标时自动成团，在超时未成团时自动失败退款。
+
+### 生命周期
+
+- 管理员创建拼团活动（草稿），配置拼团价与人数门槛。
+- 管理员将活动上架（进行中），进入可开团池。
+- 用户通过下单发起开团（创建 Group + 团长 Member）。
+- 其他用户在过期前参团（创建 Member）。
+- 成员数达 `minUserCount` 自动成团（SUCCESS），拼团优惠正式成立。
+- 超时未凑齐人数，Group 自动失败（FAILED），全员退款。
+
+### 与订单的关系
+
+- 拼团资格、活动状态、成团判定、超时失败的业务语义由本文件负责。
+- 拼团如何接入订单价格构成（`pinTuanPrice` 作用于 actualPrice 减项层）由 `order-and-cart.md` 价格语义负责引用结果，不在本文件重复维护订单价格公式。
+
+### 与取消 / 退款的关系
+
+- 拼团超时失败触发全单退款（还库存/券/积分/通知），参照团购既有退款链路。
+- 退款额受订单 `actualPrice` 约束。
+
+### 已知约束
+
+- 并发参团成团计数的越界残隙由 `maxUserCount` 上限兜底（参照团购容忍度，非强一致 DB 约束）。
+- 拼团分享图/裂变海报/邀请奖励等运营支撑能力超出 P25 范围（不改成团判定核心业务语义）。
 
 ## 不在范围内
 
