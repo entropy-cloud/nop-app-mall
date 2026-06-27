@@ -18,7 +18,7 @@
 > **状态更新只改这里，不改 Phase Details 中的状态行。**
 
 - 15. 满减送: `done`（`docs/plans/2026-06-27-1742-1-phase15-full-discount-promotion-plan.md`）
-- 16. 订单项级售后增强: `planned`（`docs/plans/2026-06-27-1742-3-phase16-order-item-aftersale-plan.md`）
+- 16. 订单项级售后增强: `done`（`docs/plans/2026-06-27-1742-3-phase16-order-item-aftersale-plan.md`）
 - 17. 微信小程序订单中心: `todo`
 - 18. Dashboard 重做: `todo`
 - 19. 报表体系扩展: `todo`

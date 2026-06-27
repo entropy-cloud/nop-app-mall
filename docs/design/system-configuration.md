@@ -102,6 +102,19 @@
 - `application.yaml` 配置 `nop.job.scheduler.config-path` 指向调度配置
 - 调度频率：cancelExpiredOrders=15min, confirmExpiredOrders=1h, expireCoupons=1h, expireGroupons=30min, expireCommentWindow=1h
 
+## 字典维护
+
+### 业务角色
+
+- 商城业务字典（售后类型、售后状态、售后原因等）由 `model/app-mall.orm.xml` 的 `<dicts>` 段声明，作为前台展示与后台校验的稳定来源。
+
+### 售后原因字典（mall/aftersale-reason）
+
+- 售后原因字典化：用户发起售后时，退款原因从 `mall/aftersale-reason` 字典选项中选择，而非自由文本。
+- 字典在 `model/app-mall.orm.xml` 声明，`LitemallAftersale.reason` 列通过 `ext:dict="mall/aftersale-reason"` 绑定该字典。
+- 申请时后端校验 `reason` 必须为字典内已定义的选项；历史记录的文本 `reason` 保持兼容（校验仅作用于新增/变更）。
+- 运营如需调整原因选项，通过修改 ORM 模型字典并重新生成落地（受保护区域，改动须人工确认，见 `docs/context/ai-autonomy-policy.md`）。
+
 ## 管理员操作日志
 
 ### 业务角色
