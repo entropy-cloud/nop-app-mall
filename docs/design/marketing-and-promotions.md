@@ -110,6 +110,64 @@
 - 团购资格、规则状态和活动状态由本文件负责。
 - 团购成功后如何作用于订单价格、支付和后续订单结果，由 `order-and-cart.md` 负责引用团购结果，不在本文件重复维护订单主流程。
 
+## 积分体系 / Points System
+
+### 业务意图
+
+- 积分是商城用户的一种虚拟资产，通过指定行为获取，可在结算时抵扣订单金额或（后续）在积分商城兑换商品/服务。
+- 积分账户与流水的持久化语义、并发安全、changeType × sourceType 分类法由 `wallet-and-assets.md` 负责；本文件负责**获取规则、抵扣规则与上限、与商城兑换的交接语义**。
+
+### 获取规则 / Earn Rules
+
+- **购物赠送**（主触发源，已落地）：用户确认收货（`LitemallOrderBizModel.confirm`）时，系统按 `mall_points_earn_per_yuan`（每元赠 X 积分，默认 1）× 订单 `actualPrice` 计算应赠积分并调用账户 earn API。**备选「支付即赠送」被否**——退款刷分风险（确认收货前退款的订单不发积分，已由 P16 item 级退款守卫覆盖）。
+- 赠送为幂等：同一 `orderId` 不重复赠送，按 `sourceType=order-confirm-earn` + `sourceId=orderId` 查重。
+- 签到得积分（P28）、评价得积分（P33）、分享得积分（不在基线）作为后续接入源复用同一账户 earn API，不在本计划实现触发逻辑。
+
+### 获取规则配置项
+
+获取规则为全局比例型，通过 `NopSysVariable`（`LitemallSystem` keyName/keyValue）配置，**不新增积分规则实体**：
+
+| 配置项 key | 含义 | 默认值 |
+| ---------- | ---- | ------ |
+| `mall_points_earn_per_yuan` | 购物赠送：每实付 1 元赠 N 积分 | 1 |
+| `mall_points_to_yuan_ratio` | 兑换比例：X 积分 = ¥1（结算抵扣换算） | 100 |
+| `mall_points_deduct_max_ratio` | 抵扣上限：占 `orderPrice` 的最大比例 | 0.3 |
+
+签到规则（P28）已有独立的 CheckInRule 实体按天配置，不与本全局配置冲突。
+
+### 抵扣规则 / Deduct Rules
+
+- 用户在结算页勾选使用 N 积分 → `integralPrice = N / mall_points_to_yuan_ratio`（兑换比例换算为金额）。
+- **抵扣上限：** `min(用户可用积分对应金额, orderPrice × mall_points_deduct_max_ratio)`。理由：兑换比例 + 比例上限为电商惯例，防全额积分抵扣侵蚀营收；`orderPrice` 为基准（与 coupon/promotion 同层基准）。**备选「固定金额上限」被否**——不随订单规模伸缩。
+- 抵扣作用于 `actualPrice` 减项层（见 `order-and-cart.md` 价格构成公式），与满减 `promotionPrice`（`orderPrice` 减项层）、券 `couponPrice`（`orderPrice` 减项层）、团购 `grouponPrice`（`actualPrice` 减项层）的层位关系由 `order-and-cart.md` 维护。
+- 抵扣扣减用户积分：调用账户 spend API（`changeType=SPEND`, `sourceType=order-deduct`, `sourceId=orderId`）。
+
+### 取消 / 退款返还语义
+
+与 P16 售后 Decision 对称（订单级才返还）：
+
+- **积分抵扣返还：** 订单取消或整单退款时，返还用户已扣的抵扣积分（调用 earn API，`changeType=EARN`, `sourceType=refund-return`, `sourceId=orderId`）。item 级部分退款**不返还抵扣积分**（积分抵扣为订单级构件，同券恢复 Decision）。
+- **购物赠送积分不追回：** 若订单已确认收货（已赠送积分）后发生售后退款，**不追回赠送积分**（简化语义，残留风险记录于计划 Deferred）。理由：避免 item 级碎片化与跨账户追回的复杂度。
+
+### 积分商城兑换（交接）
+
+- **本计划不实现积分商城兑换**（纯积分或积分+现金）——需积分商品目录（积分商品实体/兑换价）未建模，属独立子特性。本计划建立积分账户/流水/抵扣/获取 API 基座，积分商城兑换作为 successor（触发条件：积分商品目录建模需求出现）。
+- 未来积分商城兑换将复用账户 spend API（`changeType=SPEND`, `sourceType=mall-exchange`, `sourceId=exchangeOrderId`）。
+
+### 积分有效期（交接）
+
+- 积分有效期与自动过期属 model-gap（模型无有效期字段/过期批次，且批量过期需 nop-job-local 定时编排），账户/流水语义由 `wallet-and-assets.md` 持有，本文件不展开。
+
+### 管理员动作
+
+- 管理员可通过后台对用户积分账户手工调账（加/扣），调用 `adjustPoints`（`changeType=EARN` 或 `SPEND`, `sourceType=admin-adjust`），并产生对应流水。
+- 管理员可查询用户积分账户与流水。
+
+### 与订单的关系
+
+- 积分获取资格、抵扣规则、上限配置、返还语义由本文件负责。
+- 积分如何接入订单价格构成（`integralPrice` 作用于 `actualPrice` 减项层）由 `order-and-cart.md` 价格语义负责引用结果，不在本文件重复维护订单价格公式。
+
 ## 满减送 / Full-Discount Promotion
 
 ### 业务意图
@@ -292,6 +350,7 @@
 |--------|------|---------|------|
 | 优惠券价格构件 | → 出 | `order-and-cart.md` | 结算时校验可用券，影响 coupon price；取消/退款后按规则恢复 |
 | 满减价格构件 | → 出 | `order-and-cart.md` | 结算时自动判定最优档位，影响 promotion price（orderPrice 减项层）；自动触发、不可恢复 |
+| 积分抵扣构件 | → 出 | `order-and-cart.md` | 结算勾选积分抵扣，影响 integral price（actualPrice 减项层）；取消/整单退款返还，item 级不返还 |
 | 团购上下文透传 | → 出 | `order-and-cart.md` | grouponRulesId/grouponId 经加购→结算透传；团购超时触发订单 204 |
 | 团购优惠结果 | → 出 | `order-and-cart.md` | 团购成功后由订单侧价格语义消费 |
 | 评价资格 | ← 入 | `order-and-cart.md` | 收货完成是评价资格边界 |

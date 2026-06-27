@@ -67,19 +67,48 @@
 ### 业务意图
 
 - 积分账户记录用户的积分余额和变动历史，支撑积分获取和消耗的核算。
+- 每个商城用户有且只有一个积分账户，记录当前可用积分（`balance`）、累计获得（`totalEarned`）、累计消耗（`totalSpent`）。
+- 账户在用户首次获得积分时自动创建（首次 `earnPoints` 调用），无需注册时预创建。
+- 持久化字段、字典、唯一键（`uk_litemall_points_account_user` on `userId`）以 `model/app-mall.orm.xml` 为准。
 
-### 积分流水
+### 并发安全与原子操作
 
-- 每笔积分的增加或减少均产生一条流水记录。
-- 积分流水包含：变动时间、变动类型（获取/消耗/过期）、变动数量、变动后余额、来源/去向说明。
-- 积分获取来源包括：签到、购物赠送、评价奖励、分享奖励等（详见 `marketing-and-promotions.md`）。
-- 积分消耗用途包括：积分抵扣、积分商城兑换等（详见 `marketing-and-promotions.md`）。
+- 积分账户的获取（earn）与消耗（spend）均为**单事务内原子操作**：以 `version` 乐观锁执行 `update account set balance=balance±N where id=? and version=?`，version 不匹配即抛出 ErrorCode 失败。
+- `spend` 前校验 `balance - N >= 0`（余额不可为负），余额不足抛 `nop.err.mall.points.insufficient`。
+- 每次变动同时写入一条流水记录（含 `balanceAfter` 变动后余额快照），使账户表与流水表可在任意时刻对账。
+- 高并发单账户需重试；本基线非秒杀场景，乐观锁失败即返回错误由调用方重试。
+
+### 积分流水与 changeType × sourceType 分类法
+
+- 每笔积分的增加或减少均产生一条流水记录（`LitemallPointsFlow`）。
+- 流水字段：变动时间（`addTime`）、变动类型（`changeType`，字典 `mall/points-change-type`）、变动数量（`changeAmount`）、变动后余额（`balanceAfter`）、来源类型（`sourceType`，VARCHAR(50)）、来源业务 ID（`sourceId`）、备注（`remark`）。
+- **字典复用约定（不改模型）：** `mall/points-change-type` 字典仅有三值 `EARN`(0, 获取)/`SPEND`(10, 消耗)/`EXPIRE`(20, 过期)。`changeType` 严格映射这三值——获取类全用 `EARN`、消耗类全用 `SPEND`、过期用 `EXPIRE`。**所有细分来源/去向落入 `sourceType` 字段**：
+  - 购物赠送 = `EARN` + `sourceType=order-confirm-earn`
+  - 取消/整单退款返还抵扣积分 = `EARN` + `sourceType=refund-return`
+  - 结算积分抵扣 = `SPEND` + `sourceType=order-deduct`
+  - 后台手工调账（加） = `EARN` + `sourceType=admin-adjust`
+  - 后台手工调账（扣） = `SPEND` + `sourceType=admin-adjust`
+  - 签到（P28） = `EARN` + `sourceType=check-in`
+  - 评价（P33） = `EARN` + `sourceType=comment-reward`
+- `sourceId` 记录来源业务 ID（orderId / commentId / checkInRecordId 等），支撑幂等查重（如同一 orderId 不重复赠送）。
 
 ### 业务规则
 
-- 积分有有效期，过期积分自动扣减并产生流水记录。
 - 积分余额不可为负值。
 - 用户可查看积分余额和流水记录，支持按时间范围和类型筛选。
+- **积分有效期：** 业务规则要求积分有有效期，过期积分自动扣减并产生 `EXPIRE` 流水。当前**为计划中能力**——模型尚无有效期字段/过期批次实体，且批量过期需 nop-job-local 定时编排。账户/流水/抵扣/获取基座不依赖有效期，自动过期作为 successor（触发条件：积分有效期建模需求或 PointsAccount 模型修改时）。
+
+### 获取规则（积分来源）
+
+积分获取规则配置详见 `marketing-and-promotions.md`「积分体系」章节；本文件仅持有账户/流水语义。主要触发源：
+
+- **购物赠送**（主触发源，已落地）：订单确认收货（confirm）时按 `mall_points_earn_per_yuan` × `actualPrice` 赠送；幂等（同 orderId 不重复赠送，按 `sourceType=order-confirm-earn` + `sourceId=orderId` 查重）。
+- 签到（P28，依赖本计划 earn API）、评价（P33，依赖本计划 earn API）、分享（不在基线）作为后续接入源复用同一 earn API。
+
+### 抵扣与返还语义
+
+- 抵扣在结算页的勾选行为、积分兑换比例与抵扣上限由 `order-and-cart.md` 价格语义负责引用结果。
+- 取消/整单退款的积分返还语义由 `order-and-cart.md` 退款流程负责引用结果（与券恢复对称：仅订单级返还，item 级部分退款不返还）。
 
 ## 与其他 Owner Docs 的关系
 

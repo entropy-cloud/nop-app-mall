@@ -55,7 +55,7 @@
 - coupon price：订单在满足优惠券条件时形成的优惠金额构件
 - promotion price：订单在满足满减活动条件时由系统自动判定形成的优惠金额构件（满减/限时折扣共用此价格槽位）
 - groupon price：订单在满足团购条件时形成的优惠金额构件
-- integral price：积分抵扣金额；当前如果未启用积分能力，则该金额保持为零
+- integral price：积分抵扣金额；用户在结算页勾选使用 N 积分时，按 `mall_points_to_yuan_ratio`（X 积分=¥1）换算，受 `orderPrice × mall_points_deduct_max_ratio` 抵扣上限约束（详见 `marketing-and-promotions.md` 积分体系）。作用于 `actualPrice` 减项层
 - order price：叠加运费与优惠后的支付前金额
 - actual price：用户最终需要支付的金额
 
@@ -72,7 +72,9 @@
 ### 价格计算顺序约定
 
 - 满减门槛 `meetAmount` 以 `goods price` 为判定基准。若启用会员等级价（P26），会员价作用于 SKU 单价层（降低 `goods price` 汇总），会间接拉低满减门槛命中判定。
-- 因此价格计算顺序为：**先计算会员价后的 `goods price` → 再据 `goods price` 判定满减门槛与最优档位 → 再计算 coupon / orderPrice**。该顺序在 `LitemallOrderBizModel.submit()` 实现中保持。
+- 因此价格计算顺序为：**先计算会员价后的 `goods price` → 再据 `goods price` 判定满减门槛与最优档位 → 再计算 coupon / orderPrice → 再计算 integral price（积分抵扣，actualPrice 减项层）**。该顺序在 `LitemallOrderBizModel.submit()` 实现中保持。
+- **积分抵扣（P27）作用层位：** `integral price` 在 `orderPrice` 汇总完成后的 `actualPrice` 减项层，与满减 `promotionPrice`（`orderPrice` 减项层）、团购 `grouponPrice`（`actualPrice` 减项层，与积分同层）层位不同，天然不冲突。计算顺序天然正确。
+- **积分抵扣公式：** 用户结算勾选 N 积分 → `integralPrice = N / mall_points_to_yuan_ratio`，上限 `min(N 对应金额, orderPrice × mall_points_deduct_max_ratio)`；同时调用积分账户 spend API 扣减用户积分（`sourceType=order-deduct`）。
 
 ### 运费规则
 
@@ -272,6 +274,7 @@ item 级退款时三个订单级副作用策略：
 1. **订单状态迁移：** 未发货（201）订单**仅当全部商品项均已退款**时才整体进入已退款（203）；任一商品项部分退款时，订单主状态保持已支付（201）。
 2. **还库：** 仅对**被退款的那个 OrderGoods 行**（`orderItemId`）调用还库，不再遍历全部订单商品。`orderItemId=null`（整单）时仍遍历全部订单商品（历史兼容）。
 3. **券恢复：** 单项部分退款**不自动恢复券**。券为订单级优惠构件，仅在整单取消/整单退款时恢复。残留风险：部分退款后券仍处于已使用状态，由运营按需人工处理。
+4. **积分返还：** 单项部分退款**不返还积分抵扣**（积分抵扣为订单级构件，与券恢复 Decision 对称）；仅在整单取消/整单退款时返还用户已扣的抵扣积分（`sourceType=refund-return`）。**购物赠送积分不追回**（即使订单曾确认收货后发生售后退款，已赠送的积分不回收）。
 
 ### 售后流转规则
 
@@ -331,6 +334,7 @@ item 级退款时三个订单级副作用策略：
 | SKU 可售性与库存 | ← 入 | `product-catalog.md` | 结算/下单基于当前可售价格与库存；订单保留商品快照 |
 | 优惠券价格构件 | ← 入 | `marketing-and-promotions.md` | 结算校验可用券，影响 coupon price；取消/退款后恢复 |
 | 满减价格构件 | ← 入 | `marketing-and-promotions.md` | 结算自动判定满减最优档位，影响 promotion price（orderPrice 减项层）；自动触发、不可恢复 |
+| 积分抵扣构件 | ← 入 | `marketing-and-promotions.md` | 结算勾选积分抵扣，影响 integral price（actualPrice 减项层）；取消/整单退款返还积分，item 级部分退款不返还 |
 | 团购上下文 | ← 入 | `marketing-and-promotions.md` | grouponRulesId/grouponId 透传到 submit；团购超时触发 204 |
 | 评价资格 | → 出 | `marketing-and-promotions.md` | 收货完成(401/402)是评价资格边界 |
 | 售后资格 | → 出 | 本文件（退款与售后章节） | 已支付未发货(201)或已完成收货(401/402)+售后状态可申请(INIT) |
