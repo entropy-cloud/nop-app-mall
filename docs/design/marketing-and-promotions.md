@@ -803,3 +803,56 @@
 
 - 阶梯价和会员等级价不属于当前支持基线。
 - 满减的「送」（赠品）能力不在当前支持范围（档位表无赠品字段）。
+
+## 营销活动管理后台（P22）
+
+### 业务意图
+
+- 提供满减 / 限时折扣 / 秒杀 / 拼团 4 类活动的**统一管理入口**，运营可从后台侧边栏到达各类活动管理页，并对每类活动执行上下架动作。
+- 提供营销活动效果分析（满减聚合 GMV、优惠券核销、拼团效果）与活动日历（排期展示 + 冲突提示）。
+- 各类活动的**玩法本身**（满减档位、秒杀场次、拼团成团）由各自章节定义；本节只定义**统一管理面、上下架动作、效果统计口径、活动日历冲突口径**。
+
+### 后台菜单结构
+
+- 独立 TOPM `marketing-manage`（营销活动管理，orderNo 408），与 `promotion-manage`（推广：广告/专题/团购）业务域分离，避免污染推广管理。
+- 子项：营销总览 / 活动日历 / 效果分析 + 4 类活动管理入口（满减/限时折扣/秒杀/拼团）。运营侧边栏直达，消除孤立管理页。
+- 优惠券管理继续挂在 `promotion-manage`（与原有一致，非本计划结果面迁移）。
+
+### 上下架动作（状态切换）
+
+满减 / 限时折扣 / 秒杀 / 拼团共用 `mall/promotion-status` 字典（0 草稿 / 10 进行中 / 20 已结束 / 30 已关闭），各实体提供 `publishActivity` / `unpublishActivity` `@BizMutation`：
+
+| 动作 | 目标状态 | 允许的来源状态 | 非法来源（拒绝，`ERR_PROMOTION_STATUS_TRANSITION_INVALID`） |
+| ---- | -------- | -------------- | ---------------------------------------------------------- |
+| `publishActivity` | 10 进行中 | 草稿(0)、已关闭(30) | 进行中(10)（已上架）、已结束(20)（已结束不可重新上架） |
+| `unpublishActivity` | 30 已关闭 | 进行中(10)、已结束(20) | 已关闭(30)（已下架）、草稿(0)（草稿无需下架） |
+
+- 上下架只翻转 `status`；前台结算/抢购匹配仍以 `status=10` 且时间窗为强校验（与各玩法章节一致）。
+- 复用 `publishCoupon`/`publishRules` pattern：`requireEntity` + 置 `status` + 返回（事务由 `@BizMutation` 包裹）。
+
+### 效果分析口径
+
+| 指标面 | `@BizQuery` | 口径 |
+| ------ | ---------- | ---- |
+| 满减效果 | `getPromotionEffectiveness(startDate?, endDate?)` | **聚合口径**：`promotionPrice>0` 的订单的参与单数、`SUM(orderPrice)` GMV、`SUM(promotionPrice)` 优惠额。按活动归因需用户参与记录实体（model-gap，见下「已知约束」） |
+| 优惠券核销 | `getCouponUsageStatistics(couponId?, startDate?, endDate?)` | 领取数（CouponUser 总数）、已使用数（status=1）、核销率、拉动 GMV（used 关联订单 `actualPrice` 之和） |
+| 拼团效果 | `getPinTuanEffectiveness(activityId?, startDate?, endDate?)` | 开团数（Group 总数）、成团数（status=10）、成团率、参与人数（distinct member.userId）、GMV（member→order `actualPrice` 之和，按 group.addTime 时间窗） |
+| 秒杀按场次效果 | — | **model-gap**：需 `Order.flashSaleSessionId` 关联列（ORM ask-first，见下「已知约束」） |
+
+- 效果统计 `@BizQuery` 经 `@SqlLibMapper`（`LitemallMarketing.sql-lib.xml`）实现聚合；时间窗由调用方传 `startDate`/`endDate`（空时兜底全量）。
+- 报表面向管理员后台，与 `system-configuration.md` 报表与统计章节一致。
+
+### 活动日历与冲突检测口径
+
+- 活动日历按时间轴展示**进行中(10)**的满减/限时折扣/秒杀/拼团活动，前端聚合 4 类 `findPage`（status=10）列表后按 `startTime` 排序展示，无需后端日历 API。
+- **冲突判定口径：** 同一 goodsId 在同一时段被 ≥2 个**进行中(10)**活动命中即标冲突：
+  - 满减 `goodsScope=ALL`（全商品）：与任何同时段 goodsId 活动都潜在冲突。
+  - 满减 `goodsScope=CATEGORY`：经其分类下商品集与同时段 goodsId 活动求交集判定。
+  - 满减 `goodsScope=GOODS`、限时折扣、秒杀、拼团：均按 goodsId（可选 productId）直接比对。
+- 冲突在前端按 4 类列表的 goodsId + 时间窗集合判定，无需后端冲突 API。
+
+### 已知约束（ORM model-gap，待 ask-first 授权）
+
+- **满减 `maxPerUser` 强一致 + 按活动效果归因**：需新增 `LitemallPromotionUsage` 实体（userId/promotionActivityId/orderId）记录参与。当前满减为纯计算不落库，`maxPerUser` 暂不强一致执行；满减效果仅能按时间窗聚合，不可按活动归因。
+- **秒杀 `maxPerUser` 强一致 + 按场次效果**：需 `LitemallOrder.flashSaleSessionId` 关联列。当前秒杀仅执行 `maxPerOrder`，`maxPerUser` 强一致与按场次 GMV/售罄率/限购命中数暂不可得。
+- 上述两项为 ORM `model/*.orm.xml` 改动（Protected Area ask-first），授权落地后由 successor 计划实施（见 P22 计划 `Deferred But Adjudicated`）。

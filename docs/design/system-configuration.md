@@ -203,6 +203,28 @@
 - 报表输出可以按时间区间、业务状态、商品/类目、用户增长等维度过滤，但具体字段清单和技术模板不在本设计 owner doc 中展开。
 - 报表生成失败不应改变原始业务数据；它属于观察和经营分析能力，而不是交易主流程的一部分。
 
+## 营销活动管理后台
+
+### 业务角色
+
+- 营销活动管理后台为运营提供满减 / 限时折扣 / 秒杀 / 拼团 4 类活动的统一管理入口、上下架动作、活动日历与效果分析。
+
+### 后台菜单结构
+
+- 独立 TOPM `marketing-manage`（营销活动管理，orderNo 408），与 `promotion-manage`（推广：广告/专题/团购规则/团购活动）业务域分离。
+- 子项：营销总览（`marketing-overview.page.yaml`）、活动日历（`marketing-calendar.page.yaml`）、效果分析（`marketing-effect.page.yaml`）、满减活动、限时折扣、秒杀活动、拼团活动。
+- 优惠券管理继续挂在 `promotion-manage`（与原有一致）。
+
+### 运营动作
+
+- 运营可对满减/限时折扣/秒杀/拼团每类活动执行上下架（`publishActivity`/`unpublishActivity`），状态切换规则与冲突/效果口径由 `marketing-and-promotions.md`「营销活动管理后台」章节持有。
+- 效果分析看板消费满减聚合 GMV、优惠券核销、拼团效果统计 `@BizQuery`；秒杀按场次效果待 ORM 授权补齐。
+
+### 与其他 Owner Docs 的关系
+
+- 营销活动业务语义（玩法、状态字典、上下架规则、效果口径、冲突口径）由 `marketing-and-promotions.md` 持有。
+- 本文件仅持有「后台菜单结构与运营可达性」语义。
+
 ## 与其他 Owner Docs 的关系
 
 系统配置域向主链路提供配置开关与运营消费能力：
