@@ -16,6 +16,8 @@
                 <col id="actualPrice"/>
                 <col id="payTime"/>
                 <col id="shipTime"/>
+                <!-- P21 订单运营工作台：surface 既有 adminRemark 列（propId 40，无 ORM 改动） -->
+                <col id="adminRemark"/>
             </cols>
         </grid>
         <grid id="pick-list"/>
@@ -37,6 +39,7 @@
                 shipSn[快递单号] shipChannel[快递公司]
                 shipTime[发货时间] payTime[付款时间]
                 confirmTime[收货时间]
+                adminRemark[运营备注]
             </layout>
         </form>
         <form id="edit"/>
@@ -51,6 +54,36 @@
                 shipSn[快递单号] shipChannel[快递公司]
             </layout>
         </form>
+        <!-- P21 改价/改运费：增量参数，非实体字段需 custom + domain -->
+        <form id="modify-price" editMode="add" layoutMode="horizontal" title="改价/改运费">
+            <layout>
+                freightPriceDelta[运费调整额(增/减)] goodsPriceDelta[商品价调整额(增/减)]
+                remark[运营备注]
+            </layout>
+            <cells>
+                <cell id="freightPriceDelta" label="运费调整额(增/减)" custom="true" domain="decimal"/>
+                <cell id="goodsPriceDelta" label="商品价调整额(增/减)" custom="true" domain="decimal"/>
+                <cell id="remark" label="运营备注" custom="true" domain="string"/>
+            </cells>
+        </form>
+        <!-- P21 改地址：仅传 addressId，服务端校验归属同一用户 -->
+        <form id="change-address" editMode="add" layoutMode="horizontal" title="改地址">
+            <layout>
+                addressId[新收货地址ID]
+            </layout>
+            <cells>
+                <cell id="addressId" label="新收货地址ID" custom="true" domain="string" mandatory="true"/>
+            </cells>
+        </form>
+        <!-- P21 订单标记 -->
+        <form id="mark" editMode="add" layoutMode="horizontal" title="订单标记">
+            <layout>
+                adminRemark[运营备注]
+            </layout>
+            <cells>
+                <cell id="adminRemark" label="运营备注" custom="true" domain="string" mandatory="true"/>
+            </cells>
+        </form>
     </forms>
 
     <pages>
@@ -63,11 +96,34 @@
                     <visibleOn>${orderStatus == 201}</visibleOn>
                     <dialog page="ship" title="订单发货" size="md"/>
                 </action>
+                <!-- P21 改价/改运费：仅待支付(101)可改价 -->
+                <action id="modify-price-button" label="改价" level="primary" actionType="dialog">
+                    <visibleOn>${orderStatus == 101}</visibleOn>
+                    <dialog page="modify-price" title="改价/改运费" size="md"/>
+                </action>
+                <!-- P21 改地址：仅发货前(101/201)可改 -->
+                <action id="change-address-button" label="改地址" level="primary" actionType="dialog">
+                    <visibleOn>${orderStatus == 101 || orderStatus == 201}</visibleOn>
+                    <dialog page="change-address" title="改地址" size="md"/>
+                </action>
+                <!-- P21 订单标记：任意状态可标记 -->
+                <action id="mark-button" label="标记" actionType="dialog">
+                    <dialog page="mark" title="订单标记" size="md"/>
+                </action>
             </rowActions>
         </crud>
         <picker name="picker"/>
         <simple name="ship" form="ship">
             <api url="@mutation:LitemallOrder__ship?orderId=$id" withFormData="true"/>
+        </simple>
+        <simple name="modify-price" form="modify-price">
+            <api url="@mutation:LitemallOrder__modifyOrderPrice?orderId=$id" withFormData="true"/>
+        </simple>
+        <simple name="change-address" form="change-address">
+            <api url="@mutation:LitemallOrder__changeOrderAddress?orderId=$id" withFormData="true"/>
+        </simple>
+        <simple name="mark" form="mark">
+            <api url="@mutation:LitemallOrder__markOrder?orderId=$id" withFormData="true"/>
         </simple>
     </pages>
 </view>

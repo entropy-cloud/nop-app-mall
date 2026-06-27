@@ -1,0 +1,83 @@
+type: page
+title: 订单异常监控
+body:
+  - type: tabs
+    tabs:
+      - title: 超期未发货
+        body:
+          - type: form
+            title: 查询条件
+            mode: inline
+            wrapWithPanel: false
+            target: overdueUnshipped
+            submitOnInit: true
+            body:
+              - type: input-number
+                name: cutoffHours
+                label: 超期小时数(默认168)
+                placeholder: '168'
+                min: 0
+              - type: submit
+                label: 查询
+                level: primary
+          - type: service
+            name: overdueUnshipped
+            api:
+              url: '@query:LitemallOrder__getOverdueUnshippedOrders'
+              sendOn: true
+            body:
+              - type: table
+                source: '${data}'
+                placeholder: '暂无超期未发货订单'
+                columns:
+                  - name: orderSn
+                    label: 订单编号
+                  - name: userId
+                    label: 用户ID
+                  - name: consignee
+                    label: 收货人
+                  - name: mobile
+                    label: 手机号
+                  - name: actualPrice
+                    label: 实付金额
+                  - name: addTime
+                    label: 下单时间
+      - title: 超期未支付
+        body:
+          - type: form
+            title: 查询条件
+            mode: inline
+            wrapWithPanel: false
+            target: overdueUnpaid
+            submitOnInit: true
+            body:
+              - type: input-number
+                name: cutoffMinutes
+                label: 超期分钟数(默认30)
+                placeholder: '30'
+                min: 0
+              - type: submit
+                label: 查询
+                level: primary
+          - type: service
+            name: overdueUnpaid
+            api:
+              url: '@query:LitemallOrder__getOverdueUnpaidOrders'
+              sendOn: true
+            body:
+              - type: table
+                source: '${data}'
+                placeholder: '暂无超期未支付订单'
+                columns:
+                  - name: orderSn
+                    label: 订单编号
+                  - name: userId
+                    label: 用户ID
+                  - name: consignee
+                    label: 收货人
+                  - name: mobile
+                    label: 手机号
+                  - name: actualPrice
+                    label: 实付金额
+                  - name: addTime
+                    label: 下单时间

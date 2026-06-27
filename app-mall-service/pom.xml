@@ -83,6 +83,13 @@
             <artifactId>nop-integration-sms-tencent</artifactId>
         </dependency>
 
+        <!-- 批量发货 Excel 导入接线（P21）：ExcelHelper.readSheet 解析运单号 xlsx。
+             nop-ooxml-xlsx 才是平台可直接消费的低层 xlsx 解析模块（nop-ooxml 本身是 parent pom）。 -->
+        <dependency>
+            <groupId>io.github.entropy-cloud</groupId>
+            <artifactId>nop-ooxml-xlsx</artifactId>
+        </dependency>
+
         <!-- 在测试阶段引入日志文件 -->
         <dependency>
             <groupId>ch.qos.logback</groupId>

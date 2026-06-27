@@ -23,6 +23,7 @@ import app.mall.dao.entity.LitemallGoods;
 import app.mall.dao.entity.LitemallGoodsProduct;
 import app.mall.dao.entity.LitemallGrouponRules;
 import app.mall.dao.entity.LitemallOrder;
+import app.mall.dao.dto.BatchShipResultBean;
 import app.mall.dao.dto.GoodsStatisticsBean;
 import app.mall.dao.dto.OrderStatisticsBean;
 import app.mall.dao.dto.UserStatisticsBean;
@@ -37,6 +38,7 @@ import app.mall.pay.PayPrepayRequestBean;
 import app.mall.pay.PayPrepayResponseBean;
 import app.mall.pay.PayService;
 import app.mall.service.notification.MallNotificationService;
+import app.mall.service.AppMallErrors;
 import io.nop.api.core.annotations.biz.BizModel;
 import io.nop.api.core.annotations.biz.BizMutation;
 import io.nop.api.core.annotations.biz.BizQuery;
@@ -51,6 +53,10 @@ import io.nop.auth.dao.entity.NopAuthUser;
 import io.nop.biz.crud.CrudBizModel;
 import io.nop.commons.util.StringHelper;
 import io.nop.core.context.IServiceContext;
+import io.nop.core.resource.IResource;
+import io.nop.file.core.IFileRecord;
+import io.nop.file.core.IFileStore;
+import io.nop.ooxml.xlsx.util.ExcelHelper;
 import io.nop.orm.IOrmEntity;
 import io.nop.orm.IOrmTemplate;
 import jakarta.inject.Inject;
@@ -71,14 +77,20 @@ import java.util.Objects;
 
 import static app.mall.service.AppMallErrors.ERR_GROUPON_RULES_NOT_AVAILABLE;
 import static app.mall.service.AppMallErrors.ERR_ORDER_ADDRESS_INVALID;
+import static app.mall.service.AppMallErrors.ERR_ORDER_ADDRESS_NOT_BELONG_USER;
+import static app.mall.service.AppMallErrors.ERR_ORDER_BATCH_SHIP_EMPTY;
+import static app.mall.service.AppMallErrors.ERR_ORDER_BATCH_SHIP_INVALID_ROW;
 import static app.mall.service.AppMallErrors.ERR_ORDER_CART_EMPTY;
 import static app.mall.service.AppMallErrors.ERR_ORDER_NOT_ALLOW_CANCEL;
+import static app.mall.service.AppMallErrors.ERR_ORDER_NOT_ALLOW_CHANGE_ADDRESS;
 import static app.mall.service.AppMallErrors.ERR_ORDER_NOT_ALLOW_CONFIRM;
 import static app.mall.service.AppMallErrors.ERR_ORDER_NOT_ALLOW_DELETE;
 import static app.mall.service.AppMallErrors.ERR_ORDER_NOT_ALLOW_PAY;
 import static app.mall.service.AppMallErrors.ERR_ORDER_NOT_ALLOW_SHIP;
 import static app.mall.service.AppMallErrors.ERR_ORDER_NOT_FOUND;
 import static app.mall.service.AppMallErrors.ERR_ORDER_PRICE_INVALID;
+import static app.mall.service.AppMallErrors.ERR_ORDER_PRICE_MODIFY_DISCOUNT_ACTIVE;
+import static app.mall.service.AppMallErrors.ERR_ORDER_NOT_ALLOW_MODIFY_PRICE;
 import static app.mall.service.AppMallErrors.ERR_ORDER_STOCK_INSUFFICIENT;
 import static app.mall.service.AppMallErrors.ERR_ORDER_USE_REAL_PAYMENT;
 import static app.mall.service.AppMallErrors.ERR_PIN_TUAN_GROUPON_MUTEX;
@@ -159,6 +171,10 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
 
     @Inject
     PayService payService;
+
+    // P21 批量发货 Excel 解析（平台 IFileStore + ExcelHelper.readSheet）
+    @Inject
+    IFileStore fileStore;
 
     public LitemallOrderBizModel() {
         setEntityName(LitemallOrder.class.getName());
@@ -1080,5 +1096,319 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
             LOG.warn("copyGoodsPicToOrderGoods failed ({}), falling back to raw picUrl", e.getMessage());
             orderGoods.setPicUrl(goodsPicUrl);
         }
+    }
+
+    // ===================== 订单运营工作台（P21） =====================
+
+    /**
+     * 改价 / 改运费（P21）。安全策略（见 {@code docs/design/order-and-cart.md}）：
+     * 改运费 freightPrice：仅待支付（101）可改，仅重算 orderPrice/actualPrice。
+     * 改商品价 goodsPrice：仅当 couponPrice/promotionPrice/integralPrice/grouponPrice/pinTuanPrice 全为 0
+     *   （纯商品订单，无任何活动折扣）时允许并重算；任一折扣非 0 拒绝（ERR_ORDER_PRICE_MODIFY_DISCOUNT_ACTIVE）。
+     *
+     * <p>状态守卫：仅待支付（101）允许改价（管理员未发起收款前可调整）。已支付（201+）订单已固化入账金额，
+     * 不允许改价（ERR_ORDER_NOT_ALLOW_MODIFY_PRICE）。
+     *
+     * <p>本方法接受「增量」参数：freightPriceDelta/goodsPriceDelta 为可正可负的差值。绝对改值场景由前端
+     * 先读旧值计算差值传入；以增量形式接收入参更明确地表达「修改」语义，也避免前端并发覆盖。
+     */
+    @Override
+    @BizMutation
+    @Auth(roles = "admin")
+    public LitemallOrder modifyOrderPrice(@Name("orderId") String orderId,
+                                           @Optional @Name("freightPriceDelta") BigDecimal freightPriceDelta,
+                                           @Optional @Name("goodsPriceDelta") BigDecimal goodsPriceDelta,
+                                           @Optional @Name("remark") String remark,
+                                           IServiceContext context) {
+        LitemallOrder order = requireEntity(orderId, null, context);
+
+        // 状态守卫：仅待支付允许改价（已支付订单已固化入账金额）
+        if (order.getOrderStatus() != _AppMallDaoConstants.ORDER_STATUS_CREATED) {
+            throw new NopException(ERR_ORDER_NOT_ALLOW_MODIFY_PRICE)
+                    .param(AppMallErrors.ARG_ORDER_ID, orderId)
+                    .param(AppMallErrors.ARG_CURRENT_STATUS, order.getOrderStatus());
+        }
+
+        BigDecimal freightDelta = freightPriceDelta != null ? freightPriceDelta : BigDecimal.ZERO;
+        BigDecimal goodsDelta = goodsPriceDelta != null ? goodsPriceDelta : BigDecimal.ZERO;
+
+        // 改商品价守卫：纯商品订单（无任何活动折扣）才允许
+        if (goodsDelta.compareTo(BigDecimal.ZERO) != 0) {
+            boolean hasDiscount = isNonZero(order.getCouponPrice())
+                    || isNonZero(order.getPromotionPrice())
+                    || isNonZero(order.getIntegralPrice())
+                    || isNonZero(order.getGrouponPrice())
+                    || isNonZero(order.getPinTuanPrice());
+            if (hasDiscount) {
+                throw new NopException(ERR_ORDER_PRICE_MODIFY_DISCOUNT_ACTIVE)
+                        .param(AppMallErrors.ARG_ORDER_ID, orderId);
+            }
+        }
+
+        // freightPrice / goodsPrice 重算
+        BigDecimal newFreightPrice = addNonNull(order.getFreightPrice(), freightDelta);
+        BigDecimal newGoodsPrice = addNonNull(order.getGoodsPrice(), goodsDelta);
+        // 最低 0：不出现负价
+        if (newFreightPrice.compareTo(BigDecimal.ZERO) < 0) {
+            newFreightPrice = BigDecimal.ZERO;
+        }
+        if (newGoodsPrice.compareTo(BigDecimal.ZERO) < 0) {
+            newGoodsPrice = BigDecimal.ZERO;
+        }
+
+        order.setFreightPrice(newFreightPrice);
+        order.setGoodsPrice(newGoodsPrice);
+
+        // orderPrice = goodsPrice + freightPrice − couponPrice − promotionPrice
+        BigDecimal orderPrice = newGoodsPrice.add(newFreightPrice)
+                .subtract(nonNull(order.getCouponPrice()))
+                .subtract(nonNull(order.getPromotionPrice()));
+        order.setOrderPrice(orderPrice);
+
+        // actualPrice = orderPrice − integralPrice − grouponPrice − pinTuanPrice
+        BigDecimal actualPrice = orderPrice
+                .subtract(nonNull(order.getIntegralPrice()))
+                .subtract(nonNull(order.getGrouponPrice()))
+                .subtract(nonNull(order.getPinTuanPrice()));
+        if (actualPrice.compareTo(BigDecimal.ZERO) < 0) {
+            throw new NopException(ERR_ORDER_PRICE_INVALID).param("actualPrice", actualPrice);
+        }
+        order.setActualPrice(actualPrice);
+
+        if (remark != null && !remark.isEmpty()) {
+            // 运营备注：补丁式追加（不覆盖既有 adminRemark）
+            String existing = order.getAdminRemark() != null ? order.getAdminRemark() : "";
+            order.setAdminRemark(existing + (existing.isEmpty() ? "" : "\n") + remark);
+        }
+
+        updateEntity(order, "modifyOrderPrice", context);
+        logManager.logOrderSucceed("订单改价",
+                "订单 " + order.getOrderSn() + " freightΔ=" + freightDelta + " goodsΔ=" + goodsDelta);
+        return order;
+    }
+
+    /**
+     * 批量发货（P21）。Excel 经平台 {@link ExcelHelper#readSheet} 解析（orderSn/shipSn/shipChannel），
+     * 逐行复用 {@link #ship} 单行逻辑；部分失败不阻断成功行。
+     *
+     * <p>{@code excelUpload} 为 AMIS 上传返回的 {@code /f/download/{fileId}} 链接。
+     *
+     * <p>事务边界：直接调本类 {@link #ship}（不经 GraphQL 代理，无独立事务边界）；当前 {@code batchShip}
+     * 整体运行在 {@code @BizMutation} 默认事务内。部分失败不阻断：每行失败仅 catch 记入结果列表，
+     * 循环继续，已成功行不被回滚（{@link #ship} 的状态守卫 + 本方法的 catch-and-continue 共同保证）。
+     */
+    @Override
+    @BizMutation
+    @Auth(roles = "admin")
+    public List<BatchShipResultBean> batchShip(@Name("excelUpload") String excelUpload,
+                                                IServiceContext context) {
+        List<Map<String, Object>> rows = parseBatchShipExcel(excelUpload);
+        return doBatchShip(rows, context);
+    }
+
+    // package-private for test access (avoids file-store roundtrip in tests)
+    List<Map<String, Object>> parseBatchShipExcel(String excelUpload) {
+        if (excelUpload == null || excelUpload.isEmpty()) {
+            throw new NopException(ERR_ORDER_BATCH_SHIP_EMPTY);
+        }
+        String fileId = ormEntityFileStore.decodeFileId(excelUpload);
+        if (fileId == null || fileId.isEmpty()) {
+            fileId = excelUpload;
+        }
+        IFileRecord fileRecord = fileStore.getFile(fileId);
+        IResource xlsx = fileRecord != null ? fileRecord.getResource() : null;
+        if (xlsx == null) {
+            throw new NopException(ERR_ORDER_BATCH_SHIP_EMPTY);
+        }
+        try {
+            List<Map<String, Object>> rows = ExcelHelper.readSheet(xlsx, null, 0);
+            if (rows == null || rows.isEmpty()) {
+                throw new NopException(ERR_ORDER_BATCH_SHIP_EMPTY);
+            }
+            return rows;
+        } catch (NopException e) {
+            throw e;
+        } catch (Exception e) {
+            LOG.warn("batchShip: failed to parse xlsx {}", excelUpload, e);
+            throw new NopException(ERR_ORDER_BATCH_SHIP_EMPTY);
+        }
+    }
+
+    // package-private for test access (tests build rows directly to bypass file-store)
+    List<BatchShipResultBean> doBatchShip(List<Map<String, Object>> rows, IServiceContext context) {
+        List<BatchShipResultBean> results = new ArrayList<>();
+        int rowIndex = 1; // 表头是第 1 行，数据从第 2 行起，错误信息中按"数据行号"从 1 计
+        for (Map<String, Object> row : rows) {
+            rowIndex++;
+            String orderSn = stringValue(row, "orderSn");
+            String shipSn = stringValue(row, "shipSn");
+            String shipChannel = stringValue(row, "shipChannel");
+
+            if (StringHelper.isEmpty(orderSn) || StringHelper.isEmpty(shipSn)
+                    || StringHelper.isEmpty(shipChannel)) {
+                results.add(new BatchShipResultBean(orderSn, false,
+                        "数据行 " + rowIndex + " 字段缺失（orderSn/shipSn/shipChannel 必填）"));
+                continue;
+            }
+
+            try {
+                // 按 orderSn 定位订单
+                QueryBean q = new QueryBean();
+                q.addFilter(FilterBeans.eq(LitemallOrder.PROP_NAME_orderSn, orderSn));
+                LitemallOrder order = findFirst(q, null, context);
+                if (order == null) {
+                    results.add(new BatchShipResultBean(orderSn, false, "订单不存在"));
+                    continue;
+                }
+                // 复用 ship 的状态守卫与发货逻辑（不经 GraphQL，直接调本类方法）
+                ship(order.orm_idString(), shipSn, shipChannel, context);
+                results.add(new BatchShipResultBean(orderSn, true, null));
+            } catch (NopException e) {
+                String reason = e.getDescription() != null ? e.getDescription() : e.getMessage();
+                results.add(new BatchShipResultBean(orderSn, false, reason));
+            } catch (Exception e) {
+                results.add(new BatchShipResultBean(orderSn, false, e.getMessage()));
+            }
+        }
+        int success = (int) results.stream().filter(BatchShipResultBean::isSuccess).count();
+        logManager.logOrderSucceed("批量发货",
+                "共 " + results.size() + " 行，成功 " + success + " 行");
+        return results;
+    }
+
+    /**
+     * 改地址（P21）。仅发货前（待支付 101 / 已支付未发货 201）可改；新地址经 {@code ILitemallAddressBiz}
+     * 校验归属同一用户后写入 consignee/mobile/address。
+     */
+    @Override
+    @BizMutation
+    @Auth(roles = "admin")
+    public LitemallOrder changeOrderAddress(@Name("orderId") String orderId,
+                                             @Name("addressId") String addressId,
+                                             IServiceContext context) {
+        LitemallOrder order = requireEntity(orderId, null, context);
+
+        int status = order.getOrderStatus();
+        if (status != _AppMallDaoConstants.ORDER_STATUS_CREATED
+                && status != _AppMallDaoConstants.ORDER_STATUS_PAY) {
+            throw new NopException(ERR_ORDER_NOT_ALLOW_CHANGE_ADDRESS)
+                    .param(AppMallErrors.ARG_ORDER_ID, orderId)
+                    .param(AppMallErrors.ARG_CURRENT_STATUS, status);
+        }
+
+        LitemallAddress address = addressBiz.get(addressId, false, context);
+        if (address == null || Boolean.TRUE.equals(address.getDeleted())) {
+            throw new NopException(ERR_ORDER_ADDRESS_INVALID).param("addressId", addressId);
+        }
+        if (!Objects.equals(order.getUserId(), address.getUserId())) {
+            throw new NopException(ERR_ORDER_ADDRESS_NOT_BELONG_USER)
+                    .param(AppMallErrors.ARG_ORDER_ID, orderId)
+                    .param("addressId", addressId)
+                    .param(AppMallErrors.ARG_USER_ID, order.getUserId());
+        }
+
+        order.setConsignee(address.getName());
+        order.setMobile(address.getTel());
+        String fullAddress = (address.getProvince() != null ? address.getProvince() : "")
+                + (address.getCity() != null ? address.getCity() : "")
+                + (address.getCounty() != null ? address.getCounty() : "")
+                + (address.getAddressDetail() != null ? address.getAddressDetail() : "");
+        order.setAddress(fullAddress);
+
+        updateEntity(order, "changeOrderAddress", context);
+        logManager.logOrderSucceed("订单改地址", "订单 " + order.getOrderSn());
+        return order;
+    }
+
+    /**
+     * 订单标记（P21）。写既有 {@code adminRemark} 字段（surface 既有列，无 ORM 改动）。
+     * 整字段覆盖语义：以传入值作为最新运营备注（前端若需追加，自行拼串后传入）。
+     */
+    @Override
+    @BizMutation
+    @Auth(roles = "admin")
+    public LitemallOrder markOrder(@Name("orderId") String orderId,
+                                    @Name("adminRemark") String adminRemark,
+                                    IServiceContext context) {
+        LitemallOrder order = requireEntity(orderId, null, context);
+        order.setAdminRemark(adminRemark != null ? adminRemark : "");
+        updateEntity(order, "markOrder", context);
+        logManager.logOrderSucceed("订单标记", "订单 " + order.getOrderSn());
+        return order;
+    }
+
+    /**
+     * 超期未发货订单查询（P21 异常监控）。status=201 已支付且 addTime 早于 cutoff；
+     * cutoff 默认 168 小时（与系统配置的自动收货时长 7 天对齐）。
+     *
+     * <p>使用 QueryBean 走管道：异常监控为跨用户聚合查询，{@code @Auth(roles="admin")} 限定仅管理员可达。
+     * status=PAY(201) 已隐含 shipTime 未记录（发货即转 SHIP 301），故无需额外 isNull 过滤。
+     */
+    @Override
+    @BizQuery
+    @Auth(roles = "admin")
+    public List<LitemallOrder> getOverdueUnshippedOrders(@Optional @Name("cutoffHours") Integer cutoffHours,
+                                                          IServiceContext context) {
+        // 仅 null 时取默认；显式 0 表示「立即视为逾期」（用于工作台人工审视全部未发货订单）
+        int hours = cutoffHours != null ? cutoffHours : DEFAULT_OVERDUE_UNSHIPPED_HOURS;
+        if (hours < 0) {
+            hours = DEFAULT_OVERDUE_UNSHIPPED_HOURS;
+        }
+        // CoreMetrics 与 ORM 自动 createTime/updateTime 同一时间线（与 cancelExpiredOrders 一致）
+        LocalDateTime cutoff = CoreMetrics.currentDateTime().minusHours(hours);
+        QueryBean query = new QueryBean();
+        query.addFilter(FilterBeans.eq(LitemallOrder.PROP_NAME_orderStatus,
+                _AppMallDaoConstants.ORDER_STATUS_PAY));
+        query.addFilter(FilterBeans.le(LitemallOrder.PROP_NAME_addTime, cutoff));
+        query.addOrderField(LitemallOrder.PROP_NAME_addTime, false);
+        query.setLimit(100);
+        return findList(query, null, context);
+    }
+
+    /**
+     * 超期未支付订单查询（P21 异常监控）。status=101 待支付且 addTime 早于 cutoff；
+     * cutoff 默认 30 分钟（与系统配置的订单超时分钟数对齐）。
+     */
+    @Override
+    @BizQuery
+    @Auth(roles = "admin")
+    public List<LitemallOrder> getOverdueUnpaidOrders(@Optional @Name("cutoffMinutes") Integer cutoffMinutes,
+                                                       IServiceContext context) {
+        int minutes = cutoffMinutes != null ? cutoffMinutes : DEFAULT_OVERDUE_UNPAID_MINUTES;
+        if (minutes < 0) {
+            minutes = DEFAULT_OVERDUE_UNPAID_MINUTES;
+        }
+        LocalDateTime cutoff = CoreMetrics.currentDateTime().minusMinutes(minutes);
+        QueryBean query = new QueryBean();
+        query.addFilter(FilterBeans.eq(LitemallOrder.PROP_NAME_orderStatus,
+                _AppMallDaoConstants.ORDER_STATUS_CREATED));
+        query.addFilter(FilterBeans.le(LitemallOrder.PROP_NAME_addTime, cutoff));
+        query.addOrderField(LitemallOrder.PROP_NAME_addTime, false);
+        query.setLimit(100);
+        return findList(query, null, context);
+    }
+
+    private static final int DEFAULT_OVERDUE_UNSHIPPED_HOURS = 168;
+    private static final int DEFAULT_OVERDUE_UNPAID_MINUTES = 30;
+
+    private static boolean isNonZero(BigDecimal v) {
+        return v != null && v.compareTo(BigDecimal.ZERO) != 0;
+    }
+
+    private static BigDecimal addNonNull(BigDecimal a, BigDecimal b) {
+        return nonNull(a).add(nonNull(b));
+    }
+
+    private static BigDecimal nonNull(BigDecimal v) {
+        return v != null ? v : BigDecimal.ZERO;
+    }
+
+    private static String stringValue(Map<String, Object> row, String key) {
+        Object v = row.get(key);
+        if (v == null) {
+            return null;
+        }
+        String s = v.toString().trim();
+        return s.isEmpty() ? null : s;
     }
 }

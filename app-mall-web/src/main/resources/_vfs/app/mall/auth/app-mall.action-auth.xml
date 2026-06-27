@@ -58,8 +58,17 @@
                           resourceType="SUBM" url="/app/mall/pages/LitemallCategory/main.page.yaml"/>
 
                 <resource id="mall-order-manage" displayName="订单管理" orderNo="204"
-                          icon="ant-design:appstore-twotone" component="AMIS"
-                          resourceType="SUBM" url="/app/mall/pages/LitemallOrder/main.page.yaml"/>
+                           icon="ant-design:appstore-twotone" component="AMIS"
+                           resourceType="SUBM" url="/app/mall/pages/LitemallOrder/main.page.yaml"/>
+
+                <!-- P21 订单运营工作台：批量发货（Excel 导入）+ 异常监控（超期未发货/未支付） -->
+                <resource id="mall-order-batch-ship" displayName="批量发货" orderNo="208"
+                           icon="ant-design:cloud-upload-outlined" component="AMIS"
+                           resourceType="SUBM" url="/app/mall/pages/mall/order-ops/batch-ship.page.yaml"/>
+
+                <resource id="mall-order-exception" displayName="订单异常监控" orderNo="209"
+                           icon="ant-design:warning-outlined" component="AMIS"
+                           resourceType="SUBM" url="/app/mall/pages/mall/order-ops/order-exception.page.yaml"/>
 
                 <resource id="mall-aftersales-manage" displayName="售后管理" orderNo="205"
                           icon="ant-design:appstore-twotone" component="AMIS"

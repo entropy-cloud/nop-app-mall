@@ -507,14 +507,6 @@ prop:
       payTime: null
       shipSn: null
       shipChannel: null
-      shipTime: null
-      refundAmount: null
-      refundType: null
-      refundContent: null
-      refundTime: null
-      confirmTime: null
-      comments: null
-      endTime: null
       addTime: null
       updateTime: null
       deleted: null
@@ -535,6 +527,14 @@ prop:
       relatedProductList: null
       relatedProductList_ids: null
       relatedProductList_label: null
+      shipTime: null
+      refundAmount: null
+      refundType: null
+      refundContent: null
+      refundTime: null
+      confirmTime: null
+      comments: null
+      endTime: null
     LitemallOrderGoods:
       id: null
       orderId: null

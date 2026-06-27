@@ -486,4 +486,34 @@ public interface AppMallErrors {
     ErrorCode ERR_PROMOTION_STATUS_TRANSITION_INVALID =
             define("nop.err.mall.promotion.status-transition-invalid",
                     "营销活动状态切换不合法");
+
+    // 订单运营工作台错误码（P21）
+    String ARG_ORDER_ID = "orderId";
+    String ARG_CURRENT_STATUS = "status";
+    String ARG_REASON = "reason";
+    String ARG_ROW = "row";
+
+    ErrorCode ERR_ORDER_PRICE_MODIFY_DISCOUNT_ACTIVE =
+            define("nop.err.mall.order.price-modify-discount-active",
+                    "订单存在活动折扣，不允许改商品价", ARG_ORDER_ID);
+
+    ErrorCode ERR_ORDER_NOT_ALLOW_MODIFY_PRICE =
+            define("nop.err.mall.order.not-allow-modify-price",
+                    "当前订单状态不允许改价", ARG_ORDER_ID, ARG_CURRENT_STATUS);
+
+    ErrorCode ERR_ORDER_NOT_ALLOW_CHANGE_ADDRESS =
+            define("nop.err.mall.order.not-allow-change-address",
+                    "当前订单状态不允许改地址", ARG_ORDER_ID, ARG_CURRENT_STATUS);
+
+    ErrorCode ERR_ORDER_ADDRESS_NOT_BELONG_USER =
+            define("nop.err.mall.order.address-not-belong-user",
+                    "收货地址不属于订单用户", ARG_ORDER_ID, "addressId", ARG_USER_ID);
+
+    ErrorCode ERR_ORDER_BATCH_SHIP_EMPTY =
+            define("nop.err.mall.order.batch-ship-empty",
+                    "批量发货 Excel 内容为空");
+
+    ErrorCode ERR_ORDER_BATCH_SHIP_INVALID_ROW =
+            define("nop.err.mall.order.batch-ship-invalid-row",
+                    "批量发货行数据无效", ARG_ROW, ARG_REASON);
 }

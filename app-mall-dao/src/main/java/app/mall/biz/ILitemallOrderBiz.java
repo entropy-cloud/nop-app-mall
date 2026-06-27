@@ -10,6 +10,7 @@ import io.nop.orm.biz.ICrudBiz;
 import app.mall.dao.dto.GoodsStatisticsBean;
 import app.mall.dao.dto.OrderStatisticsBean;
 import app.mall.dao.dto.UserStatisticsBean;
+import app.mall.dao.dto.BatchShipResultBean;
 import app.mall.dao.entity.LitemallOrder;
 
 import java.util.Map;
@@ -122,4 +123,61 @@ public interface ILitemallOrderBiz extends ICrudBiz<LitemallOrder> {
                                         @Name("address") String address,
                                         @Name("freightPrice") BigDecimal freightPrice,
                                         IServiceContext context);
+
+    // ===== 订单运营工作台（P21） =====
+
+    /**
+     * 改价 / 改运费（P21）。安全策略见 {@code docs/design/order-and-cart.md}：
+     * 改运费（freightPrice）发货前任意态可改、仅重算 orderPrice/actualPrice；
+     * 改商品价（goodsPrice）仅当 couponPrice/promotionPrice/integralPrice/grouponPrice/pinTuanPrice 全为 0
+     * （纯商品订单，无任何活动折扣）时允许并重算；任一折扣非 0 拒绝。
+     */
+    @BizMutation
+    LitemallOrder modifyOrderPrice(@Name("orderId") String orderId,
+                                   @Optional @Name("freightPriceDelta") BigDecimal freightPriceDelta,
+                                   @Optional @Name("goodsPriceDelta") BigDecimal goodsPriceDelta,
+                                   @Optional @Name("remark") String remark,
+                                   IServiceContext context);
+
+    /**
+     * 批量发货（P21）。Excel 经平台 {@code ExcelHelper.readSheet} 解析（orderSn/shipSn/shipChannel），
+     * 逐行复用 {@link #ship} 单行逻辑（状态守卫 + 事务）；部分失败不阻断成功行。
+     * {@code excelUpload} 为前端上传的 xlsx 文件路径（{@code /f/download/{fileId}}）。
+     */
+    @BizMutation
+    List<BatchShipResultBean> batchShip(@Name("excelUpload") String excelUpload,
+                                         IServiceContext context);
+
+    /**
+     * 改地址（P21）。仅发货前（待支付 101 或已支付未发货 201）可改；新地址经
+     * {@code ILitemallAddressBiz} 校验归属同一用户后写入 consignee/mobile/address。
+     */
+    @BizMutation
+    LitemallOrder changeOrderAddress(@Name("orderId") String orderId,
+                                      @Name("addressId") String addressId,
+                                      IServiceContext context);
+
+    /**
+     * 订单标记（P21）。写既有 {@code adminRemark} 字段（surface 既有列，无 ORM 改动）。
+     */
+    @BizMutation
+    LitemallOrder markOrder(@Name("orderId") String orderId,
+                             @Name("adminRemark") String adminRemark,
+                             IServiceContext context);
+
+    /**
+     * 超期未发货订单查询（P21 异常监控）。{@code status=201} 且 {@code shipTime} 截止未发；
+     * cutoff 复用系统配置（自动收货时长）。
+     */
+    @BizQuery
+    List<LitemallOrder> getOverdueUnshippedOrders(@Optional @Name("cutoffHours") Integer cutoffHours,
+                                                   IServiceContext context);
+
+    /**
+     * 超期未支付订单查询（P21 异常监控）。{@code status=101} 且 {@code addTime} 截止未付；
+     * cutoff 复用系统配置（订单超时分钟数）。
+     */
+    @BizQuery
+    List<LitemallOrder> getOverdueUnpaidOrders(@Optional @Name("cutoffMinutes") Integer cutoffMinutes,
+                                                IServiceContext context);
 }

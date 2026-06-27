@@ -1,0 +1,44 @@
+type: page
+title: 批量发货
+body:
+  - type: panel
+    title: 批量发货
+    body:
+      - type: alert
+        body: '上传包含 orderSn、shipSn、shipChannel 三列的 xlsx 文件。系统将逐行复用单行发货逻辑，部分失败不阻断成功行。仅 status=201 已支付未发货的订单会被发货。'
+        level: info
+        className: mb-2
+
+      - type: input-file
+        name: excelUpload
+        label: 运单号 Excel
+        receiver:
+          url: '/f/upload/LitemallOrder/batchShip'
+        accept: '.xlsx'
+        required: true
+
+      - type: button
+        label: 开始批量发货
+        level: primary
+        disabledOn: '${!excelUpload}'
+        actionType: ajax
+        api:
+          url: '@mutation:LitemallOrder__batchShip'
+          data:
+            excelUpload: '${excelUpload}'
+        feedback:
+          title: 批量发货结果
+          body:
+            - type: table
+              source: '${data}'
+              columns:
+                - name: orderSn
+                  label: 订单编号
+                - name: success
+                  label: 是否成功
+                  type: mapping
+                  map:
+                    'true': '<span class="label label-success">成功</span>'
+                    'false': '<span class="label label-danger">失败</span>'
+                - name: reason
+                  label: 失败原因

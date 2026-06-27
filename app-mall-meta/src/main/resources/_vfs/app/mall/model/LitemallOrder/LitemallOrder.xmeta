@@ -1,2 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<meta x:schema="/nop/schema/xmeta.xdef" xmlns:x="/nop/schema/xdsl.xdef" x:extends="_LitemallOrder.xmeta"/>
+<meta x:schema="/nop/schema/xmeta.xdef" xmlns:x="/nop/schema/xdsl.xdef" x:extends="_LitemallOrder.xmeta"
+      xmlns:ui="ui">
+
+    <!-- P21 订单运营工作台：orderSn 模糊搜索（管理页查询表单支持 contains 操作符）。
+         _LitemallOrder.xmeta 由 codegen 从 app.orm.xml 生成，定制必须放在本保留层。 -->
+    <props>
+        <prop name="orderSn" x:override="merge" allowFilterOp="eq,in,contains,like,startsWith,endsWith"
+              ui:filterOp="contains"/>
+        <!-- addTime 支持范围比较运算符（le/ge），供异常监控等内部查询直接以 QueryBean 复用。
+             _LitemallOrder 默认仅 eq/in/dateBetween/dateTimeBetween，le/ge 需显式放开。
+             注意：放开后仅作用于 objMeta 校验白名单，业务 BizModel 自行构造 QueryBean 时同样受此约束。 -->
+        <prop name="addTime" x:override="merge" allowFilterOp="eq,in,le,ge,dateBetween,dateTimeBetween"/>
+        <prop name="shipTime" x:override="merge" allowFilterOp="eq,in,le,ge,dateBetween,dateTimeBetween"/>
+    </props>
+</meta>

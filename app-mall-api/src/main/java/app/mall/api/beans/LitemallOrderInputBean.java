@@ -279,118 +279,6 @@
         }
 
 
-        private java.time.LocalDateTime _shipTime;
-
-    
-        @PropMeta(propId=21)
-    
-        public java.time.LocalDateTime getShipTime(){
-            return _shipTime;
-        }
-
-        public void setShipTime(java.time.LocalDateTime value){
-            this._shipTime = value;
-        }
-
-
-        private java.math.BigDecimal _refundAmount;
-
-    
-        @PropMeta(propId=22)
-    
-        public java.math.BigDecimal getRefundAmount(){
-            return _refundAmount;
-        }
-
-        public void setRefundAmount(java.math.BigDecimal value){
-            this._refundAmount = value;
-        }
-
-
-        private String _refundType;
-
-    
-        @PropMeta(propId=23)
-    
-        public String getRefundType(){
-            return _refundType;
-        }
-
-        public void setRefundType(String value){
-            this._refundType = value;
-        }
-
-
-        private String _refundContent;
-
-    
-        @PropMeta(propId=24)
-    
-        public String getRefundContent(){
-            return _refundContent;
-        }
-
-        public void setRefundContent(String value){
-            this._refundContent = value;
-        }
-
-
-        private java.time.LocalDateTime _refundTime;
-
-    
-        @PropMeta(propId=25)
-    
-        public java.time.LocalDateTime getRefundTime(){
-            return _refundTime;
-        }
-
-        public void setRefundTime(java.time.LocalDateTime value){
-            this._refundTime = value;
-        }
-
-
-        private java.time.LocalDateTime _confirmTime;
-
-    
-        @PropMeta(propId=26)
-    
-        public java.time.LocalDateTime getConfirmTime(){
-            return _confirmTime;
-        }
-
-        public void setConfirmTime(java.time.LocalDateTime value){
-            this._confirmTime = value;
-        }
-
-
-        private Integer _comments;
-
-    
-        @PropMeta(propId=27)
-    
-        public Integer getComments(){
-            return _comments;
-        }
-
-        public void setComments(Integer value){
-            this._comments = value;
-        }
-
-
-        private java.time.LocalDateTime _endTime;
-
-    
-        @PropMeta(propId=28)
-    
-        public java.time.LocalDateTime getEndTime(){
-            return _endTime;
-        }
-
-        public void setEndTime(java.time.LocalDateTime value){
-            this._endTime = value;
-        }
-
-
         private Boolean _deleted;
 
     
@@ -540,6 +428,118 @@
 
         public void setRelatedProductList_ids(java.util.List<java.lang.String> value){
             this._relatedProductList_ids = value;
+        }
+
+
+        private java.time.LocalDateTime _shipTime;
+
+    
+        @PropMeta(propId=21)
+    
+        public java.time.LocalDateTime getShipTime(){
+            return _shipTime;
+        }
+
+        public void setShipTime(java.time.LocalDateTime value){
+            this._shipTime = value;
+        }
+
+
+        private java.math.BigDecimal _refundAmount;
+
+    
+        @PropMeta(propId=22)
+    
+        public java.math.BigDecimal getRefundAmount(){
+            return _refundAmount;
+        }
+
+        public void setRefundAmount(java.math.BigDecimal value){
+            this._refundAmount = value;
+        }
+
+
+        private String _refundType;
+
+    
+        @PropMeta(propId=23)
+    
+        public String getRefundType(){
+            return _refundType;
+        }
+
+        public void setRefundType(String value){
+            this._refundType = value;
+        }
+
+
+        private String _refundContent;
+
+    
+        @PropMeta(propId=24)
+    
+        public String getRefundContent(){
+            return _refundContent;
+        }
+
+        public void setRefundContent(String value){
+            this._refundContent = value;
+        }
+
+
+        private java.time.LocalDateTime _refundTime;
+
+    
+        @PropMeta(propId=25)
+    
+        public java.time.LocalDateTime getRefundTime(){
+            return _refundTime;
+        }
+
+        public void setRefundTime(java.time.LocalDateTime value){
+            this._refundTime = value;
+        }
+
+
+        private java.time.LocalDateTime _confirmTime;
+
+    
+        @PropMeta(propId=26)
+    
+        public java.time.LocalDateTime getConfirmTime(){
+            return _confirmTime;
+        }
+
+        public void setConfirmTime(java.time.LocalDateTime value){
+            this._confirmTime = value;
+        }
+
+
+        private Integer _comments;
+
+    
+        @PropMeta(propId=27)
+    
+        public Integer getComments(){
+            return _comments;
+        }
+
+        public void setComments(Integer value){
+            this._comments = value;
+        }
+
+
+        private java.time.LocalDateTime _endTime;
+
+    
+        @PropMeta(propId=28)
+    
+        public java.time.LocalDateTime getEndTime(){
+            return _endTime;
+        }
+
+        public void setEndTime(java.time.LocalDateTime value){
+            this._endTime = value;
         }
 
 

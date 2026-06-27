@@ -368,6 +368,10 @@ site:
       displayName: ''
     mall-marketing-overview:
       displayName: ''
+    mall-order-batch-ship:
+      displayName: ''
+    mall-order-exception:
+      displayName: ''
     mall-order-manage:
       displayName: ''
     mall-pin-tuan-activity:
