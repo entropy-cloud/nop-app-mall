@@ -129,6 +129,53 @@ body:
                       tpl: '<span>¥${og.price} x ${og.number}</span>'
                     - type: tpl
                       tpl: '<span style="color:#ff6700;margin-left:15px">¥${og.price * og.number}</span>'
+                    - type: button
+                      label: 申请售后
+                      level: link
+                      size: sm
+                      style:
+                        marginLeft: 15px
+                      visibleOn: "${data.orderStatus == 201 || data.orderStatus == 401 || data.orderStatus == 402}"
+                      actionType: dialog
+                      dialog:
+                        title: '申请售后 - ${og.goodsName}'
+                        body:
+                          type: form
+                          api:
+                            url: '@mutation:LitemallAftersale__apply'
+                          data:
+                            orderId: '${data.id}'
+                            orderItemId: '${og.id}'
+                          body:
+                            - type: select
+                              name: type
+                              label: 售后类型
+                              value: 0
+                              required: true
+                              options:
+                                - {label: '未收货退款', value: 0}
+                                - {label: '已收货（无需退货）退款', value: 1}
+                                - {label: '用户退货退款', value: 2}
+                            - type: select
+                              name: reason
+                              label: 退款原因
+                              required: true
+                              options:
+                                - {label: '不想要了', value: '不想要了'}
+                                - {label: '质量问题', value: '质量问题'}
+                                - {label: '少发漏发', value: '少发漏发'}
+                                - {label: '商品损坏', value: '商品损坏'}
+                                - {label: '与描述不符', value: '与描述不符'}
+                                - {label: '七天无理由', value: '七天无理由'}
+                            - type: input-number
+                              name: amount
+                              label: 退款金额
+                              value: '${og.price * og.number}'
+                              required: true
+                              min: 0.01
+                            - type: textarea
+                              name: comment
+                              label: 退款说明
 
           - type: card
             title: 价格明细

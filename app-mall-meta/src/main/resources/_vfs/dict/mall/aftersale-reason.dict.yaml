@@ -1,0 +1,31 @@
+# __XGEN_FORCE_OVERRIDE__
+label: 售后原因
+locale: zh-CN
+valueType: string
+description: 
+options:
+
+  - label: 不想要了
+    value: 不想要了
+    description: 
+  
+  - label: 质量问题
+    value: 质量问题
+    description: 
+  
+  - label: 少发漏发
+    value: 少发漏发
+    description: 
+  
+  - label: 商品损坏
+    value: 商品损坏
+    description: 
+  
+  - label: 与描述不符
+    value: 与描述不符
+    description: 
+  
+  - label: 七天无理由
+    value: 七天无理由
+    description: 
+  

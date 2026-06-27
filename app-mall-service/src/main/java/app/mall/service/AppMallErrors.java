@@ -84,6 +84,22 @@ public interface AppMallErrors {
             define("nop.err.mall.aftersale.amount-exceed",
                     "退款金额超过订单实付金额");
 
+    ErrorCode ERR_AFTERSALE_ITEM_NOT_IN_ORDER =
+            define("nop.err.mall.aftersale.item-not-in-order",
+                    "售后商品项不属于该订单");
+
+    ErrorCode ERR_AFTERSALE_ITEM_IN_PROGRESS =
+            define("nop.err.mall.aftersale.item-in-progress",
+                    "该商品项已有进行中的售后");
+
+    ErrorCode ERR_AFTERSALE_TYPE_STATUS_MISMATCH =
+            define("nop.err.mall.aftersale.type-status-mismatch",
+                    "售后类型与订单状态不匹配");
+
+    ErrorCode ERR_AFTERSALE_REASON_INVALID =
+            define("nop.err.mall.aftersale.reason-invalid",
+                    "售后原因不在字典选项内");
+
     String ARG_USERNAME = "username";
 
     ErrorCode ERR_USER_USERNAME_EXISTS =

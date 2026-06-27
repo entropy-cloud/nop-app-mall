@@ -7,12 +7,14 @@ import app.mall.dao.entity.LitemallCart;
 import app.mall.dao.entity.LitemallGoods;
 import app.mall.dao.entity.LitemallGoodsProduct;
 import app.mall.dao.entity.LitemallOrder;
+import app.mall.dao.entity.LitemallOrderGoods;
 import app.mall.pay.PayService;
 import app.mall.wx.WxPayServiceImpl;
 import io.nop.api.core.annotations.autotest.NopTestConfig;
 import io.nop.api.core.annotations.core.OptionalBoolean;
 import io.nop.api.core.beans.ApiRequest;
 import io.nop.api.core.beans.ApiResponse;
+import io.nop.api.core.beans.query.QueryBean;
 import io.nop.api.core.context.ContextProvider;
 import io.nop.autotest.junit.JunitBaseTestCase;
 import io.nop.dao.api.IDaoProvider;
@@ -25,10 +27,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static io.nop.api.core.beans.FilterBeans.eq;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -118,8 +123,41 @@ public class TestLitemallAftersaleBizModel extends JunitBaseTestCase {
         daoProvider.daoFor(LitemallCart.class).saveEntity(cart);
     }
 
+    private void addSecondSkuToCart() {
+        createFileRecord("product-pic-2", "LitemallGoodsProduct");
+        LitemallGoodsProduct product2 = daoProvider.daoFor(LitemallGoodsProduct.class).newEntity();
+        product2.setGoodsId(goodsId);
+        product2.setNumber(100);
+        product2.setPrice(BigDecimal.valueOf(50));
+        product2.setUrl("http://test.com/product-pic-2.png");
+        product2.setSpecifications("[\"加量\"]");
+        daoProvider.daoFor(LitemallGoodsProduct.class).saveEntity(product2);
+
+        createFileRecord("cart-pic-2", "LitemallCart");
+        LitemallCart cart2 = daoProvider.daoFor(LitemallCart.class).newEntity();
+        cart2.setUserId("1");
+        cart2.setGoodsId(goodsId);
+        cart2.setProductId(product2.getId());
+        cart2.setNumber(1);
+        cart2.setPrice(BigDecimal.valueOf(50));
+        cart2.setChecked(true);
+        cart2.setGoodsSn("G001");
+        cart2.setGoodsName("Test Goods");
+        cart2.setPicUrl("/f/download/cart-pic-2");
+        cart2.setSpecifications("[\"加量\"]");
+        daoProvider.daoFor(LitemallCart.class).saveEntity(cart2);
+    }
+
     @SuppressWarnings("unchecked")
     private String createAndPayOrder() {
+        return createAndPayOrder(false);
+    }
+
+    @SuppressWarnings("unchecked")
+    private String createAndPayOrder(boolean multiItem) {
+        if (multiItem) {
+            addSecondSkuToCart();
+        }
         ApiRequest<Map<String, Object>> submitReq = ApiRequest.build(Map.of(
                 "addressId", addressId,
                 "message", "test",
@@ -139,67 +177,88 @@ public class TestLitemallAftersaleBizModel extends JunitBaseTestCase {
         return orderId;
     }
 
+    private List<LitemallOrderGoods> orderGoodsOf(String orderId) {
+        QueryBean q = new QueryBean();
+        q.addFilter(eq(LitemallOrderGoods.PROP_NAME_orderId, orderId));
+        return daoProvider.daoFor(LitemallOrderGoods.class).findAllByQuery(q);
+    }
+
+    private ApiResponse<?> apply(Map<String, Object> data) {
+        ApiRequest<Map<String, Object>> req = ApiRequest.build(data);
+        IGraphQLExecutionContext ctx = graphQLEngine.newRpcContext(
+                GraphQLOperationType.mutation, "LitemallAftersale__apply", req);
+        return graphQLEngine.executeRpc(ctx);
+    }
+
+    private void approve(String aftersaleId) {
+        ApiRequest<Map<String, Object>> req = ApiRequest.build(Map.of("ids", Set.of(aftersaleId)));
+        IGraphQLExecutionContext ctx = graphQLEngine.newRpcContext(
+                GraphQLOperationType.mutation, "LitemallAftersale__batchApprove", req);
+        ApiResponse<?> r = graphQLEngine.executeRpc(ctx);
+        assertEquals(0, r.getStatus(), "batchApprove failed: " + r);
+    }
+
+    private ApiResponse<?> refund(String aftersaleId) {
+        ApiRequest<Map<String, Object>> req = ApiRequest.build(Map.of("id", aftersaleId));
+        IGraphQLExecutionContext ctx = graphQLEngine.newRpcContext(
+                GraphQLOperationType.mutation, "LitemallAftersale__refund", req);
+        return graphQLEngine.executeRpc(ctx);
+    }
+
+    // ============ whole-order (orderItemId=null) compatibility path ============
+
     @SuppressWarnings("unchecked")
     @Test
     public void testApplyAndCancel() {
         String orderId = createAndPayOrder();
 
-        ApiRequest<Map<String, Object>> applyReq = ApiRequest.build(Map.of(
+        ApiResponse<?> applyResult = apply(Map.of(
                 "orderId", orderId,
                 "type", 0,
                 "reason", "不想要了",
                 "amount", BigDecimal.valueOf(198)
         ));
-        IGraphQLExecutionContext applyCtx = graphQLEngine.newRpcContext(
-                GraphQLOperationType.mutation, "LitemallAftersale__apply", applyReq);
-        ApiResponse<?> applyResult = graphQLEngine.executeRpc(applyCtx);
-        assertEquals(0, applyResult.getStatus(),
-                "apply failed: " + applyResult);
+        assertEquals(0, applyResult.getStatus(), "apply failed: " + applyResult);
         Map<String, Object> aftersale = (Map<String, Object>) applyResult.getData();
         assertNotNull(aftersale);
         assertEquals(_AppMallDaoConstants.AFTERSALE_STATUS_REQUEST, aftersale.get("status"));
         String aftersaleId = (String) aftersale.get("id");
 
-        ApiRequest<Map<String, Object>> cancelReq = ApiRequest.build(Map.of(
-                "id", aftersaleId
-        ));
+        ApiRequest<Map<String, Object>> cancelReq = ApiRequest.build(Map.of("id", aftersaleId));
         IGraphQLExecutionContext cancelCtx = graphQLEngine.newRpcContext(
                 GraphQLOperationType.mutation, "LitemallAftersale__cancel", cancelReq);
         ApiResponse<?> cancelResult = graphQLEngine.executeRpc(cancelCtx);
-        assertEquals(0, cancelResult.getStatus(),
-                "cancel failed: " + cancelResult);
+        assertEquals(0, cancelResult.getStatus(), "cancel failed: " + cancelResult);
         Map<String, Object> cancelled = (Map<String, Object>) cancelResult.getData();
         assertEquals(_AppMallDaoConstants.AFTERSALE_STATUS_CANCELLED, cancelled.get("status"));
+
+        // After cancel, order aggregate aftersaleStatus returns to INIT.
+        LitemallOrder order = daoProvider.daoFor(LitemallOrder.class).getEntityById(orderId);
+        assertEquals(_AppMallDaoConstants.AFTERSALE_STATUS_INIT, order.getAftersaleStatus());
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void testApplyAmountExceedsActualPrice() {
         String orderId = createAndPayOrder();
 
-        // amount 99999 exceeds the order's actualPrice (~198) -> apply must be rejected (P0-4)
-        ApiRequest<Map<String, Object>> applyReq = ApiRequest.build(Map.of(
+        // amount 99999 exceeds the order's actualPrice (~198) -> apply must be rejected (valid reason so
+        // the rejection is genuinely about the amount, not the reason).
+        ApiResponse<?> applyResult = apply(Map.of(
                 "orderId", orderId,
                 "type", 0,
-                "reason", "attempt over-refund",
+                "reason", "质量问题",
                 "amount", BigDecimal.valueOf(99999)
         ));
-        IGraphQLExecutionContext applyCtx = graphQLEngine.newRpcContext(
-                GraphQLOperationType.mutation, "LitemallAftersale__apply", applyReq);
-        ApiResponse<?> applyResult = graphQLEngine.executeRpc(applyCtx);
         assertEquals(-1, applyResult.getStatus(),
                 "apply with amount exceeding actualPrice should be rejected: " + applyResult);
 
         // zero / negative amount is also invalid
-        ApiRequest<Map<String, Object>> zeroReq = ApiRequest.build(Map.of(
+        ApiResponse<?> zeroResult = apply(Map.of(
                 "orderId", orderId,
                 "type", 0,
-                "reason", "zero amount",
+                "reason", "不想要了",
                 "amount", BigDecimal.ZERO
         ));
-        IGraphQLExecutionContext zeroCtx = graphQLEngine.newRpcContext(
-                GraphQLOperationType.mutation, "LitemallAftersale__apply", zeroReq);
-        ApiResponse<?> zeroResult = graphQLEngine.executeRpc(zeroCtx);
         assertEquals(-1, zeroResult.getStatus(),
                 "apply with zero amount should be rejected: " + zeroResult);
     }
@@ -209,15 +268,12 @@ public class TestLitemallAftersaleBizModel extends JunitBaseTestCase {
     public void testUserListAndDetail() throws Exception {
         String orderId = createAndPayOrder();
 
-        ApiRequest<Map<String, Object>> applyReq = ApiRequest.build(Map.of(
+        ApiResponse<?> applyResult = apply(Map.of(
                 "orderId", orderId,
                 "type", 0,
                 "reason", "质量问题",
                 "amount", BigDecimal.valueOf(100)
         ));
-        IGraphQLExecutionContext applyCtx = graphQLEngine.newRpcContext(
-                GraphQLOperationType.mutation, "LitemallAftersale__apply", applyReq);
-        ApiResponse<?> applyResult = graphQLEngine.executeRpc(applyCtx);
         assertEquals(0, applyResult.getStatus());
         Map<String, Object> aftersale = (Map<String, Object>) applyResult.getData();
         String aftersaleId = (String) aftersale.get("id");
@@ -231,9 +287,7 @@ public class TestLitemallAftersaleBizModel extends JunitBaseTestCase {
         assertNotNull(list);
         assertEquals(1, list.size());
 
-        ApiRequest<Map<String, Object>> detailReq = ApiRequest.build(Map.of(
-                "id", aftersaleId
-        ));
+        ApiRequest<Map<String, Object>> detailReq = ApiRequest.build(Map.of("id", aftersaleId));
         IGraphQLExecutionContext detailCtx = graphQLEngine.newRpcContext(
                 GraphQLOperationType.query, "LitemallAftersale__userDetail", detailReq);
         ApiResponse<?> detailResult = graphQLEngine.executeRpc(detailCtx);
@@ -243,74 +297,38 @@ public class TestLitemallAftersaleBizModel extends JunitBaseTestCase {
         assertEquals(aftersaleId, detail.get("id"));
     }
 
-    @SuppressWarnings("unchecked")
-    private String createApplyAndApprove() {
-        String orderId = createAndPayOrder();
-
-        ApiRequest<Map<String, Object>> applyReq = ApiRequest.build(Map.of(
-                "orderId", orderId,
-                "type", 0,
-                "reason", "退款测试",
-                "amount", BigDecimal.valueOf(198)
-        ));
-        IGraphQLExecutionContext applyCtx = graphQLEngine.newRpcContext(
-                GraphQLOperationType.mutation, "LitemallAftersale__apply", applyReq);
-        ApiResponse<?> applyResult = graphQLEngine.executeRpc(applyCtx);
-        assertEquals(0, applyResult.getStatus(), "apply failed: " + applyResult);
-        Map<String, Object> aftersale = (Map<String, Object>) applyResult.getData();
-        String aftersaleId = (String) aftersale.get("id");
-
-        ApiRequest<Map<String, Object>> approveReq = ApiRequest.build(Map.of(
-                "ids", Set.of(aftersaleId)
-        ));
-        IGraphQLExecutionContext approveCtx = graphQLEngine.newRpcContext(
-                GraphQLOperationType.mutation, "LitemallAftersale__batchApprove", approveReq);
-        ApiResponse<?> approveResult = graphQLEngine.executeRpc(approveCtx);
-        assertEquals(0, approveResult.getStatus(), "batchApprove failed: " + approveResult);
-
-        return aftersaleId;
-    }
-
-    @SuppressWarnings("unchecked")
     @Test
     public void testRefundSuccess() {
-        String aftersaleId = createApplyAndApprove();
+        String orderId = createAndPayOrder();
+        String aftersaleId = createApplyAndApprove(orderId);
 
-        LitemallAftersale before = daoProvider.daoFor(LitemallAftersale.class).getEntityById(aftersaleId);
-        String orderId = before.getOrderId();
         LitemallGoodsProduct productBefore = daoProvider.daoFor(LitemallGoodsProduct.class).getEntityById(productId);
         int stockBeforeRefund = productBefore.getNumber();
 
-        ApiRequest<Map<String, Object>> refundReq = ApiRequest.build(Map.of("id", aftersaleId));
-        IGraphQLExecutionContext refundCtx = graphQLEngine.newRpcContext(
-                GraphQLOperationType.mutation, "LitemallAftersale__refund", refundReq);
-        ApiResponse<?> refundResult = graphQLEngine.executeRpc(refundCtx);
+        ApiResponse<?> refundResult = refund(aftersaleId);
         assertEquals(0, refundResult.getStatus(), "refund failed: " + refundResult);
 
         LitemallAftersale updated = daoProvider.daoFor(LitemallAftersale.class).getEntityById(aftersaleId);
         assertEquals(_AppMallDaoConstants.AFTERSALE_STATUS_REFUND, updated.getStatus());
 
-        // P0-5: unshipped PAY order with type=GOODS_MISS(0) must roll back stock AND push order to 203.
+        // Whole-order refund on an unshipped PAY order pushes the order to REFUND_CONFIRM(203) and restocks.
         LitemallOrder order = daoProvider.daoFor(LitemallOrder.class).getEntityById(orderId);
-        assertEquals(_AppMallDaoConstants.ORDER_STATUS_REFUND_CONFIRM, order.getOrderStatus(),
-                "unshipped PAY order should be pushed to REFUND_CONFIRM(203) after refund: " + order.getOrderStatus());
+        assertEquals(_AppMallDaoConstants.ORDER_STATUS_REFUND_CONFIRM, order.getOrderStatus());
 
         LitemallGoodsProduct productAfter = daoProvider.daoFor(LitemallGoodsProduct.class).getEntityById(productId);
         assertEquals(stockBeforeRefund + 2, productAfter.getNumber(),
-                "stock should be restored (+2 units) after unshipped refund: before="
+                "stock should be restored (+2 units) after whole-order refund: before="
                         + stockBeforeRefund + " after=" + productAfter.getNumber());
     }
 
     @Test
     public void testRefundFailure() {
-        String aftersaleId = createApplyAndApprove();
+        String orderId = createAndPayOrder();
+        String aftersaleId = createApplyAndApprove(orderId);
 
         WxPayServiceImpl.setForceRefundFailure(true);
         try {
-            ApiRequest<Map<String, Object>> refundReq = ApiRequest.build(Map.of("id", aftersaleId));
-            IGraphQLExecutionContext refundCtx = graphQLEngine.newRpcContext(
-                    GraphQLOperationType.mutation, "LitemallAftersale__refund", refundReq);
-            ApiResponse<?> refundResult = graphQLEngine.executeRpc(refundCtx);
+            ApiResponse<?> refundResult = refund(aftersaleId);
             assertTrue(refundResult.getStatus() != 0, "refund should fail");
             assertTrue(refundResult.getMsg().contains("退款失败") || refundResult.getMsg().contains("refund-failed"),
                     "error should contain refund-failed: " + refundResult.getMsg());
@@ -321,5 +339,197 @@ public class TestLitemallAftersaleBizModel extends JunitBaseTestCase {
         } finally {
             WxPayServiceImpl.setForceRefundFailure(false);
         }
+    }
+
+    private String createApplyAndApprove(String orderId) {
+        ApiResponse<?> applyResult = apply(Map.of(
+                "orderId", orderId,
+                "type", 0,
+                "reason", "质量问题",
+                "amount", BigDecimal.valueOf(198)
+        ));
+        assertEquals(0, applyResult.getStatus(), "apply failed: " + applyResult);
+        Map<String, Object> aftersale = (Map<String, Object>) applyResult.getData();
+        String aftersaleId = (String) aftersale.get("id");
+        approve(aftersaleId);
+        return aftersaleId;
+    }
+
+    // ============ item-level (orderItemId != null) path ============
+
+    @Test
+    public void testItemLevelApplyAmountExceedsLineCap() {
+        String orderId = createAndPayOrder();
+        String orderItemId = orderGoodsOf(orderId).get(0).getId();
+        // line = 2 x 99 = 198; amount 99999 exceeds the per-item cap.
+        ApiResponse<?> r = apply(Map.of(
+                "orderId", orderId,
+                "orderItemId", orderItemId,
+                "type", 0,
+                "reason", "质量问题",
+                "amount", BigDecimal.valueOf(99999)
+        ));
+        assertEquals(-1, r.getStatus(), "item apply over line cap should be rejected: " + r);
+    }
+
+    @Test
+    public void testItemTypeStatusMismatch() {
+        String orderId = createAndPayOrder();
+        String orderItemId = orderGoodsOf(orderId).get(0).getId();
+        // PAY(201) order only allows GOODS_MISS(0); GOODS_REQUIRED(2) must be rejected.
+        ApiResponse<?> r = apply(Map.of(
+                "orderId", orderId,
+                "orderItemId", orderItemId,
+                "type", 2,
+                "reason", "质量问题",
+                "amount", BigDecimal.valueOf(50)
+        ));
+        assertEquals(-1, r.getStatus(), "type/status mismatch should be rejected: " + r);
+    }
+
+    @Test
+    public void testItemReasonInvalid() {
+        String orderId = createAndPayOrder();
+        String orderItemId = orderGoodsOf(orderId).get(0).getId();
+        // reason not in mall/aftersale-reason dictionary must be rejected.
+        ApiResponse<?> r = apply(Map.of(
+                "orderId", orderId,
+                "orderItemId", orderItemId,
+                "type", 0,
+                "reason", "随便编的理由",
+                "amount", BigDecimal.valueOf(50)
+        ));
+        assertEquals(-1, r.getStatus(), "invalid reason should be rejected: " + r);
+    }
+
+    @Test
+    public void testItemNotInOrder() {
+        String orderId = createAndPayOrder();
+        // orderItemId that does not belong to this order must be rejected.
+        ApiResponse<?> r = apply(Map.of(
+                "orderId", orderId,
+                "orderItemId", "999999",
+                "type", 0,
+                "reason", "质量问题",
+                "amount", BigDecimal.valueOf(50)
+        ));
+        assertEquals(-1, r.getStatus(), "item not in order should be rejected: " + r);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testItemInProgressMutex() {
+        String orderId = createAndPayOrder();
+        String orderItemId = orderGoodsOf(orderId).get(0).getId();
+
+        ApiResponse<?> first = apply(Map.of(
+                "orderId", orderId,
+                "orderItemId", orderItemId,
+                "type", 0,
+                "reason", "质量问题",
+                "amount", BigDecimal.valueOf(50)
+        ));
+        assertEquals(0, first.getStatus(), "first item apply should succeed: " + first);
+
+        // Same item still in progress (REQUEST) -> second apply must be rejected.
+        ApiResponse<?> second = apply(Map.of(
+                "orderId", orderId,
+                "orderItemId", orderItemId,
+                "type", 0,
+                "reason", "质量问题",
+                "amount", BigDecimal.valueOf(50)
+        ));
+        assertEquals(-1, second.getStatus(), "in-progress item mutex should reject second apply: " + second);
+
+        // The order aggregate aftersaleStatus reflects the in-progress item.
+        LitemallOrder order = daoProvider.daoFor(LitemallOrder.class).getEntityById(orderId);
+        assertEquals(_AppMallDaoConstants.AFTERSALE_STATUS_REQUEST, order.getAftersaleStatus());
+    }
+
+    @Test
+    public void testItemLevelPartialRefundKeepsOrderPay() {
+        // Multi-item order: refunding one item must NOT push the unshipped order to terminal 203,
+        // and must restock only the refunded line.
+        String orderId = createAndPayOrder(true);
+        List<LitemallOrderGoods> goods = orderGoodsOf(orderId);
+        assertEquals(2, goods.size(), "multi-item order should have 2 order goods lines");
+
+        // Identify lines by productId (findAllByQuery order is unspecified).
+        LitemallOrderGoods line99 = goods.stream()
+                .filter(g -> productId.equals(g.getProductId())).findFirst().orElseThrow();
+        LitemallOrderGoods line50 = goods.stream()
+                .filter(g -> !productId.equals(g.getProductId())).findFirst().orElseThrow();
+        String line50ProductId = line50.getProductId();
+
+        LitemallGoodsProduct p99Before = daoProvider.daoFor(LitemallGoodsProduct.class).getEntityById(productId);
+        int p99StockBefore = p99Before.getNumber();
+        LitemallGoodsProduct p50Before = daoProvider.daoFor(LitemallGoodsProduct.class).getEntityById(line50ProductId);
+        int p50StockBefore = p50Before.getNumber();
+
+        String aftersaleId = createApplyAndApprove(orderId, line99.getId(), BigDecimal.valueOf(99));
+
+        ApiResponse<?> refundResult = refund(aftersaleId);
+        assertEquals(0, refundResult.getStatus(), "item refund failed: " + refundResult);
+
+        // Partial item refund: unshipped order stays PAY (not all items refunded).
+        LitemallOrder order = daoProvider.daoFor(LitemallOrder.class).getEntityById(orderId);
+        assertEquals(_AppMallDaoConstants.ORDER_STATUS_PAY, order.getOrderStatus(),
+                "partial item refund should keep unshipped order at PAY(201)");
+
+        // Only the refunded line is restocked.
+        LitemallGoodsProduct p99After = daoProvider.daoFor(LitemallGoodsProduct.class).getEntityById(productId);
+        assertEquals(p99StockBefore + line99.getNumber(), p99After.getNumber(),
+                "refunded line should be restocked by its quantity");
+        LitemallGoodsProduct p50After = daoProvider.daoFor(LitemallGoodsProduct.class).getEntityById(line50ProductId);
+        assertEquals(p50StockBefore, p50After.getNumber(),
+                "non-refunded line stock must be unchanged");
+
+        // Aggregate aftersaleStatus: REFUND terminal -> INIT (no in-progress aftersale).
+        assertEquals(_AppMallDaoConstants.AFTERSALE_STATUS_INIT, order.getAftersaleStatus());
+
+        // Second item is still eligible for aftersale (independent state machine).
+        String aftersale2 = createApplyAndApprove(orderId, line50.getId(), BigDecimal.valueOf(50));
+        assertNotEquals(aftersaleId, aftersale2, "second item must get its own aftersale record");
+    }
+
+    @Test
+    public void testItemLevelAllItemsRefundedTransitionsOrder() {
+        // Multi-item order: once every line is refunded, the unshipped order moves to REFUND_CONFIRM(203).
+        String orderId = createAndPayOrder(true);
+        List<LitemallOrderGoods> goods = orderGoodsOf(orderId);
+        LitemallOrderGoods line99 = goods.stream()
+                .filter(g -> productId.equals(g.getProductId())).findFirst().orElseThrow();
+        LitemallOrderGoods line50 = goods.stream()
+                .filter(g -> !productId.equals(g.getProductId())).findFirst().orElseThrow();
+
+        String a1 = createApplyAndApprove(orderId, line99.getId(), BigDecimal.valueOf(99));
+        assertEquals(0, refund(a1).getStatus(), "refund item1 failed");
+
+        // After first item refund, order still PAY (one item remains).
+        LitemallOrder order = daoProvider.daoFor(LitemallOrder.class).getEntityById(orderId);
+        assertEquals(_AppMallDaoConstants.ORDER_STATUS_PAY, order.getOrderStatus());
+
+        String a2 = createApplyAndApprove(orderId, line50.getId(), BigDecimal.valueOf(50));
+        assertEquals(0, refund(a2).getStatus(), "refund item2 failed");
+
+        // All items refunded -> unshipped order transitions to terminal REFUND_CONFIRM(203).
+        LitemallOrder updated = daoProvider.daoFor(LitemallOrder.class).getEntityById(orderId);
+        assertEquals(_AppMallDaoConstants.ORDER_STATUS_REFUND_CONFIRM, updated.getOrderStatus(),
+                "all-items-refunded unshipped order should reach REFUND_CONFIRM(203)");
+    }
+
+    private String createApplyAndApprove(String orderId, String orderItemId, BigDecimal amount) {
+        ApiResponse<?> applyResult = apply(Map.of(
+                "orderId", orderId,
+                "orderItemId", orderItemId,
+                "type", 0,
+                "reason", "质量问题",
+                "amount", amount
+        ));
+        assertEquals(0, applyResult.getStatus(), "item apply failed: " + applyResult);
+        Map<String, Object> aftersale = (Map<String, Object>) applyResult.getData();
+        String aftersaleId = (String) aftersale.get("id");
+        approve(aftersaleId);
+        return aftersaleId;
     }
 }

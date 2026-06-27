@@ -49,6 +49,36 @@ public interface _AppMallDaoConstants {
     int AFTERSALE_TYPE_GOODS_REQUIRED = 2;
                     
     /**
+     * 售后原因: 不想要了 
+     */
+    String AFTERSALE_REASON_UNWANTED = "不想要了";
+                    
+    /**
+     * 售后原因: 质量问题 
+     */
+    String AFTERSALE_REASON_QUALITY = "质量问题";
+                    
+    /**
+     * 售后原因: 少发漏发 
+     */
+    String AFTERSALE_REASON_MISSING = "少发漏发";
+                    
+    /**
+     * 售后原因: 商品损坏 
+     */
+    String AFTERSALE_REASON_DAMAGED = "商品损坏";
+                    
+    /**
+     * 售后原因: 与描述不符 
+     */
+    String AFTERSALE_REASON_NOT_AS_DESCRIBED = "与描述不符";
+                    
+    /**
+     * 售后原因: 七天无理由 
+     */
+    String AFTERSALE_REASON_SEVEN_DAY = "七天无理由";
+                    
+    /**
      * 优惠券赠送类型: 通用券，用户领取 
      */
     int COUPON_TYPE_COMMON = 0;

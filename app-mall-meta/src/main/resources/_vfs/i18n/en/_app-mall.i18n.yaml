@@ -90,6 +90,7 @@ prop:
       type: null
       type_label: null
       reason: null
+      reason_label: null
       amount: null
       pictures: null
       comment: null
@@ -788,6 +789,7 @@ dict:
   label:
     mall/aftersale-status: AfterSale Status
     mall/aftersale-type: Aftersale Type
+    mall/aftersale-reason: Aftersale Reason
     mall/coupon-status: Coupon Status
     mall/coupon-goods-type: Coupon Goods Type
     mall/coupon-time-type: Coupon Time Type

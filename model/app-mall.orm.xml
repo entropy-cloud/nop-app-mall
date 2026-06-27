@@ -18,6 +18,14 @@
             <option code="GOODS_NEEDLESS" label="已收货（无需退货）退款" value="1"/>
             <option code="GOODS_REQUIRED" label="用户退货退款" value="2"/>
         </dict>
+        <dict label="售后原因" name="mall/aftersale-reason" valueType="string" i18n-en:label="Aftersale Reason">
+            <option code="UNWANTED" label="不想要了" value="不想要了"/>
+            <option code="QUALITY" label="质量问题" value="质量问题"/>
+            <option code="MISSING" label="少发漏发" value="少发漏发"/>
+            <option code="DAMAGED" label="商品损坏" value="商品损坏"/>
+            <option code="NOT_AS_DESCRIBED" label="与描述不符" value="与描述不符"/>
+            <option code="SEVEN_DAY" label="七天无理由" value="七天无理由"/>
+        </dict>
         <dict label="优惠券赠送类型" name="mall/coupon-type" valueType="int">
             <option code="COMMON" label="通用券，用户领取" value="0"/>
             <option code="REGISTER" label="注册赠券" value="1"/>
@@ -246,7 +254,7 @@
                 <column code="TYPE" displayName="售后类型" name="type" propId="5" stdDataType="int" stdSqlType="INTEGER"
                         ext:dict="mall/aftersale-type"/>
                 <column code="REASON" displayName="退款原因" name="reason" precision="31" propId="6" stdDataType="string"
-                        stdSqlType="VARCHAR"/>
+                        stdSqlType="VARCHAR" ext:dict="mall/aftersale-reason"/>
                 <column code="AMOUNT" displayName="退款金额" name="amount" precision="10" propId="7" scale="2"
                         stdDataType="decimal" stdSqlType="DECIMAL"/>
                 <column code="PICTURES" displayName="退款凭证图片链接数组" domain="images" name="pictures" precision="1023"

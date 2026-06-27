@@ -7,7 +7,21 @@
     </x:config>
 
     <grids>
-        <grid id="list"/>
+        <grid id="list">
+            <cols x:override="bounded-merge">
+                <col id="id"/>
+                <col id="aftersaleSn"/>
+                <col id="orderId"/>
+                <col id="orderItemId"/>
+                <col id="type"/>
+                <col id="reason"/>
+                <col id="amount"/>
+                <col id="status"/>
+                <col id="handleTime"/>
+                <col id="processTime"/>
+                <col id="processNote"/>
+            </cols>
+        </grid>
         <grid id="pick-list"/>
 
         <grid id="wait-approve-list" x:prototype="list">
@@ -24,12 +38,21 @@
     </grids>
 
     <forms>
-        <form id="view"/>
+        <form id="view">
+            <layout>
+                aftersaleSn[售后编号] status[售后状态]
+                orderId[订单ID] orderItemId[订单商品项ID]
+                type[售后类型] reason[退款原因]
+                amount[退款金额] comment[退款说明]
+                addTime[申请时间] handleTime[审核处理时间]
+                processTime[退款完成时间] processNote[处理备注]
+            </layout>
+        </form>
         <form id="edit"/>
         <form id="add"/>
         <form id="query" layoutMode="horizontal">
             <layout>
-                aftersaleSn orderId
+                aftersaleSn orderId orderItemId
             </layout>
         </form>
     </forms>

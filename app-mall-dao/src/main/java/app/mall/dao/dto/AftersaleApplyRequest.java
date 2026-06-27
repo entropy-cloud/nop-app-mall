@@ -8,6 +8,7 @@ import java.math.BigDecimal;
 public class AftersaleApplyRequest {
 
     private String orderId;
+    private String orderItemId;
     private int type;
     private String reason;
     private BigDecimal amount;
@@ -20,6 +21,14 @@ public class AftersaleApplyRequest {
 
     public void setOrderId(String orderId) {
         this.orderId = orderId;
+    }
+
+    public String getOrderItemId() {
+        return orderItemId;
+    }
+
+    public void setOrderItemId(String orderItemId) {
+        this.orderItemId = orderItemId;
     }
 
     public int getType() {

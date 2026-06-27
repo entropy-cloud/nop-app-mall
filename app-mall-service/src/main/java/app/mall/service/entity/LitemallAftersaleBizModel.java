@@ -23,8 +23,8 @@ import io.nop.api.core.annotations.core.Name;
 import io.nop.api.core.beans.FilterBeans;
 import io.nop.api.core.beans.query.QueryBean;
 import io.nop.api.core.exceptions.NopException;
+import io.nop.api.core.time.CoreMetrics;
 import io.nop.biz.crud.CrudBizModel;
-import io.nop.commons.util.DateHelper;
 import io.nop.commons.util.StringHelper;
 import io.nop.core.context.IServiceContext;
 import jakarta.inject.Inject;
@@ -35,14 +35,26 @@ import java.util.List;
 import java.util.Set;
 
 import static app.mall.service.AppMallErrors.ERR_AFTERSALE_AMOUNT_EXCEED;
+import static app.mall.service.AppMallErrors.ERR_AFTERSALE_ITEM_IN_PROGRESS;
+import static app.mall.service.AppMallErrors.ERR_AFTERSALE_ITEM_NOT_IN_ORDER;
 import static app.mall.service.AppMallErrors.ERR_AFTERSALE_NOT_ALLOW_APPLY;
 import static app.mall.service.AppMallErrors.ERR_AFTERSALE_NOT_ALLOW_CANCEL;
 import static app.mall.service.AppMallErrors.ERR_AFTERSALE_NOT_ALLOW_REFUND;
 import static app.mall.service.AppMallErrors.ERR_AFTERSALE_NOT_FOUND;
+import static app.mall.service.AppMallErrors.ERR_AFTERSALE_REASON_INVALID;
 import static app.mall.service.AppMallErrors.ERR_AFTERSALE_REFUND_FAILED;
+import static app.mall.service.AppMallErrors.ERR_AFTERSALE_TYPE_STATUS_MISMATCH;
 
 @BizModel("LitemallAftersale")
 public class LitemallAftersaleBizModel extends CrudBizModel<LitemallAftersale> implements ILitemallAftersaleBiz {
+
+    private static final Set<String> VALID_AFTERSALE_REASONS = Set.of(
+            AppMallDaoConstants.AFTERSALE_REASON_UNWANTED,
+            AppMallDaoConstants.AFTERSALE_REASON_QUALITY,
+            AppMallDaoConstants.AFTERSALE_REASON_MISSING,
+            AppMallDaoConstants.AFTERSALE_REASON_DAMAGED,
+            AppMallDaoConstants.AFTERSALE_REASON_NOT_AS_DESCRIBED,
+            AppMallDaoConstants.AFTERSALE_REASON_SEVEN_DAY);
 
     @Inject
     MallNotificationService notificationService;
@@ -76,9 +88,9 @@ public class LitemallAftersaleBizModel extends CrudBizModel<LitemallAftersale> i
                 continue;
             }
             entity.setStatus(AppMallDaoConstants.AFTERSALE_STATUS_APPROVED);
-            entity.setHandleTime(DateHelper.currentDateTime());
+            entity.setHandleTime(CoreMetrics.currentDateTime());
 
-            entity.getOrder().setAftersaleStatus(entity.getStatus());
+            recomputeOrderAftersaleStatus(entity.getOrder(), context);
         }
     }
 
@@ -93,9 +105,9 @@ public class LitemallAftersaleBizModel extends CrudBizModel<LitemallAftersale> i
             }
 
             entity.setStatus(AppMallDaoConstants.AFTERSALE_STATUS_REJECT);
-            entity.setHandleTime(DateHelper.currentDateTime());
+            entity.setHandleTime(CoreMetrics.currentDateTime());
 
-            entity.getOrder().setAftersaleStatus(entity.getStatus());
+            recomputeOrderAftersaleStatus(entity.getOrder(), context);
         }
     }
 
@@ -108,14 +120,18 @@ public class LitemallAftersaleBizModel extends CrudBizModel<LitemallAftersale> i
         }
 
         LitemallOrder order = entity.getOrder();
+        boolean isWholeOrder = StringHelper.isEmpty(entity.getOrderItemId());
 
-        // Defensive amount recheck (apply() already validates, but status may have changed since)
+        // Defensive amount recheck (apply() already validates, but status may have changed since).
+        // Item-level cap = number x price of that line (minus already-refunded for the line);
+        // whole-order cap = order.actualPrice.
+        BigDecimal cap = isWholeOrder ? order.getActualPrice() : itemRefundCap(order, entity.getOrderItemId(), context);
         if (entity.getAmount() == null || entity.getAmount().signum() <= 0
-                || entity.getAmount().compareTo(order.getActualPrice()) > 0) {
+                || entity.getAmount().compareTo(cap) > 0) {
             throw new NopException(ERR_AFTERSALE_AMOUNT_EXCEED)
                     .param("aftersaleId", id)
                     .param("amount", entity.getAmount())
-                    .param("actualPrice", order.getActualPrice());
+                    .param("cap", cap);
         }
 
         PayRefundRequestBean wxPayRefundRequest = new PayRefundRequestBean();
@@ -132,46 +148,62 @@ public class LitemallAftersaleBizModel extends CrudBizModel<LitemallAftersale> i
                     .param("orderSn", order.getOrderSn());
         }
 
+        LocalDateTime now = CoreMetrics.currentDateTime();
         entity.setStatus(AppMallDaoConstants.AFTERSALE_STATUS_REFUND);
-        entity.setHandleTime(DateHelper.currentDateTime());
-        entity.getOrder().setAftersaleStatus(entity.getStatus());
+        entity.setHandleTime(now);
+        entity.setProcessTime(now);
+        entity.setProcessNote("退款成功");
+        // Flush the terminal status so the order-level decision queries below observe REFUND rather than
+        // the pre-mutation APPROVED value.
+        orm().flushSession();
 
-        // Order-level refund state: an unshipped (PAY) order is fully refunded → terminal REFUND_CONFIRM(203).
-        // A received (CONFIRM/AUTO_CONFIRM) order keeps its fulfillment status; only aftersaleStatus reflects refund.
+        // Order-level refund state (Decision 5a): a whole-order refund, or an item-level refund that
+        // exhausts every order goods line, pushes an unshipped (PAY) order to terminal REFUND_CONFIRM(203).
+        // A partial item refund on an unshipped order keeps the order at PAY.
         boolean wasUnshipped = order.getOrderStatus() == AppMallDaoConstants.ORDER_STATUS_PAY;
-        if (wasUnshipped) {
+        if (wasUnshipped && (isWholeOrder || allOrderItemsRefunded(order, context))) {
             order.setOrderStatus(AppMallDaoConstants.ORDER_STATUS_REFUND_CONFIRM);
-            order.setEndTime(DateHelper.currentDateTime());
+            order.setEndTime(now);
         }
 
+        // Restock (Decision 5b): whole-order → restock every line; item-level → restock only the refunded line.
         // Restock when goods are still in the warehouse (unshipped PAY order, regardless of aftersale type)
         // or when the user returns received goods (GOODS_REQUIRED). GOODS_NEEDLESS on received orders keeps goods.
-        // NOTE: use wasUnshipped (captured before the status mutation above), not order.getOrderStatus(),
-        // which is now REFUND_CONFIRM(203) for unshipped orders.
         boolean shouldRestock = wasUnshipped
                 || entity.getType() == AppMallDaoConstants.AFTERSALE_TYPE_GOODS_REQUIRED;
         if (shouldRestock) {
-            Set<LitemallOrderGoods> orderGoodsList = entity.getOrder().getOrderGoods();
-            for (LitemallOrderGoods orderGoods : orderGoodsList) {
-                String productId = orderGoods.getProductId();
-                Integer number = orderGoods.getNumber();
-                goodsProductMapper.addStock(productId, number);
+            if (isWholeOrder) {
+                for (LitemallOrderGoods orderGoods : order.getOrderGoods()) {
+                    goodsProductMapper.addStock(orderGoods.getProductId(), orderGoods.getNumber());
+                }
+            } else {
+                LitemallOrderGoods line = findOrderGoods(order, entity.getOrderItemId());
+                if (line != null) {
+                    goodsProductMapper.addStock(line.getProductId(), line.getNumber());
+                }
             }
         }
 
-        // Restore coupons used on this order (mirrors cancel():292-299 / refundGrouponOrder():248-255)
-        QueryBean cuQuery = new QueryBean();
-        cuQuery.addFilter(FilterBeans.eq(LitemallCouponUser.PROP_NAME_orderId, order.orm_idString()));
-        cuQuery.addFilter(FilterBeans.eq(LitemallCouponUser.PROP_NAME_status, 1));
-        List<LitemallCouponUser> usedCoupons = couponUserBiz.findList(cuQuery, null, context);
-        for (LitemallCouponUser cu : usedCoupons) {
-            couponUserBiz.returnCoupon(cu.orm_idString(), context);
+        // Coupon restore (Decision 5c): only on whole-order refund. Item-level partial refund does not
+        // restore the order-level coupon (coupon is an order-level price component; restored only on
+        // full order cancel/refund). Mirrors cancel()/refundGrouponOrder() coupon-return pattern.
+        if (isWholeOrder) {
+            QueryBean cuQuery = new QueryBean();
+            cuQuery.addFilter(FilterBeans.eq(LitemallCouponUser.PROP_NAME_orderId, order.orm_idString()));
+            cuQuery.addFilter(FilterBeans.eq(LitemallCouponUser.PROP_NAME_status, 1));
+            List<LitemallCouponUser> usedCoupons = couponUserBiz.findList(cuQuery, null, context);
+            for (LitemallCouponUser cu : usedCoupons) {
+                couponUserBiz.returnCoupon(cu.orm_idString(), context);
+            }
         }
 
-        // Notification is a fire-and-forget side effect: run after commit so its failure cannot roll back the refund.
+        // Notification (Decision 8): order-level dedupe by orderSn. Item-level refunds reuse the same
+        // order-level notification to avoid spamming the user across multiple item refunds.
         final String orderSn = order.getOrderSn();
         final String mobile = order.getMobile();
         txn().afterCommit(null, () -> notificationService.sendRefundNotification(orderSn, mobile));
+
+        recomputeOrderAftersaleStatus(order, context);
 
         logManager.logOrderSucceed("退款", "订单编号 " + order.getOrderSn() + " 售后编号 " + entity.getAftersaleSn());
     }
@@ -182,6 +214,8 @@ public class LitemallAftersaleBizModel extends CrudBizModel<LitemallAftersale> i
                                     IServiceContext context) {
         String orderId = request.getOrderId();
         String userId = context.getUserId();
+        String orderItemId = request.getOrderItemId();
+        boolean isWholeOrder = StringHelper.isEmpty(orderItemId);
 
         LitemallOrder order = orderBiz.get(orderId, false, context);
         if (order == null || Boolean.TRUE.equals(order.getDeleted())) {
@@ -198,38 +232,78 @@ public class LitemallAftersaleBizModel extends CrudBizModel<LitemallAftersale> i
                     .param("orderStatus", orderStatus);
         }
 
-        if (order.getAftersaleStatus() != null
-                && order.getAftersaleStatus() != AppMallDaoConstants.AFTERSALE_STATUS_INIT) {
-            throw new NopException(ERR_AFTERSALE_NOT_ALLOW_APPLY)
-                    .param("orderId", orderId);
+        // Decision 6: aftersale type must match order fulfillment status.
+        int type = request.getType();
+        if (!isTypeAllowedForStatus(type, orderStatus)) {
+            throw new NopException(ERR_AFTERSALE_TYPE_STATUS_MISMATCH)
+                    .param("type", type)
+                    .param("orderStatus", orderStatus);
+        }
+
+        // Reason must be a defined mall/aftersale-reason dictionary option.
+        String reason = request.getReason();
+        if (!VALID_AFTERSALE_REASONS.contains(reason)) {
+            throw new NopException(ERR_AFTERSALE_REASON_INVALID)
+                    .param("reason", reason);
+        }
+
+        BigDecimal cap;
+        LitemallOrderGoods line = null;
+        if (isWholeOrder) {
+            // Whole-order compat (Decision 7): keep the existing order-level mutex.
+            if (order.getAftersaleStatus() != null
+                    && order.getAftersaleStatus() != AppMallDaoConstants.AFTERSALE_STATUS_INIT) {
+                throw new NopException(ERR_AFTERSALE_NOT_ALLOW_APPLY)
+                        .param("orderId", orderId);
+            }
+            cap = order.getActualPrice();
+        } else {
+            // Item-level: the line must belong to this order, and have no in-progress aftersale.
+            line = findOrderGoods(order, orderItemId);
+            if (line == null) {
+                throw new NopException(ERR_AFTERSALE_ITEM_NOT_IN_ORDER)
+                        .param("orderId", orderId)
+                        .param("orderItemId", orderItemId);
+            }
+            if (hasInProgressAftersaleForItem(orderItemId, context)) {
+                throw new NopException(ERR_AFTERSALE_ITEM_IN_PROGRESS)
+                        .param("orderItemId", orderItemId);
+            }
+            // Decision 3: per-item cap = number x price, minus already-refunded for the line.
+            cap = itemRefundCap(order, orderItemId, context);
+        }
+
+        BigDecimal amount = request.getAmount() != null ? request.getAmount() : cap;
+        if (amount.signum() <= 0) {
+            throw new NopException(ERR_AFTERSALE_AMOUNT_EXCEED)
+                    .param("orderId", orderId)
+                    .param("amount", amount);
+        }
+        if (amount.compareTo(cap) > 0) {
+            throw new NopException(ERR_AFTERSALE_AMOUNT_EXCEED)
+                    .param("orderId", orderId)
+                    .param("amount", amount)
+                    .param("cap", cap);
         }
 
         LitemallAftersale aftersale = newEntity();
         aftersale.setAftersaleSn(generateAftersaleSn());
         aftersale.setOrderId(orderId);
         aftersale.setUserId(userId);
-        aftersale.setType(request.getType());
-        aftersale.setReason(request.getReason());
-        BigDecimal amount = request.getAmount() != null ? request.getAmount() : order.getActualPrice();
-        if (amount.signum() <= 0) {
-            throw new NopException(ERR_AFTERSALE_AMOUNT_EXCEED)
-                    .param("orderId", orderId)
-                    .param("amount", amount);
-        }
-        if (amount.compareTo(order.getActualPrice()) > 0) {
-            throw new NopException(ERR_AFTERSALE_AMOUNT_EXCEED)
-                    .param("orderId", orderId)
-                    .param("amount", amount)
-                    .param("actualPrice", order.getActualPrice());
-        }
+        aftersale.setOrderItemId(isWholeOrder ? null : orderItemId);
+        aftersale.setType(type);
+        aftersale.setReason(reason);
         aftersale.setAmount(amount);
         aftersale.setPictures(request.getPictures());
         aftersale.setComment(request.getComment());
         aftersale.setStatus(AppMallDaoConstants.AFTERSALE_STATUS_REQUEST);
-        aftersale.setAddTime(LocalDateTime.now());
-        aftersale.setUpdateTime(LocalDateTime.now());
+        LocalDateTime now = CoreMetrics.currentDateTime();
+        aftersale.setAddTime(now);
+        aftersale.setUpdateTime(now);
         aftersale.setDeleted(false);
 
+        // Order-level field is an aggregate view (Decision 4): a freshly requested aftersale makes the
+        // order show REQUEST regardless of item/whole granularity.
         order.setAftersaleStatus(AppMallDaoConstants.AFTERSALE_STATUS_REQUEST);
 
         saveEntity(aftersale, "apply", context);
@@ -256,7 +330,7 @@ public class LitemallAftersaleBizModel extends CrudBizModel<LitemallAftersale> i
 
         LitemallOrder order = aftersale.getOrder();
         if (order != null) {
-            order.setAftersaleStatus(AppMallDaoConstants.AFTERSALE_STATUS_INIT);
+            recomputeOrderAftersaleStatus(order, context);
         }
 
         updateEntity(aftersale, "cancel", context);
@@ -287,6 +361,106 @@ public class LitemallAftersaleBizModel extends CrudBizModel<LitemallAftersale> i
                     .param("id", id);
         }
         return aftersale;
+    }
+
+    // ---- item-level helpers ----
+
+    private boolean isTypeAllowedForStatus(int type, int orderStatus) {
+        if (orderStatus == AppMallDaoConstants.ORDER_STATUS_PAY) {
+            return type == AppMallDaoConstants.AFTERSALE_TYPE_GOODS_MISS;
+        }
+        if (orderStatus == AppMallDaoConstants.ORDER_STATUS_CONFIRM
+                || orderStatus == AppMallDaoConstants.ORDER_STATUS_AUTO_CONFIRM) {
+            return type == AppMallDaoConstants.AFTERSALE_TYPE_GOODS_NEEDLESS
+                    || type == AppMallDaoConstants.AFTERSALE_TYPE_GOODS_REQUIRED;
+        }
+        return false;
+    }
+
+    private LitemallOrderGoods findOrderGoods(LitemallOrder order, String orderItemId) {
+        if (orderItemId == null) {
+            return null;
+        }
+        Set<LitemallOrderGoods> goods = order.getOrderGoods();
+        if (goods == null) {
+            return null;
+        }
+        for (LitemallOrderGoods og : goods) {
+            if (orderItemId.equals(og.orm_idString())) {
+                return og;
+            }
+        }
+        return null;
+    }
+
+    // Decision 3: per-item refund cap = line amount (number x price) minus already-refunded for the line.
+    private BigDecimal itemRefundCap(LitemallOrder order, String orderItemId, IServiceContext context) {
+        LitemallOrderGoods line = findOrderGoods(order, orderItemId);
+        if (line == null) {
+            return BigDecimal.ZERO;
+        }
+        BigDecimal lineTotal = line.getPrice().multiply(BigDecimal.valueOf(line.getNumber()));
+        return lineTotal.subtract(sumRefundedAmountForItem(orderItemId, context));
+    }
+
+    private boolean hasInProgressAftersaleForItem(String orderItemId, IServiceContext context) {
+        QueryBean q = new QueryBean();
+        q.addFilter(FilterBeans.eq(LitemallAftersale.PROP_NAME_orderItemId, orderItemId));
+        q.addFilter(FilterBeans.in(LitemallAftersale.PROP_NAME_status, List.of(
+                AppMallDaoConstants.AFTERSALE_STATUS_REQUEST,
+                AppMallDaoConstants.AFTERSALE_STATUS_APPROVED)));
+        return !findList(q, null, context).isEmpty();
+    }
+
+    private BigDecimal sumRefundedAmountForItem(String orderItemId, IServiceContext context) {
+        QueryBean q = new QueryBean();
+        q.addFilter(FilterBeans.eq(LitemallAftersale.PROP_NAME_orderItemId, orderItemId));
+        q.addFilter(FilterBeans.eq(LitemallAftersale.PROP_NAME_status, AppMallDaoConstants.AFTERSALE_STATUS_REFUND));
+        List<LitemallAftersale> list = findList(q, null, context);
+        return list.stream()
+                .map(a -> a.getAmount() == null ? BigDecimal.ZERO : a.getAmount())
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    private boolean hasRefundedAftersaleForItem(String orderItemId, IServiceContext context) {
+        QueryBean q = new QueryBean();
+        q.addFilter(FilterBeans.eq(LitemallAftersale.PROP_NAME_orderItemId, orderItemId));
+        q.addFilter(FilterBeans.eq(LitemallAftersale.PROP_NAME_status, AppMallDaoConstants.AFTERSALE_STATUS_REFUND));
+        return !findList(q, null, context).isEmpty();
+    }
+
+    // Decision 5a: an unshipped order is fully refunded only when every order goods line has reached REFUND.
+    private boolean allOrderItemsRefunded(LitemallOrder order, IServiceContext context) {
+        Set<LitemallOrderGoods> goods = order.getOrderGoods();
+        if (goods == null || goods.isEmpty()) {
+            return false;
+        }
+        for (LitemallOrderGoods og : goods) {
+            if (!hasRefundedAftersaleForItem(og.orm_idString(), context)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    // Decision 4: order.aftersaleStatus is an aggregate view — REQUEST while any aftersale is in progress,
+    // INIT otherwise. Computed from LitemallAftersale records rather than a persisted per-item column.
+    private void recomputeOrderAftersaleStatus(LitemallOrder order, IServiceContext context) {
+        if (order == null) {
+            return;
+        }
+        // Flush in-memory status mutations (e.g. REQUEST -> CANCELLED/REFUND on the calling entity) so the
+        // in-progress query observes the up-to-date status rather than the pre-mutation persisted value.
+        orm().flushSession();
+        QueryBean q = new QueryBean();
+        q.addFilter(FilterBeans.eq(LitemallAftersale.PROP_NAME_orderId, order.orm_idString()));
+        q.addFilter(FilterBeans.in(LitemallAftersale.PROP_NAME_status, List.of(
+                AppMallDaoConstants.AFTERSALE_STATUS_REQUEST,
+                AppMallDaoConstants.AFTERSALE_STATUS_APPROVED)));
+        boolean inProgress = !findList(q, null, context).isEmpty();
+        order.setAftersaleStatus(inProgress
+                ? AppMallDaoConstants.AFTERSALE_STATUS_REQUEST
+                : AppMallDaoConstants.AFTERSALE_STATUS_INIT);
     }
 
     private String generateAftersaleSn() {

@@ -109,6 +109,18 @@
         }
 
 
+        private String _reason_label;
+
+    
+        public String getReason_label(){
+            return _reason_label;
+        }
+
+        public void setReason_label(String value){
+            this._reason_label = value;
+        }
+
+
         private java.math.BigDecimal _amount;
 
     
