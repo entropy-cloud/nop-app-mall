@@ -8,6 +8,8 @@ import app.mall.biz.ILitemallGrouponBiz;
 import app.mall.biz.ILitemallGrouponRulesBiz;
 import app.mall.biz.ILitemallOrderBiz;
 import app.mall.biz.ILitemallOrderGoodsBiz;
+import app.mall.biz.ILitemallPointsAccountBiz;
+import app.mall.biz.ILitemallPointsFlowBiz;
 import app.mall.biz.ILitemallPromotionActivityBiz;
 import app.mall.biz.ILitemallSystemBiz;
 import app.mall.dao._AppMallDaoConstants;
@@ -21,6 +23,7 @@ import app.mall.dao.dto.GoodsStatisticsBean;
 import app.mall.dao.dto.OrderStatisticsBean;
 import app.mall.dao.dto.UserStatisticsBean;
 import app.mall.dao.entity.LitemallOrderGoods;
+import app.mall.dao.entity.LitemallPointsFlow;
 import app.mall.dao.manager.MallLogManager;
 import app.mall.dao.mapper.LitemallGoodsProductMapper;
 import app.mall.dao.mapper.LitemallOrderMapper;
@@ -49,6 +52,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -71,6 +75,7 @@ import static app.mall.service.AppMallErrors.ERR_ORDER_NOT_FOUND;
 import static app.mall.service.AppMallErrors.ERR_ORDER_PRICE_INVALID;
 import static app.mall.service.AppMallErrors.ERR_ORDER_STOCK_INSUFFICIENT;
 import static app.mall.service.AppMallErrors.ERR_ORDER_USE_REAL_PAYMENT;
+import static app.mall.service.AppMallErrors.ERR_POINTS_DEDUCT_EXCEED_LIMIT;
 import static app.mall.service.AppMallErrors.ERR_PROMOTION_STACKING_NOT_ALLOWED;
 
 @BizModel("LitemallOrder")
@@ -98,6 +103,12 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
 
     @Inject
     ILitemallPromotionActivityBiz promotionActivityBiz;
+
+    @Inject
+    ILitemallPointsAccountBiz pointsAccountBiz;
+
+    @Inject
+    ILitemallPointsFlowBiz pointsFlowBiz;
 
     @Inject
     ILitemallGrouponRulesBiz grouponRulesBiz;
@@ -135,6 +146,7 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
                                  @Optional @Name("couponUserId") String couponUserId,
                                  @Optional @Name("grouponRulesId") String grouponRulesId,
                                  @Optional @Name("grouponId") String grouponId,
+                                 @Optional @Name("usePoints") Integer usePoints,
                                  IServiceContext context) {
         String userId = context.getUserId();
 
@@ -299,6 +311,12 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
         orderPrice = orderPrice.subtract(couponPrice).subtract(promotionPrice);
         order.setOrderPrice(orderPrice);
 
+        // Points deduction (P27): integralPrice is an actualPrice deduction layer, computed from
+        // the user-supplied usePoints and capped by orderPrice × mall_points_deduct_max_ratio.
+        // See docs/design/order-and-cart.md (价格计算顺序) and marketing-and-promotions.md (积分体系).
+        BigDecimal integralPrice = computeIntegralPrice(usePoints, orderPrice, context);
+        order.setIntegralPrice(integralPrice);
+
         BigDecimal actualPrice = orderPrice;
         if (order.getIntegralPrice() != null) {
             actualPrice = actualPrice.subtract(order.getIntegralPrice());
@@ -307,6 +325,17 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
         order.setActualPrice(actualPrice);
 
         saveEntity(order, "submit", context);
+
+        // Spend the user's points after the order is saved (orderId available as sourceId).
+        // A failed spend (e.g. insufficient balance) throws inside the same @BizMutation tx,
+        // rolling back the order save too — atomic with the price computation above.
+        if (integralPrice.compareTo(BigDecimal.ZERO) > 0 && usePoints != null && usePoints > 0) {
+            pointsAccountBiz.spendPoints(userId, usePoints,
+                    _AppMallDaoConstants.POINTS_CHANGE_TYPE_SPEND,
+                    LitemallPointsAccountBizModel.SOURCE_TYPE_ORDER_DEDUCT,
+                    order.orm_idString(),
+                    "订单抵扣 " + order.getOrderSn(), context);
+        }
 
         if (grouponRulesId != null && !grouponRulesId.isEmpty()) {
             String orderId = order.orm_idString();
@@ -376,6 +405,9 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
         }
 
         updateEntity(order, "cancel", context);
+        // Return deducted points (P27): order-level cancel returns the points the user spent
+        // deducting on this order. Idempotent per orderId (sourceType=refund-return).
+        returnDeductedPoints(order, context);
         logManager.logOrderSucceed("订单取消", "订单编号 " + order.getOrderSn());
         return order;
     }
@@ -526,6 +558,8 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
         order.setOrderStatus(_AppMallDaoConstants.ORDER_STATUS_CONFIRM);
         order.setConfirmTime(LocalDateTime.now());
         updateEntity(order, "confirm", context);
+        // Shopping reward (P27): earn points on receipt confirmation. Idempotent per orderId.
+        earnPointsForOrderConfirm(order, context);
         return order;
     }
 
@@ -684,6 +718,8 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
             }
 
             updateEntity(order, "cancelExpiredOrders", context);
+            // Return deducted points (P27): whole-order cancel mirrors coupon return.
+            returnDeductedPoints(order, context);
             count++;
         }
         return count;
@@ -708,6 +744,9 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
             order.setOrderStatus(_AppMallDaoConstants.ORDER_STATUS_AUTO_CONFIRM);
             order.setConfirmTime(LocalDateTime.now());
             updateEntity(order, "confirmExpiredOrders", context);
+            // Auto-confirm is also a receipt completion (P27): earns the same shopping reward as
+            // manual confirm. Idempotent per orderId.
+            earnPointsForOrderConfirm(order, context);
             count++;
         }
         return count;
@@ -730,5 +769,79 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
             return true;
         }
         return !"false".equalsIgnoreCase(value.trim()) && !"0".equals(value.trim());
+    }
+
+    private BigDecimal computeIntegralPrice(Integer usePoints, BigDecimal orderPrice, IServiceContext context) {
+        if (usePoints == null || usePoints <= 0 || orderPrice == null || orderPrice.compareTo(BigDecimal.ZERO) <= 0) {
+            return BigDecimal.ZERO;
+        }
+        int ratio = pointsAccountBiz.resolveToYuanRatio(context);
+        if (ratio <= 0) {
+            return BigDecimal.ZERO;
+        }
+        BigDecimal pointsValue = BigDecimal.valueOf(usePoints.longValue())
+                .divide(BigDecimal.valueOf(ratio), 2, RoundingMode.HALF_UP);
+        double maxRatio = pointsAccountBiz.resolveDeductMaxRatio(context);
+        BigDecimal cap = orderPrice.multiply(BigDecimal.valueOf(maxRatio));
+        if (pointsValue.compareTo(cap) > 0) {
+            throw new NopException(ERR_POINTS_DEDUCT_EXCEED_LIMIT)
+                    .param("requested", pointsValue)
+                    .param("cap", cap)
+                    .param("maxRatio", maxRatio);
+        }
+        return pointsValue;
+    }
+
+    /**
+     * Award shopping-reward points on receipt confirmation (P27). Idempotent: earnPoints rejects
+     * a duplicate (sourceType=order-confirm-earn, sourceId=orderId), and confirm() is already
+     * guarded by the SHIP→CONFIRM status transition so it succeeds once per order.
+     */
+    private void earnPointsForOrderConfirm(LitemallOrder order, IServiceContext context) {
+        int earnPerYuan = pointsAccountBiz.resolveEarnPerYuan(context);
+        if (earnPerYuan <= 0) {
+            return;
+        }
+        BigDecimal actualPrice = order.getActualPrice();
+        if (actualPrice == null || actualPrice.compareTo(BigDecimal.ZERO) <= 0) {
+            return;
+        }
+        int points = actualPrice.multiply(BigDecimal.valueOf(earnPerYuan)).intValue();
+        if (points <= 0) {
+            return;
+        }
+        pointsAccountBiz.earnPoints(order.getUserId(), points,
+                _AppMallDaoConstants.POINTS_CHANGE_TYPE_EARN,
+                LitemallPointsAccountBizModel.SOURCE_TYPE_ORDER_CONFIRM_EARN,
+                order.orm_idString(),
+                "购物赠送 " + order.getOrderSn(), context);
+    }
+
+    /**
+     * Return the points a user spent deducting on an order (for cancel/refund return).
+     * Looks up the SPEND flow (sourceType=order-deduct, sourceId=orderId).
+     */
+    private int findDeductedPoints(String orderId, IServiceContext context) {
+        QueryBean q = new QueryBean();
+        q.addFilter(FilterBeans.eq(LitemallPointsFlow.PROP_NAME_sourceType,
+                LitemallPointsAccountBizModel.SOURCE_TYPE_ORDER_DEDUCT));
+        q.addFilter(FilterBeans.eq(LitemallPointsFlow.PROP_NAME_sourceId, orderId));
+        q.addFilter(FilterBeans.eq(LitemallPointsFlow.PROP_NAME_changeType,
+                _AppMallDaoConstants.POINTS_CHANGE_TYPE_SPEND));
+        LitemallPointsFlow flow = pointsFlowBiz.findFirst(q, null, context);
+        return flow != null && flow.getChangeAmount() != null ? flow.getChangeAmount() : 0;
+    }
+
+    private void returnDeductedPoints(LitemallOrder order, IServiceContext context) {
+        int deducted = findDeductedPoints(order.orm_idString(), context);
+        if (deducted <= 0) {
+            return;
+        }
+        // Idempotent: earnPoints rejects a duplicate (sourceType=refund-return, sourceId=orderId).
+        pointsAccountBiz.earnPoints(order.getUserId(), deducted,
+                _AppMallDaoConstants.POINTS_CHANGE_TYPE_EARN,
+                LitemallPointsAccountBizModel.SOURCE_TYPE_REFUND_RETURN,
+                order.orm_idString(),
+                "取消/退款返还积分 " + order.getOrderSn(), context);
     }
 }

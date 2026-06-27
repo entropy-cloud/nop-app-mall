@@ -250,6 +250,10 @@
                 <resource id="storefront-pay" displayName="订单支付" orderNo="825"
                           icon="ant-design:qrcode-outlined" component="AMIS"
                           resourceType="SUBM" url="/app/mall/pages/mall/pay/pay.page.yaml"/>
+
+                <resource id="storefront-my-points" displayName="我的积分" orderNo="826"
+                          icon="ant-design:diamond-outlined" component="AMIS"
+                          resourceType="SUBM" url="/app/mall/pages/mall/points/my-points.page.yaml"/>
             </children>
         </resource>
 

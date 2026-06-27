@@ -1,0 +1,171 @@
+type: page
+title: 我的积分
+body:
+  - type: wrapper
+    className: storefront-header
+    body:
+      type: flex
+      justify: space-between
+      alignItems: center
+      style:
+        padding: 10px 20px
+        backgroundColor: '#fff'
+        borderBottom: 2px solid '#ff6700'
+      items:
+        - type: wrapper
+          body:
+            - type: button
+              label: '<b style="font-size:24px;color:#ff6700">商城</b>'
+              level: link
+              actionType: link
+              link: "/storefront-home"
+        - type: wrapper
+          body:
+            - type: button
+              label: 用户中心
+              icon: user
+              level: link
+              actionType: link
+              link: "/storefront-user-center"
+
+  - type: wrapper
+    style:
+      padding: 20px
+    body:
+      - type: service
+        name: pointsAccount
+        api:
+          url: '@query:LitemallPointsAccount__getMyPoints'
+          sendOn: true
+        body:
+          type: wrapper
+          style:
+            padding: 20px
+            backgroundColor: '#fff'
+            borderRadius: 4px
+            textAlign: center
+            marginBottom: 20px
+          body:
+            - type: tpl
+              tpl: '<div style="color:#999">当前可用积分</div>'
+            - type: tpl
+              tpl: '<div style="font-size:40px;color:#ff6700;font-weight:bold;margin:10px 0">${data || 0}</div>'
+            - type: tpl
+              tpl: '<div style="color:#999;font-size:12px">积分可用于结算抵扣（兑换比例与上限见结算页）</div>'
+
+      - type: tabs
+        tabs:
+          - title: 全部
+            body:
+              - type: service
+                name: allFlows
+                api:
+                  url: '@query:LitemallPointsFlow__getMyPointsFlows'
+                  data:
+                    page: 1
+                    pageSize: 50
+                  sendOn: true
+                body:
+                  type: crud
+                  data: '${items}'
+                  columns:
+                    - name: changeType
+                      label: 类型
+                      type: mapping
+                      map:
+                        0: '<span style="color:#52c41a">获取</span>'
+                        10: '<span style="color:#ff4d4f">消耗</span>'
+                        20: '<span style="color:#999">过期</span>'
+                    - name: sourceType
+                      label: 来源
+                      type: mapping
+                      map:
+                        order-confirm-earn: 购物赠送
+                        order-deduct: 订单抵扣
+                        refund-return: 退款返还
+                        admin-adjust: 后台调账
+                        check-in: 签到
+                        comment-reward: 评价奖励
+                        '': 其他
+                    - name: changeAmount
+                      label: 变动数量
+                      type: tpl
+                      tpl: "${changeType == 0 ? '+' + changeAmount : (changeType == 20 ? '-' + changeAmount : '-' + changeAmount)}"
+                    - name: balanceAfter
+                      label: 变动后余额
+                    - name: remark
+                      label: 备注
+                    - name: addTime
+                      label: 时间
+                      type: date
+                      format: 'YYYY-MM-DD HH:mm:ss'
+                  placeholder: '<div style="padding:40px;text-align:center;color:#999">暂无积分流水</div>'
+          - title: 获取记录
+            body:
+              - type: service
+                name: earnFlows
+                api:
+                  url: '@query:LitemallPointsFlow__getMyPointsFlows'
+                  data:
+                    changeType: 0
+                    page: 1
+                    pageSize: 50
+                  sendOn: true
+                body:
+                  type: crud
+                  data: '${items}'
+                  columns:
+                    - name: sourceType
+                      label: 来源
+                      type: mapping
+                      map:
+                        order-confirm-earn: 购物赠送
+                        refund-return: 退款返还
+                        admin-adjust: 后台调账
+                        check-in: 签到
+                        comment-reward: 评价奖励
+                        '': 其他
+                    - name: changeAmount
+                      label: 获取数量
+                    - name: balanceAfter
+                      label: 变动后余额
+                    - name: remark
+                      label: 备注
+                    - name: addTime
+                      label: 时间
+                      type: date
+                      format: 'YYYY-MM-DD HH:mm:ss'
+                  placeholder: '<div style="padding:40px;text-align:center;color:#999">暂无获取记录</div>'
+          - title: 消耗记录
+            body:
+              - type: service
+                name: spendFlows
+                api:
+                  url: '@query:LitemallPointsFlow__getMyPointsFlows'
+                  data:
+                    changeType: 10
+                    page: 1
+                    pageSize: 50
+                  sendOn: true
+                body:
+                  type: crud
+                  data: '${items}'
+                  columns:
+                    - name: sourceType
+                      label: 用途
+                      type: mapping
+                      map:
+                        order-deduct: 订单抵扣
+                        admin-adjust: 后台调账
+                        '': 其他
+                    - name: changeAmount
+                      label: 消耗数量
+                    - name: balanceAfter
+                      label: 变动后余额
+                    - name: remark
+                      label: 备注
+                    - name: addTime
+                      label: 时间
+                      type: date
+                      format: 'YYYY-MM-DD HH:mm:ss'
+                  placeholder: '<div style="padding:40px;text-align:center;color:#999">暂无消耗记录</div>'

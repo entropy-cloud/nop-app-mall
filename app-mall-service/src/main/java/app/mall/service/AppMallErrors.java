@@ -321,4 +321,25 @@ public interface AppMallErrors {
     ErrorCode ERR_MEMBER_LEVEL_NOT_CONFIGURED =
             define("nop.err.mall.member-level.not-configured",
                     "未配置会员等级规则");
+
+    // 积分错误码
+    ErrorCode ERR_POINTS_INSUFFICIENT =
+            define("nop.err.mall.points.insufficient",
+                    "积分余额不足");
+
+    ErrorCode ERR_POINTS_ACCOUNT_NOT_FOUND =
+            define("nop.err.mall.points.account-not-found",
+                    "积分账户不存在");
+
+    ErrorCode ERR_POINTS_DEDUCT_EXCEED_LIMIT =
+            define("nop.err.mall.points.deduct-exceed-limit",
+                    "积分抵扣超过上限");
+
+    ErrorCode ERR_POINTS_EARN_FAILED =
+            define("nop.err.mall.points.earn-failed",
+                    "积分获取失败，账户并发冲突请重试");
+
+    ErrorCode ERR_POINTS_DUPLICATE_EARN =
+            define("nop.err.mall.points.duplicate-earn",
+                    "积分已发放过，不可重复发放");
 }

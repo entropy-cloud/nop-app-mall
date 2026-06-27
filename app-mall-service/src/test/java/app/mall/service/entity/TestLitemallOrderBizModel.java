@@ -682,4 +682,149 @@ public class TestLitemallOrderBizModel extends JunitBaseTestCase {
         q.addFilter(FilterBeans.eq(LitemallOrderGoods.PROP_NAME_orderId, orderId));
         return q;
     }
+
+    // ============ Points System (P27) ============
+
+    @SuppressWarnings("unchecked")
+    private Map<String, Object> earnPointsForTest(String userId, int amount, String sourceType, String sourceId) {
+        Map<String, Object> data = new HashMap<>();
+        data.put("userId", userId);
+        data.put("amount", amount);
+        data.put("changeType", _AppMallDaoConstants.POINTS_CHANGE_TYPE_EARN);
+        data.put("sourceType", sourceType);
+        data.put("sourceId", sourceId);
+        data.put("remark", "seed");
+        IGraphQLExecutionContext ctx = graphQLEngine.newRpcContext(
+                GraphQLOperationType.mutation, "LitemallPointsAccount__earnPoints", ApiRequest.build(data));
+        ApiResponse<?> result = graphQLEngine.executeRpc(ctx);
+        assertEquals(0, result.getStatus(), "seed earnPoints failed: " + result);
+        return (Map<String, Object>) result.getData();
+    }
+
+    private int getMyPointsForTest(String userId) {
+        ContextProvider.getOrCreateContext().setUserId(userId);
+        IGraphQLExecutionContext ctx = graphQLEngine.newRpcContext(
+                GraphQLOperationType.query, "LitemallPointsAccount__getMyPoints", ApiRequest.build(new HashMap<>()));
+        ApiResponse<?> result = graphQLEngine.executeRpc(ctx);
+        assertEquals(0, result.getStatus(), "getMyPoints failed: " + result);
+        return ((Number) result.getData()).intValue();
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testSubmitWithPointsDeduction() {
+        // Seed 500 points (default ratio 100 points = ¥1 → ¥5 deduction).
+        earnPointsForTest("1", 500,
+                LitemallPointsAccountBizModel.SOURCE_TYPE_ORDER_CONFIRM_EARN, "seed-deduct-1");
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("addressId", addressId);
+        data.put("message", "积分抵扣测试");
+        data.put("freightPrice", BigDecimal.ZERO);
+        data.put("usePoints", 500);
+        IGraphQLExecutionContext ctx = graphQLEngine.newRpcContext(
+                GraphQLOperationType.mutation, "LitemallOrder__submit", ApiRequest.build(data));
+        ApiResponse<?> result = graphQLEngine.executeRpc(ctx);
+        assertEquals(0, result.getStatus(), "submit with points failed: " + result);
+        Map<String, Object> orderData = (Map<String, Object>) result.getData();
+        // orderPrice = 198; integralPrice = 500/100 = 5; actualPrice = 193
+        assertEquals(0, new BigDecimal("5.00").compareTo(new BigDecimal(orderData.get("integralPrice").toString())));
+        assertEquals(0, new BigDecimal("198").compareTo(new BigDecimal(orderData.get("orderPrice").toString())));
+        assertEquals(0, new BigDecimal("193").compareTo(new BigDecimal(orderData.get("actualPrice").toString())));
+
+        // Points fully spent (500 → 0)
+        assertEquals(0, getMyPointsForTest("1"), "balance should be 0 after spending all 500 points");
+    }
+
+    @Test
+    public void testSubmitPointsDeductionExceedingCapRejected() {
+        // Seed 100000 points (= ¥1000 with default ratio), far above the 30% cap on orderPrice 198 (= 59.4).
+        earnPointsForTest("1", 100000,
+                LitemallPointsAccountBizModel.SOURCE_TYPE_ORDER_CONFIRM_EARN, "seed-cap-1");
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("addressId", addressId);
+        data.put("message", "超上限抵扣测试");
+        data.put("freightPrice", BigDecimal.ZERO);
+        data.put("usePoints", 100000);
+        IGraphQLExecutionContext ctx = graphQLEngine.newRpcContext(
+                GraphQLOperationType.mutation, "LitemallOrder__submit", ApiRequest.build(data));
+        ApiResponse<?> result = graphQLEngine.executeRpc(ctx);
+        assertTrue(result.getStatus() != 0,
+                "submit with points exceeding cap must be rejected: " + result);
+        // Balance unchanged after rejection
+        assertEquals(100000, getMyPointsForTest("1"));
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testConfirmEarnsShoppingReward() {
+        // Submit + pay + ship + confirm, then verify shopping-reward points were earned.
+        Map<String, Object> submitData = new HashMap<>();
+        submitData.put("addressId", addressId);
+        submitData.put("message", "购物赠送测试");
+        submitData.put("freightPrice", BigDecimal.ZERO);
+        IGraphQLExecutionContext submitCtx = graphQLEngine.newRpcContext(
+                GraphQLOperationType.mutation, "LitemallOrder__submit", ApiRequest.build(submitData));
+        ApiResponse<?> submitRes = graphQLEngine.executeRpc(submitCtx);
+        assertEquals(0, submitRes.getStatus(), "submit failed: " + submitRes);
+        Map<String, Object> orderData = (Map<String, Object>) submitRes.getData();
+        String orderId = (String) orderData.get("id");
+        BigDecimal actualPrice = new BigDecimal(orderData.get("actualPrice").toString());
+
+        // pay
+        IGraphQLExecutionContext payCtx = graphQLEngine.newRpcContext(
+                GraphQLOperationType.mutation, "LitemallOrder__pay",
+                ApiRequest.build(Map.of("orderId", orderId)));
+        assertEquals(0, graphQLEngine.executeRpc(payCtx).getStatus(), "pay failed");
+
+        // ship (admin) — test harness allows admin actions (mirrors testShipAndConfirm)
+        IGraphQLExecutionContext shipCtx = graphQLEngine.newRpcContext(
+                GraphQLOperationType.mutation, "LitemallOrder__ship",
+                ApiRequest.build(Map.of("orderId", orderId, "shipSn", "SF1", "shipChannel", "顺丰")));
+        assertEquals(0, graphQLEngine.executeRpc(shipCtx).getStatus(), "ship failed");
+
+        int before = getMyPointsForTest("1");
+
+        // confirm
+        IGraphQLExecutionContext confirmCtx = graphQLEngine.newRpcContext(
+                GraphQLOperationType.mutation, "LitemallOrder__confirm",
+                ApiRequest.build(Map.of("orderId", orderId)));
+        assertEquals(0, graphQLEngine.executeRpc(confirmCtx).getStatus(), "confirm failed");
+
+        int after = getMyPointsForTest("1");
+        int expected = actualPrice.intValue(); // default earnPerYuan=1 → actualPrice points
+        assertEquals(expected, after - before,
+                "confirm should earn actualPrice points (earnPerYuan=1): expected " + expected);
+    }
+
+    @Test
+    public void testCancelReturnsDeductedPoints() {
+        // Seed points, submit with deduction, cancel the order → points must be returned.
+        earnPointsForTest("1", 500,
+                LitemallPointsAccountBizModel.SOURCE_TYPE_ORDER_CONFIRM_EARN, "seed-cancel-1");
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("addressId", addressId);
+        data.put("message", "取消返还积分测试");
+        data.put("freightPrice", BigDecimal.ZERO);
+        data.put("usePoints", 500);
+        IGraphQLExecutionContext ctx = graphQLEngine.newRpcContext(
+                GraphQLOperationType.mutation, "LitemallOrder__submit", ApiRequest.build(data));
+        ApiResponse<?> result = graphQLEngine.executeRpc(ctx);
+        assertEquals(0, result.getStatus(), "submit failed: " + result);
+        String orderId = (String) ((Map<String, Object>) result.getData()).get("id");
+
+        // After submit, 500 points spent → balance 0
+        assertEquals(0, getMyPointsForTest("1"));
+
+        // cancel
+        IGraphQLExecutionContext cancelCtx = graphQLEngine.newRpcContext(
+                GraphQLOperationType.mutation, "LitemallOrder__cancel",
+                ApiRequest.build(Map.of("orderId", orderId)));
+        assertEquals(0, graphQLEngine.executeRpc(cancelCtx).getStatus(), "cancel failed");
+
+        // After cancel, the 500 deducted points are returned
+        assertEquals(500, getMyPointsForTest("1"), "cancel should return the deducted points");
+    }
 }

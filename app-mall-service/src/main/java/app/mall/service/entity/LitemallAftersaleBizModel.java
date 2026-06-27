@@ -3,12 +3,15 @@ package app.mall.service.entity;
 import app.mall.biz.ILitemallAftersaleBiz;
 import app.mall.biz.ILitemallCouponUserBiz;
 import app.mall.biz.ILitemallOrderBiz;
+import app.mall.biz.ILitemallPointsAccountBiz;
+import app.mall.biz.ILitemallPointsFlowBiz;
 import app.mall.dao.AppMallDaoConstants;
 import app.mall.dao.dto.AftersaleApplyRequest;
 import app.mall.dao.entity.LitemallAftersale;
 import app.mall.dao.entity.LitemallCouponUser;
 import app.mall.dao.entity.LitemallOrder;
 import app.mall.dao.entity.LitemallOrderGoods;
+import app.mall.dao.entity.LitemallPointsFlow;
 import app.mall.dao.manager.MallLogManager;
 import app.mall.dao.mapper.LitemallGoodsProductMapper;
 import app.mall.pay.PayRefundRequestBean;
@@ -70,6 +73,12 @@ public class LitemallAftersaleBizModel extends CrudBizModel<LitemallAftersale> i
 
     @Inject
     ILitemallCouponUserBiz couponUserBiz;
+
+    @Inject
+    ILitemallPointsAccountBiz pointsAccountBiz;
+
+    @Inject
+    ILitemallPointsFlowBiz pointsFlowBiz;
 
     @Inject
     LitemallGoodsProductMapper goodsProductMapper; // addStock: atomic SQL UPDATE for stock replenishment after refund
@@ -195,6 +204,12 @@ public class LitemallAftersaleBizModel extends CrudBizModel<LitemallAftersale> i
             for (LitemallCouponUser cu : usedCoupons) {
                 couponUserBiz.returnCoupon(cu.orm_idString(), context);
             }
+
+            // Points return (P27, mirrors coupon restore): a whole-order refund returns the points
+            // the user spent deducting on this order. Item-level partial refund does NOT return points
+            // (deduction is an order-level component, symmetric with coupon restore). Idempotent per
+            // orderId via sourceType=refund-return dedupe in earnPoints.
+            returnOrderDeductedPoints(order, context);
         }
 
         // Notification (Decision 8): order-level dedupe by orderSn. Item-level refunds reuse the same
@@ -206,6 +221,24 @@ public class LitemallAftersaleBizModel extends CrudBizModel<LitemallAftersale> i
         recomputeOrderAftersaleStatus(order, context);
 
         logManager.logOrderSucceed("退款", "订单编号 " + order.getOrderSn() + " 售后编号 " + entity.getAftersaleSn());
+    }
+
+    private void returnOrderDeductedPoints(LitemallOrder order, IServiceContext context) {
+        QueryBean q = new QueryBean();
+        q.addFilter(FilterBeans.eq(LitemallPointsFlow.PROP_NAME_sourceType,
+                LitemallPointsAccountBizModel.SOURCE_TYPE_ORDER_DEDUCT));
+        q.addFilter(FilterBeans.eq(LitemallPointsFlow.PROP_NAME_sourceId, order.orm_idString()));
+        q.addFilter(FilterBeans.eq(LitemallPointsFlow.PROP_NAME_changeType,
+                AppMallDaoConstants.POINTS_CHANGE_TYPE_SPEND));
+        LitemallPointsFlow flow = pointsFlowBiz.findFirst(q, null, context);
+        if (flow == null || flow.getChangeAmount() == null || flow.getChangeAmount() <= 0) {
+            return;
+        }
+        pointsAccountBiz.earnPoints(order.getUserId(), flow.getChangeAmount(),
+                AppMallDaoConstants.POINTS_CHANGE_TYPE_EARN,
+                LitemallPointsAccountBizModel.SOURCE_TYPE_REFUND_RETURN,
+                order.orm_idString(),
+                "退款返还积分 " + order.getOrderSn(), context);
     }
 
     @Override

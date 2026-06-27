@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<sql-lib x:schema="/nop/schema/orm/sql-lib.xdef" xmlns:x="/nop/schema/xdsl.xdef">
+
+    <sqls>
+        <eql name="updateBalanceIfVersion" sqlMethod="execute">
+            <arg name="id"/>
+            <arg name="newBalance"/>
+            <arg name="newTotalEarned"/>
+            <arg name="newTotalSpent"/>
+            <arg name="currentVersion"/>
+
+            <source>
+                update LitemallPointsAccount
+                set balance = ${newBalance}, totalEarned = ${newTotalEarned}, totalSpent = ${newTotalSpent},
+                    version = version + 1, updateTime = now()
+                where id = ${id} and version = ${currentVersion}
+            </source>
+        </eql>
+    </sqls>
+</sql-lib>

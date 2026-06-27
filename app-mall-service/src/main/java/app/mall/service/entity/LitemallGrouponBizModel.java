@@ -5,12 +5,15 @@ import app.mall.biz.ILitemallCouponUserBiz;
 import app.mall.biz.ILitemallGrouponBiz;
 import app.mall.biz.ILitemallGrouponRulesBiz;
 import app.mall.biz.ILitemallOrderBiz;
+import app.mall.biz.ILitemallPointsAccountBiz;
+import app.mall.biz.ILitemallPointsFlowBiz;
 import app.mall.dao._AppMallDaoConstants;
 import app.mall.dao.entity.LitemallCouponUser;
 import app.mall.dao.entity.LitemallGroupon;
 import app.mall.dao.entity.LitemallGrouponRules;
 import app.mall.dao.entity.LitemallOrder;
 import app.mall.dao.entity.LitemallOrderGoods;
+import app.mall.dao.entity.LitemallPointsFlow;
 import app.mall.dao.mapper.LitemallGoodsProductMapper;
 import app.mall.pay.PayRefundRequestBean;
 import app.mall.pay.PayRefundResponseBean;
@@ -52,6 +55,12 @@ public class LitemallGrouponBizModel extends CrudBizModel<LitemallGroupon> imple
 
     @Inject
     ILitemallCouponUserBiz couponUserBiz;
+
+    @Inject
+    ILitemallPointsAccountBiz pointsAccountBiz;
+
+    @Inject
+    ILitemallPointsFlowBiz pointsFlowBiz;
 
     @Inject
     LitemallGoodsProductMapper goodsProductMapper;
@@ -275,12 +284,34 @@ public class LitemallGrouponBizModel extends CrudBizModel<LitemallGroupon> imple
             couponUserBiz.returnCoupon(cu.orm_idString(), context);
         }
 
+        // Points return (P27): groupon-expire is a whole-order refund, so return the points the
+        // user spent deducting on this order, mirroring the coupon return above. Idempotent per orderId.
+        returnOrderDeductedPoints(order, context);
+
         orderBiz.updateEntity(order, "expireGroupons:refundOrder", context);
 
         // Notification is a fire-and-forget side effect: run after commit so its failure cannot roll back the refund.
         final String orderSn = order.getOrderSn();
         final String mobile = order.getMobile();
         txn().afterCommit(null, () -> notificationService.sendGrouponFailRefundNotification(orderSn, mobile));
+    }
+
+    private void returnOrderDeductedPoints(LitemallOrder order, IServiceContext context) {
+        QueryBean q = new QueryBean();
+        q.addFilter(FilterBeans.eq(LitemallPointsFlow.PROP_NAME_sourceType,
+                LitemallPointsAccountBizModel.SOURCE_TYPE_ORDER_DEDUCT));
+        q.addFilter(FilterBeans.eq(LitemallPointsFlow.PROP_NAME_sourceId, order.orm_idString()));
+        q.addFilter(FilterBeans.eq(LitemallPointsFlow.PROP_NAME_changeType,
+                _AppMallDaoConstants.POINTS_CHANGE_TYPE_SPEND));
+        LitemallPointsFlow flow = pointsFlowBiz.findFirst(q, null, context);
+        if (flow == null || flow.getChangeAmount() == null || flow.getChangeAmount() <= 0) {
+            return;
+        }
+        pointsAccountBiz.earnPoints(order.getUserId(), flow.getChangeAmount(),
+                _AppMallDaoConstants.POINTS_CHANGE_TYPE_EARN,
+                LitemallPointsAccountBizModel.SOURCE_TYPE_REFUND_RETURN,
+                order.orm_idString(),
+                "团购失败返还积分 " + order.getOrderSn(), context);
     }
 
     private void expireRulesIfAllExpired(String rulesId, IServiceContext context) {
@@ -297,8 +328,7 @@ public class LitemallGrouponBizModel extends CrudBizModel<LitemallGroupon> imple
         }
     }
 
-    private void requireOrderContainsRuleGoods(String orderId, LitemallGrouponRules rules, IServiceContext context) {
-        LitemallOrder order = orderBiz.requireEntity(orderId, null, context);
+    private void requireOrderContainsRuleGoods(String orderId, LitemallGrouponRules rules, IServiceContext context) {        LitemallOrder order = orderBiz.requireEntity(orderId, null, context);
         boolean matched = order.getOrderGoods().stream()
                 .anyMatch(orderGoods -> Objects.equals(orderGoods.getGoodsId(), rules.getGoodsId()));
         if (!matched) {

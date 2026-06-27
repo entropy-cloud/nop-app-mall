@@ -3,17 +3,72 @@
       xmlns:x="/nop/schema/xdsl.xdef">
 
     <grids>
-        <grid id="list"/>
+        <grid id="list">
+            <cols x:override="bounded-merge">
+                <col id="id"/>
+                <col id="userId"/>
+                <col id="balance" ui:number="true"/>
+                <col id="totalEarned" ui:number="true"/>
+                <col id="totalSpent" ui:number="true"/>
+            </cols>
+        </grid>
         <grid id="pick-list"/>
     </grids>
 
     <forms>
+        <form id="query">
+            <layout>
+                userId
+            </layout>
+        </form>
         <form id="view"/>
-        <form id="edit"/>
+        <form id="edit">
+            <layout>
+                userId[用户ID]
+                balance[当前可用积分]
+                totalEarned[累计获得]
+                totalSpent[累计消耗]
+            </layout>
+        </form>
+
+        <!-- Manual adjustment form: admin grants/deducts points for a user account. -->
+        <form id="adjust" editMode="add" title="手工调账">
+            <layout>
+                userId[用户ID]
+                amount[变动数量(正=增加,负=扣减)]
+                remark[备注]
+            </layout>
+            <cells>
+                <cell id="userId">
+                    <placeholder>目标用户ID</placeholder>
+                </cell>
+                <cell id="amount">
+                    <placeholder>正数增加积分，负数扣减积分</placeholder>
+                </cell>
+            </cells>
+        </form>
     </forms>
 
     <pages>
-        <crud name="main"/>
+        <crud name="main">
+            <listActions x:override="bounded-merge">
+                <action id="add-button"/>
+                <action id="batch-delete-button"/>
+                <action id="adjust-button" label="手工调账" level="primary" icon="fa fa-balance-scale pull-left">
+                    <dialog page="adjust" title="手工调账"/>
+                </action>
+            </listActions>
+            <rowActions x:override="bounded-merge">
+                <action id="row-view-button"/>
+                <action id="row-update-button" actionType="drawer"/>
+                <action id="row-delete-button"/>
+            </rowActions>
+        </crud>
+
+        <simple name="adjust" form="adjust">
+            <api url="@mutation:LitemallPointsAccount__adjustPoints"/>
+        </simple>
+
         <picker name="picker"/>
     </pages>
 </view>

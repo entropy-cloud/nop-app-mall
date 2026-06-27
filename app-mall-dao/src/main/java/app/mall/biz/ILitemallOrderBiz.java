@@ -26,6 +26,7 @@ public interface ILitemallOrderBiz extends ICrudBiz<LitemallOrder> {
                          @Optional @Name("couponUserId") String couponUserId,
                          @Optional @Name("grouponRulesId") String grouponRulesId,
                          @Optional @Name("grouponId") String grouponId,
+                         @Optional @Name("usePoints") Integer usePoints,
                          IServiceContext context);
 
     @BizMutation

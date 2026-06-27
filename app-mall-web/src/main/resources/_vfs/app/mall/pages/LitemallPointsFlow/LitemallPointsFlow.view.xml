@@ -3,17 +3,49 @@
       xmlns:x="/nop/schema/xdsl.xdef">
 
     <grids>
-        <grid id="list"/>
+        <grid id="list">
+            <cols x:override="bounded-merge">
+                <col id="id"/>
+                <col id="userId"/>
+                <col id="changeType"/>
+                <col id="changeAmount" ui:number="true"/>
+                <col id="balanceAfter" ui:number="true"/>
+                <col id="sourceType"/>
+                <col id="sourceId"/>
+                <col id="remark"/>
+                <col id="addTime"/>
+            </cols>
+        </grid>
         <grid id="pick-list"/>
     </grids>
 
     <forms>
+        <form id="query">
+            <layout>
+                userId changeType
+            </layout>
+        </form>
         <form id="view"/>
-        <form id="edit"/>
+        <form id="edit" size="lg">
+            <layout>
+                userId[用户ID]
+                changeType[变动类型]
+                changeAmount[变动数量]
+                balanceAfter[变动后余额]
+                sourceType[来源类型]
+                sourceId[来源业务ID]
+                remark[备注]
+            </layout>
+        </form>
     </forms>
 
     <pages>
-        <crud name="main"/>
+        <crud name="main">
+            <rowActions x:override="bounded-merge">
+                <action id="row-view-button"/>
+                <action id="row-update-button" actionType="drawer"/>
+            </rowActions>
+        </crud>
         <picker name="picker"/>
     </pages>
 </view>

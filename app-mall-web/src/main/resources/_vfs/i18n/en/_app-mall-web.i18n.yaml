@@ -398,6 +398,8 @@ site:
       displayName: ''
     storefront-login:
       displayName: ''
+    storefront-my-points:
+      displayName: ''
     storefront-order-detail:
       displayName: ''
     storefront-order-list:

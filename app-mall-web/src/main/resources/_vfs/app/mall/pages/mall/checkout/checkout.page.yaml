@@ -118,6 +118,31 @@ body:
                     placeholder: 不使用优惠券
 
             - type: divider
+            - type: tpl
+              tpl: '<h3>积分抵扣</h3>'
+            - type: service
+              name: pointsService
+              api:
+                url: '@query:LitemallPointsAccount__getMyPoints'
+                sendOn: true
+              body:
+                type: form
+                name: pointsForm
+                title: ''
+                mode: normal
+                body:
+                  - type: input-number
+                    name: usePoints
+                    label: 使用积分
+                    min: 0
+                    max: '${data || 0}'
+                    step: 1
+                    precision: 0
+                    placeholder: '不使用积分抵扣'
+                    description: "当前可用积分：${data || 0}（兑换比例默认 100 积分=¥1，抵扣上限默认订单金额的 30%）"
+                    visibleOn: '${data > 0}'
+
+            - type: divider
             - type: form
               name: orderForm
               title: 订单备注
@@ -205,6 +230,7 @@ body:
                         couponUserId: "${couponForm.couponUserId}"
                         grouponRulesId: "${grouponRulesId}"
                         grouponId: "${grouponId}"
+                        usePoints: "${pointsForm.usePoints}"
                     redirect: "/storefront-order-result?orderId=${event.data.result.id}"
                     messages:
                       success: '订单提交成功'
