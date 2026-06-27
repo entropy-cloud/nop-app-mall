@@ -7,11 +7,13 @@ import app.mall.biz.ILitemallSystemBiz;
 import app.mall.dao._AppMallDaoConstants;
 import app.mall.dao.entity.LitemallMemberLevel;
 import app.mall.dao.entity.LitemallOrder;
+import app.mall.dao.manager.MallLogManager;
 import io.nop.api.core.annotations.biz.BizModel;
 import io.nop.api.core.annotations.biz.BizMutation;
 import io.nop.api.core.annotations.biz.BizQuery;
 import io.nop.api.core.annotations.core.Name;
 import io.nop.api.core.annotations.core.Optional;
+import io.nop.api.core.annotations.directive.Auth;
 import io.nop.api.core.beans.FilterBeans;
 import io.nop.api.core.beans.query.QueryBean;
 import io.nop.api.core.exceptions.NopException;
@@ -33,6 +35,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import static app.mall.service.AppMallErrors.ERR_MEMBER_LEVEL_INVALID;
 import static app.mall.service.AppMallErrors.ERR_MEMBER_LEVEL_NOT_CONFIGURED;
 import static app.mall.service.AppMallErrors.ERR_MEMBER_LEVEL_USER_NOT_FOUND;
 
@@ -49,6 +52,8 @@ public class LitemallMemberLevelBizModel extends CrudBizModel<LitemallMemberLeve
     public static final String NOP_AUTH_USER_NAME = NopAuthUser.class.getName();
     // mall/user-level dict: 0=普通, 1=VIP, 2=高级VIP. Members are levels 1 and 2.
     public static final List<Integer> MEMBER_LEVELS = List.of(1, 2);
+    // All valid userLevel values (including ordinary 0) — used to validate manual setUserLevel.
+    public static final List<Integer> MEMBER_AND_ORDINARY_LEVELS = List.of(0, 1, 2);
 
     @Inject
     ILitemallOrderBiz orderBiz;
@@ -58,6 +63,9 @@ public class LitemallMemberLevelBizModel extends CrudBizModel<LitemallMemberLeve
 
     @Inject
     IOrmTemplate ormTemplate;
+
+    @Inject
+    MallLogManager logManager;
 
     public LitemallMemberLevelBizModel() {
         setEntityName(LitemallMemberLevel.class.getName());
@@ -127,6 +135,35 @@ public class LitemallMemberLevelBizModel extends CrudBizModel<LitemallMemberLeve
         BigDecimal totalSpending = computeSpending(userId, null, context);
         int target = computeTargetLevel(sorted, totalSpending);
         return ensureUserLevel(user, target);
+    }
+
+    @Override
+    @BizMutation
+    @Auth(roles = "admin")
+    public int setUserLevel(@Name("userId") String userId,
+                            @Name("targetLevel") int targetLevel,
+                            @Optional @Name("remark") String remark,
+                            IServiceContext context) {
+        // mall/user-level dict values: 0=普通, 1=VIP, 2=高级VIP. Admin may set any of the three;
+        // other values are rejected to keep userLevel consistent with the dictionary.
+        if (!MEMBER_AND_ORDINARY_LEVELS.contains(targetLevel)) {
+            throw new NopException(ERR_MEMBER_LEVEL_INVALID).param("targetLevel", targetLevel);
+        }
+        if (StringHelper.isEmpty(userId)) {
+            throw new NopException(ERR_MEMBER_LEVEL_USER_NOT_FOUND).param("userId", userId);
+        }
+        IOrmEntity user = loadUser(userId);
+        if (user == null) {
+            throw new NopException(ERR_MEMBER_LEVEL_USER_NOT_FOUND).param("userId", userId);
+        }
+        int previous = readUserLevel(user);
+        ensureUserLevel(user, targetLevel);
+        // Manual level change is an auditable admin operation (not a points flow): record it in the
+        // admin operation log (LitemallLog) with before/after so the reason is traceable.
+        logManager.logGeneralSucceed("setUserLevel",
+                "userId=" + userId + ", " + previous + "->" + targetLevel
+                        + (StringHelper.isEmpty(remark) ? "" : ", remark=" + remark));
+        return targetLevel;
     }
 
     @Override

@@ -7,6 +7,7 @@ import app.mall.dao._AppMallDaoConstants;
 import app.mall.dao.entity.LitemallCoupon;
 import app.mall.dao.entity.LitemallCouponUser;
 import app.mall.dao.entity.LitemallGoods;
+import app.mall.dao.manager.MallLogManager;
 import app.mall.dao.mapper.LitemallCouponUserMapper;
 import io.nop.api.core.annotations.biz.BizAction;
 import io.nop.api.core.annotations.biz.BizModel;
@@ -14,10 +15,12 @@ import io.nop.api.core.annotations.biz.BizMutation;
 import io.nop.api.core.annotations.biz.BizQuery;
 import io.nop.api.core.annotations.core.Name;
 import io.nop.api.core.annotations.core.Optional;
+import io.nop.api.core.annotations.directive.Auth;
 import io.nop.api.core.beans.FilterBeans;
 import io.nop.api.core.beans.query.QueryBean;
 import io.nop.api.core.exceptions.NopException;
 import io.nop.biz.crud.CrudBizModel;
+import io.nop.commons.util.StringHelper;
 import io.nop.core.context.IServiceContext;
 import jakarta.inject.Inject;
 
@@ -44,6 +47,9 @@ public class LitemallCouponUserBizModel extends CrudBizModel<LitemallCouponUser>
 
     @Inject
     LitemallCouponUserMapper couponUserMapper;
+
+    @Inject
+    MallLogManager logManager;
 
     public LitemallCouponUserBizModel() {
         setEntityName(LitemallCouponUser.class.getName());
@@ -113,6 +119,23 @@ public class LitemallCouponUserBizModel extends CrudBizModel<LitemallCouponUser>
         } finally {
             CLAIM_LOCKS.remove(lockKey, lock);
         }
+    }
+
+    @Override
+    @BizMutation
+    @Auth(roles = "admin")
+    public LitemallCouponUser dispatchCoupon(@Name("couponId") String couponId,
+                                             @Name("userId") String userId,
+                                             @Optional @Name("remark") String remark,
+                                             IServiceContext context) {
+        // Admin manual coupon dispatch: wraps claimCouponForUser so all total/limit/status
+        // validations are reused, then records the operation for audit. Closes the P26/P32
+        // "member-exclusive coupon auto-dispatch" deferred via an explicit manual path.
+        LitemallCouponUser couponUser = claimCouponForUser(couponId, userId, context);
+        logManager.logGeneralSucceed("dispatchCoupon",
+                "couponId=" + couponId + ", userId=" + userId
+                        + (StringHelper.isEmpty(remark) ? "" : ", remark=" + remark));
+        return couponUser;
     }
 
     @Override

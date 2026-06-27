@@ -2103,5 +2103,54 @@
                 </to-many>
             </relations>
         </entity>
+        <entity className="app.mall.dao.entity.LitemallUserTag" createTimeProp="addTime" deleteFlagProp="deleted"
+                displayName="用户标签表" name="app.mall.dao.entity.LitemallUserTag" registerShortName="true"
+                tableName="litemall_user_tag" updateTimeProp="updateTime" useLogicalDelete="true">
+            <columns>
+                <column code="ID" displayName="Id" mandatory="true" name="id" primary="true" propId="1"
+                        stdDataType="string" stdSqlType="INTEGER" tagSet="seq" ui:show="R"/>
+                <column code="USER_ID" displayName="用户ID" domain="userId" mandatory="true" name="userId" precision="50"
+                        propId="2" stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="TAG" displayName="标签码" mandatory="true" name="tag" precision="63" propId="3"
+                        stdDataType="string" stdSqlType="VARCHAR" tagSet="disp"/>
+                <column code="NAME" displayName="标签名称" name="name" precision="127" propId="4" stdDataType="string"
+                        stdSqlType="VARCHAR"/>
+                <column code="ADD_TIME" displayName="创建时间" domain="createTime" name="addTime" propId="5"
+                        stdDataType="datetime" stdSqlType="DATETIME" ui:show="X"/>
+                <column code="UPDATE_TIME" displayName="更新时间" domain="updateTime" name="updateTime" propId="6"
+                        stdDataType="datetime" stdSqlType="DATETIME" ui:show="X"/>
+                <column code="DELETED" displayName="逻辑删除" domain="delFlag" name="deleted" propId="7"
+                        stdDataType="boolean" stdSqlType="BOOLEAN" ui:show="X"/>
+            </columns>
+            <indexes>
+                <index name="idx_userTag_userId_tag" unique="false">
+                    <column name="userId"/>
+                    <column name="tag"/>
+                </index>
+            </indexes>
+        </entity>
+        <entity className="app.mall.dao.entity.LitemallUserBlacklist" createTimeProp="addTime" deleteFlagProp="deleted"
+                displayName="用户黑名单表" name="app.mall.dao.entity.LitemallUserBlacklist" registerShortName="true"
+                tableName="litemall_user_blacklist" updateTimeProp="updateTime" useLogicalDelete="true">
+            <columns>
+                <column code="ID" displayName="Id" mandatory="true" name="id" primary="true" propId="1"
+                        stdDataType="string" stdSqlType="INTEGER" tagSet="seq" ui:show="R"/>
+                <column code="USER_ID" displayName="用户ID" domain="userId" mandatory="true" name="userId" precision="50"
+                        propId="2" stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="REASON" displayName="封禁原因" name="reason" precision="511" propId="3" stdDataType="string"
+                        stdSqlType="VARCHAR"/>
+                <column code="OPERATOR_ID" displayName="操作人ID" name="operatorId" precision="50" propId="4"
+                        stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="ADD_TIME" displayName="创建时间" domain="createTime" name="addTime" propId="5"
+                        stdDataType="datetime" stdSqlType="DATETIME" ui:show="X"/>
+                <column code="UPDATE_TIME" displayName="更新时间" domain="updateTime" name="updateTime" propId="6"
+                        stdDataType="datetime" stdSqlType="DATETIME" ui:show="X"/>
+                <column code="DELETED" displayName="逻辑删除" domain="delFlag" name="deleted" propId="7"
+                        stdDataType="boolean" stdSqlType="BOOLEAN" ui:show="X"/>
+            </columns>
+            <unique-keys>
+                <unique-key columns="userId" name="uk_litemall_user_blacklist_user"/>
+            </unique-keys>
+        </entity>
     </entities>
 </orm>

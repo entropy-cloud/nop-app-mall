@@ -48,7 +48,9 @@ entity:
     LitemallSystem: 系统配置表
     LitemallTimeDiscount: 限时折扣表
     LitemallTopic: 专题表
+    LitemallUserBlacklist: 用户黑名单表
     LitemallUserMessage: 用户站内信表
+    LitemallUserTag: 用户标签表
     LitemallWallet: 钱包账户表
     LitemallWalletFlow: 钱包流水表
 prop:
@@ -751,6 +753,14 @@ prop:
       subtitle: 专题子标题
       title: 专题标题
       updateTime: 更新时间
+    LitemallUserBlacklist:
+      addTime: 创建时间
+      deleted: 逻辑删除
+      id: Id
+      operatorId: 操作人ID
+      reason: 封禁原因
+      updateTime: 更新时间
+      userId: 用户ID
     LitemallUserMessage:
       addTime: 创建时间
       content: 内容
@@ -761,6 +771,14 @@ prop:
       msgType_label: 消息类型
       readTime: 阅读时间
       title: 标题
+      updateTime: 更新时间
+      userId: 用户ID
+    LitemallUserTag:
+      addTime: 创建时间
+      deleted: 逻辑删除
+      id: Id
+      name: 标签名称
+      tag: 标签码
       updateTime: 更新时间
       userId: 用户ID
     LitemallWallet:

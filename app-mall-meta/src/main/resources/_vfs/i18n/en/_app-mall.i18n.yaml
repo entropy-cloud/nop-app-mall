@@ -48,7 +48,9 @@ entity:
     LitemallSystem: null
     LitemallTimeDiscount: null
     LitemallTopic: null
+    LitemallUserBlacklist: null
     LitemallUserMessage: null
+    LitemallUserTag: null
     LitemallWallet: null
     LitemallWalletFlow: null
 prop:
@@ -751,6 +753,14 @@ prop:
       status: null
       status_label: null
       goodsComponent: null
+    LitemallUserBlacklist:
+      id: null
+      userId: null
+      reason: null
+      operatorId: null
+      addTime: null
+      updateTime: null
+      deleted: null
     LitemallUserMessage:
       id: null
       userId: null
@@ -760,6 +770,14 @@ prop:
       content: null
       isRead: null
       readTime: null
+      addTime: null
+      updateTime: null
+      deleted: null
+    LitemallUserTag:
+      id: null
+      userId: null
+      tag: null
+      name: null
       addTime: null
       updateTime: null
       deleted: null

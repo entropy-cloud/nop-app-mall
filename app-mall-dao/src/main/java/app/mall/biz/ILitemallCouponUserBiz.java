@@ -5,6 +5,7 @@ import io.nop.api.core.annotations.biz.BizMutation;
 import io.nop.api.core.annotations.biz.BizQuery;
 import io.nop.api.core.annotations.core.Name;
 import io.nop.api.core.annotations.core.Optional;
+import io.nop.api.core.annotations.directive.Auth;
 import io.nop.core.context.IServiceContext;
 import io.nop.orm.biz.ICrudBiz;
 
@@ -23,6 +24,13 @@ public interface ILitemallCouponUserBiz extends ICrudBiz<LitemallCouponUser> {
     LitemallCouponUser claimCouponForUser(@Name("couponId") String couponId,
                                           @Name("userId") String userId,
                                           IServiceContext context);
+
+    @BizMutation
+    @Auth(roles = "admin")
+    LitemallCouponUser dispatchCoupon(@Name("couponId") String couponId,
+                                      @Name("userId") String userId,
+                                      @Optional @Name("remark") String remark,
+                                      IServiceContext context);
 
     @BizMutation
     LitemallCouponUser redeemCoupon(@Name("code") String code,

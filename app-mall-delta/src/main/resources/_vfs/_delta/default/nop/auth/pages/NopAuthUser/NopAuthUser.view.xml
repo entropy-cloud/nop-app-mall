@@ -51,6 +51,122 @@
                 phone status
             </layout>
         </form>
+
+        <!-- P20 user operations workbench dialogs. These forms carry the row's userId (PK) plus
+             operator-entered params; they are submitted to admin @BizMutation endpoints. Cells for
+             non-entity params are marked custom so they render as plain inputs. -->
+        <form id="banForm" editMode="add" title="封禁用户">
+            <layout>
+                userId[用户ID]
+                reason[封禁原因]
+            </layout>
+            <cells>
+                <cell id="userId" domain="string">
+                    <placeholder>用户ID</placeholder>
+                </cell>
+                <cell id="reason" custom="true" domain="string">
+                    <placeholder>填写封禁原因（选填）</placeholder>
+                </cell>
+            </cells>
+        </form>
+
+        <form id="setLevelForm" editMode="add" title="手工调级">
+            <layout>
+                userId[用户ID]
+                targetLevel[目标等级]
+                remark[备注]
+            </layout>
+            <cells>
+                <cell id="userId" domain="string">
+                    <placeholder>用户ID</placeholder>
+                </cell>
+                <cell id="targetLevel" custom="true" domain="int">
+                    <placeholder>0=普通, 1=VIP, 2=高级VIP</placeholder>
+                </cell>
+                <cell id="remark" custom="true" domain="string">
+                    <placeholder>备注（选填）</placeholder>
+                </cell>
+            </cells>
+        </form>
+
+        <form id="dispatchCouponForm" editMode="add" title="手工发券">
+            <layout>
+                userId[用户ID]
+                couponId[优惠券ID]
+                remark[备注]
+            </layout>
+            <cells>
+                <cell id="userId" domain="string">
+                    <placeholder>用户ID</placeholder>
+                </cell>
+                <cell id="couponId" custom="true" domain="string">
+                    <placeholder>优惠券ID</placeholder>
+                </cell>
+                <cell id="remark" custom="true" domain="string">
+                    <placeholder>备注（选填）</placeholder>
+                </cell>
+            </cells>
+        </form>
+
+        <form id="adjustPointsForm" editMode="add" title="手工加积分">
+            <layout>
+                userId[用户ID]
+                amount[变动数量]
+                remark[备注]
+            </layout>
+            <cells>
+                <cell id="userId" domain="string">
+                    <placeholder>用户ID</placeholder>
+                </cell>
+                <cell id="amount" custom="true" domain="int">
+                    <placeholder>正数增加，负数扣减</placeholder>
+                </cell>
+                <cell id="remark" custom="true" domain="string">
+                    <placeholder>备注（选填）</placeholder>
+                </cell>
+            </cells>
+        </form>
     </forms>
+
+    <pages>
+        <crud name="main" grid="list" filterForm="query">
+            <rowActions x:override="bounded-merge">
+                <action id="row-view-button"/>
+                <action id="row-update-button" actionType="drawer"/>
+                <action id="row-detail-button" label="详情" level="link" icon="fa fa-eye"
+                        actionType="link"
+                        link="/mall/user-ops/user-detail?userId=${userId}"/>
+                <action id="row-ban-button" label="封禁" level="danger" visibleOn="${status == 1}">
+                    <dialog page="ban" title="封禁用户"/>
+                </action>
+                <action id="row-unban-button" label="解禁" level="success" visibleOn="${status == 0}">
+                    <api url="@mutation:LitemallUserBlacklist__unbanUser?userId=$id"/>
+                    <confirm>确认解禁该用户？</confirm>
+                </action>
+                <action id="row-set-level-button" label="调级">
+                    <dialog page="setLevel" title="手工调级"/>
+                </action>
+                <action id="row-dispatch-coupon-button" label="发券">
+                    <dialog page="dispatchCoupon" title="手工发券"/>
+                </action>
+                <action id="row-adjust-points-button" label="加积分">
+                    <dialog page="adjustPoints" title="手工加积分"/>
+                </action>
+            </rowActions>
+        </crud>
+
+        <simple name="ban" form="banForm">
+            <api url="@mutation:LitemallUserBlacklist__banUser"/>
+        </simple>
+        <simple name="setLevel" form="setLevelForm">
+            <api url="@mutation:LitemallMemberLevel__setUserLevel"/>
+        </simple>
+        <simple name="dispatchCoupon" form="dispatchCouponForm">
+            <api url="@mutation:LitemallCouponUser__dispatchCoupon"/>
+        </simple>
+        <simple name="adjustPoints" form="adjustPointsForm">
+            <api url="@mutation:LitemallPointsAccount__adjustPoints"/>
+        </simple>
+    </pages>
 
 </view>

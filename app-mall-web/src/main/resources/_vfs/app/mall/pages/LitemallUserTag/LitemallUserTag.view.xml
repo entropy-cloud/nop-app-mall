@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<view x:extends="_gen/_LitemallUserTag.view.xml" x:schema="/nop/schema/xui/xview.xdef" xmlns:x="/nop/schema/xdsl.xdef">
+
+    <grids>
+        <grid id="list">
+            <cols x:override="bounded-merge">
+                <col id="id"/>
+                <col id="userId"/>
+                <col id="tag"/>
+                <col id="name"/>
+                <col id="addTime"/>
+            </cols>
+        </grid>
+        <grid id="pick-list"/>
+    </grids>
+
+    <forms>
+        <form id="view"/>
+        <form id="edit"/>
+    </forms>
+
+    <pages>
+        <crud name="main">
+            <listActions x:override="bounded-merge">
+                <action id="add-button"/>
+                <action id="batch-delete-button"/>
+                <action id="segment-button" label="按标签分群" level="primary" icon="fa fa-search pull-left"
+                        actionType="link" link="/app/mall/pages/LitemallUserTag/segment.page.yaml"/>
+            </listActions>
+        </crud>
+        <picker name="picker"/>
+    </pages>
+</view>

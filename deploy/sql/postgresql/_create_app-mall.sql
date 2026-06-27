@@ -365,6 +365,28 @@ CREATE TABLE litemall_material_category(
   constraint PK_litemall_material_category primary key (id)
 );
 
+CREATE TABLE litemall_user_tag(
+  id INT4 NOT NULL ,
+  user_id VARCHAR(50) NOT NULL ,
+  tag VARCHAR(63) NOT NULL ,
+  name VARCHAR(127)  ,
+  add_time TIMESTAMP  ,
+  update_time TIMESTAMP  ,
+  deleted BOOLEAN  ,
+  constraint PK_litemall_user_tag primary key (id)
+);
+
+CREATE TABLE litemall_user_blacklist(
+  id INT4 NOT NULL ,
+  user_id VARCHAR(50) NOT NULL ,
+  reason VARCHAR(511)  ,
+  operator_id VARCHAR(50)  ,
+  add_time TIMESTAMP  ,
+  update_time TIMESTAMP  ,
+  deleted BOOLEAN  ,
+  constraint PK_litemall_user_blacklist primary key (id)
+);
+
 CREATE TABLE litemall_goods(
   id INT4 NOT NULL ,
   goods_sn VARCHAR(63) NOT NULL ,
@@ -1329,6 +1351,38 @@ CREATE TABLE litemall_pin_tuan_member(
       COMMENT ON COLUMN litemall_material_category.update_time IS '更新时间';
                     
       COMMENT ON COLUMN litemall_material_category.deleted IS '逻辑删除';
+                    
+      COMMENT ON TABLE litemall_user_tag IS '用户标签表';
+                
+      COMMENT ON COLUMN litemall_user_tag.id IS 'Id';
+                    
+      COMMENT ON COLUMN litemall_user_tag.user_id IS '用户ID';
+                    
+      COMMENT ON COLUMN litemall_user_tag.tag IS '标签码';
+                    
+      COMMENT ON COLUMN litemall_user_tag.name IS '标签名称';
+                    
+      COMMENT ON COLUMN litemall_user_tag.add_time IS '创建时间';
+                    
+      COMMENT ON COLUMN litemall_user_tag.update_time IS '更新时间';
+                    
+      COMMENT ON COLUMN litemall_user_tag.deleted IS '逻辑删除';
+                    
+      COMMENT ON TABLE litemall_user_blacklist IS '用户黑名单表';
+                
+      COMMENT ON COLUMN litemall_user_blacklist.id IS 'Id';
+                    
+      COMMENT ON COLUMN litemall_user_blacklist.user_id IS '用户ID';
+                    
+      COMMENT ON COLUMN litemall_user_blacklist.reason IS '封禁原因';
+                    
+      COMMENT ON COLUMN litemall_user_blacklist.operator_id IS '操作人ID';
+                    
+      COMMENT ON COLUMN litemall_user_blacklist.add_time IS '创建时间';
+                    
+      COMMENT ON COLUMN litemall_user_blacklist.update_time IS '更新时间';
+                    
+      COMMENT ON COLUMN litemall_user_blacklist.deleted IS '逻辑删除';
                     
       COMMENT ON TABLE litemall_goods IS '商品基本信息';
                 

@@ -87,6 +87,7 @@ import static app.mall.service.AppMallErrors.ERR_PIN_TUAN_PRICE_INVALID;
 import static app.mall.service.AppMallErrors.ERR_POINTS_DEDUCT_EXCEED_LIMIT;
 import static app.mall.service.AppMallErrors.ERR_PROMOTION_STACKING_NOT_ALLOWED;
 import static app.mall.service.AppMallErrors.ERR_TIME_DISCOUNT_SOLD_OUT;
+import static app.mall.service.AppMallErrors.ERR_USER_BANNED;
 
 @BizModel("LitemallOrder")
 public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implements ILitemallOrderBiz {
@@ -197,6 +198,13 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
         IOrmEntity memberUser = ormTemplate.get(NopAuthUser.class.getName(), userId);
         Object levelRaw = memberUser != null ? memberUser.orm_propValueByName("userLevel") : null;
         boolean isMember = levelRaw instanceof Integer && (Integer) levelRaw >= 1;
+
+        // Banned-user guard (P20): a disabled user (status=0) may not place orders. status is read
+        // from the same already-loaded NopAuthUser entity to avoid a second cross-entity fetch.
+        Object statusRaw = memberUser != null ? memberUser.orm_propValueByName("status") : null;
+        if (statusRaw instanceof Integer && (Integer) statusRaw == 0) {
+            throw new NopException(ERR_USER_BANNED).param("userId", userId);
+        }
 
         LitemallAddress address = addressBiz.get(addressId, false, context);
         if (address == null || Boolean.TRUE.equals(address.getDeleted())) {

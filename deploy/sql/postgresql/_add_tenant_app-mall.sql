@@ -53,6 +53,10 @@ alter table litemall_user_message add NOP_TENANT_ID VARCHAR(32) DEFAULT '0' NOT 
 
 alter table litemall_material_category add NOP_TENANT_ID VARCHAR(32) DEFAULT '0' NOT NULL;
 
+alter table litemall_user_tag add NOP_TENANT_ID VARCHAR(32) DEFAULT '0' NOT NULL;
+
+alter table litemall_user_blacklist add NOP_TENANT_ID VARCHAR(32) DEFAULT '0' NOT NULL;
+
 alter table litemall_goods add NOP_TENANT_ID VARCHAR(32) DEFAULT '0' NOT NULL;
 
 alter table litemall_coupon_user add NOP_TENANT_ID VARCHAR(32) DEFAULT '0' NOT NULL;
@@ -181,6 +185,12 @@ alter table litemall_user_message add constraint PK_litemall_user_message primar
 
 alter table litemall_material_category drop constraint PK_litemall_material_category;
 alter table litemall_material_category add constraint PK_litemall_material_category primary key (NOP_TENANT_ID, id);
+
+alter table litemall_user_tag drop constraint PK_litemall_user_tag;
+alter table litemall_user_tag add constraint PK_litemall_user_tag primary key (NOP_TENANT_ID, id);
+
+alter table litemall_user_blacklist drop constraint PK_litemall_user_blacklist;
+alter table litemall_user_blacklist add constraint PK_litemall_user_blacklist primary key (NOP_TENANT_ID, id);
 
 alter table litemall_goods drop constraint PK_litemall_goods;
 alter table litemall_goods add constraint PK_litemall_goods primary key (NOP_TENANT_ID, id);

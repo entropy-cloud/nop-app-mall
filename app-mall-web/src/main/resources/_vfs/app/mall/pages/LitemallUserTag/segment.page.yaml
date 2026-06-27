@@ -1,0 +1,37 @@
+type: page
+title: 按标签分群
+body:
+  - type: form
+    title: 查询条件
+    mode: inline
+    submitOnChange: true
+    target: segmentList
+    body:
+      - type: input-text
+        name: tag
+        label: 标签码
+        placeholder: 输入标签码查询匹配用户
+
+  - type: service
+    name: segmentList
+    api:
+      url: '@query:LitemallUserTag__findUsersByTag'
+      data:
+        tag: '${tag}'
+        page: 1
+      sendOn: '${!!tag}'
+    body:
+      - type: table
+        source: '${items}'
+        columns:
+          - name: userId
+            label: 用户ID
+          - name: tag
+            label: 标签码
+          - name: name
+            label: 标签名称
+          - name: addTime
+            label: 打标时间
+        footerToolbar:
+          - type: pagination
+          - type: statistics

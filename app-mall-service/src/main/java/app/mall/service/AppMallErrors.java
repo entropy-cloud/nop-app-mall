@@ -384,6 +384,37 @@ public interface AppMallErrors {
             define("nop.err.mall.member-level.not-configured",
                     "未配置会员等级规则");
 
+    ErrorCode ERR_MEMBER_LEVEL_INVALID =
+            define("nop.err.mall.member-level.invalid",
+                    "目标会员等级不合法", "targetLevel");
+
+    // 用户运营工作台错误码（P20）
+    String ARG_USER_ID = "userId";
+
+    ErrorCode ERR_USER_NOT_FOUND =
+            define("nop.err.mall.user.not-found",
+                    "用户不存在", ARG_USER_ID);
+
+    ErrorCode ERR_USER_ALREADY_BANNED =
+            define("nop.err.mall.user.already-banned",
+                    "用户已被封禁", ARG_USER_ID);
+
+    ErrorCode ERR_USER_NOT_BANNED =
+            define("nop.err.mall.user.not-banned",
+                    "用户未被封禁，无需解禁", ARG_USER_ID);
+
+    ErrorCode ERR_USER_BANNED =
+            define("nop.err.mall.user.banned",
+                    "账号已被封禁，无法下单", ARG_USER_ID);
+
+    ErrorCode ERR_USER_TAG_DUPLICATE =
+            define("nop.err.mall.user-tag.duplicate",
+                    "该用户已存在此标签", ARG_USER_ID, "tag");
+
+    ErrorCode ERR_USER_TAG_NOT_FOUND =
+            define("nop.err.mall.user-tag.not-found",
+                    "用户标签记录不存在", ARG_USER_ID, "tag");
+
     // 积分错误码
     ErrorCode ERR_POINTS_INSUFFICIENT =
             define("nop.err.mall.points.insufficient",

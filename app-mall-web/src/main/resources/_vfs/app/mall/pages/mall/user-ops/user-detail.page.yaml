@@ -1,0 +1,62 @@
+type: page
+title: 用户详情
+body:
+  - type: service
+    name: summary
+    api:
+      url: '@query:LitemallUserBlacklist__getUserWorkbenchSummary'
+      data:
+        userId: "${userId}"
+      sendOn: "${!!userId}"
+    body:
+      - type: panel
+        title: 基本信息
+        body:
+          - type: wrapper
+            className: b-a bg-white m-b-sm
+            body:
+              - type: tpl
+                tpl: '用户名：<b>${userName}</b>　昵称：<b>${nickName}</b>　手机：<b>${mobile}</b>'
+              - type: tpl
+                tpl: '状态：<b>${status == 0 ? "禁用" : "正常"}</b>　等级：<b>${userLevel}</b>　是否封禁：<b>${banned ? "是" : "否"}</b>'
+              - type: tpl
+                tpl: '标签：${tags | join: ", "}'
+              - type: tpl
+                tpl: '封禁原因：<b>${banReason}</b>'
+                visibleOn: "${!!banned}"
+
+      - type: grid
+        columns:
+          - md: 6
+            body:
+              - type: panel
+                title: 订单与消费
+                body:
+                  - type: tpl
+                    tpl: '订单数：<b>${orderCount}</b>　累计消费：<b>${totalSpending}</b>'
+          - md: 6
+            body:
+              - type: panel
+                title: 积分与优惠券
+                body:
+                  - type: tpl
+                    tpl: '积分余额：<b>${pointsBalance}</b>'
+                  - type: tpl
+                    tpl: '优惠券：未使用<b>${couponUnusedCount}</b>　已使用<b>${couponUsedCount}</b>　已过期<b>${couponExpiredCount}</b>'
+
+      - type: grid
+        columns:
+          - md: 6
+            body:
+              - type: panel
+                title: 浏览与反馈
+                body:
+                  - type: tpl
+                    tpl: '足迹数：<b>${footprintCount}</b>　反馈数：<b>${feedbackCount}</b>'
+          - md: 6
+            body:
+              - type: button-toolbar
+                buttons:
+                  - type: button
+                    label: 返回
+                    actionType: back

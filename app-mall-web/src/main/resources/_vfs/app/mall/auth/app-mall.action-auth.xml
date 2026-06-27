@@ -5,6 +5,12 @@
         <resource id="mall-user-manage" displayName="用户管理" icon="ion:grid-outline" resourceType="TOPM"
                   routePath="/mall-user-manage" component="layouts/default/index" orderNo="100">
             <children>
+                <!-- P20 用户运营工作台：NopAuthUser 列表 + 行级运营动作（封禁/调级/发券/加积分/详情聚合）。
+                     NopAuthUser 是平台实体，页面由 nop-auth 提供，本应用通过 app-mall-delta 覆盖其 view 增加行动作。 -->
+                <resource id="mall-user-workbench" displayName="用户运营工作台" orderNo="101"
+                          icon="ant-design:user-switch-outlined" component="AMIS"
+                          resourceType="SUBM" url="/nop/auth/pages/NopAuthUser/main.page.yaml"/>
+
                 <resource id="mall-customer-addr" displayName="收货地址" orderNo="102"
                           icon="ant-design:appstore-twotone" component="AMIS"
                           resourceType="SUBM" url="/app/mall/pages/LitemallAddress/main.page.yaml"/>
@@ -24,6 +30,14 @@
                 <resource id="mall-feedback" displayName="意见反馈" orderNo="106"
                           icon="ant-design:appstore-twotone" component="AMIS"
                           resourceType="SUBM" url="/app/mall/pages/LitemallFeedback/main.page.yaml"/>
+
+                <resource id="mall-user-tag" displayName="用户标签" orderNo="107"
+                          icon="ant-design:tag-outlined" component="AMIS"
+                          resourceType="SUBM" url="/app/mall/pages/LitemallUserTag/main.page.yaml"/>
+
+                <resource id="mall-user-blacklist" displayName="用户黑名单" orderNo="108"
+                          icon="ant-design:stop-outlined" component="AMIS"
+                          resourceType="SUBM" url="/app/mall/pages/LitemallUserBlacklist/main.page.yaml"/>
 
             </children>
         </resource>

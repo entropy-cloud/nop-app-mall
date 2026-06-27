@@ -26,6 +26,8 @@ drop table  if exists  litemall_points_account;
 drop table  if exists  litemall_wallet;
 drop table  if exists  litemall_user_message;
 drop table  if exists  litemall_material_category;
+drop table  if exists  litemall_user_tag;
+drop table  if exists  litemall_user_blacklist;
 drop table  if exists  litemall_goods;
 drop table  if exists  litemall_coupon_user;
 drop table  if exists  litemall_order;

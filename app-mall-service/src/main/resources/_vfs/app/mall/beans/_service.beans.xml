@@ -199,6 +199,21 @@
         <property name="bizObjName" value="LitemallMaterialCategory"/>
     </bean>
 
+    <bean id="app.mall.service.entity.LitemallUserTagBizModel" ioc:type="@bean:id" ioc:default="true"/>
+
+    <bean id="biz_LitemallUserTag" class="io.nop.biz.proxy.BizProxyFactoryBean"
+          ioc:type="app.mall.biz.ILitemallUserTagBiz" ioc:force-lazy-property="true" lazy-init="true" primary="true">
+        <property name="bizObjName" value="LitemallUserTag"/>
+    </bean>
+
+    <bean id="app.mall.service.entity.LitemallUserBlacklistBizModel" ioc:type="@bean:id" ioc:default="true"/>
+
+    <bean id="biz_LitemallUserBlacklist" class="io.nop.biz.proxy.BizProxyFactoryBean"
+          ioc:type="app.mall.biz.ILitemallUserBlacklistBiz" ioc:force-lazy-property="true" lazy-init="true"
+          primary="true">
+        <property name="bizObjName" value="LitemallUserBlacklist"/>
+    </bean>
+
     <bean id="app.mall.service.entity.LitemallGoodsBizModel" ioc:type="@bean:id" ioc:default="true"/>
 
     <bean id="biz_LitemallGoods" class="io.nop.biz.proxy.BizProxyFactoryBean" ioc:type="app.mall.biz.ILitemallGoodsBiz"

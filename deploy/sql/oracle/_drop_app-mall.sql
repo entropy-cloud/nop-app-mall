@@ -26,6 +26,8 @@ drop table litemall_points_account;
 drop table litemall_wallet;
 drop table litemall_user_message;
 drop table litemall_material_category;
+drop table litemall_user_tag;
+drop table litemall_user_blacklist;
 drop table litemall_goods;
 drop table litemall_coupon_user;
 drop table litemall_order;

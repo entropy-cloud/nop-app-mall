@@ -365,6 +365,28 @@ CREATE TABLE litemall_material_category(
   constraint PK_litemall_material_category primary key (ID)
 )CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
 
+CREATE TABLE litemall_user_tag(
+  ID INTEGER NOT NULL    COMMENT 'Id',
+  USER_ID VARCHAR(50) NOT NULL    COMMENT '用户ID',
+  TAG VARCHAR(63) NOT NULL    COMMENT '标签码',
+  NAME VARCHAR(127) NULL    COMMENT '标签名称',
+  ADD_TIME DATETIME NULL    COMMENT '创建时间',
+  UPDATE_TIME DATETIME NULL    COMMENT '更新时间',
+  DELETED BOOLEAN NULL    COMMENT '逻辑删除',
+  constraint PK_litemall_user_tag primary key (ID)
+)CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
+
+CREATE TABLE litemall_user_blacklist(
+  ID INTEGER NOT NULL    COMMENT 'Id',
+  USER_ID VARCHAR(50) NOT NULL    COMMENT '用户ID',
+  REASON VARCHAR(511) NULL    COMMENT '封禁原因',
+  OPERATOR_ID VARCHAR(50) NULL    COMMENT '操作人ID',
+  ADD_TIME DATETIME NULL    COMMENT '创建时间',
+  UPDATE_TIME DATETIME NULL    COMMENT '更新时间',
+  DELETED BOOLEAN NULL    COMMENT '逻辑删除',
+  constraint PK_litemall_user_blacklist primary key (ID)
+)CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
+
 CREATE TABLE litemall_goods(
   ID INTEGER NOT NULL    COMMENT 'Id',
   GOODS_SN VARCHAR(63) NOT NULL    COMMENT '商品编号',
@@ -815,6 +837,10 @@ CREATE TABLE litemall_pin_tuan_member(
    ALTER TABLE litemall_user_message COMMENT '用户站内信表';
                 
    ALTER TABLE litemall_material_category COMMENT '素材分类表';
+                
+   ALTER TABLE litemall_user_tag COMMENT '用户标签表';
+                
+   ALTER TABLE litemall_user_blacklist COMMENT '用户黑名单表';
                 
    ALTER TABLE litemall_goods COMMENT '商品基本信息';
                 

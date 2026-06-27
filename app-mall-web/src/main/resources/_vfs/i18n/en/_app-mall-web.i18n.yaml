@@ -192,9 +192,17 @@ site:
       displayName: ''
     FNPT:LitemallTopic:query:
       displayName: ''
+    FNPT:LitemallUserBlacklist:mutation:
+      displayName: ''
+    FNPT:LitemallUserBlacklist:query:
+      displayName: ''
     FNPT:LitemallUserMessage:mutation:
       displayName: ''
     FNPT:LitemallUserMessage:query:
+      displayName: ''
+    FNPT:LitemallUserTag:mutation:
+      displayName: ''
+    FNPT:LitemallUserTag:query:
       displayName: ''
     FNPT:LitemallWallet:mutation:
       displayName: ''
@@ -300,7 +308,11 @@ site:
       displayName: ''
     LitemallTopic-main:
       displayName: ''
+    LitemallUserBlacklist-main:
+      displayName: ''
     LitemallUserMessage-main:
+      displayName: ''
+    LitemallUserTag-main:
       displayName: ''
     LitemallWallet-main:
       displayName: ''
@@ -370,7 +382,13 @@ site:
       displayName: ''
     mall-topic-manage:
       displayName: ''
+    mall-user-blacklist:
+      displayName: ''
     mall-user-manage:
+      displayName: ''
+    mall-user-tag:
+      displayName: ''
+    mall-user-workbench:
       displayName: ''
     marketing-manage:
       displayName: ''
