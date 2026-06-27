@@ -254,6 +254,14 @@
                 <resource id="storefront-my-points" displayName="我的积分" orderNo="826"
                           icon="ant-design:diamond-outlined" component="AMIS"
                           resourceType="SUBM" url="/app/mall/pages/mall/points/my-points.page.yaml"/>
+
+                <resource id="storefront-pin-tuan-detail" displayName="拼团详情" orderNo="827"
+                          icon="ant-design:team-outlined" component="AMIS"
+                          resourceType="SUBM" url="/app/mall/pages/mall/pin-tuan/pin-tuan-detail.page.yaml"/>
+
+                <resource id="storefront-pin-tuan-my" displayName="我的拼团" orderNo="828"
+                          icon="ant-design:team-outlined" component="AMIS"
+                          resourceType="SUBM" url="/app/mall/pages/mall/pin-tuan/my-pin-tuan.page.yaml"/>
             </children>
         </resource>
 

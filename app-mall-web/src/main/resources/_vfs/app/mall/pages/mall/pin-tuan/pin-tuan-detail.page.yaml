@@ -1,0 +1,98 @@
+type: page
+title: 拼团详情
+body:
+  - type: wrapper
+    className: storefront-header
+    body:
+      type: flex
+      justify: space-between
+      alignItems: center
+      style:
+        padding: 10px 20px
+        backgroundColor: '#fff'
+        borderBottom: 2px solid '#e91e63'
+      items:
+        - type: wrapper
+          body:
+            - type: button
+              label: '<b style="font-size:24px;color:#e91e63">商城</b>'
+              level: link
+              actionType: link
+              link: "/storefront-home"
+        - type: wrapper
+          body:
+            - type: button
+              label: 我的拼团
+              icon: users
+              level: link
+              actionType: link
+              link: "/storefront-pin-tuan-my"
+            - type: button
+              label: 用户中心
+              icon: user
+              level: link
+              actionType: link
+              link: "/storefront-user-center"
+
+  # P25 pin-tuan detail: shows group creator + members + remaining slots + status.
+  # Calls pinTuanDetail which returns the group with its members relation.
+  - type: service
+    name: pinTuanDetail
+    api:
+      url: '@query:LitemallPinTuanActivity__pinTuanDetail'
+      data:
+        groupId: '${groupId}'
+      sendOn: "${groupId}"
+    body:
+      - type: wrapper
+        visibleOn: "${pinTuanDetail.data != null}"
+        style:
+          padding: 20px
+        body:
+          - type: tpl
+            tpl: '<div style="background:linear-gradient(90deg,#e91e63,#f06292);padding:20px;border-radius:8px;color:#fff;margin-bottom:15px"><div style="font-size:18px;font-weight:bold">${pinTuanDetail.data.status == 0 ? "拼团进行中" : (pinTuanDetail.data.status == 10 ? "拼团成功" : (pinTuanDetail.data.status == 20 ? "拼团失败" : ""))}</div><div style="margin-top:8px;font-size:13px">过期时间：${pinTuanDetail.data.expireTime}</div></div>'
+          - type: tpl
+            tpl: '<div style="color:#999;font-size:14px;margin-bottom:10px">团长：用户 ${pinTuanDetail.data.creatorUserId}</div>'
+          - type: tpl
+            tpl: '<h4>参团成员</h4>'
+          - type: each
+            name: pinTuanDetail.data.members
+            placeholder: '<div style="color:#999;padding:20px;text-align:center">暂无成员</div>'
+            items:
+              type: wrapper
+              style:
+                display: flex
+                alignItems: center
+                padding: 8px 0
+                borderBottom: 1px solid '#eee'
+              body:
+                - type: tpl
+                  tpl: '<span style="background:#e91e63;color:#fff;border-radius:50%;width:32px;height:32px;display:inline-flex;align-items:center;justify-content:center;margin-right:10px">${item.userId}</span>'
+                - type: tpl
+                  tpl: '<span>用户 ${item.userId}</span>'
+          - type: divider
+          - type: button
+            label: '邀请参团'
+            level: primary
+            size: lg
+            visibleOn: "${pinTuanDetail.data.status == 0}"
+            actionType: dialog
+            dialog:
+              title: 参与拼团
+              body:
+                type: form
+                api:
+                  url: '@mutation:LitemallPinTuanActivity__joinPinTuan'
+                  data:
+                    groupId: '${groupId}'
+                    orderId: '${orderId}'
+                body:
+                  - type: tpl
+                    tpl: '<div style="color:#999;font-size:12px">参与拼团需先下单，下单后在此填入订单ID完成参团</div>'
+                  - type: input-text
+                    name: orderId
+                    label: 订单ID
+                    required: true
+                    placeholder: '请输入拼团下单后的订单ID'
+              messages:
+                success: '参团成功'

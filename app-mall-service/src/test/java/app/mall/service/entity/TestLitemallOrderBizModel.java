@@ -7,6 +7,7 @@ import app.mall.dao.entity.LitemallGoods;
 import app.mall.dao.entity.LitemallGoodsProduct;
 import app.mall.dao.entity.LitemallOrder;
 import app.mall.dao.entity.LitemallOrderGoods;
+import app.mall.dao.entity.LitemallPinTuanActivity;
 import app.mall.dao.entity.LitemallPromotionActivity;
 import app.mall.dao.entity.LitemallPromotionTier;
 import app.mall.dao.entity.LitemallSystem;
@@ -37,6 +38,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -956,5 +958,76 @@ public class TestLitemallOrderBizModel extends JunitBaseTestCase {
 
         // After cancel, the 500 deducted points are returned
         assertEquals(500, getMyPointsForTest("1"), "cancel should return the deducted points");
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testSubmitWithPinTuan() {
+        // P25 pin-tuan: pinTuanPrice = (retailPrice - activity.pinTuanPrice) * number, applied at
+        // the actualPrice deduction layer. retail=99, pinTuanPrice=80, number=2 -> discount=38.
+        LitemallPinTuanActivity activity = daoProvider.daoFor(LitemallPinTuanActivity.class).newEntity();
+        activity.setGoodsId(goodsId);
+        activity.setPinTuanPrice(new BigDecimal("80"));
+        activity.setMinUserCount(2);
+        activity.setExpireHours(24);
+        activity.setStatus(10);
+        daoProvider.daoFor(LitemallPinTuanActivity.class).saveEntity(activity);
+        String pinTuanActivityId = activity.orm_idString();
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("addressId", addressId);
+        data.put("message", "拼团下单测试");
+        data.put("freightPrice", BigDecimal.ZERO);
+        data.put("pinTuanActivityId", pinTuanActivityId);
+        IGraphQLExecutionContext ctx = graphQLEngine.newRpcContext(
+                GraphQLOperationType.mutation, "LitemallOrder__submit", ApiRequest.build(data));
+        ApiResponse<?> result = graphQLEngine.executeRpc(ctx);
+        assertEquals(0, result.getStatus(), "submit with pin-tuan failed: " + result);
+
+        Map<String, Object> orderData = (Map<String, Object>) result.getData();
+        BigDecimal pinTuanPrice = new BigDecimal(orderData.get("pinTuanPrice").toString());
+        BigDecimal actualPrice = new BigDecimal(orderData.get("actualPrice").toString());
+        // discount = (99 - 80) * 2 = 38
+        assertEquals(0, pinTuanPrice.compareTo(new BigDecimal("38.00")),
+                "pinTuanPrice should be (retail - pinTuanPrice) * number = 38, got " + pinTuanPrice);
+        // actualPrice = orderPrice(198) - pinTuanPrice(38) = 160
+        assertEquals(0, actualPrice.compareTo(new BigDecimal("160.00")),
+                "actualPrice should be 160.00, got " + actualPrice);
+    }
+
+    @Test
+    public void testSubmitPinTuanGrouponMutex() {
+        // P25 Decision: pin-tuan × groupon mutex — submitting both must be rejected.
+        LitemallPinTuanActivity activity = daoProvider.daoFor(LitemallPinTuanActivity.class).newEntity();
+        activity.setGoodsId(goodsId);
+        activity.setPinTuanPrice(new BigDecimal("80"));
+        activity.setMinUserCount(2);
+        activity.setExpireHours(24);
+        activity.setStatus(10);
+        daoProvider.daoFor(LitemallPinTuanActivity.class).saveEntity(activity);
+        String pinTuanActivityId = activity.orm_idString();
+
+        app.mall.dao.entity.LitemallGrouponRules rules =
+                daoProvider.daoFor(app.mall.dao.entity.LitemallGrouponRules.class).newEntity();
+        rules.setGoodsId(goodsId);
+        rules.setGoodsName("Test Goods");
+        rules.setDiscount(new BigDecimal("10.00"));
+        rules.setDiscountMember(2);
+        rules.setExpireTime(LocalDateTime.now().plusDays(7));
+        rules.setStatus(0);
+        daoProvider.daoFor(app.mall.dao.entity.LitemallGrouponRules.class).saveEntity(rules);
+        String grouponRulesId = rules.orm_idString();
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("addressId", addressId);
+        data.put("message", "拼团团购互斥测试");
+        data.put("freightPrice", BigDecimal.ZERO);
+        data.put("grouponRulesId", grouponRulesId);
+        data.put("pinTuanActivityId", pinTuanActivityId);
+        IGraphQLExecutionContext ctx = graphQLEngine.newRpcContext(
+                GraphQLOperationType.mutation, "LitemallOrder__submit", ApiRequest.build(data));
+        ApiResponse<?> result = graphQLEngine.executeRpc(ctx);
+        assertFalse(result.getStatus() == 0,
+                "submit with both groupon and pin-tuan must be rejected: " + result);
     }
 }

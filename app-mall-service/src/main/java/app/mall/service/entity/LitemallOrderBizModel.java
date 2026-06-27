@@ -9,6 +9,7 @@ import app.mall.biz.ILitemallGrouponBiz;
 import app.mall.biz.ILitemallGrouponRulesBiz;
 import app.mall.biz.ILitemallOrderBiz;
 import app.mall.biz.ILitemallOrderGoodsBiz;
+import app.mall.biz.ILitemallPinTuanActivityBiz;
 import app.mall.biz.ILitemallPointsAccountBiz;
 import app.mall.biz.ILitemallPointsFlowBiz;
 import app.mall.biz.ILitemallPromotionActivityBiz;
@@ -26,6 +27,7 @@ import app.mall.dao.dto.GoodsStatisticsBean;
 import app.mall.dao.dto.OrderStatisticsBean;
 import app.mall.dao.dto.UserStatisticsBean;
 import app.mall.dao.entity.LitemallOrderGoods;
+import app.mall.dao.entity.LitemallPinTuanActivity;
 import app.mall.dao.entity.LitemallPointsFlow;
 import app.mall.dao.manager.MallLogManager;
 import app.mall.dao.mapper.LitemallGoodsProductMapper;
@@ -79,6 +81,9 @@ import static app.mall.service.AppMallErrors.ERR_ORDER_NOT_FOUND;
 import static app.mall.service.AppMallErrors.ERR_ORDER_PRICE_INVALID;
 import static app.mall.service.AppMallErrors.ERR_ORDER_STOCK_INSUFFICIENT;
 import static app.mall.service.AppMallErrors.ERR_ORDER_USE_REAL_PAYMENT;
+import static app.mall.service.AppMallErrors.ERR_PIN_TUAN_GROUPON_MUTEX;
+import static app.mall.service.AppMallErrors.ERR_PIN_TUAN_NOT_ACTIVE;
+import static app.mall.service.AppMallErrors.ERR_PIN_TUAN_PRICE_INVALID;
 import static app.mall.service.AppMallErrors.ERR_POINTS_DEDUCT_EXCEED_LIMIT;
 import static app.mall.service.AppMallErrors.ERR_PROMOTION_STACKING_NOT_ALLOWED;
 import static app.mall.service.AppMallErrors.ERR_TIME_DISCOUNT_SOLD_OUT;
@@ -131,6 +136,9 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
     ILitemallGrouponBiz grouponBiz;
 
     @Inject
+    ILitemallPinTuanActivityBiz pinTuanActivityBiz;
+
+    @Inject
     ILitemallSystemBiz systemBiz;
 
     @Inject
@@ -164,8 +172,21 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
                                  @Optional @Name("grouponRulesId") String grouponRulesId,
                                  @Optional @Name("grouponId") String grouponId,
                                  @Optional @Name("usePoints") Integer usePoints,
+                                 @Optional @Name("pinTuanActivityId") String pinTuanActivityId,
+                                 @Optional @Name("pinTuanGroupId") String pinTuanGroupId,
                                  IServiceContext context) {
         String userId = context.getUserId();
+
+        // Pin-tuan × Groupon mutex (P25 Decision): a single order may use groupon OR pin-tuan,
+        // never both. They occupy the same actualPrice deduction layer (grouponPrice /
+        // pinTuanPrice); allowing both would double-count social-buy discounts.
+        boolean hasGroupon = grouponRulesId != null && !grouponRulesId.isEmpty();
+        boolean hasPinTuan = pinTuanActivityId != null && !pinTuanActivityId.isEmpty();
+        if (hasGroupon && hasPinTuan) {
+            throw new NopException(ERR_PIN_TUAN_GROUPON_MUTEX)
+                    .param("grouponRulesId", grouponRulesId)
+                    .param("pinTuanActivityId", pinTuanActivityId);
+        }
 
         // Member-level pricing: vipPrice is a SKU unit-price discount applied at the goodsPrice
         // aggregation layer (min(retail, vip) * number), not an order-level deduction. It therefore
@@ -241,7 +262,32 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
         order.setComments(0);
         order.setDeleted(false);
 
+        // Pin-tuan activity resolution (P25): load + validate the activity up front so an invalid
+        // activity fails before any stock deduction. pinTuanPrice (order) is a deduction amount:
+        // (retailPrice - activity.pinTuanPrice) * number, aggregated over matching SKU lines, and
+        // applied at the actualPrice deduction layer (same layer as grouponPrice). See
+        // docs/design/order-and-cart.md price composition.
+        LitemallPinTuanActivity pinTuanActivity = null;
+        if (hasPinTuan) {
+            pinTuanActivity = pinTuanActivityBiz.get(pinTuanActivityId, false, context);
+            if (pinTuanActivity == null || Boolean.TRUE.equals(pinTuanActivity.getDeleted())) {
+                throw new NopException(ERR_PIN_TUAN_NOT_ACTIVE)
+                        .param("pinTuanActivityId", pinTuanActivityId);
+            }
+            if (pinTuanActivity.getStatus() == null
+                    || pinTuanActivity.getStatus() != _AppMallDaoConstants.PROMOTION_STATUS_ACTIVE) {
+                throw new NopException(ERR_PIN_TUAN_NOT_ACTIVE)
+                        .param("pinTuanActivityId", pinTuanActivityId)
+                        .param("status", pinTuanActivity.getStatus());
+            }
+            if (pinTuanActivity.getPinTuanPrice() == null) {
+                throw new NopException(ERR_PIN_TUAN_PRICE_INVALID)
+                        .param("pinTuanActivityId", pinTuanActivityId);
+            }
+        }
+
         BigDecimal goodsPriceTotal = BigDecimal.ZERO;
+        BigDecimal pinTuanPriceTotal = BigDecimal.ZERO;
         List<String> couponScopeIds = new ArrayList<>();
         for (LitemallCart item : checkedItems) {
             LitemallOrderGoods orderGoods = orderGoodsBiz.newEntity();
@@ -288,6 +334,29 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
 
             BigDecimal lineTotal = unitPrice.multiply(BigDecimal.valueOf(item.getNumber()));
             goodsPriceTotal = goodsPriceTotal.add(lineTotal);
+
+            // Pin-tuan discount (P25): for SKU lines matching the pin-tuan activity, the deduction
+            // amount is (retailPrice - activity.pinTuanPrice) * number, computed from the base retail
+            // price (product.getPrice()). Applied at the actualPrice deduction layer.
+            if (pinTuanActivity != null) {
+                boolean skuMatch = pinTuanActivity.getProductId() != null
+                        ? Objects.equals(item.getProductId(), pinTuanActivity.getProductId())
+                        : Objects.equals(item.getGoodsId(), pinTuanActivity.getGoodsId());
+                if (skuMatch) {
+                    BigDecimal retailPrice = product.getPrice();
+                    if (pinTuanActivity.getPinTuanPrice().compareTo(retailPrice) >= 0) {
+                        throw new NopException(ERR_PIN_TUAN_PRICE_INVALID)
+                                .param("pinTuanActivityId", pinTuanActivity.orm_idString())
+                                .param("pinTuanPrice", pinTuanActivity.getPinTuanPrice())
+                                .param("retailPrice", retailPrice);
+                    }
+                    BigDecimal linePinTuanDiscount = retailPrice
+                            .subtract(pinTuanActivity.getPinTuanPrice())
+                            .multiply(BigDecimal.valueOf(item.getNumber()));
+                    pinTuanPriceTotal = pinTuanPriceTotal.add(linePinTuanDiscount);
+                }
+            }
+
             couponScopeIds.add(item.getGoodsId());
             if (product.getGoods() != null && product.getGoods().getCategoryId() != null) {
                 couponScopeIds.add(product.getGoods().getCategoryId());
@@ -341,6 +410,7 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
             grouponPrice = rules.getDiscount() != null ? rules.getDiscount() : BigDecimal.ZERO;
         }
         order.setGrouponPrice(grouponPrice);
+        order.setPinTuanPrice(pinTuanPriceTotal);
 
         BigDecimal orderPrice = goodsPriceTotal;
         if (order.getFreightPrice() != null) {
@@ -359,7 +429,7 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
         if (order.getIntegralPrice() != null) {
             actualPrice = actualPrice.subtract(order.getIntegralPrice());
         }
-        actualPrice = actualPrice.subtract(grouponPrice);
+        actualPrice = actualPrice.subtract(grouponPrice).subtract(pinTuanPriceTotal);
         order.setActualPrice(actualPrice);
 
         saveEntity(order, "submit", context);
@@ -381,6 +451,17 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
                 grouponBiz.joinGroupon(grouponId, orderId, context);
             } else {
                 grouponBiz.openGroupon(grouponRulesId, orderId, context);
+            }
+        }
+
+        // Pin-tuan open/join (P25): mirror the groupon wiring above. The creator opens a new group;
+        // a joiner (pinTuanGroupId provided) joins an existing group.
+        if (pinTuanActivityId != null && !pinTuanActivityId.isEmpty()) {
+            String orderId = order.orm_idString();
+            if (pinTuanGroupId != null && !pinTuanGroupId.isEmpty()) {
+                pinTuanActivityBiz.joinPinTuan(pinTuanGroupId, orderId, context);
+            } else {
+                pinTuanActivityBiz.openPinTuan(pinTuanActivityId, orderId, context);
             }
         }
 

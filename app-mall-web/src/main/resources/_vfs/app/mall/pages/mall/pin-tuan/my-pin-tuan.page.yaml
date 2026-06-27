@@ -1,0 +1,68 @@
+type: page
+title: 我的拼团
+body:
+  - type: wrapper
+    className: storefront-header
+    body:
+      type: flex
+      justify: space-between
+      alignItems: center
+      style:
+        padding: 10px 20px
+        backgroundColor: '#fff'
+        borderBottom: 2px solid '#e91e63'
+      items:
+        - type: wrapper
+          body:
+            - type: button
+              label: '<b style="font-size:24px;color:#e91e63">商城</b>'
+              level: link
+              actionType: link
+              link: "/storefront-home"
+        - type: wrapper
+          body:
+            - type: button
+              label: 用户中心
+              icon: user
+              level: link
+              actionType: link
+              link: "/storefront-user-center"
+
+  # P25 my pin-tuan list: groups the current user participates in.
+  - type: service
+    name: myPinTuans
+    api:
+      url: '@query:LitemallPinTuanActivity__myPinTuans'
+      data:
+        page: 1
+        pageSize: 20
+    body:
+      - type: each
+        name: myPinTuans.items
+        placeholder: '<div style="padding:40px;text-align:center;color:#999">暂无拼团记录</div>'
+        items:
+          type: wrapper
+          style:
+            background: '#fff'
+            borderRadius: 8px
+            margin: '8px 20px'
+            padding: 15px
+            border: 1px solid '#eee'
+          body:
+            - type: flex
+              justify: space-between
+              alignItems: center
+              items:
+                - type: wrapper
+                  body:
+                    - type: tpl
+                      tpl: '<div style="font-size:14px;color:#666">团ID：${item.id}</div>'
+                    - type: tpl
+                      tpl: '<div style="font-size:12px;color:#999">过期时间：${item.expireTime}</div>'
+                - type: tpl
+                  tpl: '<span style="font-size:13px;padding:3px 12px;border-radius:12px;${item.status == 0 ? "background:#fff3e0;color:#e65100" : (item.status == 10 ? "background:#e8f5e9;color:#2e7d32" : "background:#ffebee;color:#c62828")}">${item.status == 0 ? "进行中" : (item.status == 10 ? "拼团成功" : (item.status == 20 ? "拼团失败" : ""))}</span>'
+            - type: button
+              label: 查看详情
+              level: link
+              actionType: link
+              link: "/storefront-pin-tuan-detail?groupId=${item.id}"

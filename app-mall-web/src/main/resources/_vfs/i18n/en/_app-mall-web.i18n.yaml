@@ -408,6 +408,10 @@ site:
       displayName: ''
     storefront-pay:
       displayName: ''
+    storefront-pin-tuan-detail:
+      displayName: ''
+    storefront-pin-tuan-my:
+      displayName: ''
     storefront-search:
       displayName: ''
     storefront-topic-detail:

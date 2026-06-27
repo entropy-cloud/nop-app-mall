@@ -1132,9 +1132,9 @@
                 <column code="ORDER_PRICE" comment="goods_price + freight_price - coupon_price - promotion_price"
                         displayName="订单费用" mandatory="true" name="orderPrice" precision="10" propId="15" scale="2"
                         stdDataType="decimal" stdSqlType="DECIMAL"/>
-                <column code="ACTUAL_PRICE" comment="order_price - integral_price - groupon_price" displayName="实付费用"
-                        mandatory="true" name="actualPrice" precision="10" propId="16" scale="2" stdDataType="decimal"
-                        stdSqlType="DECIMAL"/>
+                <column code="ACTUAL_PRICE" comment="order_price - integral_price - groupon_price - pin_tuan_price"
+                        displayName="实付费用" mandatory="true" name="actualPrice" precision="10" propId="16" scale="2"
+                        stdDataType="decimal" stdSqlType="DECIMAL"/>
                 <column code="PAY_ID" displayName="微信付款编号" name="payId" precision="63" propId="17" stdDataType="string"
                         stdSqlType="VARCHAR"/>
                 <column code="PAY_TIME" displayName="微信付款时间" name="payTime" propId="18" stdDataType="datetime"

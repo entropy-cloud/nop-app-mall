@@ -3,17 +3,70 @@
       xmlns:x="/nop/schema/xdsl.xdef">
 
     <grids>
-        <grid id="list"/>
+        <grid id="list">
+            <cols x:override="bounded-merge">
+                <col id="id"/>
+                <col id="goodsId"/>
+                <col id="productId"/>
+                <col id="pinTuanPrice"/>
+                <col id="minUserCount"/>
+                <col id="maxUserCount"/>
+                <col id="expireHours"/>
+                <col id="status"/>
+            </cols>
+        </grid>
         <grid id="pick-list"/>
     </grids>
 
     <forms>
+        <form id="query">
+            <layout>
+                goodsId status
+            </layout>
+        </form>
         <form id="view"/>
-        <form id="edit"/>
+        <form id="edit" size="lg">
+            <layout>
+                goodsId[商品ID] productId[SKU ID]
+                pinTuanPrice[拼团价] minUserCount[成团人数门槛]
+                maxUserCount[最多人数] expireHours[有效时间（小时）]
+                status[活动状态] remark[备注]
+            </layout>
+            <cells>
+                <cell id="productId">
+                    <placeholder>SKU ID，留空表示该商品全部 SKU 均参与</placeholder>
+                </cell>
+                <cell id="pinTuanPrice">
+                    <placeholder>拼团专享单价（须低于零售价，如 80.00）</placeholder>
+                </cell>
+                <cell id="minUserCount">
+                    <placeholder>成团人数门槛（含团长，如 3）</placeholder>
+                </cell>
+                <cell id="maxUserCount">
+                    <placeholder>最多人数上限（0=不限，留空=不限）</placeholder>
+                </cell>
+                <cell id="expireHours">
+                    <placeholder>开团后有效时间（小时，如 24）</placeholder>
+                </cell>
+                <cell id="status">
+                    <placeholder>活动状态（字典自动渲染：草稿/进行中/已结束/已关闭）</placeholder>
+                </cell>
+            </cells>
+        </form>
+
+        <form id="add" x:prototype="edit">
+            <layout x:override="remove"/>
+        </form>
     </forms>
 
     <pages>
-        <crud name="main"/>
+        <crud name="main">
+            <rowActions x:override="bounded-merge">
+                <action id="row-view-button"/>
+                <action id="row-update-button" actionType="drawer"/>
+                <action id="row-delete-button"/>
+            </rowActions>
+        </crud>
         <picker name="picker"/>
     </pages>
 </view>

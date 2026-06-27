@@ -5,6 +5,7 @@ import app.mall.biz.ILitemallFlashSaleSessionBiz;
 import app.mall.biz.ILitemallGrouponBiz;
 import app.mall.biz.ILitemallOrderBiz;
 import app.mall.biz.ILitemallOrderGoodsBiz;
+import app.mall.biz.ILitemallPinTuanActivityBiz;
 import io.nop.core.context.IServiceContext;
 import io.nop.core.context.ServiceContextImpl;
 import jakarta.inject.Inject;
@@ -34,6 +35,9 @@ public class MallJobInvoker {
 
     @Inject
     ILitemallFlashSaleSessionBiz flashSaleSessionBiz;
+
+    @Inject
+    ILitemallPinTuanActivityBiz pinTuanActivityBiz;
 
     public void cancelExpiredOrders() {
         IServiceContext context = new ServiceContextImpl();
@@ -71,5 +75,13 @@ public class MallJobInvoker {
         IServiceContext context = new ServiceContextImpl();
         int count = flashSaleSessionBiz.switchFlashSaleSessions(context);
         LOG.info("mall-job switchFlashSaleSessions finished, affected={}", count);
+    }
+
+    // P25 pin-tuan: expire ACTIVE groups past their expireTime -> FAILED + refund all members.
+    // See docs/design/marketing-and-promotions.md 拼团章节 "超时失败 + 退款语义".
+    public void expirePinTuans() {
+        IServiceContext context = new ServiceContextImpl();
+        int count = pinTuanActivityBiz.expirePinTuans(context);
+        LOG.info("mall-job expirePinTuans finished, affected={}", count);
     }
 }

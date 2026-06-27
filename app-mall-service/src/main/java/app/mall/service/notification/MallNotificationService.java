@@ -51,6 +51,11 @@ public class MallNotificationService {
                 "sendGrouponFailRefundNotification", orderSn);
     }
 
+    public void sendPinTuanFailRefundNotification(String orderSn, String mobile) {
+        sendSms(mobile, NotifyType.REFUND, Arrays.asList(StringHelper.tail(orderSn, 6)),
+                "sendPinTuanFailRefundNotification", orderSn);
+    }
+
     public void sendCaptchaCode(String mobile, String code) {
         sendSms(mobile, NotifyType.CAPTCHA, Arrays.asList(code),
                 "sendCaptchaCode", mobile);

@@ -413,4 +413,41 @@ public interface AppMallErrors {
     ErrorCode ERR_CHECK_IN_RULE_MISSING =
             define("nop.err.mall.check-in.rule-missing",
                     "签到规则未配置，请联系管理员");
+
+    // 拼团错误码
+    ErrorCode ERR_PIN_TUAN_NOT_FOUND =
+            define("nop.err.mall.pin-tuan.not-found",
+                    "拼团团不存在");
+
+    ErrorCode ERR_PIN_TUAN_NOT_ACTIVE =
+            define("nop.err.mall.pin-tuan.not-active",
+                    "拼团活动不在有效期内或未上架");
+
+    ErrorCode ERR_PIN_TUAN_EXPIRED =
+            define("nop.err.mall.pin-tuan.expired",
+                    "拼团已过期");
+
+    ErrorCode ERR_PIN_TUAN_FULL =
+            define("nop.err.mall.pin-tuan.full",
+                    "拼团已满员");
+
+    ErrorCode ERR_PIN_TUAN_CANNOT_JOIN_OWN =
+            define("nop.err.mall.pin-tuan.cannot-join-own",
+                    "不能加入自己发起的拼团");
+
+    ErrorCode ERR_PIN_TUAN_ALREADY_JOINED =
+            define("nop.err.mall.pin-tuan.already-joined",
+                    "已参加该拼团");
+
+    ErrorCode ERR_PIN_TUAN_NOT_ENOUGH_MEMBERS =
+            define("nop.err.mall.pin-tuan.not-enough-members",
+                    "拼团人数不足");
+
+    ErrorCode ERR_PIN_TUAN_GROUPON_MUTEX =
+            define("nop.err.mall.pin-tuan.groupon-mutex",
+                    "拼团与团购不可同时使用");
+
+    ErrorCode ERR_PIN_TUAN_PRICE_INVALID =
+            define("nop.err.mall.pin-tuan.price-invalid",
+                    "拼团价必须低于零售价");
 }
