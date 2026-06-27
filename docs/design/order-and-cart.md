@@ -53,6 +53,7 @@
 - goods price：商品金额小计
 - freight price：基于当前运费策略计算出的配送费
 - coupon price：订单在满足优惠券条件时形成的优惠金额构件
+- promotion price：订单在满足满减活动条件时由系统自动判定形成的优惠金额构件（满减/限时折扣共用此价格槽位）
 - groupon price：订单在满足团购条件时形成的优惠金额构件
 - integral price：积分抵扣金额；当前如果未启用积分能力，则该金额保持为零
 - order price：叠加运费与优惠后的支付前金额
@@ -63,10 +64,15 @@
 订单提交时按以下公式计算各价格构件：
 
 - `goods price` = 所有结算项 SKU 当前零售价 × 数量的总和（使用提交时的实时价格，不沿用购物车快照）
-- `order price` = `goods price` + `freight price` - `coupon price`
+- `order price` = `goods price` + `freight price` - `coupon price` - `promotion price`
 - `actual price` = `order price` - `integral price` - `groupon price`
 
-其中 `coupon price` 受券范围校验（全场/类目/指定商品）约束，`groupon price` 仅在团购成功后成立。这些公式的定义以 `model/app-mall.orm.xml` 字段注释和 `LitemallOrderBizModel.submit()` 实现为准。
+其中 `coupon price` 受券范围校验（全场/类目/指定商品）约束，`promotion price` 由满减活动自动判定最优档位生成（订单级优惠，与 coupon 同处 orderPrice 减项层），`groupon price` 仅在团购成功后成立。这些公式的定义以 `model/app-mall.orm.xml` 字段注释和 `LitemallOrderBizModel.submit()` 实现为准。
+
+### 价格计算顺序约定
+
+- 满减门槛 `meetAmount` 以 `goods price` 为判定基准。若启用会员等级价（P26），会员价作用于 SKU 单价层（降低 `goods price` 汇总），会间接拉低满减门槛命中判定。
+- 因此价格计算顺序为：**先计算会员价后的 `goods price` → 再据 `goods price` 判定满减门槛与最优档位 → 再计算 coupon / orderPrice**。该顺序在 `LitemallOrderBizModel.submit()` 实现中保持。
 
 ### 运费规则
 
@@ -266,6 +272,7 @@
 | 收货地址 | ← 入 | `user-and-address.md` | 结算要求地址归属于当前用户 |
 | SKU 可售性与库存 | ← 入 | `product-catalog.md` | 结算/下单基于当前可售价格与库存；订单保留商品快照 |
 | 优惠券价格构件 | ← 入 | `marketing-and-promotions.md` | 结算校验可用券，影响 coupon price；取消/退款后恢复 |
+| 满减价格构件 | ← 入 | `marketing-and-promotions.md` | 结算自动判定满减最优档位，影响 promotion price（orderPrice 减项层）；自动触发、不可恢复 |
 | 团购上下文 | ← 入 | `marketing-and-promotions.md` | grouponRulesId/grouponId 透传到 submit；团购超时触发 204 |
 | 评价资格 | → 出 | `marketing-and-promotions.md` | 收货完成(401/402)是评价资格边界 |
 | 售后资格 | → 出 | 本文件（退款与售后章节） | 已支付未发货(201)或已完成收货(401/402)+售后状态可申请(INIT) |

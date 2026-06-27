@@ -1,6 +1,6 @@
 # Enhanced Features Roadmap
 
-> Last Updated: 2026-06-21
+> Last Updated: 2026-06-27
 > Source: `docs/analysis/2026-06-21-mobile-mall-functional-design-analysis.md`, `docs/design/*.md`
 
 ## Purpose
@@ -17,8 +17,8 @@
 
 > **状态更新只改这里，不改 Phase Details 中的状态行。**
 
-- 15. 满减送: `todo`
-- 16. 订单项级售后增强: `todo`
+- 15. 满减送: `done`（`docs/plans/2026-06-27-1742-1-phase15-full-discount-promotion-plan.md`）
+- 16. 订单项级售后增强: `planned`（`docs/plans/2026-06-27-1742-3-phase16-order-item-aftersale-plan.md`）
 - 17. 微信小程序订单中心: `todo`
 - 18. Dashboard 重做: `todo`
 - 19. 报表体系扩展: `todo`
@@ -28,7 +28,7 @@
 - 23. 限时折扣: `todo`
 - 24. 秒杀: `todo`
 - 25. 拼团: `todo`
-- 26. 会员等级体系: `todo`
+- 26. 会员等级体系: `planned`（`docs/plans/2026-06-27-1742-2-phase26-member-level-system-plan.md`）
 - 27. 积分体系: `todo`
 - 28. 签到: `todo`
 - 29. 钱包余额与充值: `todo`
