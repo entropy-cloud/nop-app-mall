@@ -26,4 +26,9 @@
           ioc:type="@bean:id" ioc:bean-method="build">
         <property name="mapperClass" value="@bean:type"/>
     </bean>
+
+    <bean id="app.mall.dao.mapper.LitemallTimeDiscountMapper" class="io.nop.orm.sql_lib.proxy.SqlLibProxyFactoryBean"
+          ioc:type="@bean:id" ioc:bean-method="build">
+        <property name="mapperClass" value="@bean:type"/>
+    </bean>
 </beans>

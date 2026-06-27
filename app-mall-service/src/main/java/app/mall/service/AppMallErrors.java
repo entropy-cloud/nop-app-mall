@@ -305,6 +305,23 @@ public interface AppMallErrors {
             define("nop.err.mall.promotion.stacking-not-allowed",
                     "满减与优惠券不可叠加，满减已自动生效，请取消优惠券");
 
+    // 限时折扣错误码
+    ErrorCode ERR_TIME_DISCOUNT_NOT_ACTIVE =
+            define("nop.err.mall.time-discount.not-active",
+                    "限时折扣活动不在有效期内或未上架");
+
+    ErrorCode ERR_TIME_DISCOUNT_SOLD_OUT =
+            define("nop.err.mall.time-discount.sold-out",
+                    "限时折扣库存不足");
+
+    ErrorCode ERR_TIME_DISCOUNT_NOT_IN_WINDOW =
+            define("nop.err.mall.time-discount.not-in-window",
+                    "限时折扣不在有效时间窗内");
+
+    ErrorCode ERR_TIME_DISCOUNT_INVALID_VALUE =
+            define("nop.err.mall.time-discount.invalid-discount-value",
+                    "限时折扣值无效");
+
     // 会员等级错误码
     ErrorCode ERR_MEMBER_LEVEL_RULE_NOT_FOUND =
             define("nop.err.mall.member-level.rule-not-found",

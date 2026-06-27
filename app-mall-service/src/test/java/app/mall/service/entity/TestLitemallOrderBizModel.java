@@ -10,6 +10,7 @@ import app.mall.dao.entity.LitemallOrderGoods;
 import app.mall.dao.entity.LitemallPromotionActivity;
 import app.mall.dao.entity.LitemallPromotionTier;
 import app.mall.dao.entity.LitemallSystem;
+import app.mall.dao.entity.LitemallTimeDiscount;
 import app.mall.dao._AppMallDaoConstants;
 import io.nop.api.core.annotations.autotest.NopTestConfig;
 import io.nop.api.core.annotations.core.OptionalBoolean;
@@ -681,6 +682,135 @@ public class TestLitemallOrderBizModel extends JunitBaseTestCase {
         QueryBean q = new QueryBean();
         q.addFilter(FilterBeans.eq(LitemallOrderGoods.PROP_NAME_orderId, orderId));
         return q;
+    }
+
+    // ============ Time-Limited Discount (P23) ============
+
+    private LitemallTimeDiscount createActiveTimeDiscount(int discountType, BigDecimal discountValue,
+                                                           String productId, Integer stockLimit) {
+        LitemallTimeDiscount d = daoProvider.daoFor(LitemallTimeDiscount.class).newEntity();
+        d.setGoodsId(goodsId);
+        d.setProductId(productId);
+        d.setDiscountType(discountType);
+        d.setDiscountValue(discountValue);
+        d.setStatus(_AppMallDaoConstants.PROMOTION_STATUS_ACTIVE);
+        d.setStockLimit(stockLimit);
+        d.setStartTime(LocalDateTime.now().minusDays(1));
+        d.setEndTime(LocalDateTime.now().plusDays(1));
+        daoProvider.daoFor(LitemallTimeDiscount.class).saveEntity(d);
+        return d;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testSubmitWithTimeDiscount() {
+        // retail 99, percent 0.9 => promoPrice 89.10; goodsPrice = 89.10 * 2 = 178.20
+        createActiveTimeDiscount(_AppMallDaoConstants.DISCOUNT_TYPE_PERCENT, new BigDecimal("0.9"), null, 0);
+
+        ApiRequest<Map<String, Object>> submitReq = ApiRequest.build(Map.of(
+                "addressId", addressId,
+                "message", "限时折扣测试",
+                "freightPrice", BigDecimal.ZERO
+        ));
+        IGraphQLExecutionContext gqlCtx = graphQLEngine.newRpcContext(
+                GraphQLOperationType.mutation, "LitemallOrder__submit", submitReq);
+        ApiResponse<?> submitResult = graphQLEngine.executeRpc(gqlCtx);
+        assertEquals(0, submitResult.getStatus(), "submit failed: " + submitResult);
+        Map<String, Object> orderData = (Map<String, Object>) submitResult.getData();
+        // time discount lowers the unit price at the goodsPrice aggregation layer (not promotionPrice)
+        assertEquals(0, new BigDecimal("178.20").compareTo(new BigDecimal(orderData.get("goodsPrice").toString())),
+                "goodsPrice should reflect the discounted unit price");
+        assertEquals(0, BigDecimal.ZERO.compareTo(new BigDecimal(orderData.get("promotionPrice").toString())),
+                "time discount must NOT enter promotionPrice (it's a unit-price-layer discount)");
+
+        String orderId = (String) orderData.get("id");
+        LitemallOrderGoods og = daoProvider.daoFor(LitemallOrderGoods.class).findAllByQuery(
+                queryByOrder(orderId)).get(0);
+        assertEquals(0, new BigDecimal("89.10").compareTo(og.getPrice()),
+                "orderGoods unit price should be the discounted promoPrice");
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testSubmitTimeDiscountAmountDiscount() {
+        // retail 99, amount 20 => promoPrice 79; goodsPrice = 79 * 2 = 158
+        createActiveTimeDiscount(_AppMallDaoConstants.DISCOUNT_TYPE_AMOUNT, new BigDecimal("20"), null, 0);
+
+        ApiRequest<Map<String, Object>> submitReq = ApiRequest.build(Map.of(
+                "addressId", addressId,
+                "message", "直降折扣测试",
+                "freightPrice", BigDecimal.ZERO
+        ));
+        IGraphQLExecutionContext gqlCtx = graphQLEngine.newRpcContext(
+                GraphQLOperationType.mutation, "LitemallOrder__submit", submitReq);
+        ApiResponse<?> submitResult = graphQLEngine.executeRpc(gqlCtx);
+        assertEquals(0, submitResult.getStatus(), "submit failed: " + submitResult);
+        Map<String, Object> orderData = (Map<String, Object>) submitResult.getData();
+        assertEquals(0, new BigDecimal("158.00").compareTo(new BigDecimal(orderData.get("goodsPrice").toString())));
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testSubmitTimeDiscountCoexistsWithPromotion() {
+        // time discount percent 0.9 => goodsPrice = 89.10 * 2 = 178.20
+        createActiveTimeDiscount(_AppMallDaoConstants.DISCOUNT_TYPE_PERCENT, new BigDecimal("0.9"), null, 0);
+        // 满减 meet 100 reduce 20: applies on the discounted goodsPrice 178.20 >= 100 => promotionPrice 20
+        createActiveAmountPromotion(new BigDecimal("100"), new BigDecimal("20"));
+
+        ApiRequest<Map<String, Object>> submitReq = ApiRequest.build(Map.of(
+                "addressId", addressId,
+                "message", "折扣+满减共存",
+                "freightPrice", BigDecimal.ZERO
+        ));
+        IGraphQLExecutionContext gqlCtx = graphQLEngine.newRpcContext(
+                GraphQLOperationType.mutation, "LitemallOrder__submit", submitReq);
+        ApiResponse<?> submitResult = graphQLEngine.executeRpc(gqlCtx);
+        assertEquals(0, submitResult.getStatus(), "submit failed: " + submitResult);
+        Map<String, Object> orderData = (Map<String, Object>) submitResult.getData();
+        // goodsPrice = 178.20 (time discount unit-price layer)
+        assertEquals(0, new BigDecimal("178.20").compareTo(new BigDecimal(orderData.get("goodsPrice").toString())));
+        // promotionPrice = 20 (满减 judges on discounted goodsPrice 178.20 >= 100)
+        assertEquals(0, new BigDecimal("20").compareTo(new BigDecimal(orderData.get("promotionPrice").toString())));
+        // orderPrice = 178.20 - 20 = 158.20
+        assertEquals(0, new BigDecimal("158.20").compareTo(new BigDecimal(orderData.get("orderPrice").toString())));
+    }
+
+    @Test
+    public void testSubmitTimeDiscountStockLimitSoldOut() {
+        // discount limited to 1 unit, but cart requests 2 => sold-out rejection
+        createActiveTimeDiscount(_AppMallDaoConstants.DISCOUNT_TYPE_PERCENT, new BigDecimal("0.9"), null, 1);
+
+        ApiRequest<Map<String, Object>> submitReq = ApiRequest.build(Map.of(
+                "addressId", addressId,
+                "message", "售罄测试",
+                "freightPrice", BigDecimal.ZERO
+        ));
+        IGraphQLExecutionContext gqlCtx = graphQLEngine.newRpcContext(
+                GraphQLOperationType.mutation, "LitemallOrder__submit", submitReq);
+        ApiResponse<?> submitResult = graphQLEngine.executeRpc(gqlCtx);
+        assertTrue(submitResult.getStatus() != 0,
+                "submit should be rejected when discount stock is insufficient: " + submitResult);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testSubmitTimeDiscountStockLimitDeducted() {
+        // discount limited to 10 units, cart requests 2 => succeeds, stockLimit 10 -> 8
+        LitemallTimeDiscount d = createActiveTimeDiscount(
+                _AppMallDaoConstants.DISCOUNT_TYPE_PERCENT, new BigDecimal("0.9"), null, 10);
+
+        ApiRequest<Map<String, Object>> submitReq = ApiRequest.build(Map.of(
+                "addressId", addressId,
+                "message", "库存扣减测试",
+                "freightPrice", BigDecimal.ZERO
+        ));
+        IGraphQLExecutionContext gqlCtx = graphQLEngine.newRpcContext(
+                GraphQLOperationType.mutation, "LitemallOrder__submit", submitReq);
+        ApiResponse<?> submitResult = graphQLEngine.executeRpc(gqlCtx);
+        assertEquals(0, submitResult.getStatus(), "submit failed: " + submitResult);
+
+        LitemallTimeDiscount reloaded = daoProvider.daoFor(LitemallTimeDiscount.class).getEntityById(d.orm_idString());
+        assertEquals(8, reloaded.getStockLimit(), "stockLimit should be decremented by the ordered quantity");
     }
 
     // ============ Points System (P27) ============

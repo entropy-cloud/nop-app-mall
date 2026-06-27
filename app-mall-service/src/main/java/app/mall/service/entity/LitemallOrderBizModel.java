@@ -12,6 +12,7 @@ import app.mall.biz.ILitemallPointsAccountBiz;
 import app.mall.biz.ILitemallPointsFlowBiz;
 import app.mall.biz.ILitemallPromotionActivityBiz;
 import app.mall.biz.ILitemallSystemBiz;
+import app.mall.biz.ILitemallTimeDiscountBiz;
 import app.mall.dao._AppMallDaoConstants;
 import app.mall.dao.entity.LitemallAddress;
 import app.mall.dao.entity.LitemallCart;
@@ -27,6 +28,7 @@ import app.mall.dao.entity.LitemallPointsFlow;
 import app.mall.dao.manager.MallLogManager;
 import app.mall.dao.mapper.LitemallGoodsProductMapper;
 import app.mall.dao.mapper.LitemallOrderMapper;
+import app.mall.dao.mapper.LitemallTimeDiscountMapper;
 import app.mall.pay.PayPrepayRequestBean;
 import app.mall.pay.PayPrepayResponseBean;
 import app.mall.pay.PayService;
@@ -77,6 +79,7 @@ import static app.mall.service.AppMallErrors.ERR_ORDER_STOCK_INSUFFICIENT;
 import static app.mall.service.AppMallErrors.ERR_ORDER_USE_REAL_PAYMENT;
 import static app.mall.service.AppMallErrors.ERR_POINTS_DEDUCT_EXCEED_LIMIT;
 import static app.mall.service.AppMallErrors.ERR_PROMOTION_STACKING_NOT_ALLOWED;
+import static app.mall.service.AppMallErrors.ERR_TIME_DISCOUNT_SOLD_OUT;
 
 @BizModel("LitemallOrder")
 public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implements ILitemallOrderBiz {
@@ -103,6 +106,12 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
 
     @Inject
     ILitemallPromotionActivityBiz promotionActivityBiz;
+
+    @Inject
+    ILitemallTimeDiscountBiz timeDiscountBiz;
+
+    @Inject
+    LitemallTimeDiscountMapper timeDiscountMapper; // reduceTimeDiscountStock: atomic SQL UPDATE for discount stock
 
     @Inject
     ILitemallPointsAccountBiz pointsAccountBiz;
@@ -241,6 +250,27 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
                     && product.getVipPrice().compareTo(unitPrice) < 0) {
                 unitPrice = product.getVipPrice();
                 orderGoods.setVipPrice(product.getVipPrice());
+            }
+            // Time-limited discount (P23): SKU-level promo price at the goodsPrice aggregation layer.
+            // effectiveUnitPrice = min(retail, vip, timeDiscountPrice). When the discount wins and has
+            // a limited stock (stockLimit > 0), atomically decrement the discount stock; sold-out aborts.
+            Map<String, Object> timeDiscount = timeDiscountBiz.selectTimeDiscountForProduct(
+                    item.getGoodsId(), item.getProductId(), context);
+            if (timeDiscount != null && timeDiscount.get("promoPrice") != null) {
+                BigDecimal timeDiscountPrice = new BigDecimal(timeDiscount.get("promoPrice").toString());
+                if (timeDiscountPrice.compareTo(unitPrice) < 0) {
+                    Integer stockLimit = (Integer) timeDiscount.get("stockLimit");
+                    if (stockLimit != null && stockLimit > 0) {
+                        int affected = timeDiscountMapper.reduceTimeDiscountStock(
+                                (String) timeDiscount.get("id"), item.getNumber());
+                        if (affected == 0) {
+                            throw new NopException(ERR_TIME_DISCOUNT_SOLD_OUT)
+                                    .param("discountId", timeDiscount.get("id"))
+                                    .param("requested", item.getNumber());
+                        }
+                    }
+                    unitPrice = timeDiscountPrice;
+                }
             }
             orderGoods.setPrice(unitPrice);
             orderGoods.setSpecifications(item.getSpecifications());

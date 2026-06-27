@@ -161,7 +161,7 @@ public class _LitemallOrder extends DynamicOrmEntity{
     public static final String PROP_NAME_pickupTime = "pickupTime";
     public static final int PROP_ID_pickupTime = 35;
     
-    /* 促销优惠金额（满减/限时折扣）: PROMOTION_PRICE DECIMAL */
+    /* 满减优惠金额: PROMOTION_PRICE DECIMAL */
     public static final String PROP_NAME_promotionPrice = "promotionPrice";
     public static final int PROP_ID_promotionPrice = 36;
     
@@ -427,7 +427,7 @@ public class _LitemallOrder extends DynamicOrmEntity{
     /* 核销时间: PICKUP_TIME */
     private java.time.LocalDateTime _pickupTime;
     
-    /* 促销优惠金额（满减/限时折扣）: PROMOTION_PRICE */
+    /* 满减优惠金额: PROMOTION_PRICE */
     private java.math.BigDecimal _promotionPrice;
     
     /* 拼团优惠金额: PIN_TUAN_PRICE */
@@ -2008,7 +2008,7 @@ public class _LitemallOrder extends DynamicOrmEntity{
     }
     
     /**
-     * 促销优惠金额（满减/限时折扣）: PROMOTION_PRICE
+     * 满减优惠金额: PROMOTION_PRICE
      */
     public final java.math.BigDecimal getPromotionPrice(){
          onPropGet(PROP_ID_promotionPrice);
@@ -2016,7 +2016,7 @@ public class _LitemallOrder extends DynamicOrmEntity{
     }
 
     /**
-     * 促销优惠金额（满减/限时折扣）: PROMOTION_PRICE
+     * 满减优惠金额: PROMOTION_PRICE
      */
     public final void setPromotionPrice(java.math.BigDecimal value){
         if(onPropSet(PROP_ID_promotionPrice,value)){

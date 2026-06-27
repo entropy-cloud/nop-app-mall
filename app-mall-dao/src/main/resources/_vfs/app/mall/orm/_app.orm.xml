@@ -1173,7 +1173,7 @@
                         stdDataType="string" stdSqlType="VARCHAR"/>
                 <column code="PICKUP_TIME" displayName="核销时间" name="pickupTime" propId="35" stdDataType="datetime"
                         stdSqlType="DATETIME"/>
-                <column code="PROMOTION_PRICE" displayName="促销优惠金额（满减/限时折扣）" mandatory="true" name="promotionPrice"
+                <column code="PROMOTION_PRICE" displayName="满减优惠金额" mandatory="true" name="promotionPrice"
                         precision="10" propId="36" scale="2" stdDataType="decimal" stdSqlType="DECIMAL"/>
                 <column code="PIN_TUAN_PRICE" displayName="拼团优惠金额" mandatory="true" name="pinTuanPrice" precision="10"
                         propId="37" scale="2" stdDataType="decimal" stdSqlType="DECIMAL"/>

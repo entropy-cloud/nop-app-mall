@@ -1127,7 +1127,7 @@
                 <column code="PICKUP_STORE_ID" displayName="自提门店ID" name="pickupStoreId" propId="33" stdDataType="string" stdSqlType="INTEGER"/>
                 <column code="PICKUP_CODE" displayName="自提核销码" name="pickupCode" precision="50" propId="34" stdDataType="string" stdSqlType="VARCHAR"/>
                 <column code="PICKUP_TIME" displayName="核销时间" name="pickupTime" propId="35" stdDataType="datetime" stdSqlType="DATETIME"/>
-                <column code="PROMOTION_PRICE" displayName="促销优惠金额（满减/限时折扣）" mandatory="true" name="promotionPrice" precision="10" propId="36" scale="2" stdDataType="decimal" stdSqlType="DECIMAL"/>
+                <column code="PROMOTION_PRICE" displayName="满减优惠金额" mandatory="true" name="promotionPrice" precision="10" propId="36" scale="2" stdDataType="decimal" stdSqlType="DECIMAL"/>
                 <column code="PIN_TUAN_PRICE" displayName="拼团优惠金额" mandatory="true" name="pinTuanPrice" precision="10" propId="37" scale="2" stdDataType="decimal" stdSqlType="DECIMAL"/>
                 <column code="PAY_CHANNEL" displayName="支付通道" name="payChannel" propId="38" stdDataType="int" stdSqlType="INTEGER" ext:dict="mall/pay-channel"/>
                 <column code="WALLET_PAY_AMOUNT" displayName="余额支付金额" name="walletPayAmount" precision="10" propId="39" scale="2" stdDataType="decimal" stdSqlType="DECIMAL"/>

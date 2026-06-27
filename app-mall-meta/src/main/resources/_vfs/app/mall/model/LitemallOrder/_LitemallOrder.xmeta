@@ -162,8 +162,8 @@
               updatable="true">
             <schema type="java.time.LocalDateTime"/>
         </prop>
-        <prop name="promotionPrice" displayName="促销优惠金额（满减/限时折扣）" propId="36" mandatory="true" queryable="true"
-              sortable="true" insertable="true" updatable="true">
+        <prop name="promotionPrice" displayName="满减优惠金额" propId="36" mandatory="true" queryable="true" sortable="true"
+              insertable="true" updatable="true">
             <schema type="java.math.BigDecimal" precision="10" scale="2"/>
         </prop>
         <prop name="pinTuanPrice" displayName="拼团优惠金额" propId="37" mandatory="true" queryable="true" sortable="true"

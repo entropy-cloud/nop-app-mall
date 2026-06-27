@@ -519,7 +519,7 @@ prop:
       pickupStoreId: 自提门店ID
       pickupTime: 核销时间
       pinTuanPrice: 拼团优惠金额
-      promotionPrice: 促销优惠金额（满减/限时折扣）
+      promotionPrice: 满减优惠金额
       refundAmount: 实际退款金额
       refundContent: 退款备注
       refundTime: 退款时间

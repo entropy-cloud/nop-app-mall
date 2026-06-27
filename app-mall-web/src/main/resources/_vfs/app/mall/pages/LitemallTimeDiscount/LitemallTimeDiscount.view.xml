@@ -3,17 +3,63 @@
       xmlns:x="/nop/schema/xdsl.xdef">
 
     <grids>
-        <grid id="list"/>
+        <grid id="list">
+            <cols x:override="bounded-merge">
+                <col id="id"/>
+                <col id="goodsId"/>
+                <col id="productId"/>
+                <col id="discountType"/>
+                <col id="discountValue"/>
+                <col id="startTime"/>
+                <col id="endTime"/>
+                <col id="status"/>
+                <col id="stockLimit"/>
+            </cols>
+        </grid>
         <grid id="pick-list"/>
     </grids>
 
     <forms>
+        <form id="query">
+            <layout>
+                goodsId status
+            </layout>
+        </form>
         <form id="view"/>
-        <form id="edit"/>
+        <form id="edit" size="lg">
+            <layout>
+                goodsId[商品ID] productId[SKU ID]
+                discountType[折扣类型] discountValue[折扣值]
+                startTime[开始时间] endTime[结束时间]
+                status[活动状态] stockLimit[折扣库存]
+                remark[备注]
+            </layout>
+            <cells>
+                <cell id="productId">
+                    <placeholder>SKU ID，留空表示该商品全部 SKU 均参与</placeholder>
+                </cell>
+                <cell id="discountValue">
+                    <placeholder>折扣类型为减金额时填直降额（如 20）；为打折时填小数支付率（如 0.9 表示 9 折）</placeholder>
+                </cell>
+                <cell id="stockLimit">
+                    <placeholder>折扣库存，填 0 表示不限</placeholder>
+                </cell>
+            </cells>
+        </form>
+
+        <form id="add" x:prototype="edit">
+            <layout x:override="remove"/>
+        </form>
     </forms>
 
     <pages>
-        <crud name="main"/>
+        <crud name="main">
+            <rowActions x:override="bounded-merge">
+                <action id="row-view-button"/>
+                <action id="row-update-button" actionType="drawer"/>
+                <action id="row-delete-button"/>
+            </rowActions>
+        </crud>
         <picker name="picker"/>
     </pages>
 </view>

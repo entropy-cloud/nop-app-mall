@@ -188,6 +188,17 @@ body:
                       tpl: '<div style="color:#999;font-size:12px">${item.brief}</div>'
                     - type: tpl
                       tpl: '<span style="color:#ff6700;font-size:18px;font-weight:bold">¥${item.retailPrice}</span>'
+                    - type: service
+                      name: timeDiscount
+                      api:
+                        url: '@query:LitemallTimeDiscount__selectTimeDiscountForProduct'
+                        data:
+                          goodsId: "${item.id}"
+                        sendOn: "${item.id}"
+                      body:
+                        type: tpl
+                        visibleOn: "${timeDiscount.data != null}"
+                        tpl: '<div style="margin-top:2px"><span style="color:#ff4500;font-weight:bold">限时价 ¥${timeDiscount.data.promoPrice}</span> <span style="background:#ff4500;color:#fff;font-size:10px;padding:1px 5px;border-radius:2px">限时折扣</span></div>'
                     - type: button
                       label: 查看详情
                       level: primary

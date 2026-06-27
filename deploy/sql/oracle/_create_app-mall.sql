@@ -1474,7 +1474,7 @@ CREATE TABLE litemall_pin_tuan_member(
                     
       COMMENT ON COLUMN litemall_order.PICKUP_TIME IS '核销时间';
                     
-      COMMENT ON COLUMN litemall_order.PROMOTION_PRICE IS '促销优惠金额（满减/限时折扣）';
+      COMMENT ON COLUMN litemall_order.PROMOTION_PRICE IS '满减优惠金额';
                     
       COMMENT ON COLUMN litemall_order.PIN_TUAN_PRICE IS '拼团优惠金额';
                     
