@@ -316,6 +316,45 @@ item 级退款时三个订单级副作用策略：
 - 管理员可以查看售后申请、执行审核与退款，并保留必要的处理记录。
 - 售后流程中的审核、退款与结果通知不应改变订单原始快照和履约完成事实。
 
+## 订单运营工作台（P21）
+
+后台运营工作台为管理员提供订单批量发货、改价/改运费、改地址、订单标记、orderSn 模糊搜索与异常监控能力。所有运营动作标注 `@Auth(roles="admin")`，仅管理员可达。
+
+### 改价 / 改运费安全策略
+
+订单价格含 6 层构件（见「价格语义」）。改价动作按构件层分级守卫，避免破坏既有折扣分摊与上限语义：
+
+- **改运费（freightPrice）**：仅待支付（101）允许改。freight 在 orderPrice 加项层，不触碰折扣层，重算 `orderPrice/actualPrice` 后安全落库。
+- **改商品价（goodsPrice）**：仅待支付（101）且 `couponPrice=promotionPrice=integralPrice=grouponPrice=pinTuanPrice` 全为 0（纯商品订单，无任何活动折扣）时允许并重算；任一折扣非 0 则拒绝（`ERR_ORDER_PRICE_MODIFY_DISCOUNT_ACTIVE`）。理由：goodsPrice 变更会使已派生的满减门槛/券门槛/积分上限失效，重算将破坏既有折扣分摊与上限语义，存在负 orderPrice / 积分超额风险。残留风险：带折扣订单的 goodsPrice 改价需求由运营先取消订单重建满足。
+- 已支付订单已固化入账金额，不允许改价（`ERR_ORDER_NOT_ALLOW_MODIFY_PRICE`）。
+
+`modifyOrderPrice` 接受增量参数 `freightPriceDelta`/`goodsPriceDelta`（可正可负），最低 0 不出现负价；可选 `remark` 补丁式追加到 `adminRemark`。
+
+### 改地址
+
+- 仅发货前（待支付 101 / 已支付未发货 201）允许改地址（`ERR_ORDER_NOT_ALLOW_CHANGE_ADDRESS`）。
+- 新地址经 `ILitemallAddressBiz` 校验归属同一用户后写入 consignee/mobile/address（`ERR_ORDER_ADDRESS_NOT_BELONG_USER`）。
+
+### 订单标记
+
+- 写既有 `adminRemark` 字段（surface 既有列，无 ORM 改动）。整字段覆盖语义：以传入值作为最新运营备注。
+
+### orderSn 模糊搜索
+
+- 订单管理页 grid 查询支持 orderSn 模糊搜索（`filter_orderSn__contains`），覆盖 Nop 默认查询操作符，无需额外 xmeta 配置。
+
+### 批量发货
+
+- Excel 导入运单号批量发货（orderSn/shipSn/shipChannel 三列），经平台 `nop-excel`（`ExcelHelper.readSheet`）解析，逐行复用 `ship` 单行逻辑（状态守卫 + 事务）。
+- 部分失败不阻断成功行，失败行带原因返回（`BatchShipResultBean`）。每行独立提交：某行失败仅记录在结果列表中，不回滚已成功行。
+
+### 异常监控
+
+- `getOverdueUnshippedOrders(cutoffHours)`：`status=201` 已支付未发货且 `addTime` 早于 cutoff 的订单。cutoff 默认 168 小时（与系统配置的自动收货时长 7 天对齐）；显式 0 表示「立即视为逾期」用于人工审视全部未发货订单。
+- `getOverdueUnpaidOrders(cutoffMinutes)`：`status=101` 待支付且 `addTime` 早于 cutoff 的订单。cutoff 默认 30 分钟（与系统配置的订单超时分钟数对齐）。
+- cutoff 复用系统配置（见 `system-configuration.md` 订单超时/自动收货时长）。
+- 异常监控为跨用户聚合查询，`@Auth(roles="admin")` 限定仅管理员可达，与 `cancelExpiredOrders`/`confirmExpiredOrders` 的调度翻转职责互补：调度负责翻转状态，工作台负责暴露逾期集合供运营审视。
+
 ## 查询与展示规则
 
 - 用户可以按待支付、待发货、已发货等业务状态组过滤订单列表。

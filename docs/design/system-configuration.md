@@ -267,6 +267,46 @@
 - 标签/黑名单建模决策与会员等级/权益手工发放语义见 `user-and-address.md`「用户标签与黑名单」「会员等级体系」。
 - 封禁状态对下单的影响见 `order-and-cart.md`。
 
+## 订单运营工作台
+
+### 业务角色
+
+- 订单运营工作台为运营提供订单批量发货、改价/改运费、改地址、订单标记、orderSn 模糊搜索与异常监控能力（P21）。
+- 把订单管理从「单行发货 + 只读列表」升级为可批量操作的运营工具。
+
+### 运营动作
+
+| 动作 | BizModel 方法 | 语义 |
+| ---- | ------------- | ---- |
+| 改价 / 改运费 | `LitemallOrder__modifyOrderPrice` | 按构件层分级守卫：改运费恒允许（待支付态）、改商品价仅纯商品订单允许。安全策略见 `order-and-cart.md`「改价/改运费安全策略」 |
+| 批量发货 | `LitemallOrder__batchShip` | Excel 导入运单号批量发货，复用 `ship` 单行逻辑，部分失败不阻断成功行 |
+| 改地址 | `LitemallOrder__changeOrderAddress` | 仅发货前可改，新地址校验归属同一用户 |
+| 订单标记 | `LitemallOrder__markOrder` | 写既有 `adminRemark` 字段（surface 既有列，无 ORM 改动） |
+| 超期未发货监控 | `LitemallOrder__getOverdueUnshippedOrders` | `status=201` 已支付未发货且 addTime 早于 cutoff（默认 168h） |
+| 超期未支付监控 | `LitemallOrder__getOverdueUnpaidOrders` | `status=101` 待支付且 addTime 早于 cutoff（默认 30min） |
+
+### 权限与审计
+
+- 所有运营动作标注 `@Auth(roles="admin")`，仅管理员可达。
+- 改价/改地址/标记/批量发货写入 `LitemallLog` 管理员操作日志。
+
+### 异常监控口径
+
+- 超期未发货 cutoff 默认 168 小时（7 天），与系统配置的自动收货时长对齐；超期未支付 cutoff 默认 30 分钟，与订单超时分钟数对齐。
+- 异常监控查询与 `cancelExpiredOrders`/`confirmExpiredOrders` 调度翻转职责互补：调度负责翻转状态，工作台负责暴露逾期集合供运营审视。运营动作记录见「管理员操作日志」记录范围。
+
+### 后台菜单结构
+
+- `mall-manage`(200) 下新增子项：
+  - `mall-order-batch-ship` 批量发货 → `mall/order-ops/batch-ship.page.yaml`
+  - `mall-order-exception` 异常监控 → `mall/order-ops/order-exception.page.yaml`
+- `mall-order-manage`(204) 订单管理保留既有列表，surface `adminRemark` 列 + 行级运营动作（改价/改地址/标记，按状态 `visibleOn`）。
+
+### 与其他 Owner Docs 的关系
+
+- 改价安全策略、改地址/标记/批量发货/异常监控的业务语义与状态守卫见 `order-and-cart.md`「订单运营工作台」。
+- 本文件仅持有「后台菜单结构与运营可达性」语义。
+
 ## 与其他 Owner Docs 的关系
 
 系统配置域向主链路提供配置开关与运营消费能力：

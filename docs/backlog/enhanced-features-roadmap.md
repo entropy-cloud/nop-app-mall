@@ -23,7 +23,7 @@
 - 18. Dashboard 重做: `todo`
 - 19. 报表体系扩展: `todo`
 - 20. 用户运营工作台: `done`（`docs/plans/2026-06-28-0340-2-phase20-user-operations-workbench-plan.md`）
-- 21. 订单运营工作台: `planned`（`docs/plans/2026-06-28-0340-3-phase21-order-operations-workbench-plan.md`，active）
+- 21. 订单运营工作台: `done`（`docs/plans/2026-06-28-0340-3-phase21-order-operations-workbench-plan.md`）
 - 22. 营销活动管理后台: `planned`（`docs/plans/2026-06-28-0340-1-phase22-marketing-management-backend-plan.md`，ORM-independent slice delivered（4 类上下架 + 统一菜单 + 总览/日历/效果页 + 满减聚合/优惠券/拼团效果统计）；ORM-dependent slice（PromotionUsage 实体 + flashSaleSessionId 列 + maxPerUser 强一致 + 按活动/按场次归因）待 ask-first 授权）
 - 23. 限时折扣: `done`（`docs/plans/2026-06-27-2029-2-phase23-time-discount-plan.md`）
 - 24. 秒杀: `done`（`docs/plans/2026-06-28-0125-1-phase24-flash-sale-plan.md`）
