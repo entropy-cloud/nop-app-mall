@@ -104,7 +104,7 @@ public class TestLitemallCommentBizModel extends JunitBaseTestCase {
         cart.setGoodsSn(goods.getGoodsSn());
         cart.setGoodsName(goods.getName());
         cart.setSpecifications("[\"标准\"]");
-        cart.setPicUrl("http://test.com/cart-pic-1.png");
+        cart.setPicUrl("/f/download/cart-pic-1");
         daoProvider.daoFor(LitemallCart.class).saveEntity(cart);
 
         // submit order
@@ -198,7 +198,7 @@ public class TestLitemallCommentBizModel extends JunitBaseTestCase {
         cart2.setGoodsSn(goods2.getGoodsSn());
         cart2.setGoodsName(goods2.getName());
         cart2.setSpecifications("[\"默认\"]");
-        cart2.setPicUrl("http://test.com/cart-pic-2.png");
+        cart2.setPicUrl("/f/download/cart-pic-2");
         daoProvider.daoFor(LitemallCart.class).saveEntity(cart2);
 
         LitemallAddress addr = daoProvider.daoFor(LitemallAddress.class).newEntity();

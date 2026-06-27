@@ -3,17 +3,73 @@
       xmlns:x="/nop/schema/xdsl.xdef">
 
     <grids>
-        <grid id="list"/>
+        <grid id="list">
+            <cols x:override="bounded-merge">
+                <col id="id"/>
+                <col id="name"/>
+                <col id="discountType"/>
+                <col id="status"/>
+                <col id="goodsScope"/>
+                <col id="priority"/>
+                <col id="startTime"/>
+                <col id="endTime"/>
+            </cols>
+        </grid>
         <grid id="pick-list"/>
     </grids>
 
     <forms>
+        <form id="query">
+            <layout>
+                name status
+            </layout>
+        </form>
         <form id="view"/>
-        <form id="edit"/>
+        <form id="edit" size="lg">
+            <layout>
+                ========== base[活动信息] ================
+                name[活动名称] status[活动状态]
+                discountType[折扣类型] priority[优先级]
+                startTime[开始时间] endTime[结束时间]
+                goodsScope[商品范围类型] goodsScopeValue[商品范围值]
+                maxPerUser[每人限参与次数(0不限)] remark[备注]
+
+                =========tiers[满减档位（按门槛自动选最优档）]=======
+                !tiers
+            </layout>
+            <cells>
+                <cell id="goodsScopeValue">
+                    <placeholder>商品范围值为JSON数组，如 [&quot;1&quot;,&quot;2&quot;]。全商品范围时留空</placeholder>
+                </cell>
+
+                <cell id="tiers">
+                    <gen-control>
+                        <input-table addable="@:true" editable="@:true"
+                                     removable="@:true" needConfirm="@:false">
+                            <columns j:list="true">
+                                <input-number name="meetAmount" label="满足金额(元)" required="true" min="0" step="0.01"/>
+                                <input-number name="discountValue" label="减免值(减金额/折扣率)" required="true" min="0" step="0.01"/>
+                            </columns>
+                        </input-table>
+                    </gen-control>
+                    <selection>id, meetAmount, discountValue</selection>
+                </cell>
+            </cells>
+        </form>
+
+        <form id="add" x:prototype="edit">
+            <layout x:override="remove"/>
+        </form>
     </forms>
 
     <pages>
-        <crud name="main"/>
+        <crud name="main">
+            <rowActions x:override="bounded-merge">
+                <action id="row-view-button"/>
+                <action id="row-update-button" actionType="drawer"/>
+                <action id="row-delete-button"/>
+            </rowActions>
+        </crud>
         <picker name="picker"/>
     </pages>
 </view>

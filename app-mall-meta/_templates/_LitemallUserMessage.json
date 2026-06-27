@@ -9,7 +9,5 @@
   "readTime": "2000-01-01 14:00:00",
   "addTime": "2000-01-01 14:00:00",
   "updateTime": "2000-01-01 14:00:00",
-  "deleted": false,
-  "user": null,
-  "user.username": ""
+  "deleted": false
 }

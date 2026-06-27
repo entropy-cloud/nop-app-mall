@@ -4,6 +4,7 @@ import io.nop.orm.model.IEntityModel;
 import io.nop.orm.support.DynamicOrmEntity;
 import io.nop.orm.support.OrmEntitySet; //NOPMD - suppressed UnusedImports - Auto Gen Code
 import io.nop.orm.IOrmEntitySet; //NOPMD - suppressed UnusedImports - Auto Gen Code
+
 import io.nop.api.core.convert.ConvertHelper;
 import java.util.Map;
 import java.util.HashMap;
@@ -68,9 +69,27 @@ public class _LitemallComment extends DynamicOrmEntity{
     public static final String PROP_NAME_deleted = "deleted";
     public static final int PROP_ID_deleted = 12;
     
+    /* 优点列表(JSON): PROS VARCHAR */
+    public static final String PROP_NAME_pros = "pros";
+    public static final int PROP_ID_pros = 13;
+    
+    /* 缺点列表(JSON): CONS VARCHAR */
+    public static final String PROP_NAME_cons = "cons";
+    public static final int PROP_ID_cons = 14;
+    
+    /* 语义评级(1-5): SEMANTIC_RATING INTEGER */
+    public static final String PROP_NAME_semanticRating = "semanticRating";
+    public static final int PROP_ID_semanticRating = 15;
+    
 
-    private static int _PROP_ID_BOUND = 13;
+    private static int _PROP_ID_BOUND = 16;
 
+    
+    /* relation: 商品 */
+    public static final String PROP_NAME_goods = "goods";
+    
+    /* relation: 专题 */
+    public static final String PROP_NAME_topic = "topic";
     
     /* component:  */
     public static final String PROP_NAME_picUrlsComponent = "picUrlsComponent";
@@ -79,7 +98,7 @@ public class _LitemallComment extends DynamicOrmEntity{
     protected static final List<String> PK_PROP_NAMES = Arrays.asList(PROP_NAME_id);
     protected static final int[] PK_PROP_IDS = new int[]{PROP_ID_id};
 
-    private static final String[] PROP_ID_TO_NAME = new String[13];
+    private static final String[] PROP_ID_TO_NAME = new String[16];
     private static final Map<String,Integer> PROP_NAME_TO_ID = new HashMap<>();
     static{
       
@@ -119,6 +138,15 @@ public class _LitemallComment extends DynamicOrmEntity{
           PROP_ID_TO_NAME[PROP_ID_deleted] = PROP_NAME_deleted;
           PROP_NAME_TO_ID.put(PROP_NAME_deleted, PROP_ID_deleted);
       
+          PROP_ID_TO_NAME[PROP_ID_pros] = PROP_NAME_pros;
+          PROP_NAME_TO_ID.put(PROP_NAME_pros, PROP_ID_pros);
+      
+          PROP_ID_TO_NAME[PROP_ID_cons] = PROP_NAME_cons;
+          PROP_NAME_TO_ID.put(PROP_NAME_cons, PROP_ID_cons);
+      
+          PROP_ID_TO_NAME[PROP_ID_semanticRating] = PROP_NAME_semanticRating;
+          PROP_NAME_TO_ID.put(PROP_NAME_semanticRating, PROP_ID_semanticRating);
+      
     }
 
     
@@ -157,6 +185,15 @@ public class _LitemallComment extends DynamicOrmEntity{
     
     /* 逻辑删除: DELETED */
     private java.lang.Boolean _deleted;
+    
+    /* 优点列表(JSON): PROS */
+    private java.lang.String _pros;
+    
+    /* 缺点列表(JSON): CONS */
+    private java.lang.String _cons;
+    
+    /* 语义评级(1-5): SEMANTIC_RATING */
+    private java.lang.Integer _semanticRating;
     
 
     public _LitemallComment(){
@@ -267,6 +304,15 @@ public class _LitemallComment extends DynamicOrmEntity{
         
             case PROP_ID_deleted:
                return getDeleted();
+        
+            case PROP_ID_pros:
+               return getPros();
+        
+            case PROP_ID_cons:
+               return getCons();
+        
+            case PROP_ID_semanticRating:
+               return getSemanticRating();
         
            default:
               return super.orm_propValue(propId);
@@ -399,6 +445,36 @@ public class _LitemallComment extends DynamicOrmEntity{
                break;
             }
         
+            case PROP_ID_pros:{
+               java.lang.String typedValue = null;
+               if(value != null){
+                   typedValue = ConvertHelper.toString(value,
+                       err-> newTypeConversionError(PROP_NAME_pros));
+               }
+               setPros(typedValue);
+               break;
+            }
+        
+            case PROP_ID_cons:{
+               java.lang.String typedValue = null;
+               if(value != null){
+                   typedValue = ConvertHelper.toString(value,
+                       err-> newTypeConversionError(PROP_NAME_cons));
+               }
+               setCons(typedValue);
+               break;
+            }
+        
+            case PROP_ID_semanticRating:{
+               java.lang.Integer typedValue = null;
+               if(value != null){
+                   typedValue = ConvertHelper.toInteger(value,
+                       err-> newTypeConversionError(PROP_NAME_semanticRating));
+               }
+               setSemanticRating(typedValue);
+               break;
+            }
+        
            default:
               super.orm_propValue(propId,value);
         }
@@ -488,6 +564,27 @@ public class _LitemallComment extends DynamicOrmEntity{
             case PROP_ID_deleted:{
                onInitProp(propId);
                this._deleted = (java.lang.Boolean)value;
+               
+               break;
+            }
+        
+            case PROP_ID_pros:{
+               onInitProp(propId);
+               this._pros = (java.lang.String)value;
+               
+               break;
+            }
+        
+            case PROP_ID_cons:{
+               onInitProp(propId);
+               this._cons = (java.lang.String)value;
+               
+               break;
+            }
+        
+            case PROP_ID_semanticRating:{
+               onInitProp(propId);
+               this._semanticRating = (java.lang.Integer)value;
                
                break;
             }
@@ -726,6 +823,109 @@ public class _LitemallComment extends DynamicOrmEntity{
         }
     }
     
+    /**
+     * 优点列表(JSON): PROS
+     */
+    public final java.lang.String getPros(){
+         onPropGet(PROP_ID_pros);
+         return _pros;
+    }
+
+    /**
+     * 优点列表(JSON): PROS
+     */
+    public final void setPros(java.lang.String value){
+        if(onPropSet(PROP_ID_pros,value)){
+            this._pros = value;
+            internalClearRefs(PROP_ID_pros);
+            
+        }
+    }
+    
+    /**
+     * 缺点列表(JSON): CONS
+     */
+    public final java.lang.String getCons(){
+         onPropGet(PROP_ID_cons);
+         return _cons;
+    }
+
+    /**
+     * 缺点列表(JSON): CONS
+     */
+    public final void setCons(java.lang.String value){
+        if(onPropSet(PROP_ID_cons,value)){
+            this._cons = value;
+            internalClearRefs(PROP_ID_cons);
+            
+        }
+    }
+    
+    /**
+     * 语义评级(1-5): SEMANTIC_RATING
+     */
+    public final java.lang.Integer getSemanticRating(){
+         onPropGet(PROP_ID_semanticRating);
+         return _semanticRating;
+    }
+
+    /**
+     * 语义评级(1-5): SEMANTIC_RATING
+     */
+    public final void setSemanticRating(java.lang.Integer value){
+        if(onPropSet(PROP_ID_semanticRating,value)){
+            this._semanticRating = value;
+            internalClearRefs(PROP_ID_semanticRating);
+            
+        }
+    }
+    
+    /**
+     * 商品
+     */
+    public final app.mall.dao.entity.LitemallGoods getGoods(){
+       return (app.mall.dao.entity.LitemallGoods)internalGetRefEntity(PROP_NAME_goods);
+    }
+
+    public final void setGoods(app.mall.dao.entity.LitemallGoods refEntity){
+   
+           if(refEntity == null){
+           
+                   this.setValueId(null);
+               
+           }else{
+           internalSetRefEntity(PROP_NAME_goods, refEntity,()->{
+           
+                           this.setValueId(refEntity.getId());
+                       
+           });
+           }
+       
+    }
+       
+    /**
+     * 专题
+     */
+    public final app.mall.dao.entity.LitemallTopic getTopic(){
+       return (app.mall.dao.entity.LitemallTopic)internalGetRefEntity(PROP_NAME_topic);
+    }
+
+    public final void setTopic(app.mall.dao.entity.LitemallTopic refEntity){
+   
+           if(refEntity == null){
+           
+                   this.setValueId(null);
+               
+           }else{
+           internalSetRefEntity(PROP_NAME_topic, refEntity,()->{
+           
+                           this.setValueId(refEntity.getId());
+                       
+           });
+           }
+       
+    }
+       
    private io.nop.orm.component.OrmFileListComponent _picUrlsComponent;
 
    private static Map<String,Integer> COMPONENT_PROP_ID_MAP_picUrlsComponent = new HashMap<>();

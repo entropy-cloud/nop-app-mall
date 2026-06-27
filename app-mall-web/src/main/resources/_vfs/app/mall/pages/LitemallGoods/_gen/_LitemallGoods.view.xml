@@ -69,6 +69,12 @@
                 <!--详情-->
                 <col id="detail" sortable="true"/>
 
+                <!--是否推荐-->
+                <col id="isRecommend" sortable="true"/>
+
+                <!--商品视频链接-->
+                <col id="videoUrl" sortable="true"/>
+
                 <!--商品编号-->
                 <col id="goodsSn" mandatory="true" sortable="true" x:abstract="true"/>
             </cols>
@@ -87,7 +93,8 @@
  shareUrl[商品分享海报] isNew[是否新品]
  isHot[是否热品] unit[商品单位]
  counterPrice[市场售价] retailPrice[当前价格]
- detail[详情] goodsSn[商品编号]
+ detail[详情] isRecommend[是否推荐]
+ videoUrl[商品视频链接] goodsSn[商品编号]
 </layout>
         </form>
         <form id="add" editMode="add" title="新增-商品基本信息" i18n-en:title="" x:prototype="edit"/>
@@ -101,6 +108,7 @@
  isNew[是否新品] isHot[是否热品]
  unit[商品单位] counterPrice[市场售价]
  retailPrice[当前价格] detail[详情]
+ isRecommend[是否推荐] videoUrl[商品视频链接]
  goodsSn[商品编号] 
 </layout>
         </form>

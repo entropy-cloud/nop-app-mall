@@ -19,13 +19,6 @@
         <property name="bizObjName" value="LitemallAddress"/>
     </bean>
 
-    <bean id="app.mall.service.entity.LitemallOrderBizModel" ioc:type="@bean:id" ioc:default="true"/>
-
-    <bean id="biz_LitemallOrder" class="io.nop.biz.proxy.BizProxyFactoryBean" ioc:type="app.mall.biz.ILitemallOrderBiz"
-          ioc:force-lazy-property="true" lazy-init="true" primary="true">
-        <property name="bizObjName" value="LitemallOrder"/>
-    </bean>
-
     <bean id="app.mall.service.entity.LitemallBrandBizModel" ioc:type="@bean:id" ioc:default="true"/>
 
     <bean id="biz_LitemallBrand" class="io.nop.biz.proxy.BizProxyFactoryBean" ioc:type="app.mall.biz.ILitemallBrandBiz"
@@ -47,11 +40,11 @@
         <property name="bizObjName" value="LitemallCollect"/>
     </bean>
 
-    <bean id="app.mall.service.entity.LitemallCommentBizModel" ioc:type="@bean:id" ioc:default="true"/>
+    <bean id="app.mall.service.entity.LitemallTopicBizModel" ioc:type="@bean:id" ioc:default="true"/>
 
-    <bean id="biz_LitemallComment" class="io.nop.biz.proxy.BizProxyFactoryBean"
-          ioc:type="app.mall.biz.ILitemallCommentBiz" ioc:force-lazy-property="true" lazy-init="true" primary="true">
-        <property name="bizObjName" value="LitemallComment"/>
+    <bean id="biz_LitemallTopic" class="io.nop.biz.proxy.BizProxyFactoryBean" ioc:type="app.mall.biz.ILitemallTopicBiz"
+          ioc:force-lazy-property="true" lazy-init="true" primary="true">
+        <property name="bizObjName" value="LitemallTopic"/>
     </bean>
 
     <bean id="app.mall.service.entity.LitemallCouponBizModel" ioc:type="@bean:id" ioc:default="true"/>
@@ -103,6 +96,13 @@
         <property name="bizObjName" value="LitemallNoticeAdmin"/>
     </bean>
 
+    <bean id="app.mall.service.entity.LitemallPickupStoreBizModel" ioc:type="@bean:id" ioc:default="true"/>
+
+    <bean id="biz_LitemallPickupStore" class="io.nop.biz.proxy.BizProxyFactoryBean"
+          ioc:type="app.mall.biz.ILitemallPickupStoreBiz" ioc:force-lazy-property="true" lazy-init="true" primary="true">
+        <property name="bizObjName" value="LitemallPickupStore"/>
+    </bean>
+
     <bean id="app.mall.service.entity.LitemallRegionBizModel" ioc:type="@bean:id" ioc:default="true"/>
 
     <bean id="biz_LitemallRegion" class="io.nop.biz.proxy.BizProxyFactoryBean"
@@ -132,13 +132,6 @@
         <property name="bizObjName" value="LitemallSystem"/>
     </bean>
 
-    <bean id="app.mall.service.entity.LitemallTopicBizModel" ioc:type="@bean:id" ioc:default="true"/>
-
-    <bean id="biz_LitemallTopic" class="io.nop.biz.proxy.BizProxyFactoryBean" ioc:type="app.mall.biz.ILitemallTopicBiz"
-          ioc:force-lazy-property="true" lazy-init="true" primary="true">
-        <property name="bizObjName" value="LitemallTopic"/>
-    </bean>
-
     <bean id="app.mall.service.entity.LitemallResetCodeBizModel" ioc:type="@bean:id" ioc:default="true"/>
 
     <bean id="biz_LitemallResetCode" class="io.nop.biz.proxy.BizProxyFactoryBean"
@@ -146,18 +139,57 @@
         <property name="bizObjName" value="LitemallResetCode"/>
     </bean>
 
-    <bean id="app.mall.service.entity.LitemallAftersaleBizModel" ioc:type="@bean:id" ioc:default="true"/>
+    <bean id="app.mall.service.entity.LitemallPromotionActivityBizModel" ioc:type="@bean:id" ioc:default="true"/>
 
-    <bean id="biz_LitemallAftersale" class="io.nop.biz.proxy.BizProxyFactoryBean"
-          ioc:type="app.mall.biz.ILitemallAftersaleBiz" ioc:force-lazy-property="true" lazy-init="true" primary="true">
-        <property name="bizObjName" value="LitemallAftersale"/>
+    <bean id="biz_LitemallPromotionActivity" class="io.nop.biz.proxy.BizProxyFactoryBean"
+          ioc:type="app.mall.biz.ILitemallPromotionActivityBiz" ioc:force-lazy-property="true" lazy-init="true"
+          primary="true">
+        <property name="bizObjName" value="LitemallPromotionActivity"/>
     </bean>
 
-    <bean id="app.mall.service.entity.LitemallGrouponBizModel" ioc:type="@bean:id" ioc:default="true"/>
+    <bean id="app.mall.service.entity.LitemallCheckInRuleBizModel" ioc:type="@bean:id" ioc:default="true"/>
 
-    <bean id="biz_LitemallGroupon" class="io.nop.biz.proxy.BizProxyFactoryBean"
-          ioc:type="app.mall.biz.ILitemallGrouponBiz" ioc:force-lazy-property="true" lazy-init="true" primary="true">
-        <property name="bizObjName" value="LitemallGroupon"/>
+    <bean id="biz_LitemallCheckInRule" class="io.nop.biz.proxy.BizProxyFactoryBean"
+          ioc:type="app.mall.biz.ILitemallCheckInRuleBiz" ioc:force-lazy-property="true" lazy-init="true" primary="true">
+        <property name="bizObjName" value="LitemallCheckInRule"/>
+    </bean>
+
+    <bean id="app.mall.service.entity.LitemallCheckInRecordBizModel" ioc:type="@bean:id" ioc:default="true"/>
+
+    <bean id="biz_LitemallCheckInRecord" class="io.nop.biz.proxy.BizProxyFactoryBean"
+          ioc:type="app.mall.biz.ILitemallCheckInRecordBiz" ioc:force-lazy-property="true" lazy-init="true"
+          primary="true">
+        <property name="bizObjName" value="LitemallCheckInRecord"/>
+    </bean>
+
+    <bean id="app.mall.service.entity.LitemallPointsAccountBizModel" ioc:type="@bean:id" ioc:default="true"/>
+
+    <bean id="biz_LitemallPointsAccount" class="io.nop.biz.proxy.BizProxyFactoryBean"
+          ioc:type="app.mall.biz.ILitemallPointsAccountBiz" ioc:force-lazy-property="true" lazy-init="true"
+          primary="true">
+        <property name="bizObjName" value="LitemallPointsAccount"/>
+    </bean>
+
+    <bean id="app.mall.service.entity.LitemallWalletBizModel" ioc:type="@bean:id" ioc:default="true"/>
+
+    <bean id="biz_LitemallWallet" class="io.nop.biz.proxy.BizProxyFactoryBean"
+          ioc:type="app.mall.biz.ILitemallWalletBiz" ioc:force-lazy-property="true" lazy-init="true" primary="true">
+        <property name="bizObjName" value="LitemallWallet"/>
+    </bean>
+
+    <bean id="app.mall.service.entity.LitemallUserMessageBizModel" ioc:type="@bean:id" ioc:default="true"/>
+
+    <bean id="biz_LitemallUserMessage" class="io.nop.biz.proxy.BizProxyFactoryBean"
+          ioc:type="app.mall.biz.ILitemallUserMessageBiz" ioc:force-lazy-property="true" lazy-init="true" primary="true">
+        <property name="bizObjName" value="LitemallUserMessage"/>
+    </bean>
+
+    <bean id="app.mall.service.entity.LitemallMaterialCategoryBizModel" ioc:type="@bean:id" ioc:default="true"/>
+
+    <bean id="biz_LitemallMaterialCategory" class="io.nop.biz.proxy.BizProxyFactoryBean"
+          ioc:type="app.mall.biz.ILitemallMaterialCategoryBiz" ioc:force-lazy-property="true" lazy-init="true"
+          primary="true">
+        <property name="bizObjName" value="LitemallMaterialCategory"/>
     </bean>
 
     <bean id="app.mall.service.entity.LitemallGoodsBizModel" ioc:type="@bean:id" ioc:default="true"/>
@@ -174,11 +206,61 @@
         <property name="bizObjName" value="LitemallCouponUser"/>
     </bean>
 
+    <bean id="app.mall.service.entity.LitemallOrderBizModel" ioc:type="@bean:id" ioc:default="true"/>
+
+    <bean id="biz_LitemallOrder" class="io.nop.biz.proxy.BizProxyFactoryBean" ioc:type="app.mall.biz.ILitemallOrderBiz"
+          ioc:force-lazy-property="true" lazy-init="true" primary="true">
+        <property name="bizObjName" value="LitemallOrder"/>
+    </bean>
+
+    <bean id="app.mall.service.entity.LitemallPromotionTierBizModel" ioc:type="@bean:id" ioc:default="true"/>
+
+    <bean id="biz_LitemallPromotionTier" class="io.nop.biz.proxy.BizProxyFactoryBean"
+          ioc:type="app.mall.biz.ILitemallPromotionTierBiz" ioc:force-lazy-property="true" lazy-init="true"
+          primary="true">
+        <property name="bizObjName" value="LitemallPromotionTier"/>
+    </bean>
+
+    <bean id="app.mall.service.entity.LitemallPointsFlowBizModel" ioc:type="@bean:id" ioc:default="true"/>
+
+    <bean id="biz_LitemallPointsFlow" class="io.nop.biz.proxy.BizProxyFactoryBean"
+          ioc:type="app.mall.biz.ILitemallPointsFlowBiz" ioc:force-lazy-property="true" lazy-init="true" primary="true">
+        <property name="bizObjName" value="LitemallPointsFlow"/>
+    </bean>
+
+    <bean id="app.mall.service.entity.LitemallWalletFlowBizModel" ioc:type="@bean:id" ioc:default="true"/>
+
+    <bean id="biz_LitemallWalletFlow" class="io.nop.biz.proxy.BizProxyFactoryBean"
+          ioc:type="app.mall.biz.ILitemallWalletFlowBiz" ioc:force-lazy-property="true" lazy-init="true" primary="true">
+        <property name="bizObjName" value="LitemallWalletFlow"/>
+    </bean>
+
+    <bean id="app.mall.service.entity.LitemallRechargeBizModel" ioc:type="@bean:id" ioc:default="true"/>
+
+    <bean id="biz_LitemallRecharge" class="io.nop.biz.proxy.BizProxyFactoryBean"
+          ioc:type="app.mall.biz.ILitemallRechargeBiz" ioc:force-lazy-property="true" lazy-init="true" primary="true">
+        <property name="bizObjName" value="LitemallRecharge"/>
+    </bean>
+
+    <bean id="app.mall.service.entity.LitemallMaterialBizModel" ioc:type="@bean:id" ioc:default="true"/>
+
+    <bean id="biz_LitemallMaterial" class="io.nop.biz.proxy.BizProxyFactoryBean"
+          ioc:type="app.mall.biz.ILitemallMaterialBiz" ioc:force-lazy-property="true" lazy-init="true" primary="true">
+        <property name="bizObjName" value="LitemallMaterial"/>
+    </bean>
+
     <bean id="app.mall.service.entity.LitemallCartBizModel" ioc:type="@bean:id" ioc:default="true"/>
 
     <bean id="biz_LitemallCart" class="io.nop.biz.proxy.BizProxyFactoryBean" ioc:type="app.mall.biz.ILitemallCartBiz"
           ioc:force-lazy-property="true" lazy-init="true" primary="true">
         <property name="bizObjName" value="LitemallCart"/>
+    </bean>
+
+    <bean id="app.mall.service.entity.LitemallCommentBizModel" ioc:type="@bean:id" ioc:default="true"/>
+
+    <bean id="biz_LitemallComment" class="io.nop.biz.proxy.BizProxyFactoryBean"
+          ioc:type="app.mall.biz.ILitemallCommentBiz" ioc:force-lazy-property="true" lazy-init="true" primary="true">
+        <property name="bizObjName" value="LitemallComment"/>
     </bean>
 
     <bean id="app.mall.service.entity.LitemallFootprintBizModel" ioc:type="@bean:id" ioc:default="true"/>
@@ -220,10 +302,71 @@
         <property name="bizObjName" value="LitemallGrouponRules"/>
     </bean>
 
+    <bean id="app.mall.service.entity.LitemallTimeDiscountBizModel" ioc:type="@bean:id" ioc:default="true"/>
+
+    <bean id="biz_LitemallTimeDiscount" class="io.nop.biz.proxy.BizProxyFactoryBean"
+          ioc:type="app.mall.biz.ILitemallTimeDiscountBiz" ioc:force-lazy-property="true" lazy-init="true"
+          primary="true">
+        <property name="bizObjName" value="LitemallTimeDiscount"/>
+    </bean>
+
+    <bean id="app.mall.service.entity.LitemallFlashSaleBizModel" ioc:type="@bean:id" ioc:default="true"/>
+
+    <bean id="biz_LitemallFlashSale" class="io.nop.biz.proxy.BizProxyFactoryBean"
+          ioc:type="app.mall.biz.ILitemallFlashSaleBiz" ioc:force-lazy-property="true" lazy-init="true" primary="true">
+        <property name="bizObjName" value="LitemallFlashSale"/>
+    </bean>
+
+    <bean id="app.mall.service.entity.LitemallPinTuanActivityBizModel" ioc:type="@bean:id" ioc:default="true"/>
+
+    <bean id="biz_LitemallPinTuanActivity" class="io.nop.biz.proxy.BizProxyFactoryBean"
+          ioc:type="app.mall.biz.ILitemallPinTuanActivityBiz" ioc:force-lazy-property="true" lazy-init="true"
+          primary="true">
+        <property name="bizObjName" value="LitemallPinTuanActivity"/>
+    </bean>
+
+    <bean id="app.mall.service.entity.LitemallAftersaleBizModel" ioc:type="@bean:id" ioc:default="true"/>
+
+    <bean id="biz_LitemallAftersale" class="io.nop.biz.proxy.BizProxyFactoryBean"
+          ioc:type="app.mall.biz.ILitemallAftersaleBiz" ioc:force-lazy-property="true" lazy-init="true" primary="true">
+        <property name="bizObjName" value="LitemallAftersale"/>
+    </bean>
+
+    <bean id="app.mall.service.entity.LitemallGrouponBizModel" ioc:type="@bean:id" ioc:default="true"/>
+
+    <bean id="biz_LitemallGroupon" class="io.nop.biz.proxy.BizProxyFactoryBean"
+          ioc:type="app.mall.biz.ILitemallGrouponBiz" ioc:force-lazy-property="true" lazy-init="true" primary="true">
+        <property name="bizObjName" value="LitemallGroupon"/>
+    </bean>
+
     <bean id="app.mall.service.entity.LitemallOrderGoodsBizModel" ioc:type="@bean:id" ioc:default="true"/>
 
     <bean id="biz_LitemallOrderGoods" class="io.nop.biz.proxy.BizProxyFactoryBean"
           ioc:type="app.mall.biz.ILitemallOrderGoodsBiz" ioc:force-lazy-property="true" lazy-init="true" primary="true">
         <property name="bizObjName" value="LitemallOrderGoods"/>
+    </bean>
+
+    <bean id="app.mall.service.entity.LitemallFlashSaleSessionBizModel" ioc:type="@bean:id" ioc:default="true"/>
+
+    <bean id="biz_LitemallFlashSaleSession" class="io.nop.biz.proxy.BizProxyFactoryBean"
+          ioc:type="app.mall.biz.ILitemallFlashSaleSessionBiz" ioc:force-lazy-property="true" lazy-init="true"
+          primary="true">
+        <property name="bizObjName" value="LitemallFlashSaleSession"/>
+    </bean>
+
+    <bean id="app.mall.service.entity.LitemallPinTuanGroupBizModel" ioc:type="@bean:id" ioc:default="true"/>
+
+    <bean id="biz_LitemallPinTuanGroup" class="io.nop.biz.proxy.BizProxyFactoryBean"
+          ioc:type="app.mall.biz.ILitemallPinTuanGroupBiz" ioc:force-lazy-property="true" lazy-init="true"
+          primary="true">
+        <property name="bizObjName" value="LitemallPinTuanGroup"/>
+    </bean>
+
+    <bean id="app.mall.service.entity.LitemallPinTuanMemberBizModel" ioc:type="@bean:id" ioc:default="true"/>
+
+    <bean id="biz_LitemallPinTuanMember" class="io.nop.biz.proxy.BizProxyFactoryBean"
+          ioc:type="app.mall.biz.ILitemallPinTuanMemberBiz" ioc:force-lazy-property="true" lazy-init="true"
+          primary="true">
+        <property name="bizObjName" value="LitemallPinTuanMember"/>
     </bean>
 </beans>

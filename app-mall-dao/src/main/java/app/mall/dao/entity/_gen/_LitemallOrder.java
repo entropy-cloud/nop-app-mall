@@ -4,6 +4,7 @@ import io.nop.orm.model.IEntityModel;
 import io.nop.orm.support.DynamicOrmEntity;
 import io.nop.orm.support.OrmEntitySet; //NOPMD - suppressed UnusedImports - Auto Gen Code
 import io.nop.orm.IOrmEntitySet; //NOPMD - suppressed UnusedImports - Auto Gen Code
+
 import io.nop.api.core.convert.ConvertHelper;
 import java.util.Map;
 import java.util.HashMap;
@@ -144,18 +145,57 @@ public class _LitemallOrder extends DynamicOrmEntity{
     public static final String PROP_NAME_deleted = "deleted";
     public static final int PROP_ID_deleted = 31;
     
+    /* 配送方式: DELIVERY_TYPE INTEGER */
+    public static final String PROP_NAME_deliveryType = "deliveryType";
+    public static final int PROP_ID_deliveryType = 32;
+    
+    /* 自提门店ID: PICKUP_STORE_ID INTEGER */
+    public static final String PROP_NAME_pickupStoreId = "pickupStoreId";
+    public static final int PROP_ID_pickupStoreId = 33;
+    
+    /* 自提核销码: PICKUP_CODE VARCHAR */
+    public static final String PROP_NAME_pickupCode = "pickupCode";
+    public static final int PROP_ID_pickupCode = 34;
+    
+    /* 核销时间: PICKUP_TIME DATETIME */
+    public static final String PROP_NAME_pickupTime = "pickupTime";
+    public static final int PROP_ID_pickupTime = 35;
+    
+    /* 促销优惠金额（满减/限时折扣）: PROMOTION_PRICE DECIMAL */
+    public static final String PROP_NAME_promotionPrice = "promotionPrice";
+    public static final int PROP_ID_promotionPrice = 36;
+    
+    /* 拼团优惠金额: PIN_TUAN_PRICE DECIMAL */
+    public static final String PROP_NAME_pinTuanPrice = "pinTuanPrice";
+    public static final int PROP_ID_pinTuanPrice = 37;
+    
+    /* 支付通道: PAY_CHANNEL INTEGER */
+    public static final String PROP_NAME_payChannel = "payChannel";
+    public static final int PROP_ID_payChannel = 38;
+    
+    /* 余额支付金额: WALLET_PAY_AMOUNT DECIMAL */
+    public static final String PROP_NAME_walletPayAmount = "walletPayAmount";
+    public static final int PROP_ID_walletPayAmount = 39;
+    
+    /* 运营备注: ADMIN_REMARK VARCHAR */
+    public static final String PROP_NAME_adminRemark = "adminRemark";
+    public static final int PROP_ID_adminRemark = 40;
+    
 
-    private static int _PROP_ID_BOUND = 32;
+    private static int _PROP_ID_BOUND = 41;
 
     
     /* relation: 订单商品 */
     public static final String PROP_NAME_orderGoods = "orderGoods";
     
+    /* relation: 自提门店 */
+    public static final String PROP_NAME_pickupStore = "pickupStore";
+    
 
     protected static final List<String> PK_PROP_NAMES = Arrays.asList(PROP_NAME_id);
     protected static final int[] PK_PROP_IDS = new int[]{PROP_ID_id};
 
-    private static final String[] PROP_ID_TO_NAME = new String[32];
+    private static final String[] PROP_ID_TO_NAME = new String[41];
     private static final Map<String,Integer> PROP_NAME_TO_ID = new HashMap<>();
     static{
       
@@ -252,6 +292,33 @@ public class _LitemallOrder extends DynamicOrmEntity{
           PROP_ID_TO_NAME[PROP_ID_deleted] = PROP_NAME_deleted;
           PROP_NAME_TO_ID.put(PROP_NAME_deleted, PROP_ID_deleted);
       
+          PROP_ID_TO_NAME[PROP_ID_deliveryType] = PROP_NAME_deliveryType;
+          PROP_NAME_TO_ID.put(PROP_NAME_deliveryType, PROP_ID_deliveryType);
+      
+          PROP_ID_TO_NAME[PROP_ID_pickupStoreId] = PROP_NAME_pickupStoreId;
+          PROP_NAME_TO_ID.put(PROP_NAME_pickupStoreId, PROP_ID_pickupStoreId);
+      
+          PROP_ID_TO_NAME[PROP_ID_pickupCode] = PROP_NAME_pickupCode;
+          PROP_NAME_TO_ID.put(PROP_NAME_pickupCode, PROP_ID_pickupCode);
+      
+          PROP_ID_TO_NAME[PROP_ID_pickupTime] = PROP_NAME_pickupTime;
+          PROP_NAME_TO_ID.put(PROP_NAME_pickupTime, PROP_ID_pickupTime);
+      
+          PROP_ID_TO_NAME[PROP_ID_promotionPrice] = PROP_NAME_promotionPrice;
+          PROP_NAME_TO_ID.put(PROP_NAME_promotionPrice, PROP_ID_promotionPrice);
+      
+          PROP_ID_TO_NAME[PROP_ID_pinTuanPrice] = PROP_NAME_pinTuanPrice;
+          PROP_NAME_TO_ID.put(PROP_NAME_pinTuanPrice, PROP_ID_pinTuanPrice);
+      
+          PROP_ID_TO_NAME[PROP_ID_payChannel] = PROP_NAME_payChannel;
+          PROP_NAME_TO_ID.put(PROP_NAME_payChannel, PROP_ID_payChannel);
+      
+          PROP_ID_TO_NAME[PROP_ID_walletPayAmount] = PROP_NAME_walletPayAmount;
+          PROP_NAME_TO_ID.put(PROP_NAME_walletPayAmount, PROP_ID_walletPayAmount);
+      
+          PROP_ID_TO_NAME[PROP_ID_adminRemark] = PROP_NAME_adminRemark;
+          PROP_NAME_TO_ID.put(PROP_NAME_adminRemark, PROP_ID_adminRemark);
+      
     }
 
     
@@ -347,6 +414,33 @@ public class _LitemallOrder extends DynamicOrmEntity{
     
     /* 逻辑删除: DELETED */
     private java.lang.Boolean _deleted;
+    
+    /* 配送方式: DELIVERY_TYPE */
+    private java.lang.Integer _deliveryType;
+    
+    /* 自提门店ID: PICKUP_STORE_ID */
+    private java.lang.String _pickupStoreId;
+    
+    /* 自提核销码: PICKUP_CODE */
+    private java.lang.String _pickupCode;
+    
+    /* 核销时间: PICKUP_TIME */
+    private java.time.LocalDateTime _pickupTime;
+    
+    /* 促销优惠金额（满减/限时折扣）: PROMOTION_PRICE */
+    private java.math.BigDecimal _promotionPrice;
+    
+    /* 拼团优惠金额: PIN_TUAN_PRICE */
+    private java.math.BigDecimal _pinTuanPrice;
+    
+    /* 支付通道: PAY_CHANNEL */
+    private java.lang.Integer _payChannel;
+    
+    /* 余额支付金额: WALLET_PAY_AMOUNT */
+    private java.math.BigDecimal _walletPayAmount;
+    
+    /* 运营备注: ADMIN_REMARK */
+    private java.lang.String _adminRemark;
     
 
     public _LitemallOrder(){
@@ -514,6 +608,33 @@ public class _LitemallOrder extends DynamicOrmEntity{
         
             case PROP_ID_deleted:
                return getDeleted();
+        
+            case PROP_ID_deliveryType:
+               return getDeliveryType();
+        
+            case PROP_ID_pickupStoreId:
+               return getPickupStoreId();
+        
+            case PROP_ID_pickupCode:
+               return getPickupCode();
+        
+            case PROP_ID_pickupTime:
+               return getPickupTime();
+        
+            case PROP_ID_promotionPrice:
+               return getPromotionPrice();
+        
+            case PROP_ID_pinTuanPrice:
+               return getPinTuanPrice();
+        
+            case PROP_ID_payChannel:
+               return getPayChannel();
+        
+            case PROP_ID_walletPayAmount:
+               return getWalletPayAmount();
+        
+            case PROP_ID_adminRemark:
+               return getAdminRemark();
         
            default:
               return super.orm_propValue(propId);
@@ -836,6 +957,96 @@ public class _LitemallOrder extends DynamicOrmEntity{
                break;
             }
         
+            case PROP_ID_deliveryType:{
+               java.lang.Integer typedValue = null;
+               if(value != null){
+                   typedValue = ConvertHelper.toInteger(value,
+                       err-> newTypeConversionError(PROP_NAME_deliveryType));
+               }
+               setDeliveryType(typedValue);
+               break;
+            }
+        
+            case PROP_ID_pickupStoreId:{
+               java.lang.String typedValue = null;
+               if(value != null){
+                   typedValue = ConvertHelper.toString(value,
+                       err-> newTypeConversionError(PROP_NAME_pickupStoreId));
+               }
+               setPickupStoreId(typedValue);
+               break;
+            }
+        
+            case PROP_ID_pickupCode:{
+               java.lang.String typedValue = null;
+               if(value != null){
+                   typedValue = ConvertHelper.toString(value,
+                       err-> newTypeConversionError(PROP_NAME_pickupCode));
+               }
+               setPickupCode(typedValue);
+               break;
+            }
+        
+            case PROP_ID_pickupTime:{
+               java.time.LocalDateTime typedValue = null;
+               if(value != null){
+                   typedValue = ConvertHelper.toLocalDateTime(value,
+                       err-> newTypeConversionError(PROP_NAME_pickupTime));
+               }
+               setPickupTime(typedValue);
+               break;
+            }
+        
+            case PROP_ID_promotionPrice:{
+               java.math.BigDecimal typedValue = null;
+               if(value != null){
+                   typedValue = ConvertHelper.toBigDecimal(value,
+                       err-> newTypeConversionError(PROP_NAME_promotionPrice));
+               }
+               setPromotionPrice(typedValue);
+               break;
+            }
+        
+            case PROP_ID_pinTuanPrice:{
+               java.math.BigDecimal typedValue = null;
+               if(value != null){
+                   typedValue = ConvertHelper.toBigDecimal(value,
+                       err-> newTypeConversionError(PROP_NAME_pinTuanPrice));
+               }
+               setPinTuanPrice(typedValue);
+               break;
+            }
+        
+            case PROP_ID_payChannel:{
+               java.lang.Integer typedValue = null;
+               if(value != null){
+                   typedValue = ConvertHelper.toInteger(value,
+                       err-> newTypeConversionError(PROP_NAME_payChannel));
+               }
+               setPayChannel(typedValue);
+               break;
+            }
+        
+            case PROP_ID_walletPayAmount:{
+               java.math.BigDecimal typedValue = null;
+               if(value != null){
+                   typedValue = ConvertHelper.toBigDecimal(value,
+                       err-> newTypeConversionError(PROP_NAME_walletPayAmount));
+               }
+               setWalletPayAmount(typedValue);
+               break;
+            }
+        
+            case PROP_ID_adminRemark:{
+               java.lang.String typedValue = null;
+               if(value != null){
+                   typedValue = ConvertHelper.toString(value,
+                       err-> newTypeConversionError(PROP_NAME_adminRemark));
+               }
+               setAdminRemark(typedValue);
+               break;
+            }
+        
            default:
               super.orm_propValue(propId,value);
         }
@@ -1058,6 +1269,69 @@ public class _LitemallOrder extends DynamicOrmEntity{
             case PROP_ID_deleted:{
                onInitProp(propId);
                this._deleted = (java.lang.Boolean)value;
+               
+               break;
+            }
+        
+            case PROP_ID_deliveryType:{
+               onInitProp(propId);
+               this._deliveryType = (java.lang.Integer)value;
+               
+               break;
+            }
+        
+            case PROP_ID_pickupStoreId:{
+               onInitProp(propId);
+               this._pickupStoreId = (java.lang.String)value;
+               
+               break;
+            }
+        
+            case PROP_ID_pickupCode:{
+               onInitProp(propId);
+               this._pickupCode = (java.lang.String)value;
+               
+               break;
+            }
+        
+            case PROP_ID_pickupTime:{
+               onInitProp(propId);
+               this._pickupTime = (java.time.LocalDateTime)value;
+               
+               break;
+            }
+        
+            case PROP_ID_promotionPrice:{
+               onInitProp(propId);
+               this._promotionPrice = (java.math.BigDecimal)value;
+               
+               break;
+            }
+        
+            case PROP_ID_pinTuanPrice:{
+               onInitProp(propId);
+               this._pinTuanPrice = (java.math.BigDecimal)value;
+               
+               break;
+            }
+        
+            case PROP_ID_payChannel:{
+               onInitProp(propId);
+               this._payChannel = (java.lang.Integer)value;
+               
+               break;
+            }
+        
+            case PROP_ID_walletPayAmount:{
+               onInitProp(propId);
+               this._walletPayAmount = (java.math.BigDecimal)value;
+               
+               break;
+            }
+        
+            case PROP_ID_adminRemark:{
+               onInitProp(propId);
+               this._adminRemark = (java.lang.String)value;
                
                break;
             }
@@ -1657,6 +1931,177 @@ public class _LitemallOrder extends DynamicOrmEntity{
         }
     }
     
+    /**
+     * 配送方式: DELIVERY_TYPE
+     */
+    public final java.lang.Integer getDeliveryType(){
+         onPropGet(PROP_ID_deliveryType);
+         return _deliveryType;
+    }
+
+    /**
+     * 配送方式: DELIVERY_TYPE
+     */
+    public final void setDeliveryType(java.lang.Integer value){
+        if(onPropSet(PROP_ID_deliveryType,value)){
+            this._deliveryType = value;
+            internalClearRefs(PROP_ID_deliveryType);
+            
+        }
+    }
+    
+    /**
+     * 自提门店ID: PICKUP_STORE_ID
+     */
+    public final java.lang.String getPickupStoreId(){
+         onPropGet(PROP_ID_pickupStoreId);
+         return _pickupStoreId;
+    }
+
+    /**
+     * 自提门店ID: PICKUP_STORE_ID
+     */
+    public final void setPickupStoreId(java.lang.String value){
+        if(onPropSet(PROP_ID_pickupStoreId,value)){
+            this._pickupStoreId = value;
+            internalClearRefs(PROP_ID_pickupStoreId);
+            
+        }
+    }
+    
+    /**
+     * 自提核销码: PICKUP_CODE
+     */
+    public final java.lang.String getPickupCode(){
+         onPropGet(PROP_ID_pickupCode);
+         return _pickupCode;
+    }
+
+    /**
+     * 自提核销码: PICKUP_CODE
+     */
+    public final void setPickupCode(java.lang.String value){
+        if(onPropSet(PROP_ID_pickupCode,value)){
+            this._pickupCode = value;
+            internalClearRefs(PROP_ID_pickupCode);
+            
+        }
+    }
+    
+    /**
+     * 核销时间: PICKUP_TIME
+     */
+    public final java.time.LocalDateTime getPickupTime(){
+         onPropGet(PROP_ID_pickupTime);
+         return _pickupTime;
+    }
+
+    /**
+     * 核销时间: PICKUP_TIME
+     */
+    public final void setPickupTime(java.time.LocalDateTime value){
+        if(onPropSet(PROP_ID_pickupTime,value)){
+            this._pickupTime = value;
+            internalClearRefs(PROP_ID_pickupTime);
+            
+        }
+    }
+    
+    /**
+     * 促销优惠金额（满减/限时折扣）: PROMOTION_PRICE
+     */
+    public final java.math.BigDecimal getPromotionPrice(){
+         onPropGet(PROP_ID_promotionPrice);
+         return _promotionPrice;
+    }
+
+    /**
+     * 促销优惠金额（满减/限时折扣）: PROMOTION_PRICE
+     */
+    public final void setPromotionPrice(java.math.BigDecimal value){
+        if(onPropSet(PROP_ID_promotionPrice,value)){
+            this._promotionPrice = value;
+            internalClearRefs(PROP_ID_promotionPrice);
+            
+        }
+    }
+    
+    /**
+     * 拼团优惠金额: PIN_TUAN_PRICE
+     */
+    public final java.math.BigDecimal getPinTuanPrice(){
+         onPropGet(PROP_ID_pinTuanPrice);
+         return _pinTuanPrice;
+    }
+
+    /**
+     * 拼团优惠金额: PIN_TUAN_PRICE
+     */
+    public final void setPinTuanPrice(java.math.BigDecimal value){
+        if(onPropSet(PROP_ID_pinTuanPrice,value)){
+            this._pinTuanPrice = value;
+            internalClearRefs(PROP_ID_pinTuanPrice);
+            
+        }
+    }
+    
+    /**
+     * 支付通道: PAY_CHANNEL
+     */
+    public final java.lang.Integer getPayChannel(){
+         onPropGet(PROP_ID_payChannel);
+         return _payChannel;
+    }
+
+    /**
+     * 支付通道: PAY_CHANNEL
+     */
+    public final void setPayChannel(java.lang.Integer value){
+        if(onPropSet(PROP_ID_payChannel,value)){
+            this._payChannel = value;
+            internalClearRefs(PROP_ID_payChannel);
+            
+        }
+    }
+    
+    /**
+     * 余额支付金额: WALLET_PAY_AMOUNT
+     */
+    public final java.math.BigDecimal getWalletPayAmount(){
+         onPropGet(PROP_ID_walletPayAmount);
+         return _walletPayAmount;
+    }
+
+    /**
+     * 余额支付金额: WALLET_PAY_AMOUNT
+     */
+    public final void setWalletPayAmount(java.math.BigDecimal value){
+        if(onPropSet(PROP_ID_walletPayAmount,value)){
+            this._walletPayAmount = value;
+            internalClearRefs(PROP_ID_walletPayAmount);
+            
+        }
+    }
+    
+    /**
+     * 运营备注: ADMIN_REMARK
+     */
+    public final java.lang.String getAdminRemark(){
+         onPropGet(PROP_ID_adminRemark);
+         return _adminRemark;
+    }
+
+    /**
+     * 运营备注: ADMIN_REMARK
+     */
+    public final void setAdminRemark(java.lang.String value){
+        if(onPropSet(PROP_ID_adminRemark,value)){
+            this._adminRemark = value;
+            internalClearRefs(PROP_ID_adminRemark);
+            
+        }
+    }
+    
     private final OrmEntitySet<app.mall.dao.entity.LitemallOrderGoods> _orderGoods = new OrmEntitySet<>(this, PROP_NAME_orderGoods,
         app.mall.dao.entity.LitemallOrderGoods.PROP_NAME_order, null,app.mall.dao.entity.LitemallOrderGoods.class);
 
@@ -1665,6 +2110,29 @@ public class _LitemallOrder extends DynamicOrmEntity{
      */
     public final IOrmEntitySet<app.mall.dao.entity.LitemallOrderGoods> getOrderGoods(){
        return _orderGoods;
+    }
+       
+    /**
+     * 自提门店
+     */
+    public final app.mall.dao.entity.LitemallPickupStore getPickupStore(){
+       return (app.mall.dao.entity.LitemallPickupStore)internalGetRefEntity(PROP_NAME_pickupStore);
+    }
+
+    public final void setPickupStore(app.mall.dao.entity.LitemallPickupStore refEntity){
+   
+           if(refEntity == null){
+           
+                   this.setPickupStoreId(null);
+               
+           }else{
+           internalSetRefEntity(PROP_NAME_pickupStore, refEntity,()->{
+           
+                           this.setPickupStoreId(refEntity.getId());
+                       
+           });
+           }
+       
     }
        
         public final List<app.mall.dao.entity.LitemallGoodsProduct> getRelatedProductList(){

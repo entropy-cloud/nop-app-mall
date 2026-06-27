@@ -17,7 +17,9 @@
         <meta-gen:DefaultMetaPostExtends xpl:lib="/nop/core/xlib/meta-gen.xlib"/>
     </x:post-extends>
 
-    <keys/>
+    <keys>
+        <key name="orderSnKey" props="orderSn"/>
+    </keys>
 
     <props>
         <prop name="id" displayName="Id" propId="1" tagSet="seq" mandatory="true" queryable="true" sortable="true"
@@ -144,12 +146,57 @@
               updatable="true" internal="true" ui:show="X">
             <schema domain="delFlag" type="java.lang.Boolean"/>
         </prop>
+        <prop name="deliveryType" displayName="配送方式" propId="32" queryable="true" sortable="true" insertable="true"
+              updatable="true">
+            <schema type="java.lang.Integer" dict="mall/delivery-type"/>
+        </prop>
+        <prop name="pickupStoreId" displayName="自提门店ID" propId="33" queryable="true" sortable="true" insertable="true"
+              updatable="true" ext:relation="pickupStore">
+            <schema type="java.lang.String"/>
+        </prop>
+        <prop name="pickupCode" displayName="自提核销码" propId="34" queryable="true" sortable="true" insertable="true"
+              updatable="true">
+            <schema type="java.lang.String" precision="50"/>
+        </prop>
+        <prop name="pickupTime" displayName="核销时间" propId="35" queryable="true" sortable="true" insertable="true"
+              updatable="true">
+            <schema type="java.time.LocalDateTime"/>
+        </prop>
+        <prop name="promotionPrice" displayName="促销优惠金额（满减/限时折扣）" propId="36" mandatory="true" queryable="true"
+              sortable="true" insertable="true" updatable="true">
+            <schema type="java.math.BigDecimal" precision="10" scale="2"/>
+        </prop>
+        <prop name="pinTuanPrice" displayName="拼团优惠金额" propId="37" mandatory="true" queryable="true" sortable="true"
+              insertable="true" updatable="true">
+            <schema type="java.math.BigDecimal" precision="10" scale="2"/>
+        </prop>
+        <prop name="payChannel" displayName="支付通道" propId="38" queryable="true" sortable="true" insertable="true"
+              updatable="true">
+            <schema type="java.lang.Integer" dict="mall/pay-channel"/>
+        </prop>
+        <prop name="walletPayAmount" displayName="余额支付金额" propId="39" queryable="true" sortable="true" insertable="true"
+              updatable="true">
+            <schema type="java.math.BigDecimal" precision="10" scale="2"/>
+        </prop>
+        <prop name="adminRemark" displayName="运营备注" propId="40" queryable="true" sortable="true" insertable="true"
+              updatable="true">
+            <schema type="java.lang.String" precision="511"/>
+        </prop>
         <prop name="orderGoods" displayName="订单商品" i18n-en:displayName="Order Goods"
               tagSet="pub,cascade-delete,updatable,insertable" ext:kind="to-many" internal="true" ext:joinLeftProp="id"
               ext:joinRightProp="orderId" orm:manyToManyRefProp="goodsId" insertable="true" updatable="true" lazy="true">
             <schema>
                 <item bizObjName="LitemallOrderGoods"/>
             </schema>
+        </prop>
+        <prop name="pickupStore" displayName="自提门店" i18n-en:displayName="Pickup Store" tagSet="pub" ext:kind="to-one"
+              internal="true" queryable="true" ext:joinLeftProp="pickupStoreId" ext:joinRightProp="id"
+              ext:joinRightDisplayProp="name" insertable="false" updatable="false" lazy="true">
+            <schema bizObjName="LitemallPickupStore"/>
+        </prop>
+        <prop name="pickupStore.name" displayName="自提门店" i18n-en:displayName="Pickup Store" internal="true"
+              queryable="true" sortable="true" lazy="true">
+            <schema type="String"/>
         </prop>
         <prop name="relatedProductList" displayName="relatedProductList" insertable="true" updatable="true"
               tagSet="pub,cascade-delete,updatable,insertable" depends="~orderGoods" internal="true" lazy="true">

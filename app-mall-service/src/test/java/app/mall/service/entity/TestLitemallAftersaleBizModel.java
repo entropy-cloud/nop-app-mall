@@ -113,7 +113,7 @@ public class TestLitemallAftersaleBizModel extends JunitBaseTestCase {
         cart.setChecked(true);
         cart.setGoodsSn(goods.getGoodsSn());
         cart.setGoodsName(goods.getName());
-        cart.setPicUrl("http://test.com/cart-pic.png");
+        cart.setPicUrl("/f/download/cart-pic");
         cart.setSpecifications("[\"标准\"]");
         daoProvider.daoFor(LitemallCart.class).saveEntity(cart);
     }

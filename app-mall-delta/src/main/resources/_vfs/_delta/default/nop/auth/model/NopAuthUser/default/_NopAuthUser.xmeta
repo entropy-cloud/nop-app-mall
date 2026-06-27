@@ -60,7 +60,7 @@
         </prop>
         <prop name="gender" displayName="性别" propId="9" i18n-en:displayName="Gender" mandatory="true" queryable="true"
               sortable="true" insertable="true" updatable="true">
-            <schema type="java.lang.Integer" dict="auth/gender"/>
+            <schema type="java.lang.Integer" dict="mall/gender"/>
         </prop>
         <prop name="avatar" displayName="头像" propId="10" i18n-en:displayName="Avatar" queryable="true" sortable="true"
               insertable="true" updatable="true" internal="true" ui:show="X">
@@ -165,6 +165,10 @@
         <prop name="remark" displayName="备注" propId="36" i18n-en:displayName="Remark" queryable="true" sortable="true"
               insertable="true" updatable="true" ui:show="SL">
             <schema domain="remark" type="java.lang.String" precision="200"/>
+        </prop>
+        <prop name="extFlags" displayName="扩展标记" propId="37" i18n-en:displayName="Ext Flags" queryable="true"
+              sortable="true" insertable="true" updatable="true" internal="true" ui:show="X">
+            <schema domain="compactExt" type="java.lang.String" precision="10"/>
         </prop>
         <prop name="picUrl" displayName="测试图片" propId="101" i18n-en:displayName="Pic Url" queryable="true"
               sortable="true" insertable="true" updatable="true">

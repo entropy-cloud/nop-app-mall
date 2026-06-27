@@ -105,6 +105,8 @@ public class TestLitemallGrouponBizModel extends JunitBaseTestCase {
         order.setCouponPrice(BigDecimal.ZERO);
         order.setIntegralPrice(BigDecimal.ZERO);
         order.setGrouponPrice(BigDecimal.ZERO);
+        order.setPromotionPrice(BigDecimal.ZERO);
+        order.setPinTuanPrice(BigDecimal.ZERO);
         order.setOrderPrice(new BigDecimal("100.00"));
         order.setActualPrice(new BigDecimal("100.00"));
         order.setComments(0);
@@ -120,7 +122,7 @@ public class TestLitemallGrouponBizModel extends JunitBaseTestCase {
         orderGoods.setNumber(1);
         orderGoods.setPrice(new BigDecimal("100.00"));
         orderGoods.setSpecifications("[\"标准\"]");
-        orderGoods.setPicUrl("http://test.com/groupon-goods-pic.png");
+        orderGoods.setPicUrl("/f/download/groupon-goods-pic");
         orderGoods.setComment(0);
         daoProvider.daoFor(LitemallOrderGoods.class).saveEntity(orderGoods);
 

@@ -122,17 +122,6 @@
         }
 
 
-        private Map<String,Object> _user;
-
-        public Map<String,Object> getUser(){
-            return _user;
-        }
-
-        public void setUser(Map<String,Object> value){
-            this._user = value;
-        }
-
-
         private Map<String,Object> _order;
 
         public Map<String,Object> getOrder(){

@@ -263,6 +263,34 @@
         }
 
 
+        private Boolean _isRecommend;
+
+    
+        @PropMeta(propId=22)
+    
+        public Boolean getIsRecommend(){
+            return _isRecommend;
+        }
+
+        public void setIsRecommend(Boolean value){
+            this._isRecommend = value;
+        }
+
+
+        private String _videoUrl;
+
+    
+        @PropMeta(propId=23)
+    
+        public String getVideoUrl(){
+            return _videoUrl;
+        }
+
+        public void setVideoUrl(String value){
+            this._videoUrl = value;
+        }
+
+
         private String _goodsSn;
 
     

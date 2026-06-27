@@ -6,11 +6,15 @@ entity:
     LitemallBrand: null
     LitemallCart: null
     LitemallCategory: null
+    LitemallCheckInRecord: null
+    LitemallCheckInRule: null
     LitemallCollect: null
     LitemallComment: null
     LitemallCoupon: null
     LitemallCouponUser: null
     LitemallFeedback: null
+    LitemallFlashSale: null
+    LitemallFlashSaleSession: null
     LitemallFootprint: null
     LitemallGoods: null
     LitemallGoodsAttribute: null
@@ -21,16 +25,31 @@ entity:
     LitemallIssue: null
     LitemallKeyword: null
     LitemallLog: null
+    LitemallMaterial: null
+    LitemallMaterialCategory: null
     LitemallNotice: null
     LitemallNoticeAdmin: null
     LitemallOrder: null
     LitemallOrderGoods: null
+    LitemallPickupStore: null
+    LitemallPinTuanActivity: null
+    LitemallPinTuanGroup: null
+    LitemallPinTuanMember: null
+    LitemallPointsAccount: null
+    LitemallPointsFlow: null
+    LitemallPromotionActivity: null
+    LitemallPromotionTier: null
+    LitemallRecharge: null
     LitemallRegion: null
     LitemallResetCode: null
     LitemallSearchHistory: null
     LitemallStorage: null
     LitemallSystem: null
+    LitemallTimeDiscount: null
     LitemallTopic: null
+    LitemallUserMessage: null
+    LitemallWallet: null
+    LitemallWalletFlow: null
 prop:
   label:
     LitemallAd:
@@ -79,6 +98,9 @@ prop:
       addTime: null
       updateTime: null
       deleted: null
+      orderItemId: null
+      processNote: null
+      processTime: null
       order: Order
       order.orderSn: Order
       picturesComponentFileStatusList: null
@@ -130,6 +152,22 @@ prop:
       children: Children
       iconUrlComponentFileStatus: null
       picUrlComponentFileStatus: null
+    LitemallCheckInRecord:
+      id: null
+      userId: null
+      checkInDate: null
+      consecutiveDays: null
+      pointsEarned: null
+      addTime: null
+      updateTime: null
+      deleted: null
+    LitemallCheckInRule:
+      id: null
+      daySeq: null
+      pointReward: null
+      resetCycle: null
+      addTime: null
+      updateTime: null
     LitemallCollect:
       id: null
       userId: null
@@ -151,6 +189,12 @@ prop:
       addTime: null
       updateTime: null
       deleted: null
+      pros: null
+      cons: null
+      semanticRating: null
+      goods: Goods
+      goods.name: Goods
+      topic: Topic
       picUrlsComponentFileStatusList: null
     LitemallCoupon:
       id: null
@@ -206,6 +250,33 @@ prop:
       updateTime: null
       deleted: null
       picUrlsComponentFileStatusList: null
+    LitemallFlashSale:
+      id: null
+      goodsId: null
+      productId: null
+      flashPrice: null
+      totalStock: null
+      maxPerUser: null
+      maxPerOrder: null
+      status: null
+      status_label: null
+      addTime: null
+      updateTime: null
+      deleted: null
+      goods: Goods
+      goods.name: Goods
+      sessions: Sessions
+    LitemallFlashSaleSession:
+      id: null
+      flashSaleId: null
+      sessionStart: null
+      sessionEnd: null
+      sessionStock: null
+      sessionStatus: null
+      addTime: null
+      updateTime: null
+      deleted: null
+      flashSale: Flash Sale
     LitemallFootprint:
       id: null
       userId: null
@@ -224,6 +295,7 @@ prop:
       galleryComponentFileStatusList: null
       picUrlComponentFileStatus: null
       shareUrlComponentFileStatus: null
+      videoUrlComponentFileStatus: null
       relatedProductList: null
       relatedProductList_ids: null
       relatedProductList_label: null
@@ -247,6 +319,8 @@ prop:
       addTime: Add Time
       updateTime: Update Time
       deleted: Deleted
+      isRecommend: Is Recommend
+      videoUrl: Video Url
       category: Category
       category.name: Category
       brand: Brand
@@ -272,6 +346,7 @@ prop:
       addTime: null
       updateTime: null
       deleted: null
+      safeStock: null
       goods: Goods
       goods.name: Goods
       specificationsComponent: null
@@ -349,6 +424,30 @@ prop:
       addTime: null
       updateTime: null
       deleted: null
+    LitemallMaterial:
+      id: null
+      name: null
+      url: null
+      fileType: null
+      fileSize: null
+      categoryId: null
+      tag: null
+      addTime: null
+      updateTime: null
+      deleted: null
+      category: Category
+      category.name: Category
+    LitemallMaterialCategory:
+      id: null
+      name: null
+      parentId: null
+      sortOrder: null
+      addTime: null
+      updateTime: null
+      deleted: null
+      parent: Parent
+      parent.name: Parent
+      children: Children
     LitemallNotice:
       id: null
       title: null
@@ -400,7 +499,20 @@ prop:
       addTime: null
       updateTime: null
       deleted: null
+      deliveryType: null
+      deliveryType_label: null
+      pickupStoreId: null
+      pickupCode: null
+      pickupTime: null
+      promotionPrice: null
+      pinTuanPrice: null
+      payChannel: null
+      payChannel_label: null
+      walletPayAmount: null
+      adminRemark: null
       orderGoods: Order Goods
+      pickupStore: Pickup Store
+      pickupStore.name: Pickup Store
       relatedProductList: null
       relatedProductList_ids: null
       relatedProductList_label: null
@@ -419,12 +531,133 @@ prop:
       addTime: null
       updateTime: null
       deleted: null
+      actualPayAmount: null
       order: Order
       order.orderSn: Order
       goods: Order Goods
       goods.name: Order Goods
       product: Order Product
       picUrlComponentFileStatus: null
+    LitemallPickupStore:
+      id: null
+      name: null
+      address: null
+      contact: null
+      phone: null
+      latitude: null
+      longitude: null
+      openingHours: null
+      status: null
+      remark: null
+      addTime: null
+      updateTime: null
+      deleted: null
+    LitemallPinTuanActivity:
+      id: null
+      goodsId: null
+      productId: null
+      pinTuanPrice: null
+      minUserCount: null
+      maxUserCount: null
+      expireHours: null
+      status: null
+      status_label: null
+      remark: null
+      addTime: null
+      updateTime: null
+      deleted: null
+      goods: Goods
+      goods.name: Goods
+    LitemallPinTuanGroup:
+      id: null
+      activityId: null
+      creatorUserId: null
+      orderId: null
+      status: null
+      status_label: null
+      expireTime: null
+      addTime: null
+      updateTime: null
+      deleted: null
+      activity: Activity
+      members: Members
+    LitemallPinTuanMember:
+      id: null
+      groupId: null
+      userId: null
+      orderId: null
+      addTime: null
+      updateTime: null
+      deleted: null
+      group: Group
+      order: Order
+      order.orderSn: Order
+    LitemallPointsAccount:
+      id: null
+      userId: null
+      balance: null
+      totalEarned: null
+      totalSpent: null
+      version: null
+      addTime: null
+      updateTime: null
+    LitemallPointsFlow:
+      id: null
+      accountId: null
+      userId: null
+      changeType: null
+      changeType_label: null
+      changeAmount: null
+      balanceAfter: null
+      sourceType: null
+      sourceId: null
+      remark: null
+      addTime: null
+      updateTime: null
+      account: Account
+    LitemallPromotionActivity:
+      id: null
+      name: null
+      discountType: null
+      discountType_label: null
+      startTime: null
+      endTime: null
+      status: null
+      status_label: null
+      goodsScope: null
+      goodsScope_label: null
+      goodsScopeValue: null
+      priority: null
+      maxPerUser: null
+      remark: null
+      addTime: null
+      updateTime: null
+      deleted: null
+      tiers: Tiers
+    LitemallPromotionTier:
+      id: null
+      activityId: null
+      meetAmount: null
+      discountValue: null
+      addTime: null
+      updateTime: null
+      deleted: null
+      activity: Activity
+      activity.name: Activity
+    LitemallRecharge:
+      id: null
+      userId: null
+      walletId: null
+      amount: null
+      giftAmount: null
+      payChannel: null
+      payChannel_label: null
+      payStatus: null
+      payStatus_label: null
+      addTime: null
+      updateTime: null
+      deleted: null
+      wallet: Wallet
     LitemallRegion:
       id: null
       pid: null
@@ -466,6 +699,24 @@ prop:
       addTime: null
       updateTime: null
       deleted: null
+    LitemallTimeDiscount:
+      id: null
+      goodsId: null
+      productId: null
+      discountType: null
+      discountType_label: null
+      discountValue: null
+      startTime: null
+      endTime: null
+      status: null
+      status_label: null
+      stockLimit: null
+      remark: null
+      addTime: null
+      updateTime: null
+      deleted: null
+      goods: Goods
+      goods.name: Goods
     LitemallTopic:
       id: null
       title: null
@@ -482,3 +733,63 @@ prop:
       status: null
       status_label: null
       goodsComponent: null
+    LitemallUserMessage:
+      id: null
+      userId: null
+      msgType: null
+      msgType_label: null
+      title: null
+      content: null
+      isRead: null
+      readTime: null
+      addTime: null
+      updateTime: null
+      deleted: null
+    LitemallWallet:
+      id: null
+      userId: null
+      balance: null
+      totalRecharge: null
+      totalSpent: null
+      version: null
+      addTime: null
+      updateTime: null
+    LitemallWalletFlow:
+      id: null
+      walletId: null
+      changeType: null
+      changeType_label: null
+      changeAmount: null
+      balanceAfter: null
+      sourceType: null
+      sourceId: null
+      remark: null
+      addTime: null
+      updateTime: null
+      wallet: Wallet
+dict:
+  label:
+    mall/aftersale-status: AfterSale Status
+    mall/aftersale-type: Aftersale Type
+    mall/coupon-status: Coupon Status
+    mall/coupon-goods-type: Coupon Goods Type
+    mall/coupon-time-type: Coupon Time Type
+    mall/order-status: Order Status
+    mall/category-level: Goods Category Level
+    mall/region-type: Region Type
+    mall/gender: Gender
+    mall/user-status: User Status
+    mall/user-level: User Level
+    mall/coupon-use-status: Coupon Usage Status
+    mall/promotion-status: Promotion Status
+    mall/discount-type: Discount Type
+    mall/goods-scope: Goods Scope
+    mall/pin-tuan-group-status: PinTuan Group Status
+    mall/points-change-type: Points Change Type
+    mall/wallet-change-type: Wallet Change Type
+    mall/msg-type: Message Type
+    mall/delivery-type: Delivery Type
+    mall/pay-channel: Pay Channel
+    mall/pay-status: Pay Status
+    mall/topic-status: Topic Status
+    mall/groupon-status: Groupon Status

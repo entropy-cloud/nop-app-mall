@@ -42,6 +42,8 @@
                 <column code="USER_ID" displayName="用户ID" domain="userId" mandatory="true" name="userId"
                         notGenCode="true" precision="50" primary="true" propId="1" stdDataType="string"
                         stdSqlType="VARCHAR" tagSet="seq,not-gen" ui:show="X" i18n-en:displayName="User ID"/>
+                <column code="GENDER" displayName="性别" name="gender" notGenCode="true" propId="9" stdDataType="int"
+                        stdSqlType="INTEGER" ext:dict="mall/gender" i18n-en:displayName="Gender"/>
                 <column code="CLIENT_ID" displayName="设备ID" name="clientId" notGenCode="true" precision="100"
                         propId="26" stdDataType="string" stdSqlType="VARCHAR" tagSet="del" ui:show="X"
                         i18n-en:displayName="Client Id"/>

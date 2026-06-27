@@ -2,9 +2,13 @@ package app.mall.service.entity;
 
 import app.mall.dao.entity.LitemallAddress;
 import app.mall.dao.entity.LitemallCart;
+import app.mall.dao.entity.LitemallCoupon;
 import app.mall.dao.entity.LitemallGoods;
 import app.mall.dao.entity.LitemallGoodsProduct;
 import app.mall.dao.entity.LitemallOrder;
+import app.mall.dao.entity.LitemallPromotionActivity;
+import app.mall.dao.entity.LitemallPromotionTier;
+import app.mall.dao.entity.LitemallSystem;
 import app.mall.dao._AppMallDaoConstants;
 import io.nop.api.core.annotations.autotest.NopTestConfig;
 import io.nop.api.core.annotations.core.OptionalBoolean;
@@ -23,6 +27,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -108,7 +113,10 @@ public class TestLitemallOrderBizModel extends JunitBaseTestCase {
         cart.setChecked(true);
         cart.setGoodsSn(goods.getGoodsSn());
         cart.setGoodsName(goods.getName());
-        cart.setPicUrl("http://test.com/cart-pic.png");
+        // domain=image stores a file link /f/download/{fileId}, not a plain URL.
+        // submit() copies cart.picUrl -> orderGoods.picUrl via OrmFileComponent.copyFrom,
+        // which only resolves if the value is a file link matching a NopFileRecord.
+        cart.setPicUrl("/f/download/cart-pic");
         cart.setSpecifications("[\"标准\"]");
         daoProvider.daoFor(LitemallCart.class).saveEntity(cart);
     }
@@ -125,7 +133,7 @@ public class TestLitemallOrderBizModel extends JunitBaseTestCase {
                 GraphQLOperationType.mutation, "LitemallOrder__submit", submitReq);
         ApiResponse<?> submitResult = graphQLEngine.executeRpc(gqlCtx);
         assertEquals(0, submitResult.getStatus(),
-                "submit failed: " + submitResult);
+                "submit failed: msg=" + submitResult.getMsg() + " data=" + submitResult.getData());
         Map<String, Object> orderData = (Map<String, Object>) submitResult.getData();
         assertNotNull(orderData);
         assertEquals(99 * 2, ((Number) orderData.get("goodsPrice")).intValue());
@@ -405,5 +413,123 @@ public class TestLitemallOrderBizModel extends JunitBaseTestCase {
             daoProvider.daoFor(LitemallOrder.class).updateEntity(o);
             return null;
         });
+    }
+
+    private LitemallPromotionActivity createActiveAmountPromotion(BigDecimal meetAmount, BigDecimal discountValue) {
+        LitemallPromotionActivity a = daoProvider.daoFor(LitemallPromotionActivity.class).newEntity();
+        a.setName("满减测试");
+        a.setDiscountType(_AppMallDaoConstants.DISCOUNT_TYPE_AMOUNT);
+        a.setStatus(_AppMallDaoConstants.PROMOTION_STATUS_ACTIVE);
+        a.setGoodsScope(_AppMallDaoConstants.GOODS_SCOPE_ALL);
+        a.setPriority(1);
+        a.setStartTime(LocalDateTime.now().minusDays(1));
+        a.setEndTime(LocalDateTime.now().plusDays(1));
+        daoProvider.daoFor(LitemallPromotionActivity.class).saveEntity(a);
+
+        LitemallPromotionTier t = daoProvider.daoFor(LitemallPromotionTier.class).newEntity();
+        t.setActivityId(a.getId());
+        t.setMeetAmount(meetAmount);
+        t.setDiscountValue(discountValue);
+        daoProvider.daoFor(LitemallPromotionTier.class).saveEntity(t);
+        return a;
+    }
+
+    private String claimCouponForTest() {
+        LitemallCoupon coupon = daoProvider.daoFor(LitemallCoupon.class).newEntity();
+        coupon.setName("满减叠加测试券");
+        coupon.setTag("通用");
+        coupon.setTotal(100);
+        coupon.setDiscount(BigDecimal.valueOf(5));
+        coupon.setMin(BigDecimal.ZERO);
+        coupon.setLimit(1);
+        coupon.setType(0);
+        coupon.setStatus(0);
+        coupon.setGoodsType(0);
+        coupon.setGoodsValue("");
+        coupon.setTimeType(0);
+        coupon.setDays(30);
+        coupon.setStartTime(LocalDateTime.now().minusDays(1));
+        coupon.setEndTime(LocalDateTime.now().plusDays(30));
+        daoProvider.daoFor(LitemallCoupon.class).saveEntity(coupon);
+
+        ApiRequest<Map<String, Object>> claimReq = ApiRequest.build(Map.of("couponId", coupon.getId()));
+        IGraphQLExecutionContext claimCtx = graphQLEngine.newRpcContext(
+                GraphQLOperationType.mutation, "LitemallCouponUser__claimCoupon", claimReq);
+        ApiResponse<?> claimRes = graphQLEngine.executeRpc(claimCtx);
+        assertEquals(0, claimRes.getStatus(), "claimCoupon failed: " + claimRes);
+        return (String) ((Map<String, Object>) claimRes.getData()).get("id");
+    }
+
+    private void setStackingConfig(String value) {
+        LitemallSystem cfg = daoProvider.daoFor(LitemallSystem.class).newEntity();
+        cfg.setKeyName("mall_promotion_coupon_stacking");
+        cfg.setKeyValue(value);
+        daoProvider.daoFor(LitemallSystem.class).saveEntity(cfg);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testSubmitWithPromotion() {
+        // goodsPrice = 99 * 2 = 198; promotion 满100减20 -> promotionPrice=20
+        createActiveAmountPromotion(new BigDecimal("100"), new BigDecimal("20"));
+
+        ApiRequest<Map<String, Object>> submitReq = ApiRequest.build(Map.of(
+                "addressId", addressId,
+                "message", "满减测试",
+                "freightPrice", BigDecimal.ZERO
+        ));
+        IGraphQLExecutionContext gqlCtx = graphQLEngine.newRpcContext(
+                GraphQLOperationType.mutation, "LitemallOrder__submit", submitReq);
+        ApiResponse<?> submitResult = graphQLEngine.executeRpc(gqlCtx);
+        assertEquals(0, submitResult.getStatus(), "submit failed: " + submitResult);
+        Map<String, Object> orderData = (Map<String, Object>) submitResult.getData();
+        assertEquals(0, new BigDecimal("20").compareTo(new BigDecimal(orderData.get("promotionPrice").toString())));
+        assertEquals(198, ((Number) orderData.get("goodsPrice")).intValue());
+        // orderPrice = 198 + 0 - 0 - 20 = 178
+        assertEquals(0, new BigDecimal("178").compareTo(new BigDecimal(orderData.get("orderPrice").toString())));
+        assertEquals(0, new BigDecimal("178").compareTo(new BigDecimal(orderData.get("actualPrice").toString())));
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testSubmitPromotionAndCouponStackingAllowed() {
+        createActiveAmountPromotion(new BigDecimal("100"), new BigDecimal("20"));
+        String couponUserId = claimCouponForTest();
+        // no stacking config -> default allowed
+
+        ApiRequest<Map<String, Object>> submitReq = ApiRequest.build(Map.of(
+                "addressId", addressId,
+                "message", "叠加测试",
+                "freightPrice", BigDecimal.ZERO,
+                "couponUserId", couponUserId
+        ));
+        IGraphQLExecutionContext gqlCtx = graphQLEngine.newRpcContext(
+                GraphQLOperationType.mutation, "LitemallOrder__submit", submitReq);
+        ApiResponse<?> submitResult = graphQLEngine.executeRpc(gqlCtx);
+        assertEquals(0, submitResult.getStatus(), "submit failed: " + submitResult);
+        Map<String, Object> orderData = (Map<String, Object>) submitResult.getData();
+        assertEquals(0, new BigDecimal("5").compareTo(new BigDecimal(orderData.get("couponPrice").toString())));
+        assertEquals(0, new BigDecimal("20").compareTo(new BigDecimal(orderData.get("promotionPrice").toString())));
+        // orderPrice = 198 - 5 - 20 = 173
+        assertEquals(0, new BigDecimal("173").compareTo(new BigDecimal(orderData.get("orderPrice").toString())));
+    }
+
+    @Test
+    public void testSubmitPromotionCouponStackingDisabled() {
+        createActiveAmountPromotion(new BigDecimal("100"), new BigDecimal("20"));
+        String couponUserId = claimCouponForTest();
+        setStackingConfig("false");
+
+        ApiRequest<Map<String, Object>> submitReq = ApiRequest.build(Map.of(
+                "addressId", addressId,
+                "message", "禁止叠加测试",
+                "freightPrice", BigDecimal.ZERO,
+                "couponUserId", couponUserId
+        ));
+        IGraphQLExecutionContext gqlCtx = graphQLEngine.newRpcContext(
+                GraphQLOperationType.mutation, "LitemallOrder__submit", submitReq);
+        ApiResponse<?> submitResult = graphQLEngine.executeRpc(gqlCtx);
+        assertTrue(submitResult.getStatus() != 0,
+                "submit should be rejected when stacking disabled and both promotion and coupon apply: " + submitResult);
     }
 }

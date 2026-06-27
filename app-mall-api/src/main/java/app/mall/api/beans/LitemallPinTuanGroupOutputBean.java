@@ -163,17 +163,6 @@
         }
 
 
-        private Map<String,Object> _creator;
-
-        public Map<String,Object> getCreator(){
-            return _creator;
-        }
-
-        public void setCreator(Map<String,Object> value){
-            this._creator = value;
-        }
-
-
         private List<Map<String,Object>> _members;
 
         public List<Map<String,Object>> getMembers(){

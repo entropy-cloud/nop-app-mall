@@ -190,15 +190,4 @@
         }
 
 
-        private Map<String,Object> _user;
-
-        public Map<String,Object> getUser(){
-            return _user;
-        }
-
-        public void setUser(Map<String,Object> value){
-            this._user = value;
-        }
-
-
     }

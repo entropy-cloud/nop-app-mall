@@ -4,6 +4,7 @@ import io.nop.orm.model.IEntityModel;
 import io.nop.orm.support.DynamicOrmEntity;
 import io.nop.orm.support.OrmEntitySet; //NOPMD - suppressed UnusedImports - Auto Gen Code
 import io.nop.orm.IOrmEntitySet; //NOPMD - suppressed UnusedImports - Auto Gen Code
+
 import io.nop.api.core.convert.ConvertHelper;
 import java.util.Map;
 import java.util.HashMap;
@@ -62,9 +63,6 @@ public class _LitemallPinTuanGroup extends DynamicOrmEntity{
     
     /* relation: 拼团活动 */
     public static final String PROP_NAME_activity = "activity";
-    
-    /* relation: 团长 */
-    public static final String PROP_NAME_creator = "creator";
     
     /* relation: 参团成员 */
     public static final String PROP_NAME_members = "members";
@@ -602,29 +600,6 @@ public class _LitemallPinTuanGroup extends DynamicOrmEntity{
            internalSetRefEntity(PROP_NAME_activity, refEntity,()->{
            
                            this.setActivityId(refEntity.getId());
-                       
-           });
-           }
-       
-    }
-       
-    /**
-     * 团长
-     */
-    public final app.mall.dao.entity.LitemallUser getCreator(){
-       return (app.mall.dao.entity.LitemallUser)internalGetRefEntity(PROP_NAME_creator);
-    }
-
-    public final void setCreator(app.mall.dao.entity.LitemallUser refEntity){
-   
-           if(refEntity == null){
-           
-                   this.setCreatorUserId(null);
-               
-           }else{
-           internalSetRefEntity(PROP_NAME_creator, refEntity,()->{
-           
-                           this.setCreatorUserId(refEntity.getId());
                        
            });
            }

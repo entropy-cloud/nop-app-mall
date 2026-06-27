@@ -64,6 +64,18 @@
         }
 
 
+        private io.nop.api.core.beans.file.FileStatusBean _videoUrlComponentFileStatus;
+
+    
+        public io.nop.api.core.beans.file.FileStatusBean getVideoUrlComponentFileStatus(){
+            return _videoUrlComponentFileStatus;
+        }
+
+        public void setVideoUrlComponentFileStatus(io.nop.api.core.beans.file.FileStatusBean value){
+            this._videoUrlComponentFileStatus = value;
+        }
+
+
         private java.util.List<java.lang.String> _relatedProductList_ids;
 
     
@@ -363,6 +375,34 @@
 
         public void setDeleted(Boolean value){
             this._deleted = value;
+        }
+
+
+        private Boolean _isRecommend;
+
+    
+        @PropMeta(propId=22)
+    
+        public Boolean getIsRecommend(){
+            return _isRecommend;
+        }
+
+        public void setIsRecommend(Boolean value){
+            this._isRecommend = value;
+        }
+
+
+        private String _videoUrl;
+
+    
+        @PropMeta(propId=23)
+    
+        public String getVideoUrl(){
+            return _videoUrl;
+        }
+
+        public void setVideoUrl(String value){
+            this._videoUrl = value;
         }
 
 

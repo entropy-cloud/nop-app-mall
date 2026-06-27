@@ -232,14 +232,6 @@
                     <column name="userId"/>
                 </index>
             </indexes>
-            <relations>
-                <to-one displayName="客户" name="user" refEntityName="app.mall.dao.entity.LitemallUser"
-                        tagSet="pub,ref-pub" i18n-en:displayName="User">
-                    <join>
-                        <on leftProp="userId" rightProp="id"/>
-                    </join>
-                </to-one>
-            </relations>
         </entity>
         <entity className="app.mall.dao.entity.LitemallAftersale" createTimeProp="addTime" deleteFlagProp="deleted"
                 displayName="售后表" name="app.mall.dao.entity.LitemallAftersale" registerShortName="true"
@@ -475,12 +467,6 @@
                 </index>
             </indexes>
             <relations>
-                <to-one displayName="客户" name="user" refEntityName="app.mall.dao.entity.LitemallUser"
-                        tagSet="pub,ref-pub" i18n-en:displayName="User">
-                    <join>
-                        <on leftProp="userId" rightProp="id"/>
-                    </join>
-                </to-one>
                 <to-one displayName="商品" name="goods" refEntityName="app.mall.dao.entity.LitemallGoods"
                         tagSet="pub,ref-pub" i18n-en:displayName="Goods">
                     <join>
@@ -1090,7 +1076,7 @@
                         propId="13" scale="2" stdDataType="decimal" stdSqlType="DECIMAL"/>
                 <column code="GROUPON_PRICE" displayName="团购优惠价减免" mandatory="true" name="grouponPrice" precision="10"
                         propId="14" scale="2" stdDataType="decimal" stdSqlType="DECIMAL"/>
-                <column code="ORDER_PRICE" comment="goods_price + freight_price - coupon_price" displayName="订单费用"
+                <column code="ORDER_PRICE" comment="goods_price + freight_price - coupon_price - promotion_price" displayName="订单费用"
                         mandatory="true" name="orderPrice" precision="10" propId="15" scale="2" stdDataType="decimal"
                         stdSqlType="DECIMAL"/>
                 <column code="ACTUAL_PRICE" comment="order_price - integral_price - groupon_price" displayName="实付费用" mandatory="true"
@@ -1659,12 +1645,6 @@
                         <on leftProp="activityId" rightProp="id"/>
                     </join>
                 </to-one>
-                <to-one displayName="团长" name="creator" refEntityName="app.mall.dao.entity.LitemallUser"
-                        tagSet="pub,ref-pub" i18n-en:displayName="Creator">
-                    <join>
-                        <on leftProp="creatorUserId" rightProp="id"/>
-                    </join>
-                </to-one>
                 <to-many cascadeDelete="true" displayName="参团成员" name="members"
                          refEntityName="app.mall.dao.entity.LitemallPinTuanMember" refPropName="group"
                          tagSet="pub,cascade-delete,insertable,updatable" i18n-en:displayName="Members">
@@ -1701,12 +1681,6 @@
                         i18n-en:displayName="Group" ref-i18n-en:displayName="Members">
                     <join>
                         <on leftProp="groupId" rightProp="id"/>
-                    </join>
-                </to-one>
-                <to-one displayName="用户" name="user" refEntityName="app.mall.dao.entity.LitemallUser"
-                        tagSet="pub,ref-pub" i18n-en:displayName="User">
-                    <join>
-                        <on leftProp="userId" rightProp="id"/>
                     </join>
                 </to-one>
                 <to-one displayName="订单" name="order" refEntityName="app.mall.dao.entity.LitemallOrder"
@@ -1757,14 +1731,6 @@
                 <column code="DELETED" displayName="逻辑删除" domain="delFlag" name="deleted" propId="8"
                         stdDataType="boolean" stdSqlType="BOOLEAN" ui:show="X"/>
             </columns>
-            <relations>
-                <to-one displayName="用户" name="user" refEntityName="app.mall.dao.entity.LitemallUser"
-                        tagSet="pub,ref-pub" i18n-en:displayName="User">
-                    <join>
-                        <on leftProp="userId" rightProp="id"/>
-                    </join>
-                </to-one>
-            </relations>
         </entity>
         <entity className="app.mall.dao.entity.LitemallPointsAccount" createTimeProp="addTime"
                 displayName="积分账户表" name="app.mall.dao.entity.LitemallPointsAccount"
@@ -1788,14 +1754,6 @@
                 <column code="UPDATE_TIME" displayName="更新时间" domain="updateTime" name="updateTime" propId="8"
                         stdDataType="datetime" stdSqlType="DATETIME" ui:show="X"/>
             </columns>
-            <relations>
-                <to-one displayName="用户" name="user" refEntityName="app.mall.dao.entity.LitemallUser"
-                        tagSet="pub,ref-pub" i18n-en:displayName="User">
-                    <join>
-                        <on leftProp="userId" rightProp="id"/>
-                    </join>
-                </to-one>
-            </relations>
             <unique-keys>
                 <unique-key columns="userId" name="uk_litemall_points_account_user"/>
             </unique-keys>
@@ -1835,12 +1793,6 @@
                         <on leftProp="accountId" rightProp="id"/>
                     </join>
                 </to-one>
-                <to-one displayName="用户" name="user" refEntityName="app.mall.dao.entity.LitemallUser"
-                        tagSet="pub,ref-pub" i18n-en:displayName="User">
-                    <join>
-                        <on leftProp="userId" rightProp="id"/>
-                    </join>
-                </to-one>
             </relations>
         </entity>
         <entity className="app.mall.dao.entity.LitemallWallet" createTimeProp="addTime"
@@ -1865,14 +1817,6 @@
                 <column code="UPDATE_TIME" displayName="更新时间" domain="updateTime" name="updateTime" propId="8"
                         stdDataType="datetime" stdSqlType="DATETIME" ui:show="X"/>
             </columns>
-            <relations>
-                <to-one displayName="用户" name="user" refEntityName="app.mall.dao.entity.LitemallUser"
-                        tagSet="pub,ref-pub" i18n-en:displayName="User">
-                    <join>
-                        <on leftProp="userId" rightProp="id"/>
-                    </join>
-                </to-one>
-            </relations>
             <unique-keys>
                 <unique-key columns="userId" name="uk_litemall_wallet_user"/>
             </unique-keys>
@@ -1945,12 +1889,6 @@
                         <on leftProp="walletId" rightProp="id"/>
                     </join>
                 </to-one>
-                <to-one displayName="用户" name="user" refEntityName="app.mall.dao.entity.LitemallUser"
-                        tagSet="pub,ref-pub" i18n-en:displayName="User">
-                    <join>
-                        <on leftProp="userId" rightProp="id"/>
-                    </join>
-                </to-one>
             </relations>
         </entity>
         <entity className="app.mall.dao.entity.LitemallPickupStore" createTimeProp="addTime"
@@ -2012,14 +1950,6 @@
                 <column code="DELETED" displayName="逻辑删除" domain="delFlag" name="deleted" propId="10"
                         stdDataType="boolean" stdSqlType="BOOLEAN" ui:show="X"/>
             </columns>
-            <relations>
-                <to-one displayName="用户" name="user" refEntityName="app.mall.dao.entity.LitemallUser"
-                        tagSet="pub,ref-pub" i18n-en:displayName="User">
-                    <join>
-                        <on leftProp="userId" rightProp="id"/>
-                    </join>
-                </to-one>
-            </relations>
         </entity>
         <entity className="app.mall.dao.entity.LitemallMaterial" createTimeProp="addTime"
                 deleteFlagProp="deleted" displayName="素材资源表" name="app.mall.dao.entity.LitemallMaterial"

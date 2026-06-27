@@ -81,6 +81,8 @@ public class TestLitemallGrouponExpireBizModel extends JunitBaseTestCase {
         order.setCouponPrice(BigDecimal.ZERO);
         order.setIntegralPrice(BigDecimal.ZERO);
         order.setGrouponPrice(BigDecimal.ZERO);
+        order.setPromotionPrice(BigDecimal.ZERO);
+        order.setPinTuanPrice(BigDecimal.ZERO);
         order.setOrderPrice(new BigDecimal("100.00"));
         order.setActualPrice(new BigDecimal("100.00"));
         daoProvider.daoFor(LitemallOrder.class).saveEntity(order);

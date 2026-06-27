@@ -8,6 +8,7 @@ import app.mall.biz.ILitemallGrouponBiz;
 import app.mall.biz.ILitemallGrouponRulesBiz;
 import app.mall.biz.ILitemallOrderBiz;
 import app.mall.biz.ILitemallOrderGoodsBiz;
+import app.mall.biz.ILitemallPromotionActivityBiz;
 import app.mall.biz.ILitemallSystemBiz;
 import app.mall.dao._AppMallDaoConstants;
 import app.mall.dao.entity.LitemallAddress;
@@ -36,6 +37,7 @@ import io.nop.api.core.annotations.directive.Auth;
 import io.nop.api.core.beans.FilterBeans;
 import io.nop.api.core.beans.query.QueryBean;
 import io.nop.api.core.exceptions.NopException;
+import io.nop.api.core.time.CoreMetrics;
 import io.nop.biz.crud.CrudBizModel;
 import io.nop.commons.util.StringHelper;
 import io.nop.core.context.IServiceContext;
@@ -66,6 +68,7 @@ import static app.mall.service.AppMallErrors.ERR_ORDER_NOT_FOUND;
 import static app.mall.service.AppMallErrors.ERR_ORDER_PRICE_INVALID;
 import static app.mall.service.AppMallErrors.ERR_ORDER_STOCK_INSUFFICIENT;
 import static app.mall.service.AppMallErrors.ERR_ORDER_USE_REAL_PAYMENT;
+import static app.mall.service.AppMallErrors.ERR_PROMOTION_STACKING_NOT_ALLOWED;
 
 @BizModel("LitemallOrder")
 public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implements ILitemallOrderBiz {
@@ -89,6 +92,9 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
 
     @Inject
     ILitemallCouponUserBiz couponUserBiz;
+
+    @Inject
+    ILitemallPromotionActivityBiz promotionActivityBiz;
 
     @Inject
     ILitemallGrouponRulesBiz grouponRulesBiz;
@@ -185,6 +191,8 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
         order.setCouponPrice(BigDecimal.ZERO);
         order.setIntegralPrice(BigDecimal.ZERO);
         order.setGrouponPrice(BigDecimal.ZERO);
+        order.setPromotionPrice(BigDecimal.ZERO);
+        order.setPinTuanPrice(BigDecimal.ZERO);
         order.setComments(0);
         order.setDeleted(false);
 
@@ -228,6 +236,16 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
         }
         order.setCouponPrice(couponPrice);
 
+        BigDecimal promotionPrice = promotionActivityBiz.selectPromotionForOrder(goodsPriceTotal, couponScopeIds, context);
+        if (couponUserId != null && !couponUserId.isEmpty()
+                && promotionPrice.compareTo(BigDecimal.ZERO) > 0
+                && !isPromotionCouponStackingEnabled(context)) {
+            throw new NopException(ERR_PROMOTION_STACKING_NOT_ALLOWED)
+                    .param("goodsPrice", goodsPriceTotal)
+                    .param("promotionPrice", promotionPrice);
+        }
+        order.setPromotionPrice(promotionPrice);
+
         BigDecimal grouponPrice = BigDecimal.ZERO;
         if (grouponRulesId != null && !grouponRulesId.isEmpty()) {
             LitemallGrouponRules rules = grouponRulesBiz.requireEntity(grouponRulesId, null, context);
@@ -254,7 +272,7 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
         if (order.getFreightPrice() != null) {
             orderPrice = orderPrice.add(order.getFreightPrice());
         }
-        orderPrice = orderPrice.subtract(couponPrice);
+        orderPrice = orderPrice.subtract(couponPrice).subtract(promotionPrice);
         order.setOrderPrice(orderPrice);
 
         BigDecimal actualPrice = orderPrice;
@@ -595,11 +613,14 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
     @BizMutation
     public int cancelExpiredOrders(@Name("timeoutMinutes") int timeoutMinutes,
                                     IServiceContext context) {
-        LocalDateTime cutoff = LocalDateTime.now().minusMinutes(timeoutMinutes);
+        // Use CoreMetrics (same clock the ORM uses for auto createTime/updateTime) so the
+        // expiry cutoff and the entity's addTime/shipTime stay on one monotonic timeline.
+        LocalDateTime cutoff = CoreMetrics.currentDateTime().minusMinutes(timeoutMinutes);
 
         QueryBean query = new QueryBean();
         query.addFilter(FilterBeans.eq(LitemallOrder.PROP_NAME_orderStatus, _AppMallDaoConstants.ORDER_STATUS_CREATED));
-        query.addFilter(FilterBeans.lt(LitemallOrder.PROP_NAME_addTime, cutoff));
+        // Inclusive cutoff: an order created exactly N minutes ago has "timed out".
+        query.addFilter(FilterBeans.le(LitemallOrder.PROP_NAME_addTime, cutoff));
         query.setLimit(100);
 
         List<LitemallOrder> orders = doFindListByQueryDirectly(query, context);
@@ -648,11 +669,13 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
     @BizMutation
     public int confirmExpiredOrders(@Name("timeoutMinutes") int timeoutMinutes,
                                      IServiceContext context) {
-        LocalDateTime cutoff = LocalDateTime.now().minusMinutes(timeoutMinutes);
+        // Use CoreMetrics (same clock the ORM uses for auto createTime/updateTime) so the
+        // expiry cutoff and the entity's addTime/shipTime stay on one monotonic timeline.
+        LocalDateTime cutoff = CoreMetrics.currentDateTime().minusMinutes(timeoutMinutes);
 
         QueryBean query = new QueryBean();
         query.addFilter(FilterBeans.eq(LitemallOrder.PROP_NAME_orderStatus, _AppMallDaoConstants.ORDER_STATUS_SHIP));
-        query.addFilter(FilterBeans.lt(LitemallOrder.PROP_NAME_shipTime, cutoff));
+        query.addFilter(FilterBeans.le(LitemallOrder.PROP_NAME_shipTime, cutoff));
         query.setLimit(100);
 
         List<LitemallOrder> orders = doFindListByQueryDirectly(query, context);
@@ -675,5 +698,13 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
             throw new NopException(ERR_ORDER_NOT_FOUND)
                     .param("orderId", order.orm_idString());
         }
+    }
+
+    private boolean isPromotionCouponStackingEnabled(IServiceContext context) {
+        String value = systemBiz.getConfig("mall_promotion_coupon_stacking", context);
+        if (value == null || value.isEmpty()) {
+            return true;
+        }
+        return !"false".equalsIgnoreCase(value.trim()) && !"0".equals(value.trim());
     }
 }

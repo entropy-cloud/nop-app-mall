@@ -4,6 +4,7 @@ import io.nop.orm.model.IEntityModel;
 import io.nop.orm.support.DynamicOrmEntity;
 import io.nop.orm.support.OrmEntitySet; //NOPMD - suppressed UnusedImports - Auto Gen Code
 import io.nop.orm.IOrmEntitySet; //NOPMD - suppressed UnusedImports - Auto Gen Code
+
 import io.nop.api.core.convert.ConvertHelper;
 import java.util.Map;
 import java.util.HashMap;
@@ -70,9 +71,6 @@ public class _LitemallPointsFlow extends DynamicOrmEntity{
     
     /* relation: 积分账户 */
     public static final String PROP_NAME_account = "account";
-    
-    /* relation: 用户 */
-    public static final String PROP_NAME_user = "user";
     
 
     protected static final List<String> PK_PROP_NAMES = Arrays.asList(PROP_NAME_id);
@@ -697,29 +695,6 @@ public class _LitemallPointsFlow extends DynamicOrmEntity{
            internalSetRefEntity(PROP_NAME_account, refEntity,()->{
            
                            this.setAccountId(refEntity.getId());
-                       
-           });
-           }
-       
-    }
-       
-    /**
-     * 用户
-     */
-    public final app.mall.dao.entity.LitemallUser getUser(){
-       return (app.mall.dao.entity.LitemallUser)internalGetRefEntity(PROP_NAME_user);
-    }
-
-    public final void setUser(app.mall.dao.entity.LitemallUser refEntity){
-   
-           if(refEntity == null){
-           
-                   this.setUserId(null);
-               
-           }else{
-           internalSetRefEntity(PROP_NAME_user, refEntity,()->{
-           
-                           this.setUserId(refEntity.getId());
                        
            });
            }

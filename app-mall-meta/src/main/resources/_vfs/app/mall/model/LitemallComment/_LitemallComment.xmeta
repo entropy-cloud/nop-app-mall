@@ -23,7 +23,7 @@
             <schema type="java.lang.String"/>
         </prop>
         <prop name="valueId" displayName="如果type=0，则是商品评论；如果是type=1，则是专题评论。" propId="2" mandatory="true"
-              queryable="true" sortable="true" insertable="true" updatable="true">
+              queryable="true" sortable="true" insertable="true" updatable="true" ext:relation="goods">
             <schema type="java.lang.String"/>
         </prop>
         <prop name="type" displayName="评论类型" propId="3" mandatory="true" queryable="true" sortable="true"
@@ -65,6 +65,32 @@
         <prop name="deleted" displayName="逻辑删除" propId="12" queryable="true" sortable="true" insertable="false"
               updatable="true" internal="true" ui:show="X">
             <schema domain="delFlag" type="java.lang.Boolean"/>
+        </prop>
+        <prop name="pros" displayName="优点列表(JSON)" propId="13" queryable="true" sortable="true" insertable="true"
+              updatable="true">
+            <schema type="java.lang.String" precision="1023"/>
+        </prop>
+        <prop name="cons" displayName="缺点列表(JSON)" propId="14" queryable="true" sortable="true" insertable="true"
+              updatable="true">
+            <schema type="java.lang.String" precision="1023"/>
+        </prop>
+        <prop name="semanticRating" displayName="语义评级(1-5)" propId="15" queryable="true" sortable="true"
+              insertable="true" updatable="true">
+            <schema type="java.lang.Integer"/>
+        </prop>
+        <prop name="goods" displayName="商品" i18n-en:displayName="Goods" tagSet="pub,ref-pub" ext:kind="to-one"
+              internal="true" queryable="true" ext:joinLeftProp="valueId" ext:joinRightProp="id"
+              ext:joinRightDisplayProp="name" insertable="false" updatable="false" mandatory="true" lazy="true">
+            <schema bizObjName="LitemallGoods"/>
+        </prop>
+        <prop name="goods.name" displayName="商品" i18n-en:displayName="Goods" internal="true" queryable="true"
+              sortable="true" lazy="true">
+            <schema type="String"/>
+        </prop>
+        <prop name="topic" displayName="专题" i18n-en:displayName="Topic" tagSet="pub,ref-pub" ext:kind="to-one"
+              internal="true" queryable="true" ext:joinLeftProp="valueId" ext:joinRightProp="id" insertable="false"
+              updatable="false" mandatory="true" lazy="true">
+            <schema bizObjName="LitemallTopic"/>
         </prop>
         <prop name="picUrlsComponentFileStatusList" mapToProp="picUrlsComponent.fileStatusList" internal="true"
               lazy="true">

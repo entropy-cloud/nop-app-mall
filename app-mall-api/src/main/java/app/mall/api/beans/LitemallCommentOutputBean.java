@@ -181,6 +181,48 @@
         }
 
 
+        private String _pros;
+
+    
+        @PropMeta(propId=13)
+    
+        public String getPros(){
+            return _pros;
+        }
+
+        public void setPros(String value){
+            this._pros = value;
+        }
+
+
+        private String _cons;
+
+    
+        @PropMeta(propId=14)
+    
+        public String getCons(){
+            return _cons;
+        }
+
+        public void setCons(String value){
+            this._cons = value;
+        }
+
+
+        private Integer _semanticRating;
+
+    
+        @PropMeta(propId=15)
+    
+        public Integer getSemanticRating(){
+            return _semanticRating;
+        }
+
+        public void setSemanticRating(Integer value){
+            this._semanticRating = value;
+        }
+
+
         private java.util.List<io.nop.api.core.beans.file.FileStatusBean> _picUrlsComponentFileStatusList;
 
     
@@ -190,6 +232,28 @@
 
         public void setPicUrlsComponentFileStatusList(java.util.List<io.nop.api.core.beans.file.FileStatusBean> value){
             this._picUrlsComponentFileStatusList = value;
+        }
+
+
+        private Map<String,Object> _goods;
+
+        public Map<String,Object> getGoods(){
+            return _goods;
+        }
+
+        public void setGoods(Map<String,Object> value){
+            this._goods = value;
+        }
+
+
+        private Map<String,Object> _topic;
+
+        public Map<String,Object> getTopic(){
+            return _topic;
+        }
+
+        public void setTopic(Map<String,Object> value){
+            this._topic = value;
         }
 
 

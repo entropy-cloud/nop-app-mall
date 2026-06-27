@@ -139,6 +139,16 @@ body:
             - type: tpl
               tpl: '<h3>价格汇总</h3>'
             - type: service
+              name: promotionService
+              api:
+                url: '@query:LitemallPromotionActivity__selectPromotionForOrder'
+                data:
+                  goodsPrice: "${SUM(cartItems.items, 'price * number')}"
+                sendOn: "${cartItems.items != null}"
+              body:
+                type: wrapper
+                body: []
+            - type: service
               name: freightService
               api:
                 url: '@query:LitemallSystem__getFreightPrice'
@@ -164,13 +174,14 @@ body:
                         tpl: '<span>¥${data}</span>'
                   - type: flex
                     justify: space-between
+                    visibleOn: "${promotionService.data > 0}"
                     style:
                       margin: 8px 0
                     items:
                       - type: tpl
-                        tpl: '优惠：'
+                        tpl: '活动优惠：'
                       - type: tpl
-                        tpl: '<span style="color:#ff6700">-¥0.00</span>'
+                        tpl: '<span style="color:#ff6700">-¥${promotionService.data}</span>'
                   - type: divider
                   - type: flex
                     justify: space-between
@@ -179,7 +190,7 @@ body:
                       - type: tpl
                         tpl: '<b>应付金额：</b>'
                       - type: tpl
-                        tpl: '<span style="color:#ff6700;font-size:28px;font-weight:bold">¥${(cartItems.items ? SUM(cartItems.items, "price * number") : 0) + (data || 0)}</span>'
+                        tpl: '<span style="color:#ff6700;font-size:28px;font-weight:bold">¥${(cartItems.items ? SUM(cartItems.items, "price * number") : 0) + (data || 0) - (promotionService.data || 0)}</span>'
                   - type: button
                     label: 提交订单
                     level: primary

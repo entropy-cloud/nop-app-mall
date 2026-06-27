@@ -6,11 +6,15 @@ entity:
     LitemallBrand: 品牌商表
     LitemallCart: 购物车商品表
     LitemallCategory: 类目表
+    LitemallCheckInRecord: 签到记录表
+    LitemallCheckInRule: 签到规则表
     LitemallCollect: 收藏表
     LitemallComment: 评论表
     LitemallCoupon: 优惠券信息及规则表
     LitemallCouponUser: 优惠券用户使用表
     LitemallFeedback: 意见反馈表
+    LitemallFlashSale: 秒杀活动表
+    LitemallFlashSaleSession: 秒杀场次表
     LitemallFootprint: 用户浏览足迹表
     LitemallGoods: 商品基本信息
     LitemallGoodsAttribute: 商品参数表
@@ -21,16 +25,31 @@ entity:
     LitemallIssue: 常见问题表
     LitemallKeyword: 关键字表
     LitemallLog: 操作日志表
+    LitemallMaterial: 素材资源表
+    LitemallMaterialCategory: 素材分类表
     LitemallNotice: 通知表
     LitemallNoticeAdmin: 通知管理员表
     LitemallOrder: 订单表
     LitemallOrderGoods: 订单商品表
+    LitemallPickupStore: 自提门店表
+    LitemallPinTuanActivity: 拼团活动表
+    LitemallPinTuanGroup: 拼团开团记录表
+    LitemallPinTuanMember: 拼团参团记录表
+    LitemallPointsAccount: 积分账户表
+    LitemallPointsFlow: 积分流水表
+    LitemallPromotionActivity: 促销活动表（满减送）
+    LitemallPromotionTier: 满减档位表
+    LitemallRecharge: 充值记录表
     LitemallRegion: 行政区域表
     LitemallResetCode: 密码重置验证码
     LitemallSearchHistory: 搜索历史表
     LitemallStorage: 文件存储表
     LitemallSystem: 系统配置表
+    LitemallTimeDiscount: 限时折扣表
     LitemallTopic: 专题表
+    LitemallUserMessage: 用户站内信表
+    LitemallWallet: 钱包账户表
+    LitemallWalletFlow: 钱包流水表
 prop:
   label:
     LitemallAd:
@@ -73,8 +92,11 @@ prop:
       order: 订单
       order.orderSn: 订单
       orderId: 订单ID
+      orderItemId: 订单商品项ID
       pictures: 退款凭证图片链接数组
       picturesComponentFileStatusList: null
+      processNote: 处理备注
+      processTime: 处理时间
       reason: 退款原因
       status: 售后状态
       status_label: 售后状态
@@ -130,6 +152,22 @@ prop:
       pid: 父类目ID
       sortOrder: 排序
       updateTime: 更新时间
+    LitemallCheckInRecord:
+      addTime: 创建时间
+      checkInDate: 签到日期
+      consecutiveDays: 连续签到天数
+      deleted: 逻辑删除
+      id: Id
+      pointsEarned: 获得积分
+      updateTime: 更新时间
+      userId: 用户ID
+    LitemallCheckInRule:
+      addTime: 创建时间
+      daySeq: 连续第N天
+      id: Id
+      pointReward: 奖励积分数
+      resetCycle: 重置周期（天数，0不重置）
+      updateTime: 更新时间
     LitemallCollect:
       addTime: 创建时间
       deleted: 逻辑删除
@@ -141,13 +179,19 @@ prop:
     LitemallComment:
       addTime: 创建时间
       adminContent: 管理员回复内容
+      cons: 缺点列表(JSON)
       content: 评论内容
       deleted: 逻辑删除
+      goods: 商品
+      goods.name: 商品
       hasPicture: 是否含有图片
       id: Id
       picUrls: 图片地址列表，采用JSON数组格式
       picUrlsComponentFileStatusList: null
+      pros: 优点列表(JSON)
+      semanticRating: 语义评级(1-5)
       star: 评分， 1-5
+      topic: 专题
       type: 评论类型
       updateTime: 更新时间
       userId: 用户ID
@@ -206,6 +250,33 @@ prop:
       updateTime: 更新时间
       userId: 用户ID
       username: 用户名称
+    LitemallFlashSale:
+      addTime: 创建时间
+      deleted: 逻辑删除
+      flashPrice: 秒杀价
+      goods: 商品
+      goods.name: 商品
+      goodsId: 商品ID
+      id: Id
+      maxPerOrder: 每单限购
+      maxPerUser: 每人限购
+      productId: SKU ID（null表示全部SKU）
+      sessions: 秒杀场次
+      status: 状态
+      status_label: 状态
+      totalStock: 活动总库存
+      updateTime: 更新时间
+    LitemallFlashSaleSession:
+      addTime: 创建时间
+      deleted: 逻辑删除
+      flashSale: 秒杀活动
+      flashSaleId: 秒杀活动ID
+      id: Id
+      sessionEnd: 场次结束时间
+      sessionStart: 场次开始时间
+      sessionStatus: 场次状态（0未开始/1进行中/2已结束）
+      sessionStock: 场次库存
+      updateTime: 更新时间
     LitemallFootprint:
       addTime: 创建时间
       deleted: 逻辑删除
@@ -236,6 +307,7 @@ prop:
       isHot: 是否热品
       isNew: 是否新品
       isOnSale: 是否在售
+      isRecommend: 是否推荐
       keywords: 商品关键字
       name: 商品名称
       orderGoods: 订单商品
@@ -252,6 +324,8 @@ prop:
       specifications: 商品规格
       unit: 商品单位
       updateTime: 更新时间
+      videoUrl: 商品视频链接
+      videoUrlComponentFileStatus: null
     LitemallGoodsAttribute:
       addTime: 创建时间
       attribute: 商品参数名称
@@ -271,6 +345,7 @@ prop:
       id: Id
       number: 商品货品数量
       price: 商品货品价格
+      safeStock: 安全库存预警线
       specifications: 商品规格值
       specificationsComponent: null
       updateTime: 更新时间
@@ -349,6 +424,30 @@ prop:
       status: 操作状态
       type: 操作分类
       updateTime: 更新时间
+    LitemallMaterial:
+      addTime: 创建时间
+      category: 分类
+      category.name: 分类
+      categoryId: 分类ID
+      deleted: 逻辑删除
+      fileSize: 文件大小(bytes)
+      fileType: 文件类型(image/video)
+      id: Id
+      name: 文件名
+      tag: 标签
+      updateTime: 更新时间
+      url: 访问链接
+    LitemallMaterialCategory:
+      addTime: 创建时间
+      children: 子分类
+      deleted: 逻辑删除
+      id: Id
+      name: 分类名称
+      parent: 父分类
+      parent.name: 父分类
+      parentId: 父分类ID
+      sortOrder: 排序
+      updateTime: 更新时间
     LitemallNotice:
       addTime: 创建时间
       adminId: 创建通知的管理员ID
@@ -370,6 +469,7 @@ prop:
       actualPrice: 实付费用
       addTime: 创建时间
       address: 收货具体地址
+      adminRemark: 运营备注
       aftersaleStatus: 售后状态
       aftersaleStatus_label: 售后状态
       comments: 待评价订单商品数量
@@ -377,6 +477,8 @@ prop:
       consignee: 收货人名称
       couponPrice: 优惠券减免
       deleted: 逻辑删除
+      deliveryType: 配送方式
+      deliveryType_label: 配送方式
       endTime: 订单关闭时间
       freightPrice: 配送费用
       goodsPrice: 商品总费用
@@ -390,8 +492,17 @@ prop:
       orderSn: 订单编号
       orderStatus: 订单状态
       orderStatus_label: 订单状态
+      payChannel: 支付通道
+      payChannel_label: 支付通道
       payId: 微信付款编号
       payTime: 微信付款时间
+      pickupCode: 自提核销码
+      pickupStore: 自提门店
+      pickupStore.name: 自提门店
+      pickupStoreId: 自提门店ID
+      pickupTime: 核销时间
+      pinTuanPrice: 拼团优惠金额
+      promotionPrice: 促销优惠金额（满减/限时折扣）
       refundAmount: 实际退款金额
       refundContent: 退款备注
       refundTime: 退款时间
@@ -404,7 +515,9 @@ prop:
       shipTime: 发货开始时间
       updateTime: 更新时间
       userId: 用户ID
+      walletPayAmount: 余额支付金额
     LitemallOrderGoods:
+      actualPayAmount: 实付金额
       addTime: 创建时间
       comment: 订单商品评论，如果是-1，则超期不能评价；如果是0，则可以评价；如果其他值，则是comment表里面的评论ID。
       deleted: 逻辑删除
@@ -425,6 +538,126 @@ prop:
       productId: 货品ID
       specifications: 规格列表
       updateTime: 更新时间
+    LitemallPickupStore:
+      addTime: 创建时间
+      address: 门店地址
+      contact: 联系人
+      deleted: 逻辑删除
+      id: Id
+      latitude: 纬度
+      longitude: 经度
+      name: 门店名称
+      openingHours: 营业时间
+      phone: 联系电话
+      remark: 备注
+      status: 启用状态
+      updateTime: 更新时间
+    LitemallPinTuanActivity:
+      addTime: 创建时间
+      deleted: 逻辑删除
+      expireHours: 有效时间（小时）
+      goods: 商品
+      goods.name: 商品
+      goodsId: 商品ID
+      id: Id
+      maxUserCount: 最多人数
+      minUserCount: 成团人数门槛
+      pinTuanPrice: 拼团价
+      productId: SKU ID（null表示全部SKU）
+      remark: 备注
+      status: 状态
+      status_label: 状态
+      updateTime: 更新时间
+    LitemallPinTuanGroup:
+      activity: 拼团活动
+      activityId: 拼团活动ID
+      addTime: 创建时间
+      creatorUserId: 团长用户ID
+      deleted: 逻辑删除
+      expireTime: 过期时间
+      id: Id
+      members: 参团成员
+      orderId: 团长的订单ID
+      status: 拼团状态
+      status_label: 拼团状态
+      updateTime: 更新时间
+    LitemallPinTuanMember:
+      addTime: 创建时间
+      deleted: 逻辑删除
+      group: 拼团团
+      groupId: 拼团团ID
+      id: Id
+      order: 订单
+      order.orderSn: 订单
+      orderId: 订单ID
+      updateTime: 更新时间
+      userId: 用户ID
+    LitemallPointsAccount:
+      addTime: 创建时间
+      balance: 当前可用积分
+      id: Id
+      totalEarned: 累计获得
+      totalSpent: 累计消耗
+      updateTime: 更新时间
+      userId: 用户ID
+      version: 数据版本
+    LitemallPointsFlow:
+      account: 积分账户
+      accountId: 积分账户ID
+      addTime: 创建时间
+      balanceAfter: 变动后余额
+      changeAmount: 变动数量
+      changeType: 变动类型
+      changeType_label: 变动类型
+      id: Id
+      remark: 备注
+      sourceId: 来源业务ID
+      sourceType: 来源类型
+      updateTime: 更新时间
+      userId: 用户ID
+    LitemallPromotionActivity:
+      addTime: 创建时间
+      deleted: 逻辑删除
+      discountType: 折扣类型
+      discountType_label: 折扣类型
+      endTime: 结束时间
+      goodsScope: 商品范围类型
+      goodsScopeValue: 商品范围值(JSON)
+      goodsScope_label: 商品范围类型
+      id: Id
+      maxPerUser: 每人限参与次数(0不限)
+      name: 活动名称
+      priority: 优先级
+      remark: 备注
+      startTime: 开始时间
+      status: 活动状态
+      status_label: 活动状态
+      tiers: 满减档位
+      updateTime: 更新时间
+    LitemallPromotionTier:
+      activity: 促销活动
+      activity.name: 促销活动
+      activityId: 促销活动ID
+      addTime: 创建时间
+      deleted: 逻辑删除
+      discountValue: 减免值（金额或折扣率）
+      id: Id
+      meetAmount: 满足金额
+      updateTime: 更新时间
+    LitemallRecharge:
+      addTime: 创建时间
+      amount: 充值金额
+      deleted: 逻辑删除
+      giftAmount: 赠送金额
+      id: Id
+      payChannel: 支付渠道
+      payChannel_label: 支付渠道
+      payStatus: 支付状态
+      payStatus_label: 支付状态
+      updateTime: 更新时间
+      userId: 用户ID
+      wallet: 钱包
+      walletId: 钱包ID
     LitemallRegion:
       children: 子区域
       code: 行政区域编码
@@ -466,6 +699,24 @@ prop:
       keyName: 系统配置名
       keyValue: 系统配置值
       updateTime: 更新时间
+    LitemallTimeDiscount:
+      addTime: 创建时间
+      deleted: 逻辑删除
+      discountType: 折扣类型
+      discountType_label: 折扣类型
+      discountValue: 折扣值（金额或折扣率）
+      endTime: 结束时间
+      goods: 商品
+      goods.name: 商品
+      goodsId: 商品ID
+      id: Id
+      productId: SKU ID（null表示全部SKU）
+      remark: 备注
+      startTime: 开始时间
+      status: 状态
+      status_label: 状态
+      stockLimit: 折扣库存（0不限）
+      updateTime: 更新时间
     LitemallTopic:
       addTime: 创建时间
       content: 专题内容
@@ -482,3 +733,37 @@ prop:
       subtitle: 专题子标题
       title: 专题标题
       updateTime: 更新时间
+    LitemallUserMessage:
+      addTime: 创建时间
+      content: 内容
+      deleted: 逻辑删除
+      id: Id
+      isRead: 是否已读
+      msgType: 消息类型
+      msgType_label: 消息类型
+      readTime: 阅读时间
+      title: 标题
+      updateTime: 更新时间
+      userId: 用户ID
+    LitemallWallet:
+      addTime: 创建时间
+      balance: 可用余额
+      id: Id
+      totalRecharge: 累计充值
+      totalSpent: 累计消费
+      updateTime: 更新时间
+      userId: 用户ID
+      version: 数据版本
+    LitemallWalletFlow:
+      addTime: 创建时间
+      balanceAfter: 变动后余额
+      changeAmount: 变动金额
+      changeType: 变动类型
+      changeType_label: 变动类型
+      id: Id
+      remark: 备注
+      sourceId: 来源业务ID
+      sourceType: 来源类型
+      updateTime: 更新时间
+      wallet: 钱包
+      walletId: 钱包ID

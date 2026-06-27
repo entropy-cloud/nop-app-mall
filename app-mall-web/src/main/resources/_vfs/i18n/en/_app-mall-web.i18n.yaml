@@ -24,6 +24,14 @@ site:
       displayName: ''
     FNPT:LitemallCategory:query:
       displayName: ''
+    FNPT:LitemallCheckInRecord:mutation:
+      displayName: ''
+    FNPT:LitemallCheckInRecord:query:
+      displayName: ''
+    FNPT:LitemallCheckInRule:mutation:
+      displayName: ''
+    FNPT:LitemallCheckInRule:query:
+      displayName: ''
     FNPT:LitemallCollect:mutation:
       displayName: ''
     FNPT:LitemallCollect:query:
@@ -43,6 +51,14 @@ site:
     FNPT:LitemallFeedback:mutation:
       displayName: ''
     FNPT:LitemallFeedback:query:
+      displayName: ''
+    FNPT:LitemallFlashSale:mutation:
+      displayName: ''
+    FNPT:LitemallFlashSale:query:
+      displayName: ''
+    FNPT:LitemallFlashSaleSession:mutation:
+      displayName: ''
+    FNPT:LitemallFlashSaleSession:query:
       displayName: ''
     FNPT:LitemallFootprint:mutation:
       displayName: ''
@@ -84,6 +100,14 @@ site:
       displayName: ''
     FNPT:LitemallLog:query:
       displayName: ''
+    FNPT:LitemallMaterial:mutation:
+      displayName: ''
+    FNPT:LitemallMaterial:query:
+      displayName: ''
+    FNPT:LitemallMaterialCategory:mutation:
+      displayName: ''
+    FNPT:LitemallMaterialCategory:query:
+      displayName: ''
     FNPT:LitemallNotice:mutation:
       displayName: ''
     FNPT:LitemallNotice:query:
@@ -99,6 +123,42 @@ site:
     FNPT:LitemallOrderGoods:mutation:
       displayName: ''
     FNPT:LitemallOrderGoods:query:
+      displayName: ''
+    FNPT:LitemallPickupStore:mutation:
+      displayName: ''
+    FNPT:LitemallPickupStore:query:
+      displayName: ''
+    FNPT:LitemallPinTuanActivity:mutation:
+      displayName: ''
+    FNPT:LitemallPinTuanActivity:query:
+      displayName: ''
+    FNPT:LitemallPinTuanGroup:mutation:
+      displayName: ''
+    FNPT:LitemallPinTuanGroup:query:
+      displayName: ''
+    FNPT:LitemallPinTuanMember:mutation:
+      displayName: ''
+    FNPT:LitemallPinTuanMember:query:
+      displayName: ''
+    FNPT:LitemallPointsAccount:mutation:
+      displayName: ''
+    FNPT:LitemallPointsAccount:query:
+      displayName: ''
+    FNPT:LitemallPointsFlow:mutation:
+      displayName: ''
+    FNPT:LitemallPointsFlow:query:
+      displayName: ''
+    FNPT:LitemallPromotionActivity:mutation:
+      displayName: ''
+    FNPT:LitemallPromotionActivity:query:
+      displayName: ''
+    FNPT:LitemallPromotionTier:mutation:
+      displayName: ''
+    FNPT:LitemallPromotionTier:query:
+      displayName: ''
+    FNPT:LitemallRecharge:mutation:
+      displayName: ''
+    FNPT:LitemallRecharge:query:
       displayName: ''
     FNPT:LitemallRegion:mutation:
       displayName: ''
@@ -120,9 +180,25 @@ site:
       displayName: ''
     FNPT:LitemallSystem:query:
       displayName: ''
+    FNPT:LitemallTimeDiscount:mutation:
+      displayName: ''
+    FNPT:LitemallTimeDiscount:query:
+      displayName: ''
     FNPT:LitemallTopic:mutation:
       displayName: ''
     FNPT:LitemallTopic:query:
+      displayName: ''
+    FNPT:LitemallUserMessage:mutation:
+      displayName: ''
+    FNPT:LitemallUserMessage:query:
+      displayName: ''
+    FNPT:LitemallWallet:mutation:
+      displayName: ''
+    FNPT:LitemallWallet:query:
+      displayName: ''
+    FNPT:LitemallWalletFlow:mutation:
+      displayName: ''
+    FNPT:LitemallWalletFlow:query:
       displayName: ''
     LitemallAd-main:
       displayName: ''
@@ -136,6 +212,10 @@ site:
       displayName: ''
     LitemallCategory-main:
       displayName: ''
+    LitemallCheckInRecord-main:
+      displayName: ''
+    LitemallCheckInRule-main:
+      displayName: ''
     LitemallCollect-main:
       displayName: ''
     LitemallComment-main:
@@ -145,6 +225,10 @@ site:
     LitemallCouponUser-main:
       displayName: ''
     LitemallFeedback-main:
+      displayName: ''
+    LitemallFlashSale-main:
+      displayName: ''
+    LitemallFlashSaleSession-main:
       displayName: ''
     LitemallFootprint-main:
       displayName: ''
@@ -166,6 +250,10 @@ site:
       displayName: ''
     LitemallLog-main:
       displayName: ''
+    LitemallMaterial-main:
+      displayName: ''
+    LitemallMaterialCategory-main:
+      displayName: ''
     LitemallNotice-main:
       displayName: ''
     LitemallNoticeAdmin-main:
@@ -173,6 +261,24 @@ site:
     LitemallOrder-main:
       displayName: ''
     LitemallOrderGoods-main:
+      displayName: ''
+    LitemallPickupStore-main:
+      displayName: ''
+    LitemallPinTuanActivity-main:
+      displayName: ''
+    LitemallPinTuanGroup-main:
+      displayName: ''
+    LitemallPinTuanMember-main:
+      displayName: ''
+    LitemallPointsAccount-main:
+      displayName: ''
+    LitemallPointsFlow-main:
+      displayName: ''
+    LitemallPromotionActivity-main:
+      displayName: ''
+    LitemallPromotionTier-main:
+      displayName: ''
+    LitemallRecharge-main:
       displayName: ''
     LitemallRegion-main:
       displayName: ''
@@ -184,7 +290,15 @@ site:
       displayName: ''
     LitemallSystem-main:
       displayName: ''
+    LitemallTimeDiscount-main:
+      displayName: ''
     LitemallTopic-main:
+      displayName: ''
+    LitemallUserMessage-main:
+      displayName: ''
+    LitemallWallet-main:
+      displayName: ''
+    LitemallWalletFlow-main:
       displayName: ''
     goods-manage:
       displayName: ''

@@ -66,6 +66,20 @@ body:
                 - type: tpl
                   tpl: '<div style="margin:5px 0"><span style="color:#999">专柜价：</span><span style="text-decoration:line-through;color:#999">¥${data.counterPrice}</span></div>'
 
+                - type: service
+                  name: promotionSummary
+                  api:
+                    url: '@query:LitemallPromotionActivity__selectPromotionForOrder'
+                    data:
+                      goodsPrice: "${data.retailPrice}"
+                      goodsScopeIds:
+                        - "${id}"
+                    sendOn: "${id != null && data != null}"
+                  body:
+                    type: tpl
+                    visibleOn: "${promotionSummary.data > 0}"
+                    tpl: '<div style="background:#fff0e0;padding:8px 15px;border-radius:4px;margin:5px 0"><span style="color:#ff6700">满减优惠</span>：本商品参与满减，单件最高可减 <b style="color:#ff6700">¥${promotionSummary.data}</b>（满减自动生效，最终优惠以下单结算为准）</div>'
+
                 - type: form
                   name: skuForm
                   title: 选择规格

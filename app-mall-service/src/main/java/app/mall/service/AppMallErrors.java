@@ -271,4 +271,21 @@ public interface AppMallErrors {
     ErrorCode ERR_ORDER_PRICE_INVALID =
             define("nop.err.mall.order.price-invalid",
                     "订单价格无效");
+
+    // 满减促销错误码
+    ErrorCode ERR_PROMOTION_NOT_ACTIVE =
+            define("nop.err.mall.promotion.not-active",
+                    "满减活动不在有效期内或未上架");
+
+    ErrorCode ERR_PROMOTION_GOODS_NOT_IN_SCOPE =
+            define("nop.err.mall.promotion.goods-not-in-scope",
+                    "订单商品不在满减活动适用范围");
+
+    ErrorCode ERR_PROMOTION_TIER_NOT_MATCHED =
+            define("nop.err.mall.promotion.tier-not-matched",
+                    "订单金额未达到满减档位门槛");
+
+    ErrorCode ERR_PROMOTION_STACKING_NOT_ALLOWED =
+            define("nop.err.mall.promotion.stacking-not-allowed",
+                    "满减与优惠券不可叠加，满减已自动生效，请取消优惠券");
 }

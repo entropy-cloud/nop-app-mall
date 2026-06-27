@@ -33,41 +33,6 @@ CREATE TABLE litemall_address(
   constraint PK_litemall_address primary key (ID)
 )CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
 
-CREATE TABLE litemall_order(
-  ID INTEGER NOT NULL    COMMENT 'Id',
-  USER_ID VARCHAR(50) NOT NULL    COMMENT '用户ID',
-  ORDER_SN VARCHAR(63) NOT NULL    COMMENT '订单编号',
-  ORDER_STATUS INTEGER NOT NULL    COMMENT '订单状态',
-  AFTERSALE_STATUS INTEGER NULL    COMMENT '售后状态',
-  CONSIGNEE VARCHAR(63) NOT NULL    COMMENT '收货人名称',
-  MOBILE VARCHAR(63) NOT NULL    COMMENT '收货人手机号',
-  ADDRESS VARCHAR(127) NOT NULL    COMMENT '收货具体地址',
-  MESSAGE VARCHAR(512) NOT NULL    COMMENT '用户订单留言',
-  GOODS_PRICE DECIMAL(10,2) NOT NULL    COMMENT '商品总费用',
-  FREIGHT_PRICE DECIMAL(10,2) NOT NULL    COMMENT '配送费用',
-  COUPON_PRICE DECIMAL(10,2) NOT NULL    COMMENT '优惠券减免',
-  INTEGRAL_PRICE DECIMAL(10,2) NOT NULL    COMMENT '用户积分减免',
-  GROUPON_PRICE DECIMAL(10,2) NOT NULL    COMMENT '团购优惠价减免',
-  ORDER_PRICE DECIMAL(10,2) NOT NULL    COMMENT '订单费用',
-  ACTUAL_PRICE DECIMAL(10,2) NOT NULL    COMMENT '实付费用',
-  PAY_ID VARCHAR(63) NULL    COMMENT '微信付款编号',
-  PAY_TIME DATETIME NULL    COMMENT '微信付款时间',
-  SHIP_SN VARCHAR(63) NULL    COMMENT '发货编号',
-  SHIP_CHANNEL VARCHAR(63) NULL    COMMENT '发货快递公司',
-  SHIP_TIME DATETIME NULL    COMMENT '发货开始时间',
-  REFUND_AMOUNT DECIMAL(10,2) NULL    COMMENT '实际退款金额',
-  REFUND_TYPE VARCHAR(63) NULL    COMMENT '退款方式',
-  REFUND_CONTENT VARCHAR(127) NULL    COMMENT '退款备注',
-  REFUND_TIME DATETIME NULL    COMMENT '退款时间',
-  CONFIRM_TIME DATETIME NULL    COMMENT '用户确认收货时间',
-  COMMENTS INTEGER NULL    COMMENT '待评价订单商品数量',
-  END_TIME DATETIME NULL    COMMENT '订单关闭时间',
-  ADD_TIME DATETIME NULL    COMMENT '创建时间',
-  UPDATE_TIME DATETIME NULL    COMMENT '更新时间',
-  DELETED BOOLEAN NULL    COMMENT '逻辑删除',
-  constraint PK_litemall_order primary key (ID)
-)CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
-
 CREATE TABLE litemall_brand(
   ID INTEGER NOT NULL    COMMENT 'Id',
   NAME VARCHAR(255) NOT NULL    COMMENT '品牌商名称',
@@ -108,20 +73,21 @@ CREATE TABLE litemall_collect(
   constraint PK_litemall_collect primary key (ID)
 )CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
 
-CREATE TABLE litemall_comment(
+CREATE TABLE litemall_topic(
   ID INTEGER NOT NULL    COMMENT 'Id',
-  VALUE_ID INTEGER NOT NULL    COMMENT '如果type=0，则是商品评论；如果是type=1，则是专题评论。',
-  TYPE INTEGER NOT NULL    COMMENT '评论类型',
-  CONTENT VARCHAR(1023) NULL    COMMENT '评论内容',
-  ADMIN_CONTENT VARCHAR(511) NULL    COMMENT '管理员回复内容',
-  USER_ID VARCHAR(50) NOT NULL    COMMENT '用户ID',
-  HAS_PICTURE BOOLEAN NULL    COMMENT '是否含有图片',
-  PIC_URLS VARCHAR(1023) NULL    COMMENT '图片地址列表，采用JSON数组格式',
-  STAR INTEGER NULL    COMMENT '评分， 1-5',
+  TITLE VARCHAR(255) NOT NULL    COMMENT '专题标题',
+  SUBTITLE VARCHAR(255) NULL    COMMENT '专题子标题',
+  CONTENT TEXT NULL    COMMENT '专题内容',
+  PRICE DECIMAL(10,2) NULL    COMMENT '专题相关商品最低价',
+  READ_COUNT INTEGER NULL    COMMENT '专题阅读量',
+  PIC_URL VARCHAR(255) NULL    COMMENT '专题图片',
+  SORT_ORDER INTEGER NULL    COMMENT '排序',
+  GOODS VARCHAR(1023) NULL    COMMENT '专题相关商品',
   ADD_TIME DATETIME NULL    COMMENT '创建时间',
   UPDATE_TIME DATETIME NULL    COMMENT '更新时间',
   DELETED BOOLEAN NULL    COMMENT '逻辑删除',
-  constraint PK_litemall_comment primary key (ID)
+  STATUS INTEGER default 0  NULL    COMMENT '上下架状态',
+  constraint PK_litemall_topic primary key (ID)
 )CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
 
 CREATE TABLE litemall_coupon(
@@ -225,6 +191,23 @@ CREATE TABLE litemall_notice_admin(
   constraint PK_litemall_notice_admin primary key (ID)
 )CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
 
+CREATE TABLE litemall_pickup_store(
+  ID INTEGER NOT NULL    COMMENT 'Id',
+  NAME VARCHAR(127) NOT NULL    COMMENT '门店名称',
+  ADDRESS VARCHAR(255) NOT NULL    COMMENT '门店地址',
+  CONTACT VARCHAR(50) NOT NULL    COMMENT '联系人',
+  PHONE VARCHAR(20) NOT NULL    COMMENT '联系电话',
+  LATITUDE DECIMAL(10,6) NULL    COMMENT '纬度',
+  LONGITUDE DECIMAL(10,6) NULL    COMMENT '经度',
+  OPENING_HOURS VARCHAR(100) NULL    COMMENT '营业时间',
+  STATUS INTEGER NULL    COMMENT '启用状态',
+  REMARK VARCHAR(255) NULL    COMMENT '备注',
+  ADD_TIME DATETIME NULL    COMMENT '创建时间',
+  UPDATE_TIME DATETIME NULL    COMMENT '更新时间',
+  DELETED BOOLEAN NULL    COMMENT '逻辑删除',
+  constraint PK_litemall_pickup_store primary key (ID)
+)CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
+
 CREATE TABLE litemall_region(
   ID INTEGER NOT NULL    COMMENT 'Id',
   PID INTEGER NOT NULL    COMMENT '行政区域父ID',
@@ -268,23 +251,6 @@ CREATE TABLE litemall_system(
   constraint PK_litemall_system primary key (ID)
 )CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
 
-CREATE TABLE litemall_topic(
-  ID INTEGER NOT NULL    COMMENT 'Id',
-  TITLE VARCHAR(255) NOT NULL    COMMENT '专题标题',
-  SUBTITLE VARCHAR(255) NULL    COMMENT '专题子标题',
-  CONTENT TEXT NULL    COMMENT '专题内容',
-  PRICE DECIMAL(10,2) NULL    COMMENT '专题相关商品最低价',
-  READ_COUNT INTEGER NULL    COMMENT '专题阅读量',
-  PIC_URL VARCHAR(255) NULL    COMMENT '专题图片',
-  SORT_ORDER INTEGER NULL    COMMENT '排序',
-  GOODS VARCHAR(1023) NULL    COMMENT '专题相关商品',
-  ADD_TIME DATETIME NULL    COMMENT '创建时间',
-  UPDATE_TIME DATETIME NULL    COMMENT '更新时间',
-  DELETED BOOLEAN NULL    COMMENT '逻辑删除',
-  STATUS INTEGER default 0  NULL    COMMENT '上下架状态',
-  constraint PK_litemall_topic primary key (ID)
-)CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
-
 CREATE TABLE litemall_reset_code(
   ID VARCHAR(50) NULL    COMMENT 'null',
   MOBILE VARCHAR(50) NULL    COMMENT '手机号',
@@ -295,38 +261,93 @@ CREATE TABLE litemall_reset_code(
   constraint PK_litemall_reset_code primary key (ID)
 )CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
 
-CREATE TABLE litemall_aftersale(
+CREATE TABLE litemall_promotion_activity(
   ID INTEGER NOT NULL    COMMENT 'Id',
-  AFTERSALE_SN VARCHAR(63) NULL    COMMENT '售后编号',
-  ORDER_ID INTEGER NOT NULL    COMMENT '订单ID',
-  USER_ID VARCHAR(50) NOT NULL    COMMENT '用户ID',
-  TYPE INTEGER NULL    COMMENT '售后类型',
-  REASON VARCHAR(31) NULL    COMMENT '退款原因',
-  AMOUNT DECIMAL(10,2) NULL    COMMENT '退款金额',
-  PICTURES VARCHAR(1023) NULL    COMMENT '退款凭证图片链接数组',
-  COMMENT VARCHAR(511) NULL    COMMENT '退款说明',
-  STATUS INTEGER NULL    COMMENT '售后状态',
-  HANDLE_TIME DATETIME NULL    COMMENT '管理员操作时间',
-  ADD_TIME DATETIME NULL    COMMENT '添加时间',
+  NAME VARCHAR(63) NOT NULL    COMMENT '活动名称',
+  DISCOUNT_TYPE INTEGER NULL    COMMENT '折扣类型',
+  START_TIME DATETIME NULL    COMMENT '开始时间',
+  END_TIME DATETIME NULL    COMMENT '结束时间',
+  STATUS INTEGER NULL    COMMENT '活动状态',
+  GOODS_SCOPE INTEGER NULL    COMMENT '商品范围类型',
+  GOODS_SCOPE_VALUE VARCHAR(1023) NULL    COMMENT '商品范围值(JSON)',
+  PRIORITY INTEGER NULL    COMMENT '优先级',
+  MAX_PER_USER INTEGER NULL    COMMENT '每人限参与次数(0不限)',
+  REMARK VARCHAR(255) NULL    COMMENT '备注',
+  ADD_TIME DATETIME NULL    COMMENT '创建时间',
   UPDATE_TIME DATETIME NULL    COMMENT '更新时间',
   DELETED BOOLEAN NULL    COMMENT '逻辑删除',
-  constraint PK_litemall_aftersale primary key (ID)
+  constraint PK_litemall_promotion_activity primary key (ID)
 )CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
 
-CREATE TABLE litemall_groupon(
+CREATE TABLE litemall_check_in_rule(
   ID INTEGER NOT NULL    COMMENT 'Id',
-  ORDER_ID INTEGER NOT NULL    COMMENT '订单ID',
-  GROUPON_ID INTEGER NULL    COMMENT '如果是开团用户，则groupon_id是0；如果是参团用户，则groupon_id是团购活动ID',
-  RULES_ID INTEGER NOT NULL    COMMENT '团购规则ID',
-  USER_ID VARCHAR(50) NOT NULL    COMMENT '用户ID',
-  SHARE_URL VARCHAR(255) NULL    COMMENT '团购分享图片地址',
-  CREATOR_USER_ID VARCHAR(50) NOT NULL    COMMENT '开团用户ID',
-  CREATOR_USER_TIME DATETIME NULL    COMMENT '开团时间',
-  STATUS INTEGER NULL    COMMENT '团购活动状态',
-  ADD_TIME DATETIME NOT NULL    COMMENT '创建时间',
+  DAY_SEQ INTEGER NOT NULL    COMMENT '连续第N天',
+  POINT_REWARD INTEGER NULL    COMMENT '奖励积分数',
+  RESET_CYCLE INTEGER NULL    COMMENT '重置周期（天数，0不重置）',
+  ADD_TIME DATETIME NULL    COMMENT '创建时间',
+  UPDATE_TIME DATETIME NULL    COMMENT '更新时间',
+  constraint PK_litemall_check_in_rule primary key (ID)
+)CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
+
+CREATE TABLE litemall_check_in_record(
+  ID INTEGER NOT NULL    COMMENT 'Id',
+  USER_ID INTEGER NOT NULL    COMMENT '用户ID',
+  CHECK_IN_DATE DATE NOT NULL    COMMENT '签到日期',
+  CONSECUTIVE_DAYS INTEGER NULL    COMMENT '连续签到天数',
+  POINTS_EARNED INTEGER NULL    COMMENT '获得积分',
+  ADD_TIME DATETIME NULL    COMMENT '创建时间',
   UPDATE_TIME DATETIME NULL    COMMENT '更新时间',
   DELETED BOOLEAN NULL    COMMENT '逻辑删除',
-  constraint PK_litemall_groupon primary key (ID)
+  constraint PK_litemall_check_in_record primary key (ID)
+)CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
+
+CREATE TABLE litemall_points_account(
+  ID INTEGER NOT NULL    COMMENT 'Id',
+  USER_ID INTEGER NOT NULL    COMMENT '用户ID',
+  BALANCE INTEGER NULL    COMMENT '当前可用积分',
+  TOTAL_EARNED INTEGER NULL    COMMENT '累计获得',
+  TOTAL_SPENT INTEGER NULL    COMMENT '累计消耗',
+  VERSION INTEGER NOT NULL    COMMENT '数据版本',
+  ADD_TIME DATETIME NULL    COMMENT '创建时间',
+  UPDATE_TIME DATETIME NULL    COMMENT '更新时间',
+  constraint PK_litemall_points_account primary key (ID)
+)CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
+
+CREATE TABLE litemall_wallet(
+  ID INTEGER NOT NULL    COMMENT 'Id',
+  USER_ID INTEGER NOT NULL    COMMENT '用户ID',
+  BALANCE DECIMAL(10,2) NULL    COMMENT '可用余额',
+  TOTAL_RECHARGE DECIMAL(10,2) NULL    COMMENT '累计充值',
+  TOTAL_SPENT DECIMAL(10,2) NULL    COMMENT '累计消费',
+  VERSION INTEGER NOT NULL    COMMENT '数据版本',
+  ADD_TIME DATETIME NULL    COMMENT '创建时间',
+  UPDATE_TIME DATETIME NULL    COMMENT '更新时间',
+  constraint PK_litemall_wallet primary key (ID)
+)CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
+
+CREATE TABLE litemall_user_message(
+  ID INTEGER NOT NULL    COMMENT 'Id',
+  USER_ID INTEGER NOT NULL    COMMENT '用户ID',
+  MSG_TYPE INTEGER NOT NULL    COMMENT '消息类型',
+  TITLE VARCHAR(127) NOT NULL    COMMENT '标题',
+  CONTENT VARCHAR(1023) NULL    COMMENT '内容',
+  IS_READ BOOLEAN NULL    COMMENT '是否已读',
+  READ_TIME DATETIME NULL    COMMENT '阅读时间',
+  ADD_TIME DATETIME NULL    COMMENT '创建时间',
+  UPDATE_TIME DATETIME NULL    COMMENT '更新时间',
+  DELETED BOOLEAN NULL    COMMENT '逻辑删除',
+  constraint PK_litemall_user_message primary key (ID)
+)CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
+
+CREATE TABLE litemall_material_category(
+  ID INTEGER NOT NULL    COMMENT 'Id',
+  NAME VARCHAR(127) NOT NULL    COMMENT '分类名称',
+  PARENT_ID INTEGER NULL    COMMENT '父分类ID',
+  SORT_ORDER INTEGER NULL    COMMENT '排序',
+  ADD_TIME DATETIME NULL    COMMENT '创建时间',
+  UPDATE_TIME DATETIME NULL    COMMENT '更新时间',
+  DELETED BOOLEAN NULL    COMMENT '逻辑删除',
+  constraint PK_litemall_material_category primary key (ID)
 )CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
 
 CREATE TABLE litemall_goods(
@@ -351,6 +372,8 @@ CREATE TABLE litemall_goods(
   ADD_TIME DATETIME NULL    COMMENT '创建时间',
   UPDATE_TIME DATETIME NULL    COMMENT '更新时间',
   DELETED BOOLEAN NULL    COMMENT '逻辑删除',
+  IS_RECOMMEND BOOLEAN NULL    COMMENT '是否推荐',
+  VIDEO_URL VARCHAR(255) NULL    COMMENT '商品视频链接',
   constraint PK_litemall_goods primary key (ID)
 )CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
 
@@ -369,6 +392,118 @@ CREATE TABLE litemall_coupon_user(
   constraint PK_litemall_coupon_user primary key (ID)
 )CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
 
+CREATE TABLE litemall_order(
+  ID INTEGER NOT NULL    COMMENT 'Id',
+  USER_ID VARCHAR(50) NOT NULL    COMMENT '用户ID',
+  ORDER_SN VARCHAR(63) NOT NULL    COMMENT '订单编号',
+  ORDER_STATUS INTEGER NOT NULL    COMMENT '订单状态',
+  AFTERSALE_STATUS INTEGER NULL    COMMENT '售后状态',
+  CONSIGNEE VARCHAR(63) NOT NULL    COMMENT '收货人名称',
+  MOBILE VARCHAR(63) NOT NULL    COMMENT '收货人手机号',
+  ADDRESS VARCHAR(127) NOT NULL    COMMENT '收货具体地址',
+  MESSAGE VARCHAR(512) NOT NULL    COMMENT '用户订单留言',
+  GOODS_PRICE DECIMAL(10,2) NOT NULL    COMMENT '商品总费用',
+  FREIGHT_PRICE DECIMAL(10,2) NOT NULL    COMMENT '配送费用',
+  COUPON_PRICE DECIMAL(10,2) NOT NULL    COMMENT '优惠券减免',
+  INTEGRAL_PRICE DECIMAL(10,2) NOT NULL    COMMENT '用户积分减免',
+  GROUPON_PRICE DECIMAL(10,2) NOT NULL    COMMENT '团购优惠价减免',
+  ORDER_PRICE DECIMAL(10,2) NOT NULL    COMMENT '订单费用',
+  ACTUAL_PRICE DECIMAL(10,2) NOT NULL    COMMENT '实付费用',
+  PAY_ID VARCHAR(63) NULL    COMMENT '微信付款编号',
+  PAY_TIME DATETIME NULL    COMMENT '微信付款时间',
+  SHIP_SN VARCHAR(63) NULL    COMMENT '发货编号',
+  SHIP_CHANNEL VARCHAR(63) NULL    COMMENT '发货快递公司',
+  SHIP_TIME DATETIME NULL    COMMENT '发货开始时间',
+  REFUND_AMOUNT DECIMAL(10,2) NULL    COMMENT '实际退款金额',
+  REFUND_TYPE VARCHAR(63) NULL    COMMENT '退款方式',
+  REFUND_CONTENT VARCHAR(127) NULL    COMMENT '退款备注',
+  REFUND_TIME DATETIME NULL    COMMENT '退款时间',
+  CONFIRM_TIME DATETIME NULL    COMMENT '用户确认收货时间',
+  COMMENTS INTEGER NULL    COMMENT '待评价订单商品数量',
+  END_TIME DATETIME NULL    COMMENT '订单关闭时间',
+  ADD_TIME DATETIME NULL    COMMENT '创建时间',
+  UPDATE_TIME DATETIME NULL    COMMENT '更新时间',
+  DELETED BOOLEAN NULL    COMMENT '逻辑删除',
+  DELIVERY_TYPE INTEGER NULL    COMMENT '配送方式',
+  PICKUP_STORE_ID INTEGER NULL    COMMENT '自提门店ID',
+  PICKUP_CODE VARCHAR(50) NULL    COMMENT '自提核销码',
+  PICKUP_TIME DATETIME NULL    COMMENT '核销时间',
+  PROMOTION_PRICE DECIMAL(10,2) NOT NULL    COMMENT '促销优惠金额（满减/限时折扣）',
+  PIN_TUAN_PRICE DECIMAL(10,2) NOT NULL    COMMENT '拼团优惠金额',
+  PAY_CHANNEL INTEGER NULL    COMMENT '支付通道',
+  WALLET_PAY_AMOUNT DECIMAL(10,2) NULL    COMMENT '余额支付金额',
+  ADMIN_REMARK VARCHAR(511) NULL    COMMENT '运营备注',
+  constraint PK_litemall_order primary key (ID)
+)CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
+
+CREATE TABLE litemall_promotion_tier(
+  ID INTEGER NOT NULL    COMMENT 'Id',
+  ACTIVITY_ID INTEGER NOT NULL    COMMENT '促销活动ID',
+  MEET_AMOUNT DECIMAL(10,2) NOT NULL    COMMENT '满足金额',
+  DISCOUNT_VALUE DECIMAL(10,2) NOT NULL    COMMENT '减免值（金额或折扣率）',
+  ADD_TIME DATETIME NULL    COMMENT '创建时间',
+  UPDATE_TIME DATETIME NULL    COMMENT '更新时间',
+  DELETED BOOLEAN NULL    COMMENT '逻辑删除',
+  constraint PK_litemall_promotion_tier primary key (ID)
+)CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
+
+CREATE TABLE litemall_points_flow(
+  ID INTEGER NOT NULL    COMMENT 'Id',
+  ACCOUNT_ID INTEGER NOT NULL    COMMENT '积分账户ID',
+  USER_ID INTEGER NOT NULL    COMMENT '用户ID',
+  CHANGE_TYPE INTEGER NOT NULL    COMMENT '变动类型',
+  CHANGE_AMOUNT INTEGER NOT NULL    COMMENT '变动数量',
+  BALANCE_AFTER INTEGER NOT NULL    COMMENT '变动后余额',
+  SOURCE_TYPE VARCHAR(50) NULL    COMMENT '来源类型',
+  SOURCE_ID VARCHAR(50) NULL    COMMENT '来源业务ID',
+  REMARK VARCHAR(255) NULL    COMMENT '备注',
+  ADD_TIME DATETIME NULL    COMMENT '创建时间',
+  UPDATE_TIME DATETIME NULL    COMMENT '更新时间',
+  constraint PK_litemall_points_flow primary key (ID)
+)CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
+
+CREATE TABLE litemall_wallet_flow(
+  ID INTEGER NOT NULL    COMMENT 'Id',
+  WALLET_ID INTEGER NOT NULL    COMMENT '钱包ID',
+  CHANGE_TYPE INTEGER NOT NULL    COMMENT '变动类型',
+  CHANGE_AMOUNT DECIMAL(10,2) NOT NULL    COMMENT '变动金额',
+  BALANCE_AFTER DECIMAL(10,2) NULL    COMMENT '变动后余额',
+  SOURCE_TYPE VARCHAR(50) NULL    COMMENT '来源类型',
+  SOURCE_ID VARCHAR(50) NULL    COMMENT '来源业务ID',
+  REMARK VARCHAR(255) NULL    COMMENT '备注',
+  ADD_TIME DATETIME NULL    COMMENT '创建时间',
+  UPDATE_TIME DATETIME NULL    COMMENT '更新时间',
+  constraint PK_litemall_wallet_flow primary key (ID)
+)CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
+
+CREATE TABLE litemall_recharge(
+  ID INTEGER NOT NULL    COMMENT 'Id',
+  USER_ID INTEGER NOT NULL    COMMENT '用户ID',
+  WALLET_ID INTEGER NOT NULL    COMMENT '钱包ID',
+  AMOUNT DECIMAL(10,2) NOT NULL    COMMENT '充值金额',
+  GIFT_AMOUNT DECIMAL(10,2) NULL    COMMENT '赠送金额',
+  PAY_CHANNEL INTEGER NULL    COMMENT '支付渠道',
+  PAY_STATUS INTEGER NULL    COMMENT '支付状态',
+  ADD_TIME DATETIME NULL    COMMENT '创建时间',
+  UPDATE_TIME DATETIME NULL    COMMENT '更新时间',
+  DELETED BOOLEAN NULL    COMMENT '逻辑删除',
+  constraint PK_litemall_recharge primary key (ID)
+)CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
+
+CREATE TABLE litemall_material(
+  ID INTEGER NOT NULL    COMMENT 'Id',
+  NAME VARCHAR(255) NOT NULL    COMMENT '文件名',
+  URL VARCHAR(255) NOT NULL    COMMENT '访问链接',
+  FILE_TYPE VARCHAR(50) NULL    COMMENT '文件类型(image/video)',
+  FILE_SIZE INTEGER NULL    COMMENT '文件大小(bytes)',
+  CATEGORY_ID INTEGER NULL    COMMENT '分类ID',
+  TAG VARCHAR(255) NULL    COMMENT '标签',
+  ADD_TIME DATETIME NULL    COMMENT '创建时间',
+  UPDATE_TIME DATETIME NULL    COMMENT '更新时间',
+  DELETED BOOLEAN NULL    COMMENT '逻辑删除',
+  constraint PK_litemall_material primary key (ID)
+)CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
+
 CREATE TABLE litemall_cart(
   ID INTEGER NOT NULL    COMMENT 'Id',
   USER_ID VARCHAR(50) NULL    COMMENT '用户ID',
@@ -385,6 +520,25 @@ CREATE TABLE litemall_cart(
   UPDATE_TIME DATETIME NULL    COMMENT '更新时间',
   DELETED BOOLEAN NULL    COMMENT '逻辑删除',
   constraint PK_litemall_cart primary key (ID)
+)CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
+
+CREATE TABLE litemall_comment(
+  ID INTEGER NOT NULL    COMMENT 'Id',
+  VALUE_ID INTEGER NOT NULL    COMMENT '如果type=0，则是商品评论；如果是type=1，则是专题评论。',
+  TYPE INTEGER NOT NULL    COMMENT '评论类型',
+  CONTENT VARCHAR(1023) NULL    COMMENT '评论内容',
+  ADMIN_CONTENT VARCHAR(511) NULL    COMMENT '管理员回复内容',
+  USER_ID VARCHAR(50) NOT NULL    COMMENT '用户ID',
+  HAS_PICTURE BOOLEAN NULL    COMMENT '是否含有图片',
+  PIC_URLS VARCHAR(1023) NULL    COMMENT '图片地址列表，采用JSON数组格式',
+  STAR INTEGER NULL    COMMENT '评分， 1-5',
+  ADD_TIME DATETIME NULL    COMMENT '创建时间',
+  UPDATE_TIME DATETIME NULL    COMMENT '更新时间',
+  DELETED BOOLEAN NULL    COMMENT '逻辑删除',
+  PROS VARCHAR(1023) NULL    COMMENT '优点列表(JSON)',
+  CONS VARCHAR(1023) NULL    COMMENT '缺点列表(JSON)',
+  SEMANTIC_RATING INTEGER NULL    COMMENT '语义评级(1-5)',
+  constraint PK_litemall_comment primary key (ID)
 )CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
 
 CREATE TABLE litemall_footprint(
@@ -418,6 +572,7 @@ CREATE TABLE litemall_goods_product(
   ADD_TIME DATETIME NULL    COMMENT '创建时间',
   UPDATE_TIME DATETIME NULL    COMMENT '更新时间',
   DELETED BOOLEAN NULL    COMMENT '逻辑删除',
+  SAFE_STOCK INTEGER NULL    COMMENT '安全库存预警线',
   constraint PK_litemall_goods_product primary key (ID)
 )CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
 
@@ -448,6 +603,91 @@ CREATE TABLE litemall_groupon_rules(
   constraint PK_litemall_groupon_rules primary key (ID)
 )CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
 
+CREATE TABLE litemall_time_discount(
+  ID INTEGER NOT NULL    COMMENT 'Id',
+  GOODS_ID INTEGER NOT NULL    COMMENT '商品ID',
+  PRODUCT_ID INTEGER NULL    COMMENT 'SKU ID（null表示全部SKU）',
+  DISCOUNT_TYPE INTEGER NULL    COMMENT '折扣类型',
+  DISCOUNT_VALUE DECIMAL(10,2) NULL    COMMENT '折扣值（金额或折扣率）',
+  START_TIME DATETIME NULL    COMMENT '开始时间',
+  END_TIME DATETIME NULL    COMMENT '结束时间',
+  STATUS INTEGER NULL    COMMENT '状态',
+  STOCK_LIMIT INTEGER NULL    COMMENT '折扣库存（0不限）',
+  REMARK VARCHAR(255) NULL    COMMENT '备注',
+  ADD_TIME DATETIME NULL    COMMENT '创建时间',
+  UPDATE_TIME DATETIME NULL    COMMENT '更新时间',
+  DELETED BOOLEAN NULL    COMMENT '逻辑删除',
+  constraint PK_litemall_time_discount primary key (ID)
+)CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
+
+CREATE TABLE litemall_flash_sale(
+  ID INTEGER NOT NULL    COMMENT 'Id',
+  GOODS_ID INTEGER NOT NULL    COMMENT '商品ID',
+  PRODUCT_ID INTEGER NULL    COMMENT 'SKU ID（null表示全部SKU）',
+  FLASH_PRICE DECIMAL(10,2) NOT NULL    COMMENT '秒杀价',
+  TOTAL_STOCK INTEGER NULL    COMMENT '活动总库存',
+  MAX_PER_USER INTEGER NULL    COMMENT '每人限购',
+  MAX_PER_ORDER INTEGER NULL    COMMENT '每单限购',
+  STATUS INTEGER NULL    COMMENT '状态',
+  ADD_TIME DATETIME NULL    COMMENT '创建时间',
+  UPDATE_TIME DATETIME NULL    COMMENT '更新时间',
+  DELETED BOOLEAN NULL    COMMENT '逻辑删除',
+  constraint PK_litemall_flash_sale primary key (ID)
+)CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
+
+CREATE TABLE litemall_pin_tuan_activity(
+  ID INTEGER NOT NULL    COMMENT 'Id',
+  GOODS_ID INTEGER NOT NULL    COMMENT '商品ID',
+  PRODUCT_ID INTEGER NULL    COMMENT 'SKU ID（null表示全部SKU）',
+  PIN_TUAN_PRICE DECIMAL(10,2) NOT NULL    COMMENT '拼团价',
+  MIN_USER_COUNT INTEGER NOT NULL    COMMENT '成团人数门槛',
+  MAX_USER_COUNT INTEGER NULL    COMMENT '最多人数',
+  EXPIRE_HOURS INTEGER NULL    COMMENT '有效时间（小时）',
+  STATUS INTEGER NULL    COMMENT '状态',
+  REMARK VARCHAR(255) NULL    COMMENT '备注',
+  ADD_TIME DATETIME NULL    COMMENT '创建时间',
+  UPDATE_TIME DATETIME NULL    COMMENT '更新时间',
+  DELETED BOOLEAN NULL    COMMENT '逻辑删除',
+  constraint PK_litemall_pin_tuan_activity primary key (ID)
+)CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
+
+CREATE TABLE litemall_aftersale(
+  ID INTEGER NOT NULL    COMMENT 'Id',
+  AFTERSALE_SN VARCHAR(63) NULL    COMMENT '售后编号',
+  ORDER_ID INTEGER NOT NULL    COMMENT '订单ID',
+  USER_ID VARCHAR(50) NOT NULL    COMMENT '用户ID',
+  TYPE INTEGER NULL    COMMENT '售后类型',
+  REASON VARCHAR(31) NULL    COMMENT '退款原因',
+  AMOUNT DECIMAL(10,2) NULL    COMMENT '退款金额',
+  PICTURES VARCHAR(1023) NULL    COMMENT '退款凭证图片链接数组',
+  COMMENT VARCHAR(511) NULL    COMMENT '退款说明',
+  STATUS INTEGER NULL    COMMENT '售后状态',
+  HANDLE_TIME DATETIME NULL    COMMENT '管理员操作时间',
+  ADD_TIME DATETIME NULL    COMMENT '添加时间',
+  UPDATE_TIME DATETIME NULL    COMMENT '更新时间',
+  DELETED BOOLEAN NULL    COMMENT '逻辑删除',
+  ORDER_ITEM_ID INTEGER NULL    COMMENT '订单商品项ID',
+  PROCESS_NOTE VARCHAR(511) NULL    COMMENT '处理备注',
+  PROCESS_TIME DATETIME NULL    COMMENT '处理时间',
+  constraint PK_litemall_aftersale primary key (ID)
+)CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
+
+CREATE TABLE litemall_groupon(
+  ID INTEGER NOT NULL    COMMENT 'Id',
+  ORDER_ID INTEGER NOT NULL    COMMENT '订单ID',
+  GROUPON_ID INTEGER NULL    COMMENT '如果是开团用户，则groupon_id是0；如果是参团用户，则groupon_id是团购活动ID',
+  RULES_ID INTEGER NOT NULL    COMMENT '团购规则ID',
+  USER_ID VARCHAR(50) NOT NULL    COMMENT '用户ID',
+  SHARE_URL VARCHAR(255) NULL    COMMENT '团购分享图片地址',
+  CREATOR_USER_ID VARCHAR(50) NOT NULL    COMMENT '开团用户ID',
+  CREATOR_USER_TIME DATETIME NULL    COMMENT '开团时间',
+  STATUS INTEGER NULL    COMMENT '团购活动状态',
+  ADD_TIME DATETIME NOT NULL    COMMENT '创建时间',
+  UPDATE_TIME DATETIME NULL    COMMENT '更新时间',
+  DELETED BOOLEAN NULL    COMMENT '逻辑删除',
+  constraint PK_litemall_groupon primary key (ID)
+)CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
+
 CREATE TABLE litemall_order_goods(
   ID INTEGER NOT NULL    COMMENT 'Id',
   ORDER_ID INTEGER NOT NULL    COMMENT '订单ID',
@@ -463,7 +703,45 @@ CREATE TABLE litemall_order_goods(
   ADD_TIME DATETIME NULL    COMMENT '创建时间',
   UPDATE_TIME DATETIME NULL    COMMENT '更新时间',
   DELETED BOOLEAN NULL    COMMENT '逻辑删除',
+  ACTUAL_PAY_AMOUNT DECIMAL(10,2) NULL    COMMENT '实付金额',
   constraint PK_litemall_order_goods primary key (ID)
+)CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
+
+CREATE TABLE litemall_flash_sale_session(
+  ID INTEGER NOT NULL    COMMENT 'Id',
+  FLASH_SALE_ID INTEGER NOT NULL    COMMENT '秒杀活动ID',
+  SESSION_START DATETIME NOT NULL    COMMENT '场次开始时间',
+  SESSION_END DATETIME NOT NULL    COMMENT '场次结束时间',
+  SESSION_STOCK INTEGER NULL    COMMENT '场次库存',
+  SESSION_STATUS INTEGER NULL    COMMENT '场次状态（0未开始/1进行中/2已结束）',
+  ADD_TIME DATETIME NULL    COMMENT '创建时间',
+  UPDATE_TIME DATETIME NULL    COMMENT '更新时间',
+  DELETED BOOLEAN NULL    COMMENT '逻辑删除',
+  constraint PK_litemall_flash_sale_session primary key (ID)
+)CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
+
+CREATE TABLE litemall_pin_tuan_group(
+  ID INTEGER NOT NULL    COMMENT 'Id',
+  ACTIVITY_ID INTEGER NOT NULL    COMMENT '拼团活动ID',
+  CREATOR_USER_ID INTEGER NOT NULL    COMMENT '团长用户ID',
+  ORDER_ID INTEGER NULL    COMMENT '团长的订单ID',
+  STATUS INTEGER NULL    COMMENT '拼团状态',
+  EXPIRE_TIME DATETIME NULL    COMMENT '过期时间',
+  ADD_TIME DATETIME NULL    COMMENT '创建时间',
+  UPDATE_TIME DATETIME NULL    COMMENT '更新时间',
+  DELETED BOOLEAN NULL    COMMENT '逻辑删除',
+  constraint PK_litemall_pin_tuan_group primary key (ID)
+)CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
+
+CREATE TABLE litemall_pin_tuan_member(
+  ID INTEGER NOT NULL    COMMENT 'Id',
+  GROUP_ID INTEGER NOT NULL    COMMENT '拼团团ID',
+  USER_ID INTEGER NOT NULL    COMMENT '用户ID',
+  ORDER_ID INTEGER NOT NULL    COMMENT '订单ID',
+  ADD_TIME DATETIME NULL    COMMENT '创建时间',
+  UPDATE_TIME DATETIME NULL    COMMENT '更新时间',
+  DELETED BOOLEAN NULL    COMMENT '逻辑删除',
+  constraint PK_litemall_pin_tuan_member primary key (ID)
 )CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
 
 
@@ -471,15 +749,13 @@ CREATE TABLE litemall_order_goods(
                 
    ALTER TABLE litemall_address COMMENT '收货地址表';
                 
-   ALTER TABLE litemall_order COMMENT '订单表';
-                
    ALTER TABLE litemall_brand COMMENT '品牌商表';
                 
    ALTER TABLE litemall_category COMMENT '类目表';
                 
    ALTER TABLE litemall_collect COMMENT '收藏表';
                 
-   ALTER TABLE litemall_comment COMMENT '评论表';
+   ALTER TABLE litemall_topic COMMENT '专题表';
                 
    ALTER TABLE litemall_coupon COMMENT '优惠券信息及规则表';
                 
@@ -495,6 +771,8 @@ CREATE TABLE litemall_order_goods(
                 
    ALTER TABLE litemall_notice_admin COMMENT '通知管理员表';
                 
+   ALTER TABLE litemall_pickup_store COMMENT '自提门店表';
+                
    ALTER TABLE litemall_region COMMENT '行政区域表';
                 
    ALTER TABLE litemall_search_history COMMENT '搜索历史表';
@@ -503,19 +781,41 @@ CREATE TABLE litemall_order_goods(
                 
    ALTER TABLE litemall_system COMMENT '系统配置表';
                 
-   ALTER TABLE litemall_topic COMMENT '专题表';
-                
    ALTER TABLE litemall_reset_code COMMENT '密码重置验证码';
                 
-   ALTER TABLE litemall_aftersale COMMENT '售后表';
+   ALTER TABLE litemall_promotion_activity COMMENT '促销活动表（满减送）';
                 
-   ALTER TABLE litemall_groupon COMMENT '团购活动表';
+   ALTER TABLE litemall_check_in_rule COMMENT '签到规则表';
+                
+   ALTER TABLE litemall_check_in_record COMMENT '签到记录表';
+                
+   ALTER TABLE litemall_points_account COMMENT '积分账户表';
+                
+   ALTER TABLE litemall_wallet COMMENT '钱包账户表';
+                
+   ALTER TABLE litemall_user_message COMMENT '用户站内信表';
+                
+   ALTER TABLE litemall_material_category COMMENT '素材分类表';
                 
    ALTER TABLE litemall_goods COMMENT '商品基本信息';
                 
    ALTER TABLE litemall_coupon_user COMMENT '优惠券用户使用表';
                 
+   ALTER TABLE litemall_order COMMENT '订单表';
+                
+   ALTER TABLE litemall_promotion_tier COMMENT '满减档位表';
+                
+   ALTER TABLE litemall_points_flow COMMENT '积分流水表';
+                
+   ALTER TABLE litemall_wallet_flow COMMENT '钱包流水表';
+                
+   ALTER TABLE litemall_recharge COMMENT '充值记录表';
+                
+   ALTER TABLE litemall_material COMMENT '素材资源表';
+                
    ALTER TABLE litemall_cart COMMENT '购物车商品表';
+                
+   ALTER TABLE litemall_comment COMMENT '评论表';
                 
    ALTER TABLE litemall_footprint COMMENT '用户浏览足迹表';
                 
@@ -527,5 +827,21 @@ CREATE TABLE litemall_order_goods(
                 
    ALTER TABLE litemall_groupon_rules COMMENT '团购规则表';
                 
+   ALTER TABLE litemall_time_discount COMMENT '限时折扣表';
+                
+   ALTER TABLE litemall_flash_sale COMMENT '秒杀活动表';
+                
+   ALTER TABLE litemall_pin_tuan_activity COMMENT '拼团活动表';
+                
+   ALTER TABLE litemall_aftersale COMMENT '售后表';
+                
+   ALTER TABLE litemall_groupon COMMENT '团购活动表';
+                
    ALTER TABLE litemall_order_goods COMMENT '订单商品表';
+                
+   ALTER TABLE litemall_flash_sale_session COMMENT '秒杀场次表';
+                
+   ALTER TABLE litemall_pin_tuan_group COMMENT '拼团开团记录表';
+                
+   ALTER TABLE litemall_pin_tuan_member COMMENT '拼团参团记录表';
                 
