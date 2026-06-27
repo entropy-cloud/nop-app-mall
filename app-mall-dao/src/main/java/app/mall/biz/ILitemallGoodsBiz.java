@@ -29,6 +29,7 @@ public interface ILitemallGoodsBiz extends ICrudBiz<LitemallGoods>{
     @BizQuery
     PageBean<LitemallGoods> frontListByFlags(@Optional @Name("isHot") Boolean isHot,
                                              @Optional @Name("isNew") Boolean isNew,
+                                             @Optional @Name("isRecommend") Boolean isRecommend,
                                              @Optional @Name("categoryId") String categoryId,
                                              @Optional @Name("brandId") String brandId,
                                              @Name("page") int page,

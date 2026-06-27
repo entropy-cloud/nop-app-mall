@@ -308,4 +308,91 @@ public class TestLitemallGoodsExtendedBizModel extends JunitBaseTestCase {
         assertTrue(items.stream().anyMatch(i -> hotAndNew.getId().equals(i.get("id"))));
         assertFalse(items.stream().anyMatch(i -> normal.getId().equals(i.get("id"))));
     }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testFrontListByFlagsRecommend() {
+        LitemallGoods recommendGoods = daoProvider.daoFor(LitemallGoods.class).newEntity();
+        recommendGoods.setGoodsSn("G009");
+        recommendGoods.setName("Recommend Goods");
+        recommendGoods.setRetailPrice(BigDecimal.valueOf(399));
+        recommendGoods.setIsOnSale(true);
+        recommendGoods.setIsRecommend(true);
+        recommendGoods.setPicUrl("");
+        recommendGoods.setShareUrl("");
+        recommendGoods.setGallery("");
+        daoProvider.daoFor(LitemallGoods.class).saveEntity(recommendGoods);
+
+        LitemallGoods recommendAndHot = daoProvider.daoFor(LitemallGoods.class).newEntity();
+        recommendAndHot.setGoodsSn("G011");
+        recommendAndHot.setName("Recommend and Hot Goods");
+        recommendAndHot.setRetailPrice(BigDecimal.valueOf(459));
+        recommendAndHot.setIsOnSale(true);
+        recommendAndHot.setIsRecommend(true);
+        recommendAndHot.setIsHot(true);
+        recommendAndHot.setPicUrl("");
+        recommendAndHot.setShareUrl("");
+        recommendAndHot.setGallery("");
+        daoProvider.daoFor(LitemallGoods.class).saveEntity(recommendAndHot);
+
+        LitemallGoods normal = daoProvider.daoFor(LitemallGoods.class).newEntity();
+        normal.setGoodsSn("G010");
+        normal.setName("Not Recommend Goods");
+        normal.setRetailPrice(BigDecimal.valueOf(499));
+        normal.setIsOnSale(true);
+        normal.setIsRecommend(false);
+        normal.setPicUrl("");
+        normal.setShareUrl("");
+        normal.setGallery("");
+        daoProvider.daoFor(LitemallGoods.class).saveEntity(normal);
+
+        // isRecommend=true 命中推荐商品（含同时具备 isHot 的），不命中非推荐商品
+        ApiRequest<Map<String, Object>> reqTrue = ApiRequest.build(Map.of(
+                "isRecommend", true,
+                "page", 1,
+                "pageSize", 20
+        ));
+        IGraphQLExecutionContext ctxTrue = graphQLEngine.newRpcContext(
+                GraphQLOperationType.query, "LitemallGoods__frontListByFlags", reqTrue);
+        ApiResponse<?> resultTrue = graphQLEngine.executeRpc(ctxTrue);
+        assertEquals(0, resultTrue.getStatus(), "frontListByFlags isRecommend=true failed: " + resultTrue);
+
+        Map<String, Object> pageTrue = (Map<String, Object>) resultTrue.getData();
+        List<Map<String, Object>> itemsTrue = (List<Map<String, Object>>) pageTrue.get("items");
+        assertTrue(itemsTrue.stream().anyMatch(i -> recommendGoods.getId().equals(i.get("id"))));
+        assertTrue(itemsTrue.stream().anyMatch(i -> recommendAndHot.getId().equals(i.get("id"))));
+        assertFalse(itemsTrue.stream().anyMatch(i -> normal.getId().equals(i.get("id"))));
+
+        // 向后兼容：省略 isRecommend 时推荐商品仍出现在列表（与既有 frontList/frontListByFlags 行为一致）
+        ApiRequest<Map<String, Object>> reqAll = ApiRequest.build(Map.of(
+                "page", 1,
+                "pageSize", 20
+        ));
+        IGraphQLExecutionContext ctxAll = graphQLEngine.newRpcContext(
+                GraphQLOperationType.query, "LitemallGoods__frontListByFlags", reqAll);
+        ApiResponse<?> resultAll = graphQLEngine.executeRpc(ctxAll);
+        assertEquals(0, resultAll.getStatus(), "frontListByFlags backward-compat failed: " + resultAll);
+
+        Map<String, Object> pageAll = (Map<String, Object>) resultAll.getData();
+        List<Map<String, Object>> itemsAll = (List<Map<String, Object>>) pageAll.get("items");
+        assertTrue(itemsAll.stream().anyMatch(i -> recommendGoods.getId().equals(i.get("id"))));
+
+        // 组合过滤：isRecommend=true 且 isHot=true 仅命中同时具备两标记的商品，排除仅 isRecommend 的与无标记的
+        ApiRequest<Map<String, Object>> reqCombo = ApiRequest.build(Map.of(
+                "isRecommend", true,
+                "isHot", true,
+                "page", 1,
+                "pageSize", 20
+        ));
+        IGraphQLExecutionContext ctxCombo = graphQLEngine.newRpcContext(
+                GraphQLOperationType.query, "LitemallGoods__frontListByFlags", reqCombo);
+        ApiResponse<?> resultCombo = graphQLEngine.executeRpc(ctxCombo);
+        assertEquals(0, resultCombo.getStatus(), "frontListByFlags combo failed: " + resultCombo);
+
+        Map<String, Object> pageCombo = (Map<String, Object>) resultCombo.getData();
+        List<Map<String, Object>> itemsCombo = (List<Map<String, Object>>) pageCombo.get("items");
+        assertTrue(itemsCombo.stream().anyMatch(i -> recommendAndHot.getId().equals(i.get("id"))));
+        assertFalse(itemsCombo.stream().anyMatch(i -> recommendGoods.getId().equals(i.get("id"))));
+        assertFalse(itemsCombo.stream().anyMatch(i -> normal.getId().equals(i.get("id"))));
+    }
 }

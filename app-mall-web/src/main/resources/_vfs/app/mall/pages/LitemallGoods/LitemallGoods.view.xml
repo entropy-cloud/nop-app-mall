@@ -51,6 +51,9 @@
                 <!--是否人气推荐，如果设置则可以在人气推荐页面展示-->
                 <col id="isHot"/>
 
+                <!--是否推荐，如果设置则可以在为你推荐楼层展示-->
+                <col id="isRecommend"/>
+
                 <!--是否上架-->
                 <col id="isOnSale"/>
 
@@ -80,7 +83,7 @@
     <forms>
         <form id="query">
             <layout>
-                id goodsSn keywords
+                id goodsSn keywords isNew isHot isRecommend
             </layout>
         </form>
         <form id="view"/>
@@ -89,7 +92,7 @@
                 ========== intro[商品介绍] ================
                 goodsSn[商品编号] name[商品名称]
                 counterPrice[市场价格]
-                isNew[是否新品首发] isHot[是否人气推荐]
+                isNew[是否新品首发] isHot[是否人气推荐] isRecommend[是否推荐]
                 isOnSale[是否上架]
                 picUrl[商品页面商品图片]
                 gallery[商品宣传图片列表，采用JSON数组格式]

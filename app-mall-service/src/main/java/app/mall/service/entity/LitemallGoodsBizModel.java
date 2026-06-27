@@ -134,7 +134,7 @@ public class LitemallGoodsBizModel extends CrudBizModel<LitemallGoods> implement
                                               @Name("page") int page,
                                               @Name("pageSize") int pageSize,
                                               IServiceContext context) {
-        return frontListByFlags(null, null, categoryId, brandId, page, pageSize, context);
+        return frontListByFlags(null, null, null, categoryId, brandId, page, pageSize, context);
     }
 
     @Override
@@ -142,6 +142,7 @@ public class LitemallGoodsBizModel extends CrudBizModel<LitemallGoods> implement
     @Auth(publicAccess = true)
     public PageBean<LitemallGoods> frontListByFlags(@Optional @Name("isHot") Boolean isHot,
                                                      @Optional @Name("isNew") Boolean isNew,
+                                                     @Optional @Name("isRecommend") Boolean isRecommend,
                                                      @Optional @Name("categoryId") String categoryId,
                                                      @Optional @Name("brandId") String brandId,
                                                      @Name("page") int page,
@@ -155,6 +156,9 @@ public class LitemallGoodsBizModel extends CrudBizModel<LitemallGoods> implement
         }
         if (isNew != null) {
             query.addFilter(FilterBeans.eq(LitemallGoods.PROP_NAME_isNew, isNew));
+        }
+        if (isRecommend != null) {
+            query.addFilter(FilterBeans.eq(LitemallGoods.PROP_NAME_isRecommend, isRecommend));
         }
 
         if (categoryId != null && !categoryId.isEmpty()) {

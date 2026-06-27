@@ -206,6 +206,47 @@ body:
                       link: "/storefront-goods-detail?id=${item.id}"
 
   - type: wrapper
+    className: storefront-section
+    style:
+      padding: 20px
+    body:
+      - type: tpl
+        tpl: '<h3 style="color:#333;border-left:4px solid #ff6700;padding-left:8px">为你推荐</h3>'
+      - type: service
+        name: recommendGoods
+        api:
+          url: '@query:LitemallGoods__frontListByFlags'
+          data:
+            isRecommend: true
+            page: 1
+            pageSize: 8
+          sendOn: true
+        body:
+          type: grid
+          columns:
+            - type: each
+              name: items
+              placeholder: 暂无商品
+              items:
+                type: card
+                header:
+                  title: "${item.name}"
+                  avatar: "${item.picUrl}"
+                body:
+                  type: wrapper
+                  body:
+                    - type: tpl
+                      tpl: '<div style="color:#999;font-size:12px">${item.brief}</div>'
+                    - type: tpl
+                      tpl: '<span style="color:#ff6700;font-size:18px;font-weight:bold">¥${item.retailPrice}</span>'
+                    - type: button
+                      label: 查看详情
+                      level: primary
+                      size: sm
+                      actionType: link
+                      link: "/storefront-goods-detail?id=${item.id}"
+
+  - type: wrapper
     className: storefront-footer
     style:
       padding: 20px
