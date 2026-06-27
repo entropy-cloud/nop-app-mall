@@ -3,6 +3,7 @@ package app.mall.service.entity;
 import app.mall.biz.ILitemallCouponUserBiz;
 import app.mall.dao.entity.LitemallCoupon;
 import app.mall.dao.entity.LitemallCouponUser;
+import app.mall.dao.entity.LitemallGoods;
 import io.nop.api.core.annotations.autotest.NopTestConfig;
 import io.nop.api.core.annotations.core.OptionalBoolean;
 import io.nop.api.core.beans.ApiRequest;
@@ -42,6 +43,10 @@ public class TestLitemallCouponUserBizModel extends JunitBaseTestCase {
     ILitemallCouponUserBiz couponUserBiz;
 
     String couponId;
+    String categoryScopedCouponId;
+    String categoryMatchGoodsId;
+    String categoryMismatchGoodsId;
+    String categoryIdMatch = "100100";
 
     @BeforeEach
     void setUp() {
@@ -65,7 +70,50 @@ public class TestLitemallCouponUserBizModel extends JunitBaseTestCase {
         coupon.setStartTime(LocalDateTime.now().minusDays(1));
         coupon.setEndTime(LocalDateTime.now().plusDays(30));
         daoProvider.daoFor(LitemallCoupon.class).saveEntity(coupon);
-        couponId = coupon.getId();
+        couponId = coupon.orm_idString();
+
+        LitemallCoupon categoryScoped = daoProvider.daoFor(LitemallCoupon.class).newEntity();
+        categoryScoped.setName("分类券");
+        categoryScoped.setTag("分类限定");
+        categoryScoped.setTotal(50);
+        categoryScoped.setDiscount(BigDecimal.valueOf(15));
+        categoryScoped.setMin(BigDecimal.valueOf(30));
+        categoryScoped.setLimit(1);
+        categoryScoped.setType(0);
+        categoryScoped.setStatus(0);
+        categoryScoped.setGoodsType(1);
+        categoryScoped.setGoodsValue(categoryIdMatch);
+        categoryScoped.setCode("");
+        categoryScoped.setTimeType(0);
+        categoryScoped.setDays(15);
+        categoryScoped.setStartTime(LocalDateTime.now().minusDays(1));
+        categoryScoped.setEndTime(LocalDateTime.now().plusDays(15));
+        daoProvider.daoFor(LitemallCoupon.class).saveEntity(categoryScoped);
+        categoryScopedCouponId = categoryScoped.orm_idString();
+
+        LitemallGoods matchGoods = daoProvider.daoFor(LitemallGoods.class).newEntity();
+        matchGoods.setGoodsSn("CAT-MATCH-001");
+        matchGoods.setName("Category Match Goods");
+        matchGoods.setRetailPrice(BigDecimal.valueOf(100));
+        matchGoods.setIsOnSale(true);
+        matchGoods.setPicUrl("");
+        matchGoods.setShareUrl("");
+        matchGoods.setGallery("");
+        matchGoods.setCategoryId(categoryIdMatch);
+        daoProvider.daoFor(LitemallGoods.class).saveEntity(matchGoods);
+        categoryMatchGoodsId = matchGoods.orm_idString();
+
+        LitemallGoods mismatchGoods = daoProvider.daoFor(LitemallGoods.class).newEntity();
+        mismatchGoods.setGoodsSn("CAT-MISMATCH-002");
+        mismatchGoods.setName("Category Mismatch Goods");
+        mismatchGoods.setRetailPrice(BigDecimal.valueOf(100));
+        mismatchGoods.setIsOnSale(true);
+        mismatchGoods.setPicUrl("");
+        mismatchGoods.setShareUrl("");
+        mismatchGoods.setGallery("");
+        mismatchGoods.setCategoryId("999999");
+        daoProvider.daoFor(LitemallGoods.class).saveEntity(mismatchGoods);
+        categoryMismatchGoodsId = mismatchGoods.orm_idString();
     }
 
     @SuppressWarnings("unchecked")
@@ -200,5 +248,47 @@ public class TestLitemallCouponUserBizModel extends JunitBaseTestCase {
 
         assertThrows(NopException.class, () ->
                 couponUserBiz.claimCouponForUser(couponId, targetUserId, ctx));
+    }
+
+    @Test
+    public void testSelectCouponForOrder_categoryScopedMatch() {
+        ApiRequest<Map<String, Object>> claimReq = ApiRequest.build(Map.of("couponId", categoryScopedCouponId));
+        ApiResponse<?> claimRes = graphQLEngine.executeRpc(graphQLEngine.newRpcContext(
+                GraphQLOperationType.mutation, "LitemallCouponUser__claimCoupon", claimReq));
+        assertEquals(0, claimRes.getStatus(), "claim setup failed: " + claimRes);
+        String couponUserId = (String) ((Map<String, Object>) claimRes.getData()).get("id");
+
+        ApiRequest<Map<String, Object>> req = ApiRequest.build(Map.of(
+                "couponUserId", couponUserId,
+                "goodsPrice", BigDecimal.valueOf(100),
+                "goodsIds", List.of(categoryMatchGoodsId)
+        ));
+        IGraphQLExecutionContext ctx = graphQLEngine.newRpcContext(
+                GraphQLOperationType.query, "LitemallCouponUser__selectCouponForOrder", req);
+        ApiResponse<?> result = graphQLEngine.executeRpc(ctx);
+        assertEquals(0, result.getStatus(),
+                "category-scoped coupon should match when goods.categoryId is in coupon.goodsValue: " + result);
+        BigDecimal discount = (BigDecimal) result.getData();
+        assertEquals(0, BigDecimal.valueOf(15).compareTo(discount));
+    }
+
+    @Test
+    public void testSelectCouponForOrder_categoryScopedMismatch() {
+        ApiRequest<Map<String, Object>> claimReq = ApiRequest.build(Map.of("couponId", categoryScopedCouponId));
+        ApiResponse<?> claimRes = graphQLEngine.executeRpc(graphQLEngine.newRpcContext(
+                GraphQLOperationType.mutation, "LitemallCouponUser__claimCoupon", claimReq));
+        assertEquals(0, claimRes.getStatus());
+        String couponUserId = (String) ((Map<String, Object>) claimRes.getData()).get("id");
+
+        ApiRequest<Map<String, Object>> req = ApiRequest.build(Map.of(
+                "couponUserId", couponUserId,
+                "goodsPrice", BigDecimal.valueOf(100),
+                "goodsIds", List.of(categoryMismatchGoodsId)
+        ));
+        IGraphQLExecutionContext ctx = graphQLEngine.newRpcContext(
+                GraphQLOperationType.query, "LitemallCouponUser__selectCouponForOrder", req);
+        ApiResponse<?> result = graphQLEngine.executeRpc(ctx);
+        assertEquals(-1, result.getStatus(),
+                "category-scoped coupon should NOT match when goods.categoryId not in coupon.goodsValue");
     }
 }

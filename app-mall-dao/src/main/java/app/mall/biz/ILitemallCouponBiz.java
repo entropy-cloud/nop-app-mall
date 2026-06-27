@@ -1,3 +1,4 @@
+
 package app.mall.biz;
 
 import io.nop.api.core.annotations.biz.BizMutation;
@@ -10,6 +11,9 @@ import io.nop.orm.biz.ICrudBiz;
 
 import app.mall.dao.entity.LitemallCoupon;
 import app.mall.dao.entity.LitemallCouponUser;
+
+import java.util.List;
+import java.util.Map;
 
 public interface ILitemallCouponBiz extends ICrudBiz<LitemallCoupon> {
 
@@ -31,4 +35,8 @@ public interface ILitemallCouponBiz extends ICrudBiz<LitemallCoupon> {
                                                 @Name("page") int page,
                                                 @Name("pageSize") int pageSize,
                                                 IServiceContext context);
+
+    @BizQuery
+    List<Map<String, Object>> listCouponsForGoods(@Name("goodsId") String goodsId,
+                                                   IServiceContext context);
 }

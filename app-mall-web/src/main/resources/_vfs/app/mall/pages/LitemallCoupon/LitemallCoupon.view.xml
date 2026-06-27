@@ -12,6 +12,8 @@
                 <col id="min" label="最低消费"/>
                 <col id="total" label="数量" sortable="true"/>
                 <col id="limit" label="限领数量"/>
+                <col id="goodsType" label="商品范围"/>
+                <col id="goodsValue" label="商品范围值"/>
                 <col id="status" label="状态" sortable="true"/>
                 <col id="timeType" label="时间类型"/>
                 <col id="startTime" label="开始时间" sortable="true"/>
@@ -22,9 +24,33 @@
     </grids>
 
     <forms>
-        <form id="view"/>
-        <form id="edit"/>
-        <form id="add"/>
+        <form id="view">
+            <layout>
+ name[优惠券名称] tag[优惠券标签]
+ type[优惠券赠送类型] status[优惠券状态]
+ desc[优惠券介绍]
+ discount[优惠金额] min[最低消费金额]
+ total[优惠券数量] limit[用户领券限制数量]
+ goodsType[商品限制类型] goodsValue[商品限制值]
+ timeType[有效时间限制] days[基于领取时间的有效天数]
+ startTime[使用券开始时间] endTime[使用券截至时间]
+ code[优惠券兑换码]
+</layout>
+        </form>
+        <form id="edit">
+            <layout>
+ name[优惠券名称] tag[优惠券标签]
+ type[优惠券赠送类型] status[优惠券状态]
+ desc[优惠券介绍]
+ discount[优惠金额] min[最低消费金额]
+ total[优惠券数量] limit[用户领券限制数量]
+ goodsType[商品限制类型] goodsValue[商品限制值]
+ timeType[有效时间限制] days[基于领取时间的有效天数]
+ startTime[使用券开始时间] endTime[使用券截至时间]
+ code[优惠券兑换码]
+</layout>
+        </form>
+        <form id="add" x:prototype="edit"/>
         <form id="query" editMode="query" title="查询条件">
             <layout>
                 name type status

@@ -93,6 +93,55 @@ body:
                       visibleOn: "${timeDiscount.data != null}"
                       tpl: '<div style="background:linear-gradient(90deg,#fff0e0,#ffe4c4);padding:12px 15px;border-radius:4px;margin:5px 0;border:1px solid #ffb74d"><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span style="background:#ff4500;color:#fff;font-size:12px;padding:2px 8px;border-radius:3px;font-weight:bold">限时折扣</span><span style="text-decoration:line-through;color:#999">¥${timeDiscount.data.originalPrice}</span><span style="color:#ff6700;font-size:24px;font-weight:bold">¥${timeDiscount.data.promoPrice}</span><span style="color:#ff6700">直降 ¥${timeDiscount.data.discountAmount}</span></div><div style="margin-top:6px;color:#666;font-size:13px">距活动结束：<b style="color:#ff4500">${timeDiscount.data.endTime}</b></div><div visibleOn="${timeDiscount.data.stockLimit > 0}" style="margin-top:4px;color:#999;font-size:12px">剩余折扣库存：${timeDiscount.data.remainingStock} 件</div></div>'
 
+                # P32 商品详情领券入口：本商品可用券（按 goodsType/goodsValue 过滤）+ 已领/可领状态 + 领取按钮
+                - type: service
+                  name: goodsCoupons
+                  api:
+                    url: '@query:LitemallCoupon__listCouponsForGoods'
+                    data:
+                      goodsId: "${id}"
+                    sendOn: "${id != null}"
+                  body:
+                    type: wrapper
+                    visibleOn: "${goodsCoupons.data != null && goodsCoupons.data.length > 0}"
+                    style:
+                      margin: '5px 0'
+                    body:
+                      - type: tpl
+                        tpl: '<div style="color:#999;font-size:13px;margin-bottom:4px">本商品可用优惠券</div>'
+                      - type: each
+                        name: goodsCoupons.data
+                        items:
+                          type: wrapper
+                          style:
+                            background: '#fff8f0'
+                            padding: 10px 12px
+                            borderRadius: 4px
+                            margin: '4px 0'
+                            display: flex
+                            alignItems: center
+                            justifyContent: space-between
+                          body:
+                            - type: wrapper
+                              body:
+                                - type: tpl
+                                  tpl: '<div><span style="color:#ff6700;font-size:18px;font-weight:bold">¥${item.discount}</span><span style="color:#999;margin-left:6px">满 ${item.min} 元可用</span>${item.tag ? "<span style=\"margin-left:6px;background:#ff6700;color:#fff;font-size:11px;padding:1px 6px;border-radius:8px\">" + item.tag + "</span>" : ""}</div>'
+                                - type: tpl
+                                  tpl: '<div style="color:#999;font-size:12px">${item.desc || ""}</div>'
+                            - type: button
+                              label: '${item.claimedByMe ? "已领取" : "立即领取"}'
+                              level: '${item.claimedByMe ? "link" : "primary"}'
+                              size: sm
+                              disabled: '${item.claimedByMe || !item.claimable}'
+                              actionType: ajax
+                              api:
+                                url: '@mutation:LitemallCouponUser__claimCoupon'
+                                data:
+                                  couponId: "${item.id}"
+                              messages:
+                                success: '领取成功'
+                              reload: 'goodsCoupons'
+
                 - type: form
                   name: skuForm
                   title: 选择规格

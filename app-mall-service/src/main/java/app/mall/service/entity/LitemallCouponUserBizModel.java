@@ -2,8 +2,11 @@ package app.mall.service.entity;
 
 import app.mall.biz.ILitemallCouponBiz;
 import app.mall.biz.ILitemallCouponUserBiz;
+import app.mall.biz.ILitemallGoodsBiz;
+import app.mall.dao._AppMallDaoConstants;
 import app.mall.dao.entity.LitemallCoupon;
 import app.mall.dao.entity.LitemallCouponUser;
+import app.mall.dao.entity.LitemallGoods;
 import app.mall.dao.mapper.LitemallCouponUserMapper;
 import io.nop.api.core.annotations.biz.BizAction;
 import io.nop.api.core.annotations.biz.BizModel;
@@ -20,7 +23,10 @@ import jakarta.inject.Inject;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static app.mall.service.AppMallErrors.*;
@@ -32,6 +38,9 @@ public class LitemallCouponUserBizModel extends CrudBizModel<LitemallCouponUser>
 
     @Inject
     ILitemallCouponBiz couponBiz;
+
+    @Inject
+    ILitemallGoodsBiz goodsBiz;
 
     @Inject
     LitemallCouponUserMapper couponUserMapper;
@@ -171,7 +180,7 @@ public class LitemallCouponUserBizModel extends CrudBizModel<LitemallCouponUser>
                     .param("min", min);
         }
 
-        if (coupon.getGoodsType() != null && coupon.getGoodsType() != 0) {
+        if (coupon.getGoodsType() != null && coupon.getGoodsType() != _AppMallDaoConstants.COUPON_GOODS_TYPE_ALL) {
             if (goodsIds == null || goodsIds.isEmpty()) {
                 throw new NopException(ERR_COUPON_GOODS_NOT_MATCH)
                         .param("couponUserId", couponUserId);
@@ -180,16 +189,43 @@ public class LitemallCouponUserBizModel extends CrudBizModel<LitemallCouponUser>
             String goodsValue = coupon.getGoodsValue();
             if (goodsValue != null && !goodsValue.isEmpty()) {
                 List<String> allowedIds = parseGoodsValue(goodsValue);
-                for (String gid : goodsIds) {
-                    if (!allowedIds.contains(gid)) {
+                if (coupon.getGoodsType() == _AppMallDaoConstants.COUPON_GOODS_TYPE_CATEGORY) {
+                    Set<String> orderCategoryIds = collectCategoryIds(goodsIds, context);
+                    boolean anyMatch = false;
+                    for (String catId : orderCategoryIds) {
+                        if (allowedIds.contains(catId)) {
+                            anyMatch = true;
+                            break;
+                        }
+                    }
+                    if (!anyMatch) {
                         throw new NopException(ERR_COUPON_GOODS_NOT_MATCH)
-                                .param("goodsId", gid);
+                                .param("couponUserId", couponUserId)
+                                .param("goodsType", coupon.getGoodsType());
+                    }
+                } else {
+                    for (String gid : goodsIds) {
+                        if (!allowedIds.contains(gid)) {
+                            throw new NopException(ERR_COUPON_GOODS_NOT_MATCH)
+                                    .param("goodsId", gid);
+                        }
                     }
                 }
             }
         }
 
         return coupon.getDiscount() != null ? coupon.getDiscount() : BigDecimal.ZERO;
+    }
+
+    private Set<String> collectCategoryIds(List<String> goodsIds, IServiceContext context) {
+        Set<String> categoryIds = new HashSet<>();
+        for (String gid : goodsIds) {
+            LitemallGoods goods = goodsBiz.get(gid, false, context);
+            if (goods != null && goods.getCategoryId() != null) {
+                categoryIds.add(goods.getCategoryId());
+            }
+        }
+        return categoryIds;
     }
 
     @Override
