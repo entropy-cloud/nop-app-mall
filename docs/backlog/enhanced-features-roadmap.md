@@ -1,6 +1,6 @@
 # Enhanced Features Roadmap
 
-> Last Updated: 2026-06-27
+> Last Updated: 2026-06-28
 > Source: `docs/analysis/2026-06-21-mobile-mall-functional-design-analysis.md`, `docs/design/*.md`
 
 ## Purpose
@@ -26,8 +26,8 @@
 - 21. 订单运营工作台: `todo`
 - 22. 营销活动管理后台: `todo`
 - 23. 限时折扣: `done`（`docs/plans/2026-06-27-2029-2-phase23-time-discount-plan.md`）
-- 24. 秒杀: `todo`
-- 25. 拼团: `todo`
+- 24. 秒杀: `done`（`docs/plans/2026-06-28-0125-1-phase24-flash-sale-plan.md`）
+- 25. 拼团: `planned`（`docs/plans/2026-06-28-0125-2-phase25-pin-tuan-plan.md`）
 - 26. 会员等级体系: `done`（`docs/plans/2026-06-27-1742-2-phase26-member-level-system-plan.md`）
 - 27. 积分体系: `done`（`docs/plans/2026-06-27-2029-1-phase27-points-system-plan.md`）
 - 28. 签到: `done`（`docs/plans/2026-06-27-2321-1-phase28-check-in-plan.md`）
@@ -102,7 +102,7 @@
 | # | Phase | Owner Doc | 依赖 | Platform Reuse |
 |---|-------|-----------|------|----------------|
 | 23 | 限时折扣 | `marketing-and-promotions.md` | Phase 5 + Phase 5b | — |
-| 24 | 秒杀 | `marketing-and-promotions.md` | Phase 5 + Phase 5b | nop-job（需引入，秒杀场次状态切换） |
+| 24 | 秒杀 | `marketing-and-promotions.md` | Phase 5 + Phase 5b | nop-job-local（已引入，Phase 11） |
 | 25 | 拼团 | `marketing-and-promotions.md` | Phase 5 + Phase 5b | nop-job（需引入，拼团超时失败） |
 | 26 | 会员等级体系 | `user-and-address.md` | Phase 1 | nop-auth Delta |
 | 27 | 积分体系 | `marketing-and-promotions.md`, `wallet-and-assets.md` | Phase 5 + Phase 5b + Phase 26 | — |

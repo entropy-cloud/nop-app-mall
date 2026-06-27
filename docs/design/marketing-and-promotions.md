@@ -580,6 +580,7 @@
 | 优惠券价格构件 | → 出 | `order-and-cart.md` | 结算时校验可用券，影响 coupon price；取消/退款后按规则恢复 |
 | 满减价格构件 | → 出 | `order-and-cart.md` | 结算时自动判定最优档位，影响 promotion price（orderPrice 减项层）；自动触发、不可恢复 |
 | 限时折扣价格构件 | → 出 | `order-and-cart.md` | 命中折扣的 SKU 行单价取 min(retail,vip,timeDiscount)，作用于商品单价层（降低 goodsPrice 汇总），不进 promotion price；自动触发、不可恢复 |
+| 秒杀价格构件 | → 出 | `order-and-cart.md` | 秒杀走独立 `flashSaleBuy` 路径，秒杀价（flashPrice）为成交单价（商品单价层）；不走购物车、不挂券、不与其他促销叠加；场次状态由 nop-job 翻转 |
 | 积分抵扣构件 | → 出 | `order-and-cart.md` | 结算勾选积分抵扣，影响 integral price（actualPrice 减项层）；取消/整单退款返还，item 级不返还 |
 | 团购上下文透传 | → 出 | `order-and-cart.md` | grouponRulesId/grouponId 经加购→结算透传；团购超时触发订单 204 |
 | 团购优惠结果 | → 出 | `order-and-cart.md` | 团购成功后由订单侧价格语义消费 |
@@ -590,8 +591,107 @@
 
 全局流程视图见 `flow-overview.md`。
 
+## 秒杀 / Flash Sale (Seckill)
+
+### 业务意图
+
+- 秒杀是按场次组织的短期、限量、低价强促销形式。其本质区别于限时折扣（常规降价促销）：秒杀以**场次**（session）为组织单位，每个场次有独立时间窗与库存；用户在抢购窗口内集中下单，库存抢完即止。
+- 秒杀**不走购物车、直接购买**：用户在秒杀活动页或商品详情页点击「立即抢购」直接进入下单，不进入购物车流程，订单为单 SKU 单行的极简下单路径。
+- 秒杀订单**不支持优惠券**、**默认不与任何其他促销叠加**（满减 / 限时折扣 / 会员价 / 积分抵扣 / 团购），秒杀价（`flashPrice`）即成交单价。
+
+### 业务规则
+
+- 一条秒杀活动（`LitemallFlashSale`）绑定到具体商品（`goodsId`），可选绑定到具体 SKU（`productId`，null 表示该商品的全部 SKU 均参与）。
+- 一个秒杀活动可配置多个场次（`LitemallFlashSaleSession`），每场有独立的开始时间（`sessionStart`）、结束时间（`sessionEnd`）与场次库存（`sessionStock`）。
+- 秒杀价 `flashPrice` 为成交单价（商品单价层），优先于会员价（`vipPrice`）与限时折扣价（秒杀场景例外）。
+- 限购：每单限购 `maxPerOrder`（在 `flashSaleBuy` 中以请求数量上限校验）；每人限购 `maxPerUser` 的强一致执行依赖 `Order↔FlashSaleSession` 关联列（当前为 model-gap，见「已知约束」）。
+
+### 下单路径（Decision A：独立 flashSaleBuy 路径）
+
+**抉择：** 秒杀走独立的 `LitemallFlashSaleBizModel.flashSaleBuy()` `@BizMutation` 路径，**不进** `LitemallOrderBizModel.submit()`。
+
+- 备选 B（扩展 `submit()` 增加可选 `flashSaleSessionId` 参数并分支）被否——会污染 submit() 主流程价格公式，与 P25 拼团的 submit() 改动耦合，且违背「不走购物车直接购买」的独立语义。
+- **理由：** roadmap 明确「秒杀不走购物车直接购买」「秒杀订单不支持优惠券」，独立路径最干净表达此语义；与 P25 拼团（改 submit() 接线 pinTuanPrice）解耦无跨计划耦合。
+- **下单步骤：** 校验场次状态、活动状态、商品在售、`maxPerOrder` 上限 → 原子扣减 `sessionStock`（售罄抛 ErrorCode）+ 复用既有 `goodsProductMapper.reduceStock` 扣减商品库存 → 以 `flashPrice` 为成交单价创建单行 OrderGoods 的订单（couponPrice / promotionPrice / integralPrice / grouponPrice / pinTuanPrice 全置 ZERO，不挂券、不判满减、不抵扣积分）。
+
+### 限购执行路径（Decision B：maxPerOrder + maxPerUser model-gap）
+
+- `maxPerOrder`（每单限购）：在 `flashSaleBuy` 中以请求数量上限校验，**无需模型改动**。
+- `maxPerUser`（每人限购）：强一致执行需按用户累计计数其对该场次的秒杀成交订单数，依赖 `Order↔FlashSaleSession` 关联列（如 `LitemallOrder.flashSaleSessionId`）。
+  - 备选 Alt A（新增关联列，触发 ORM 重生成，标记为 Protected Area ask-first）：可强一致查询计数 + 服务 P22 秒杀效果报表。
+  - 备选 Alt B（**采纳**）：`maxPerUser` 延后为 model-gap，本计划仅执行 `maxPerOrder` + `sessionStock` 原子扣减；`maxPerUser` 强一致需求触发时由 successor 计划落地关联列。
+  - **理由：** ORM 模型（`model/app-mall.orm.xml`）为 Protected Area（ask-first），无人工批准不可改；参照 P15 满减 `maxPerUser` 同样的 model-gap 先例。秒杀「限量」语义已由场次库存原子扣减保证，限购为运营增强项，非阻塞。
+
+### 场次状态（sessionStatus）切换（Decision A：nop-job 持久化翻转）
+
+**抉择：** `MallJobInvoker.switchFlashSaleSessions()` 定时扫描所有场次，按 `sessionStart` / `sessionEnd` 翻转 `sessionStatus`：
+
+| sessionStatus | 含义 | 翻转条件 |
+| ------------- | ---- | -------- |
+| 0 | 未开始 | 当前时间 < `sessionStart` |
+| 1 | 进行中 | `sessionStart` ≤ 当前时间 ≤ `sessionEnd` |
+| 2 | 已结束 | 当前时间 > `sessionEnd` |
+
+- 备选 B（读取时实时计算、不持久化翻转）被否——roadmap 明确「秒杀场次状态切换依赖 nop-job」；持久化状态使列表查询、前台展示、库存守卫（进行中才允许扣库存）一致，避免每次读取重复计算时间窗。
+- job 频率与场次边界的精度差（秒级误差）不影响业务正确性：抢购边界由 `flashSaleBuy` 内的 `sessionStart ≤ now ≤ sessionEnd` 强校验兜底，job 翻转仅服务于列表展示与查询性能。
+
+### 并发库存扣减语义（Decision A：场次库存为权威扣减单位）
+
+- **`sessionStock` 为权威扣减单位**：通过新增 `LitemallFlashSaleSessionMapper.reduceFlashSaleSessionStock(sessionId, n)` 条件 UPDATE 原子扣减（参照 P23 `reduceTimeDiscountStock`：`UPDATE ... SET session_stock = session_stock - n WHERE id = ? AND session_stock >= n`，affectedRows = 0 视为售罄抛 ErrorCode `ERR_FLASH_SALE_SOLD_OUT`），事务回滚保证一致。
+- 同时复用既有 `goodsProductMapper.reduceStock` 扣减商品库存（双库存双扣减）。
+- `sessionStock = 0` 或 `null` 语义抉择：**0/null 均视为不限**（与 P23 `stockLimit = 0` 语义一致），运营需为「限量」场次显式配置正整数。
+- **`totalStock` 为非规范化元数据**：≈ 各场次 `sessionStock` 之和，由后台配置/维护，仅作展示用（如列表显示「全场剩余 X 件」聚合），**不作为跨场次硬上限原子扣减**。理由：秒杀的并发竞争发生在单场次内，跨场次硬上限会引入分布式计数复杂度且无业务必要；单场次原子扣减已保证并发安全。
+- **取消/退款库存回流语义：** 秒杀场次库存**不随订单取消/退款回流**（继承 P23 限时折扣先例——促销库存为活动稀缺资源，回流会破坏「限量」语义并引发超卖风险）。残留风险由运营在活动库存配置时预留余量控制。
+
+### 不与其他促销叠加（Decision A：默认不叠加）
+
+- 秒杀为独立直接购买路径，秒杀价（`flashPrice`）即成交单价（商品单价层），**默认不与满减 / 限时折扣 / 会员价 / 优惠券 / 积分抵扣 / 团购叠加**。
+- **会员价（vipPrice）不叠加：** 秒杀场景下秒杀价优于会员价（秒杀例外规则），写入 owner doc 与代码（`flashSaleBuy` 不读取 `vipPrice`、不读取 `LitemallTimeDiscount`、不读取 `LitemallPromotionActivity`、不接入积分 spend / 团购）。
+- **理由：** 秒杀本质为「限量低价强促销」，叠加会侵蚀毛利且违背「不支持优惠券」要求；用户享秒杀价即为最优价。残留风险：会员感知问题由运营在配置秒杀价时合理考虑（建议秒杀价 ≤ 会员价）。
+
+### 活动状态语义
+
+秒杀活动状态复用 `mall/promotion-status` 字典（与满减、限时折扣一致）：
+
+| 业务状态 | 状态码 | 含义 |
+| -------- | ------ | ---- |
+| 草稿 | 0 | 活动已创建但未上架，不参与匹配 |
+| 进行中 | 10 | 活动已上架；具体是否在抢购窗口由其场次的 `sessionStatus` 与时间窗决定 |
+| 已结束 | 20 | 活动到达结束或被运营置为结束，所有场次不再可抢 |
+| 已关闭 | 30 | 活动被强制下线，所有场次不再可抢 |
+
+- 场次可抢的条件：活动 `status = 进行中(10)` **且** 场次 `sessionStatus = 进行中(1)` **且** 当前时间在 `sessionStart ≤ now ≤ sessionEnd` 时间窗内。
+- 场次的 `sessionStatus` 由 nop-job 翻转，但 `flashSaleBuy` 仍以时间窗为兜底强校验，避免 job 边界误差。
+
+### 管理员与用户动作
+
+- 管理员可以创建、编辑、上下架秒杀活动，配置商品/SKU、秒杀价、限购（`maxPerUser` / `maxPerOrder`）、活动总库存，以及多个场次（每场的开始/结束时间与场次库存）。
+- 商城用户可以浏览秒杀活动列表（按 `sessionStatus` 分区为「即将开始 / 进行中 / 已结束」+ 倒计时 + 抢购进度），在商品详情页查看秒杀横幅（秒杀价 + 倒计时 + 抢购进度条），点击「立即抢购」直接进入下单（不走加购）。
+
+### 生命周期
+
+- 管理员创建秒杀活动（草稿），配置商品/SKU、秒杀价、限购与库存。
+- 管理员为该活动配置一个或多个场次（每场独立的开始/结束时间与场次库存）。
+- 管理员将活动上架（进行中）；场次 `sessionStatus` 由 nop-job 按 `sessionStart` / `sessionEnd` 翻转（0 未开始 → 1 进行中 → 2 已结束）。
+- 场次进行中（`sessionStatus = 1`）时，用户可发起 `flashSaleBuy`：原子扣减场次库存（售罄抛错）+ 扣减商品库存，以秒杀价创建单行订单。
+- 场次到达结束时间或库存售罄，场次退出可抢状态；活动到达结束时间或被运营下架（已结束/已关闭），所有场次退出可抢状态。
+
+### 与订单的关系
+
+- 秒杀资格、场次状态、库存扣减、限购的业务语义由本文件负责。
+- 秒杀如何接入订单（独立 `flashSaleBuy` 路径，秒杀价为成交单价，不进 submit() 的 promotionPrice / coupon / integral / groupon 槽位）由 `order-and-cart.md` 价格语义负责引用结果，不在本文件重复维护订单主流程价格公式。
+
+### 与取消 / 退款的关系
+
+- 秒杀场次库存**不随订单取消/退款回流**（同限时折扣先例）。退款额受订单 `actualPrice` 约束。
+- 秒杀订单的售后仍走 `LitemallAftersale` 流程（item 级售后适用），退款额以秒杀价成交单价计算的行金额为上限。
+
+### 已知约束
+
+- **`maxPerUser` 强一致执行为 model-gap**：缺 `Order↔FlashSaleSession` 关联列，本计划仅执行 `maxPerOrder`。`maxPerUser` 强一致执行（含按场次计数查询）由 successor 计划落地关联列后实现，触发条件：限购强一致需求或 P22 秒杀效果报表。参照 P15 满减 `maxPerUser` 同样的 model-gap 先例。
+- 秒杀场次库存无 DB 唯一键约束（`session_stock` 为可减为 0 的普通整数列），并发安全完全依赖应用层条件 UPDATE，已足够。
+
 ## 不在范围内
 
-- 秒杀 / seckill 不属于当前支持基线。
 - 阶梯价和会员等级价不属于当前支持基线。
 - 满减的「送」（赠品）能力不在当前支持范围（档位表无赠品字段）。

@@ -76,6 +76,13 @@
 - **积分抵扣（P27）作用层位：** `integral price` 在 `orderPrice` 汇总完成后的 `actualPrice` 减项层，与满减 `promotionPrice`（`orderPrice` 减项层）、团购 `grouponPrice`（`actualPrice` 减项层，与积分同层）层位不同，天然不冲突。计算顺序天然正确。
 - **积分抵扣公式：** 用户结算勾选 N 积分 → `integralPrice = N / mall_points_to_yuan_ratio`，上限 `min(N 对应金额, orderPrice × mall_points_deduct_max_ratio)`；同时调用积分账户 spend API 扣减用户积分（`sourceType=order-deduct`）。
 
+### 秒杀独立下单路径（P24，独立分支）
+
+- 秒杀走独立的 `LitemallFlashSaleBizModel.flashSaleBuy()` `@BizMutation` 下单路径，**不进 `submit()` 主流程**，因而不参与上述价格公式中的任何减项计算。
+- 秒杀价 `flashPrice` 直接作为 OrderGoods 行单价（成交单价层，等同于 `goodsPrice` 的单行来源），最终 `actualPrice = flashPrice × number + freightPrice`；`couponPrice` / `promotionPrice` / `integralPrice` / `grouponPrice` / `pinTuanPrice` 全部初始化为 0（不挂券、不判满减、不抵扣积分、不接团购/拼团）。
+- 该独立路径由 `marketing-and-promotions.md` 秒杀章节定义业务语义（场次状态、库存扣减、限购、不叠加），具体实现（事务边界、原子扣减、OrderGoods 行写入）由本订单域负责。
+- 详见 `marketing-and-promotions.md` 秒杀章节「下单路径（Decision A：独立 flashSaleBuy 路径）」。
+
 ### 运费规则
 
 - 运费策略统一配置。
@@ -335,6 +342,7 @@ item 级退款时三个订单级副作用策略：
 | 优惠券价格构件 | ← 入 | `marketing-and-promotions.md` | 结算校验可用券，影响 coupon price；取消/退款后恢复 |
 | 满减价格构件 | ← 入 | `marketing-and-promotions.md` | 结算自动判定满减最优档位，影响 promotion price（orderPrice 减项层）；自动触发、不可恢复 |
 | 限时折扣价格构件 | ← 入 | `marketing-and-promotions.md` | 命中折扣的 SKU 行单价取 min(retail,vip,timeDiscount)，作用于商品单价层（降低 goodsPrice 汇总），不进 promotion price；自动触发、不可恢复 |
+| 秒杀独立下单路径 | ← 入 | `marketing-and-promotions.md` | 秒杀走独立 `flashSaleBuy` `@BizMutation` 路径（不进 `submit()`），秒杀价（flashPrice）为成交单价（商品单价层）；不走购物车、不挂券、不与满减/限时折扣/会员价/积分/团购叠加；场次状态由 nop-job 翻转 |
 | 积分抵扣构件 | ← 入 | `marketing-and-promotions.md` | 结算勾选积分抵扣，影响 integral price（actualPrice 减项层）；取消/整单退款返还积分，item 级部分退款不返还 |
 | 团购上下文 | ← 入 | `marketing-and-promotions.md` | grouponRulesId/grouponId 透传到 submit；团购超时触发 204 |
 | 评价资格 | → 出 | `marketing-and-promotions.md` | 收货完成(401/402)是评价资格边界 |
