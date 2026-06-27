@@ -359,4 +359,13 @@ public interface AppMallErrors {
     ErrorCode ERR_POINTS_DUPLICATE_EARN =
             define("nop.err.mall.points.duplicate-earn",
                     "积分已发放过，不可重复发放");
+
+    // 签到错误码
+    ErrorCode ERR_CHECK_IN_ALREADY_TODAY =
+            define("nop.err.mall.check-in.already-today",
+                    "今日已签到，不可重复签到");
+
+    ErrorCode ERR_CHECK_IN_RULE_MISSING =
+            define("nop.err.mall.check-in.rule-missing",
+                    "签到规则未配置，请联系管理员");
 }

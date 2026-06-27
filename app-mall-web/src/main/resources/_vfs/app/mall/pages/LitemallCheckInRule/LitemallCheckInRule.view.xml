@@ -3,17 +3,59 @@
       xmlns:x="/nop/schema/xdsl.xdef">
 
     <grids>
-        <grid id="list"/>
+        <grid id="list">
+            <cols x:override="bounded-merge">
+                <col id="id"/>
+                <col id="daySeq" sortable="true"/>
+                <col id="pointReward"/>
+                <col id="resetCycle"/>
+            </cols>
+        </grid>
         <grid id="pick-list"/>
     </grids>
 
     <forms>
+        <form id="query">
+            <layout>
+                daySeq
+            </layout>
+        </form>
         <form id="view"/>
-        <form id="edit"/>
+        <form id="edit" size="lg">
+            <layout>
+                ========== base[签到规则] ================
+                daySeq[连续第N天] pointReward[奖励积分数]
+                resetCycle[重置周期]
+            </layout>
+            <cells>
+                <cell id="daySeq">
+                    <placeholder>连续签到的第 N 天，例如 1 表示首签档位</placeholder>
+                </cell>
+                <cell id="pointReward">
+                    <placeholder>命中该档位时奖励的积分数量</placeholder>
+                </cell>
+                <cell id="resetCycle">
+                    <placeholder>0=不循环（达最大 daySeq 后保持顶档）；&gt;0=达此天数后连续天数归 1 循环发奖</placeholder>
+                </cell>
+            </cells>
+        </form>
+
+        <form id="add" x:prototype="edit">
+            <layout x:override="remove"/>
+        </form>
     </forms>
 
     <pages>
-        <crud name="main"/>
+        <crud name="main">
+            <table autoFillHeight="true">
+                <api url="@query:LitemallCheckInRule__findPage" gql:selection="{@pageSelection}"/>
+            </table>
+            <rowActions x:override="bounded-merge">
+                <action id="row-view-button"/>
+                <action id="row-update-button" actionType="drawer"/>
+                <action id="row-delete-button"/>
+            </rowActions>
+        </crud>
         <picker name="picker"/>
     </pages>
 </view>

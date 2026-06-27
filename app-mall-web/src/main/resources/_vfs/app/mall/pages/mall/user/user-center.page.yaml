@@ -110,6 +110,71 @@ body:
                     visibleOn: '${!data.nextLevel}'
                     tpl: '<span style="color:#999">已达最高等级（已累计消费 ¥${data.totalSpending}）</span>'
 
+      - type: service
+        name: checkInStatus
+        api:
+          url: '@query:LitemallCheckInRecord__getMyCheckInStatus'
+          sendOn: true
+        body:
+          - type: card
+            header:
+              title: 每日签到
+            body:
+              - type: wrapper
+                style:
+                  display: flex
+                  alignItems: center
+                  justifyContent: space-around
+                  padding: '10px 0'
+                body:
+                  - type: wrapper
+                    style:
+                      textAlign: center
+                    body:
+                      - type: tpl
+                        tpl: '<div style="font-size:24px;color:#ff6700;font-weight:bold">${data.consecutiveDays || 0}</div>'
+                      - type: tpl
+                        tpl: '<div style="color:#999">连续签到(天)</div>'
+                  - type: wrapper
+                    style:
+                      textAlign: center
+                    body:
+                      - type: tpl
+                        tpl: '<div style="font-size:24px;color:#ff6700;font-weight:bold">${data.totalDays || 0}</div>'
+                      - type: tpl
+                        tpl: '<div style="color:#999">累计签到(天)</div>'
+                  - type: wrapper
+                    style:
+                      textAlign: center
+                    body:
+                      - type: tpl
+                        tpl: '<div style="font-size:24px;color:#ff6700;font-weight:bold">${data.accountBalance || 0}</div>'
+                      - type: tpl
+                        tpl: '<div style="color:#999">可用积分</div>'
+              - type: each
+                name: rewardRules
+                items: '${data.rewardRules}'
+                placeholder: ''
+                body:
+                  type: tag
+                  label: '${"第" + item.daySeq + "天 +" + item.pointReward + "积分"}'
+                  style:
+                    margin: '0 4px'
+              - type: button
+                label: '${data.todayChecked ? "今日已签到" : "立即签到"}'
+                level: primary
+                block: true
+                disabledOn: '${data.todayChecked}'
+                actionType: ajax
+                api:
+                  url: '@mutation:LitemallCheckInRecord__checkInToday'
+                feedback:
+                  title: 签到成功
+                  body:
+                    - type: tpl
+                      tpl: '<div style="text-align:center;padding:10px">本次签到获得 <b style="color:#ff6700;font-size:20px">${response.data.pointsEarned}</b> 积分<br/>已连续签到 <b>${response.data.consecutiveDays}</b> 天，当前积分余额 <b>${response.data.accountBalance}</b></div>'
+                reload: checkInStatus
+
       - type: divider
 
       - type: grid
