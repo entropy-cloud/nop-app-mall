@@ -1,6 +1,7 @@
 package app.mall.service.scheduler;
 
 import app.mall.biz.ILitemallCouponUserBiz;
+import app.mall.biz.ILitemallFlashSaleSessionBiz;
 import app.mall.biz.ILitemallGrouponBiz;
 import app.mall.biz.ILitemallOrderBiz;
 import app.mall.biz.ILitemallOrderGoodsBiz;
@@ -31,6 +32,9 @@ public class MallJobInvoker {
     @Inject
     ILitemallOrderGoodsBiz orderGoodsBiz;
 
+    @Inject
+    ILitemallFlashSaleSessionBiz flashSaleSessionBiz;
+
     public void cancelExpiredOrders() {
         IServiceContext context = new ServiceContextImpl();
         int count = orderBiz.cancelExpiredOrders(ORDER_CANCEL_TIMEOUT_MINUTES, context);
@@ -59,5 +63,13 @@ public class MallJobInvoker {
         IServiceContext context = new ServiceContextImpl();
         int count = orderGoodsBiz.expireCommentWindow(COMMENT_WINDOW_TIMEOUT_DAYS, context);
         LOG.info("mall-job expireCommentWindow finished, affected={}", count);
+    }
+
+    // P24 flash sale: flip sessionStatus 0 -> 1 -> 2 by sessionStart/sessionEnd. See
+    // docs/design/marketing-and-promotions.md 秒杀章节 "场次状态切换".
+    public void switchFlashSaleSessions() {
+        IServiceContext context = new ServiceContextImpl();
+        int count = flashSaleSessionBiz.switchFlashSaleSessions(context);
+        LOG.info("mall-job switchFlashSaleSessions finished, affected={}", count);
     }
 }

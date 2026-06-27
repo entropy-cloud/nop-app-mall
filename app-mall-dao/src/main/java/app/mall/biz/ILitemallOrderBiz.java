@@ -97,4 +97,27 @@ public interface ILitemallOrderBiz extends ICrudBiz<LitemallOrder> {
     @BizMutation
     int confirmExpiredOrders(@Name("timeoutMinutes") int timeoutMinutes,
                              IServiceContext context);
+
+    /**
+     * Flash-sale direct-buy order creation (P24 Decision A — independent path, NOT submit()).
+     * Creates a single-line order with flashPrice as the unit price. No coupon / promotion /
+     * integral / groupon slots are wired (all zeroed). Intended for internal trusted invocation
+     * from {@code LitemallFlashSaleBizModel.flashSaleBuy} after it validates session/activity/
+     * stock and performs the atomic stock deductions.
+     */
+    @BizMutation
+    LitemallOrder createFlashSaleOrder(@Name("userId") String userId,
+                                        @Name("goodsId") String goodsId,
+                                        @Name("productId") String productId,
+                                        @Name("goodsName") String goodsName,
+                                        @Name("goodsSn") String goodsSn,
+                                        @Name("specifications") String specifications,
+                                        @Name("picUrl") String picUrl,
+                                        @Name("flashPrice") BigDecimal flashPrice,
+                                        @Name("number") int number,
+                                        @Name("consignee") String consignee,
+                                        @Name("mobile") String mobile,
+                                        @Name("address") String address,
+                                        @Name("freightPrice") BigDecimal freightPrice,
+                                        IServiceContext context);
 }

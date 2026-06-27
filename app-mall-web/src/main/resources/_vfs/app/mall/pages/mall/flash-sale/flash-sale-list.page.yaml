@@ -1,0 +1,174 @@
+type: page
+title: 秒杀活动
+body:
+  - type: wrapper
+    className: storefront-header
+    body:
+      type: flex
+      justify: space-between
+      alignItems: center
+      style:
+        padding: 10px 20px
+        backgroundColor: '#fff'
+        borderBottom: 2px solid '#ff4500'
+      items:
+        - type: wrapper
+          body:
+            - type: button
+              label: '<b style="font-size:24px;color:#ff4500">商城</b>'
+              level: link
+              actionType: link
+              link: "/storefront-home"
+        - type: wrapper
+          body:
+            - type: button
+              label: 购物车
+              icon: shopping-cart
+              level: link
+              actionType: link
+              link: "/storefront-cart"
+            - type: button
+              label: 用户中心
+              icon: user
+              level: link
+              actionType: link
+              link: "/storefront-user-center"
+
+  - type: service
+    name: flashSales
+    api:
+      url: '@query:LitemallFlashSale__activeFlashSales'
+      data:
+        page: 1
+        pageSize: 20
+    body:
+      - type: wrapper
+        visibleOn: "${flashSales.data != null && flashSales.data.ongoing != null && flashSales.data.ongoing.length > 0}"
+        style:
+          padding: 10px 20px
+        body:
+          - type: tpl
+            tpl: '<h3 style="color:#ff4500">🔥 正在抢购</h3>'
+          - type: grid
+            columns:
+              md: 4
+            body:
+              type: each
+              name: flashSales.data.ongoing
+              items:
+                type: wrapper
+                style:
+                  background: '#fff'
+                  border: 2px solid '#ff4500'
+                  borderRadius: 8px
+                  margin: 5px
+                  padding: 15px
+                  textAlign: center
+                body:
+                  - type: tpl
+                    tpl: '<div style="font-size:16px;font-weight:bold">${goodsId}</div>'
+                  - type: tpl
+                    tpl: '<div style="color:#ff4500;font-size:28px;font-weight:bold">¥${flashPrice}</div>'
+                  - type: tpl
+                    tpl: '<div style="color:#999;font-size:12px">剩余 ${sessionStock} 件</div>'
+                  - type: tpl
+                    tpl: '<div style="color:#ff4500;font-size:12px;margin-top:5px">距结束：${sessionEnd}</div>'
+                  - type: button
+                    label: 立即抢购
+                    level: danger
+                    size: lg
+                    actionType: dialog
+                    dialog:
+                      title: 秒杀下单
+                      body:
+                        type: form
+                        api:
+                          url: '@mutation:LitemallFlashSale__flashSaleBuy'
+                          data:
+                            flashSaleSessionId: '${liveSessionId}'
+                            addressId: '${addressId}'
+                            productId: '${productId}'
+                            number: '${number}'
+                        body:
+                          - type: select
+                            name: addressId
+                            label: 收货地址
+                            required: true
+                            source:
+                              url: '@query:LitemallAddress__findList'
+                              valueField: id
+                              labelField: name
+                          - type: input-number
+                            name: number
+                            label: 购买数量
+                            value: 1
+                            min: 1
+                            max: '${maxPerOrder}'
+                          - type: tpl
+                            tpl: '<div style="color:#999;font-size:12px">秒杀价：¥${flashPrice}/件，不支持优惠券</div>'
+
+      - type: wrapper
+        visibleOn: "${flashSales.data != null && flashSales.data.upcoming != null && flashSales.data.upcoming.length > 0}"
+        style:
+          padding: 10px 20px
+        body:
+          - type: tpl
+            tpl: '<h3 style="color:#ff6700">⏰ 即将开始</h3>'
+          - type: grid
+            columns:
+              md: 4
+            body:
+              type: each
+              name: flashSales.data.upcoming
+              items:
+                type: wrapper
+                style:
+                  background: '#fff8f0'
+                  border: 1px solid '#ffd0a0'
+                  borderRadius: 8px
+                  margin: 5px
+                  padding: 15px
+                  textAlign: center
+                body:
+                  - type: tpl
+                    tpl: '<div style="font-size:16px;font-weight:bold">${goodsId}</div>'
+                  - type: tpl
+                    tpl: '<div style="color:#ff6700;font-size:24px;font-weight:bold">¥${flashPrice}</div>'
+                  - type: tpl
+                    tpl: '<div style="color:#999;font-size:12px">开始时间：${sessionStart}</div>'
+                  - type: button
+                    label: 即将开始
+                    level: link
+                    disabled: true
+
+      - type: wrapper
+        visibleOn: "${flashSales.data != null && flashSales.data.finished != null && flashSales.data.finished.length > 0}"
+        style:
+          padding: 10px 20px
+        body:
+          - type: tpl
+            tpl: '<h3 style="color:#999">✅ 已结束</h3>'
+          - type: grid
+            columns:
+              md: 4
+            body:
+              type: each
+              name: flashSales.data.finished
+              items:
+                type: wrapper
+                style:
+                  background: '#f5f5f5'
+                  borderRadius: 8px
+                  margin: 5px
+                  padding: 15px
+                  textAlign: center
+                  opacity: 0.6
+                body:
+                  - type: tpl
+                    tpl: '<div style="font-size:16px;font-weight:bold">${goodsId}</div>'
+                  - type: tpl
+                    tpl: '<div style="color:#999;font-size:20px;font-weight:bold;text-decoration:line-through">¥${flashPrice}</div>'
+                  - type: button
+                    label: 已结束
+                    level: link
+                    disabled: true

@@ -330,6 +330,43 @@ public interface AppMallErrors {
             define("nop.err.mall.time-discount.invalid-discount-value",
                     "限时折扣值无效");
 
+    // 秒杀错误码
+    ErrorCode ERR_FLASH_SALE_NOT_ACTIVE =
+            define("nop.err.mall.flash-sale.not-active",
+                    "秒杀活动不在有效期内或未上架");
+
+    ErrorCode ERR_FLASH_SALE_SESSION_NOT_IN_WINDOW =
+            define("nop.err.mall.flash-sale.session-not-in-window",
+                    "秒杀场次不在有效时间窗内");
+
+    ErrorCode ERR_FLASH_SALE_SOLD_OUT =
+            define("nop.err.mall.flash-sale.sold-out",
+                    "秒杀场次库存不足");
+
+    ErrorCode ERR_FLASH_SALE_OVER_LIMIT_PER_ORDER =
+            define("nop.err.mall.flash-sale.over-limit-per-order",
+                    "秒杀购买数量超过每单限购");
+
+    ErrorCode ERR_FLASH_SALE_OVER_LIMIT_PER_USER =
+            define("nop.err.mall.flash-sale.over-limit-per-user",
+                    "秒杀购买数量超过每人限购");
+
+    ErrorCode ERR_FLASH_SALE_GOODS_OFF_SHELF =
+            define("nop.err.mall.flash-sale.goods-off-shelf",
+                    "秒杀关联商品未上架");
+
+    ErrorCode ERR_FLASH_SALE_GOODS_PRODUCT_NOT_FOUND =
+            define("nop.err.mall.flash-sale.goods-product-not-found",
+                    "秒杀关联SKU不存在");
+
+    ErrorCode ERR_FLASH_SALE_PRODUCT_NOT_IN_ACTIVITY =
+            define("nop.err.mall.flash-sale.product-not-in-activity",
+                    "指定SKU不在该秒杀活动范围内");
+
+    ErrorCode ERR_FLASH_SALE_SESSION_NOT_FOUND =
+            define("nop.err.mall.flash-sale.session-not-found",
+                    "秒杀场次不存在");
+
     // 会员等级错误码
     ErrorCode ERR_MEMBER_LEVEL_RULE_NOT_FOUND =
             define("nop.err.mall.member-level.rule-not-found",

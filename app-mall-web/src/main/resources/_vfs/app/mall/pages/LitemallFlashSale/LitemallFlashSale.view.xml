@@ -1,18 +1,69 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<view x:extends="_gen/_LitemallFlashSale.view.xml" x:schema="/nop/schema/xui/xview.xdef" xmlns:x="/nop/schema/xdsl.xdef">
+<view x:extends="_gen/_LitemallFlashSale.view.xml" x:schema="/nop/schema/xui/xview.xdef"
+      xmlns:x="/nop/schema/xdsl.xdef">
 
     <grids>
-        <grid id="list"/>
+        <grid id="list">
+            <cols x:override="bounded-merge">
+                <col id="id"/>
+                <col id="goodsId"/>
+                <col id="productId"/>
+                <col id="flashPrice"/>
+                <col id="totalStock"/>
+                <col id="maxPerUser"/>
+                <col id="maxPerOrder"/>
+                <col id="status"/>
+            </cols>
+        </grid>
         <grid id="pick-list"/>
     </grids>
 
     <forms>
+        <form id="query">
+            <layout>
+                goodsId status
+            </layout>
+        </form>
         <form id="view"/>
-        <form id="edit"/>
+        <form id="edit" size="lg">
+            <layout>
+                goodsId[商品ID] productId[SKU ID]
+                flashPrice[秒杀价] totalStock[活动总库存]
+                maxPerUser[每人限购] maxPerOrder[每单限购]
+                status[活动状态]
+            </layout>
+            <cells>
+                <cell id="productId">
+                    <placeholder>SKU ID，留空表示该商品全部 SKU 均参与</placeholder>
+                </cell>
+                <cell id="flashPrice">
+                    <placeholder>秒杀成交单价（如 99.00）</placeholder>
+                </cell>
+                <cell id="totalStock">
+                    <placeholder>活动总库存（各场次库存之和，仅展示用）</placeholder>
+                </cell>
+                <cell id="maxPerUser">
+                    <placeholder>每人限购（当前为展示配置，强一致执行待 successor）</placeholder>
+                </cell>
+                <cell id="maxPerOrder">
+                    <placeholder>每单限购（0=不限）</placeholder>
+                </cell>
+            </cells>
+        </form>
+
+        <form id="add" x:prototype="edit">
+            <layout x:override="remove"/>
+        </form>
     </forms>
 
     <pages>
-        <crud name="main"/>
+        <crud name="main">
+            <rowActions x:override="bounded-merge">
+                <action id="row-view-button"/>
+                <action id="row-update-button" actionType="drawer"/>
+                <action id="row-delete-button"/>
+            </rowActions>
+        </crud>
         <picker name="picker"/>
     </pages>
 </view>

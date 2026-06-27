@@ -54,3 +54,14 @@ jobs:
     invoker:
       bean: app.mall.service.scheduler.MallJobInvoker
       method: expireCommentWindow
+
+  - jobName: switch-flash-sale-sessions
+    displayName: Switch Flash Sale Sessions
+    description: Flip flash sale sessionStatus 0/1/2 by sessionStart/sessionEnd time window
+    trigger:
+      repeatInterval: 60000
+      repeatFixedDelay: true
+      maxExecutionCount: 0
+    invoker:
+      bean: app.mall.service.scheduler.MallJobInvoker
+      method: switchFlashSaleSessions

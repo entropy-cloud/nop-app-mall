@@ -3,17 +3,55 @@
       xmlns:x="/nop/schema/xdsl.xdef">
 
     <grids>
-        <grid id="list"/>
+        <grid id="list">
+            <cols x:override="bounded-merge">
+                <col id="id"/>
+                <col id="flashSaleId"/>
+                <col id="sessionStart"/>
+                <col id="sessionEnd"/>
+                <col id="sessionStock"/>
+                <col id="sessionStatus"/>
+            </cols>
+        </grid>
         <grid id="pick-list"/>
     </grids>
 
     <forms>
+        <form id="query">
+            <layout>
+                flashSaleId sessionStatus
+            </layout>
+        </form>
         <form id="view"/>
-        <form id="edit"/>
+        <form id="edit" size="lg">
+            <layout>
+                flashSaleId[秒杀活动ID] sessionStock[场次库存]
+                sessionStart[场次开始时间] sessionEnd[场次结束时间]
+                sessionStatus[场次状态]
+            </layout>
+            <cells>
+                <cell id="sessionStock">
+                    <placeholder>场次库存（0=不限；正整数=限量抢购）</placeholder>
+                </cell>
+                <cell id="sessionStatus">
+                    <placeholder>0=未开始 / 1=进行中 / 2=已结束（由 nop-job 自动翻转）</placeholder>
+                </cell>
+            </cells>
+        </form>
+
+        <form id="add" x:prototype="edit">
+            <layout x:override="remove"/>
+        </form>
     </forms>
 
     <pages>
-        <crud name="main"/>
+        <crud name="main">
+            <rowActions x:override="bounded-merge">
+                <action id="row-view-button"/>
+                <action id="row-update-button" actionType="drawer"/>
+                <action id="row-delete-button"/>
+            </rowActions>
+        </crud>
         <picker name="picker"/>
     </pages>
 </view>

@@ -3,6 +3,7 @@ package app.mall.service.entity;
 import app.mall.biz.ILitemallAddressBiz;
 import app.mall.biz.ILitemallCartBiz;
 import app.mall.biz.ILitemallCouponUserBiz;
+import app.mall.biz.ILitemallGoodsBiz;
 import app.mall.biz.ILitemallGoodsProductBiz;
 import app.mall.biz.ILitemallGrouponBiz;
 import app.mall.biz.ILitemallGrouponRulesBiz;
@@ -17,6 +18,7 @@ import app.mall.dao._AppMallDaoConstants;
 import app.mall.dao.entity.LitemallAddress;
 import app.mall.dao.entity.LitemallCart;
 import app.mall.dao.entity.LitemallCouponUser;
+import app.mall.dao.entity.LitemallGoods;
 import app.mall.dao.entity.LitemallGoodsProduct;
 import app.mall.dao.entity.LitemallGrouponRules;
 import app.mall.dao.entity.LitemallOrder;
@@ -93,6 +95,9 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
     ILitemallAddressBiz addressBiz;
 
     @Inject
+    ILitemallGoodsBiz goodsBiz;
+
+    @Inject
     ILitemallGoodsProductBiz goodsProductBiz;
 
     @Inject
@@ -139,6 +144,9 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
 
     @Inject
     LitemallOrderMapper orderMapper;
+
+    @Inject
+    io.nop.orm.IOrmEntityFileStore ormEntityFileStore;
 
     @Inject
     PayService payService;
@@ -786,6 +794,84 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
         return StringHelper.generateUUID();
     }
 
+    @Override
+    @BizMutation
+    public LitemallOrder createFlashSaleOrder(@Name("userId") String userId,
+                                               @Name("goodsId") String goodsId,
+                                               @Name("productId") String productId,
+                                               @Name("goodsName") String goodsName,
+                                               @Name("goodsSn") String goodsSn,
+                                               @Name("specifications") String specifications,
+                                               @Name("picUrl") String picUrl,
+                                               @Name("flashPrice") BigDecimal flashPrice,
+                                               @Name("number") int number,
+                                               @Name("consignee") String consignee,
+                                               @Name("mobile") String mobile,
+                                               @Name("address") String address,
+                                               @Name("freightPrice") BigDecimal freightPrice,
+                                               IServiceContext context) {
+        // P24 flash-sale direct-buy order creation (independent path, NOT submit()).
+        // flashPrice is the unit price (商品单价层); coupon / promotion / integral / groupon /
+        // pinTuan slots are all zeroed. Single OrderGoods line. No cart involvement.
+        // See docs/design/marketing-and-promotions.md 秒杀章节 "下单路径".
+        LocalDateTime now = LocalDateTime.now();
+        BigDecimal lineTotal = flashPrice.multiply(BigDecimal.valueOf(number));
+        BigDecimal effectiveFreight = freightPrice != null ? freightPrice : BigDecimal.ZERO;
+        BigDecimal orderPrice = lineTotal.add(effectiveFreight);
+
+        LitemallOrder order = newEntity();
+        order.setUserId(userId);
+        order.setOrderSn(generateOrderSn());
+        order.setOrderStatus(_AppMallDaoConstants.ORDER_STATUS_CREATED);
+        order.setAftersaleStatus(_AppMallDaoConstants.AFTERSALE_STATUS_INIT);
+        order.setConsignee(consignee);
+        order.setMobile(mobile);
+        order.setAddress(address);
+        order.setMessage("");
+        order.setFreightPrice(effectiveFreight);
+        order.setCouponPrice(BigDecimal.ZERO);
+        order.setIntegralPrice(BigDecimal.ZERO);
+        order.setGrouponPrice(BigDecimal.ZERO);
+        order.setPromotionPrice(BigDecimal.ZERO);
+        order.setPinTuanPrice(BigDecimal.ZERO);
+        order.setGoodsPrice(lineTotal);
+        order.setOrderPrice(orderPrice);
+        order.setActualPrice(orderPrice);
+        order.setComments(0);
+        order.setDeleted(false);
+
+        LitemallOrderGoods orderGoods = orderGoodsBiz.newEntity();
+        orderGoods.setGoodsId(goodsId);
+        orderGoods.setGoodsName(goodsName);
+        orderGoods.setGoodsSn(goodsSn);
+        orderGoods.setProductId(productId);
+        orderGoods.setNumber(number);
+        orderGoods.setPrice(flashPrice);
+        orderGoods.setSpecifications(specifications);
+        // LitemallOrderGoods.picUrl has stdDomain="file" and requires a /f/download/{fileId}
+        // reference registered in NopFileRecord with bizObjName=LitemallOrderGoods. We use
+        // OrmFileComponent.copyFrom on the TARGET to create a new file record from the goods
+        // image, but since the goods entity may be loaded in a different session scope (causing
+        // its component enhancer to be null), we extract the fileId from the picUrl string and
+        // call the file store directly on the target component.
+        copyGoodsPicToOrderGoods(orderGoods, picUrl);
+        orderGoods.setComment(0);
+        order.getOrderGoods().add(orderGoods);
+
+        saveEntity(order, "createFlashSaleOrder", context);
+
+        if (orderPrice.compareTo(BigDecimal.ZERO) == 0) {
+            order.setOrderStatus(_AppMallDaoConstants.ORDER_STATUS_PAY);
+            order.setPayTime(now);
+            updateEntity(order, "createFlashSaleOrder:zeroPay", context);
+        }
+
+        final String adminNotifyOrderSn = order.getOrderSn();
+        txn().afterCommit(null, () -> notificationService.sendAdminOrderNotification(adminNotifyOrderSn));
+
+        return order;
+    }
+
     private void requireUserIdMatch(LitemallOrder order, IServiceContext context) {
         if (!Objects.equals(order.getUserId(), context.getUserId())) {
             throw new NopException(ERR_ORDER_NOT_FOUND)
@@ -873,5 +959,37 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
                 LitemallPointsAccountBizModel.SOURCE_TYPE_REFUND_RETURN,
                 order.orm_idString(),
                 "取消/退款返还积分 " + order.getOrderSn(), context);
+    }
+
+    private void copyGoodsPicToOrderGoods(LitemallOrderGoods orderGoods, String goodsPicUrl) {
+        if (goodsPicUrl == null || goodsPicUrl.isEmpty()) {
+            return;
+        }
+        // Use the injected file store to create a new file record from the goods image.
+        // This bypasses the source OrmFileComponent (which may have a null enhancer when the
+        // goods entity is loaded through a different session scope in cross-BizModel calls).
+        // We decode the fileId from the /f/download/{fileId} link and call fileStore.copyFile
+        // on the TARGET entity, which creates a new NopFileRecord with correct bizObjName.
+        try {
+            io.nop.orm.component.OrmFileComponent target = orderGoods.getPicUrlComponent();
+            if (target == null || ormEntityFileStore == null) {
+                orderGoods.setPicUrl(goodsPicUrl);
+                return;
+            }
+            String sourceFileId = ormEntityFileStore.decodeFileId(goodsPicUrl);
+            if (sourceFileId == null || sourceFileId.isEmpty()) {
+                target.setFilePath(goodsPicUrl);
+                return;
+            }
+            if (!orderGoods.orm_hasId()) {
+                orderGoods.orm_enhancer().initEntityId(orderGoods);
+            }
+            String newFileId = ormEntityFileStore.copyFile(sourceFileId,
+                    target.getBizObjName(), orderGoods.orm_idString(), "picUrl");
+            target.setFilePath(ormEntityFileStore.getFileLink(newFileId));
+        } catch (Exception e) {
+            LOG.warn("copyGoodsPicToOrderGoods failed ({}), falling back to raw picUrl", e.getMessage());
+            orderGoods.setPicUrl(goodsPicUrl);
+        }
     }
 }
