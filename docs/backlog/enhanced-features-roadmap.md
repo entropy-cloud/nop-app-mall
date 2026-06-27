@@ -36,7 +36,7 @@
 - 31. 配送方式扩展（自提）: `todo`
 - 32. 优惠券体系增强: `todo`
 - 33. 商品评价结构化: `todo`
-- 34. 首页运营打标: `planned`（`docs/plans/2026-06-27-2029-3-phase34-homepage-operation-tagging-plan.md`）
+- 34. 首页运营打标: `done`（`docs/plans/2026-06-27-2029-3-phase34-homepage-operation-tagging-plan.md`）
 - 35. 站内信/消息中心: `todo`
 - 36. 商品运营增强: `todo`
 - 37. 内容/素材管理: `todo`
@@ -432,7 +432,7 @@
 **目标：** 给管理员提供配置新品/热销/推荐商品通道的轻量运营能力。
 
 **交付范围：**
-- 商品三标记字段（newFlag/hotFlag/recommendFlag）
+- 商品三标记字段（isNew/isHot/isRecommend，均已存在，P34 仅接线启用推荐位）
 - 首页三楼层区块展示
 - 后台商品编辑页标记控制
 
@@ -581,7 +581,7 @@ graph TD
 
 | 扩展字段（现有实体新增字段） | Phase | 字段 |
 |---------------------------|-------|------|
-| LitemallGoods | 34 | newFlag, hotFlag, recommendFlag |
+| LitemallGoods | 34 | 无新增（isNew/isHot/isRecommend 均已存在，P34 仅接线启用推荐位） |
 | LitemallGoodsProduct | 38 | 无新增字段（展示逻辑变化） |
 | LitemallOrder | 16 | 无新增（Aftersale 关联改为 order_item_id） |
 | LitemallAftersale | 16 | 新增 order_item_id |

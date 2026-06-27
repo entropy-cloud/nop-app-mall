@@ -204,11 +204,23 @@
 
 - 商品运营打标为管理员提供在首页配置新品、热销和推荐商品通道的轻量运营能力。
 
+### 字段映射
+
+> 设计命名与模型实际字段对齐（litemall 内置字段，均已建模于 `model/app-mall.orm.xml`，无需新增列）：
+
+| 设计语义 | 模型字段（权威） | propId | 说明 |
+|----------|------------------|--------|------|
+| 新品 | `isNew` | 13 | 是否新品首发 |
+| 热销 | `isHot` | 14 | 是否人气推荐 |
+| 推荐 | `isRecommend` | 22 | 是否推荐（曾用语义名 recommendFlag，模型实际为 isRecommend） |
+
 ### 业务规则
 
-- 三个正交标记位：`newFlag`（新品）、`hotFlag`（热销）、`recommendFlag`（推荐），独立于商品的上下架状态和排序权重。
-- 每种标记位的启停由管理员在商品编辑页面独立控制。
-- 首页相应的楼层区块根据标记位自动拉取商品列表。
+- 三个正交标记位：`isNew`（新品）、`isHot`（热销）、`isRecommend`（推荐），独立于商品的上下架状态和排序权重。
+- 每种标记位的启停由管理员在商品编辑页面独立控制（后台商品页 grid 列、edit 开关、query 过滤均全程暴露三个标记位，对称可配）。
+- 推荐位默认 `false`（存量商品非推荐）；推荐楼层仅展示 `isRecommend=true` 且 `isOnSale=true` 的商品（与新品/人气楼层 `isOnSale` 约束一致）。
+- 首页相应的楼层区块根据标记位自动拉取商品列表：新品首发（isNew）、人气推荐（isHot）、为你推荐（isRecommend），均调 `@query:LitemallGoods__frontListByFlags`。
+- `frontListByFlags` 支持三标记位过滤（`isNew`/`isHot`/`isRecommend` 均为 `@Optional`，省略即不过滤，向后兼容既有调用方）。
 - 标记位与促销活动（满减、秒杀等）互不干扰，同一个商品可同时拥有多个标记。
 
 ## 邻接范围
