@@ -82,6 +82,55 @@
 | `LitemallUserRole` | `NopAuthUserRole` | 平台用户-角色映射 |
 | `LitemallAdmin` | `NopAuthUser`（userType=2） | 管理员用户 |
 
+## 会员等级体系
+
+> 持久化字段、等级字典与等级规则表以 `model/app-mall.orm.xml`、`model/nop-auth-delta.orm.xml` 为准。本节描述等级规则、升级/降级机制、权益配置和会员价（vipPrice）的业务语义。
+
+### 等级模型
+
+- 用户当前等级记录在 `NopAuthUserEx.userLevel`（Delta 扩展字段，字典 `mall/user-level`：0=普通用户，1=VIP，2=高级VIP）。
+- 等级规则由独立实体 `LitemallMemberLevel` 维护（每个等级一行规则），包含升级阈值、保级（降级）阈值、权益配置与排序。等级值（`level`）与 `mall/user-level` 字典值对齐。
+
+### 升级条件指标
+
+- **指标抉择：累计消费金额**（用户已支付/已收货订单的 `actualPrice` 累加），而非成长值或累计订单数。
+- 抉择理由：累计消费直接反映用户商业价值，且可由订单历史聚合得到，**无需在 `NopAuthUserEx` 新增 `growthValue` 字段**（成长值需要 P27 积分/签到等多源贡献，而 P27 为本体系的下游且尚未实现业务逻辑，采用成长值会引入空字段与未接线依赖）。累计订单数对客单价差异不敏感。
+- 升级判定：`evaluateUserLevel` 取用户累计消费，命中「累计消费 ≥ 等级 `upgradeThreshold`」的最高等级，更新 `userLevel`。等级阈值以 `LitemallMemberLevel.upgradeThreshold` 为准（后台可配）。
+
+### 降级机制（必实现）
+
+- **机制抉择：周期内累计未达保级阈值则降一级**（备选 A）。
+- 评估周期：自然滚动周期（最近 N 天，N 由系统配置 `mall_member_eval_period_days` 控制，默认 365）。
+- 保级阈值取当前等级的 `LitemallMemberLevel.downgradeThreshold`：若周期内累计消费 < 该阈值，则 `userLevel` 下调一级（普通用户为最低，不再下调）。降级按当前等级逐级进行，不跨级直降。
+- 周期重置/触发：通过后台手动触发的 `@BizMutation`（`downgradeExpiredLevels`）批量评估。roadmap 中 nop-job 调度当前**未引入**，故本基线提供手动入口；未来引入 nop-job 后可由定时任务调用同一 BizMutation。
+- 降级不可跳过：roadmap Phase 26 交付范围明确包含「降级机制（周期内未达标降级）」。
+
+### 会员价（vipPrice）
+
+- 会员价为 **SKU 单价级**优惠，作用于订单 `goodsPrice` 汇总（每行 `min(retailPrice, vipPrice) × number`），**不是订单级减项**。
+- 会员价适用对象：`userLevel >= 1`（VIP / 高级VIP）的用户；`userLevel = 0`（普通用户）按零售价购买。`LitemallGoodsProduct.vipPrice` 为可空字段，空或为 0 表示该 SKU 无会员价（会员仍按零售价）。
+- 与满减（P15 `promotionPrice`）的层位区分与计算顺序见 `order-and-cart.md`「价格计算顺序约定」：先按会员价汇总 `goodsPrice` → 再以 `goodsPrice` 判定满减门槛。
+- 订单快照：订单提交时将生效会员价快照到 `LitemallOrderGoods.vipPrice`（生效的会员单价；非会员或无会员价时为空），`LitemallOrderGoods.price` 记录实际成交单价（`min(retail, vip)`）。快照支撑退款额计算与「会员价」展示标签。
+
+### 权益配置
+
+- 权益项以 `LitemallMemberLevel.benefits`（JSON）配置。本基线**仅在模型中预留权益配置字段**，不实现权益发放逻辑：
+  - 专属价：已由 `vipPrice` 价格机制落地（见上）。
+  - 专属券 / 生日礼包 / 专享客服：roadmap 列为权益项，但其发放依赖 P8（券）+ P32（优惠券体系增强），属 Non-Goals，后续在 successor 计划实现。
+
+### 个人中心等级展示
+
+- 提供等级 + 进度查询：返回当前等级、累计消费、下一级等级、距下一级还差多少消费。
+- 进度计算依据「升级条件指标」的累计消费与各等级 `upgradeThreshold`。
+
+### 与其他域的交接
+
+| 交接点 | 方向 | 目标文档 | 说明 |
+|--------|------|---------|------|
+| 会员价价格影响 | → 出 | `order-and-cart.md` | vipPrice 作用于 goodsPrice 汇总层，影响满减门槛命中（计算顺序见该文档） |
+| 累计消费来源 | ← 入 | `order-and-cart.md` | 累计消费由已支付/已收货订单的 actualPrice 聚合 |
+| 积分/签到贡献 | ← 入 | `marketing-and-promotions.md`、`wallet-and-assets.md`（P27/P28） | 本基线升级指标为累计消费；P27 积分体系若改用成长值指标，须与本体系协调指标源（successor） |
+
 ## 商城用户管理
 
 ### 支持的用户能力

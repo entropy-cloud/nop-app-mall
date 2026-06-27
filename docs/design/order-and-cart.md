@@ -63,7 +63,7 @@
 
 订单提交时按以下公式计算各价格构件：
 
-- `goods price` = 所有结算项 SKU 当前零售价 × 数量的总和（使用提交时的实时价格，不沿用购物车快照）
+- `goods price` = 所有结算项 SKU 当前零售价 × 数量的总和（使用提交时的实时价格，不沿用购物车快照）。会员用户（`userLevel >= 1`）的 SKU 若配置了 `vipPrice`，则该行单价取 `min(retailPrice, vipPrice)`（SKU 单价级会员价，见 `user-and-address.md` 会员等级体系）
 - `order price` = `goods price` + `freight price` - `coupon price` - `promotion price`
 - `actual price` = `order price` - `integral price` - `groupon price`
 
