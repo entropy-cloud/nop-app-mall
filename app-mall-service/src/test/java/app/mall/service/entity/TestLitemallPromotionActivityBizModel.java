@@ -1,6 +1,7 @@
 package app.mall.service.entity;
 
 import app.mall.dao._AppMallDaoConstants;
+import app.mall.dao.entity.LitemallOrder;
 import app.mall.dao.entity.LitemallPromotionActivity;
 import app.mall.dao.entity.LitemallPromotionTier;
 import io.nop.api.core.annotations.autotest.NopTestConfig;
@@ -24,6 +25,8 @@ import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @NopTestConfig(localDb = true, initDatabaseSchema = OptionalBoolean.TRUE)
 public class TestLitemallPromotionActivityBizModel extends JunitBaseTestCase {
@@ -156,5 +159,107 @@ public class TestLitemallPromotionActivityBizModel extends JunitBaseTestCase {
         addTier(high, new BigDecimal("100"), new BigDecimal("20"));
 
         assertEquals(0, new BigDecimal("20").compareTo(selectPromotion(new BigDecimal("200"), null)));
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testPublishAndUnpublishActivity() {
+        LitemallPromotionActivity draft = createActivity(_AppMallDaoConstants.DISCOUNT_TYPE_AMOUNT,
+                _AppMallDaoConstants.PROMOTION_STATUS_DRAFT,
+                _AppMallDaoConstants.GOODS_SCOPE_ALL, null, 1,
+                LocalDateTime.now().minusDays(1), LocalDateTime.now().plusDays(1));
+        String id = draft.orm_idString();
+
+        // draft(0) -> publish -> active(10)
+        ApiRequest<Map<String, Object>> pubReq = ApiRequest.build(Map.of("id", id));
+        ApiResponse<?> pubRes = graphQLEngine.executeRpc(graphQLEngine.newRpcContext(
+                GraphQLOperationType.mutation, "LitemallPromotionActivity__publishActivity", pubReq));
+        assertEquals(0, pubRes.getStatus(), "publishActivity failed: " + pubRes);
+        assertEquals(_AppMallDaoConstants.PROMOTION_STATUS_ACTIVE,
+                ((Number) ((Map<String, Object>) pubRes.getData()).get("status")).intValue());
+
+        // active(10) -> publish again -> fail (invalid transition)
+        ApiResponse<?> republish = graphQLEngine.executeRpc(graphQLEngine.newRpcContext(
+                GraphQLOperationType.mutation, "LitemallPromotionActivity__publishActivity", pubReq));
+        assertNotEquals(0, republish.getStatus(), "re-publish active activity should fail");
+
+        // active(10) -> unpublish -> closed(30)
+        ApiRequest<Map<String, Object>> unpubReq = ApiRequest.build(Map.of("id", id));
+        ApiResponse<?> unpubRes = graphQLEngine.executeRpc(graphQLEngine.newRpcContext(
+                GraphQLOperationType.mutation, "LitemallPromotionActivity__unpublishActivity", unpubReq));
+        assertEquals(0, unpubRes.getStatus(), "unpublishActivity failed: " + unpubRes);
+        assertEquals(_AppMallDaoConstants.PROMOTION_STATUS_CLOSED,
+                ((Number) ((Map<String, Object>) unpubRes.getData()).get("status")).intValue());
+
+        // draft(0) -> unpublish -> fail (draft need not be unpublished)
+        LitemallPromotionActivity anotherDraft = createActivity(_AppMallDaoConstants.DISCOUNT_TYPE_AMOUNT,
+                _AppMallDaoConstants.PROMOTION_STATUS_DRAFT,
+                _AppMallDaoConstants.GOODS_SCOPE_ALL, null, 2,
+                LocalDateTime.now().minusDays(1), LocalDateTime.now().plusDays(1));
+        ApiRequest<Map<String, Object>> draftUnpub = ApiRequest.build(Map.of("id", anotherDraft.orm_idString()));
+        ApiResponse<?> draftUnpubRes = graphQLEngine.executeRpc(graphQLEngine.newRpcContext(
+                GraphQLOperationType.mutation, "LitemallPromotionActivity__unpublishActivity", draftUnpub));
+        assertNotEquals(0, draftUnpubRes.getStatus(), "unpublish draft activity should fail");
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testGetPromotionEffectiveness() {
+        // One order hit by a promotion (promotionPrice>0), one order not (promotionPrice=0).
+        LitemallOrder promoted = daoProvider.daoFor(LitemallOrder.class).newEntity();
+        promoted.setUserId("1");
+        promoted.setOrderSn("PROMO-STAT-001");
+        promoted.setOrderStatus(201);
+        promoted.setAftersaleStatus(0);
+        promoted.setConsignee("测试用户");
+        promoted.setMobile("13800138000");
+        promoted.setAddress("测试地址");
+        promoted.setMessage("promo-stat");
+        promoted.setGoodsPrice(new BigDecimal("200"));
+        promoted.setFreightPrice(BigDecimal.ZERO);
+        promoted.setCouponPrice(BigDecimal.ZERO);
+        promoted.setIntegralPrice(BigDecimal.ZERO);
+        promoted.setGrouponPrice(BigDecimal.ZERO);
+        promoted.setPromotionPrice(new BigDecimal("30"));
+        promoted.setPinTuanPrice(BigDecimal.ZERO);
+        promoted.setOrderPrice(new BigDecimal("170"));
+        promoted.setActualPrice(new BigDecimal("170"));
+        promoted.setComments(0);
+        promoted.setDeleted(false);
+        daoProvider.daoFor(LitemallOrder.class).saveEntity(promoted);
+
+        LitemallOrder plain = daoProvider.daoFor(LitemallOrder.class).newEntity();
+        plain.setUserId("1");
+        plain.setOrderSn("PROMO-STAT-002");
+        plain.setOrderStatus(201);
+        plain.setAftersaleStatus(0);
+        plain.setConsignee("测试用户");
+        plain.setMobile("13800138000");
+        plain.setAddress("测试地址");
+        plain.setMessage("promo-stat");
+        plain.setGoodsPrice(new BigDecimal("50"));
+        plain.setFreightPrice(BigDecimal.ZERO);
+        plain.setCouponPrice(BigDecimal.ZERO);
+        plain.setIntegralPrice(BigDecimal.ZERO);
+        plain.setGrouponPrice(BigDecimal.ZERO);
+        plain.setPromotionPrice(BigDecimal.ZERO);
+        plain.setPinTuanPrice(BigDecimal.ZERO);
+        plain.setOrderPrice(new BigDecimal("50"));
+        plain.setActualPrice(new BigDecimal("50"));
+        plain.setComments(0);
+        plain.setDeleted(false);
+        daoProvider.daoFor(LitemallOrder.class).saveEntity(plain);
+
+        ApiRequest<Map<String, Object>> req = ApiRequest.build(new HashMap<>());
+        IGraphQLExecutionContext ctx = graphQLEngine.newRpcContext(
+                GraphQLOperationType.query, "LitemallPromotionActivity__getPromotionEffectiveness", req);
+        ApiResponse<?> result = graphQLEngine.executeRpc(ctx);
+        assertEquals(0, result.getStatus(), "getPromotionEffectiveness failed: " + result);
+
+        Map<String, Object> data = (Map<String, Object>) result.getData();
+        assertTrue(((Number) data.get("promotedOrderCount")).intValue() >= 1,
+                "promotedOrderCount should include the promotion-hit order");
+        assertEquals(0, new BigDecimal("30").compareTo(new BigDecimal(data.get("totalDiscount").toString())),
+                "totalDiscount should equal the promotion discount sum");
     }
 }

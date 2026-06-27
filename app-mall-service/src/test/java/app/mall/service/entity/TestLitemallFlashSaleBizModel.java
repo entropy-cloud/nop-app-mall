@@ -500,4 +500,30 @@ public class TestLitemallFlashSaleBizModel extends JunitBaseTestCase {
         assertTrue(code == null || code.contains("data-integrity-violation"),
                 "unexpected error: " + code + " msg=" + result.getMsg());
     }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testPublishAndUnpublishActivity() {
+        String id = createActivity(productId, new BigDecimal("99"), 100, 5, 0,
+                _AppMallDaoConstants.PROMOTION_STATUS_DRAFT);
+
+        ApiRequest<java.util.Map<String, Object>> pubReq = ApiRequest.build(java.util.Map.of("id", id));
+        ApiResponse<?> pubRes = graphQLEngine.executeRpc(graphQLEngine.newRpcContext(
+                GraphQLOperationType.mutation, "LitemallFlashSale__publishActivity", pubReq));
+        assertEquals(0, pubRes.getStatus(), "publishActivity failed: " + pubRes);
+        assertEquals(_AppMallDaoConstants.PROMOTION_STATUS_ACTIVE,
+                ((Number) ((java.util.Map<String, Object>) pubRes.getData()).get("status")).intValue());
+
+        // active -> publish again should fail
+        ApiResponse<?> republish = graphQLEngine.executeRpc(graphQLEngine.newRpcContext(
+                GraphQLOperationType.mutation, "LitemallFlashSale__publishActivity", pubReq));
+        assertNotEquals(0, republish.getStatus(), "re-publish active should fail");
+
+        // active -> unpublish -> closed
+        ApiResponse<?> unpubRes = graphQLEngine.executeRpc(graphQLEngine.newRpcContext(
+                GraphQLOperationType.mutation, "LitemallFlashSale__unpublishActivity", pubReq));
+        assertEquals(0, unpubRes.getStatus(), "unpublishActivity failed: " + unpubRes);
+        assertEquals(_AppMallDaoConstants.PROMOTION_STATUS_CLOSED,
+                ((Number) ((java.util.Map<String, Object>) unpubRes.getData()).get("status")).intValue());
+    }
 }

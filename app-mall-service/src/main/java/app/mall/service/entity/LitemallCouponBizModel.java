@@ -4,9 +4,11 @@ import app.mall.biz.ILitemallCouponBiz;
 import app.mall.biz.ILitemallCouponUserBiz;
 import app.mall.biz.ILitemallGoodsBiz;
 import app.mall.dao._AppMallDaoConstants;
+import app.mall.dao.dto.CouponUsageStatisticsBean;
 import app.mall.dao.entity.LitemallCoupon;
 import app.mall.dao.entity.LitemallCouponUser;
 import app.mall.dao.entity.LitemallGoods;
+import app.mall.dao.mapper.LitemallMarketingMapper;
 import io.nop.api.core.annotations.biz.BizModel;
 import io.nop.api.core.annotations.biz.BizMutation;
 import io.nop.api.core.annotations.biz.BizQuery;
@@ -20,7 +22,10 @@ import io.nop.biz.crud.CrudBizModel;
 import io.nop.core.context.IServiceContext;
 import jakarta.inject.Inject;
 
+import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -35,6 +40,14 @@ public class LitemallCouponBizModel extends CrudBizModel<LitemallCoupon> impleme
 
     @Inject
     ILitemallGoodsBiz goodsBiz;
+
+    // @SqlLibMapper for aggregation SQL that I*Biz/QueryBean cannot express (coupon GMV join). This
+    // is the sanctioned cross-entity aggregation path per AGENTS.md cross-entity rule.
+    @Inject
+    LitemallMarketingMapper marketingMapper;
+
+    private static final Timestamp MIN_TIMESTAMP = Timestamp.valueOf("1970-01-01 00:00:00");
+    private static final Timestamp MAX_TIMESTAMP = Timestamp.valueOf("2099-12-31 23:59:59");
 
     public LitemallCouponBizModel() {
         setEntityName(LitemallCoupon.class.getName());
@@ -56,6 +69,19 @@ public class LitemallCouponBizModel extends CrudBizModel<LitemallCoupon> impleme
         LitemallCoupon coupon = requireEntity(id, null, context);
         coupon.setStatus(2);
         return coupon;
+    }
+
+    @Override
+    @BizQuery
+    public CouponUsageStatisticsBean getCouponUsageStatistics(@Optional @Name("couponId") String couponId,
+                                                                @Optional @Name("startDate") String startDate,
+                                                                @Optional @Name("endDate") String endDate,
+                                                                IServiceContext context) {
+        Timestamp start = startDate != null && !startDate.isEmpty()
+                ? Timestamp.valueOf(LocalDate.parse(startDate).atTime(LocalTime.MIN)) : MIN_TIMESTAMP;
+        Timestamp end = endDate != null && !endDate.isEmpty()
+                ? Timestamp.valueOf(LocalDate.parse(endDate).atTime(LocalTime.MAX)) : MAX_TIMESTAMP;
+        return marketingMapper.getCouponUsageStatistics(couponId, start, end);
     }
 
     @Override

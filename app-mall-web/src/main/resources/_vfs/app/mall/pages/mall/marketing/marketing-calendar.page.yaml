@@ -1,0 +1,87 @@
+type: page
+title: 营销活动日历
+body:
+  - type: alert
+    level: warning
+    body: |-
+      <b>活动冲突检测口径</b>：同一 goodsId 在同一时段被 ≥2 个<b>进行中(10)</b>活动命中即视为冲突。
+      满减 goodsScope=ALL（全商品）与任何同时段 goodsId 活动都潜在冲突；满减 goodsScope=CATEGORY 与同时段 goodsId 活动按其分类下商品集求交集判定；限时折扣/秒杀/拼团均绑定 goodsId。
+      冲突在前端按 4 类活动列表的 goodsId + 时间窗集合判定，无需后端冲突 API。
+
+  - type: tabs
+    tabs:
+      - title: 满减活动
+        body:
+          - type: crud
+            api:
+              url: '@query:LitemallPromotionActivity__findPage'
+            filter:
+              status: 10
+            columns:
+              - name: name
+                label: 活动名称
+              - name: goodsScope
+                label: 商品范围
+              - name: status
+                label: 状态
+              - name: startTime
+                label: 开始时间
+              - name: endTime
+                label: 结束时间
+            orderBy: startTime asc
+
+      - title: 限时折扣
+        body:
+          - type: crud
+            api:
+              url: '@query:LitemallTimeDiscount__findPage'
+            filter:
+              status: 10
+            columns:
+              - name: goodsId
+                label: 商品ID
+              - name: productId
+                label: SKU
+              - name: status
+                label: 状态
+              - name: startTime
+                label: 开始时间
+              - name: endTime
+                label: 结束时间
+            orderBy: startTime asc
+
+      - title: 秒杀活动
+        body:
+          - type: crud
+            api:
+              url: '@query:LitemallFlashSale__findPage'
+            filter:
+              status: 10
+            columns:
+              - name: goodsId
+                label: 商品ID
+              - name: productId
+                label: SKU
+              - name: flashPrice
+                label: 秒杀价
+              - name: status
+                label: 状态
+            orderBy: startTime asc
+
+      - title: 拼团活动
+        body:
+          - type: crud
+            api:
+              url: '@query:LitemallPinTuanActivity__findPage'
+            filter:
+              status: 10
+            columns:
+              - name: goodsId
+                label: 商品ID
+              - name: productId
+                label: SKU
+              - name: pinTuanPrice
+                label: 拼团价
+              - name: status
+                label: 状态
+            orderBy: startTime asc

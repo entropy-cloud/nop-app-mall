@@ -3,9 +3,12 @@ package app.mall.service.entity;
 
 import app.mall.biz.ILitemallPromotionActivityBiz;
 import app.mall.dao._AppMallDaoConstants;
+import app.mall.dao.dto.PromotionEffectivenessBean;
 import app.mall.dao.entity.LitemallPromotionActivity;
 import app.mall.dao.entity.LitemallPromotionTier;
+import app.mall.dao.mapper.LitemallMarketingMapper;
 import io.nop.api.core.annotations.biz.BizModel;
+import io.nop.api.core.annotations.biz.BizMutation;
 import io.nop.api.core.annotations.biz.BizQuery;
 import io.nop.api.core.annotations.core.Name;
 import io.nop.api.core.annotations.core.Optional;
@@ -16,13 +19,19 @@ import io.nop.api.core.json.JSON;
 import io.nop.biz.crud.CrudBizModel;
 import io.nop.core.context.IServiceContext;
 import io.nop.orm.IOrmEntitySet;
+import jakarta.inject.Inject;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import static app.mall.service.AppMallErrors.ERR_PROMOTION_STATUS_TRANSITION_INVALID;
 
 @BizModel("LitemallPromotionActivity")
 public class LitemallPromotionActivityBizModel extends CrudBizModel<LitemallPromotionActivity> implements ILitemallPromotionActivityBiz {
@@ -30,12 +39,66 @@ public class LitemallPromotionActivityBizModel extends CrudBizModel<LitemallProm
         setEntityName(LitemallPromotionActivity.class.getName());
     }
 
+    // @SqlLibMapper for aggregation SQL (promotion GMV/discount) that QueryBean cannot express.
+    @Inject
+    LitemallMarketingMapper marketingMapper;
+
+    private static final Timestamp MIN_TIMESTAMP = Timestamp.valueOf("1970-01-01 00:00:00");
+    private static final Timestamp MAX_TIMESTAMP = Timestamp.valueOf("2099-12-31 23:59:59");
+
+    @Override
+    @BizMutation
+    public LitemallPromotionActivity publishActivity(@Name("id") String id, IServiceContext context) {
+        LitemallPromotionActivity activity = requireEntity(id, null, context);
+        Integer status = activity.getStatus();
+        if (status != null && (status == _AppMallDaoConstants.PROMOTION_STATUS_ACTIVE
+                || status == _AppMallDaoConstants.PROMOTION_STATUS_FINISHED)) {
+            throw new NopException(ERR_PROMOTION_STATUS_TRANSITION_INVALID)
+                    .param("activityId", id)
+                    .param("currentStatus", status)
+                    .param("targetStatus", _AppMallDaoConstants.PROMOTION_STATUS_ACTIVE);
+        }
+        activity.setStatus(_AppMallDaoConstants.PROMOTION_STATUS_ACTIVE);
+        return activity;
+    }
+
+    @Override
+    @BizMutation
+    public LitemallPromotionActivity unpublishActivity(@Name("id") String id, IServiceContext context) {
+        LitemallPromotionActivity activity = requireEntity(id, null, context);
+        Integer status = activity.getStatus();
+        if (status != null && (status == _AppMallDaoConstants.PROMOTION_STATUS_CLOSED
+                || status == _AppMallDaoConstants.PROMOTION_STATUS_DRAFT)) {
+            throw new NopException(ERR_PROMOTION_STATUS_TRANSITION_INVALID)
+                    .param("activityId", id)
+                    .param("currentStatus", status)
+                    .param("targetStatus", _AppMallDaoConstants.PROMOTION_STATUS_CLOSED);
+        }
+        activity.setStatus(_AppMallDaoConstants.PROMOTION_STATUS_CLOSED);
+        return activity;
+    }
+
+    @Override
+    @BizQuery
+    public PromotionEffectivenessBean getPromotionEffectiveness(@Optional @Name("startDate") String startDate,
+                                                                @Optional @Name("endDate") String endDate,
+                                                                IServiceContext context) {
+        // Aggregate promotion effectiveness by time window. Per-activity attribution requires a
+        // PromotionUsage entity (ORM model-gap, deferred per plan degradation path — see plan
+        // Deferred and marketing-and-promotions.md "已知约束"). This aggregate stat covers all
+        // orders whose promotionPrice > 0 within the window.
+        Timestamp start = startDate != null && !startDate.isEmpty()
+                ? Timestamp.valueOf(LocalDate.parse(startDate).atTime(LocalTime.MIN)) : MIN_TIMESTAMP;
+        Timestamp end = endDate != null && !endDate.isEmpty()
+                ? Timestamp.valueOf(LocalDate.parse(endDate).atTime(LocalTime.MAX)) : MAX_TIMESTAMP;
+        return marketingMapper.getPromotionEffectiveness(start, end);
+    }
+
     @Override
     @BizQuery
     public BigDecimal selectPromotionForOrder(@Name("goodsPrice") BigDecimal goodsPrice,
                                               @Optional @Name("goodsScopeIds") List<String> goodsScopeIds,
-                                              IServiceContext context) {
-        BigDecimal effectiveGoodsPrice = goodsPrice != null ? goodsPrice : BigDecimal.ZERO;
+                                              IServiceContext context) {        BigDecimal effectiveGoodsPrice = goodsPrice != null ? goodsPrice : BigDecimal.ZERO;
         List<String> scopeIds = goodsScopeIds != null ? goodsScopeIds : Collections.emptyList();
 
         LocalDateTime now = LocalDateTime.now();

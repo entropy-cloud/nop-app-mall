@@ -6,6 +6,7 @@ import app.mall.dao._AppMallDaoConstants;
 import app.mall.dao.entity.LitemallGoods;
 import app.mall.dao.entity.LitemallTimeDiscount;
 import io.nop.api.core.annotations.biz.BizModel;
+import io.nop.api.core.annotations.biz.BizMutation;
 import io.nop.api.core.annotations.biz.BizQuery;
 import io.nop.api.core.annotations.core.Name;
 import io.nop.api.core.annotations.core.Optional;
@@ -24,6 +25,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static app.mall.service.AppMallErrors.ERR_PROMOTION_STATUS_TRANSITION_INVALID;
 import static app.mall.service.AppMallErrors.ERR_TIME_DISCOUNT_INVALID_VALUE;
 
 @BizModel("LitemallTimeDiscount")
@@ -34,6 +36,38 @@ public class LitemallTimeDiscountBizModel extends CrudBizModel<LitemallTimeDisco
 
     @Inject
     ILitemallGoodsBiz goodsBiz;
+
+    @Override
+    @BizMutation
+    public LitemallTimeDiscount publishActivity(@Name("id") String id, IServiceContext context) {
+        LitemallTimeDiscount discount = requireEntity(id, null, context);
+        Integer status = discount.getStatus();
+        if (status != null && (status == _AppMallDaoConstants.PROMOTION_STATUS_ACTIVE
+                || status == _AppMallDaoConstants.PROMOTION_STATUS_FINISHED)) {
+            throw new NopException(ERR_PROMOTION_STATUS_TRANSITION_INVALID)
+                    .param("activityId", id)
+                    .param("currentStatus", status)
+                    .param("targetStatus", _AppMallDaoConstants.PROMOTION_STATUS_ACTIVE);
+        }
+        discount.setStatus(_AppMallDaoConstants.PROMOTION_STATUS_ACTIVE);
+        return discount;
+    }
+
+    @Override
+    @BizMutation
+    public LitemallTimeDiscount unpublishActivity(@Name("id") String id, IServiceContext context) {
+        LitemallTimeDiscount discount = requireEntity(id, null, context);
+        Integer status = discount.getStatus();
+        if (status != null && (status == _AppMallDaoConstants.PROMOTION_STATUS_CLOSED
+                || status == _AppMallDaoConstants.PROMOTION_STATUS_DRAFT)) {
+            throw new NopException(ERR_PROMOTION_STATUS_TRANSITION_INVALID)
+                    .param("activityId", id)
+                    .param("currentStatus", status)
+                    .param("targetStatus", _AppMallDaoConstants.PROMOTION_STATUS_CLOSED);
+        }
+        discount.setStatus(_AppMallDaoConstants.PROMOTION_STATUS_CLOSED);
+        return discount;
+    }
 
     @Override
     @BizQuery

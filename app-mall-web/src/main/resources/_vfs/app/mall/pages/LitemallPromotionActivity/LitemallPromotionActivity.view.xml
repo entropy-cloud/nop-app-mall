@@ -67,6 +67,24 @@
             <rowActions x:override="bounded-merge">
                 <action id="row-view-button"/>
                 <action id="row-update-button" actionType="drawer"/>
+                <action id="publish-button" label="上架" level="success"
+                        visibleOn="${status !== 10 &amp;&amp; status !== 20}">
+                    <api url="@mutation:LitemallPromotionActivity__publishActivity">
+                        <data>
+                            <id>$id</id>
+                        </data>
+                    </api>
+                    <confirmText>确认上架该满减活动吗？</confirmText>
+                </action>
+                <action id="unpublish-button" label="下架" level="warning"
+                        visibleOn="${status === 10 || status === 20}">
+                    <api url="@mutation:LitemallPromotionActivity__unpublishActivity">
+                        <data>
+                            <id>$id</id>
+                        </data>
+                    </api>
+                    <confirmText>确认下架该满减活动吗？</confirmText>
+                </action>
                 <action id="row-delete-button"/>
             </rowActions>
         </crud>

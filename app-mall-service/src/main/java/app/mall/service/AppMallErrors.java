@@ -450,4 +450,9 @@ public interface AppMallErrors {
     ErrorCode ERR_PIN_TUAN_PRICE_INVALID =
             define("nop.err.mall.pin-tuan.price-invalid",
                     "拼团价必须低于零售价");
+
+    // 营销活动状态切换错误码（满减/限时折扣/秒杀/拼团 共用）
+    ErrorCode ERR_PROMOTION_STATUS_TRANSITION_INVALID =
+            define("nop.err.mall.promotion.status-transition-invalid",
+                    "营销活动状态切换不合法");
 }

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<sql-lib x:schema="/nop/schema/orm/sql-lib.xdef" xmlns:x="/nop/schema/xdsl.xdef">
+    <sqls>
+        <!-- 优惠券核销统计：领取数/已使用数/核销拉动 GMV。
+             couponId 可空（空=全量券聚合）；startDate/endDate 由调用方填充 MIN/MAX 时间戳兜底。 -->
+        <sql name="getCouponUsageStatistics" sqlMethod="findFirst"
+             colNameCamelCase="true"
+             rowType="app.mall.dao.dto.CouponUsageStatisticsBean">
+            <arg name="couponId"/>
+            <arg name="startDate"/>
+            <arg name="endDate"/>
+            <source>
+                SELECT
+                  COUNT(*) AS CLAIMED_COUNT,
+                  SUM(CASE WHEN CAST(cu.STATUS AS INT) = 1 THEN 1 ELSE 0 END) AS USED_COUNT,
+                  COALESCE(SUM(CASE WHEN CAST(cu.STATUS AS INT) = 1 THEN COALESCE(o.ACTUAL_PRICE, 0) ELSE 0 END), 0) AS PULLED_GMV
+                FROM litemall_coupon_user cu
+                LEFT JOIN litemall_order o ON o.ID = cu.ORDER_ID AND CAST(o.DELETED AS INT) = 0
+                WHERE CAST(cu.DELETED AS INT) = 0
+                  AND (${couponId} IS NULL OR cu.COUPON_ID = ${couponId})
+                  AND cu.ADD_TIME &gt;= ${startDate}
+                  AND cu.ADD_TIME &lt;= ${endDate}
+            </source>
+        </sql>
+
+        <!-- 满减效果统计（聚合口径，按时间窗）。
+             注：Order 无 promotionActivityId，按活动归因需 PromotionUsage 实体（ORM model-gap，见计划 Deferred）。
+             本聚合口径统计 promotionPrice>0 的订单的 GMV/优惠额/参与单数。 -->
+        <sql name="getPromotionEffectiveness" sqlMethod="findFirst"
+             colNameCamelCase="true"
+             rowType="app.mall.dao.dto.PromotionEffectivenessBean">
+            <arg name="startDate"/>
+            <arg name="endDate"/>
+            <source>
+                SELECT
+                  COUNT(*) AS PROMOTED_ORDER_COUNT,
+                  COALESCE(SUM(ORDER_PRICE), 0) AS TOTAL_GMV,
+                  COALESCE(SUM(PROMOTION_PRICE), 0) AS TOTAL_DISCOUNT
+                FROM litemall_order
+                WHERE CAST(DELETED AS INT) = 0
+                  AND CAST(ORDER_STATUS AS INT) NOT IN (102, 103)
+                  AND PROMOTION_PRICE IS NOT NULL
+                  AND PROMOTION_PRICE &gt; 0
+                  AND ADD_TIME &gt;= ${startDate}
+                  AND ADD_TIME &lt;= ${endDate}
+            </source>
+        </sql>
+
+        <!-- 拼团效果统计：开团数/成团数/参与人数/GMV。
+             activityId 可空（空=全量拼团聚合）；按 group.addTime 时间窗过滤。
+             参与人数/GMV 经标量子查询派生（member→order 为 1:1，无 SUM 扇出）。 -->
+        <sql name="getPinTuanEffectiveness" sqlMethod="findFirst"
+             colNameCamelCase="true"
+             rowType="app.mall.dao.dto.PinTuanEffectivenessBean">
+            <arg name="activityId"/>
+            <arg name="startDate"/>
+            <arg name="endDate"/>
+            <source>
+                SELECT
+                  COUNT(*) AS OPENED_GROUPS,
+                  COALESCE(SUM(CASE WHEN CAST(g.STATUS AS INT) = 10 THEN 1 ELSE 0 END), 0) AS SUCCESS_GROUPS,
+                  (SELECT COUNT(DISTINCT m.USER_ID)
+                     FROM litemall_pin_tuan_member m
+                     INNER JOIN litemall_pin_tuan_group g2 ON g2.ID = m.GROUP_ID
+                     WHERE CAST(m.DELETED AS INT) = 0
+                       AND (${activityId} IS NULL OR g2.ACTIVITY_ID = ${activityId})
+                       AND g2.ADD_TIME &gt;= ${startDate}
+                       AND g2.ADD_TIME &lt;= ${endDate}) AS PARTICIPANT_COUNT,
+                  (SELECT COALESCE(SUM(o.ACTUAL_PRICE), 0)
+                     FROM litemall_pin_tuan_member m
+                     INNER JOIN litemall_pin_tuan_group g3 ON g3.ID = m.GROUP_ID
+                     LEFT JOIN litemall_order o ON o.ID = m.ORDER_ID AND CAST(o.DELETED AS INT) = 0
+                     WHERE CAST(m.DELETED AS INT) = 0
+                       AND (${activityId} IS NULL OR g3.ACTIVITY_ID = ${activityId})
+                       AND g3.ADD_TIME &gt;= ${startDate}
+                       AND g3.ADD_TIME &lt;= ${endDate}) AS TOTAL_GMV
+                FROM litemall_pin_tuan_group g
+                WHERE CAST(g.DELETED AS INT) = 0
+                  AND (${activityId} IS NULL OR g.ACTIVITY_ID = ${activityId})
+                  AND g.ADD_TIME &gt;= ${startDate}
+                  AND g.ADD_TIME &lt;= ${endDate}
+            </source>
+        </sql>
+    </sqls>
+</sql-lib>

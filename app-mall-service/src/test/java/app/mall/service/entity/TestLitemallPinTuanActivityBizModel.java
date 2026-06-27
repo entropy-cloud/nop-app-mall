@@ -369,4 +369,90 @@ public class TestLitemallPinTuanActivityBizModel extends JunitBaseTestCase {
                 .requireEntityById(groupId);
         assertEquals(20, updated.getStatus(), "group should be FAILED after expire");
     }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testGetPinTuanEffectiveness() {
+        String order1 = createOrderWithGoods("1", "PT-STAT-1");
+        String order2 = createOrderWithGoods("2", "PT-STAT-2");
+        String order3 = createOrderWithGoods("3", "PT-STAT-3");
+
+        // success group (status=10) with 2 members
+        LitemallPinTuanGroup successGroup = daoProvider.daoFor(LitemallPinTuanGroup.class).newEntity();
+        successGroup.setActivityId(activityId);
+        successGroup.setCreatorUserId("1");
+        successGroup.setOrderId(order1);
+        successGroup.setStatus(10);
+        daoProvider.daoFor(LitemallPinTuanGroup.class).saveEntity(successGroup);
+        String successGroupId = successGroup.orm_idString();
+
+        LitemallPinTuanMember m1 = daoProvider.daoFor(LitemallPinTuanMember.class).newEntity();
+        m1.setGroupId(successGroupId);
+        m1.setUserId("1");
+        m1.setOrderId(order1);
+        daoProvider.daoFor(LitemallPinTuanMember.class).saveEntity(m1);
+        LitemallPinTuanMember m2 = daoProvider.daoFor(LitemallPinTuanMember.class).newEntity();
+        m2.setGroupId(successGroupId);
+        m2.setUserId("2");
+        m2.setOrderId(order2);
+        daoProvider.daoFor(LitemallPinTuanMember.class).saveEntity(m2);
+
+        // active group (status=0) with 1 member
+        LitemallPinTuanGroup activeGroup = daoProvider.daoFor(LitemallPinTuanGroup.class).newEntity();
+        activeGroup.setActivityId(activityId);
+        activeGroup.setCreatorUserId("3");
+        activeGroup.setOrderId(order3);
+        activeGroup.setStatus(0);
+        daoProvider.daoFor(LitemallPinTuanGroup.class).saveEntity(activeGroup);
+        LitemallPinTuanMember m3 = daoProvider.daoFor(LitemallPinTuanMember.class).newEntity();
+        m3.setGroupId(activeGroup.orm_idString());
+        m3.setUserId("3");
+        m3.setOrderId(order3);
+        daoProvider.daoFor(LitemallPinTuanMember.class).saveEntity(m3);
+
+        ApiRequest<Map<String, Object>> req = ApiRequest.build(Map.of("activityId", activityId));
+        IGraphQLExecutionContext ctx = graphQLEngine.newRpcContext(
+                GraphQLOperationType.query, "LitemallPinTuanActivity__getPinTuanEffectiveness", req);
+        ApiResponse<?> result = graphQLEngine.executeRpc(ctx);
+        assertEquals(0, result.getStatus(), "getPinTuanEffectiveness failed: " + result);
+
+        Map<String, Object> data = (Map<String, Object>) result.getData();
+        assertEquals(2, ((Number) data.get("openedGroups")).intValue(), "openedGroups");
+        assertEquals(1, ((Number) data.get("successGroups")).intValue(), "successGroups");
+        assertEquals(3, ((Number) data.get("participantCount")).intValue(), "participantCount");
+        assertEquals(0, new BigDecimal("300").compareTo(new BigDecimal(data.get("totalGmv").toString())),
+                "totalGmv should be sum of the 3 member orders' actualPrice");
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testPublishAndUnpublishActivity() {
+        LitemallPinTuanActivity draft = daoProvider.daoFor(LitemallPinTuanActivity.class).newEntity();
+        draft.setGoodsId(goodsId);
+        draft.setPinTuanPrice(new BigDecimal("80.00"));
+        draft.setMinUserCount(3);
+        draft.setMaxUserCount(3);
+        draft.setExpireHours(24);
+        draft.setStatus(0);
+        daoProvider.daoFor(LitemallPinTuanActivity.class).saveEntity(draft);
+        String id = draft.orm_idString();
+
+        // draft(0) -> publish -> active(10)
+        ApiRequest<Map<String, Object>> pubReq = ApiRequest.build(Map.of("id", id));
+        ApiResponse<?> pubRes = graphQLEngine.executeRpc(graphQLEngine.newRpcContext(
+                GraphQLOperationType.mutation, "LitemallPinTuanActivity__publishActivity", pubReq));
+        assertEquals(0, pubRes.getStatus(), "publishActivity failed: " + pubRes);
+        assertEquals(10, ((Number) ((Map<String, Object>) pubRes.getData()).get("status")).intValue());
+
+        // active(10) -> publish again should fail
+        ApiResponse<?> republish = graphQLEngine.executeRpc(graphQLEngine.newRpcContext(
+                GraphQLOperationType.mutation, "LitemallPinTuanActivity__publishActivity", pubReq));
+        assertNotEquals(0, republish.getStatus(), "re-publish active should fail");
+
+        // active(10) -> unpublish -> closed(30)
+        ApiResponse<?> unpubRes = graphQLEngine.executeRpc(graphQLEngine.newRpcContext(
+                GraphQLOperationType.mutation, "LitemallPinTuanActivity__unpublishActivity", pubReq));
+        assertEquals(0, unpubRes.getStatus(), "unpublishActivity failed: " + unpubRes);
+        assertEquals(30, ((Number) ((Map<String, Object>) unpubRes.getData()).get("status")).intValue());
+    }
 }

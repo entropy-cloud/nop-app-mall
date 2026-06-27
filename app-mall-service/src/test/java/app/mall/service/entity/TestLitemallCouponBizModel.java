@@ -1,7 +1,9 @@
 package app.mall.service.entity;
 
 import app.mall.dao.entity.LitemallCoupon;
+import app.mall.dao.entity.LitemallCouponUser;
 import app.mall.dao.entity.LitemallGoods;
+import app.mall.dao.entity.LitemallOrder;
 import io.nop.api.core.annotations.autotest.NopTestConfig;
 import io.nop.api.core.annotations.core.OptionalBoolean;
 import io.nop.api.core.beans.ApiRequest;
@@ -258,5 +260,65 @@ public class TestLitemallCouponBizModel extends JunitBaseTestCase {
             assertEquals(false, item.get("claimedByMe"),
                     "anonymous user (userId=null) should always see claimedByMe=false");
         }
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testGetCouponUsageStatistics() {
+        // Build an order that the used coupon pulls GMV from.
+        LitemallOrder order = daoProvider.daoFor(LitemallOrder.class).newEntity();
+        order.setUserId("1");
+        order.setOrderSn("COUPON-STAT-001");
+        order.setOrderStatus(201);
+        order.setAftersaleStatus(0);
+        order.setConsignee("测试用户");
+        order.setMobile("13800138000");
+        order.setAddress("测试地址");
+        order.setMessage("coupon-stat");
+        order.setGoodsPrice(new BigDecimal("100"));
+        order.setFreightPrice(BigDecimal.ZERO);
+        order.setCouponPrice(BigDecimal.ZERO);
+        order.setIntegralPrice(BigDecimal.ZERO);
+        order.setGrouponPrice(BigDecimal.ZERO);
+        order.setPromotionPrice(BigDecimal.ZERO);
+        order.setPinTuanPrice(BigDecimal.ZERO);
+        order.setOrderPrice(new BigDecimal("100"));
+        order.setActualPrice(new BigDecimal("100"));
+        order.setComments(0);
+        order.setDeleted(false);
+        daoProvider.daoFor(LitemallOrder.class).saveEntity(order);
+        String orderId = order.orm_idString();
+
+        // 2 claimed-but-unused + 1 used (status=1) → claimed=3, used=1, pulledGmv=100
+        for (int i = 0; i < 2; i++) {
+            LitemallCouponUser unused = daoProvider.daoFor(LitemallCouponUser.class).newEntity();
+            unused.setUserId("1");
+            unused.setCouponId(couponId);
+            unused.setStatus(0);
+            unused.setStartTime(LocalDateTime.now().minusDays(1));
+            unused.setEndTime(LocalDateTime.now().plusDays(30));
+            daoProvider.daoFor(LitemallCouponUser.class).saveEntity(unused);
+        }
+        LitemallCouponUser used = daoProvider.daoFor(LitemallCouponUser.class).newEntity();
+        used.setUserId("1");
+        used.setCouponId(couponId);
+        used.setStatus(1);
+        used.setOrderId(orderId);
+        used.setUsedTime(LocalDateTime.now());
+        used.setStartTime(LocalDateTime.now().minusDays(1));
+        used.setEndTime(LocalDateTime.now().plusDays(30));
+        daoProvider.daoFor(LitemallCouponUser.class).saveEntity(used);
+
+        ApiRequest<Map<String, Object>> req = ApiRequest.build(Map.of("couponId", couponId));
+        IGraphQLExecutionContext ctx = graphQLEngine.newRpcContext(
+                GraphQLOperationType.query, "LitemallCoupon__getCouponUsageStatistics", req);
+        ApiResponse<?> result = graphQLEngine.executeRpc(ctx);
+        assertEquals(0, result.getStatus(), "getCouponUsageStatistics failed: " + result);
+
+        Map<String, Object> data = (Map<String, Object>) result.getData();
+        assertEquals(3, ((Number) data.get("claimedCount")).intValue(), "claimedCount");
+        assertEquals(1, ((Number) data.get("usedCount")).intValue(), "usedCount");
+        assertEquals(0, new BigDecimal("100").compareTo(new BigDecimal(data.get("pulledGmv").toString())),
+                "pulledGmv should equal the used order actualPrice");
     }
 }

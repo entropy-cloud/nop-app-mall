@@ -4,10 +4,12 @@ package app.mall.biz;
 import io.nop.api.core.annotations.biz.BizMutation;
 import io.nop.api.core.annotations.biz.BizQuery;
 import io.nop.api.core.annotations.core.Name;
+import io.nop.api.core.annotations.core.Optional;
 import io.nop.api.core.beans.PageBean;
 import io.nop.core.context.IServiceContext;
 import io.nop.orm.biz.ICrudBiz;
 
+import app.mall.dao.dto.PinTuanEffectivenessBean;
 import app.mall.dao.entity.LitemallPinTuanActivity;
 import app.mall.dao.entity.LitemallPinTuanGroup;
 
@@ -36,4 +38,16 @@ public interface ILitemallPinTuanActivityBiz extends ICrudBiz<LitemallPinTuanAct
 
     @BizMutation
     int expirePinTuans(IServiceContext context);
+
+    @BizMutation
+    LitemallPinTuanActivity publishActivity(@Name("id") String id, IServiceContext context);
+
+    @BizMutation
+    LitemallPinTuanActivity unpublishActivity(@Name("id") String id, IServiceContext context);
+
+    @BizQuery
+    PinTuanEffectivenessBean getPinTuanEffectiveness(@Optional @Name("activityId") String activityId,
+                                                     @Optional @Name("startDate") String startDate,
+                                                     @Optional @Name("endDate") String endDate,
+                                                     IServiceContext context);
 }

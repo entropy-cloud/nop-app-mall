@@ -1,5 +1,6 @@
 package app.mall.biz;
 
+import io.nop.api.core.annotations.biz.BizMutation;
 import io.nop.api.core.annotations.biz.BizQuery;
 import io.nop.api.core.annotations.core.Name;
 import io.nop.api.core.annotations.core.Optional;
@@ -16,4 +17,10 @@ public interface ILitemallTimeDiscountBiz extends ICrudBiz<LitemallTimeDiscount>
     Map<String, Object> selectTimeDiscountForProduct(@Name("goodsId") String goodsId,
                                                       @Optional @Name("productId") String productId,
                                                       IServiceContext context);
+
+    @BizMutation
+    LitemallTimeDiscount publishActivity(@Name("id") String id, IServiceContext context);
+
+    @BizMutation
+    LitemallTimeDiscount unpublishActivity(@Name("id") String id, IServiceContext context);
 }

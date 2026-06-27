@@ -100,6 +100,41 @@
             </children>
         </resource>
 
+        <!-- 营销活动管理：满减/限时折扣/秒杀/拼团 4 类活动统一管理入口 + 总览/日历/效果。
+             与 promotion-manage（推广：广告/专题/团购）业务域不同，独立 TOPM。 -->
+        <resource id="marketing-manage" displayName="营销活动管理" icon="ion:grid-outline" resourceType="TOPM"
+                  routePath="/marketing-manage" component="layouts/default/index" orderNo="408">
+            <children>
+                <resource id="mall-marketing-overview" displayName="营销总览" orderNo="408"
+                          icon="ant-design:appstore-twotone" component="AMIS"
+                          resourceType="SUBM" url="/app/mall/pages/mall/marketing/marketing-overview.page.yaml"/>
+
+                <resource id="mall-marketing-calendar" displayName="活动日历" orderNo="409"
+                          icon="ant-design:appstore-twotone" component="AMIS"
+                          resourceType="SUBM" url="/app/mall/pages/mall/marketing/marketing-calendar.page.yaml"/>
+
+                <resource id="mall-marketing-effect" displayName="效果分析" orderNo="410"
+                          icon="ant-design:appstore-twotone" component="AMIS"
+                          resourceType="SUBM" url="/app/mall/pages/mall/marketing/marketing-effect.page.yaml"/>
+
+                <resource id="mall-promotion-activity" displayName="满减活动" orderNo="411"
+                          icon="ant-design:appstore-twotone" component="AMIS"
+                          resourceType="SUBM" url="/app/mall/pages/LitemallPromotionActivity/main.page.yaml"/>
+
+                <resource id="mall-time-discount" displayName="限时折扣" orderNo="412"
+                          icon="ant-design:appstore-twotone" component="AMIS"
+                          resourceType="SUBM" url="/app/mall/pages/LitemallTimeDiscount/main.page.yaml"/>
+
+                <resource id="mall-flash-sale" displayName="秒杀活动" orderNo="413"
+                          icon="ant-design:appstore-twotone" component="AMIS"
+                          resourceType="SUBM" url="/app/mall/pages/LitemallFlashSale/main.page.yaml"/>
+
+                <resource id="mall-pin-tuan-activity" displayName="拼团活动" orderNo="414"
+                          icon="ant-design:appstore-twotone" component="AMIS"
+                          resourceType="SUBM" url="/app/mall/pages/LitemallPinTuanActivity/main.page.yaml"/>
+            </children>
+        </resource>
+
 <!--        <resource id="config-manage" displayName="配置管理" icon="ion:grid-outline" resourceType="TOPM"-->
 <!--                  routePath="/config-manage" component="layouts/default/index" orderNo="500">-->
 <!--            <children>-->

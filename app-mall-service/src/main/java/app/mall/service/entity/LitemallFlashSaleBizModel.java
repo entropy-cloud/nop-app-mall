@@ -53,6 +53,7 @@ import static app.mall.service.AppMallErrors.ERR_FLASH_SALE_SESSION_NOT_IN_WINDO
 import static app.mall.service.AppMallErrors.ERR_FLASH_SALE_SOLD_OUT;
 import static app.mall.service.AppMallErrors.ERR_ORDER_ADDRESS_INVALID;
 import static app.mall.service.AppMallErrors.ERR_ORDER_STOCK_INSUFFICIENT;
+import static app.mall.service.AppMallErrors.ERR_PROMOTION_STATUS_TRANSITION_INVALID;
 
 @BizModel("LitemallFlashSale")
 public class LitemallFlashSaleBizModel extends CrudBizModel<LitemallFlashSale> implements ILitemallFlashSaleBiz {
@@ -98,6 +99,38 @@ public class LitemallFlashSaleBizModel extends CrudBizModel<LitemallFlashSale> i
 
     public LitemallFlashSaleBizModel() {
         setEntityName(LitemallFlashSale.class.getName());
+    }
+
+    @Override
+    @BizMutation
+    public LitemallFlashSale publishActivity(@Name("id") String id, IServiceContext context) {
+        LitemallFlashSale activity = requireEntity(id, null, context);
+        Integer status = activity.getStatus();
+        if (status != null && (status == _AppMallDaoConstants.PROMOTION_STATUS_ACTIVE
+                || status == _AppMallDaoConstants.PROMOTION_STATUS_FINISHED)) {
+            throw new NopException(ERR_PROMOTION_STATUS_TRANSITION_INVALID)
+                    .param("activityId", id)
+                    .param("currentStatus", status)
+                    .param("targetStatus", _AppMallDaoConstants.PROMOTION_STATUS_ACTIVE);
+        }
+        activity.setStatus(_AppMallDaoConstants.PROMOTION_STATUS_ACTIVE);
+        return activity;
+    }
+
+    @Override
+    @BizMutation
+    public LitemallFlashSale unpublishActivity(@Name("id") String id, IServiceContext context) {
+        LitemallFlashSale activity = requireEntity(id, null, context);
+        Integer status = activity.getStatus();
+        if (status != null && (status == _AppMallDaoConstants.PROMOTION_STATUS_CLOSED
+                || status == _AppMallDaoConstants.PROMOTION_STATUS_DRAFT)) {
+            throw new NopException(ERR_PROMOTION_STATUS_TRANSITION_INVALID)
+                    .param("activityId", id)
+                    .param("currentStatus", status)
+                    .param("targetStatus", _AppMallDaoConstants.PROMOTION_STATUS_CLOSED);
+        }
+        activity.setStatus(_AppMallDaoConstants.PROMOTION_STATUS_CLOSED);
+        return activity;
     }
 
     @Override

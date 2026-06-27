@@ -1,0 +1,95 @@
+type: page
+title: 营销活动管理总览
+body:
+  - type: alert
+    level: info
+    body: '营销活动管理统一入口：满减 / 限时折扣 / 秒杀 / 拼团 / 优惠券。各类活动的管理页、上下架动作、活动日历与效果分析见左侧菜单「营销活动管理」。'
+
+  - type: grid
+    columns:
+      - md: 4
+        body:
+          - type: card
+            header:
+              title: 满减活动
+            body:
+              - type: tpl
+                tpl: '订单级门槛优惠，多档自动最优。支持上下架状态切换与商品范围（全商品/分类/商品）。'
+              - type: button
+                label: 进入满减管理
+                level: primary
+                actionType: link
+                link: '/marketing-manage/mall-promotion-activity'
+      - md: 4
+        body:
+          - type: card
+            header:
+              title: 限时折扣
+            body:
+              - type: tpl
+                tpl: '商品级/SKU 级短期降价，按时间窗自动生效，作用于商品单价层。'
+              - type: button
+                label: 进入限时折扣管理
+                level: primary
+                actionType: link
+                link: '/marketing-manage/mall-time-discount'
+      - md: 4
+        body:
+          - type: card
+            header:
+              title: 秒杀活动
+            body:
+              - type: tpl
+                tpl: '按场次组织的限量低价抢购，不走购物车直接购买，秒杀价即成交单价。'
+              - type: button
+                label: 进入秒杀管理
+                level: primary
+                actionType: link
+                link: '/marketing-manage/mall-flash-sale'
+
+  - type: grid
+    columns:
+      - md: 4
+        body:
+          - type: card
+            header:
+              title: 拼团活动
+            body:
+              - type: tpl
+                tpl: '社交裂变拼团，团长开团 + 好友参团，成团享专享价，超时失败退款。'
+              - type: button
+                label: 进入拼团管理
+                level: primary
+                actionType: link
+                link: '/marketing-manage/mall-pin-tuan-activity'
+      - md: 4
+        body:
+          - type: card
+            header:
+              title: 优惠券
+            body:
+              - type: tpl
+                tpl: '优惠券规则与投放配置（领券中心 / 注册赠 / 兑换码），含核销统计。'
+              - type: button
+                label: 进入优惠券管理
+                level: primary
+                actionType: link
+                link: '/promotion-manage/mall-coupon-manage'
+      - md: 4
+        body:
+          - type: card
+            header:
+              title: 活动日历 / 效果分析
+            body:
+              - type: tpl
+                tpl: '按时间轴查看进行中/即将开始的活动，并查看各类活动效果。'
+              - type: button
+                label: 查看活动日历
+                level: primary
+                actionType: link
+                link: '/marketing-manage/mall-marketing-calendar'
+              - type: button
+                label: 查看效果分析
+                level: success
+                actionType: link
+                link: '/marketing-manage/mall-marketing-effect'

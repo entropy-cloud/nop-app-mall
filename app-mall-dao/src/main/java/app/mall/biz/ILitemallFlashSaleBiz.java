@@ -34,4 +34,10 @@ public interface ILitemallFlashSaleBiz extends ICrudBiz<LitemallFlashSale> {
     Map<String, Object> flashSaleForGoods(@Name("goodsId") String goodsId,
                                            @Optional @Name("productId") String productId,
                                            IServiceContext context);
+
+    @BizMutation
+    LitemallFlashSale publishActivity(@Name("id") String id, IServiceContext context);
+
+    @BizMutation
+    LitemallFlashSale unpublishActivity(@Name("id") String id, IServiceContext context);
 }

@@ -9,6 +9,7 @@ import app.mall.biz.ILitemallPinTuanMemberBiz;
 import app.mall.biz.ILitemallPointsAccountBiz;
 import app.mall.biz.ILitemallPointsFlowBiz;
 import app.mall.dao._AppMallDaoConstants;
+import app.mall.dao.dto.PinTuanEffectivenessBean;
 import app.mall.dao.entity.LitemallCouponUser;
 import app.mall.dao.entity.LitemallOrder;
 import app.mall.dao.entity.LitemallOrderGoods;
@@ -17,6 +18,7 @@ import app.mall.dao.entity.LitemallPinTuanGroup;
 import app.mall.dao.entity.LitemallPinTuanMember;
 import app.mall.dao.entity.LitemallPointsFlow;
 import app.mall.dao.mapper.LitemallGoodsProductMapper;
+import app.mall.dao.mapper.LitemallMarketingMapper;
 import app.mall.pay.PayRefundRequestBean;
 import app.mall.pay.PayRefundResponseBean;
 import app.mall.pay.PayService;
@@ -25,6 +27,7 @@ import io.nop.api.core.annotations.biz.BizModel;
 import io.nop.api.core.annotations.biz.BizMutation;
 import io.nop.api.core.annotations.biz.BizQuery;
 import io.nop.api.core.annotations.core.Name;
+import io.nop.api.core.annotations.core.Optional;
 import io.nop.api.core.beans.FilterBeans;
 import io.nop.api.core.beans.PageBean;
 import io.nop.api.core.beans.query.QueryBean;
@@ -35,7 +38,10 @@ import jakarta.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -75,8 +81,60 @@ public class LitemallPinTuanActivityBizModel extends CrudBizModel<LitemallPinTua
     @Inject
     MallNotificationService notificationService;
 
+    // @SqlLibMapper for aggregation SQL (pintuan effectiveness) that I*Biz/QueryBean cannot express.
+    @Inject
+    LitemallMarketingMapper marketingMapper;
+
+    private static final Timestamp MIN_TIMESTAMP = Timestamp.valueOf("1970-01-01 00:00:00");
+    private static final Timestamp MAX_TIMESTAMP = Timestamp.valueOf("2099-12-31 23:59:59");
+
     public LitemallPinTuanActivityBizModel() {
         setEntityName(LitemallPinTuanActivity.class.getName());
+    }
+
+    @Override
+    @BizMutation
+    public LitemallPinTuanActivity publishActivity(@Name("id") String id, IServiceContext context) {
+        LitemallPinTuanActivity activity = requireEntity(id, null, context);
+        Integer status = activity.getStatus();
+        if (status != null && (status == _AppMallDaoConstants.PROMOTION_STATUS_ACTIVE
+                || status == _AppMallDaoConstants.PROMOTION_STATUS_FINISHED)) {
+            throw new NopException(ERR_PROMOTION_STATUS_TRANSITION_INVALID)
+                    .param("activityId", id)
+                    .param("currentStatus", status)
+                    .param("targetStatus", _AppMallDaoConstants.PROMOTION_STATUS_ACTIVE);
+        }
+        activity.setStatus(_AppMallDaoConstants.PROMOTION_STATUS_ACTIVE);
+        return activity;
+    }
+
+    @Override
+    @BizMutation
+    public LitemallPinTuanActivity unpublishActivity(@Name("id") String id, IServiceContext context) {
+        LitemallPinTuanActivity activity = requireEntity(id, null, context);
+        Integer status = activity.getStatus();
+        if (status != null && (status == _AppMallDaoConstants.PROMOTION_STATUS_CLOSED
+                || status == _AppMallDaoConstants.PROMOTION_STATUS_DRAFT)) {
+            throw new NopException(ERR_PROMOTION_STATUS_TRANSITION_INVALID)
+                    .param("activityId", id)
+                    .param("currentStatus", status)
+                    .param("targetStatus", _AppMallDaoConstants.PROMOTION_STATUS_CLOSED);
+        }
+        activity.setStatus(_AppMallDaoConstants.PROMOTION_STATUS_CLOSED);
+        return activity;
+    }
+
+    @Override
+    @BizQuery
+    public PinTuanEffectivenessBean getPinTuanEffectiveness(@Optional @Name("activityId") String activityId,
+                                                            @Optional @Name("startDate") String startDate,
+                                                            @Optional @Name("endDate") String endDate,
+                                                            IServiceContext context) {
+        Timestamp start = startDate != null && !startDate.isEmpty()
+                ? Timestamp.valueOf(LocalDate.parse(startDate).atTime(LocalTime.MIN)) : MIN_TIMESTAMP;
+        Timestamp end = endDate != null && !endDate.isEmpty()
+                ? Timestamp.valueOf(LocalDate.parse(endDate).atTime(LocalTime.MAX)) : MAX_TIMESTAMP;
+        return marketingMapper.getPinTuanEffectiveness(activityId, start, end);
     }
 
     @Override

@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 @NopTestConfig(localDb = true, initDatabaseSchema = OptionalBoolean.TRUE)
@@ -198,5 +199,33 @@ public class TestLitemallTimeDiscountBizModel extends JunitBaseTestCase {
         assertEquals(50, m.get("stockLimit"), "stockLimit should be returned for countdown/progress");
         assertEquals(50, m.get("remainingStock"));
         assertEquals(d.getEndTime(), m.get("endTime"), "endTime should be returned for countdown");
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testPublishAndUnpublishActivity() {
+        LitemallTimeDiscount draft = createDiscount(_AppMallDaoConstants.DISCOUNT_TYPE_AMOUNT, new BigDecimal("20"),
+                _AppMallDaoConstants.PROMOTION_STATUS_DRAFT, null, 0,
+                LocalDateTime.now().minusDays(1), LocalDateTime.now().plusDays(1));
+        String id = draft.orm_idString();
+
+        ApiRequest<Map<String, Object>> pubReq = ApiRequest.build(Map.of("id", id));
+        ApiResponse<?> pubRes = graphQLEngine.executeRpc(graphQLEngine.newRpcContext(
+                GraphQLOperationType.mutation, "LitemallTimeDiscount__publishActivity", pubReq));
+        assertEquals(0, pubRes.getStatus(), "publishActivity failed: " + pubRes);
+        assertEquals(_AppMallDaoConstants.PROMOTION_STATUS_ACTIVE,
+                ((Number) ((Map<String, Object>) pubRes.getData()).get("status")).intValue());
+
+        // active -> publish again should fail
+        ApiResponse<?> republish = graphQLEngine.executeRpc(graphQLEngine.newRpcContext(
+                GraphQLOperationType.mutation, "LitemallTimeDiscount__publishActivity", pubReq));
+        assertNotEquals(0, republish.getStatus(), "re-publish active should fail");
+
+        // active -> unpublish -> closed
+        ApiResponse<?> unpubRes = graphQLEngine.executeRpc(graphQLEngine.newRpcContext(
+                GraphQLOperationType.mutation, "LitemallTimeDiscount__unpublishActivity", pubReq));
+        assertEquals(0, unpubRes.getStatus(), "unpublishActivity failed: " + unpubRes);
+        assertEquals(_AppMallDaoConstants.PROMOTION_STATUS_CLOSED,
+                ((Number) ((Map<String, Object>) unpubRes.getData()).get("status")).intValue());
     }
 }

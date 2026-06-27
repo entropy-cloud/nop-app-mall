@@ -334,6 +334,8 @@ site:
       displayName: ''
     mall-feedback:
       displayName: ''
+    mall-flash-sale:
+      displayName: ''
     mall-goods-create:
       displayName: ''
     mall-goods-list:
@@ -348,15 +350,29 @@ site:
       displayName: ''
     mall-manage:
       displayName: ''
+    mall-marketing-calendar:
+      displayName: ''
+    mall-marketing-effect:
+      displayName: ''
+    mall-marketing-overview:
+      displayName: ''
     mall-order-manage:
+      displayName: ''
+    mall-pin-tuan-activity:
+      displayName: ''
+    mall-promotion-activity:
       displayName: ''
     mall-search-history:
       displayName: ''
     mall-stat-dashboard:
       displayName: ''
+    mall-time-discount:
+      displayName: ''
     mall-topic-manage:
       displayName: ''
     mall-user-manage:
+      displayName: ''
+    marketing-manage:
       displayName: ''
     promotion-manage:
       displayName: ''
