@@ -141,6 +141,16 @@
 - 缺货 SKU 不应影响其他有货 SKU 的正常销售。
 - 管理员可在后台自定义各档位的文本文案，使其匹配商城品牌语气。
 
+### 运营侧安全库存阈值（与展示侧三档语义不同关注点）
+
+本节为 C 端展示语义；运营侧另有**安全库存预警阈值**，三级优先解析（详见 `docs/design/system-configuration.md` Decision G3）：
+
+- **per-SKU `LitemallGoodsProduct.safeStock`**：SKU 粒度安全库存预警线（工作台 SKU 列表路径）。
+- **per-goods `LitemallGoods.safetyStock`**：商品聚合级安全库存预警线（运营按商品整体设置；Dashboard 聚合预警路径与工作台 per-SKU 路径在 goods 档以下对齐）。
+- **全局 `mall_stock_threshold_tight`**：最终回退档（与展示侧紧张档上限复用同一键，但语义独立：展示侧面向 C 端、运营侧面向工作台预警）。
+
+字段在商品编辑表单可空输入，空或 0 视为不启用对应粒度阈值，逐级回退至全局，保证存量商品零回归。
+
 ## 营销价拼接到列表
 
 ### 业务意图

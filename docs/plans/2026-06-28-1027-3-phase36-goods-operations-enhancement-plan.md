@@ -156,6 +156,7 @@ Exit Criteria:
 - Why Not Blocking Closure: 库存预警已用既有 per-SKU `LitemallGoodsProduct.safeStock`（`orm.xml:806`）+ 全局回退阈值，覆盖安全库存语义；goods 级（聚合）安全库存为额外增强。
 - Successor Required: yes
 - 说明：此前将安全库存误记为 model-gap 不成立——`safeStock` 字段已存在，本计划直接复用，无 ORM 改动。
+- **已由 successor 关闭（2026-06-29）：** `docs/plans/2026-06-29-1045-2-goods-level-safety-stock-plan.md` 已完成。`LitemallGoods.safetyStock`（propId=24，可空 INTEGER）已落地作为 goods 聚合级安全库存阈值；P36 工作台 `getStockWarningList` 阈值解析扩展为三级优先（per-SKU `safeStock` → per-goods `safetyStock` → 全局 `mall_stock_threshold_tight`），`thresholdSource` 扩展 `safetyStock` 档；`StockWarningSkuBean` 加 `safetyStock` 字段；工作台前端补商品级阈值展示。
 
 ### 评论前置审核状态机（G4）
 

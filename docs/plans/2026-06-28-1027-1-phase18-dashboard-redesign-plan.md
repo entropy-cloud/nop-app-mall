@@ -139,6 +139,7 @@ Exit Criteria:
 - Why Not Blocking Closure: 全局阈值（复用 P38 `mall_stock_threshold_tight`）已可驱动看板库存预警计数；按商品粒度安全库存为运营增强，不影响看板正确性。
 - Successor Required: yes
 - Model Gap Detail: `LitemallGoods` 缺 `safetyStock` 列。建议新增可空 int 列。触发条件：按商品粒度安全库存预警需求出现时（与 P36 商品运营增强的库存预警可合并落地）。
+- **已由 successor 关闭（2026-06-29）：** `docs/plans/2026-06-29-1045-2-goods-level-safety-stock-plan.md` 已完成。`LitemallGoods.safetyStock`（propId=24，可空 INTEGER）已落地；P18 Dashboard `getTodoAggregation` SQL-lib `HAVING COALESCE(NULLIF(g.SAFETY_STOCK,0), ${threshold})` 使 goods 聚合级阈值生效；`StockWarningItemBean` 扩展 `safetyStock`/`thresholdSource`。
 
 ### nop-report 引擎引入（D1）
 
