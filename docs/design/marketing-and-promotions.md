@@ -215,8 +215,8 @@
 
 ### 积分商城兑换
 
-- **本特性已交付（纯积分兑换，firm 结果面）：** 用户可在积分商城浏览可用积分商品、按积分单价兑换，扣减积分 + 扣减兑换活动库存 + 生成可履约的兑换订单。建模与履约路径采用独立实体，不侵入核心商品表 / 订单主流程（见本节 Decisions）。
-- **积分+现金组合兑换 Deferred：** 首期不交付组合兑换（需收银台与现金支付编排）；列为显式 scope change（见 `docs/plans/2026-06-29-0900-1-points-mall-exchange-plan.md` Decision D3 抉择方案 B），属非静默降级。触发条件：组合兑换需求出现时重开 successor。
+- **纯积分兑换（已交付）：** 用户可在积分商城浏览可用积分商品、按积分单价兑换，扣减积分 + 扣减兑换活动库存 + 生成可履约的兑换订单。建模与履约路径采用独立实体，不侵入核心商品表 / 订单主流程（见本节 Decisions）。
+- **积分+现金组合兑换（已交付）：** 当 `PointsGoods.cashPrice` 非空且 >0 时，该商品支持组合兑换——用户以 `pointsPrice × quantity` 积分 + `cashPrice × quantity` 现金兑换。现金部分消费已 done 的 P30 多支付通道（微信/支付宝）+ P29 钱包余额支付，通过独立 `PE` outTradeNo 前缀 + 独立回调分支与主订单支付流不串账（见下「组合兑换流程」与组合兑换 Decisions E1-E5）。关闭原 P27/P29 Deferred「积分+现金组合兑换」successor（见 `docs/plans/2026-06-29-1045-3-points-cash-combo-exchange-plan.md`）。
 
 #### Decisions（积分商城兑换 successor）
 
@@ -247,6 +247,50 @@
 
 - 兑换扣减积分复用 P27 账户 spend API：`pointsAccountBiz.spendPoints(userId, totalPoints, SPEND, "mall-exchange", exchangeOrderId, remark)`。
 - 幂等性：兑换订单创建后 `id` 作为 `sourceId` 传入 `spendPoints`，积分账户的 `(sourceType, sourceId)` 应用层查重保证同一兑换订单不重复扣分（与 P27 既有 earn/spend 一致）。
+
+#### 组合兑换流程（积分+现金）
+
+组合兑换为纯积分兑换的扩展：当积分商品的 `cashPrice` 非空且 >0 时启用组合路径；`cashPrice` 为空/0 时走纯积分路径（现状，零回归）。组合兑换消费已 done 的 P30 多支付通道策略（微信/支付宝）+ P29 钱包余额支付，不新建支付集成。
+
+##### 组合兑换 Decisions（E1-E5）
+
+- **E1 PointsGoods 价格模型 → 新增可空 `cashPrice`（BigDecimal）。** `cashPrice` 非空且 >0 → 该商品支持组合兑换；`cashPrice` 为空/0 → 仅纯积分（现状）。备选（新建 PointsGoodsType 枚举区分纯积分/组合）被否——`cashPrice` 非空即隐含组合语义，无需额外枚举。残留风险：需后台商品编辑页暴露 `cashPrice` 输入。
+- **E2 兑换单支付状态建模 → PointsExchangeOrder 新增 `payStatus`/`payChannel`/`cashPrice`/`walletPayAmount` 列 + exchange-status 状态机新增 `AWAITING_PAYMENT(5)`。** 组合单建单 `exchangeStatus=AWAITING_PAYMENT` → 现金支付回调确认 → `exchangeStatus=PENDING`（待发货）。`payStatus` 复用 `mall/pay-status`，`payChannel` 复用 `mall/pay-channel`（int + dict，与 `LitemallOrder`/`LitemallRecharge` 一致）。备选（不加状态、用独立 payStatus 驱动）被否——履约链（ship 等）依赖 `exchangeStatus`，复用状态机更内聚。残留风险：纯积分路径状态机不变（E2 仅组合路径新增 AWAITING_PAYMENT）。
+- **E3 积分与现金扣减顺序与原子性 → 积分先扣（建单时）+ 现金后付（用户支付）。** 与纯积分兑换的「建单即扣积分」一致；若用户未支付现金，组合单停留在 AWAITING_PAYMENT，由超时取消任务（复用 nop-job-local，`MallJobInvoker.cancelExpiredExchangeOrders`）还库存 + 退积分。备选 A（现金先付再扣积分）被否——破坏与纯积分路径一致性，且现金支付是异步回调更难回滚积分预留；备选 B（两阶段预留）被否——过度复杂。残留风险：AWAITING_PAYMENT 期间积分已扣，由超时取消任务兜底（本特性交付项，非 deferred）。
+- **E4 Protected Area（支付）裁定 → 新增 outTradeNo 前缀 `PE`（points-exchange）+ `PaymentCallbackImpl` 新增 `PE` 分支。** 归类为「消费既有 P30 通道策略（prepay/refund）的新业务路由」，非修改通道行为（通道策略接口不变）。`onPaymentSuccess` 新增 `PE` 前缀分支路由到 `confirmExchangePaidByNotify`；`onRefundSuccess` 新增 `PE` 分支路由到 `refundExchangeOrderByNotify`。备选（复用 order 的 outTradeNo/orderSn）被否——会与主订单回调路由串账。**路由不变式：** order outTradeNo 为 32 位小写 hex UUID，不以大写 `PE`/`RC` 开头；组合兑换 outTradeNo 派生 = `"PE" + %08d(exchangeOrderId)`（与 P29 `RC` 派生同先例，6–32 字符在微信限额内）。
+- **E5 余额支付分量建模 → 组合兑换现金部分余额支付走「直接 debitBalance」路径。** mimic `LitemallOrderBizModel.payByBalance`（不经不存在的 `BalancePayChannel` bean），兑换单设 `payChannel=PAY_CHANNEL_BALANCE` + `walletPayAmount`，`sourceId` 用 exchangeOrderId。**不为本特性创建 `BalancePayChannel` bean**（记入 Deferred，触发条件「余额需作为统一 PayChannel 策略被多处复用时」）。备选（先建 BalancePayChannel）被否——扩大范围，且 P30 已用直接 debit 路径，保持一致。
+
+##### 组合兑换价构成
+
+- 组合兑换价 = `pointsPrice × quantity` 积分 + `cashPrice × quantity` 现金。
+- `cashPrice` 为单件所需现金（BigDecimal），兑换时按 `cashPrice × quantity` 计算现金总额，建单时快照到 `LitemallPointsExchangeOrder.cashPrice`（单价快照，与 `pointsPrice` 快照同层）。
+- 现金部分不进入零售订单价格构成层（与纯积分兑换一致，D2 备选 B 被否的根因）；现金经 P30 通道或 P29 钱包独立收银。
+
+##### 组合兑换履约流转
+
+- 组合兑换订单状态机（`mall/exchange-status`，E2 扩展）：
+  - 组合建单 → `AWAITING_PAYMENT(5)` 待支付（积分已扣、库存已扣、现金未付）。
+  - `AWAITING_PAYMENT(5)` → 现金支付回调确认（`confirmExchangePaidByNotify`，设 `payStatus=PAID`/`payChannel`）→ `PENDING(0)` 待处理。
+  - `AWAITING_PAYMENT(5)` → 余额支付（`payComboByBalance`，同步 debit + 设 `payChannel=BALANCE`/`walletPayAmount`）→ `PENDING(0)` 待处理。
+  - `PENDING(0)` → 管理员发货（`shipExchangeOrder`）→ `SHIPPED(10)` → 用户确认（`confirmExchangeOrder`）→ `COMPLETED(20)`（与纯积分履约链一致）。
+  - `AWAITING_PAYMENT(5)`/`PENDING(0)` → 取消（`cancelExchangeOrder`，还库存 + 退积分 + 若已付现金则触发通道退款/余额退回）→ `CANCELLED(30)`。
+  - `AWAITING_PAYMENT(5)` → 超时未支付（`cancelExpiredExchangeOrders` 定时任务）→ 还库存 + 退积分（现金未付无需退款）→ `CANCELLED(30)`。
+
+##### 原子性与取消/退款路径
+
+- **建单原子性（E3）：** `exchangeCombo` 在单个 `@BizMutation` 事务内完成「扣积分（spendPoints）+ 扣 exchangeStock（mapper 原子 UPDATE）+ 建单 AWAITING_PAYMENT」。任一步失败（积分不足、库存售罄）事务回滚，不留副作用。
+- **支付回调原子性：** `confirmExchangePaidByNotify` 幂等推进 AWAITING_PAYMENT→PENDING（仅 AWAITING_PAYMENT 态可推进，重复回调 no-op）。
+- **取消退款路径：** `cancelExchangeOrder` 扩展支持 AWAITING_PAYMENT/PENDING→CANCELLED：
+  - 还库存（`pointsGoodsMapper.restoreExchangeStock`）。
+  - 退积分（`earnPoints`，`sourceType=mall-exchange-refund`，`sourceId=exchangeOrderId`，幂等继承查重）。
+  - 若已付现金（`payStatus=PAID`）：微信/支付宝通道 → 调 `payChannel.refund`（outTradeNo=`PE`+paddedId，refundFee=`cashPrice × quantity`）；余额支付 → `walletBiz.creditBalance`（`changeType=REFUND`，`sourceType=mall-exchange-refund`，`sourceId=exchangeOrderId`）退回钱包。
+- **超时取消：** `MallJobInvoker.cancelExpiredExchangeOrders`（复用 nop-job-local）扫描 AWAITING_PAYMENT 且超过支付超时的单，还库存 + 退积分（现金未付无需退款）。与 `cancelExpiredOrders` 同先例。
+- **退款回调对账：** `PaymentCallbackImpl.onRefundSuccess` 新增 `PE` 前缀分支 → `refundExchangeOrderByNotify`（幂等，与 P29 `refundRechargeByNotify` 同先例：REFUNDED/UNPAID no-op，仅 PAID 推进）。
+
+##### outTradeNo 与回调路由（E4）
+
+- 组合兑换单 outTradeNo 派生（不存列，与 P29 `RC` 同先例）：`"PE" + String.format("%08d", exchangeOrderId)`，例 `PE00000001`。
+- `PaymentCallbackImpl` 路由不变式保持：order outTradeNo 为 32 位小写 hex UUID（`generateOrderSn`），不以大写 `PE`/`RC` 开头；`PE`→组合兑换、`RC`→充值、else→主订单，三路互斥。
 
 ### 积分有效期（交接）
 

@@ -169,7 +169,8 @@ Exit Criteria:
 
 - Classification: `out-of-scope improvement`（explicit scope change per guide Rule #10，非静默降级）
 - Why Not Blocking Closure: Decision D3 抉择方案 B——首期只交付纯积分兑换（firm 结果面）。组合兑换的现金收银编排（独立 outTradeNo 走既有 P30 多支付通道 + P29 钱包、与主订单支付流不串账）属额外复杂度，不阻塞纯积分闭环。备选 A（消费 P30/P29 通道）作为 successor 实现路径备忘。
-- Successor Required: `yes`（触发条件：业务要求积分+现金组合兑换时）
+- Successor Required: `yes`（触发条件：业务要求积分+现金组合兑换时）→ **已触发并闭环**
+- Successor Closed: 已由 `docs/plans/2026-06-29-1045-3-points-cash-combo-exchange-plan.md` 交付（PointsGoods.cashPrice + PointsExchangeOrder pay 字段 + AWAITING_PAYMENT 状态 + exchangeCombo/payComboByBalance/confirmExchangePaidByNotify + PE outTradeNo 回调路由 + 超时取消任务；owner doc `marketing-and-promotions.md` 组合兑换设计落地）。
 
 ### 积分有效期与自动过期
 

@@ -581,6 +581,8 @@ graph TD
 | Material（素材资源） | 37 | |
 
 > **P27 Deferred successor 已闭环：** PointsGoods（积分商品目录）/ PointsExchangeOrder（积分兑换订单）由 `docs/plans/2026-06-29-0900-1-points-mall-exchange-plan.md` 交付（纯积分兑换 firm 结果面）。
+>
+> **P27/P29 Deferred「积分+现金组合兑换」已闭环：** 由 `docs/plans/2026-06-29-1045-3-points-cash-combo-exchange-plan.md` 交付（PointsGoods.cashPrice + PointsExchangeOrder pay 字段 + AWAITING_PAYMENT 状态 + exchangeCombo/payComboByBalance/confirmExchangePaidByNotify + PE outTradeNo 回调路由 + 超时取消任务；消费 P30 多支付通道 + P29 钱包，不新建支付集成）。
 
 | 扩展字段（现有实体新增字段） | Phase | 字段 |
 |---------------------------|-------|------|
