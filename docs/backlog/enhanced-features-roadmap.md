@@ -190,7 +190,7 @@
 - 销售趋势图（时/天/周/月 + 同环比）
 - 实时订单流
 - 待办事项聚合（待发货/待退款/售后待审核/库存预警）
-- 引入 nop-report 依赖 ✅（已由 successor 计划 `2026-06-28-2352-1` 交付：nop-report-core + nop-report-pdf + `.xpt.xml` 模板，提供商品/报表 xlsx/pdf 导出）
+- 引入 nop-report 依赖 ✅（已由 successor 计划 `2026-06-28-2352-1` 交付：nop-report-core + nop-report-pdf + `.xpt.xml` 模板，提供商品/报表 xlsx/pdf 导出；successor `2026-06-29-0119-1` 扩展用户分析[多 sheet]/优惠券分析导出，5 大主题域 xlsx/pdf 全覆盖）
 
 **模块：** app-mall-service、app-mall-web
 

@@ -29,7 +29,7 @@
 - 10. 内容营销与反馈: `done`
 - 11. 系统运营与定时任务: `done`（nop-job-local 调度装配已引入，5 个定时任务自动执行）
 - 12. 通知系统: `done`
-- 13. 报表与统计: `done`（AMIS chart 看板 + 3 统计 API + SQL 数据集）
+- 13. 报表与统计: `done`（AMIS chart 看板 + 3 统计 API + SQL 数据集；5 大主题域 xlsx/pdf 导出全覆盖：funnel/product/order 计划 `2026-06-28-2352-1` + user[多 sheet]/coupon 计划 `2026-06-29-0119-1`）
 - 14. 微信支付集成: `done`
 
 ## Status Values
@@ -380,7 +380,7 @@
 **交付范围：**
 - 引入 nop-report 依赖 ✅（nop-report-core + nop-report-pdf，计划 `2026-06-28-2352-1`）
 - 定义数据集（SQL）：订单统计、商品统计、用户统计
-- 创建报表模板 ✅（`_vfs/nop/main/report/*.xpt.xml`：goods-export/sales-funnel/product-analysis/order-analysis，计划 `2026-06-28-2352-1`）
+- 创建报表模板 ✅（`_vfs/nop/main/report/*.xpt.xml`：goods-export/sales-funnel/product-analysis/order-analysis，计划 `2026-06-28-2352-1`；user-analysis[多 sheet]/coupon-analysis，计划 `2026-06-29-0119-1`）
 - 后台统计看板
 - 单元测试
 
