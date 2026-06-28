@@ -1,5 +1,6 @@
 package app.mall.wx;
 
+import app.mall.pay.PayChannel;
 import app.mall.pay.PayPrepayRequestBean;
 import app.mall.pay.PayPrepayResponseBean;
 import app.mall.pay.PayRefundRequestBean;
@@ -38,7 +39,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 @BizModel("PayService")
-public class WxPayServiceImpl implements PayService {
+public class WxPayServiceImpl implements PayService, PayChannel {
+
+    /** P30 PayChannel dict code. Aligned with the {@code mall/pay-channel} dictionary. */
+    public static final String CHANNEL_CODE = "WECHAT";
 
     private static final Logger LOG = LoggerFactory.getLogger(WxPayServiceImpl.class);
 
@@ -282,6 +286,52 @@ public class WxPayServiceImpl implements PayService {
         }
     }
 
+    /**
+     * Parse and verify a WeChat Pay <b>refund</b> async notify body (P30, closes the P29 deferred
+     * "退款异步通知流程"). Returns the order's {@code out_trade_no} only when signature verification
+     * succeeds AND the refund status indicates success ({@code REFUND_SUCCESS}); returns {@code null}
+     * otherwise so the caller does not advance the refund reconciliation.
+     *
+     * <p>In example/disabled mode this returns {@code null} (no real refund to confirm), mirroring
+     * {@link #parseNotifyBody}. Real signature verification uses the same SDK notification parser
+     * but deserializes to the WeChat {@code Refund} notification type.
+     */
+    public String parseRefundNotifyBody(String body, String wechatpaySerial, String wechatpayNonce,
+                                         String wechatpaySignature, String wechatpayTimestamp,
+                                         String wechatpaySignatureType) {
+        if (!enabled) {
+            LOG.warn("WxPay disabled, skipping refund notify verification");
+            return null;
+        }
+        // Successor integration point: parse with RefundNotificationParser / Refund class and
+        // verify refund_status == REFUND_SUCCESS. The current WeChat SDK refund-notify parsing is
+        // wired here once the refund notify_url is pointed at /wxpay/refund-notify in production.
+        // For now, the verified-success path returns the outTradeNo; the skeleton keeps the
+        // signature-verification contract identical to the payment notify.
+        try {
+            RequestParam requestParam = new RequestParam.Builder()
+                    .serialNumber(wechatpaySerial)
+                    .nonce(wechatpayNonce)
+                    .signature(wechatpaySignature)
+                    .timestamp(wechatpayTimestamp)
+                    .signType(wechatpaySignatureType)
+                    .body(body)
+                    .build();
+            // The WeChat SDK parses the refund notify into a Refund model; refund status is on it.
+            Refund refund = notificationParser.parse(requestParam, Refund.class);
+            LOG.info("Refund notify verified: outTradeNo={}, refundId={}, status={}",
+                    refund.getOutTradeNo(), refund.getRefundId(), refund.getStatus());
+            if ("SUCCESS".equals(refund.getStatus() == null ? null : refund.getStatus().name())) {
+                return refund.getOutTradeNo();
+            }
+            return null;
+        } catch (ValidationException e) {
+            LOG.error("Refund notify signature verification failed", e);
+            throw new NopException(ERR_WXPAY_NOTIFY_VERIFY_FAILED, e)
+                    .param(ARG_ERROR_MESSAGE, e.getMessage());
+        }
+    }
+
     private String readPem(String path) {
         try {
             return Files.readString(Path.of(path));
@@ -297,6 +347,29 @@ public class WxPayServiceImpl implements PayService {
         }
         return e.getMessage();
     }
+
+    // ===== P30 PayChannel strategy methods =====
+    // These adapt the existing PayService methods into the PayChannel strategy contract so the
+    // registry can route by code. They delegate to the same WeChat implementation; the PayService
+    // facade stays as the backward-compatible entry used by order prepay / recharge / aftersale.
+
+    @Override
+    public String getCode() {
+        return CHANNEL_CODE;
+    }
+
+    @Override
+    public PayPrepayResponseBean prepay(PayPrepayRequestBean req) {
+        return createPayment(req);
+    }
+
+    @Override
+    public PayStatusResponseBean query(String outTradeNo) {
+        return queryPayment(outTradeNo);
+    }
+
+    // isEnabled() / refund(req) above already match the PayChannel signatures,
+    // so no separate adapter is needed for those two.
 
     private static final String ARG_OUT_TRADE_NO = "outTradeNo";
     private static final String ARG_OUT_REFUND_NO = "outRefundNo";

@@ -65,39 +65,103 @@ body:
         style:
           padding: 20px
         body:
-          - type: wrapper
-            style:
-              padding: 20px
-              maxWidth: 600px
-              margin: 0 auto
-              backgroundColor: '#fafafa'
-              borderRadius: 4px
+          - type: service
+            name: channelsLoad
+            api:
+              url: '@query:LitemallOrder__getEnabledPayChannels'
+              data:
+                orderId: "${orderId}"
+              sendOn: "${orderId}"
             body:
-              - type: flex
-                justify: space-between
+              - type: wrapper
                 style:
-                  margin: 8px 0
-                items:
-                  - type: tpl
-                    tpl: '订单编号：'
-                  - type: tpl
-                    tpl: '<b>${data.orderSn}</b>'
-              - type: flex
-                justify: space-between
+                  padding: 20px
+                  maxWidth: 600px
+                  margin: 0 auto
+                  backgroundColor: '#fafafa'
+                  borderRadius: 4px
+                body:
+                  - type: flex
+                    justify: space-between
+                    style:
+                      margin: 8px 0
+                    items:
+                      - type: tpl
+                        tpl: '订单编号：'
+                      - type: tpl
+                        tpl: '<b>${data.orderSn}</b>'
+                  - type: flex
+                    justify: space-between
+                    style:
+                      margin: 8px 0
+                    items:
+                      - type: tpl
+                        tpl: '实付金额：'
+                      - type: tpl
+                        tpl: '<span style="color:#ff6700;font-size:20px;font-weight:bold">¥${data.actualPrice}</span>'
+
+              # 余额支付通道（P30）：仅当收银台通道列表返回 BALANCE 通道时展示。
+              - type: wrapper
+                visibleOn: "${channels && channels.length > 0 && channels.some(c => c.code == 'BALANCE')}"
                 style:
-                  margin: 8px 0
-                items:
-                  - type: tpl
-                    tpl: '实付金额：'
-                  - type: tpl
-                    tpl: '<span style="color:#ff6700;font-size:20px;font-weight:bold">¥${data.actualPrice}</span>'
+                  padding: 10px 20px
+                  maxWidth: 600px
+                  margin: 0 auto
+                body:
+                  - type: flex
+                    justify: space-between
+                    alignItems: center
+                    style:
+                      padding: 12px
+                      backgroundColor: '#fff'
+                      borderRadius: 4px
+                      border: 1px solid '#eee'
+                    items:
+                      - type: tpl
+                        tpl: '<b>余额支付</b><br/><span style="color:#999;font-size:12px">可用余额：¥${channels.filter(c => c.code == "BALANCE")[0].balanceAvailable}</span>'
+                      - type: button
+                        label: 余额支付
+                        level: primary
+                        actionType: dialog
+                        dialog:
+                          type: dialog
+                          title: 余额支付确认
+                          body:
+                            - type: alert
+                              level: info
+                              body: '为保障资金安全，请输入登录密码完成余额支付确认。'
+                            - type: input-password
+                              name: confirmCredential
+                              label: 登录密码
+                              required: true
+                              placeholder: '请输入登录密码'
+                          actions:
+                            - type: button
+                              label: 取消
+                              actionType: close
+                            - type: button
+                              label: 确认支付
+                              level: primary
+                              actionType: ajax
+                              api:
+                                url: '@mutation:LitemallOrder__payByBalance'
+                                data:
+                                  orderId: "${orderId}"
+                                  confirmCredential: "${confirmCredential}"
+                              redirect: "/storefront-order-detail?orderId=${orderId}"
+                              messages:
+                                success: '余额支付成功'
+
+              # 微信扫码支付通道（既有）：仅当通道列表返回 WECHAT 时展示。
 
           - type: service
             name: payPrepare
+            visibleOn: "${!channels || channels.length == 0 || channels.some(c => c.code == 'WECHAT')}"
             api:
               url: '@mutation:LitemallOrder__prepay'
               data:
                 orderId: "${orderId}"
+              sendOn: "${!channels || channels.length == 0 || channels.some(c => c.code == 'WECHAT')}"
             body:
               - type: wrapper
                 style:
@@ -114,6 +178,7 @@ body:
 
           - type: service
             name: payStatus
+            visibleOn: "${!channels || channels.length == 0 || channels.some(c => c.code == 'WECHAT')}"
             api:
               url: '@query:PayService__queryPayment'
               data:
@@ -134,6 +199,7 @@ body:
                 link: "/storefront-order-detail?orderId=${orderId}"
 
           - type: wrapper
+            visibleOn: "${!channels || channels.length == 0 || channels.some(c => c.code == 'WECHAT')}"
             style:
               padding: 20px
               textAlign: center

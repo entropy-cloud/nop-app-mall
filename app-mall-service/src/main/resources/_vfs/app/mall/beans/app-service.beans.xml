@@ -12,4 +12,10 @@
     <bean id="app.mall.service.scheduler.MallJobInvoker" ioc:type="@bean:id" ioc:default="true"/>
 
     <bean id="app.mall.service.pay.PaymentCallbackImpl" ioc:type="@bean:id" ioc:default="true"/>
+
+    <bean id="payChannelRegistry" class="app.mall.service.pay.PayChannelRegistryImpl">
+        <property name="channels">
+            <ioc:collect-beans by-type="app.mall.pay.PayChannel" ioc:ignore-depends="true"/>
+        </property>
+    </bean>
 </beans>

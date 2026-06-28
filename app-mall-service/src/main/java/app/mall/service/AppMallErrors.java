@@ -59,6 +59,14 @@ public interface AppMallErrors {
             define("nop.err.mall.order.use-real-payment",
                     "真实支付模式非零金额订单必须通过微信扫码支付，不可直接确认");
 
+    ErrorCode ERR_ORDER_PAY_CREDENTIAL_INVALID =
+            define("nop.err.mall.order.pay-credential-invalid",
+                    "余额支付确认凭证不正确");
+
+    ErrorCode ERR_ORDER_BALANCE_INSUFFICIENT =
+            define("nop.err.mall.order.balance-insufficient",
+                    "钱包余额不足以支付该订单");
+
     ErrorCode ERR_ORDER_NOT_ALLOW_DELETE =
             define("nop.err.mall.order.not-allow-delete",
                     "当前订单状态不允许删除");

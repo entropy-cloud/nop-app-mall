@@ -2,9 +2,14 @@ package app.mall.service.pay;
 
 import app.mall.biz.ILitemallOrderBiz;
 import app.mall.biz.ILitemallRechargeBiz;
+import app.mall.dao._AppMallDaoConstants;
+import app.mall.dao.entity.LitemallOrder;
 import app.mall.pay.IPaymentCallback;
+import io.nop.api.core.beans.FilterBeans;
+import io.nop.api.core.beans.query.QueryBean;
 import io.nop.core.context.IServiceContext;
 import io.nop.core.context.ServiceContextImpl;
+import io.nop.dao.api.IDaoProvider;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import org.slf4j.Logger;
@@ -42,6 +47,14 @@ public class PaymentCallbackImpl implements IPaymentCallback {
     @Inject
     ILitemallRechargeBiz rechargeBiz;
 
+    // IDaoProvider used for the read-only refund-notify reconciliation lookup. The refund notify
+    // only checks the order's current status (idempotency) — it does not drive BizModel mutations
+    // (the sync refund path already advanced status). Using the dao directly here avoids the
+    // lazy I*Biz proxy round-trip in this async bridge bean. See ai-defaults anti-pattern table:
+    // IDaoProvider is permitted when I*Biz only provides a read the dao can serve directly.
+    @Inject
+    IDaoProvider daoProvider;
+
     @Override
     public void onPaymentSuccess(String outTradeNo, String transactionId) {
         // System context (no end-user session): the trigger is an async WeChat server callback
@@ -59,5 +72,57 @@ public class PaymentCallbackImpl implements IPaymentCallback {
             LOG.info("onPaymentSuccess: confirmed order payment for outTradeNo={}, transactionId={}",
                     outTradeNo, transactionId);
         }
+    }
+
+    /**
+     * Refund async-notify reconciliation (P30, closes the P29 deferred "退款异步通知流程").
+     *
+     * <p>The synchronous refund path ({@code LitemallAftersaleBizModel.refund} / groupon / pin-tuan
+     * refund) already advances the order and aftersale status on a synchronous channel success.
+     * This async notify is the authoritative channel-side confirmation that the money movement
+     * actually completed. It is <b>idempotent</b>: if the sync path already advanced the order to a
+     * refunded-terminal state, this is a no-op (so channel retries are always safe). If the order is
+     * NOT yet in a refunded state, the sync path did not run (or failed) — we log a reconciliation
+     * warning for manual intervention rather than silently advancing, because the async notify alone
+     * does not carry enough context (which aftersale line, restock, coupon/points return) to drive
+     * the full refund side-effects safely.
+     */
+    @Override
+    public void onRefundSuccess(String outTradeNo, String outRefundNo) {
+        IServiceContext systemContext = new ServiceContextImpl();
+        if (outTradeNo == null || outTradeNo.isEmpty()) {
+            LOG.warn("onRefundSuccess: empty outTradeNo, ignoring");
+            return;
+        }
+        // Recharge refunds are not tracked here (recharge has no refund flow in baseline).
+        if (outTradeNo.startsWith(RECHARGE_OUT_TRADE_NO_PREFIX)) {
+            LOG.info("onRefundSuccess: ignoring recharge-channel refund notify for outTradeNo={}", outTradeNo);
+            return;
+        }
+        LitemallOrder order = findOrderByOrderSn(outTradeNo, systemContext);
+        if (order == null) {
+            LOG.warn("onRefundSuccess: no order found for outTradeNo={}, ignoring", outTradeNo);
+            return;
+        }
+        Integer status = order.getOrderStatus();
+        if (status != null
+                && (status == _AppMallDaoConstants.ORDER_STATUS_REFUND
+                || status == _AppMallDaoConstants.ORDER_STATUS_REFUND_CONFIRM)) {
+            LOG.info("onRefundSuccess: order {} already in refunded state {}, refund notify is a no-op (idempotent)",
+                    order.getOrderSn(), status);
+            return;
+        }
+        // Sync refund path did not advance the order. The async notify alone cannot safely drive
+        // the full refund side-effects (restock / coupon / points / notification). Surface for manual
+        // reconciliation — operator re-runs the refund through the aftersale flow or investigates.
+        LOG.warn("onRefundSuccess: order {} is in state {} (not refunded-terminal); sync refund path did not advance. "
+                + "outRefundNo={}. Manual reconciliation required.", order.getOrderSn(), status, outRefundNo);
+    }
+
+    private LitemallOrder findOrderByOrderSn(String orderSn, IServiceContext context) {
+        QueryBean query = new QueryBean();
+        query.addFilter(FilterBeans.eq(LitemallOrder.PROP_NAME_orderSn, orderSn));
+        return (LitemallOrder) daoProvider.daoFor(LitemallOrder.class).findAllByQuery(query).stream()
+                .findFirst().orElse(null);
     }
 }

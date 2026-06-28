@@ -73,6 +73,13 @@
             <artifactId>nop-auth-dao</artifactId>
         </dependency>
 
+        <!-- P30 余额支付确认凭证校验（Decision B）：复用登录密码经平台 IPasswordEncoder 校验，
+             不新建独立支付密码账户实体。与登录态密码校验同一编码器。 -->
+        <dependency>
+            <groupId>io.github.entropy-cloud</groupId>
+            <artifactId>nop-biz-auth-core</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>io.github.entropy-cloud</groupId>
             <artifactId>nop-sys-dao</artifactId>

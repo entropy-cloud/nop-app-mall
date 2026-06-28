@@ -19,6 +19,7 @@ import app.mall.biz.ILitemallPromotionUsageBiz;
 import app.mall.biz.ILitemallPickupStoreBiz;
 import app.mall.biz.ILitemallSystemBiz;
 import app.mall.biz.ILitemallTimeDiscountBiz;
+import app.mall.biz.ILitemallWalletBiz;
 import app.mall.dao._AppMallDaoConstants;
 import app.mall.dao.entity.LitemallAddress;
 import app.mall.dao.entity.LitemallAftersale;
@@ -36,6 +37,7 @@ import app.mall.dao.dto.DashboardMetricsBean;
 import app.mall.dao.dto.GoodsStatisticsBean;
 import app.mall.dao.dto.OrderPointBean;
 import app.mall.dao.dto.OrderStatisticsBean;
+import app.mall.dao.dto.PayChannelViewBean;
 import app.mall.dao.dto.SalesTrendPointBean;
 import app.mall.dao.dto.StockWarningItemBean;
 import app.mall.dao.dto.TodoAggregationBean;
@@ -65,6 +67,7 @@ import app.mall.dao.entity.LitemallPinTuanActivity;
 import app.mall.dao.entity.LitemallPointsFlow;
 import app.mall.dao.entity.LitemallPromotionActivity;
 import app.mall.dao.entity.LitemallPromotionUsage;
+import app.mall.dao.entity.LitemallWallet;
 import app.mall.dao.manager.MallLogManager;
 import app.mall.dao.mapper.LitemallGoodsProductMapper;
 import app.mall.dao.mapper.LitemallOrderMapper;
@@ -72,6 +75,8 @@ import app.mall.dao.mapper.LitemallTimeDiscountMapper;
 import app.mall.pay.PayPrepayRequestBean;
 import app.mall.pay.PayPrepayResponseBean;
 import app.mall.pay.PayService;
+import app.mall.pay.IPayChannelRegistry;
+import app.mall.pay.PayChannel;
 import app.mall.service.notification.MallNotificationService;
 import app.mall.service.AppMallErrors;
 import io.nop.api.core.annotations.biz.BizModel;
@@ -123,6 +128,7 @@ import static app.mall.service.AppMallErrors.ERR_ORDER_ADDRESS_NOT_BELONG_USER;
 import static app.mall.service.AppMallErrors.ERR_ORDER_BATCH_SHIP_EMPTY;
 import static app.mall.service.AppMallErrors.ERR_ORDER_BATCH_SHIP_INVALID_ROW;
 import static app.mall.service.AppMallErrors.ERR_ORDER_CART_EMPTY;
+import static app.mall.service.AppMallErrors.ERR_ORDER_BALANCE_INSUFFICIENT;
 import static app.mall.service.AppMallErrors.ERR_ORDER_NOT_ALLOW_CANCEL;
 import static app.mall.service.AppMallErrors.ERR_ORDER_NOT_ALLOW_CHANGE_ADDRESS;
 import static app.mall.service.AppMallErrors.ERR_ORDER_NOT_ALLOW_CONFIRM;
@@ -130,6 +136,7 @@ import static app.mall.service.AppMallErrors.ERR_ORDER_NOT_ALLOW_DELETE;
 import static app.mall.service.AppMallErrors.ERR_ORDER_NOT_ALLOW_PAY;
 import static app.mall.service.AppMallErrors.ERR_ORDER_NOT_ALLOW_SHIP;
 import static app.mall.service.AppMallErrors.ERR_ORDER_NOT_FOUND;
+import static app.mall.service.AppMallErrors.ERR_ORDER_PAY_CREDENTIAL_INVALID;
 import static app.mall.service.AppMallErrors.ERR_ORDER_PICKUP_NOT_SHIPPABLE;
 import static app.mall.service.AppMallErrors.ERR_ORDER_PRICE_INVALID;
 import static app.mall.service.AppMallErrors.ERR_ORDER_PRICE_MODIFY_DISCOUNT_ACTIVE;
@@ -231,6 +238,19 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
 
     @Inject
     PayService payService;
+
+    // P30 multi-channel abstraction. The registry routes by channel code and combines each
+    // channel's capability flag with the operator toggle stored in LitemallSystem pay_channels.
+    @Inject
+    IPayChannelRegistry payChannelRegistry;
+
+    @Inject
+    ILitemallWalletBiz walletBiz;
+
+    // P30 Decision B: balance-payment confirm credential. Reuses the platform login-password
+    // encoder so no separate payment-password account entity is needed.
+    @Inject
+    io.nop.auth.core.password.IPasswordEncoder passwordEncoder;
 
     // P21 批量发货 Excel 解析（平台 IFileStore + ExcelHelper.readSheet）
     @Inject
@@ -757,15 +777,164 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
                     .param("actualPrice", order.getActualPrice());
         }
 
+        markOrderPaidCore(order, context);
+        return order;
+    }
+
+    /**
+     * P30: shared "order became paid" tail extracted from {@code pay()} and
+     * {@code confirmPaidByNotify()}. Sets ORDER_STATUS_PAY + payTime, persists, and fires the
+     * payment notification after commit. Callers validate status + ownership + channel fields
+     * (payId / payChannel / walletPayAmount) BEFORE invoking this. Balance-payment reuses this
+     * core after debiting the wallet, so it does not bypass the state machine nor re-trigger
+     * the real-payment guard in {@code pay()}.
+     *
+     * <p>Internal helper (not a {@code @BizAction}): the GraphQL engine does not support entity
+     * params on exposed actions, and this is only reused within this BizModel. Covered
+     * transitively by the {@code pay()} / {@code confirmPaidByNotify()} / {@code payByBalance()}
+     * GraphQL tests.
+     */
+    void markOrderPaidCore(LitemallOrder order, IServiceContext context) {
         order.setOrderStatus(_AppMallDaoConstants.ORDER_STATUS_PAY);
         order.setPayTime(LocalDateTime.now());
-        updateEntity(order, "pay", context);
+        updateEntity(order, "markOrderPaidCore", context);
         final String payOrderSn = order.getOrderSn();
         final String payMobile = order.getMobile();
         final String payUserId = notificationService.isEventMessageEnabled("payment", context)
                 ? order.getUserId() : null;
         txn().afterCommit(null, () -> notificationService.sendOrderPaymentNotification(payOrderSn, payMobile, payUserId));
-        return order;
+    }
+
+    @Override
+    @BizMutation
+    public LitemallOrder payByBalance(@Name("orderId") String orderId,
+                                       @Name("confirmCredential") String confirmCredential,
+                                       IServiceContext context) {
+        LitemallOrder order = get(orderId, false, context);
+        if (order == null) {
+            throw new NopException(ERR_ORDER_NOT_FOUND).param("orderId", orderId);
+        }
+        // Status guard (idempotency layer 1): a repeat call for an already-paid order is rejected.
+        if (order.getOrderStatus() != _AppMallDaoConstants.ORDER_STATUS_CREATED) {
+            throw new NopException(ERR_ORDER_NOT_ALLOW_PAY)
+                    .param("orderId", orderId)
+                    .param("status", order.getOrderStatus());
+        }
+        requireUserIdMatch(order, context);
+
+        BigDecimal actualPrice = order.getActualPrice() == null ? BigDecimal.ZERO : order.getActualPrice();
+        // Balance channel only serves non-zero orders. Zero-amount orders confirm via pay() in the
+        // cashier's zero-amount branch (no debit needed).
+        if (actualPrice.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new NopException(ERR_ORDER_NOT_ALLOW_PAY)
+                    .param("orderId", orderId)
+                    .param("reason", "zero-amount order must use pay(), not balance channel");
+        }
+
+        // Confirm credential (Decision B): reuse the login password via the platform encoder.
+        verifyPayCredential(order.getUserId(), confirmCredential, context);
+
+        // Balance sufficiency pre-check (the optimistic-lock debit is the authoritative guard).
+        BigDecimal balance = lookupWalletBalance(context);
+        if (balance.compareTo(actualPrice) < 0) {
+            throw new NopException(ERR_ORDER_BALANCE_INSUFFICIENT)
+                    .param("orderId", orderId)
+                    .param("balance", balance)
+                    .param("actualPrice", actualPrice);
+        }
+
+        // Atomic debit (idempotency layer 2): optimistic version lock rejects concurrent double
+        // debit. sourceId=orderSn ties the flow to this order. Runs in the same @BizMutation tx.
+        walletBiz.debitBalance(order.getUserId(), actualPrice,
+                _AppMallDaoConstants.WALLET_CHANGE_TYPE_PAY,
+                LitemallWalletBizModel.SOURCE_TYPE_PAY,
+                order.getOrderSn(),
+                "余额支付订单 " + order.getOrderSn(),
+                context);
+
+        // Write channel fields BEFORE advancing state so the persisted PAID row reflects the
+        // balance channel. Reload the order because debitBalance clears the entity session cache
+        // (it detaches entities to force the conditional UPDATE to run as real SQL).
+        LitemallOrder fresh = get(orderId, false, context);
+        fresh.setWalletPayAmount(actualPrice);
+        fresh.setPayChannel(_AppMallDaoConstants.PAY_CHANNEL_BALANCE);
+        markOrderPaidCore(fresh, context);
+        return fresh;
+    }
+
+    /**
+     * Decision B confirm-credential check. Verifies {@code confirmCredential} against the user's
+     * login password via the platform {@link io.nop.auth.core.password.IPasswordEncoder}. Throws
+     * {@link AppMallErrors#ERR_ORDER_PAY_CREDENTIAL_INVALID} on mismatch. The login password is
+     * read from {@code NopAuthUser} via {@code IOrmTemplate} (app-mall-delta is test-scoped, so
+     * the typed Delta column extension is accessed the same way as the existing userLevel read).
+     */
+    private void verifyPayCredential(String userId, String confirmCredential, IServiceContext context) {
+        if (StringHelper.isEmpty(confirmCredential)) {
+            throw new NopException(ERR_ORDER_PAY_CREDENTIAL_INVALID).param("userId", userId);
+        }
+        IOrmEntity authUser = ormTemplate.get(NopAuthUser.class.getName(), userId);
+        if (authUser == null) {
+            throw new NopException(ERR_ORDER_PAY_CREDENTIAL_INVALID).param("userId", userId);
+        }
+        String encoded = (String) authUser.orm_propValueByName("password");
+        String salt = (String) authUser.orm_propValueByName("salt");
+        if (StringHelper.isEmpty(encoded) || !passwordEncoder.passwordMatches(confirmCredential, salt, encoded)) {
+            throw new NopException(ERR_ORDER_PAY_CREDENTIAL_INVALID).param("userId", userId);
+        }
+    }
+
+    @Override
+    @BizQuery
+    public List<PayChannelViewBean> getEnabledPayChannels(@Name("orderId") String orderId,
+                                                            IServiceContext context) {
+        // Ownership-checked catalog of cashier channels. Combines the registry (capability +
+        // operator toggle) with the calling user's wallet balance for the BALANCE channel.
+        LitemallOrder order = get(orderId, false, context);
+        if (order == null || Boolean.TRUE.equals(order.getDeleted())) {
+            throw new NopException(ERR_ORDER_NOT_FOUND).param("orderId", orderId);
+        }
+        if (!order.getUserId().equals(context.getUserId())) {
+            throw new NopException(ERR_ORDER_NOT_FOUND).param("orderId", orderId);
+        }
+
+        BigDecimal balance = lookupWalletBalance(context);
+        List<PayChannelViewBean> views = new ArrayList<>();
+        for (PayChannel ch : payChannelRegistry.getEnabledChannels()) {
+            PayChannelViewBean view = new PayChannelViewBean();
+            view.setCode(ch.getCode());
+            view.setName(payChannelDisplayName(ch.getCode()));
+            view.setDescription(payChannelDisplayDescription(ch.getCode()));
+            if ("BALANCE".equals(ch.getCode())) {
+                view.setBalanceAvailable(balance);
+            }
+            views.add(view);
+        }
+        return views;
+    }
+
+    private BigDecimal lookupWalletBalance(IServiceContext context) {
+        LitemallWallet wallet = walletBiz.getMyWallet(context);
+        BigDecimal balance = wallet != null ? wallet.getBalance() : null;
+        return balance != null ? balance : BigDecimal.ZERO;
+    }
+
+    private String payChannelDisplayName(String code) {
+        switch (code) {
+            case "WECHAT": return "微信支付";
+            case "ALIPAY": return "支付宝";
+            case "BALANCE": return "余额支付";
+            default: return code;
+        }
+    }
+
+    private String payChannelDisplayDescription(String code) {
+        switch (code) {
+            case "WECHAT": return "微信扫码支付";
+            case "ALIPAY": return "支付宝支付";
+            case "BALANCE": return "使用钱包余额支付";
+            default: return null;
+        }
     }
 
     @Override
@@ -788,17 +957,13 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
                     order.getOrderSn(), order.getOrderStatus());
             return;
         }
-        order.setOrderStatus(_AppMallDaoConstants.ORDER_STATUS_PAY);
-        order.setPayTime(LocalDateTime.now());
         if (transactionId != null && !transactionId.isEmpty()) {
             order.setPayId(transactionId);
         }
-        updateEntity(order, "confirmPaidByNotify", context);
-        final String orderSn = order.getOrderSn();
-        final String mobile = order.getMobile();
-        final String notifyUserId = notificationService.isEventMessageEnabled("payment", context)
-                ? order.getUserId() : null;
-        txn().afterCommit(null, () -> notificationService.sendOrderPaymentNotification(orderSn, mobile, notifyUserId));
+        // Mark WeChat channel on the paid order (Channel abstraction P30): prepay recorded no
+        // channel at creation; the verified SUCCESS notify is the authoritative pay confirmation.
+        order.setPayChannel(_AppMallDaoConstants.PAY_CHANNEL_WECHAT);
+        markOrderPaidCore(order, context);
     }
 
     @Override

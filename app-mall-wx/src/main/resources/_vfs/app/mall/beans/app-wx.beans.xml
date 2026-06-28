@@ -20,4 +20,17 @@
         <property name="wxPayService" ref="wxPayService"/>
     </bean>
 
+    <!-- P30 Alipay channel (example/disabled by default; real SDK integration is a successor).
+         Registered as a PayChannel bean so the registry discovers it via <ioc:collect-beans>. -->
+    <bean id="alipayPayChannel" class="app.mall.wx.AlipayPayChannel">
+        <property name="enabled" value="@cfg:alipay.enabled|false"/>
+        <property name="appId" value="@cfg:alipay.app-id|"/>
+        <property name="appPrivateKey" value="@cfg:alipay.app-private-key|"/>
+        <property name="alipayPublicKey" value="@cfg:alipay.alipay-public-key|"/>
+        <property name="gateway" value="@cfg:alipay.gateway|"/>
+        <property name="notifyUrl" value="@cfg:alipay.notify-url|http://localhost:8080/alipay/notify"/>
+    </bean>
+
+    <bean id="alipayNotifyResource" class="app.mall.wx.AlipayNotifyResource"/>
+
 </beans>

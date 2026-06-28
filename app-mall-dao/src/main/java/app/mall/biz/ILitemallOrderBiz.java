@@ -25,6 +25,7 @@ import app.mall.dao.dto.OrderAnalysisBean;
 import app.mall.dao.dto.CouponUsageStatisticsBean;
 import app.mall.dao.dto.UserPortraitBean;
 import app.mall.dao.dto.SegmentMemberBean;
+import app.mall.dao.dto.PayChannelViewBean;
 import app.mall.dao.entity.LitemallOrder;
 
 import java.util.Map;
@@ -60,6 +61,33 @@ public interface ILitemallOrderBiz extends ICrudBiz<LitemallOrder> {
     @BizMutation
     LitemallOrder pay(@Name("orderId") String orderId,
                       IServiceContext context);
+
+    /**
+     * Cashier channel catalog (P30). Returns the payment channels available for {@code orderId}
+     * at {@code /storefront-pay}: channels whose capability ({@code PayChannel.isEnabled()})
+     * AND operator toggle ({@code pay_channels} config) are on, with the calling user's wallet
+     * balance attached to the BALANCE channel. Ownership-checked (the order must belong to the
+     * caller). Replaces the hardcoded WeChat-only cashier with a dynamic channel list.
+     */
+    @BizQuery
+    List<PayChannelViewBean> getEnabledPayChannels(@Name("orderId") String orderId,
+                                                     IServiceContext context);
+
+    /**
+     * Balance-payment channel (P30). Confirms a CREATED order with wallet balance:
+     * validates ownership + status + balance ≥ actualPrice + confirm credential (login password,
+     * Decision B), atomically debits the wallet ({@code WALLET_CHANGE_TYPE_PAY +
+     * sourceType=pay}), writes {@code walletPayAmount} + {@code payChannel=20(BALANCE)}, then
+     * advances the order to PAID via {@link #markOrderPaidCore}.
+     *
+     * <p>Double-layer idempotency: the CREATED(101) status guard rejects a repeat call
+     * ({@code ERR_ORDER_NOT_ALLOW_PAY}), and {@code debitBalance}'s optimistic lock rejects
+     * concurrent double-debit ({@code ERR_WALLET_VERSION_CONFLICT}).
+     */
+    @BizMutation
+    LitemallOrder payByBalance(@Name("orderId") String orderId,
+                                @Name("confirmCredential") String confirmCredential,
+                                IServiceContext context);
 
     /**
      * Trusted internal entry: drive a CREATED order to PAY after WeChat Pay async notify
