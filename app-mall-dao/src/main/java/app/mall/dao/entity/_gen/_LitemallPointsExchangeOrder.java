@@ -101,8 +101,24 @@ public class _LitemallPointsExchangeOrder extends DynamicOrmEntity{
     public static final String PROP_NAME_deleted = "deleted";
     public static final int PROP_ID_deleted = 20;
     
+    /* 支付状态（组合兑换现金部分）: PAY_STATUS INTEGER */
+    public static final String PROP_NAME_payStatus = "payStatus";
+    public static final int PROP_ID_payStatus = 21;
+    
+    /* 支付通道（组合兑换现金部分）: PAY_CHANNEL INTEGER */
+    public static final String PROP_NAME_payChannel = "payChannel";
+    public static final int PROP_ID_payChannel = 22;
+    
+    /* 现金单价快照（组合兑换）: CASH_PRICE DECIMAL */
+    public static final String PROP_NAME_cashPrice = "cashPrice";
+    public static final int PROP_ID_cashPrice = 23;
+    
+    /* 余额支付金额（组合兑换现金部分）: WALLET_PAY_AMOUNT DECIMAL */
+    public static final String PROP_NAME_walletPayAmount = "walletPayAmount";
+    public static final int PROP_ID_walletPayAmount = 24;
+    
 
-    private static int _PROP_ID_BOUND = 21;
+    private static int _PROP_ID_BOUND = 25;
 
     
     /* relation: 积分商品 */
@@ -112,7 +128,7 @@ public class _LitemallPointsExchangeOrder extends DynamicOrmEntity{
     protected static final List<String> PK_PROP_NAMES = Arrays.asList(PROP_NAME_id);
     protected static final int[] PK_PROP_IDS = new int[]{PROP_ID_id};
 
-    private static final String[] PROP_ID_TO_NAME = new String[21];
+    private static final String[] PROP_ID_TO_NAME = new String[25];
     private static final Map<String,Integer> PROP_NAME_TO_ID = new HashMap<>();
     static{
       
@@ -176,6 +192,18 @@ public class _LitemallPointsExchangeOrder extends DynamicOrmEntity{
           PROP_ID_TO_NAME[PROP_ID_deleted] = PROP_NAME_deleted;
           PROP_NAME_TO_ID.put(PROP_NAME_deleted, PROP_ID_deleted);
       
+          PROP_ID_TO_NAME[PROP_ID_payStatus] = PROP_NAME_payStatus;
+          PROP_NAME_TO_ID.put(PROP_NAME_payStatus, PROP_ID_payStatus);
+      
+          PROP_ID_TO_NAME[PROP_ID_payChannel] = PROP_NAME_payChannel;
+          PROP_NAME_TO_ID.put(PROP_NAME_payChannel, PROP_ID_payChannel);
+      
+          PROP_ID_TO_NAME[PROP_ID_cashPrice] = PROP_NAME_cashPrice;
+          PROP_NAME_TO_ID.put(PROP_NAME_cashPrice, PROP_ID_cashPrice);
+      
+          PROP_ID_TO_NAME[PROP_ID_walletPayAmount] = PROP_NAME_walletPayAmount;
+          PROP_NAME_TO_ID.put(PROP_NAME_walletPayAmount, PROP_ID_walletPayAmount);
+      
     }
 
     
@@ -238,6 +266,18 @@ public class _LitemallPointsExchangeOrder extends DynamicOrmEntity{
     
     /* 逻辑删除: DELETED */
     private java.lang.Boolean _deleted;
+    
+    /* 支付状态（组合兑换现金部分）: PAY_STATUS */
+    private java.lang.Integer _payStatus;
+    
+    /* 支付通道（组合兑换现金部分）: PAY_CHANNEL */
+    private java.lang.Integer _payChannel;
+    
+    /* 现金单价快照（组合兑换）: CASH_PRICE */
+    private java.math.BigDecimal _cashPrice;
+    
+    /* 余额支付金额（组合兑换现金部分）: WALLET_PAY_AMOUNT */
+    private java.math.BigDecimal _walletPayAmount;
     
 
     public _LitemallPointsExchangeOrder(){
@@ -372,6 +412,18 @@ public class _LitemallPointsExchangeOrder extends DynamicOrmEntity{
         
             case PROP_ID_deleted:
                return getDeleted();
+        
+            case PROP_ID_payStatus:
+               return getPayStatus();
+        
+            case PROP_ID_payChannel:
+               return getPayChannel();
+        
+            case PROP_ID_cashPrice:
+               return getCashPrice();
+        
+            case PROP_ID_walletPayAmount:
+               return getWalletPayAmount();
         
            default:
               return super.orm_propValue(propId);
@@ -584,6 +636,46 @@ public class _LitemallPointsExchangeOrder extends DynamicOrmEntity{
                break;
             }
         
+            case PROP_ID_payStatus:{
+               java.lang.Integer typedValue = null;
+               if(value != null){
+                   typedValue = ConvertHelper.toInteger(value,
+                       err-> newTypeConversionError(PROP_NAME_payStatus));
+               }
+               setPayStatus(typedValue);
+               break;
+            }
+        
+            case PROP_ID_payChannel:{
+               java.lang.Integer typedValue = null;
+               if(value != null){
+                   typedValue = ConvertHelper.toInteger(value,
+                       err-> newTypeConversionError(PROP_NAME_payChannel));
+               }
+               setPayChannel(typedValue);
+               break;
+            }
+        
+            case PROP_ID_cashPrice:{
+               java.math.BigDecimal typedValue = null;
+               if(value != null){
+                   typedValue = ConvertHelper.toBigDecimal(value,
+                       err-> newTypeConversionError(PROP_NAME_cashPrice));
+               }
+               setCashPrice(typedValue);
+               break;
+            }
+        
+            case PROP_ID_walletPayAmount:{
+               java.math.BigDecimal typedValue = null;
+               if(value != null){
+                   typedValue = ConvertHelper.toBigDecimal(value,
+                       err-> newTypeConversionError(PROP_NAME_walletPayAmount));
+               }
+               setWalletPayAmount(typedValue);
+               break;
+            }
+        
            default:
               super.orm_propValue(propId,value);
         }
@@ -729,6 +821,34 @@ public class _LitemallPointsExchangeOrder extends DynamicOrmEntity{
             case PROP_ID_deleted:{
                onInitProp(propId);
                this._deleted = (java.lang.Boolean)value;
+               
+               break;
+            }
+        
+            case PROP_ID_payStatus:{
+               onInitProp(propId);
+               this._payStatus = (java.lang.Integer)value;
+               
+               break;
+            }
+        
+            case PROP_ID_payChannel:{
+               onInitProp(propId);
+               this._payChannel = (java.lang.Integer)value;
+               
+               break;
+            }
+        
+            case PROP_ID_cashPrice:{
+               onInitProp(propId);
+               this._cashPrice = (java.math.BigDecimal)value;
+               
+               break;
+            }
+        
+            case PROP_ID_walletPayAmount:{
+               onInitProp(propId);
+               this._walletPayAmount = (java.math.BigDecimal)value;
                
                break;
             }
@@ -1115,6 +1235,82 @@ public class _LitemallPointsExchangeOrder extends DynamicOrmEntity{
         if(onPropSet(PROP_ID_deleted,value)){
             this._deleted = value;
             internalClearRefs(PROP_ID_deleted);
+            
+        }
+    }
+    
+    /**
+     * 支付状态（组合兑换现金部分）: PAY_STATUS
+     */
+    public final java.lang.Integer getPayStatus(){
+         onPropGet(PROP_ID_payStatus);
+         return _payStatus;
+    }
+
+    /**
+     * 支付状态（组合兑换现金部分）: PAY_STATUS
+     */
+    public final void setPayStatus(java.lang.Integer value){
+        if(onPropSet(PROP_ID_payStatus,value)){
+            this._payStatus = value;
+            internalClearRefs(PROP_ID_payStatus);
+            
+        }
+    }
+    
+    /**
+     * 支付通道（组合兑换现金部分）: PAY_CHANNEL
+     */
+    public final java.lang.Integer getPayChannel(){
+         onPropGet(PROP_ID_payChannel);
+         return _payChannel;
+    }
+
+    /**
+     * 支付通道（组合兑换现金部分）: PAY_CHANNEL
+     */
+    public final void setPayChannel(java.lang.Integer value){
+        if(onPropSet(PROP_ID_payChannel,value)){
+            this._payChannel = value;
+            internalClearRefs(PROP_ID_payChannel);
+            
+        }
+    }
+    
+    /**
+     * 现金单价快照（组合兑换）: CASH_PRICE
+     */
+    public final java.math.BigDecimal getCashPrice(){
+         onPropGet(PROP_ID_cashPrice);
+         return _cashPrice;
+    }
+
+    /**
+     * 现金单价快照（组合兑换）: CASH_PRICE
+     */
+    public final void setCashPrice(java.math.BigDecimal value){
+        if(onPropSet(PROP_ID_cashPrice,value)){
+            this._cashPrice = value;
+            internalClearRefs(PROP_ID_cashPrice);
+            
+        }
+    }
+    
+    /**
+     * 余额支付金额（组合兑换现金部分）: WALLET_PAY_AMOUNT
+     */
+    public final java.math.BigDecimal getWalletPayAmount(){
+         onPropGet(PROP_ID_walletPayAmount);
+         return _walletPayAmount;
+    }
+
+    /**
+     * 余额支付金额（组合兑换现金部分）: WALLET_PAY_AMOUNT
+     */
+    public final void setWalletPayAmount(java.math.BigDecimal value){
+        if(onPropSet(PROP_ID_walletPayAmount,value)){
+            this._walletPayAmount = value;
+            internalClearRefs(PROP_ID_walletPayAmount);
             
         }
     }

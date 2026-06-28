@@ -656,6 +656,12 @@ prop:
       addTime: null
       updateTime: null
       deleted: null
+      payStatus: null
+      payStatus_label: null
+      payChannel: null
+      payChannel_label: null
+      cashPrice: null
+      walletPayAmount: null
       pointsGoods: Points Goods
     LitemallPointsFlow:
       id: null
@@ -687,6 +693,7 @@ prop:
       addTime: null
       updateTime: null
       deleted: null
+      cashPrice: Cash Price (combo, null/0 = points-only)
       goods: Goods
       goods.name: Goods
     LitemallPromotionActivity:

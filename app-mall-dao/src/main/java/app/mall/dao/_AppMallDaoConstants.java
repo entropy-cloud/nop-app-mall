@@ -474,6 +474,11 @@ public interface _AppMallDaoConstants {
     int EXCHANGE_STATUS_PENDING = 0;
                     
     /**
+     * 积分兑换订单状态: 待支付 
+     */
+    int EXCHANGE_STATUS_AWAITING_PAYMENT = 5;
+                    
+    /**
      * 积分兑换订单状态: 已发货 
      */
     int EXCHANGE_STATUS_SHIPPED = 10;

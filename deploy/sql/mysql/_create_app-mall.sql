@@ -708,6 +708,7 @@ CREATE TABLE litemall_points_goods(
   ADD_TIME DATETIME NULL    COMMENT '创建时间',
   UPDATE_TIME DATETIME NULL    COMMENT '更新时间',
   DELETED BOOLEAN NULL    COMMENT '逻辑删除',
+  CASH_PRICE DECIMAL(10,2) NULL    COMMENT '现金单价（组合兑换，空/0=纯积分）',
   constraint PK_litemall_points_goods primary key (ID)
 )CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
 
@@ -832,6 +833,10 @@ CREATE TABLE litemall_points_exchange_order(
   ADD_TIME DATETIME NULL    COMMENT '创建时间',
   UPDATE_TIME DATETIME NULL    COMMENT '更新时间',
   DELETED BOOLEAN NULL    COMMENT '逻辑删除',
+  PAY_STATUS INTEGER NULL    COMMENT '支付状态（组合兑换现金部分）',
+  PAY_CHANNEL INTEGER NULL    COMMENT '支付通道（组合兑换现金部分）',
+  CASH_PRICE DECIMAL(10,2) NULL    COMMENT '现金单价快照（组合兑换）',
+  WALLET_PAY_AMOUNT DECIMAL(10,2) NULL    COMMENT '余额支付金额（组合兑换现金部分）',
   constraint PK_litemall_points_exchange_order primary key (ID)
 )CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
 

@@ -708,6 +708,7 @@ CREATE TABLE litemall_points_goods(
   ADD_TIME DATE  ,
   UPDATE_TIME DATE  ,
   DELETED CHAR(1)  ,
+  CASH_PRICE NUMBER(10,2)  ,
   constraint PK_litemall_points_goods primary key (ID)
 );
 
@@ -832,6 +833,10 @@ CREATE TABLE litemall_points_exchange_order(
   ADD_TIME DATE  ,
   UPDATE_TIME DATE  ,
   DELETED CHAR(1)  ,
+  PAY_STATUS INTEGER  ,
+  PAY_CHANNEL INTEGER  ,
+  CASH_PRICE NUMBER(10,2)  ,
+  WALLET_PAY_AMOUNT NUMBER(10,2)  ,
   constraint PK_litemall_points_exchange_order primary key (ID)
 );
 
@@ -1981,6 +1986,8 @@ CREATE TABLE litemall_pin_tuan_member(
                     
       COMMENT ON COLUMN litemall_points_goods.DELETED IS '逻辑删除';
                     
+      COMMENT ON COLUMN litemall_points_goods.CASH_PRICE IS '现金单价（组合兑换，空/0=纯积分）';
+                    
       COMMENT ON TABLE litemall_aftersale IS '售后表';
                 
       COMMENT ON COLUMN litemall_aftersale.ID IS 'Id';
@@ -2186,6 +2193,14 @@ CREATE TABLE litemall_pin_tuan_member(
       COMMENT ON COLUMN litemall_points_exchange_order.UPDATE_TIME IS '更新时间';
                     
       COMMENT ON COLUMN litemall_points_exchange_order.DELETED IS '逻辑删除';
+                    
+      COMMENT ON COLUMN litemall_points_exchange_order.PAY_STATUS IS '支付状态（组合兑换现金部分）';
+                    
+      COMMENT ON COLUMN litemall_points_exchange_order.PAY_CHANNEL IS '支付通道（组合兑换现金部分）';
+                    
+      COMMENT ON COLUMN litemall_points_exchange_order.CASH_PRICE IS '现金单价快照（组合兑换）';
+                    
+      COMMENT ON COLUMN litemall_points_exchange_order.WALLET_PAY_AMOUNT IS '余额支付金额（组合兑换现金部分）';
                     
       COMMENT ON TABLE litemall_pin_tuan_member IS '拼团参团记录表';
                 

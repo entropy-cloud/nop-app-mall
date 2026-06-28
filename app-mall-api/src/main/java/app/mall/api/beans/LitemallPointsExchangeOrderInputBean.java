@@ -250,4 +250,60 @@
         }
 
 
+        private Integer _payStatus;
+
+    
+        @PropMeta(propId=21)
+    
+        public Integer getPayStatus(){
+            return _payStatus;
+        }
+
+        public void setPayStatus(Integer value){
+            this._payStatus = value;
+        }
+
+
+        private Integer _payChannel;
+
+    
+        @PropMeta(propId=22)
+    
+        public Integer getPayChannel(){
+            return _payChannel;
+        }
+
+        public void setPayChannel(Integer value){
+            this._payChannel = value;
+        }
+
+
+        private java.math.BigDecimal _cashPrice;
+
+    
+        @PropMeta(propId=23)
+    
+        public java.math.BigDecimal getCashPrice(){
+            return _cashPrice;
+        }
+
+        public void setCashPrice(java.math.BigDecimal value){
+            this._cashPrice = value;
+        }
+
+
+        private java.math.BigDecimal _walletPayAmount;
+
+    
+        @PropMeta(propId=24)
+    
+        public java.math.BigDecimal getWalletPayAmount(){
+            return _walletPayAmount;
+        }
+
+        public void setWalletPayAmount(java.math.BigDecimal value){
+            this._walletPayAmount = value;
+        }
+
+
     }

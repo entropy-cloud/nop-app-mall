@@ -7,6 +7,7 @@ import app.mall.biz.ILitemallMemberLevelBiz;
 import app.mall.biz.ILitemallOrderBiz;
 import app.mall.biz.ILitemallOrderGoodsBiz;
 import app.mall.biz.ILitemallPinTuanActivityBiz;
+import app.mall.biz.ILitemallPointsExchangeOrderBiz;
 import io.nop.core.context.IServiceContext;
 import io.nop.core.context.ServiceContextImpl;
 import jakarta.inject.Inject;
@@ -21,6 +22,7 @@ public class MallJobInvoker {
     private static final int ORDER_CANCEL_TIMEOUT_MINUTES = 30;
     private static final int ORDER_CONFIRM_TIMEOUT_MINUTES = 10080;
     private static final int COMMENT_WINDOW_TIMEOUT_DAYS = 7;
+    private static final int EXCHANGE_CANCEL_TIMEOUT_MINUTES = 30;
 
     @Inject
     ILitemallOrderBiz orderBiz;
@@ -42,6 +44,9 @@ public class MallJobInvoker {
 
     @Inject
     ILitemallMemberLevelBiz memberLevelBiz;
+
+    @Inject
+    ILitemallPointsExchangeOrderBiz exchangeOrderBiz;
 
     public void cancelExpiredOrders() {
         IServiceContext context = new ServiceContextImpl();
@@ -96,5 +101,14 @@ public class MallJobInvoker {
         IServiceContext context = new ServiceContextImpl();
         int count = memberLevelBiz.dispatchBirthdayCoupons(context);
         LOG.info("mall-job dispatchBirthdayCoupons finished, affected={}", count);
+    }
+
+    // Combo-exchange (points+cash) AWAITING_PAYMENT timeout cancel (E3 backstop): scans combo orders
+    // past the payment timeout and cancels them (restore stock + refund points; cash never paid).
+    // See docs/design/marketing-and-promotions.md 「组合兑换流程」超时取消.
+    public void cancelExpiredExchangeOrders() {
+        IServiceContext context = new ServiceContextImpl();
+        int count = exchangeOrderBiz.cancelExpiredExchangeOrders(EXCHANGE_CANCEL_TIMEOUT_MINUTES, context);
+        LOG.info("mall-job cancelExpiredExchangeOrders finished, affected={}", count);
     }
 }

@@ -76,3 +76,14 @@ jobs:
     invoker:
       bean: app.mall.service.scheduler.MallJobInvoker
       method: dispatchBirthdayCoupons
+
+  - jobName: cancel-expired-exchange-orders
+    displayName: Cancel Expired Combo Exchange Orders
+    description: Auto-cancel combo (points+cash) exchange orders stuck in AWAITING_PAYMENT past timeout
+    trigger:
+      repeatInterval: 900000
+      repeatFixedDelay: true
+      maxExecutionCount: 0
+    invoker:
+      bean: app.mall.service.scheduler.MallJobInvoker
+      method: cancelExpiredExchangeOrders

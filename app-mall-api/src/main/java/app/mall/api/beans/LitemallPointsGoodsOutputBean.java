@@ -221,6 +221,20 @@
         }
 
 
+        private java.math.BigDecimal _cashPrice;
+
+    
+        @PropMeta(propId=15)
+    
+        public java.math.BigDecimal getCashPrice(){
+            return _cashPrice;
+        }
+
+        public void setCashPrice(java.math.BigDecimal value){
+            this._cashPrice = value;
+        }
+
+
         private Map<String,Object> _goods;
 
         public Map<String,Object> getGoods(){

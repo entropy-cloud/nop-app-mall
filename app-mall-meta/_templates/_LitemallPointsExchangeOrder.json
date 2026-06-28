@@ -20,5 +20,11 @@
   "addTime": "2000-01-01 14:00:00",
   "updateTime": "2000-01-01 14:00:00",
   "deleted": false,
+  "payStatus": 0,
+  "payStatus_label": "",
+  "payChannel": 0,
+  "payChannel_label": "",
+  "cashPrice": 0.0,
+  "walletPayAmount": 0.0,
   "pointsGoods": null
 }

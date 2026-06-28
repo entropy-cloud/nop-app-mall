@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<sql-lib x:schema="/nop/schema/orm/sql-lib.xdef" xmlns:x="/nop/schema/xdsl.xdef">
+
+    <sqls>
+        <eql name="updateStatusIfMatch" sqlMethod="execute">
+            <arg name="id"/>
+            <arg name="newStatus"/>
+            <arg name="expectedStatus"/>
+
+            <source>
+                update LitemallPointsExchangeOrder
+                set exchangeStatus = ${newStatus},
+                    updateTime = now()
+                where id = ${id} and exchangeStatus = ${expectedStatus}
+            </source>
+        </eql>
+    </sqls>
+</sql-lib>

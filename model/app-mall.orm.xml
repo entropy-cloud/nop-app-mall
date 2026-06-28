@@ -156,6 +156,7 @@
         </dict>
         <dict label="积分兑换订单状态" name="mall/exchange-status" valueType="int" i18n-en:label="Points Exchange Status">
             <option code="PENDING" label="待处理" value="0"/>
+            <option code="AWAITING_PAYMENT" label="待支付" value="5"/>
             <option code="SHIPPED" label="已发货" value="10"/>
             <option code="COMPLETED" label="已完成" value="20"/>
             <option code="CANCELLED" label="已取消" value="30"/>
@@ -2239,6 +2240,8 @@
                         stdDataType="int" stdSqlType="INTEGER" ext:dict="mall/promotion-status"/>
                 <column code="REMARK" displayName="备注" name="remark" precision="255" propId="11"
                         stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="CASH_PRICE" displayName="现金单价（组合兑换，空/0=纯积分）" name="cashPrice" precision="10" propId="15" scale="2"
+                        stdDataType="decimal" stdSqlType="DECIMAL" i18n-en:displayName="Cash Price (combo, null/0 = points-only)"/>
                 <column code="ADD_TIME" displayName="创建时间" domain="createTime" name="addTime" propId="12"
                         stdDataType="datetime" stdSqlType="DATETIME" ui:show="X"/>
                 <column code="UPDATE_TIME" displayName="更新时间" domain="updateTime" name="updateTime" propId="13"
@@ -2294,6 +2297,14 @@
                         stdDataType="string" stdSqlType="VARCHAR"/>
                 <column code="REMARK" displayName="备注" name="remark" precision="255" propId="17"
                         stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="PAY_STATUS" displayName="支付状态（组合兑换现金部分）" name="payStatus" propId="21"
+                        stdDataType="int" stdSqlType="INTEGER" ext:dict="mall/pay-status"/>
+                <column code="PAY_CHANNEL" displayName="支付通道（组合兑换现金部分）" name="payChannel" propId="22"
+                        stdDataType="int" stdSqlType="INTEGER" ext:dict="mall/pay-channel"/>
+                <column code="CASH_PRICE" displayName="现金单价快照（组合兑换）" name="cashPrice" precision="10" propId="23" scale="2"
+                        stdDataType="decimal" stdSqlType="DECIMAL"/>
+                <column code="WALLET_PAY_AMOUNT" displayName="余额支付金额（组合兑换现金部分）" name="walletPayAmount" precision="10" propId="24" scale="2"
+                        stdDataType="decimal" stdSqlType="DECIMAL"/>
                 <column code="ADD_TIME" displayName="创建时间" domain="createTime" name="addTime" propId="18"
                         stdDataType="datetime" stdSqlType="DATETIME" ui:show="X"/>
                 <column code="UPDATE_TIME" displayName="更新时间" domain="updateTime" name="updateTime" propId="19"

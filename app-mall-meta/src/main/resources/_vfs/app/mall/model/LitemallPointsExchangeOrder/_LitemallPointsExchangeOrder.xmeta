@@ -98,6 +98,22 @@
               updatable="true" internal="true" ui:show="X">
             <schema domain="delFlag" type="java.lang.Boolean"/>
         </prop>
+        <prop name="payStatus" displayName="支付状态（组合兑换现金部分）" propId="21" queryable="true" sortable="true"
+              insertable="true" updatable="true">
+            <schema type="java.lang.Integer" dict="mall/pay-status"/>
+        </prop>
+        <prop name="payChannel" displayName="支付通道（组合兑换现金部分）" propId="22" queryable="true" sortable="true"
+              insertable="true" updatable="true">
+            <schema type="java.lang.Integer" dict="mall/pay-channel"/>
+        </prop>
+        <prop name="cashPrice" displayName="现金单价快照（组合兑换）" propId="23" queryable="true" sortable="true" insertable="true"
+              updatable="true">
+            <schema type="java.math.BigDecimal" precision="10" scale="2"/>
+        </prop>
+        <prop name="walletPayAmount" displayName="余额支付金额（组合兑换现金部分）" propId="24" queryable="true" sortable="true"
+              insertable="true" updatable="true">
+            <schema type="java.math.BigDecimal" precision="10" scale="2"/>
+        </prop>
         <prop name="pointsGoods" displayName="积分商品" i18n-en:displayName="Points Goods" tagSet="pub,ref-pub"
               ext:kind="to-one" internal="true" queryable="true" ext:joinLeftProp="pointsGoodsId" ext:joinRightProp="id"
               insertable="false" updatable="false" mandatory="true" lazy="true">

@@ -9,6 +9,10 @@ options:
     value: 0
     description: 
   
+  - label: 待支付
+    value: 5
+    description: 
+  
   - label: 已发货
     value: 10
     description: 

@@ -692,4 +692,25 @@ public interface AppMallErrors {
     ErrorCode ERR_EXCHANGE_STATUS_TRANSITION_INVALID =
             define("nop.err.mall.points-exchange.status-transition-invalid",
                     "兑换订单状态切换不合法");
+
+    // 积分+现金组合兑换错误码（successor）
+    ErrorCode ERR_EXCHANGE_CASH_PRICE_REQUIRED =
+            define("nop.err.mall.points-exchange.cash-price-required",
+                    "该积分商品不支持组合兑换（cashPrice 未配置）");
+
+    ErrorCode ERR_EXCHANGE_NOT_ALLOW_PAY =
+            define("nop.err.mall.points-exchange.not-allow-pay",
+                    "当前兑换订单状态不允许支付");
+
+    ErrorCode ERR_EXCHANGE_BALANCE_INSUFFICIENT =
+            define("nop.err.mall.points-exchange.balance-insufficient",
+                    "钱包余额不足以支付组合兑换现金部分");
+
+    ErrorCode ERR_EXCHANGE_PAY_CREDENTIAL_INVALID =
+            define("nop.err.mall.points-exchange.pay-credential-invalid",
+                    "组合兑换余额支付确认凭证不正确");
+
+    ErrorCode ERR_EXCHANGE_PAY_CHANNEL_DISABLED =
+            define("nop.err.mall.points-exchange.pay-channel-disabled",
+                    "所选支付通道未启用或不存在");
 }

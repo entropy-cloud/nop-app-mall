@@ -637,6 +637,7 @@ prop:
     LitemallPointsExchangeOrder:
       addTime: 创建时间
       addressId: 收货地址ID
+      cashPrice: 现金单价快照（组合兑换）
       consignee: 收货人
       deleted: 逻辑删除
       exchangeStatus: 兑换状态
@@ -645,6 +646,10 @@ prop:
       goodsId: 商品ID
       goodsName: 商品名称
       id: Id
+      payChannel: 支付通道（组合兑换现金部分）
+      payChannel_label: 支付通道（组合兑换现金部分）
+      payStatus: 支付状态（组合兑换现金部分）
+      payStatus_label: 支付状态（组合兑换现金部分）
       phone: 联系电话
       picUrl: 商品图片
       pointsGoods: 积分商品
@@ -657,6 +662,7 @@ prop:
       totalPoints: 消耗总积分
       updateTime: 更新时间
       userId: 用户ID
+      walletPayAmount: 余额支付金额（组合兑换现金部分）
     LitemallPointsFlow:
       account: 积分账户
       accountId: 积分账户ID
@@ -673,6 +679,7 @@ prop:
       userId: 用户ID
     LitemallPointsGoods:
       addTime: 创建时间
+      cashPrice: 现金单价（组合兑换，空/0=纯积分）
       deleted: 逻辑删除
       endTime: 兑换结束时间
       exchangeStock: 兑换活动库存
