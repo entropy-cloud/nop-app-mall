@@ -68,6 +68,42 @@
 - 只要能保证素材语义和可取回性，本地存储可作为支持方案。
 - 云存储属于基础设施选择，不应改变素材的业务语义。
 
+## 素材管理（P37）
+
+### 业务角色
+
+- 素材管理为管理员提供统一的图片/视频素材库，承载商城运营所需的可复用文件（活动 banner、商品封面、品牌素材等）。
+- 素材按分类组织，支持按分类 / 标签 / 文件类型 / 关键词检索。
+
+### 后端实现
+
+- 实体：`LitemallMaterial`（素材资源表）+ `LitemallMaterialCategory`（素材分类表，树形自引用 `parentId`/`children`）。
+- 上传动作 `uploadMaterial`（`@BizMutation`，`@Auth(roles="admin")`）：接收 AMIS file-upload 控件返回的 fileRef，通过 `IOrmEntityFileStore.decodeFileId` 解析 fileId → `IFileStore.getFile` 获取 `IFileRecord`，自动提取 `name`（文件名）、`fileSize`（字节）、`url`（`getFileLink`），并按 MIME/扩展名推断 `fileType`（`image/*` 或图片扩展名 → `image`；`video/*` 或视频扩展名 → `video`；其余 → `file`）。复用 `LitemallGoodsBizModel.parseGoodsImportExcel` 的 fileStore 使用模式，不引入新的平台模块。
+- 删除动作 `deleteMaterial`（`@BizMutation`，`@Auth(roles="admin")`）：逻辑删除素材记录（走 `deleted` 标记）。文件本身不从 `IFileStore` 物理删除（goods pic / brand logo 等引用可能仍存在，跨实体引用关系追踪为 Deferred successor）。
+- 搜索 `searchMaterials`（`@BizQuery`，`@Auth(roles="admin")`）：QueryBean 组合过滤 `name`(contains) / `categoryId`(eq) / `fileType`(eq) / `tag`(contains)，按 `addTime` 降序分页。基线数据量小，不做 FTS/索引。
+- 分类树 `getCategoryTree`（`@BizQuery`，`@Auth(roles="admin")`）：全量查询后内存组装为树，根节点为 `parentId` 为空者，所有层级按 `sortOrder` 升序。
+
+### xmeta 配置
+
+- `LitemallMaterial.xmeta` 为 `name`、`tag` 启用 `allowFilterOp="eq,in,contains,startsWith,endsWith"`，以支持 `searchMaterials` 的 contains 过滤。
+
+### 前端页面（P37 落地）
+
+- **素材库页（`LitemallMaterial.view.xml`，bounded-merge 定制）：**
+  - list grid（bounded-merge）：`url` 列用 gen-control 渲染图片/视频缩略图（`<img>`），其余列 name/fileType/fileSize/categoryId/tag/addTime。
+  - 查询表单（多维筛选）：`name`(contains 关键字) + `categoryId`（select，source=`LitemallMaterialCategory__findList/value:id,label:name`）+ `fileType` + `tag`。
+  - 上传弹窗：自定义 `upload` 表单（editMode=add）+ listAction「上传素材」(`dialog page="upload"`)。表单含 `fileUpload`（gen-control `input-file`，`receiver=/f/upload/LitemallMaterial/url`，上传得到 fileRef）+ `categoryId`（select）+ `tag`，提交至 `@mutation:LitemallMaterial__uploadMaterial`（fileUpload/categoryId/tag 作为参数）。fileType 由后端按 MIME/扩展名推断，前端不采集。
+  - 行操作：查看 / 编辑（drawer） / 删除（`row-delete-material-button`，调 `@mutation:LitemallMaterial__deleteMaterial?id=$id` 逻辑删除）。
+- **素材分类管理页（`LitemallMaterialCategory.view.xml`，bounded-merge 定制）：**
+  - list grid（bounded-merge）：id/name/parentId/sortOrder（sortOrder 可排序）。
+  - 编辑表单：name + parentId（select，source=`LitemallMaterialCategory__findList/value:id,label:name`，支持选父分类）+ sortOrder。
+  - 标准 CRUD（新增/编辑/删除）+ 排序。`getCategoryTree` 提供树形数据（后端 API），分类管理的父子关系通过 parentId select 维护。
+- **校验：** `TestMaterialViewLoad`（app-mall-web）通过 `DslModelParser` 解析两份 view.xml（x:extends + view-gen + xview.xdef 校验），证明启动时加载无报错。
+
+### 与文件存储章节的关系
+
+- 素材管理复用「文件存储」章节定义的本地存储基线（`nop-file-service` 提供的 `IFileStore`），不改变素材的业务语义。
+
 ## 通知
 
 ### 业务角色
