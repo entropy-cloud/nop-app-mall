@@ -181,7 +181,8 @@ Exit Criteria:
 
 - Classification: `model-gap`
 - Why Not Blocking Closure: 兑换幂等复用既有应用层 `(sourceType, sourceId)` 查重（与 P27 既有 earn/spend 一致）；DB 唯一键为强一致兜底，非本特性阻塞项。
-- Successor Required: `yes`（触发条件：下次修改 PointsFlow 模型时，或要求 DB 级幂等强一致时）
+- Successor Required: `yes`（触发条件：下次修改 PointsFlow 模型时，或要求 DB 级幂等强一致时）→ **已触发并闭环**
+- Successor Closed: 已由 `docs/plans/2026-06-29-1045-1-orm-data-integrity-constraints-plan.md` 交付（`uk_litemall_points_flow_source` 唯一键 + earnPoints 应用层异常翻译为 `ERR_POINTS_DUPLICATE_EARN`）。
 
 ## Closure
 

@@ -236,7 +236,8 @@ Exit Criteria:
 
 - Classification: `model-gap`
 - Why Not Blocking Closure: 核销码反查与唯一性当前由应用层保证（基线订单量非超大，应用层足够）；DB 唯一键为强一致兜底。
-- Successor Required: `yes`
+- Successor Required: `yes` → **已触发并闭环**
+- Successor Closed: 已由 `docs/plans/2026-06-29-1045-1-orm-data-integrity-constraints-plan.md` 交付（`idx_order_pickupCode` 非唯一索引关闭反查性能 gap；唯一性已由应用层 UUID 保证，唯一键因 Order 逻辑删除 + pickupCode 可空不适用）。
 - Model Gap Detail: 缺 `LitemallOrder.pickupCode` 唯一键/索引；触发条件——下次修改 Order 模型时，或核销码反查成为热点/要求 DB 级唯一强一致时，补 unique-key/index。
 
 ### 已支付未自提订单自动超时取消/退款

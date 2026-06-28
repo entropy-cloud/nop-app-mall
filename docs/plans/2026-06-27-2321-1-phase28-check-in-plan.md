@@ -220,7 +220,8 @@ Exit Criteria:
 
 - Classification: `model-gap`
 - Why Not Blocking Closure: 防重签应用层查 (userId, checkInDate=今日) 已保证正确性；DB 唯一键为强一致兜底，签到非高并发路径，应用层足够。模型当前无该唯一键。
-- Successor Required: `yes`
+- Successor Required: `yes` → **已触发并部分闭环**
+- Successor Closed: 已由 `docs/plans/2026-06-29-1045-1-orm-data-integrity-constraints-plan.md` 交付（`idx_check_in_record_user_date` 非唯一索引关闭反查性能 gap）。**注：** DB 级唯一键保证因 CheckInRecord 使用 BOOLEAN 逻辑删除方案（按 `logical-deletion.md:68,197` 无法解决唯一键冲突）不可行，该 successor 计划据平台文档裁定改用非唯一索引；真正的 DB 级防重签唯一保证需迁移至 `delVersion` BIGINT 方案 + 复合唯一键，见该 successor 计划的 Deferred But Adjudicated。
 - Model Gap Detail: 缺 `LitemallCheckInRecord` 的 `(userId, checkInDate)` 唯一键；触发条件——下次修改 CheckInRecord 模型时，或业务要求防重签 DB 级强一致时，补 unique-key。
 
 ### P27 签到得积分触发残留闭合

@@ -215,7 +215,8 @@ Exit Criteria:
 
 - Classification: `model-gap`
 - Why Not Blocking Closure: `LitemallPointsFlow` 无 `(sourceType, sourceId)` 数据库唯一键（`app-mall.orm.xml:1806-1841` 仅有 relations 无 unique-keys）。购物赠送幂等依赖应用层「查 sourceId 后插入」，在并发 confirm() 下存在竞态（极低概率，订单确认收货非高并发路径）。账户 earn/spend 核心不依赖此唯一键。
-- Successor Required: `yes`
+- Successor Required: `yes` → **已触发并闭环**
+- Successor Closed: 已由 `docs/plans/2026-06-29-1045-1-orm-data-integrity-constraints-plan.md` 交付（`uk_litemall_points_flow_source` 唯一键 + earnPoints 应用层异常翻译为 `ERR_POINTS_DUPLICATE_EARN`）。
 - Model Gap Detail: 缺 `LitemallPointsFlow` 的 `(sourceType, sourceId)` 唯一键约束（防重复赠送）；触发条件——下次修改 PointsFlow 模型时，或业务要求赠送幂等强一致（数据库级保证）时，补 unique-key。
 
 ### 积分有效期与自动过期
