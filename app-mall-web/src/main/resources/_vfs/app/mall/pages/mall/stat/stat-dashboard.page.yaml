@@ -1,85 +1,195 @@
 type: page
-title: 统计看板
+title: 经营看板
 body:
   - type: form
-    title: 查询条件
+    title: 看板筛选
     mode: inline
     wrapWithPanel: false
     body:
+      - type: select
+        name: granularity
+        label: 趋势粒度
+        value: day
+        options:
+          - label: 按小时
+            value: hour
+          - label: 按天
+            value: day
+          - label: 按周
+            value: week
+          - label: 按月
+            value: month
       - type: input-date-range
         name: dateRange
-        label: 时间范围
+        label: 趋势范围
         format: X
       - type: button
         label: 刷新
         level: primary
         actionType: reload
-        target: orderStat,userStat,goodsRank
+        target: metrics,salesTrend,realtimeOrders,todo
 
-  - type: grid
-    columns:
-      - md: 6
-        body:
-          - type: service
-            name: orderStat
-            api:
-              url: '@query:LitemallOrder__getOrderStatistics'
-              data:
-                startDate: "${dateRange[0] ? dateRange[0] | date : ''}"
-                endDate: "${dateRange[1] ? dateRange[1] | date : ''}"
-              sendOn: true
-            body:
-              - type: panel
-                title: 订单统计
-                body:
-                  - type: tpl
-                    tpl: '订单总数：<b>${totalCount}</b>'
-                  - type: tpl
-                    tpl: '订单总金额：<b>¥${totalAmount}</b>'
-                  - type: tpl
-                    tpl: '待付款：${pendingCount}，已支付：${paidCount}'
-                  - type: tpl
-                    tpl: '已发货：${shippedCount}，已完成：${completedCount}，已取消：${cancelledCount}'
-      - md: 6
-        body:
-          - type: service
-            name: userStat
-            api:
-              url: '@query:LitemallOrder__getUserStatistics'
-              data:
-                startDate: "${dateRange[0] ? dateRange[0] | date : ''}"
-                endDate: "${dateRange[1] ? dateRange[1] | date : ''}"
-              sendOn: true
-            body:
-              - type: panel
-                title: 用户统计
-                body:
-                  - type: tpl
-                    tpl: '用户总数：<b>${totalUsers}</b>'
-                  - type: tpl
-                    tpl: '今日新增：<b>${newUsersToday}</b>'
-                  - type: tpl
-                    tpl: '本周新增：${newUsersThisWeek}，本月新增：${newUsersThisMonth}'
-
+  # 核心指标卡
   - type: service
-    name: goodsRank
+    name: metrics
     api:
-      url: '@query:LitemallOrder__getGoodsSalesRanking'
+      url: '@query:LitemallOrder__getDashboardMetrics'
+      data: {}
+      sendOn: true
+    body:
+      - type: grid
+        columns:
+          - md: 2
+            body:
+              - type: panel
+                title: 今日 GMV（¥）
+                body:
+                  - type: tpl
+                    tpl: '<b style="font-size:24px">${todayGmv || 0}</b>'
+                  - type: tpl
+                    tpl: '日环比：${gmvDayRatio != null ? (gmvDayRatio >= 0 ? "▲" : "▼") + (Math.abs(gmvDayRatio) * 100).toFixed(1) + "%" : "--"} | 周同比：${gmvWeekRatio != null ? (gmvWeekRatio >= 0 ? "▲" : "▼") + (Math.abs(gmvWeekRatio) * 100).toFixed(1) + "%" : "--"}'
+          - md: 2
+            body:
+              - type: panel
+                title: 今日订单数
+                body:
+                  - type: tpl
+                    tpl: '<b style="font-size:24px">${orderCount || 0}</b>'
+          - md: 2
+            body:
+              - type: panel
+                title: UV（登录用户）
+                body:
+                  - type: tpl
+                    tpl: '<b style="font-size:24px">${uv || 0}</b>'
+          - md: 2
+            body:
+              - type: panel
+                title: 转化率
+                body:
+                  - type: tpl
+                    tpl: '<b style="font-size:24px">${((conversionRate || 0) * 100).toFixed(2)}%</b>'
+          - md: 2
+            body:
+              - type: panel
+                title: 客单价（¥）
+                body:
+                  - type: tpl
+                    tpl: '<b style="font-size:24px">${aov || 0}</b>'
+          - md: 2
+            body:
+              - type: panel
+                title: 退货率
+                body:
+                  - type: tpl
+                    tpl: '<b style="font-size:24px">${((returnRate || 0) * 100).toFixed(2)}%</b>'
+
+  # 销售趋势图
+  - type: service
+    name: salesTrend
+    api:
+      url: '@query:LitemallOrder__getSalesTrend'
       data:
-        startDate: "${dateRange[0] ? dateRange[0] | date : ''}"
-        endDate: "${dateRange[1] ? dateRange[1] | date : ''}"
-        limit: 10
+        granularity: ${granularity}
+        startDate: "${dateRange ? (dateRange[0] ? dateRange[0] | date : '') : ''}"
+        endDate: "${dateRange ? (dateRange[1] ? dateRange[1] | date : '') : ''}"
       sendOn: true
     body:
       - type: panel
-        title: 商品销量排行 TOP10
+        title: 销售趋势
         body:
-          - type: table
-            source: ${data}
-            columns:
-              - name: goodsName
-                label: 商品
-              - name: salesCount
-                label: 销量
-              - name: salesAmount
-                label: 销售额
+          - type: chart
+            config:
+              tooltip:
+                trigger: axis
+              legend:
+                data: [GMV, 订单数]
+              dataset:
+                source: ${data}
+              xAxis:
+                type: category
+              yAxis:
+                - type: value
+                  name: GMV(¥)
+                - type: value
+                  name: 订单数
+              series:
+                - type: line
+                  name: GMV
+                  encode:
+                    x: dateLabel
+                    y: gmv
+                - type: bar
+                  name: 订单数
+                  yAxisIndex: 1
+                  encode:
+                    x: dateLabel
+                    y: orderCount
+
+  # 实时订单流 + 待办聚合
+  - type: grid
+    columns:
+      - md: 7
+        body:
+          - type: service
+            name: realtimeOrders
+            api:
+              url: '@query:LitemallOrder__getRealtimeOrders'
+              data:
+                limit: 20
+              sendOn: true
+            body:
+              - type: panel
+                title: 实时订单流
+                body:
+                  - type: table
+                    source: ${data}
+                    columns:
+                      - name: orderSn
+                        label: 订单号
+                      - name: userId
+                        label: 用户ID
+                      - name: orderStatus
+                        label: 状态
+                      - name: addTime
+                        label: 下单时间
+      - md: 5
+        body:
+          - type: service
+            name: todo
+            api:
+              url: '@query:LitemallOrder__getTodoAggregation'
+              data: {}
+              sendOn: true
+            body:
+              - type: panel
+                title: 待办聚合
+                body:
+                  - type: grid
+                    columns:
+                      - md: 6
+                        body:
+                          - type: tpl
+                            tpl: '待发货：<b style="color:#dc3545">${pendingShip || 0}</b>'
+                      - md: 6
+                        body:
+                          - type: tpl
+                            tpl: '待退款：<b style="color:#dc3545">${pendingRefund || 0}</b>'
+                      - md: 6
+                        body:
+                          - type: tpl
+                            tpl: '售后待审核：<b style="color:#dc3545">${aftersalePendingReview || 0}</b>'
+                      - md: 6
+                        body:
+                          - type: tpl
+                            tpl: '库存预警：<b style="color:#dc3545">${stockWarning || 0}</b>'
+                  - type: divider
+                  - type: tpl
+                    tpl: '<b>库存预警明细</b>'
+                  - type: table
+                    source: ${stockWarningDetails}
+                    columns:
+                      - name: goodsName
+                        label: 商品
+                      - name: totalStock
+                        label: 聚合库存

@@ -77,5 +77,69 @@
                   AND CREATE_TIME &lt;= ${endDate}
             </source>
         </sql>
+
+        <!-- ===== P18 经营看板统计 ===== -->
+
+        <sql name="getDashboardGmv" sqlMethod="findFirst"
+             colNameCamelCase="true"
+             rowType="app.mall.dao.dto.DashboardGmvBean">
+            <arg name="startDate"/>
+            <arg name="endDate"/>
+            <source>
+                SELECT
+                  COALESCE(SUM(ACTUAL_PRICE), 0) AS GMV,
+                  COUNT(*) AS ORDER_COUNT,
+                  COUNT(DISTINCT USER_ID) AS PAID_USER_COUNT,
+                  (SELECT COUNT(DISTINCT f.USER_ID) FROM litemall_footprint f
+                   WHERE CAST(f.DELETED AS INT) = 0
+                     AND f.ADD_TIME &gt;= ${startDate}
+                     AND f.ADD_TIME &lt;= ${endDate}) AS UV,
+                  (SELECT COUNT(*) FROM litemall_aftersale a
+                   WHERE CAST(a.DELETED AS INT) = 0
+                     AND CAST(a.STATUS AS INT) = 3
+                     AND a.ADD_TIME &gt;= ${startDate}
+                     AND a.ADD_TIME &lt;= ${endDate}) AS RETURN_COUNT
+                FROM litemall_order
+                WHERE CAST(DELETED AS INT) = 0
+                  AND CAST(ORDER_STATUS AS INT) &gt;= 201
+                  AND PAY_TIME &gt;= ${startDate}
+                  AND PAY_TIME &lt;= ${endDate}
+            </source>
+        </sql>
+
+        <sql name="getPaidOrderPoints" sqlMethod="findAll"
+             colNameCamelCase="true"
+             rowType="app.mall.dao.dto.OrderPointBean">
+            <arg name="startDate"/>
+            <arg name="endDate"/>
+            <source>
+                SELECT PAY_TIME AS PAY_TIME, ACTUAL_PRICE AS ACTUAL_PRICE
+                FROM litemall_order
+                WHERE CAST(DELETED AS INT) = 0
+                  AND CAST(ORDER_STATUS AS INT) &gt;= 201
+                  AND PAY_TIME &gt;= ${startDate}
+                  AND PAY_TIME &lt;= ${endDate}
+            </source>
+        </sql>
+
+        <sql name="getStockWarningList" sqlMethod="findAll"
+             colNameCamelCase="true"
+             rowType="app.mall.dao.dto.StockWarningItemBean">
+            <arg name="threshold"/>
+            <arg name="limit"/>
+            <source>
+                SELECT g.ID AS GOODS_ID, g.NAME AS GOODS_NAME,
+                       COALESCE(SUM(p.NUMBER), 0) AS TOTAL_STOCK
+                FROM litemall_goods g
+                LEFT JOIN litemall_goods_product p
+                  ON p.GOODS_ID = g.ID AND CAST(p.DELETED AS INT) = 0
+                WHERE CAST(g.DELETED AS INT) = 0
+                  AND CAST(g.IS_ON_SALE AS INT) = 1
+                GROUP BY g.ID, g.NAME
+                HAVING COALESCE(SUM(p.NUMBER), 0) &lt;= ${threshold}
+                ORDER BY TOTAL_STOCK ASC
+                LIMIT ${limit}
+            </source>
+        </sql>
     </sqls>
 </sql-lib>

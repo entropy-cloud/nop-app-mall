@@ -1,7 +1,10 @@
 package app.mall.dao.mapper;
 
+import app.mall.dao.dto.DashboardGmvBean;
 import app.mall.dao.dto.GoodsStatisticsBean;
+import app.mall.dao.dto.OrderPointBean;
 import app.mall.dao.dto.OrderStatisticsBean;
+import app.mall.dao.dto.StockWarningItemBean;
 import app.mall.dao.dto.UserStatisticsBean;
 import io.nop.api.core.annotations.core.Name;
 import io.nop.api.core.annotations.orm.SqlLibMapper;
@@ -29,4 +32,15 @@ public interface LitemallOrderMapper {
                                           @Name("todayStart") Timestamp todayStart,
                                           @Name("weekStart") Timestamp weekStart,
                                           @Name("monthStart") Timestamp monthStart);
+
+    // ===== P18 经营看板 =====
+
+    DashboardGmvBean getDashboardGmv(@Name("startDate") Timestamp startDate,
+                                      @Name("endDate") Timestamp endDate);
+
+    List<OrderPointBean> getPaidOrderPoints(@Name("startDate") Timestamp startDate,
+                                             @Name("endDate") Timestamp endDate);
+
+    List<StockWarningItemBean> getStockWarningList(@Name("threshold") int threshold,
+                                                    @Name("limit") int limit);
 }

@@ -1,8 +1,10 @@
 package app.mall.service.entity;
 
 import app.mall.biz.ILitemallAddressBiz;
+import app.mall.biz.ILitemallAftersaleBiz;
 import app.mall.biz.ILitemallCartBiz;
 import app.mall.biz.ILitemallCouponUserBiz;
+import app.mall.biz.ILitemallFootprintBiz;
 import app.mall.biz.ILitemallGoodsBiz;
 import app.mall.biz.ILitemallGoodsProductBiz;
 import app.mall.biz.ILitemallGrouponBiz;
@@ -18,15 +20,23 @@ import app.mall.biz.ILitemallSystemBiz;
 import app.mall.biz.ILitemallTimeDiscountBiz;
 import app.mall.dao._AppMallDaoConstants;
 import app.mall.dao.entity.LitemallAddress;
+import app.mall.dao.entity.LitemallAftersale;
 import app.mall.dao.entity.LitemallCart;
 import app.mall.dao.entity.LitemallCouponUser;
+import app.mall.dao.entity.LitemallFootprint;
 import app.mall.dao.entity.LitemallGoods;
 import app.mall.dao.entity.LitemallGoodsProduct;
 import app.mall.dao.entity.LitemallGrouponRules;
 import app.mall.dao.entity.LitemallOrder;
 import app.mall.dao.dto.BatchShipResultBean;
+import app.mall.dao.dto.DashboardGmvBean;
+import app.mall.dao.dto.DashboardMetricsBean;
 import app.mall.dao.dto.GoodsStatisticsBean;
+import app.mall.dao.dto.OrderPointBean;
 import app.mall.dao.dto.OrderStatisticsBean;
+import app.mall.dao.dto.SalesTrendPointBean;
+import app.mall.dao.dto.StockWarningItemBean;
+import app.mall.dao.dto.TodoAggregationBean;
 import app.mall.dao.dto.UserStatisticsBean;
 import app.mall.dao.dto.VerifyPickupResultBean;
 import app.mall.dao.entity.LitemallOrderGoods;
@@ -69,11 +79,14 @@ import org.slf4j.LoggerFactory;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.Timestamp;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -161,6 +174,12 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
 
     @Inject
     ILitemallSystemBiz systemBiz;
+
+    @Inject
+    ILitemallAftersaleBiz aftersaleBiz;
+
+    @Inject
+    ILitemallFootprintBiz footprintBiz;
 
     @Inject
     ILitemallPickupStoreBiz pickupStoreBiz;
@@ -946,6 +965,220 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
         Timestamp monthStart = Timestamp.valueOf(now.minusMonths(1));
 
         return orderMapper.getUserStatistics(start, end, todayStart, weekStart, monthStart);
+    }
+
+    // ===== P18 经营看板统计 API =====
+
+    @Override
+    @BizQuery
+    public DashboardMetricsBean getDashboardMetrics(IServiceContext context) {
+        LocalDate today = CoreMetrics.currentDate();
+        LocalDate yesterday = today.minusDays(1);
+        LocalDate lastWeekSameDay = today.minusWeeks(1);
+
+        Timestamp todayStart = Timestamp.valueOf(today.atTime(LocalTime.MIN));
+        Timestamp todayEnd = Timestamp.valueOf(today.atTime(LocalTime.MAX));
+        Timestamp yStart = Timestamp.valueOf(yesterday.atTime(LocalTime.MIN));
+        Timestamp yEnd = Timestamp.valueOf(yesterday.atTime(LocalTime.MAX));
+        Timestamp lwStart = Timestamp.valueOf(lastWeekSameDay.atTime(LocalTime.MIN));
+        Timestamp lwEnd = Timestamp.valueOf(lastWeekSameDay.atTime(LocalTime.MAX));
+
+        DashboardGmvBean todayBean = orderMapper.getDashboardGmv(todayStart, todayEnd);
+        DashboardGmvBean yBean = orderMapper.getDashboardGmv(yStart, yEnd);
+        DashboardGmvBean lwBean = orderMapper.getDashboardGmv(lwStart, lwEnd);
+
+        BigDecimal todayGmv = gmvOrZero(todayBean);
+        BigDecimal yesterdayGmv = gmvOrZero(yBean);
+        BigDecimal lastWeekGmv = gmvOrZero(lwBean);
+        int orderCount = todayBean != null ? todayBean.getOrderCount() : 0;
+        int paidUserCount = todayBean != null ? todayBean.getPaidUserCount() : 0;
+        int uv = todayBean != null ? todayBean.getUv() : 0;
+        int returnCount = todayBean != null ? todayBean.getReturnCount() : 0;
+
+        DashboardMetricsBean result = new DashboardMetricsBean();
+        result.setTodayGmv(todayGmv);
+        result.setYesterdayGmv(yesterdayGmv);
+        result.setLastWeekGmv(lastWeekGmv);
+        result.setOrderCount(orderCount);
+        result.setUv(uv);
+        result.setGmvDayRatio(growthRatio(todayGmv, yesterdayGmv));
+        result.setGmvWeekRatio(growthRatio(todayGmv, lastWeekGmv));
+        result.setAov(orderCount > 0
+                ? todayGmv.divide(BigDecimal.valueOf(orderCount), 2, RoundingMode.HALF_UP)
+                : BigDecimal.ZERO);
+        result.setConversionRate(uv > 0
+                ? BigDecimal.valueOf(paidUserCount).divide(BigDecimal.valueOf(uv), 4, RoundingMode.HALF_UP)
+                : BigDecimal.ZERO);
+        result.setReturnRate(orderCount > 0
+                ? BigDecimal.valueOf(returnCount).divide(BigDecimal.valueOf(orderCount), 4, RoundingMode.HALF_UP)
+                : BigDecimal.ZERO);
+        return result;
+    }
+
+    @Override
+    @BizQuery
+    public List<SalesTrendPointBean> getSalesTrend(@Optional @Name("granularity") String granularity,
+                                                     @Optional @Name("startDate") String startDate,
+                                                     @Optional @Name("endDate") String endDate,
+                                                     IServiceContext context) {
+        String gran = StringHelper.isEmpty(granularity) ? "day" : granularity.toLowerCase();
+        LocalDate today = CoreMetrics.currentDate();
+        LocalDate start = (startDate != null && !startDate.isEmpty()) ? LocalDate.parse(startDate) : today.minusDays(29);
+        LocalDate end = (endDate != null && !endDate.isEmpty()) ? LocalDate.parse(endDate) : today;
+        if (start.isAfter(end)) {
+            start = end;
+        }
+
+        Timestamp startTs = Timestamp.valueOf(start.atTime(LocalTime.MIN));
+        Timestamp endTs = Timestamp.valueOf(end.atTime(LocalTime.MAX));
+
+        List<OrderPointBean> points = orderMapper.getPaidOrderPoints(startTs, endTs);
+
+        Map<String, BigDecimal> gmvByKey = new LinkedHashMap<>();
+        Map<String, Integer> countByKey = new LinkedHashMap<>();
+        for (OrderPointBean p : points) {
+            if (p.getPayTime() == null) {
+                continue;
+            }
+            String key = trendBucketLabel(p.getPayTime(), gran);
+            BigDecimal price = p.getActualPrice() != null ? p.getActualPrice() : BigDecimal.ZERO;
+            gmvByKey.merge(key, price, BigDecimal::add);
+            countByKey.merge(key, 1, Integer::sum);
+        }
+
+        List<SalesTrendPointBean> result = new ArrayList<>();
+        for (String key : trendKeySequence(start, end, gran)) {
+            SalesTrendPointBean pt = new SalesTrendPointBean();
+            pt.setDateLabel(key);
+            pt.setGmv(gmvByKey.getOrDefault(key, BigDecimal.ZERO));
+            pt.setOrderCount(countByKey.getOrDefault(key, 0));
+            result.add(pt);
+        }
+        return result;
+    }
+
+    @Override
+    @BizQuery
+    public List<LitemallOrder> getRealtimeOrders(@Optional @Name("limit") Integer limit,
+                                                  IServiceContext context) {
+        int effectiveLimit = limit != null && limit > 0 ? limit : 20;
+        QueryBean query = new QueryBean();
+        query.addFilter(FilterBeans.eq(LitemallOrder.PROP_NAME_deleted, false));
+        query.addOrderField(LitemallOrder.PROP_NAME_addTime, true);
+        query.setLimit(effectiveLimit);
+        return findList(query, null, context);
+    }
+
+    @Override
+    @BizQuery
+    public TodoAggregationBean getTodoAggregation(IServiceContext context) {
+        QueryBean shipQ = new QueryBean();
+        shipQ.addFilter(FilterBeans.eq(LitemallOrder.PROP_NAME_orderStatus,
+                _AppMallDaoConstants.ORDER_STATUS_PAY));
+        int pendingShip = (int) findCount(shipQ, context);
+
+        QueryBean refundQ = new QueryBean();
+        refundQ.addFilter(FilterBeans.eq(LitemallOrder.PROP_NAME_orderStatus,
+                _AppMallDaoConstants.ORDER_STATUS_REFUND));
+        int pendingRefund = (int) findCount(refundQ, context);
+
+        QueryBean aftQ = new QueryBean();
+        aftQ.addFilter(FilterBeans.eq(LitemallAftersale.PROP_NAME_status,
+                _AppMallDaoConstants.AFTERSALE_STATUS_REQUEST));
+        int aftersalePendingReview = (int) aftersaleBiz.findCount(aftQ, context);
+
+        int threshold = resolveStockThreshold(context);
+        List<StockWarningItemBean> stockWarningDetails = orderMapper.getStockWarningList(threshold, 50);
+
+        TodoAggregationBean result = new TodoAggregationBean();
+        result.setPendingShip(pendingShip);
+        result.setPendingRefund(pendingRefund);
+        result.setAftersalePendingReview(aftersalePendingReview);
+        result.setStockWarning(stockWarningDetails.size());
+        result.setStockWarningDetails(stockWarningDetails);
+        return result;
+    }
+
+    private static BigDecimal gmvOrZero(DashboardGmvBean bean) {
+        return bean != null && bean.getGmv() != null ? bean.getGmv() : BigDecimal.ZERO;
+    }
+
+    private static BigDecimal growthRatio(BigDecimal current, BigDecimal compare) {
+        if (compare == null || compare.compareTo(BigDecimal.ZERO) == 0) {
+            return null;
+        }
+        return current.subtract(compare).divide(compare, 4, RoundingMode.HALF_UP);
+    }
+
+    private static String trendBucketLabel(LocalDateTime payTime, String granularity) {
+        switch (granularity) {
+            case "hour":
+                return payTime.toLocalDate().toString() + " " + String.format("%02d:00", payTime.getHour());
+            case "week": {
+                LocalDate monday = payTime.toLocalDate().with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
+                return monday.toString();
+            }
+            case "month":
+                return String.format("%04d-%02d", payTime.getYear(), payTime.getMonthValue());
+            case "day":
+            default:
+                return payTime.toLocalDate().toString();
+        }
+    }
+
+    private static List<String> trendKeySequence(LocalDate start, LocalDate end, String granularity) {
+        List<String> keys = new ArrayList<>();
+        switch (granularity) {
+            case "hour": {
+                LocalDate d = start;
+                while (!d.isAfter(end)) {
+                    for (int h = 0; h < 24; h++) {
+                        keys.add(d.toString() + " " + String.format("%02d:00", h));
+                    }
+                    d = d.plusDays(1);
+                }
+                break;
+            }
+            case "week": {
+                LocalDate monday = start.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
+                while (!monday.isAfter(end)) {
+                    keys.add(monday.toString());
+                    monday = monday.plusWeeks(1);
+                }
+                break;
+            }
+            case "month": {
+                LocalDate m = start.withDayOfMonth(1);
+                while (!m.isAfter(end)) {
+                    keys.add(String.format("%04d-%02d", m.getYear(), m.getMonthValue()));
+                    m = m.plusMonths(1);
+                }
+                break;
+            }
+            case "day":
+            default: {
+                LocalDate d = start;
+                while (!d.isAfter(end)) {
+                    keys.add(d.toString());
+                    d = d.plusDays(1);
+                }
+                break;
+            }
+        }
+        return keys;
+    }
+
+    private int resolveStockThreshold(IServiceContext context) {
+        String raw = systemBiz.getConfig(LitemallGoodsBizModel.CONFIG_STOCK_THRESHOLD_TIGHT, context);
+        if (StringHelper.isEmpty(raw)) {
+            return LitemallGoodsBizModel.DEFAULT_STOCK_THRESHOLD_TIGHT;
+        }
+        try {
+            int parsed = Integer.parseInt(raw.trim());
+            return parsed >= 0 ? parsed : LitemallGoodsBizModel.DEFAULT_STOCK_THRESHOLD_TIGHT;
+        } catch (NumberFormatException e) {
+            return LitemallGoodsBizModel.DEFAULT_STOCK_THRESHOLD_TIGHT;
+        }
     }
 
     @Override

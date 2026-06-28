@@ -12,6 +12,9 @@ import app.mall.dao.dto.OrderStatisticsBean;
 import app.mall.dao.dto.UserStatisticsBean;
 import app.mall.dao.dto.BatchShipResultBean;
 import app.mall.dao.dto.VerifyPickupResultBean;
+import app.mall.dao.dto.DashboardMetricsBean;
+import app.mall.dao.dto.SalesTrendPointBean;
+import app.mall.dao.dto.TodoAggregationBean;
 import app.mall.dao.entity.LitemallOrder;
 
 import java.util.Map;
@@ -104,6 +107,35 @@ public interface ILitemallOrderBiz extends ICrudBiz<LitemallOrder> {
     UserStatisticsBean getUserStatistics(@Optional @Name("startDate") String startDate,
                                           @Optional @Name("endDate") String endDate,
                                           IServiceContext context);
+
+    /**
+     * 经营看板核心指标卡（P18）。今日 GMV/同环比、订单数、UV、转化率、客单价、退货率。
+     * 口径见 docs/design/system-configuration.md「报表与统计」。
+     */
+    @BizQuery
+    DashboardMetricsBean getDashboardMetrics(IServiceContext context);
+
+    /**
+     * 销售趋势（P18）。按 granularity(hour/day/week/month) + 时间区间返回时序点。
+     */
+    @BizQuery
+    List<SalesTrendPointBean> getSalesTrend(@Optional @Name("granularity") String granularity,
+                                             @Optional @Name("startDate") String startDate,
+                                             @Optional @Name("endDate") String endDate,
+                                             IServiceContext context);
+
+    /**
+     * 实时订单流（P18）。返回最近 N 条订单（默认 20）。
+     */
+    @BizQuery
+    List<LitemallOrder> getRealtimeOrders(@Optional @Name("limit") Integer limit,
+                                          IServiceContext context);
+
+    /**
+     * 待办聚合（P18）。待发货/待退款/售后待审核/库存预警计数 + 库存预警明细。
+     */
+    @BizQuery
+    TodoAggregationBean getTodoAggregation(IServiceContext context);
 
     @BizMutation
     int cancelExpiredOrders(@Name("timeoutMinutes") int timeoutMinutes,

@@ -63,6 +63,64 @@ public class TestLitemallOrderStatisticsBizModel extends JunitBaseTestCase {
         assertNotNull(data);
     }
 
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testGetDashboardMetrics() {
+        ApiRequest<Map<String, Object>> req = ApiRequest.build(Map.of());
+        IGraphQLExecutionContext ctx = graphQLEngine.newRpcContext(
+                GraphQLOperationType.query, "LitemallOrder__getDashboardMetrics", req);
+        ApiResponse<?> result = graphQLEngine.executeRpc(ctx);
+        assertEquals(0, result.getStatus(), "getDashboardMetrics failed: status=" + result.getStatus() + " msg=" + result.getMsg());
+        Map<String, Object> data = (Map<String, Object>) result.getData();
+        assertNotNull(data);
+        assertNotNull(data.get("orderCount"));
+        assertNotNull(data.get("uv"));
+    }
+
+    @Test
+    public void testGetSalesTrend() {
+        ApiRequest<Map<String, Object>> req = ApiRequest.build(Map.of("granularity", "day"));
+        IGraphQLExecutionContext ctx = graphQLEngine.newRpcContext(
+                GraphQLOperationType.query, "LitemallOrder__getSalesTrend", req);
+        ApiResponse<?> result = graphQLEngine.executeRpc(ctx);
+        assertEquals(0, result.getStatus(), "getSalesTrend failed: status=" + result.getStatus() + " msg=" + result.getMsg());
+        assertNotNull(result.getData());
+    }
+
+    @Test
+    public void testGetSalesTrendHourly() {
+        ApiRequest<Map<String, Object>> req = ApiRequest.build(Map.of("granularity", "hour"));
+        IGraphQLExecutionContext ctx = graphQLEngine.newRpcContext(
+                GraphQLOperationType.query, "LitemallOrder__getSalesTrend", req);
+        ApiResponse<?> result = graphQLEngine.executeRpc(ctx);
+        assertEquals(0, result.getStatus(), "getSalesTrend(hour) failed: status=" + result.getStatus() + " msg=" + result.getMsg());
+        assertNotNull(result.getData());
+    }
+
+    @Test
+    public void testGetRealtimeOrders() {
+        ApiRequest<Map<String, Object>> req = ApiRequest.build(Map.of("limit", 5));
+        IGraphQLExecutionContext ctx = graphQLEngine.newRpcContext(
+                GraphQLOperationType.query, "LitemallOrder__getRealtimeOrders", req);
+        ApiResponse<?> result = graphQLEngine.executeRpc(ctx);
+        assertEquals(0, result.getStatus(), "getRealtimeOrders failed: status=" + result.getStatus() + " msg=" + result.getMsg());
+        assertNotNull(result.getData());
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testGetTodoAggregation() {
+        ApiRequest<Map<String, Object>> req = ApiRequest.build(Map.of());
+        IGraphQLExecutionContext ctx = graphQLEngine.newRpcContext(
+                GraphQLOperationType.query, "LitemallOrder__getTodoAggregation", req);
+        ApiResponse<?> result = graphQLEngine.executeRpc(ctx);
+        assertEquals(0, result.getStatus(), "getTodoAggregation failed: status=" + result.getStatus() + " msg=" + result.getMsg());
+        Map<String, Object> data = (Map<String, Object>) result.getData();
+        assertNotNull(data);
+        assertNotNull(data.get("pendingShip"));
+        assertNotNull(data.get("stockWarning"));
+    }
+
     @BeforeEach
     void setUp() {
         ContextProvider.getOrCreateContext().setUserId("1");
