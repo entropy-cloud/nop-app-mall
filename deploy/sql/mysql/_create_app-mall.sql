@@ -576,6 +576,7 @@ CREATE TABLE litemall_comment(
   PROS VARCHAR(1023) NULL    COMMENT '优点列表(JSON)',
   CONS VARCHAR(1023) NULL    COMMENT '缺点列表(JSON)',
   SEMANTIC_RATING INTEGER NULL    COMMENT '语义评级(1-5)',
+  AUDIT_STATUS INTEGER NULL    COMMENT '审核状态',
   constraint PK_litemall_comment primary key (ID)
 )CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
 

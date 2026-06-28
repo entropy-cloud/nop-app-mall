@@ -188,6 +188,8 @@ prop:
     LitemallComment:
       addTime: 创建时间
       adminContent: 管理员回复内容
+      auditStatus: 审核状态
+      auditStatus_label: 审核状态
       cons: 缺点列表(JSON)
       content: 评论内容
       deleted: 逻辑删除

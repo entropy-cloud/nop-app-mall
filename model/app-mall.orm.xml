@@ -149,6 +149,11 @@
             <option code="FAILED" label="开团失败" value="2"/>
             <option code="SUCCESS" label="开团成功" value="3"/>
         </dict>
+        <dict label="评论审核状态" name="mall/comment-audit-status" valueType="int" i18n-en:label="Comment Audit Status">
+            <option code="PENDING" label="待审核" value="0"/>
+            <option code="APPROVED" label="已通过" value="1"/>
+            <option code="REJECTED" label="已拒绝" value="2"/>
+        </dict>
     </dicts>
 
     <domains>
@@ -473,6 +478,7 @@
                 <column code="PROS" displayName="优点列表(JSON)" name="pros" precision="1023" propId="13" stdDataType="string" stdSqlType="VARCHAR"/>
                 <column code="CONS" displayName="缺点列表(JSON)" name="cons" precision="1023" propId="14" stdDataType="string" stdSqlType="VARCHAR"/>
                 <column code="SEMANTIC_RATING" displayName="语义评级(1-5)" name="semanticRating" propId="15" stdDataType="int" stdSqlType="INTEGER"/>
+                <column code="AUDIT_STATUS" displayName="审核状态" name="auditStatus" propId="16" stdDataType="int" stdSqlType="INTEGER" ext:dict="mall/comment-audit-status"/>
             </columns>
             <indexes>
                 <index name="idx_comment_userId" unique="false">

@@ -223,6 +223,32 @@
         }
 
 
+        private Integer _auditStatus;
+
+    
+        @PropMeta(propId=16)
+    
+        public Integer getAuditStatus(){
+            return _auditStatus;
+        }
+
+        public void setAuditStatus(Integer value){
+            this._auditStatus = value;
+        }
+
+
+        private String _auditStatus_label;
+
+    
+        public String getAuditStatus_label(){
+            return _auditStatus_label;
+        }
+
+        public void setAuditStatus_label(String value){
+            this._auditStatus_label = value;
+        }
+
+
         private java.util.List<io.nop.api.core.beans.file.FileStatusBean> _picUrlsComponentFileStatusList;
 
     

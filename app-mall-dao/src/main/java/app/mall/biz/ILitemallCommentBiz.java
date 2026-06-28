@@ -60,10 +60,16 @@ public interface ILitemallCommentBiz extends ICrudBiz<LitemallComment> {
                                                        @Name("action") String action,
                                                        IServiceContext context);
 
+    @BizMutation
+    List<BatchCommentResultBean> batchAuditComments(@Name("commentIds") List<String> commentIds,
+                                                    @Name("action") String action,
+                                                    IServiceContext context);
+
     @BizQuery
     PageBean<LitemallComment> getCommentReviewList(@Optional @Name("keyword") String keyword,
                                                     @Optional @Name("star") Integer star,
                                                     @Optional @Name("hasPicture") Boolean hasPicture,
+                                                    @Optional @Name("auditStatus") Integer auditStatus,
                                                     @Optional @Name("startTime") String startTime,
                                                     @Optional @Name("endTime") String endTime,
                                                     @Optional @Name("page") Integer page,

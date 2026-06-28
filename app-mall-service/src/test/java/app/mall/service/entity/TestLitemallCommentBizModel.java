@@ -592,4 +592,194 @@ public class TestLitemallCommentBizModel extends JunitBaseTestCase {
         assertEquals(0, res.getStatus());
         assertEquals(1, ((List<?>) ((Map<String, Object>) res.getData()).get("items")).size());
     }
+
+    // ---------- P36 successor 前置审核状态机 tests ----------
+
+    private void seedPreModerationConfig(String value) {
+        LitemallSystem cfg = daoProvider.daoFor(LitemallSystem.class).newEntity();
+        cfg.orm_propValueByName("keyName",
+                LitemallCommentBizModel.CONFIG_COMMENT_PRE_MODERATION);
+        cfg.orm_propValueByName("keyValue", value);
+        daoProvider.daoFor(LitemallSystem.class).saveEntity(cfg);
+    }
+
+    private void seedCommentRewardConfig(String value) {
+        LitemallSystem cfg = daoProvider.daoFor(LitemallSystem.class).newEntity();
+        cfg.orm_propValueByName("keyName",
+                LitemallPointsAccountBizModel.CONFIG_POINTS_COMMENT_REWARD);
+        cfg.orm_propValueByName("keyValue", value);
+        daoProvider.daoFor(LitemallSystem.class).saveEntity(cfg);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testPreModerationOnSubmitPendingAndNotPublic() {
+        seedPreModerationConfig("1");
+        // 同时配置奖励 10：预审 ON 时 submit 不应立即发积分
+        seedCommentRewardConfig("10");
+
+        ApiRequest<Map<String, Object>> req = ApiRequest.build(Map.of(
+                "orderGoodsId", orderGoodsId, "content", "pending-comment", "star", 5));
+        ApiResponse<?> res = graphQLEngine.executeRpc(graphQLEngine.newRpcContext(
+                GraphQLOperationType.mutation, "LitemallComment__submitComment", req));
+        assertEquals(0, res.getStatus(), "submit failed: " + res);
+        String commentId = (String) ((Map<String, Object>) res.getData()).get("id");
+
+        // auditStatus=PENDING
+        LitemallComment persisted = daoProvider.daoFor(LitemallComment.class).getEntityById(commentId);
+        assertEquals(_AppMallDaoConstants.COMMENT_AUDIT_STATUS_PENDING,
+                persisted.orm_propValueByName(LitemallComment.PROP_NAME_auditStatus));
+
+        // 公共 commentList 应过滤掉 PENDING 评论
+        LitemallOrderGoods og = daoProvider.daoFor(LitemallOrderGoods.class).getEntityById(orderGoodsId);
+        ApiResponse<?> listRes = graphQLEngine.executeRpc(graphQLEngine.newRpcContext(
+                GraphQLOperationType.query, "LitemallComment__commentList",
+                ApiRequest.build(Map.of("type", 0, "valueId", og.getGoodsId(),
+                        "page", 1, "pageSize", 10))));
+        assertEquals(0, listRes.getStatus());
+        List<?> items = (List<?>) ((Map<String, Object>) listRes.getData()).get("items");
+        assertEquals(0, items.size(), "PENDING comment must not be publicly visible");
+
+        // 公共 getCommentSummary 也应过滤掉 PENDING（totalCount=0）
+        ApiResponse<?> sumRes = graphQLEngine.executeRpc(graphQLEngine.newRpcContext(
+                GraphQLOperationType.query, "LitemallComment__getCommentSummary",
+                ApiRequest.build(Map.of("type", 0, "valueId", og.getGoodsId()))));
+        assertEquals(0, sumRes.getStatus());
+        Map<String, Object> summary = (Map<String, Object>) sumRes.getData();
+        assertEquals(0, ((Number) summary.get("totalCount")).intValue(),
+                "PENDING comment must not be aggregated in summary");
+
+        // 预审 ON 时 submit 不立即发积分
+        QueryBean q = new QueryBean();
+        q.addFilter(FilterBeans.eq(LitemallPointsFlow.PROP_NAME_sourceType,
+                LitemallPointsAccountBizModel.SOURCE_TYPE_COMMENT_REWARD));
+        long count = daoProvider.daoFor(LitemallPointsFlow.class).findAllByQuery(q).size();
+        assertEquals(0, count, "pre-mod ON must defer points issuance to approve");
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testPreModerationOffSubmitPublicAndRewardImmediate() {
+        // 不设预审开关（默认 OFF）；配置奖励 10
+        seedCommentRewardConfig("10");
+
+        ApiRequest<Map<String, Object>> req = ApiRequest.build(Map.of(
+                "orderGoodsId", orderGoodsId, "content", "public-comment", "star", 5));
+        ApiResponse<?> res = graphQLEngine.executeRpc(graphQLEngine.newRpcContext(
+                GraphQLOperationType.mutation, "LitemallComment__submitComment", req));
+        assertEquals(0, res.getStatus());
+        String commentId = (String) ((Map<String, Object>) res.getData()).get("id");
+
+        // auditStatus 为 null（=已通过，公开可见）
+        LitemallComment persisted = daoProvider.daoFor(LitemallComment.class).getEntityById(commentId);
+        assertNull(persisted.orm_propValueByName(LitemallComment.PROP_NAME_auditStatus));
+
+        // 公共 commentList 可见
+        LitemallOrderGoods og = daoProvider.daoFor(LitemallOrderGoods.class).getEntityById(orderGoodsId);
+        ApiResponse<?> listRes = graphQLEngine.executeRpc(graphQLEngine.newRpcContext(
+                GraphQLOperationType.query, "LitemallComment__commentList",
+                ApiRequest.build(Map.of("type", 0, "valueId", og.getGoodsId(),
+                        "page", 1, "pageSize", 10))));
+        assertEquals(0, listRes.getStatus());
+        List<?> items = (List<?>) ((Map<String, Object>) listRes.getData()).get("items");
+        assertEquals(1, items.size(), "null auditStatus comment must be publicly visible");
+
+        // submit 即发积分（行为同今）
+        QueryBean q = new QueryBean();
+        q.addFilter(FilterBeans.eq(LitemallPointsFlow.PROP_NAME_sourceType,
+                LitemallPointsAccountBizModel.SOURCE_TYPE_COMMENT_REWARD));
+        long count = daoProvider.daoFor(LitemallPointsFlow.class).findAllByQuery(q).size();
+        assertEquals(1, count, "pre-mod OFF must issue points at submit time");
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testPreModerationOnApprovePublishesAndIssuesPoints() {
+        seedPreModerationConfig("1");
+        seedCommentRewardConfig("10");
+
+        // submit → PENDING
+        ApiRequest<Map<String, Object>> submitReq = ApiRequest.build(Map.of(
+                "orderGoodsId", orderGoodsId, "content", "to-approve", "star", 5));
+        ApiResponse<?> submitRes = graphQLEngine.executeRpc(graphQLEngine.newRpcContext(
+                GraphQLOperationType.mutation, "LitemallComment__submitComment", submitReq));
+        assertEquals(0, submitRes.getStatus());
+        String commentId = (String) ((Map<String, Object>) submitRes.getData()).get("id");
+        LitemallOrderGoods og = daoProvider.daoFor(LitemallOrderGoods.class).getEntityById(orderGoodsId);
+
+        // approve
+        ApiResponse<?> approveRes = graphQLEngine.executeRpc(graphQLEngine.newRpcContext(
+                GraphQLOperationType.mutation, "LitemallComment__batchAuditComments",
+                ApiRequest.build(Map.of("commentIds", List.of(commentId), "action", "approve"))));
+        assertEquals(0, approveRes.getStatus(), "approve failed: " + approveRes);
+        List<Map<String, Object>> results = (List<Map<String, Object>>) approveRes.getData();
+        assertEquals(1, results.size());
+        assertEquals(true, results.get(0).get("success"));
+
+        // APPROVED + 公开可见
+        LitemallComment persisted = daoProvider.daoFor(LitemallComment.class).getEntityById(commentId);
+        assertEquals(_AppMallDaoConstants.COMMENT_AUDIT_STATUS_APPROVED,
+                persisted.orm_propValueByName(LitemallComment.PROP_NAME_auditStatus));
+        ApiResponse<?> listRes = graphQLEngine.executeRpc(graphQLEngine.newRpcContext(
+                GraphQLOperationType.query, "LitemallComment__commentList",
+                ApiRequest.build(Map.of("type", 0, "valueId", og.getGoodsId(),
+                        "page", 1, "pageSize", 10))));
+        List<?> items = (List<?>) ((Map<String, Object>) listRes.getData()).get("items");
+        assertEquals(1, items.size(), "APPROVED comment must be publicly visible");
+
+        // 积分在 approve 时发放（幂等 sourceId=comment.id）
+        QueryBean q = new QueryBean();
+        q.addFilter(FilterBeans.eq(LitemallPointsFlow.PROP_NAME_sourceType,
+                LitemallPointsAccountBizModel.SOURCE_TYPE_COMMENT_REWARD));
+        q.addFilter(FilterBeans.eq(LitemallPointsFlow.PROP_NAME_sourceId, commentId));
+        long count = daoProvider.daoFor(LitemallPointsFlow.class).findAllByQuery(q).size();
+        assertEquals(1, count, "approve must issue deferred points exactly once");
+
+        // 重审（重复 approve 同 comment）应被守卫跳过且积分不重复发放
+        graphQLEngine.executeRpc(graphQLEngine.newRpcContext(
+                GraphQLOperationType.mutation, "LitemallComment__batchAuditComments",
+                ApiRequest.build(Map.of("commentIds", List.of(commentId), "action", "approve"))));
+        long count2 = daoProvider.daoFor(LitemallPointsFlow.class).findAllByQuery(q).size();
+        assertEquals(1, count2, "re-approve must not duplicate points");
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testPreModerationOnRejectKeepsPrivateAndNoPoints() {
+        seedPreModerationConfig("1");
+        seedCommentRewardConfig("10");
+
+        ApiRequest<Map<String, Object>> submitReq = ApiRequest.build(Map.of(
+                "orderGoodsId", orderGoodsId, "content", "to-reject", "star", 1));
+        ApiResponse<?> submitRes = graphQLEngine.executeRpc(graphQLEngine.newRpcContext(
+                GraphQLOperationType.mutation, "LitemallComment__submitComment", submitReq));
+        assertEquals(0, submitRes.getStatus());
+        String commentId = (String) ((Map<String, Object>) submitRes.getData()).get("id");
+        LitemallOrderGoods og = daoProvider.daoFor(LitemallOrderGoods.class).getEntityById(orderGoodsId);
+
+        // reject
+        ApiResponse<?> rejectRes = graphQLEngine.executeRpc(graphQLEngine.newRpcContext(
+                GraphQLOperationType.mutation, "LitemallComment__batchAuditComments",
+                ApiRequest.build(Map.of("commentIds", List.of(commentId), "action", "reject"))));
+        assertEquals(0, rejectRes.getStatus());
+        assertEquals(true, ((List<Map<String, Object>>) rejectRes.getData()).get(0).get("success"));
+
+        // REJECTED + 公共不可见
+        LitemallComment persisted = daoProvider.daoFor(LitemallComment.class).getEntityById(commentId);
+        assertEquals(_AppMallDaoConstants.COMMENT_AUDIT_STATUS_REJECTED,
+                persisted.orm_propValueByName(LitemallComment.PROP_NAME_auditStatus));
+        ApiResponse<?> listRes = graphQLEngine.executeRpc(graphQLEngine.newRpcContext(
+                GraphQLOperationType.query, "LitemallComment__commentList",
+                ApiRequest.build(Map.of("type", 0, "valueId", og.getGoodsId(),
+                        "page", 1, "pageSize", 10))));
+        List<?> items = (List<?>) ((Map<String, Object>) listRes.getData()).get("items");
+        assertEquals(0, items.size(), "REJECTED comment must not be publicly visible");
+
+        // reject 不发积分
+        QueryBean q = new QueryBean();
+        q.addFilter(FilterBeans.eq(LitemallPointsFlow.PROP_NAME_sourceType,
+                LitemallPointsAccountBizModel.SOURCE_TYPE_COMMENT_REWARD));
+        long count = daoProvider.daoFor(LitemallPointsFlow.class).findAllByQuery(q).size();
+        assertEquals(0, count, "reject must not issue points");
+    }
 }

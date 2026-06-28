@@ -30,6 +30,17 @@ body:
       - type: switch
         name: hasPicture
         label: 仅看有图
+      - type: select
+        name: auditStatus
+        label: 审核状态
+        clearable: true
+        options:
+          - label: 待审核
+            value: 0
+          - label: 已通过
+            value: 1
+          - label: 已拒绝
+            value: 2
       - type: submit
         label: 查询
         level: primary
@@ -60,11 +71,69 @@ body:
         map:
           'true': '<span class="label label-info">有</span>'
           'false': '<span class="label label-default">无</span>'
+      - name: auditStatus
+        label: 审核状态
+        type: mapping
+        map:
+          '0': '<span class="label label-warning">待审核</span>'
+          '1': '<span class="label label-success">已通过</span>'
+          '2': '<span class="label label-danger">已拒绝</span>'
+          '~': '<span class="label label-success">已通过</span>'
       - name: adminContent
         label: 管理员回复
       - name: addTime
         label: 评论时间
     bulkActions:
+      - label: 批量通过
+        level: success
+        confirmText: '确认审核通过选中的评论？（仅 auditStatus=PENDING 生效，并发放预审延迟积分）'
+        actionType: ajax
+        api:
+          url: '@mutation:LitemallComment__batchAuditComments'
+          data:
+            commentIds: '${ARRAYMAP(selectedItems, item => item.id)}'
+            action: approve
+        feedback:
+          title: 批量审核通过结果
+          body:
+            - type: table
+              source: '${data}'
+              columns:
+                - name: commentId
+                  label: 评论ID
+                - name: success
+                  label: 是否成功
+                  type: mapping
+                  map:
+                    'true': '<span class="label label-success">成功</span>'
+                    'false': '<span class="label label-danger">失败</span>'
+                - name: reason
+                  label: 失败原因
+      - label: 批量拒绝
+        level: warning
+        confirmText: '确认拒绝选中的评论？（仅 auditStatus=PENDING 生效）'
+        actionType: ajax
+        api:
+          url: '@mutation:LitemallComment__batchAuditComments'
+          data:
+            commentIds: '${ARRAYMAP(selectedItems, item => item.id)}'
+            action: reject
+        feedback:
+          title: 批量审核拒绝结果
+          body:
+            - type: table
+              source: '${data}'
+              columns:
+                - name: commentId
+                  label: 评论ID
+                - name: success
+                  label: 是否成功
+                  type: mapping
+                  map:
+                    'true': '<span class="label label-success">成功</span>'
+                    'false': '<span class="label label-danger">失败</span>'
+                - name: reason
+                  label: 失败原因
       - label: 批量回复
         level: primary
         actionType: dialog

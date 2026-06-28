@@ -201,6 +201,8 @@ prop:
       pros: null
       cons: null
       semanticRating: null
+      auditStatus: null
+      auditStatus_label: null
       goods: Goods
       goods.name: Goods
       topic: Topic
@@ -851,3 +853,4 @@ dict:
     mall/pay-status: Pay Status
     mall/topic-status: Topic Status
     mall/groupon-status: Groupon Status
+    mall/comment-audit-status: Comment Audit Status

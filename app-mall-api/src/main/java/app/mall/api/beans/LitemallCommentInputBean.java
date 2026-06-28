@@ -180,4 +180,18 @@
         }
 
 
+        private Integer _auditStatus;
+
+    
+        @PropMeta(propId=16)
+    
+        public Integer getAuditStatus(){
+            return _auditStatus;
+        }
+
+        public void setAuditStatus(Integer value){
+            this._auditStatus = value;
+        }
+
+
     }

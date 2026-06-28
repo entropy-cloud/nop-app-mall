@@ -138,6 +138,13 @@ public class LitemallCommentBizModel extends CrudBizModel<LitemallComment> imple
         if (semanticRating != null) {
             comment.setSemanticRating(semanticRating);
         }
+        // P36 successor 前置审核：预审 ON 时新评论置 PENDING（公开不可见，待管理员审核），
+        // 且积分延迟至审核通过发放（见 batchAuditComments approve 分支）。
+        // 预审 OFF 时 auditStatus 保持 null（=已通过，公开可见，行为同今），积分 submit 即发。
+        boolean preModeration = isPreModerationEnabled(context);
+        if (preModeration) {
+            comment.setAuditStatus(_AppMallDaoConstants.COMMENT_AUDIT_STATUS_PENDING);
+        }
         saveEntity(comment, null, context);
 
         // Atomic conditional UPDATE: win the "first comment" race only if orderGoods.comment is still 0.
@@ -154,14 +161,17 @@ public class LitemallCommentBizModel extends CrudBizModel<LitemallComment> imple
 
         // P33 comment-reward points integration (gated by mall_points_comment_reward, default 0=off).
         // Idempotency is inherited from P27 (sourceType=comment-reward, sourceId=comment.id).
-        int reward = resolveCommentReward(context);
-        if (reward > 0) {
-            pointsAccountBiz.earnPoints(userId, reward,
-                    _AppMallDaoConstants.POINTS_CHANGE_TYPE_EARN,
-                    LitemallPointsAccountBizModel.SOURCE_TYPE_COMMENT_REWARD,
-                    comment.orm_idString(),
-                    "商品评价奖励",
-                    context);
+        // P36 successor: 预审 ON 时积分延迟至 batchAuditComments approve 分支发放；OFF 时维持 submit 即发。
+        if (!preModeration) {
+            int reward = resolveCommentReward(context);
+            if (reward > 0) {
+                pointsAccountBiz.earnPoints(userId, reward,
+                        _AppMallDaoConstants.POINTS_CHANGE_TYPE_EARN,
+                        LitemallPointsAccountBizModel.SOURCE_TYPE_COMMENT_REWARD,
+                        comment.orm_idString(),
+                        "商品评价奖励",
+                        context);
+            }
         }
 
         return comment;
@@ -180,11 +190,18 @@ public class LitemallCommentBizModel extends CrudBizModel<LitemallComment> imple
         query.addFilter(FilterBeans.eq(LitemallComment.PROP_NAME_type, type));
         query.addFilter(FilterBeans.eq(LitemallComment.PROP_NAME_valueId, valueId));
         applyShowTypeFilter(query, showType);
+        // P36 successor 前置审核：公共查询仅返回 APPROVED 或 auditStatus 为空（=已通过）的评论，
+        // PENDING/REJECTED 不公开。auditStatus 的 OR(isNull, eq APPROVED) 复合过滤超出 xmeta 公共端
+        // 允许的操作符面（与本文件 applyShowTypeFilter/getCommentReviewList 同类约束），故走
+        // doFindPageByQueryDirectly（绕过 xmeta 操作符校验，不绕过 @Auth(publicAccess=true) 公开语义；
+        // 查询仍由 BizModel 显式构造，仅暴露 valueId/type 维度 + auditStatus 过滤，与既有 getCommentReviewList
+        // 同一安全模型）。
+        applyPublicAuditFilter(query);
         query.setOffset(page > 0 ? (page - 1) * pageSize : 0);
         query.setLimit(pageSize > 0 ? pageSize : 10);
         query.addOrderField(LitemallComment.PROP_NAME_addTime, true);
 
-        return findPage(query, null, context);
+        return doFindPageByQueryDirectly(query, null, context);
     }
 
     @Override
@@ -196,8 +213,11 @@ public class LitemallCommentBizModel extends CrudBizModel<LitemallComment> imple
         QueryBean query = new QueryBean();
         query.addFilter(FilterBeans.eq(LitemallComment.PROP_NAME_type, type));
         query.addFilter(FilterBeans.eq(LitemallComment.PROP_NAME_valueId, valueId));
+        // P36 successor 前置审核：汇总口径与 commentList 一致——仅聚合公开可见集合（APPROVED/null），
+        // 避免未公开 PENDING 拉偏 goodRate/starDistribution/标签云。同样走 doFindListByQueryDirectly。
+        applyPublicAuditFilter(query);
 
-        List<LitemallComment> all = findList(query, null, context);
+        List<LitemallComment> all = doFindListByQueryDirectly(query, context);
 
         Map<String, Object> summary = new LinkedHashMap<>();
         int totalCount = all.size();
@@ -263,6 +283,13 @@ public class LitemallCommentBizModel extends CrudBizModel<LitemallComment> imple
 
     static final String MODERATION_ACTION_HIDE = "hide";
     static final String MODERATION_ACTION_RESTORE = "restore";
+
+    // ===== P36 successor 评论前置审核状态机：预审开关 + batchAuditComments =====
+
+    static final String AUDIT_ACTION_APPROVE = "approve";
+    static final String AUDIT_ACTION_REJECT = "reject";
+
+    static final String CONFIG_COMMENT_PRE_MODERATION = "mall_comment_pre_moderation";
 
     @Override
     @BizMutation
@@ -334,12 +361,86 @@ public class LitemallCommentBizModel extends CrudBizModel<LitemallComment> imple
         return results;
     }
 
+    // ===== P36 successor 前置审核状态机：batchAuditComments（PENDING→APPROVED/REJECTED）=====
+
+    @Override
+    @BizMutation
+    @Auth(roles = "admin")
+    public List<BatchCommentResultBean> batchAuditComments(@Name("commentIds") List<String> commentIds,
+                                                            @Name("action") String action,
+                                                            IServiceContext context) {
+        if (commentIds == null || commentIds.isEmpty()) {
+            throw new NopException(ERR_COMMENT_BATCH_EMPTY);
+        }
+        boolean approve;
+        if (AUDIT_ACTION_APPROVE.equals(action)) {
+            approve = true;
+        } else if (AUDIT_ACTION_REJECT.equals(action)) {
+            approve = false;
+        } else {
+            throw new NopException(ERR_COMMENT_AUDIT_ACTION_INVALID).param("action", action);
+        }
+        // 预审 ON 时积分延迟至此发放；预审 OFF 时此处必为 null→PENDING 守卫跳过，不会重复发放。
+        // reward=0（未配置）时跳过积分发放，仅置状态。
+        int reward = approve ? resolveCommentReward(context) : 0;
+
+        List<BatchCommentResultBean> results = new ArrayList<>();
+        for (String commentId : commentIds) {
+            try {
+                // 审核动作需操作 PENDING 评论；requireEntity 走管道不会被 deleted 过滤（审核评论不应已删除），
+                // 但与 batchModerateComments 同一调查路径便于一致性，仍用 dao().getEntityById() 直查。
+                LitemallComment comment = dao().getEntityById(commentId);
+                if (comment == null) {
+                    results.add(new BatchCommentResultBean(commentId, false, "评论不存在"));
+                    continue;
+                }
+                Integer current = comment.getAuditStatus();
+                if (current == null || current != _AppMallDaoConstants.COMMENT_AUDIT_STATUS_PENDING) {
+                    results.add(new BatchCommentResultBean(commentId, false,
+                            "评论非待审核状态，跳过（当前 auditStatus=" + current + "）"));
+                    continue;
+                }
+                if (approve) {
+                    comment.setAuditStatus(_AppMallDaoConstants.COMMENT_AUDIT_STATUS_APPROVED);
+                    // 预审 ON 延迟发放分支：经 I*LitemallPointsAccountBiz 发放积分，sourceId=comment.id 保幂等。
+                    // earnPoints 在 (sourceType, sourceId) 已存在时抛 ERR_POINTS_DUPLICATE_EARN——视为已发放，
+                    // 与状态推进幂等一致（重审不会重复发积分）。
+                    if (reward > 0) {
+                        try {
+                            pointsAccountBiz.earnPoints(comment.getUserId(), reward,
+                                    _AppMallDaoConstants.POINTS_CHANGE_TYPE_EARN,
+                                    LitemallPointsAccountBizModel.SOURCE_TYPE_COMMENT_REWARD,
+                                    comment.orm_idString(),
+                                    "商品评价奖励",
+                                    context);
+                        } catch (NopException e) {
+                            if (!ERR_POINTS_DUPLICATE_EARN.getErrorCode().equals(e.getErrorCode())) {
+                                throw e;
+                            }
+                            // 幂等：积分已发放过，视为成功（状态推进仍继续）
+                        }
+                    }
+                } else {
+                    comment.setAuditStatus(_AppMallDaoConstants.COMMENT_AUDIT_STATUS_REJECTED);
+                }
+                results.add(new BatchCommentResultBean(commentId, true, null));
+            } catch (NopException e) {
+                results.add(new BatchCommentResultBean(commentId, false,
+                        e.getDescription() != null ? e.getDescription() : e.getMessage()));
+            } catch (Exception e) {
+                results.add(new BatchCommentResultBean(commentId, false, e.getMessage()));
+            }
+        }
+        return results;
+    }
+
     @Override
     @BizQuery
     @Auth(roles = "admin")
     public PageBean<LitemallComment> getCommentReviewList(@Optional @Name("keyword") String keyword,
                                                            @Optional @Name("star") Integer star,
                                                            @Optional @Name("hasPicture") Boolean hasPicture,
+                                                           @Optional @Name("auditStatus") Integer auditStatus,
                                                            @Optional @Name("startTime") String startTime,
                                                            @Optional @Name("endTime") String endTime,
                                                            @Optional @Name("page") Integer page,
@@ -355,6 +456,9 @@ public class LitemallCommentBizModel extends CrudBizModel<LitemallComment> imple
         }
         if (hasPicture != null) {
             query.addFilter(FilterBeans.eq(LitemallComment.PROP_NAME_hasPicture, hasPicture));
+        }
+        if (auditStatus != null) {
+            query.addFilter(FilterBeans.eq(LitemallComment.PROP_NAME_auditStatus, auditStatus));
         }
         if (!StringHelper.isEmpty(startTime)) {
             Timestamp startTs = Timestamp.valueOf(LocalDate.parse(startTime).atTime(0, 0));
@@ -457,5 +561,35 @@ public class LitemallCommentBizModel extends CrudBizModel<LitemallComment> imple
         } catch (NumberFormatException e) {
             return 0;
         }
+    }
+
+    // ===== P36 successor 前置审核：公共查询过滤 + 预审开关读取 =====
+
+    /**
+     * 公共查询仅返回 APPROVED 或 auditStatus 为空（历史评论，null=已通过）。
+     * PENDING/REJECTED 不公开。OR/isNull 复合操作符超出公共端 xmeta 允许面，
+     * 故 commentList/getCommentSummary 走 doFind*ByQueryDirectly 后由本方法构造过滤。
+     */
+    private void applyPublicAuditFilter(QueryBean query) {
+        query.addFilter(FilterBeans.or(
+                FilterBeans.isNull(LitemallComment.PROP_NAME_auditStatus),
+                FilterBeans.eq(LitemallComment.PROP_NAME_auditStatus,
+                        _AppMallDaoConstants.COMMENT_AUDIT_STATUS_APPROVED)));
+    }
+
+    /**
+     * 预审开关读取（复刻 resolveCommentReward 防御解析模式）：
+     * empty/null/"0"/"false"/解析失败=OFF；"1"/"true"=ON。
+     */
+    private boolean isPreModerationEnabled(IServiceContext context) {
+        String raw = systemBiz.getConfig(CONFIG_COMMENT_PRE_MODERATION, context);
+        if (StringHelper.isEmpty(raw)) {
+            return false;
+        }
+        String v = raw.trim().toLowerCase();
+        if ("1".equals(v) || "true".equals(v)) {
+            return true;
+        }
+        return false;
     }
 }

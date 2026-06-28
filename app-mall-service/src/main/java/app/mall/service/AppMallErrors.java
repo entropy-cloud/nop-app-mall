@@ -627,6 +627,10 @@ public interface AppMallErrors {
             define("nop.err.mall.comment.moderation-action-invalid",
                     "审核动作不合法（仅支持 hide/restore）");
 
+    ErrorCode ERR_COMMENT_AUDIT_ACTION_INVALID =
+            define("nop.err.mall.comment.audit-action-invalid",
+                    "审核动作不合法（仅支持 approve/reject）");
+
     // 素材管理错误码（P37）
     ErrorCode ERR_MATERIAL_FILE_EMPTY =
             define("nop.err.mall.material.file-empty",

@@ -576,6 +576,7 @@ CREATE TABLE litemall_comment(
   pros VARCHAR(1023)  ,
   cons VARCHAR(1023)  ,
   semantic_rating INT4  ,
+  audit_status INT4  ,
   constraint PK_litemall_comment primary key (id)
 );
 
@@ -1725,6 +1726,8 @@ CREATE TABLE litemall_pin_tuan_member(
       COMMENT ON COLUMN litemall_comment.cons IS '缺点列表(JSON)';
                     
       COMMENT ON COLUMN litemall_comment.semantic_rating IS '语义评级(1-5)';
+                    
+      COMMENT ON COLUMN litemall_comment.audit_status IS '审核状态';
                     
       COMMENT ON TABLE litemall_footprint IS '用户浏览足迹表';
                 

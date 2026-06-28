@@ -81,8 +81,12 @@ public class _LitemallComment extends DynamicOrmEntity{
     public static final String PROP_NAME_semanticRating = "semanticRating";
     public static final int PROP_ID_semanticRating = 15;
     
+    /* 审核状态: AUDIT_STATUS INTEGER */
+    public static final String PROP_NAME_auditStatus = "auditStatus";
+    public static final int PROP_ID_auditStatus = 16;
+    
 
-    private static int _PROP_ID_BOUND = 16;
+    private static int _PROP_ID_BOUND = 17;
 
     
     /* relation: 商品 */
@@ -98,7 +102,7 @@ public class _LitemallComment extends DynamicOrmEntity{
     protected static final List<String> PK_PROP_NAMES = Arrays.asList(PROP_NAME_id);
     protected static final int[] PK_PROP_IDS = new int[]{PROP_ID_id};
 
-    private static final String[] PROP_ID_TO_NAME = new String[16];
+    private static final String[] PROP_ID_TO_NAME = new String[17];
     private static final Map<String,Integer> PROP_NAME_TO_ID = new HashMap<>();
     static{
       
@@ -147,6 +151,9 @@ public class _LitemallComment extends DynamicOrmEntity{
           PROP_ID_TO_NAME[PROP_ID_semanticRating] = PROP_NAME_semanticRating;
           PROP_NAME_TO_ID.put(PROP_NAME_semanticRating, PROP_ID_semanticRating);
       
+          PROP_ID_TO_NAME[PROP_ID_auditStatus] = PROP_NAME_auditStatus;
+          PROP_NAME_TO_ID.put(PROP_NAME_auditStatus, PROP_ID_auditStatus);
+      
     }
 
     
@@ -194,6 +201,9 @@ public class _LitemallComment extends DynamicOrmEntity{
     
     /* 语义评级(1-5): SEMANTIC_RATING */
     private java.lang.Integer _semanticRating;
+    
+    /* 审核状态: AUDIT_STATUS */
+    private java.lang.Integer _auditStatus;
     
 
     public _LitemallComment(){
@@ -313,6 +323,9 @@ public class _LitemallComment extends DynamicOrmEntity{
         
             case PROP_ID_semanticRating:
                return getSemanticRating();
+        
+            case PROP_ID_auditStatus:
+               return getAuditStatus();
         
            default:
               return super.orm_propValue(propId);
@@ -475,6 +488,16 @@ public class _LitemallComment extends DynamicOrmEntity{
                break;
             }
         
+            case PROP_ID_auditStatus:{
+               java.lang.Integer typedValue = null;
+               if(value != null){
+                   typedValue = ConvertHelper.toInteger(value,
+                       err-> newTypeConversionError(PROP_NAME_auditStatus));
+               }
+               setAuditStatus(typedValue);
+               break;
+            }
+        
            default:
               super.orm_propValue(propId,value);
         }
@@ -585,6 +608,13 @@ public class _LitemallComment extends DynamicOrmEntity{
             case PROP_ID_semanticRating:{
                onInitProp(propId);
                this._semanticRating = (java.lang.Integer)value;
+               
+               break;
+            }
+        
+            case PROP_ID_auditStatus:{
+               onInitProp(propId);
+               this._auditStatus = (java.lang.Integer)value;
                
                break;
             }
@@ -876,6 +906,25 @@ public class _LitemallComment extends DynamicOrmEntity{
         if(onPropSet(PROP_ID_semanticRating,value)){
             this._semanticRating = value;
             internalClearRefs(PROP_ID_semanticRating);
+            
+        }
+    }
+    
+    /**
+     * 审核状态: AUDIT_STATUS
+     */
+    public final java.lang.Integer getAuditStatus(){
+         onPropGet(PROP_ID_auditStatus);
+         return _auditStatus;
+    }
+
+    /**
+     * 审核状态: AUDIT_STATUS
+     */
+    public final void setAuditStatus(java.lang.Integer value){
+        if(onPropSet(PROP_ID_auditStatus,value)){
+            this._auditStatus = value;
+            internalClearRefs(PROP_ID_auditStatus);
             
         }
     }

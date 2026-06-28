@@ -1,5 +1,6 @@
 package app.mall.service.entity;
 
+import app.mall.dao._AppMallDaoConstants;
 import app.mall.dao.entity.LitemallComment;
 import io.nop.api.core.annotations.autotest.NopTestConfig;
 import io.nop.api.core.annotations.core.OptionalBoolean;
@@ -23,6 +24,7 @@ import java.util.Map;
 import static io.nop.api.core.beans.FilterBeans.eq;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -60,6 +62,21 @@ public class TestLitemallCommentOpsWorkbench extends JunitBaseTestCase {
         comment.setUserId("user-" + star);
         comment.setStar(star);
         comment.setHasPicture(hasPicture);
+        daoProvider.daoFor(LitemallComment.class).saveEntity(comment);
+        return comment.orm_idString();
+    }
+
+    private String createCommentWithAuditStatus(String content, int star, String valueId, Integer auditStatus, String userId) {
+        LitemallComment comment = daoProvider.daoFor(LitemallComment.class).newEntity();
+        comment.setType(0);
+        comment.setValueId(valueId);
+        comment.setContent(content);
+        comment.setUserId(userId);
+        comment.setStar(star);
+        comment.setHasPicture(false);
+        if (auditStatus != null) {
+            comment.orm_propValueByName(LitemallComment.PROP_NAME_auditStatus, auditStatus);
+        }
         daoProvider.daoFor(LitemallComment.class).saveEntity(comment);
         return comment.orm_idString();
     }
@@ -264,5 +281,138 @@ public class TestLitemallCommentOpsWorkbench extends JunitBaseTestCase {
         // 下架的评论 deleted=true，CrudBizModel 默认查询过滤 deleted（取决于 defaultPrepareQuery）
         // 工作台应仅返回未删除评论
         assertEquals(2, items.size(), "hidden comment should be excluded from review list");
+    }
+
+    // ===== P36 successor 前置审核状态机：batchAuditComments + auditStatus 筛选 =====
+
+    @Test
+    public void testBatchAuditApprovePendingToApproved() {
+        String c1 = createCommentWithAuditStatus("待审-1", 5, "1",
+                _AppMallDaoConstants.COMMENT_AUDIT_STATUS_PENDING, "user-p1");
+        String c2 = createCommentWithAuditStatus("待审-2", 4, "1",
+                _AppMallDaoConstants.COMMENT_AUDIT_STATUS_PENDING, "user-p2");
+
+        ApiResponse<?> r = callMutation("batchAuditComments", Map.of(
+                "commentIds", List.of(c1, c2),
+                "action", "approve"
+        ));
+        List<Map<String, Object>> results = resultMaps(r);
+        assertEquals(2, results.size());
+        assertEquals(2, successCount(results));
+
+        assertEquals(_AppMallDaoConstants.COMMENT_AUDIT_STATUS_APPROVED,
+                reload(c1).orm_propValueByName(LitemallComment.PROP_NAME_auditStatus));
+        assertEquals(_AppMallDaoConstants.COMMENT_AUDIT_STATUS_APPROVED,
+                reload(c2).orm_propValueByName(LitemallComment.PROP_NAME_auditStatus));
+    }
+
+    @Test
+    public void testBatchAuditRejectPendingToRejected() {
+        String c1 = createCommentWithAuditStatus("待审-r1", 5, "1",
+                _AppMallDaoConstants.COMMENT_AUDIT_STATUS_PENDING, "user-r1");
+
+        ApiResponse<?> r = callMutation("batchAuditComments", Map.of(
+                "commentIds", List.of(c1),
+                "action", "reject"
+        ));
+        List<Map<String, Object>> results = resultMaps(r);
+        assertEquals(1, results.size());
+        assertEquals(1, successCount(results));
+        assertEquals(_AppMallDaoConstants.COMMENT_AUDIT_STATUS_REJECTED,
+                reload(c1).orm_propValueByName(LitemallComment.PROP_NAME_auditStatus));
+    }
+
+    @Test
+    public void testBatchAuditSkipsNonPending() {
+        // PENDING 待审；APPROVED/null/REJECTED 应被跳过（非 PENDING 守卫）
+        String pending = createCommentWithAuditStatus("p", 5, "1",
+                _AppMallDaoConstants.COMMENT_AUDIT_STATUS_PENDING, "u1");
+        String approved = createCommentWithAuditStatus("a", 5, "1",
+                _AppMallDaoConstants.COMMENT_AUDIT_STATUS_APPROVED, "u2");
+        // commentId1 在 setUp 创建（auditStatus=null），应被跳过
+
+        ApiResponse<?> r = callMutation("batchAuditComments", Map.of(
+                "commentIds", List.of(pending, approved, commentId1),
+                "action", "approve"
+        ));
+        List<Map<String, Object>> results = resultMaps(r);
+        assertEquals(3, results.size());
+        assertEquals(1, successCount(results));
+        // PENDING 推进到 APPROVED；其他保持原状
+        assertEquals(_AppMallDaoConstants.COMMENT_AUDIT_STATUS_APPROVED,
+                reload(pending).orm_propValueByName(LitemallComment.PROP_NAME_auditStatus));
+        assertEquals(_AppMallDaoConstants.COMMENT_AUDIT_STATUS_APPROVED,
+                reload(approved).orm_propValueByName(LitemallComment.PROP_NAME_auditStatus));
+        assertNull(reload(commentId1).orm_propValueByName(LitemallComment.PROP_NAME_auditStatus));
+    }
+
+    @Test
+    public void testBatchAuditPartialFailureNonExistent() {
+        String pending = createCommentWithAuditStatus("p", 5, "1",
+                _AppMallDaoConstants.COMMENT_AUDIT_STATUS_PENDING, "u1");
+
+        ApiResponse<?> r = callMutation("batchAuditComments", Map.of(
+                "commentIds", List.of(pending, "non-existent"),
+                "action", "approve"
+        ));
+        List<Map<String, Object>> results = resultMaps(r);
+        assertEquals(2, results.size());
+        assertEquals(1, successCount(results));
+    }
+
+    @Test
+    public void testBatchAuditInvalidActionRejected() {
+        ApiResponse<?> r = callMutation("batchAuditComments", Map.of(
+                "commentIds", List.of(commentId1),
+                "action", "publish"
+        ));
+        assertEquals(-1, r.getStatus(), "invalid action should be rejected: " + r);
+    }
+
+    @Test
+    public void testBatchAuditEmptyRejected() {
+        ApiResponse<?> r = callMutation("batchAuditComments", Map.of(
+                "commentIds", List.of(),
+                "action", "approve"
+        ));
+        assertEquals(-1, r.getStatus(), "empty ids should be rejected: " + r);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testGetCommentReviewListByAuditStatus() {
+        createCommentWithAuditStatus("pending-1", 5, "1",
+                _AppMallDaoConstants.COMMENT_AUDIT_STATUS_PENDING, "u-p1");
+        createCommentWithAuditStatus("rejected-1", 5, "1",
+                _AppMallDaoConstants.COMMENT_AUDIT_STATUS_REJECTED, "u-r1");
+        createCommentWithAuditStatus("approved-1", 5, "1",
+                _AppMallDaoConstants.COMMENT_AUDIT_STATUS_APPROVED, "u-a1");
+
+        // 筛选 PENDING
+        ApiResponse<?> pendingRes = callQuery("getCommentReviewList", Map.of(
+                "auditStatus", _AppMallDaoConstants.COMMENT_AUDIT_STATUS_PENDING,
+                "page", 1, "pageSize", 50));
+        assertEquals(0, pendingRes.getStatus());
+        List<Map<String, Object>> pendingItems = (List<Map<String, Object>>)
+                ((Map<String, Object>) pendingRes.getData()).get("items");
+        assertEquals(1, pendingItems.size());
+        assertEquals("pending-1", pendingItems.get(0).get("content"));
+
+        // 筛选 REJECTED
+        ApiResponse<?> rejectedRes = callQuery("getCommentReviewList", Map.of(
+                "auditStatus", _AppMallDaoConstants.COMMENT_AUDIT_STATUS_REJECTED,
+                "page", 1, "pageSize", 50));
+        assertEquals(0, rejectedRes.getStatus());
+        List<Map<String, Object>> rejectedItems = (List<Map<String, Object>>)
+                ((Map<String, Object>) rejectedRes.getData()).get("items");
+        assertEquals(1, rejectedItems.size());
+        assertEquals("rejected-1", rejectedItems.get(0).get("content"));
+
+        // 不限定 → 全部（含 PENDING/APPROVED/REJECTED + setUp 的 3 条 auditStatus=null）
+        ApiResponse<?> allRes = callQuery("getCommentReviewList", new HashMap<>());
+        assertEquals(0, allRes.getStatus());
+        List<Map<String, Object>> allItems = (List<Map<String, Object>>)
+                ((Map<String, Object>) allRes.getData()).get("items");
+        assertEquals(6, allItems.size(), "auditStatus 未指定时应返回全部（含各审核状态）");
     }
 }

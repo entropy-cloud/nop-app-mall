@@ -53,6 +53,9 @@
 
                 <!--语义评级(1-5)-->
                 <col id="semanticRating" ui:number="true" sortable="true"/>
+
+                <!--审核状态-->
+                <col id="auditStatus" ui:number="true" sortable="true"/>
             </cols>
         </grid>
         <grid id="pick-list" x:prototype="list" x:abstract="true"/>
@@ -67,6 +70,7 @@
  hasPicture[是否含有图片] picUrls[图片地址列表，采用JSON数组格式]
  star[评分， 1-5] pros[优点列表(JSON)]
  cons[缺点列表(JSON)] semanticRating[语义评级(1-5)]
+ auditStatus[审核状态] 
 </layout>
         </form>
         <form id="add" editMode="add" title="新增-评论表" i18n-en:title="" x:prototype="edit"/>
@@ -77,7 +81,7 @@
  userId[用户ID] hasPicture[是否含有图片]
  picUrls[图片地址列表，采用JSON数组格式] star[评分， 1-5]
  pros[优点列表(JSON)] cons[缺点列表(JSON)]
- semanticRating[语义评级(1-5)] 
+ semanticRating[语义评级(1-5)] auditStatus[审核状态]
 </layout>
         </form>
         <form id="query" editMode="query" title="查询条件" i18n-en:title="Query Condition" x:abstract="true"/>

@@ -453,4 +453,19 @@ public interface _AppMallDaoConstants {
      */
     int GROUPON_STATUS_SUCCESS = 3;
                     
+    /**
+     * 评论审核状态: 待审核 
+     */
+    int COMMENT_AUDIT_STATUS_PENDING = 0;
+                    
+    /**
+     * 评论审核状态: 已通过 
+     */
+    int COMMENT_AUDIT_STATUS_APPROVED = 1;
+                    
+    /**
+     * 评论审核状态: 已拒绝 
+     */
+    int COMMENT_AUDIT_STATUS_REJECTED = 2;
+                    
 }
