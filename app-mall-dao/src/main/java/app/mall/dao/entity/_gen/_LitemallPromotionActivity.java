@@ -84,6 +84,9 @@ public class _LitemallPromotionActivity extends DynamicOrmEntity{
     /* relation: 满减档位 */
     public static final String PROP_NAME_tiers = "tiers";
     
+    /* relation: 满减参与记录 */
+    public static final String PROP_NAME_promotionUsages = "promotionUsages";
+    
 
     protected static final List<String> PK_PROP_NAMES = Arrays.asList(PROP_NAME_id);
     protected static final int[] PK_PROP_IDS = new int[]{PROP_ID_id};
@@ -833,6 +836,16 @@ public class _LitemallPromotionActivity extends DynamicOrmEntity{
      */
     public final IOrmEntitySet<app.mall.dao.entity.LitemallPromotionTier> getTiers(){
        return _tiers;
+    }
+       
+    private final OrmEntitySet<app.mall.dao.entity.LitemallPromotionUsage> _promotionUsages = new OrmEntitySet<>(this, PROP_NAME_promotionUsages,
+        app.mall.dao.entity.LitemallPromotionUsage.PROP_NAME_activity, null,app.mall.dao.entity.LitemallPromotionUsage.class);
+
+    /**
+     * 满减参与记录。 refPropName: activity, keyProp: {rel.keyProp}
+     */
+    public final IOrmEntitySet<app.mall.dao.entity.LitemallPromotionUsage> getPromotionUsages(){
+       return _promotionUsages;
     }
        
 }

@@ -16,5 +16,6 @@
   "addTime": "2000-01-01 14:00:00",
   "updateTime": "2000-01-01 14:00:00",
   "deleted": false,
-  "tiers": null
+  "tiers": null,
+  "promotionUsages": null
 }

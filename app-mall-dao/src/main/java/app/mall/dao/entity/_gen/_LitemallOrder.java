@@ -181,8 +181,12 @@ public class _LitemallOrder extends DynamicOrmEntity{
     public static final String PROP_NAME_adminRemark = "adminRemark";
     public static final int PROP_ID_adminRemark = 40;
     
+    /* 秒杀场次ID: FLASH_SALE_SESSION_ID INTEGER */
+    public static final String PROP_NAME_flashSaleSessionId = "flashSaleSessionId";
+    public static final int PROP_ID_flashSaleSessionId = 41;
+    
 
-    private static int _PROP_ID_BOUND = 41;
+    private static int _PROP_ID_BOUND = 42;
 
     
     /* relation: 订单商品 */
@@ -195,7 +199,7 @@ public class _LitemallOrder extends DynamicOrmEntity{
     protected static final List<String> PK_PROP_NAMES = Arrays.asList(PROP_NAME_id);
     protected static final int[] PK_PROP_IDS = new int[]{PROP_ID_id};
 
-    private static final String[] PROP_ID_TO_NAME = new String[41];
+    private static final String[] PROP_ID_TO_NAME = new String[42];
     private static final Map<String,Integer> PROP_NAME_TO_ID = new HashMap<>();
     static{
       
@@ -319,6 +323,9 @@ public class _LitemallOrder extends DynamicOrmEntity{
           PROP_ID_TO_NAME[PROP_ID_adminRemark] = PROP_NAME_adminRemark;
           PROP_NAME_TO_ID.put(PROP_NAME_adminRemark, PROP_ID_adminRemark);
       
+          PROP_ID_TO_NAME[PROP_ID_flashSaleSessionId] = PROP_NAME_flashSaleSessionId;
+          PROP_NAME_TO_ID.put(PROP_NAME_flashSaleSessionId, PROP_ID_flashSaleSessionId);
+      
     }
 
     
@@ -441,6 +448,9 @@ public class _LitemallOrder extends DynamicOrmEntity{
     
     /* 运营备注: ADMIN_REMARK */
     private java.lang.String _adminRemark;
+    
+    /* 秒杀场次ID: FLASH_SALE_SESSION_ID */
+    private java.lang.String _flashSaleSessionId;
     
 
     public _LitemallOrder(){
@@ -635,6 +645,9 @@ public class _LitemallOrder extends DynamicOrmEntity{
         
             case PROP_ID_adminRemark:
                return getAdminRemark();
+        
+            case PROP_ID_flashSaleSessionId:
+               return getFlashSaleSessionId();
         
            default:
               return super.orm_propValue(propId);
@@ -1047,6 +1060,16 @@ public class _LitemallOrder extends DynamicOrmEntity{
                break;
             }
         
+            case PROP_ID_flashSaleSessionId:{
+               java.lang.String typedValue = null;
+               if(value != null){
+                   typedValue = ConvertHelper.toString(value,
+                       err-> newTypeConversionError(PROP_NAME_flashSaleSessionId));
+               }
+               setFlashSaleSessionId(typedValue);
+               break;
+            }
+        
            default:
               super.orm_propValue(propId,value);
         }
@@ -1332,6 +1355,13 @@ public class _LitemallOrder extends DynamicOrmEntity{
             case PROP_ID_adminRemark:{
                onInitProp(propId);
                this._adminRemark = (java.lang.String)value;
+               
+               break;
+            }
+        
+            case PROP_ID_flashSaleSessionId:{
+               onInitProp(propId);
+               this._flashSaleSessionId = (java.lang.String)value;
                
                break;
             }
@@ -2098,6 +2128,25 @@ public class _LitemallOrder extends DynamicOrmEntity{
         if(onPropSet(PROP_ID_adminRemark,value)){
             this._adminRemark = value;
             internalClearRefs(PROP_ID_adminRemark);
+            
+        }
+    }
+    
+    /**
+     * 秒杀场次ID: FLASH_SALE_SESSION_ID
+     */
+    public final java.lang.String getFlashSaleSessionId(){
+         onPropGet(PROP_ID_flashSaleSessionId);
+         return _flashSaleSessionId;
+    }
+
+    /**
+     * 秒杀场次ID: FLASH_SALE_SESSION_ID
+     */
+    public final void setFlashSaleSessionId(java.lang.String value){
+        if(onPropSet(PROP_ID_flashSaleSessionId,value)){
+            this._flashSaleSessionId = value;
+            internalClearRefs(PROP_ID_flashSaleSessionId);
             
         }
     }

@@ -248,6 +248,7 @@ public interface ILitemallOrderBiz extends ICrudBiz<LitemallOrder> {
                                         @Name("mobile") String mobile,
                                         @Name("address") String address,
                                         @Name("freightPrice") BigDecimal freightPrice,
+                                        @Optional @Name("flashSaleSessionId") String flashSaleSessionId,
                                         IServiceContext context);
 
     // ===== 订单运营工作台（P21） =====

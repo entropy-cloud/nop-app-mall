@@ -15,6 +15,7 @@ import app.mall.biz.ILitemallPinTuanActivityBiz;
 import app.mall.biz.ILitemallPointsAccountBiz;
 import app.mall.biz.ILitemallPointsFlowBiz;
 import app.mall.biz.ILitemallPromotionActivityBiz;
+import app.mall.biz.ILitemallPromotionUsageBiz;
 import app.mall.biz.ILitemallPickupStoreBiz;
 import app.mall.biz.ILitemallSystemBiz;
 import app.mall.biz.ILitemallTimeDiscountBiz;
@@ -54,11 +55,14 @@ import app.mall.dao.dto.AovDistributionBean;
 import app.mall.dao.dto.CouponUsageStatisticsBean;
 import app.mall.dao.dto.OrderAnalysisBean;
 import app.mall.dao.dto.PaymentMethodShareBean;
+import app.mall.dao.dto.PromotionResolutionBean;
 import app.mall.dao.dto.ReturnReasonShareBean;
 import app.mall.dao.entity.LitemallOrderGoods;
 import app.mall.dao.entity.LitemallPickupStore;
 import app.mall.dao.entity.LitemallPinTuanActivity;
 import app.mall.dao.entity.LitemallPointsFlow;
+import app.mall.dao.entity.LitemallPromotionActivity;
+import app.mall.dao.entity.LitemallPromotionUsage;
 import app.mall.dao.manager.MallLogManager;
 import app.mall.dao.mapper.LitemallGoodsProductMapper;
 import app.mall.dao.mapper.LitemallOrderMapper;
@@ -133,6 +137,7 @@ import static app.mall.service.AppMallErrors.ERR_PIN_TUAN_GROUPON_MUTEX;
 import static app.mall.service.AppMallErrors.ERR_PIN_TUAN_NOT_ACTIVE;
 import static app.mall.service.AppMallErrors.ERR_PIN_TUAN_PRICE_INVALID;
 import static app.mall.service.AppMallErrors.ERR_POINTS_DEDUCT_EXCEED_LIMIT;
+import static app.mall.service.AppMallErrors.ERR_PROMOTION_MAX_PER_USER;
 import static app.mall.service.AppMallErrors.ERR_PROMOTION_STACKING_NOT_ALLOWED;
 import static app.mall.service.AppMallErrors.ERR_PICKUP_CODE_INVALID;
 import static app.mall.service.AppMallErrors.ERR_PICKUP_ORDER_NOT_VERIFIABLE;
@@ -169,6 +174,9 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
 
     @Inject
     ILitemallPromotionActivityBiz promotionActivityBiz;
+
+    @Inject
+    ILitemallPromotionUsageBiz promotionUsageBiz;
 
     @Inject
     ILitemallTimeDiscountBiz timeDiscountBiz;
@@ -496,7 +504,14 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
         }
         order.setCouponPrice(couponPrice);
 
-        BigDecimal promotionPrice = promotionActivityBiz.selectPromotionForOrder(goodsPriceTotal, couponScopeIds, context);
+        // Resolve the winning promotion via the internal resolver (not the public @BizQuery) so we
+        // also obtain the hit activityId — needed to enforce maxPerUser and to write PromotionUsage.
+        PromotionResolutionBean promotionResolution = promotionActivityBiz.resolvePromotionForOrderInternal(
+                goodsPriceTotal, couponScopeIds, context);
+        BigDecimal promotionPrice = promotionResolution != null ? promotionResolution.getDiscount() : BigDecimal.ZERO;
+        String promotionActivityId = promotionResolution != null ? promotionResolution.getActivityId() : null;
+        BigDecimal promotionMeetAmount = promotionResolution != null ? promotionResolution.getMeetAmount() : null;
+
         if (couponUserId != null && !couponUserId.isEmpty()
                 && promotionPrice.compareTo(BigDecimal.ZERO) > 0
                 && !isPromotionCouponStackingEnabled(context)) {
@@ -505,6 +520,27 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
                     .param("promotionPrice", promotionPrice);
         }
         order.setPromotionPrice(promotionPrice);
+
+        // maxPerUser guard: when a promotion is hit, count this user's existing participation for
+        // the activity and reject if the cap is reached. Throwing here rolls back stock deductions
+        // too — the whole submit runs in one @BizMutation transaction.
+        if (promotionActivityId != null && promotionPrice.compareTo(BigDecimal.ZERO) > 0) {
+            LitemallPromotionActivity promoActivity = promotionActivityBiz.get(promotionActivityId, false, context);
+            Integer maxPerUser = promoActivity != null ? promoActivity.getMaxPerUser() : null;
+            if (maxPerUser != null && maxPerUser > 0) {
+                QueryBean usageQuery = new QueryBean();
+                usageQuery.addFilter(FilterBeans.eq(LitemallPromotionUsage.PROP_NAME_userId, userId));
+                usageQuery.addFilter(FilterBeans.eq(LitemallPromotionUsage.PROP_NAME_promotionActivityId, promotionActivityId));
+                long usageCount = promotionUsageBiz.findCount(usageQuery, context);
+                if (usageCount >= maxPerUser) {
+                    throw new NopException(ERR_PROMOTION_MAX_PER_USER)
+                            .param("userId", userId)
+                            .param("activityId", promotionActivityId)
+                            .param("maxPerUser", maxPerUser)
+                            .param("currentCount", usageCount);
+                }
+            }
+        }
 
         BigDecimal grouponPrice = BigDecimal.ZERO;
         if (grouponRulesId != null && !grouponRulesId.isEmpty()) {
@@ -550,6 +586,19 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
         order.setActualPrice(actualPrice);
 
         saveEntity(order, "submit", context);
+
+        // Write the promotion participation record (maxPerUser model-gap closure): the order hit a
+        // promotion, so record the participation fact for limit counting and per-activity attribution.
+        // Runs in the same @BizMutation tx; orderId is now available.
+        if (promotionActivityId != null && promotionPrice.compareTo(BigDecimal.ZERO) > 0) {
+            LitemallPromotionUsage usage = promotionUsageBiz.newEntity();
+            usage.setUserId(userId);
+            usage.setPromotionActivityId(promotionActivityId);
+            usage.setOrderId(order.orm_idString());
+            usage.setMeetAmount(promotionMeetAmount);
+            usage.setDiscountAmount(promotionPrice);
+            promotionUsageBiz.saveEntity(usage, "submit:promotionUsage", context);
+        }
 
         // Spend the user's points after the order is saved (orderId available as sourceId).
         // A failed spend (e.g. insufficient balance) throws inside the same @BizMutation tx,
@@ -1664,10 +1713,13 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
                                                @Name("mobile") String mobile,
                                                @Name("address") String address,
                                                @Name("freightPrice") BigDecimal freightPrice,
+                                               @Optional @Name("flashSaleSessionId") String flashSaleSessionId,
                                                IServiceContext context) {
         // P24 flash-sale direct-buy order creation (independent path, NOT submit()).
         // flashPrice is the unit price (商品单价层); coupon / promotion / integral / groupon /
         // pinTuan slots are all zeroed. Single OrderGoods line. No cart involvement.
+        // flashSaleSessionId is written for per-session attribution (maxPerUser counting +
+        // getFlashSaleEffectiveness). Non-flash-sale orders keep the column null.
         // See docs/design/marketing-and-promotions.md 秒杀章节 "下单路径".
         LocalDateTime now = LocalDateTime.now();
         BigDecimal lineTotal = flashPrice.multiply(BigDecimal.valueOf(number));
@@ -1694,6 +1746,7 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
         order.setActualPrice(orderPrice);
         order.setComments(0);
         order.setDeleted(false);
+        order.setFlashSaleSessionId(flashSaleSessionId);
 
         LitemallOrderGoods orderGoods = orderGoodsBiz.newEntity();
         orderGoods.setGoodsId(goodsId);

@@ -361,6 +361,14 @@
         <property name="bizObjName" value="LitemallGroupon"/>
     </bean>
 
+    <bean id="app.mall.service.entity.LitemallPromotionUsageBizModel" ioc:type="@bean:id" ioc:default="true"/>
+
+    <bean id="biz_LitemallPromotionUsage" class="io.nop.biz.proxy.BizProxyFactoryBean"
+          ioc:type="app.mall.biz.ILitemallPromotionUsageBiz" ioc:force-lazy-property="true" lazy-init="true"
+          primary="true">
+        <property name="bizObjName" value="LitemallPromotionUsage"/>
+    </bean>
+
     <bean id="app.mall.service.entity.LitemallOrderGoodsBizModel" ioc:type="@bean:id" ioc:default="true"/>
 
     <bean id="biz_LitemallOrderGoods" class="io.nop.biz.proxy.BizProxyFactoryBean"

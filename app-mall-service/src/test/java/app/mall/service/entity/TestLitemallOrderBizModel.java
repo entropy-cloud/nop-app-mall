@@ -10,6 +10,7 @@ import app.mall.dao.entity.LitemallOrderGoods;
 import app.mall.dao.entity.LitemallPinTuanActivity;
 import app.mall.dao.entity.LitemallPromotionActivity;
 import app.mall.dao.entity.LitemallPromotionTier;
+import app.mall.dao.entity.LitemallPromotionUsage;
 import app.mall.dao.entity.LitemallSystem;
 import app.mall.dao.entity.LitemallTimeDiscount;
 import app.mall.dao._AppMallDaoConstants;
@@ -425,12 +426,18 @@ public class TestLitemallOrderBizModel extends JunitBaseTestCase {
     }
 
     private LitemallPromotionActivity createActiveAmountPromotion(BigDecimal meetAmount, BigDecimal discountValue) {
+        return createActiveAmountPromotion(meetAmount, discountValue, null);
+    }
+
+    private LitemallPromotionActivity createActiveAmountPromotion(BigDecimal meetAmount, BigDecimal discountValue,
+                                                                   Integer maxPerUser) {
         LitemallPromotionActivity a = daoProvider.daoFor(LitemallPromotionActivity.class).newEntity();
         a.setName("满减测试");
         a.setDiscountType(_AppMallDaoConstants.DISCOUNT_TYPE_AMOUNT);
         a.setStatus(_AppMallDaoConstants.PROMOTION_STATUS_ACTIVE);
         a.setGoodsScope(_AppMallDaoConstants.GOODS_SCOPE_ALL);
         a.setPriority(1);
+        a.setMaxPerUser(maxPerUser);
         a.setStartTime(LocalDateTime.now().minusDays(1));
         a.setEndTime(LocalDateTime.now().plusDays(1));
         daoProvider.daoFor(LitemallPromotionActivity.class).saveEntity(a);
@@ -497,6 +504,87 @@ public class TestLitemallOrderBizModel extends JunitBaseTestCase {
         // orderPrice = 198 + 0 - 0 - 20 = 178
         assertEquals(0, new BigDecimal("178").compareTo(new BigDecimal(orderData.get("orderPrice").toString())));
         assertEquals(0, new BigDecimal("178").compareTo(new BigDecimal(orderData.get("actualPrice").toString())));
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testSubmitPromotionWritesUsage() {
+        // Promotion hit must write exactly one PromotionUsage record attributed to the activity.
+        LitemallPromotionActivity a = createActiveAmountPromotion(new BigDecimal("100"), new BigDecimal("20"), 0);
+
+        ApiRequest<Map<String, Object>> submitReq = ApiRequest.build(Map.of(
+                "addressId", addressId,
+                "message", "满减参与记录",
+                "freightPrice", BigDecimal.ZERO
+        ));
+        IGraphQLExecutionContext gqlCtx = graphQLEngine.newRpcContext(
+                GraphQLOperationType.mutation, "LitemallOrder__submit", submitReq);
+        ApiResponse<?> submitResult = graphQLEngine.executeRpc(gqlCtx);
+        assertEquals(0, submitResult.getStatus(), "submit failed: " + submitResult);
+        Map<String, Object> orderData = (Map<String, Object>) submitResult.getData();
+        String orderId = (String) orderData.get("id");
+        assertEquals(0, new BigDecimal("20").compareTo(new BigDecimal(orderData.get("promotionPrice").toString())));
+
+        QueryBean usageQuery = new QueryBean();
+        usageQuery.addFilter(FilterBeans.eq(LitemallPromotionUsage.PROP_NAME_orderId, orderId));
+        java.util.List<LitemallPromotionUsage> usages = daoProvider.daoFor(LitemallPromotionUsage.class)
+                .findAllByQuery(usageQuery);
+        assertEquals(1, usages.size(), "exactly one PromotionUsage should be written on a promotion hit");
+        LitemallPromotionUsage usage = usages.get(0);
+        assertEquals("1", usage.getUserId());
+        assertEquals(a.orm_idString(), usage.getPromotionActivityId());
+        assertEquals(0, new BigDecimal("20").compareTo(usage.getDiscountAmount()));
+        assertEquals(0, new BigDecimal("198").compareTo(usage.getMeetAmount()));
+    }
+
+    @Test
+    public void testSubmitPromotionMaxPerUserRejected() {
+        // maxPerUser=1 and one prior participation already recorded -> second submit rejected.
+        LitemallPromotionActivity a = createActiveAmountPromotion(new BigDecimal("100"), new BigDecimal("20"), 1);
+
+        LitemallPromotionUsage prior = daoProvider.daoFor(LitemallPromotionUsage.class).newEntity();
+        prior.setUserId("1");
+        prior.setPromotionActivityId(a.orm_idString());
+        prior.setOrderId("999999");
+        prior.setMeetAmount(new BigDecimal("198"));
+        prior.setDiscountAmount(new BigDecimal("20"));
+        daoProvider.daoFor(LitemallPromotionUsage.class).saveEntity(prior);
+
+        ApiRequest<Map<String, Object>> submitReq = ApiRequest.build(Map.of(
+                "addressId", addressId,
+                "message", "超限拒绝",
+                "freightPrice", BigDecimal.ZERO
+        ));
+        IGraphQLExecutionContext gqlCtx = graphQLEngine.newRpcContext(
+                GraphQLOperationType.mutation, "LitemallOrder__submit", submitReq);
+        ApiResponse<?> submitResult = graphQLEngine.executeRpc(gqlCtx);
+        assertTrue(submitResult.getStatus() != 0,
+                "submit should be rejected when maxPerUser reached: " + submitResult);
+        assertTrue(submitResult.getMsg() != null && submitResult.getMsg().contains("限参与次数"),
+                "rejection should surface the max-per-user description: " + submitResult.getMsg());
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testSubmitPromotionMaxPerUserAllowsUnderLimit() {
+        // maxPerUser=5 and no prior participation -> submit succeeds and writes usage.
+        LitemallPromotionActivity a = createActiveAmountPromotion(new BigDecimal("100"), new BigDecimal("20"), 5);
+
+        ApiRequest<Map<String, Object>> submitReq = ApiRequest.build(Map.of(
+                "addressId", addressId,
+                "message", "限购允许",
+                "freightPrice", BigDecimal.ZERO
+        ));
+        IGraphQLExecutionContext gqlCtx = graphQLEngine.newRpcContext(
+                GraphQLOperationType.mutation, "LitemallOrder__submit", submitReq);
+        ApiResponse<?> submitResult = graphQLEngine.executeRpc(gqlCtx);
+        assertEquals(0, submitResult.getStatus(), "submit under limit should succeed: " + submitResult);
+        Map<String, Object> orderData = (Map<String, Object>) submitResult.getData();
+        String orderId = (String) orderData.get("id");
+
+        QueryBean usageQuery = new QueryBean();
+        usageQuery.addFilter(FilterBeans.eq(LitemallPromotionUsage.PROP_NAME_orderId, orderId));
+        assertEquals(1, daoProvider.daoFor(LitemallPromotionUsage.class).findAllByQuery(usageQuery).size());
     }
 
     @SuppressWarnings("unchecked")

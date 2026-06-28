@@ -40,6 +40,7 @@ entity:
     LitemallPointsFlow: 积分流水表
     LitemallPromotionActivity: 促销活动表（满减送）
     LitemallPromotionTier: 满减档位表
+    LitemallPromotionUsage: 满减参与记录表
     LitemallRecharge: 充值记录表
     LitemallRegion: 行政区域表
     LitemallResetCode: 密码重置验证码
@@ -499,6 +500,7 @@ prop:
       deliveryType: 配送方式
       deliveryType_label: 配送方式
       endTime: 订单关闭时间
+      flashSaleSessionId: 秒杀场次ID
       freightPrice: 配送费用
       goodsPrice: 商品总费用
       grouponPrice: 团购优惠价减免
@@ -648,6 +650,7 @@ prop:
       maxPerUser: 每人限参与次数(0不限)
       name: 活动名称
       priority: 优先级
+      promotionUsages: 满减参与记录
       remark: 备注
       startTime: 开始时间
       status: 活动状态
@@ -664,6 +667,20 @@ prop:
       id: Id
       meetAmount: 满足金额
       updateTime: 更新时间
+    LitemallPromotionUsage:
+      activity: 促销活动
+      activity.name: 促销活动
+      addTime: 创建时间
+      deleted: 逻辑删除
+      discountAmount: 实际优惠额
+      id: Id
+      meetAmount: 满减门槛命中金额
+      order: 订单
+      order.orderSn: 订单
+      orderId: 订单ID
+      promotionActivityId: 促销活动ID
+      updateTime: 更新时间
+      userId: 用户ID
     LitemallRecharge:
       addTime: 创建时间
       amount: 充值金额

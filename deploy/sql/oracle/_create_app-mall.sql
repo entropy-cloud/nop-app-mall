@@ -470,6 +470,7 @@ CREATE TABLE litemall_order(
   PAY_CHANNEL INTEGER  ,
   WALLET_PAY_AMOUNT NUMBER(10,2)  ,
   ADMIN_REMARK VARCHAR2(511)  ,
+  FLASH_SALE_SESSION_ID INTEGER  ,
   constraint PK_litemall_order primary key (ID)
 );
 
@@ -724,6 +725,19 @@ CREATE TABLE litemall_groupon(
   UPDATE_TIME DATE  ,
   DELETED CHAR(1)  ,
   constraint PK_litemall_groupon primary key (ID)
+);
+
+CREATE TABLE litemall_promotion_usage(
+  ID INTEGER NOT NULL ,
+  USER_ID VARCHAR2(50) NOT NULL ,
+  PROMOTION_ACTIVITY_ID INTEGER NOT NULL ,
+  ORDER_ID INTEGER NOT NULL ,
+  MEET_AMOUNT NUMBER(10,2)  ,
+  DISCOUNT_AMOUNT NUMBER(10,2)  ,
+  ADD_TIME DATE  ,
+  UPDATE_TIME DATE  ,
+  DELETED CHAR(1)  ,
+  constraint PK_litemall_promotion_usage primary key (ID)
 );
 
 CREATE TABLE litemall_order_goods(
@@ -1538,6 +1552,8 @@ CREATE TABLE litemall_pin_tuan_member(
                     
       COMMENT ON COLUMN litemall_order.ADMIN_REMARK IS '运营备注';
                     
+      COMMENT ON COLUMN litemall_order.FLASH_SALE_SESSION_ID IS '秒杀场次ID';
+                    
       COMMENT ON TABLE litemall_promotion_tier IS '满减档位表';
                 
       COMMENT ON COLUMN litemall_promotion_tier.ID IS 'Id';
@@ -1941,6 +1957,26 @@ CREATE TABLE litemall_pin_tuan_member(
       COMMENT ON COLUMN litemall_groupon.UPDATE_TIME IS '更新时间';
                     
       COMMENT ON COLUMN litemall_groupon.DELETED IS '逻辑删除';
+                    
+      COMMENT ON TABLE litemall_promotion_usage IS '满减参与记录表';
+                
+      COMMENT ON COLUMN litemall_promotion_usage.ID IS 'Id';
+                    
+      COMMENT ON COLUMN litemall_promotion_usage.USER_ID IS '用户ID';
+                    
+      COMMENT ON COLUMN litemall_promotion_usage.PROMOTION_ACTIVITY_ID IS '促销活动ID';
+                    
+      COMMENT ON COLUMN litemall_promotion_usage.ORDER_ID IS '订单ID';
+                    
+      COMMENT ON COLUMN litemall_promotion_usage.MEET_AMOUNT IS '满减门槛命中金额';
+                    
+      COMMENT ON COLUMN litemall_promotion_usage.DISCOUNT_AMOUNT IS '实际优惠额';
+                    
+      COMMENT ON COLUMN litemall_promotion_usage.ADD_TIME IS '创建时间';
+                    
+      COMMENT ON COLUMN litemall_promotion_usage.UPDATE_TIME IS '更新时间';
+                    
+      COMMENT ON COLUMN litemall_promotion_usage.DELETED IS '逻辑删除';
                     
       COMMENT ON TABLE litemall_order_goods IS '订单商品表';
                 

@@ -160,6 +160,10 @@ site:
       displayName: ''
     FNPT:LitemallPromotionTier:query:
       displayName: ''
+    FNPT:LitemallPromotionUsage:mutation:
+      displayName: ''
+    FNPT:LitemallPromotionUsage:query:
+      displayName: ''
     FNPT:LitemallRecharge:mutation:
       displayName: ''
     FNPT:LitemallRecharge:query:
@@ -291,6 +295,8 @@ site:
     LitemallPromotionActivity-main:
       displayName: ''
     LitemallPromotionTier-main:
+      displayName: ''
+    LitemallPromotionUsage-main:
       displayName: ''
     LitemallRecharge-main:
       displayName: ''

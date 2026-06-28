@@ -470,6 +470,7 @@ CREATE TABLE litemall_order(
   PAY_CHANNEL INTEGER NULL    COMMENT '支付通道',
   WALLET_PAY_AMOUNT DECIMAL(10,2) NULL    COMMENT '余额支付金额',
   ADMIN_REMARK VARCHAR(511) NULL    COMMENT '运营备注',
+  FLASH_SALE_SESSION_ID INTEGER NULL    COMMENT '秒杀场次ID',
   constraint PK_litemall_order primary key (ID)
 )CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
 
@@ -726,6 +727,19 @@ CREATE TABLE litemall_groupon(
   constraint PK_litemall_groupon primary key (ID)
 )CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
 
+CREATE TABLE litemall_promotion_usage(
+  ID INTEGER NOT NULL    COMMENT 'Id',
+  USER_ID VARCHAR(50) NOT NULL    COMMENT '用户ID',
+  PROMOTION_ACTIVITY_ID INTEGER NOT NULL    COMMENT '促销活动ID',
+  ORDER_ID INTEGER NOT NULL    COMMENT '订单ID',
+  MEET_AMOUNT DECIMAL(10,2) NULL    COMMENT '满减门槛命中金额',
+  DISCOUNT_AMOUNT DECIMAL(10,2) NULL    COMMENT '实际优惠额',
+  ADD_TIME DATETIME NULL    COMMENT '创建时间',
+  UPDATE_TIME DATETIME NULL    COMMENT '更新时间',
+  DELETED BOOLEAN NULL    COMMENT '逻辑删除',
+  constraint PK_litemall_promotion_usage primary key (ID)
+)CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
+
 CREATE TABLE litemall_order_goods(
   ID INTEGER NOT NULL    COMMENT 'Id',
   ORDER_ID INTEGER NOT NULL    COMMENT '订单ID',
@@ -881,6 +895,8 @@ CREATE TABLE litemall_pin_tuan_member(
    ALTER TABLE litemall_aftersale COMMENT '售后表';
                 
    ALTER TABLE litemall_groupon COMMENT '团购活动表';
+                
+   ALTER TABLE litemall_promotion_usage COMMENT '满减参与记录表';
                 
    ALTER TABLE litemall_order_goods COMMENT '订单商品表';
                 

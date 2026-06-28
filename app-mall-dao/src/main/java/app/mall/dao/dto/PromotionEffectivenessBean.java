@@ -9,6 +9,7 @@ public class PromotionEffectivenessBean {
     private int promotedOrderCount;
     private BigDecimal totalGmv;
     private BigDecimal totalDiscount;
+    private int participantCount;
 
     public int getPromotedOrderCount() {
         return promotedOrderCount;
@@ -32,5 +33,13 @@ public class PromotionEffectivenessBean {
 
     public void setTotalDiscount(BigDecimal totalDiscount) {
         this.totalDiscount = totalDiscount;
+    }
+
+    public int getParticipantCount() {
+        return participantCount;
+    }
+
+    public void setParticipantCount(int participantCount) {
+        this.participantCount = participantCount;
     }
 }

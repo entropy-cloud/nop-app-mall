@@ -1183,6 +1183,8 @@
                         scale="2" stdDataType="decimal" stdSqlType="DECIMAL"/>
                 <column code="ADMIN_REMARK" displayName="运营备注" name="adminRemark" precision="511" propId="40"
                         stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="FLASH_SALE_SESSION_ID" displayName="秒杀场次ID" name="flashSaleSessionId" propId="41"
+                        stdDataType="string" stdSqlType="INTEGER"/>
             </columns>
             <indexes>
                 <index name="idx_order_userId" unique="false">
@@ -1487,6 +1489,13 @@
                         <on leftProp="id" rightProp="activityId"/>
                     </join>
                 </to-many>
+                <to-many cascadeDelete="true" displayName="满减参与记录" name="promotionUsages"
+                         refEntityName="app.mall.dao.entity.LitemallPromotionUsage" refPropName="activity"
+                         tagSet="pub,cascade-delete,insertable,updatable" i18n-en:displayName="Promotion Usages">
+                    <join>
+                        <on leftProp="id" rightProp="promotionActivityId"/>
+                    </join>
+                </to-many>
             </relations>
         </entity>
         <entity className="app.mall.dao.entity.LitemallPromotionTier" createTimeProp="addTime" deleteFlagProp="deleted"
@@ -1518,6 +1527,60 @@
                     </join>
                 </to-one>
             </relations>
+        </entity>
+        <entity className="app.mall.dao.entity.LitemallPromotionUsage" createTimeProp="addTime" deleteFlagProp="deleted"
+                displayName="满减参与记录表" name="app.mall.dao.entity.LitemallPromotionUsage" registerShortName="true"
+                tableName="litemall_promotion_usage" updateTimeProp="updateTime" useLogicalDelete="true">
+            <columns>
+                <column code="ID" displayName="Id" mandatory="true" name="id" primary="true" propId="1"
+                        stdDataType="string" stdSqlType="INTEGER" tagSet="seq" ui:show="R"/>
+                <column code="USER_ID" displayName="用户ID" domain="userId" mandatory="true" name="userId" precision="50"
+                        propId="2" stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="PROMOTION_ACTIVITY_ID" displayName="促销活动ID" mandatory="true" name="promotionActivityId"
+                        propId="3" stdDataType="string" stdSqlType="INTEGER"/>
+                <column code="ORDER_ID" displayName="订单ID" mandatory="true" name="orderId" propId="4"
+                        stdDataType="string" stdSqlType="INTEGER"/>
+                <column code="MEET_AMOUNT" displayName="满减门槛命中金额" name="meetAmount" precision="10" propId="5" scale="2"
+                        stdDataType="decimal" stdSqlType="DECIMAL"/>
+                <column code="DISCOUNT_AMOUNT" displayName="实际优惠额" name="discountAmount" precision="10" propId="6"
+                        scale="2" stdDataType="decimal" stdSqlType="DECIMAL"/>
+                <column code="ADD_TIME" displayName="创建时间" domain="createTime" name="addTime" propId="7"
+                        stdDataType="datetime" stdSqlType="DATETIME" ui:show="X"/>
+                <column code="UPDATE_TIME" displayName="更新时间" domain="updateTime" name="updateTime" propId="8"
+                        stdDataType="datetime" stdSqlType="DATETIME" ui:show="X"/>
+                <column code="DELETED" displayName="逻辑删除" domain="delFlag" name="deleted" propId="9"
+                        stdDataType="boolean" stdSqlType="BOOLEAN" ui:show="X"/>
+            </columns>
+            <indexes>
+                <index name="idx_promoUsage_user_activity" unique="false">
+                    <column name="userId"/>
+                    <column name="promotionActivityId"/>
+                </index>
+                <index name="idx_promoUsage_order" unique="false">
+                    <column name="orderId"/>
+                </index>
+                <index name="idx_promoUsage_activity" unique="false">
+                    <column name="promotionActivityId"/>
+                </index>
+            </indexes>
+            <relations>
+                <to-one displayName="促销活动" name="activity" refDisplayName="满减参与记录"
+                        refEntityName="app.mall.dao.entity.LitemallPromotionActivity" refPropName="promotionUsages"
+                        tagSet="pub,ref-pub" i18n-en:displayName="Activity" ref-i18n-en:displayName="Promotion Usages">
+                    <join>
+                        <on leftProp="promotionActivityId" rightProp="id"/>
+                    </join>
+                </to-one>
+                <to-one displayName="订单" name="order" refEntityName="app.mall.dao.entity.LitemallOrder"
+                        tagSet="pub,ref-pub" i18n-en:displayName="Order">
+                    <join>
+                        <on leftProp="orderId" rightProp="id"/>
+                    </join>
+                </to-one>
+            </relations>
+            <unique-keys>
+                <unique-key columns="userId,orderId" name="uk_promoUsage_user_order"/>
+            </unique-keys>
         </entity>
         <entity className="app.mall.dao.entity.LitemallMemberLevel" createTimeProp="addTime" deleteFlagProp="deleted"
                 displayName="会员等级规则表" name="app.mall.dao.entity.LitemallMemberLevel" registerShortName="true"

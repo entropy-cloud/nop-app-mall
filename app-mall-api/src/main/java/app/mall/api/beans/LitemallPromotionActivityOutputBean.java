@@ -257,4 +257,15 @@
         }
 
 
+        private List<Map<String,Object>> _promotionUsages;
+
+        public List<Map<String,Object>> getPromotionUsages(){
+            return _promotionUsages;
+        }
+
+        public void setPromotionUsages(List<Map<String,Object>> value){
+            this._promotionUsages = value;
+        }
+
+
     }

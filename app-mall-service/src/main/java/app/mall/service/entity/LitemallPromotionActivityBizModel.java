@@ -4,6 +4,7 @@ package app.mall.service.entity;
 import app.mall.biz.ILitemallPromotionActivityBiz;
 import app.mall.dao._AppMallDaoConstants;
 import app.mall.dao.dto.PromotionEffectivenessBean;
+import app.mall.dao.dto.PromotionResolutionBean;
 import app.mall.dao.entity.LitemallPromotionActivity;
 import app.mall.dao.entity.LitemallPromotionTier;
 import app.mall.dao.mapper.LitemallMarketingMapper;
@@ -80,17 +81,20 @@ public class LitemallPromotionActivityBizModel extends CrudBizModel<LitemallProm
 
     @Override
     @BizQuery
-    public PromotionEffectivenessBean getPromotionEffectiveness(@Optional @Name("startDate") String startDate,
+    public PromotionEffectivenessBean getPromotionEffectiveness(@Optional @Name("activityId") String activityId,
+                                                                @Optional @Name("startDate") String startDate,
                                                                 @Optional @Name("endDate") String endDate,
                                                                 IServiceContext context) {
-        // Aggregate promotion effectiveness by time window. Per-activity attribution requires a
-        // PromotionUsage entity (ORM model-gap, deferred per plan degradation path — see plan
-        // Deferred and marketing-and-promotions.md "已知约束"). This aggregate stat covers all
-        // orders whose promotionPrice > 0 within the window.
+        // Per-activity attribution (PromotionUsage model-gap closure): when activityId is provided,
+        // aggregate via PromotionUsage (distinct participants, per-activity GMV/discount/order count).
+        // When activityId is null, keep the time-window aggregate over promotionPrice>0 orders.
         Timestamp start = startDate != null && !startDate.isEmpty()
                 ? Timestamp.valueOf(LocalDate.parse(startDate).atTime(LocalTime.MIN)) : MIN_TIMESTAMP;
         Timestamp end = endDate != null && !endDate.isEmpty()
                 ? Timestamp.valueOf(LocalDate.parse(endDate).atTime(LocalTime.MAX)) : MAX_TIMESTAMP;
+        if (activityId != null && !activityId.isEmpty()) {
+            return marketingMapper.getPromotionEffectivenessByActivity(activityId, start, end);
+        }
         return marketingMapper.getPromotionEffectiveness(start, end);
     }
 
@@ -98,7 +102,20 @@ public class LitemallPromotionActivityBizModel extends CrudBizModel<LitemallProm
     @BizQuery
     public BigDecimal selectPromotionForOrder(@Name("goodsPrice") BigDecimal goodsPrice,
                                               @Optional @Name("goodsScopeIds") List<String> goodsScopeIds,
-                                              IServiceContext context) {        BigDecimal effectiveGoodsPrice = goodsPrice != null ? goodsPrice : BigDecimal.ZERO;
+                                              IServiceContext context) {
+        // Public GraphQL preview contract preserved: delegates to the internal resolver and
+        // returns only the discount. submit() uses resolvePromotionForOrderInternal directly to
+        // also obtain the hit activityId (needed to write PromotionUsage). Single source of truth
+        // lives in resolvePromotionForOrderInternal.
+        PromotionResolutionBean resolved = resolvePromotionForOrderInternal(goodsPrice, goodsScopeIds, context);
+        return resolved != null ? resolved.getDiscount() : BigDecimal.ZERO;
+    }
+
+    @Override
+    public PromotionResolutionBean resolvePromotionForOrderInternal(BigDecimal goodsPrice,
+                                                                     List<String> goodsScopeIds,
+                                                                     IServiceContext context) {
+        BigDecimal effectiveGoodsPrice = goodsPrice != null ? goodsPrice : BigDecimal.ZERO;
         List<String> scopeIds = goodsScopeIds != null ? goodsScopeIds : Collections.emptyList();
 
         LocalDateTime now = LocalDateTime.now();
@@ -116,6 +133,7 @@ public class LitemallPromotionActivityBizModel extends CrudBizModel<LitemallProm
         // priority are broken by the larger discount.
         Integer bestPriority = null;
         BigDecimal bestDiscount = BigDecimal.ZERO;
+        String bestActivityId = null;
         for (LitemallPromotionActivity activity : activities) {
             if (!isInTimeWindow(activity, now) || !isScopeEligible(activity, scopeIds)) {
                 continue;
@@ -130,9 +148,18 @@ public class LitemallPromotionActivityBizModel extends CrudBizModel<LitemallProm
                     || (priority != null && priority.equals(bestPriority) && tierDiscount.compareTo(bestDiscount) > 0)) {
                 bestPriority = priority != null ? priority : 0;
                 bestDiscount = tierDiscount;
+                bestActivityId = activity.orm_idString();
             }
         }
-        return bestDiscount;
+        if (bestDiscount.compareTo(BigDecimal.ZERO) <= 0 || bestActivityId == null) {
+            return null;
+        }
+        PromotionResolutionBean result = new PromotionResolutionBean();
+        result.setActivityId(bestActivityId);
+        result.setDiscount(bestDiscount);
+        // meetAmount = the order goodsPrice at the moment the tier threshold was met.
+        result.setMeetAmount(effectiveGoodsPrice);
+        return result;
     }
 
     private boolean isInTimeWindow(LitemallPromotionActivity activity, LocalDateTime now) {

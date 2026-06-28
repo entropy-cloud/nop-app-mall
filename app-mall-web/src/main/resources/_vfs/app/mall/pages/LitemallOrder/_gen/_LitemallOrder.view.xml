@@ -105,6 +105,9 @@
                 <!--运营备注-->
                 <col id="adminRemark" sortable="true"/>
 
+                <!--秒杀场次ID-->
+                <col id="flashSaleSessionId" sortable="true"/>
+
                 <!--发货开始时间-->
                 <col id="shipTime" sortable="true"/>
 
@@ -150,11 +153,11 @@
  pickupCode[自提核销码] pickupTime[核销时间]
  promotionPrice[满减优惠金额] pinTuanPrice[拼团优惠金额]
  payChannel[支付通道] walletPayAmount[余额支付金额]
- adminRemark[运营备注] shipTime[发货开始时间]
- refundAmount[实际退款金额] refundType[退款方式]
- refundContent[退款备注] refundTime[退款时间]
- confirmTime[用户确认收货时间] comments[待评价订单商品数量]
- endTime[订单关闭时间] 
+ adminRemark[运营备注] flashSaleSessionId[秒杀场次ID]
+ shipTime[发货开始时间] refundAmount[实际退款金额]
+ refundType[退款方式] refundContent[退款备注]
+ refundTime[退款时间] confirmTime[用户确认收货时间]
+ comments[待评价订单商品数量] endTime[订单关闭时间]
 </layout>
         </form>
         <form id="add" editMode="add" title="新增-订单表" i18n-en:title="" x:prototype="edit"/>
@@ -174,10 +177,11 @@
  pickupTime[核销时间] promotionPrice[满减优惠金额]
  pinTuanPrice[拼团优惠金额] payChannel[支付通道]
  walletPayAmount[余额支付金额] adminRemark[运营备注]
- shipTime[发货开始时间] refundAmount[实际退款金额]
- refundType[退款方式] refundContent[退款备注]
- refundTime[退款时间] confirmTime[用户确认收货时间]
- comments[待评价订单商品数量] endTime[订单关闭时间]
+ flashSaleSessionId[秒杀场次ID] shipTime[发货开始时间]
+ refundAmount[实际退款金额] refundType[退款方式]
+ refundContent[退款备注] refundTime[退款时间]
+ confirmTime[用户确认收货时间] comments[待评价订单商品数量]
+ endTime[订单关闭时间] 
 </layout>
         </form>
         <form id="query" editMode="query" title="查询条件" i18n-en:title="Query Condition" x:abstract="true"/>

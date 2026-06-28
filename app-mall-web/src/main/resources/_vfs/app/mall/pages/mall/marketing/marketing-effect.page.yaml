@@ -10,11 +10,15 @@ body:
         name: dateRange
         label: 时间范围
         format: X
+      - type: input-text
+        name: promotionActivityId
+        label: 满减活动ID
+        placeholder: 可选，填入后满减面板按活动归因
       - type: button
         label: 刷新
         level: primary
         actionType: reload
-        target: promotionEffect,couponUsage,pinTuanEffect
+        target: promotionEffect,couponUsage,pinTuanEffect,flashSaleEffect
 
   - type: grid
     columns:
@@ -25,21 +29,24 @@ body:
             api:
               url: '@query:LitemallPromotionActivity__getPromotionEffectiveness'
               data:
+                activityId: '${promotionActivityId}'
                 startDate: "${dateRange[0] ? dateRange[0] | date : ''}"
                 endDate: "${dateRange[1] ? dateRange[1] | date : ''}"
               sendOn: true
             body:
               - type: panel
-                title: 满减效果（聚合口径，按时间窗）
+                title: 满减效果（按活动归因 / 时间窗聚合）
                 body:
                   - type: tpl
-                    tpl: '命中满减的订单数：<b>${promotedOrderCount}</b>'
+                    tpl: '参与单数：<b>${promotedOrderCount}</b>'
                   - type: tpl
-                    tpl: '订单 GMV（orderPrice 之和）：¥<b>${totalGmv}</b>'
+                    tpl: '订单 GMV：<b>${totalGmv}</b>'
                   - type: tpl
-                    tpl: '满减优惠额（promotionPrice 之和）：¥<b>${totalDiscount}</b>'
+                    tpl: '满减优惠额：<b>${totalDiscount}</b>'
                   - type: tpl
-                    tpl: '备注：按活动归因需用户参与记录实体（ORM model-gap，待授权）；当前为时间窗聚合口径。'
+                    tpl: '参与人数（distinct userId，按活动归因时统计）：<b>${participantCount}</b>'
+                  - type: tpl
+                    tpl: '说明：填入满减活动ID时按活动归因（经参与记录）；不填时为时间窗内 promotionPrice>0 订单聚合口径。'
       - md: 6
         body:
           - type: service
@@ -93,6 +100,44 @@ body:
                 body:
                   - type: tpl
                     tpl: '参与人数：${participantCount}，GMV：¥${totalGmv}'
-          - type: alert
-            level: info
-            body: '秒杀按场次效果统计需 Order.flashSaleSessionId 关联列（ORM model-gap，待 ask-first 授权后补齐）。'
+
+  - type: service
+    name: flashSaleEffect
+    api:
+      url: '@query:LitemallFlashSale__getFlashSaleEffectiveness'
+      data:
+        startDate: "${dateRange[0] ? dateRange[0] | date : ''}"
+        endDate: "${dateRange[1] ? dateRange[1] | date : ''}"
+      sendOn: true
+    body:
+      - type: panel
+        title: 秒杀效果（按场次归因）
+        body:
+          - type: grid
+            columns:
+              - md: 3
+                body:
+                  - type: tpl
+                    tpl: '成交单数：<b>${dealOrderCount}</b>'
+              - md: 3
+                body:
+                  - type: tpl
+                    tpl: '成交 GMV：¥<b>${totalGmv}</b>'
+              - md: 3
+                body:
+                  - type: tpl
+                    tpl: '参与人数：${participantCount}'
+              - md: 3
+                body:
+                  - type: tpl
+                    tpl: '限购命中拒绝数：${rejectedCount}'
+          - type: grid
+            columns:
+              - md: 6
+                body:
+                  - type: tpl
+                    tpl: '场次售罄率（sessionStock=0 场次占比）：${soldOutRate ? (soldOutRate * 100).toFixed(1) : 0}%'
+              - md: 6
+                body:
+                  - type: tpl
+                    tpl: '说明：经 Order.flashSaleSessionId 按场次归因成交单数/GMV；售罄率为已售罄场次占比。'

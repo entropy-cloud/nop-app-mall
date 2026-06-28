@@ -4,6 +4,7 @@ import app.mall.dao._AppMallDaoConstants;
 import app.mall.dao.entity.LitemallOrder;
 import app.mall.dao.entity.LitemallPromotionActivity;
 import app.mall.dao.entity.LitemallPromotionTier;
+import app.mall.dao.entity.LitemallPromotionUsage;
 import io.nop.api.core.annotations.autotest.NopTestConfig;
 import io.nop.api.core.annotations.core.OptionalBoolean;
 import io.nop.api.core.beans.ApiRequest;
@@ -26,6 +27,7 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @NopTestConfig(localDb = true, initDatabaseSchema = OptionalBoolean.TRUE)
@@ -261,5 +263,81 @@ public class TestLitemallPromotionActivityBizModel extends JunitBaseTestCase {
                 "promotedOrderCount should include the promotion-hit order");
         assertEquals(0, new BigDecimal("30").compareTo(new BigDecimal(data.get("totalDiscount").toString())),
                 "totalDiscount should equal the promotion discount sum");
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testGetPromotionEffectivenessByActivity() {
+        // Per-activity attribution (PromotionUsage-based): two users participated in one activity.
+        LitemallPromotionActivity activity = createActiveActivity(_AppMallDaoConstants.DISCOUNT_TYPE_AMOUNT,
+                _AppMallDaoConstants.GOODS_SCOPE_ALL, null, 1);
+
+        LitemallOrder o1 = newPaidOrder("1", "PROMO-BY-ACT-1", new BigDecimal("200"));
+        LitemallOrder o2 = newPaidOrder("2", "PROMO-BY-ACT-2", new BigDecimal("300"));
+        saveUsage("1", activity.orm_idString(), o1.orm_idString(), new BigDecimal("30"));
+        saveUsage("2", activity.orm_idString(), o2.orm_idString(), new BigDecimal("50"));
+
+        ApiRequest<Map<String, Object>> req = ApiRequest.build(Map.of("activityId", activity.orm_idString()));
+        IGraphQLExecutionContext ctx = graphQLEngine.newRpcContext(
+                GraphQLOperationType.query, "LitemallPromotionActivity__getPromotionEffectiveness", req);
+        ApiResponse<?> result = graphQLEngine.executeRpc(ctx);
+        assertEquals(0, result.getStatus(), "getPromotionEffectiveness(byActivity) failed: " + result);
+
+        Map<String, Object> data = (Map<String, Object>) result.getData();
+        assertEquals(2, ((Number) data.get("promotedOrderCount")).intValue(), "two participation orders");
+        assertEquals(2, ((Number) data.get("participantCount")).intValue(), "two distinct users");
+        assertEquals(0, new BigDecimal("80").compareTo(new BigDecimal(data.get("totalDiscount").toString())),
+                "totalDiscount = 30 + 50");
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testGetPromotionEffectivenessAggregateWithoutActivityId() {
+        // activityId null → time-window aggregate over promotionPrice>0 orders (existing contract).
+        createActiveActivity(_AppMallDaoConstants.DISCOUNT_TYPE_AMOUNT,
+                _AppMallDaoConstants.GOODS_SCOPE_ALL, null, 1);
+
+        ApiRequest<Map<String, Object>> req = ApiRequest.build(new HashMap<>());
+        IGraphQLExecutionContext ctx = graphQLEngine.newRpcContext(
+                GraphQLOperationType.query, "LitemallPromotionActivity__getPromotionEffectiveness", req);
+        ApiResponse<?> result = graphQLEngine.executeRpc(ctx);
+        assertEquals(0, result.getStatus(), "aggregate getPromotionEffectiveness failed: " + result);
+        Map<String, Object> data = (Map<String, Object>) result.getData();
+        assertNotNull(data.get("promotedOrderCount"));
+    }
+
+    private LitemallOrder newPaidOrder(String userId, String orderSn, BigDecimal orderPrice) {
+        LitemallOrder o = daoProvider.daoFor(LitemallOrder.class).newEntity();
+        o.setUserId(userId);
+        o.setOrderSn(orderSn);
+        o.setOrderStatus(201);
+        o.setAftersaleStatus(0);
+        o.setConsignee("测试");
+        o.setMobile("13800138000");
+        o.setAddress("测试地址");
+        o.setMessage("by-activity");
+        o.setGoodsPrice(orderPrice);
+        o.setFreightPrice(BigDecimal.ZERO);
+        o.setCouponPrice(BigDecimal.ZERO);
+        o.setIntegralPrice(BigDecimal.ZERO);
+        o.setGrouponPrice(BigDecimal.ZERO);
+        o.setPromotionPrice(BigDecimal.ZERO);
+        o.setPinTuanPrice(BigDecimal.ZERO);
+        o.setOrderPrice(orderPrice);
+        o.setActualPrice(orderPrice);
+        o.setComments(0);
+        o.setDeleted(false);
+        daoProvider.daoFor(LitemallOrder.class).saveEntity(o);
+        return o;
+    }
+
+    private void saveUsage(String userId, String activityId, String orderId, BigDecimal discount) {
+        LitemallPromotionUsage u = daoProvider.daoFor(LitemallPromotionUsage.class).newEntity();
+        u.setUserId(userId);
+        u.setPromotionActivityId(activityId);
+        u.setOrderId(orderId);
+        u.setMeetAmount(BigDecimal.ZERO);
+        u.setDiscountAmount(discount);
+        daoProvider.daoFor(LitemallPromotionUsage.class).saveEntity(u);
     }
 }

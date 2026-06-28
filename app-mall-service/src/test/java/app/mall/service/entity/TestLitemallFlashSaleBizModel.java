@@ -6,11 +6,14 @@ import app.mall.dao.entity.LitemallFlashSale;
 import app.mall.dao.entity.LitemallFlashSaleSession;
 import app.mall.dao.entity.LitemallGoods;
 import app.mall.dao.entity.LitemallGoodsProduct;
+import app.mall.dao.entity.LitemallLog;
 import app.mall.dao.entity.LitemallOrder;
 import io.nop.api.core.annotations.autotest.NopTestConfig;
 import io.nop.api.core.annotations.core.OptionalBoolean;
 import io.nop.api.core.beans.ApiRequest;
 import io.nop.api.core.beans.ApiResponse;
+import io.nop.api.core.beans.FilterBeans;
+import io.nop.api.core.beans.query.QueryBean;
 import io.nop.api.core.context.ContextProvider;
 import io.nop.autotest.junit.JunitBaseTestCase;
 import io.nop.dao.api.IDaoProvider;
@@ -499,6 +502,132 @@ public class TestLitemallFlashSaleBizModel extends JunitBaseTestCase {
         // Accept success or data-integrity-violation (file-domain limitation in H2 test mode).
         assertTrue(code == null || code.contains("data-integrity-violation"),
                 "unexpected error: " + code + " msg=" + result.getMsg());
+    }
+
+    @Test
+    public void testFlashSaleBuyMaxPerUserRejected() {
+        // maxPerUser=1 and one prior paid flash-sale order already attributed to this session
+        // (via flashSaleSessionId) -> second flashSaleBuy rejected by the per-user guard. The guard
+        // runs BEFORE stock deduction / createFlashSaleOrder, so it is deterministic and does not
+        // hit the test-mode file-copy data-integrity limitation.
+        String activityId = createActivity(null, new BigDecimal("99"), 100, 5, 1,
+                _AppMallDaoConstants.PROMOTION_STATUS_ACTIVE);
+        String sessionId = createSession(activityId,
+                LocalDateTime.now().minusMinutes(30), LocalDateTime.now().plusMinutes(30),
+                50, 1);
+        preInsertFlashSaleOrder(sessionId, "1", _AppMallDaoConstants.ORDER_STATUS_PAY);
+
+        int status = callMutationStatus("LitemallFlashSale__flashSaleBuy", java.util.Map.of(
+                "flashSaleSessionId", sessionId,
+                "addressId", addressId,
+                "productId", productId,
+                "number", 1
+        ));
+        assertNotEquals(0, status, "flashSaleBuy must be rejected when maxPerUser reached");
+
+        // The rejection must be logged for analytics (rejected-count feeds flash-sale effectiveness).
+        // Count all LitemallLog entries written by this test's flashSaleBuy rejection.
+        int logCount = daoProvider.daoFor(LitemallLog.class).findAllByQuery(new QueryBean()).size();
+        assertTrue(logCount >= 1, "maxPerUser rejection should be written to LitemallLog, got " + logCount);
+    }
+
+    @Test
+    public void testFlashSaleBuyMaxPerUserDifferentSessionAllowed() {
+        // maxPerUser=1, prior order attributed to sessionA. flashSaleBuy for a DIFFERENT sessionB
+        // must pass the per-user guard (count for sessionB is 0). The subsequent createFlashSaleOrder
+        // may still fail with the test-mode file-copy data-integrity issue, but that is NOT a per-user
+        // rejection — proving sessions do not interfere.
+        String activityId = createActivity(null, new BigDecimal("99"), 100, 5, 1,
+                _AppMallDaoConstants.PROMOTION_STATUS_ACTIVE);
+        String sessionA = createSession(activityId,
+                LocalDateTime.now().minusMinutes(30), LocalDateTime.now().plusMinutes(30),
+                50, 1);
+        String sessionB = createSession(activityId,
+                LocalDateTime.now().minusMinutes(30), LocalDateTime.now().plusMinutes(30),
+                50, 1);
+        preInsertFlashSaleOrder(sessionA, "1", _AppMallDaoConstants.ORDER_STATUS_PAY);
+
+        ApiRequest<java.util.Map<String, Object>> req = ApiRequest.build(java.util.Map.of(
+                "flashSaleSessionId", sessionB,
+                "addressId", addressId,
+                "productId", productId,
+                "number", 1
+        ));
+        IGraphQLExecutionContext ctx = graphQLEngine.newRpcContext(
+                GraphQLOperationType.mutation, "LitemallFlashSale__flashSaleBuy", req);
+        ApiResponse<?> result = graphQLEngine.executeRpc(ctx);
+        String code = result.getCode();
+        // Accept success OR data-integrity-violation (test-mode file-copy), but NOT a per-user rejection.
+        assertTrue(code == null
+                        || code.contains("data-integrity-violation")
+                        || (code.contains("flash-sale") && !code.contains("over-limit-per-user")),
+                "different session must not be rejected by maxPerUser: " + code + " msg=" + result.getMsg());
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testGetFlashSaleEffectiveness() {
+        // Per-session attribution: two deal orders attributed to a flash-sale session via
+        // flashSaleSessionId; getFlashSaleEffectiveness returns deal count/GMV/participants.
+        String activityId = createActivity(null, new BigDecimal("99"), 100, 5, 0,
+                _AppMallDaoConstants.PROMOTION_STATUS_ACTIVE);
+        String sessionId = createSession(activityId,
+                LocalDateTime.now().minusMinutes(30), LocalDateTime.now().plusMinutes(30),
+                50, 1);
+        // Two orders from two users attributed to this session.
+        preInsertFlashSaleOrder(sessionId, "1", _AppMallDaoConstants.ORDER_STATUS_PAY);
+        preInsertFlashSaleOrder(sessionId, "2", _AppMallDaoConstants.ORDER_STATUS_SHIP);
+
+        java.util.Map<String, Object> result = callQuery("LitemallFlashSale__getFlashSaleEffectiveness",
+                java.util.Map.of("flashSaleId", activityId));
+
+        assertEquals(2, ((Number) result.get("dealOrderCount")).intValue(), "two deal orders");
+        assertEquals(2, ((Number) result.get("participantCount")).intValue(), "two distinct users");
+        assertNotNull(result.get("totalGmv"), "totalGmv should be present");
+        assertNotNull(result.get("soldOutRate"), "soldOutRate should be present");
+        assertTrue(((Number) result.get("rejectedCount")).intValue() >= 0, "rejectedCount present");
+    }
+
+    @Test
+    public void testGetFlashSaleEffectivenessEmpty() {
+        // No flash-sale orders yet → returns zeros, no exception (empty-data state).
+        String activityId = createActivity(null, new BigDecimal("99"), 100, 5, 0,
+                _AppMallDaoConstants.PROMOTION_STATUS_ACTIVE);
+        createSession(activityId,
+                LocalDateTime.now().minusMinutes(30), LocalDateTime.now().plusMinutes(30),
+                50, 1);
+
+        java.util.Map<String, Object> result = callQuery("LitemallFlashSale__getFlashSaleEffectiveness",
+                java.util.Map.of("flashSaleId", activityId));
+
+        assertEquals(0, ((Number) result.get("dealOrderCount")).intValue(), "no deals yet");
+    }
+
+    private void preInsertFlashSaleOrder(String flashSaleSessionId, String userId, int orderStatus) {
+        // Insert a flash-sale-attributed order directly via the DAO to simulate prior participation.
+        // flashSaleSessionId is the per-session attribution key written by createFlashSaleOrder.
+        LitemallOrder order = daoProvider.daoFor(LitemallOrder.class).newEntity();
+        order.setUserId(userId);
+        order.setOrderSn("FS-PRIOR-" + flashSaleSessionId);
+        order.setOrderStatus(orderStatus);
+        order.setAftersaleStatus(_AppMallDaoConstants.AFTERSALE_STATUS_INIT);
+        order.setConsignee("张三");
+        order.setMobile("13800138000");
+        order.setAddress("广东省深圳市南山区科技园");
+        order.setMessage("flash-sale-prior");
+        order.setGoodsPrice(new BigDecimal("99"));
+        order.setFreightPrice(BigDecimal.ZERO);
+        order.setCouponPrice(BigDecimal.ZERO);
+        order.setIntegralPrice(BigDecimal.ZERO);
+        order.setGrouponPrice(BigDecimal.ZERO);
+        order.setPromotionPrice(BigDecimal.ZERO);
+        order.setPinTuanPrice(BigDecimal.ZERO);
+        order.setOrderPrice(new BigDecimal("99"));
+        order.setActualPrice(new BigDecimal("99"));
+        order.setComments(0);
+        order.setDeleted(false);
+        order.setFlashSaleSessionId(flashSaleSessionId);
+        daoProvider.daoFor(LitemallOrder.class).saveEntity(order);
     }
 
     @SuppressWarnings("unchecked")

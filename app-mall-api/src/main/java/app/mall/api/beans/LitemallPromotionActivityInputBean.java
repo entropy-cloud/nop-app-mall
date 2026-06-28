@@ -178,4 +178,15 @@
         }
 
 
+        private List<LitemallPromotionUsageInputBean> _promotionUsages;
+
+        public List<LitemallPromotionUsageInputBean> getPromotionUsages(){
+            return _promotionUsages;
+        }
+
+        public void setPromotionUsages(List<LitemallPromotionUsageInputBean> value){
+            this._promotionUsages = value;
+        }
+
+
     }

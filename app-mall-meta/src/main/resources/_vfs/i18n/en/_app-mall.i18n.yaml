@@ -40,6 +40,7 @@ entity:
     LitemallPointsFlow: null
     LitemallPromotionActivity: null
     LitemallPromotionTier: null
+    LitemallPromotionUsage: null
     LitemallRecharge: null
     LitemallRegion: null
     LitemallResetCode: null
@@ -521,6 +522,7 @@ prop:
       payChannel_label: null
       walletPayAmount: null
       adminRemark: null
+      flashSaleSessionId: null
       orderGoods: Order Goods
       pickupStore: Pickup Store
       pickupStore.name: Pickup Store
@@ -654,6 +656,7 @@ prop:
       updateTime: null
       deleted: null
       tiers: Tiers
+      promotionUsages: Promotion Usages
     LitemallPromotionTier:
       id: null
       activityId: null
@@ -664,6 +667,20 @@ prop:
       deleted: null
       activity: Activity
       activity.name: Activity
+    LitemallPromotionUsage:
+      id: null
+      userId: null
+      promotionActivityId: null
+      orderId: null
+      meetAmount: null
+      discountAmount: null
+      addTime: null
+      updateTime: null
+      deleted: null
+      activity: Activity
+      activity.name: Activity
+      order: Order
+      order.orderSn: Order
     LitemallRecharge:
       id: null
       userId: null

@@ -9,6 +9,7 @@ import app.mall.biz.ILitemallOrderBiz;
 import app.mall.biz.ILitemallOrderGoodsBiz;
 import app.mall.biz.ILitemallSystemBiz;
 import app.mall.dao._AppMallDaoConstants;
+import app.mall.dao.dto.FlashSaleEffectivenessBean;
 import app.mall.dao.entity.LitemallAddress;
 import app.mall.dao.entity.LitemallFlashSale;
 import app.mall.dao.entity.LitemallFlashSaleSession;
@@ -16,8 +17,10 @@ import app.mall.dao.entity.LitemallGoods;
 import app.mall.dao.entity.LitemallGoodsProduct;
 import app.mall.dao.entity.LitemallOrder;
 import app.mall.dao.entity.LitemallOrderGoods;
+import app.mall.dao.manager.MallLogManager;
 import app.mall.dao.mapper.LitemallFlashSaleSessionMapper;
 import app.mall.dao.mapper.LitemallGoodsProductMapper;
+import app.mall.dao.mapper.LitemallMarketingMapper;
 import app.mall.service.notification.MallNotificationService;
 import io.nop.api.core.annotations.biz.BizModel;
 import io.nop.api.core.annotations.biz.BizMutation;
@@ -36,7 +39,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -47,6 +54,7 @@ import static app.mall.service.AppMallErrors.ERR_FLASH_SALE_GOODS_OFF_SHELF;
 import static app.mall.service.AppMallErrors.ERR_FLASH_SALE_GOODS_PRODUCT_NOT_FOUND;
 import static app.mall.service.AppMallErrors.ERR_FLASH_SALE_NOT_ACTIVE;
 import static app.mall.service.AppMallErrors.ERR_FLASH_SALE_OVER_LIMIT_PER_ORDER;
+import static app.mall.service.AppMallErrors.ERR_FLASH_SALE_OVER_LIMIT_PER_USER;
 import static app.mall.service.AppMallErrors.ERR_FLASH_SALE_PRODUCT_NOT_IN_ACTIVITY;
 import static app.mall.service.AppMallErrors.ERR_FLASH_SALE_SESSION_NOT_FOUND;
 import static app.mall.service.AppMallErrors.ERR_FLASH_SALE_SESSION_NOT_IN_WINDOW;
@@ -96,6 +104,13 @@ public class LitemallFlashSaleBizModel extends CrudBizModel<LitemallFlashSale> i
 
     @Inject
     MallNotificationService notificationService;
+
+    @Inject
+    MallLogManager logManager;
+
+    // @SqlLibMapper for flash-sale effectiveness aggregation SQL (deal orders/GMV/reject count).
+    @Inject
+    LitemallMarketingMapper marketingMapper;
 
     public LitemallFlashSaleBizModel() {
         setEntityName(LitemallFlashSale.class.getName());
@@ -219,6 +234,41 @@ public class LitemallFlashSaleBizModel extends CrudBizModel<LitemallFlashSale> i
                     .param("maxPerOrder", activity.getMaxPerOrder());
         }
 
+        // maxPerUser guard (model-gap closure). Count this user's effective (pending-pay + paid +
+        // shipped + confirmed) flash-sale orders for THIS session; reject if the per-user cap is
+        // reached. Placed before stock deduction so a rejection leaves no stock side effects.
+        // Rejections are logged for analytics (rejected count feeds getFlashSaleEffectiveness).
+        // The orderStatus filter uses `in` (notIn is disallowed by the xmeta filter-op whitelist).
+        Integer maxPerUser = activity.getMaxPerUser();
+        if (maxPerUser != null && maxPerUser > 0) {
+            QueryBean userCountQuery = new QueryBean();
+            userCountQuery.addFilter(FilterBeans.eq(LitemallOrder.PROP_NAME_flashSaleSessionId, flashSaleSessionId));
+            userCountQuery.addFilter(FilterBeans.eq(LitemallOrder.PROP_NAME_userId, userId));
+            userCountQuery.addFilter(FilterBeans.in(LitemallOrder.PROP_NAME_orderStatus,
+                    List.of(_AppMallDaoConstants.ORDER_STATUS_CREATED, _AppMallDaoConstants.ORDER_STATUS_PAY,
+                            _AppMallDaoConstants.ORDER_STATUS_SHIP, _AppMallDaoConstants.ORDER_STATUS_CONFIRM,
+                            _AppMallDaoConstants.ORDER_STATUS_AUTO_CONFIRM)));
+            long bought = orderBiz.findCount(userCountQuery, context);
+            if (bought >= maxPerUser) {
+                // Write the rejection log in a REQUIRES_NEW transaction so it survives the parent
+                // @BizMutation rollback (the throw below rolls back the business tx, but the audit
+                // log must persist for the rejected-count metric in getFlashSaleEffectiveness).
+                String rejectMsg = "userId=" + userId + ",sessionId=" + flashSaleSessionId
+                        + ",maxPerUser=" + maxPerUser + ",bought=" + bought;
+                txn().runInTransaction(io.nop.dao.DaoConstants.DEFAULT_QUERY_SPACE,
+                        io.nop.api.core.annotations.txn.TransactionPropagation.REQUIRES_NEW,
+                        t -> {
+                            logManager.logOtherFail("flashSaleBuy:maxPerUser", rejectMsg);
+                            return null;
+                        });
+                throw new NopException(ERR_FLASH_SALE_OVER_LIMIT_PER_USER)
+                        .param("userId", userId)
+                        .param("flashSaleSessionId", flashSaleSessionId)
+                        .param("maxPerUser", maxPerUser)
+                        .param("bought", bought);
+            }
+        }
+
         // Address validation (mirrors submit() rule: must belong to current user).
         LitemallAddress address = addressBiz.get(addressId, false, context);
         if (address == null || Boolean.TRUE.equals(address.getDeleted())) {
@@ -287,6 +337,7 @@ public class LitemallFlashSaleBizModel extends CrudBizModel<LitemallFlashSale> i
                 address.getTel(),
                 fullAddress,
                 freightPrice,
+                flashSaleSessionId,
                 context);
 
         return order;
@@ -391,6 +442,53 @@ public class LitemallFlashSaleBizModel extends CrudBizModel<LitemallFlashSale> i
         }
         return null;
     }
+
+    @Override
+    @BizQuery
+    public FlashSaleEffectivenessBean getFlashSaleEffectiveness(@Optional @Name("flashSaleId") String flashSaleId,
+                                                                 @Optional @Name("startDate") String startDate,
+                                                                 @Optional @Name("endDate") String endDate,
+                                                                 IServiceContext context) {
+        // Per-session attribution (model-gap closure): aggregate flash-sale deal orders/GMV/
+        // participants/rejected-count via Order.flashSaleSessionId, then compute soldOutRate from
+        // sessions in Java (sold-out sessions / total sessions). flashSaleId null = all flash sales.
+        Timestamp start = startDate != null && !startDate.isEmpty()
+                ? Timestamp.valueOf(LocalDate.parse(startDate).atTime(LocalTime.MIN)) : MIN_TIMESTAMP;
+        Timestamp end = endDate != null && !endDate.isEmpty()
+                ? Timestamp.valueOf(LocalDate.parse(endDate).atTime(LocalTime.MAX)) : MAX_TIMESTAMP;
+
+        FlashSaleEffectivenessBean bean = marketingMapper.getFlashSaleEffectiveness(flashSaleId, start, end);
+        if (bean == null) {
+            bean = new FlashSaleEffectivenessBean();
+        }
+        bean.setSoldOutRate(computeSoldOutRate(flashSaleId, context));
+        return bean;
+    }
+
+    private BigDecimal computeSoldOutRate(String flashSaleId, IServiceContext context) {
+        // soldOutRate = sold-out sessions (sessionStock == 0) / total sessions. Stock-level sold-out
+        // rate would require an initial-stock field (not present); session-level rate is the
+        // computable, meaningful metric. flashSaleId null = over all sessions.
+        QueryBean q = new QueryBean();
+        if (flashSaleId != null && !flashSaleId.isEmpty()) {
+            q.addFilter(FilterBeans.eq(LitemallFlashSaleSession.PROP_NAME_flashSaleId, flashSaleId));
+        }
+        List<LitemallFlashSaleSession> sessions = flashSaleSessionBiz.findList(q, null, context);
+        if (sessions == null || sessions.isEmpty()) {
+            return BigDecimal.ZERO;
+        }
+        int soldOut = 0;
+        for (LitemallFlashSaleSession s : sessions) {
+            if (s.getSessionStock() != null && s.getSessionStock() == 0) {
+                soldOut++;
+            }
+        }
+        return BigDecimal.valueOf(soldOut)
+                .divide(BigDecimal.valueOf(sessions.size()), 4, RoundingMode.HALF_UP);
+    }
+
+    private static final Timestamp MIN_TIMESTAMP = Timestamp.valueOf("1970-01-01 00:00:00");
+    private static final Timestamp MAX_TIMESTAMP = Timestamp.valueOf("2099-12-31 23:59:59");
 
     private LitemallFlashSaleSession requireSession(String sessionId, IServiceContext context) {
         if (StringHelper.isEmpty(sessionId)) {

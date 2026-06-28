@@ -313,6 +313,10 @@ public interface AppMallErrors {
             define("nop.err.mall.promotion.stacking-not-allowed",
                     "满减与优惠券不可叠加，满减已自动生效，请取消优惠券");
 
+    ErrorCode ERR_PROMOTION_MAX_PER_USER =
+            define("nop.err.mall.promotion.max-per-user",
+                    "已达满减活动每人限参与次数", "userId", "activityId", "maxPerUser", "currentCount");
+
     // 限时折扣错误码
     ErrorCode ERR_TIME_DISCOUNT_NOT_ACTIVE =
             define("nop.err.mall.time-discount.not-active",

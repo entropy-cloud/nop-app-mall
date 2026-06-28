@@ -97,6 +97,8 @@ alter table litemall_aftersale add NOP_TENANT_ID VARCHAR(32) DEFAULT '0' NOT NUL
 
 alter table litemall_groupon add NOP_TENANT_ID VARCHAR(32) DEFAULT '0' NOT NULL;
 
+alter table litemall_promotion_usage add NOP_TENANT_ID VARCHAR(32) DEFAULT '0' NOT NULL;
+
 alter table litemall_order_goods add NOP_TENANT_ID VARCHAR(32) DEFAULT '0' NOT NULL;
 
 alter table litemall_flash_sale_session add NOP_TENANT_ID VARCHAR(32) DEFAULT '0' NOT NULL;
@@ -251,6 +253,9 @@ alter table litemall_aftersale add constraint PK_litemall_aftersale primary key 
 
 alter table litemall_groupon drop constraint PK_litemall_groupon;
 alter table litemall_groupon add constraint PK_litemall_groupon primary key (NOP_TENANT_ID, id);
+
+alter table litemall_promotion_usage drop constraint PK_litemall_promotion_usage;
+alter table litemall_promotion_usage add constraint PK_litemall_promotion_usage primary key (NOP_TENANT_ID, id);
 
 alter table litemall_order_goods drop constraint PK_litemall_order_goods;
 alter table litemall_order_goods add constraint PK_litemall_order_goods primary key (NOP_TENANT_ID, id);

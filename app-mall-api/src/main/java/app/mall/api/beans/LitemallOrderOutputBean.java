@@ -510,6 +510,20 @@
         }
 
 
+        private String _flashSaleSessionId;
+
+    
+        @PropMeta(propId=41)
+    
+        public String getFlashSaleSessionId(){
+            return _flashSaleSessionId;
+        }
+
+        public void setFlashSaleSessionId(String value){
+            this._flashSaleSessionId = value;
+        }
+
+
         private java.util.List<java.lang.String> _relatedProductList_ids;
 
     

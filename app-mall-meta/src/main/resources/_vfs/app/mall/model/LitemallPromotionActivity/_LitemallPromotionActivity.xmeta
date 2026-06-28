@@ -84,5 +84,12 @@
                 <item bizObjName="LitemallPromotionTier"/>
             </schema>
         </prop>
+        <prop name="promotionUsages" displayName="满减参与记录" i18n-en:displayName="Promotion Usages"
+              tagSet="pub,cascade-delete,insertable,updatable" ext:kind="to-many" internal="true" ext:joinLeftProp="id"
+              ext:joinRightProp="promotionActivityId" insertable="true" updatable="true" lazy="true">
+            <schema>
+                <item bizObjName="LitemallPromotionUsage"/>
+            </schema>
+        </prop>
     </props>
 </meta>

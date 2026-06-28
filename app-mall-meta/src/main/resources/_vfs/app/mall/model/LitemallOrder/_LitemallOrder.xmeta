@@ -182,6 +182,10 @@
               updatable="true">
             <schema type="java.lang.String" precision="511"/>
         </prop>
+        <prop name="flashSaleSessionId" displayName="秒杀场次ID" propId="41" queryable="true" sortable="true"
+              insertable="true" updatable="true">
+            <schema type="java.lang.String"/>
+        </prop>
         <prop name="orderGoods" displayName="订单商品" i18n-en:displayName="Order Goods"
               tagSet="pub,cascade-delete,updatable,insertable" ext:kind="to-many" internal="true" ext:joinLeftProp="id"
               ext:joinRightProp="orderId" orm:manyToManyRefProp="goodsId" insertable="true" updatable="true" lazy="true">

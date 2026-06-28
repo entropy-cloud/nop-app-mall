@@ -35,6 +35,7 @@
   "payChannel_label": "",
   "walletPayAmount": 0.0,
   "adminRemark": "",
+  "flashSaleSessionId": "",
   "orderGoods": null,
   "pickupStore": null,
   "pickupStore.name": "",
