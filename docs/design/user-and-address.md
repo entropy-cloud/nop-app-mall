@@ -219,7 +219,9 @@
 ### 业务语义
 
 - 封禁/解禁：杠杆平台 `NopAuthUser.status`（0=禁用、1=正常）并同步写 `LitemallUserBlacklist`，二者保持一致。封禁用户登录由平台 status 机制拒绝，下单由订单 `submit` 增加 `ERR_USER_BANNED` 守卫拒绝。
-- 标签：运营对用户打标/去标，并按标签分群查询（`findUsersByTag`）。本基线为简单标签集合（非算法画像/RFM，后者归 P19 报表扩展 successor）。
+- 标签：运营对用户打标/去标，并按标签分群查询（`findUsersByTag`）。本基线为简单标签集合。
+- **算法化分群（P20 successor）**：`LitemallOrder__getSegmentMembers(segmentType, segmentValue, page, pageSize)` 在手工标签分群基础上新增算法化维度，按 `segmentType=rfm`（8 段之一）/ `segmentType=lifecycle`（新客/活跃/沉睡/流失）圈选用户成员列表（`PageBean<SegmentMemberBean>`：userId / rfmSegment / lifecycleStage / orderCount / totalAmount / lastPayTime）。all-time / 当前快照口径与 `getUserPortrait` 一致，分类逻辑与 P19 同源（详见 `system-configuration.md`「Per-User 画像口径」）。前端 `LitemallUserTag/segment.page.yaml` 提供三 Tab 并存：手工标签 / 按 RFM 段 / 按生命周期。无消费用户不计入算法化分群命中段。
+- **用户详情算法画像（P20 successor）**：用户详情页 `mall/user-ops/user-detail.page.yaml` 在「基本信息」面板下新增「算法画像（RFM + 生命周期）」面板，调用 `@query:LitemallOrder__getUserPortrait(userId)`，展示 RFM 段 + 生命周期阶段 + R/F/M 原始值 + 首末单时间；无消费用户展示「该用户暂无支付订单，仅有手工标签画像」。与既有「订单与消费 / 积分与优惠券 / 浏览与反馈」面板并存。算法画像口径为 all-time / 当前快照（与 P19 报表 period 口径不同），分类逻辑同源；详见 `system-configuration.md`「Per-User 画像口径」。
 - 权益手工发放：运营工作台提供用户级直达入口（手工调级 `setUserLevel`、手工发券 `dispatchCoupon`、手工加积分复用既有 `adjustPoints`），覆盖 P26/P32 自动化发放 deferred 的手动路径。
 
 ### 与其他 Owner Docs 的关系

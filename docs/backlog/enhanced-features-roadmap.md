@@ -22,7 +22,7 @@
 - 17. 微信小程序订单中心: `todo`
 - 18. Dashboard 重做: `done`（`docs/plans/2026-06-28-1027-1-phase18-dashboard-redesign-plan.md`；4 看板 `@BizQuery`[getDashboardMetrics/getSalesTrend/getRealtimeOrders/getTodoAggregation] + AMIS chart 指标卡/趋势/实时订单流/待办聚合 4 区块 + owner doc 口径；nop-report 引擎按引擎定位归 P19 导出场景）
 - 19. 报表体系扩展: `done`（`docs/plans/2026-06-28-1027-2-phase19-report-system-extension-plan.md`；销售漏斗/用户分析[含生命周期]/商品分析/订单分析/优惠券分析 + 4 报表页 + CSV 导出[E1 抉择 CSV 兜底，nop-report 为 successor]；8 新增 `@BizQuery` 挂 LitemallOrderBizModel[E2 抉择] + SQL-lib `<c:if>` 条件查询 + Java cohort/RFM/lifecycle 分组；289 测试全绿；活动 ROI 归 P22，毛利归 successor）
-- 20. 用户运营工作台: `done`（`docs/plans/2026-06-28-0340-2-phase20-user-operations-workbench-plan.md`）
+- 20. 用户运营工作台: `done`（`docs/plans/2026-06-28-0340-2-phase20-user-operations-workbench-plan.md`；P20 deferred successor「算法化用户画像/RFM/生命周期」已闭环：`docs/plans/2026-06-28-1822-2-user-portrait-algorithmization-plan.md` done — per-user all-time 画像 `getUserPortrait` + 算法化分群 `getSegmentMembers` + 用户详情算法画像面板 + segment 三 Tab[手工标签/RFM/生命周期] + P19 分类逻辑同源抽取 `computeRfmThresholds`/`classifyLifecycleStage`[零回归] + `getUserPaymentSummaryAllTime` SQL TOTAL_AMOUNT 修正；360 测试全绿）
 - 21. 订单运营工作台: `done`（`docs/plans/2026-06-28-0340-3-phase21-order-operations-workbench-plan.md`）
 - 22. 营销活动管理后台: `done`（`docs/plans/2026-06-28-0340-1-phase22-marketing-management-backend-plan.md` ORM-independent slice + `docs/plans/2026-06-28-1610-1-phase22-promotion-usage-model-gap-plan.md` ORM-dependent slice：PromotionUsage 实体 + flashSaleSessionId 列 + maxPerUser 强一致 + 按活动/按场次归因 + 效果看板秒杀面板）
 - 23. 限时折扣: `done`（`docs/plans/2026-06-27-2029-2-phase23-time-discount-plan.md`）

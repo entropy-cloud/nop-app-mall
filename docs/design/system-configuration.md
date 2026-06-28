@@ -367,6 +367,16 @@
 - **生命周期**：按支付 recency 派生 4 类——新客（首次支付在分析期间）/活跃（期间有支付但首单不在期间）/沉睡（历史有支付但期间无，且距上次支付 < 流失线）/流失（距上次支付 ≥ 流失线）。流失线默认 90 天（`churnDays` 参数可调）。基于全量历史支付数据（非仅期间）派生。
 - **复购率时序**：按天分组，复购率 = 当天 ≥ 2 单支付用户数 / 当天支付用户数。返回每日 paidUsers / repurchaseUsers / rate 三元组时序。
 
+#### Per-User 画像口径（P20 算法化用户画像 successor）
+
+P19 上述口径为**报表聚合**（看分布）；P20 successor 新增**单用户算法画像**与**算法化分群**，沿用 P19 分类私有方法（`labelRfm` / `computeRfmThresholds` / `classifyLifecycleStage`，无逻辑分叉），口径如下：
+
+- **画像口径（all-time / 当前快照，区别于报表 period 口径）**：R=距末单天数（取自全量 `getUserPaymentSummaryAllTime.lastPayTime`）、F=累计单数、M=累计消费。RFM 段对 all-time R/F/M 用**全量 all-time 阈值**（`computeRfmThresholds(allTimeSummaries)`）；生命周期用 `classifyLifecycleStage` 以「活跃窗口=近 30 天、churn=90 天」判定当前阶段（`inPeriod`/`firstInPeriod` 由 all-time 数据派生：`inPeriod = allTimeLastPayTime 落在活跃窗口内`、`firstInPeriod = allTimeFirstPayTime 落在活跃窗口内`）。
+- **`@BizQuery getUserPortrait(userId)`**：返回 `UserPortraitBean`（recencyDays / frequency / monetary / rfmSegment / lifecycleStage / firstPayTime / lastPayTime）。无消费用户返回「未消费」画像（rfmSegment/lifecycleStage 空 + 计数 0）。
+- **`@BizQuery getSegmentMembers(segmentType, segmentValue, page, pageSize)`**：按 `segmentType=rfm`（值=8 段之一）/ `segmentType=lifecycle`（值=新客/活跃/沉睡/流失）圈选命中用户，all-time 口径与 `getUserPortrait` 一致。全量用户逐个分类后 Java 端过滤命中段并分页返回（`PageBean<SegmentMemberBean>`）。
+- **口径抉择说明（all-time vs period）**：报表看期间分布（period 口径），画像看用户当前全貌（all-time 口径），意图不同；本设计不主张跨口径段值严格相等，仅保证分类逻辑同源（同一私有方法，无逻辑分叉）。all-time 阈值与 period 阈值不同 → 同一用户在报表段与画像段可能不同（已显式记录，非缺陷）。
+- **性能与未决项（Deferred）**：基线用户量下全量阈值计算 + 全量分类可接受；规模化触发条件见 `docs/plans/2026-06-28-1822-2-user-portrait-algorithmization-plan.md` Deferred But Adjudicated（阈值缓存 / 分段物化表 / 历史快照落库）。
+
 ### 订单分析与营销分析指标口径（P19）
 
 订单分析聚合客单价分布、支付方式占比、退货原因占比；营销分析覆盖优惠券核销率与拉动 GMV，口径如下：
