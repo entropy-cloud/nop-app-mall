@@ -23,12 +23,33 @@
 - 订单超时与自动收货时长
 - 每用户地址数量上限
 - 商城身份信息与联系方式
+- 商品库存语义化阈值与文案（库存语义三档展示，见 `product-catalog.md`「库存语义化」）
 
 ### 业务规则
 
 - 支持的配置项由应用基线预先定义。
 - 配置变更应尽快对新进入评估的业务流程生效。
 - 运营配置只能由具备相应职责的管理角色编辑。
+
+### 商品库存语义化配置（P38）
+
+库存语义化（`product-catalog.md`「库存语义化」）把纯数字库存按后台可配阈值映射为三档语义（充足/紧张/缺货），各档文案与色值均可后台覆盖，未配置时使用代码兜底默认。配置键存于 `LitemallSystem`（keyName/keyValue），由 `LitemallGoodsBizModel.getStockSemantic` 经 `ILitemallSystemBiz.getConfig()` 读取。
+
+| 配置键（keyName） | 语义 | 兜底默认 |
+| ---- | ---- | ---- |
+| `mall_stock_threshold_tight` | 紧张档上限阈值（聚合库存 ≤ 该值且 > 0 → 紧张；> 该值 → 充足；= 0 → 缺货） | 10 |
+| `mall_stock_label_sufficient` | 充足档展示文案 | 库存充足 |
+| `mall_stock_label_tight` | 紧张档展示文案，支持 `{n}` 占位符替换为聚合库存数 | 仅剩 {n} |
+| `mall_stock_label_out` | 缺货档展示文案 | 已售罄 |
+| `mall_stock_color_sufficient` | 充足档色值（青色安心提示） | #17a2b8 |
+| `mall_stock_color_tight` | 紧张档色值（红色紧迫提示） | #dc3545 |
+| `mall_stock_color_out` | 缺货档色值 | #999999 |
+
+业务规则：
+
+- 商品级语义按其全部 SKU 的 `number` **求和**判定档位（求和更符合「该商品是否还可买」的用户心智）；单 SKU 缺货由详情页 SKU 下拉单独标识。
+- 阈值边界归属：聚合库存 = 阈值 → 紧张；阈值 + 1 → 充足。
+- 阈值非法（负数/非数字）时回退兜底默认；文案/色值留空时回退兜底默认。
 
 ## 文件存储
 

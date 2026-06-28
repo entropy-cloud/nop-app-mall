@@ -40,7 +40,7 @@
 - 35. 站内信/消息中心: `done`（`docs/plans/2026-06-28-0530-1-phase35-message-center-plan.md`）
 - 36. 商品运营增强: `todo`
 - 37. 内容/素材管理: `todo`
-- 38. 库存语义化: `planned`（`docs/plans/2026-06-28-0530-2-phase38-stock-semantics-plan.md`）
+- 38. 库存语义化: `done`（`docs/plans/2026-06-28-0530-2-phase38-stock-semantics-plan.md`）
 
 ## Status Values
 

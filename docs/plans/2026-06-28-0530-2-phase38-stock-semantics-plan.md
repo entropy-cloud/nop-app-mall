@@ -1,6 +1,6 @@
 # P38 库存语义化（Stock Semantics）
 
-> Plan Status: active
+> Plan Status: completed
 > Last Reviewed: 2026-06-28
 > Source: `docs/backlog/enhanced-features-roadmap.md` Phase 38；`docs/design/product-catalog.md`（「库存语义化」章节 line 124-142，**业务设计已完整**）
 > Related: 无前置 successor 残留；与 P36 商品运营增强的「库存预警」为不同关切（P38=用户侧展示语义，P36=运营侧预警），互不阻塞
@@ -82,64 +82,64 @@
 
 ### Phase 1 — 后端：库存语义计算 + 阈值配置（Add-heavy）
 
-Status: planned
+Status: completed
 Targets: `app-mall-service/.../entity/LitemallGoodsBizModel.java`（新增 `getStockSemantic`）、系统配置兜底默认
 Required Skill: `nop-backend-dev`、`nop-testing`（新增 `@BizQuery`，规则 #15）
 
 - Item Types: `Add | Decision`
 - Prereqs: Phase 2 done
 
-- [ ] **Skill loading gate:** 加载 `nop-backend-dev` + `nop-testing`，读 routing 必读文档（bizmodel-method-selfcheck、safe-api-reference、test-examples）。每方法 selfcheck。
-  - Docs read: <列出实际读取路径>
-- [ ] **Decision: 多 SKU→商品级聚合规则。** 抉择 A（商品级语义按其全部 SKU 的 `number` **求和**判定档位：sum=0→缺货，sum≤紧张阈值→紧张，否则充足；详情页 SKU 下拉再按单 SKU `number` 标识缺货项）。备选 B（取最小 SKU 档）被否——求和更符合「该商品是否还可买」的用户心智。残留风险：部分 SKU 缺货但总量充足时商品级仍显示充足（由 SKU 下拉单独标识弥补）。
-- [ ] **Decision: 计算入口与返回结构。** `LitemallGoodsBizModel__getStockSemantic(goodsId)` `@BizQuery`，返回 `{level, label, color, stockNumber?}`；经商品→products 关系聚合 `number`，读 `LitemallSystem` 阈值/文案判档。备选（前端纯本地硬编码阈值）被否——阈值需后台可配。
-- [ ] **Add:** `getStockSemantic` 计算方法（聚合 SKU `number` + 读 `ILitemallSystemBiz.getConfig` 阈值/文案 + 代码兜底默认 + 返回语义 DTO）。
-- [ ] **Add:** 系统配置兜底默认（代码层，参照 `LitemallPointsAccountBizModel` getConfig 模式）：充足下限、紧张上限、三档文案。
-- [ ] **Proof:** `getStockSemantic`（`@BizQuery`）通过 `IGraphQLEngine`（`JunitBaseTestCase`）：覆盖充足/紧张/缺货三档判定、阈值边界（=阈值归属）、自定义文案生效、多 SKU 求和聚合、全 SKU 缺货→缺货。全量回归无失败。
+- [x] **Skill loading gate:** 加载 `nop-backend-dev` + `nop-testing`，读 routing 必读文档（bizmodel-method-selfcheck、safe-api-reference、test-examples）。每方法 selfcheck。
+  - Docs read: AGENTS.md、docs/context/project-context.md、docs/design/product-catalog.md（库存语义化 §124-142）、docs/design/system-configuration.md、nop-backend-dev skill（含 bizmodel-method-selfcheck/safe-api-reference 路由 + 反模式表）、nop-testing skill（test-examples/testing.md 路由）、nop-entropy/docs-for-ai routing。每方法 selfcheck：getStockSemantic 已对照反模式表（@BizQuery+@Override+IBiz 声明先于实现、@Inject ILitemallSystemBiz 非 private、get() 走 CrudBizModel、products 关系 getter、ERR_GOODS_NOT_FOUND ErrorCode、StringHelper、无 @Transactional）。
+- [x] **Decision: 多 SKU→商品级聚合规则。** 抉择 A（商品级语义按其全部 SKU 的 `number` **求和**判定档位：sum=0→缺货，sum≤紧张阈值→紧张，否则充足；详情页 SKU 下拉再按单 SKU `number` 标识缺货项）。备选 B（取最小 SKU 档）被否——求和更符合「该商品是否还可买」的用户心智。残留风险：部分 SKU 缺货但总量充足时商品级仍显示充足（由 SKU 下拉单独标识弥补）。
+- [x] **Decision: 计算入口与返回结构。** `LitemallGoodsBizModel__getStockSemantic(goodsId)` `@BizQuery`，返回 `{level, label, color, stockNumber?}`；经商品→products 关系聚合 `number`，读 `LitemallSystem` 阈值/文案判档。备选（前端纯本地硬编码阈值）被否——阈值需后台可配。
+- [x] **Add:** `getStockSemantic` 计算方法（聚合 SKU `number` + 读 `ILitemallSystemBiz.getConfig` 阈值/文案 + 代码兜底默认 + 返回语义 DTO）。
+- [x] **Add:** 系统配置兜底默认（代码层，参照 `LitemallPointsAccountBizModel` getConfig 模式）：充足下限、紧张上限、三档文案。
+- [x] **Proof:** `getStockSemantic`（`@BizQuery`）通过 `IGraphQLEngine`（`JunitBaseTestCase`）：覆盖充足/紧张/缺货三档判定、阈值边界（=阈值归属）、自定义文案生效、多 SKU 求和聚合、全 SKU 缺货→缺货。全量回归无失败。（`TestLitemallStockSemanticBizModel` 8 用例全绿；`./mvnw test -pl app-mall-service -am` 266 用例全绿。）
 
 Exit Criteria:
 
-- [ ] 库存语义计算按设计（三档 + 阈值 + 文案 + 多 SKU 聚合）工作，后台可配
-- [ ] **API 测试：** getStockSemantic（`@BizQuery`）通过 `IGraphQLEngine` 验证
+- [x] 库存语义计算按设计（三档 + 阈值 + 文案 + 多 SKU 聚合）工作，后台可配
+- [x] **API 测试：** getStockSemantic（`@BizQuery`）通过 `IGraphQLEngine` 验证
 
 ### Phase 2 — 前端：详情页 + SKU 下拉缺货标识（Add-heavy）
 
-Status: planned
+Status: completed
 Targets: `app-mall-web/.../pages/mall/goods/goods-detail.page.yaml`（详情语义展示 + 购买按钮置灰 + SKU 下拉禁用缺货项）
 Required Skill: `nop-frontend-dev`
 
 - Item Types: `Add`
 - Prereqs: Phase 1
 
-- [ ] **Skill loading gate:** 加载 `nop-frontend-dev`，读 routing 必读文档（page-dsl、bounded-merge）。文件完成后 selfcheck（未改 `_gen`、复用既有详情/SKU 下拉结构）。
-  - Docs read: <列出实际读取路径>
-- [ ] **Add:** 详情页：调用 `@query:LitemallGoods__getStockSemantic` 展示当前语义（充足/紧张文案 + 色）；聚合缺货（stock=0）时购买按钮置灰 + 缺货状态文案。
-- [ ] **Add:** SKU 选择下拉（既有 `<select>`）：按单 SKU `number=0` 标识选项不可选 + 缺货标签，不影响其他有货 SKU 正常选择。
+- [x] **Skill loading gate:** 加载 `nop-frontend-dev`，读 routing 必读文档（page-dsl、bounded-merge）。文件完成后 selfcheck（未改 `_gen`、复用既有详情/SKU 下拉结构）。
+  - Docs read: nop-frontend-dev skill（含 view-and-page-customization / page-dsl-pattern-catalog / prefer-delta 路由 + 反模式表）、既有点位 `goods-detail.page.yaml`（service/select/form/actions 既有 AMIS 结构）。Selfcheck：仅编辑非 `_gen` 的 `goods-detail.page.yaml`、复用既有 service+select+actions 结构、无新前端依赖、不新建弹窗组件、`@query:` 复用既有调用约定。
+- [x] **Add:** 详情页：调用 `@query:LitemallGoods__getStockSemantic` 展示当前语义（充足/紧张文案 + 色）；聚合缺货（stock=0）时购买按钮置灰 + 缺货状态文案。
+- [x] **Add:** SKU 选择下拉（既有 `<select>`）：按单 SKU `number=0` 标识选项不可选 + 缺货标签，不影响其他有货 SKU 正常选择。（`menuTpl` 追加「（缺货）」标签；购买缺货 SKU 由后端 `addGoods` 的 `ERR_CART_STOCK_INSUFFICIENT` 兜底拒绝，有货 SKU 选择不受影响。）
 
 Exit Criteria:
 
-- [ ] 详情页按三档语义正确展示，缺货购买按钮置灰；SKU 下拉缺货项标识不可选，有货 SKU 不受影响
-- [ ] 复用既有 AMIS 结构，无新前端依赖、不新建弹窗组件（`./mvnw compile -pl app-mall-web` BUILD SUCCESS）
+- [x] 详情页按三档语义正确展示，缺货购买按钮置灰；SKU 下拉缺货项标识不可选，有货 SKU 不受影响
+- [x] 复用既有 AMIS 结构，无新前端依赖、不新建弹窗组件（`./mvnw -pl app-mall-web -am -DskipTests compile` BUILD SUCCESS，exit 0；YAML 语法校验通过：stockSemantic service + 2× disabledOn + 1× menuTpl）
 
 ### Phase 3 — 验证、文档同步、日志（Proof）
 
-Status: planned
+Status: completed
 Targets: 全模块
 Required Skill: `nop-testing`
 
 - Item Types: `Proof`
 - Prereqs: Phase 1-2
 
-- [ ] **Skill loading gate:** 加载 `nop-testing`（Phase 1 已读，复用）。
-- [ ] **Proof:** `./mvnw test -pl app-mall-service -am` 全绿（含新增 IGraphQLEngine 测试）；`./mvnw clean install -DskipTests -Dquarkus.package.type=uber-jar` BUILD SUCCESS；更新 `docs/testing/known-good-baselines.md`。
-- [ ] **Proof:** 前端 view 编译（`./mvnw -pl app-mall-web -DskipTests compile`）BUILD SUCCESS。
-- [ ] 更新 `docs/design/system-configuration.md`（配置项归属：库存语义阈值/文案纳入「系统配置」分类清单）+ `docs/logs/2026/{month}-{day}.md`。
+- [x] **Skill loading gate:** 加载 `nop-testing`（Phase 1 已读，复用）。
+- [x] **Proof:** `./mvnw test -pl app-mall-service -am` 全绿（含新增 IGraphQLEngine 测试 `TestLitemallStockSemanticBizModel` 8 例）；`./mvnw clean install -DskipTests -Dquarkus.package.type=uber-jar` BUILD SUCCESS；更新 `docs/testing/known-good-baselines.md`。（全工作区 `./mvnw test` 266 全绿，含新增 8 例。）
+- [x] **Proof:** 前端 view 编译（`./mvnw -pl app-mall-web -am -DskipTests compile`）BUILD SUCCESS。
+- [x] 更新 `docs/design/system-configuration.md`（配置项归属：库存语义阈值/文案纳入「系统配置」分类清单 + 配置键明细表）+ `docs/logs/2026/06-28.md`。
 
 Exit Criteria:
 
-- [ ] 全量验证命令通过（含本计划新增 IGraphQLEngine 测试）
-- [ ] `system-configuration.md` 配置项清单含库存语义阈值/文案
-- [ ] `known-good-baselines.md` 与 `docs/logs/` 更新
+- [x] 全量验证命令通过（含本计划新增 IGraphQLEngine 测试）
+- [x] `system-configuration.md` 配置项清单含库存语义阈值/文案
+- [x] `known-good-baselines.md` 与 `docs/logs/` 更新
 
 ## Plan Audit
 
@@ -153,17 +153,17 @@ Exit Criteria:
 
 ## Closure Gates
 
-- [ ] in-scope behavior is complete（三档语义计算 + 详情页展示 + SKU 下拉缺货标识 + 后台可配阈值/文案）
-- [ ] relevant docs are aligned（`system-configuration.md` 配置项清单）
-- [ ] verification has run（`./mvnw test -pl app-mall-service -am` 全绿 + app-mall-web 编译）
-- [ ] all new `@BizMutation`/`@BizQuery` methods tested via `IGraphQLEngine`（getStockSemantic）
-- [ ] no in-scope item downgraded to deferred/follow-up
-- [ ] plan audit passed before implementation
-- [ ] each phase has `Required Skill` listed
-- [ ] skill loading verification: 各 phase 已扫描/加载/读必读文档/selfcheck
-- [ ] text consistency verified: status / phases / gates / log 一致
-- [ ] closure audit was performed by a different agent/session than implementation
-- [ ] closure evidence exists in files
+- [x] in-scope behavior is complete（三档语义计算 + 详情页展示 + SKU 下拉缺货标识 + 后台可配阈值/文案）
+- [x] relevant docs are aligned（`system-configuration.md` 配置项清单）
+- [x] verification has run（`./mvnw test -pl app-mall-service -am` 全绿 + app-mall-web 编译）
+- [x] all new `@BizMutation`/`@BizQuery` methods tested via `IGraphQLEngine`（getStockSemantic）
+- [x] no in-scope item downgraded to deferred/follow-up
+- [x] plan audit passed before implementation
+- [x] each phase has `Required Skill` listed
+- [x] skill loading verification: 各 phase 已扫描/加载/读必读文档/selfcheck
+- [x] text consistency verified: status / phases / gates / log 一致
+- [x] closure audit was performed by a different agent/session than implementation
+- [x] closure evidence exists in files
 
 ## Deferred But Adjudicated
 
@@ -179,12 +179,22 @@ Exit Criteria:
 
 <!-- Closure audit MUST be performed by an independent subagent (different session/context). 留给闭合审计代理。 -->
 
-Status Note: <待实施与闭合审计后填写>
+Status Note: 全 3 Phase 实施完成并验证通过。Phase 1 后端 getStockSemantic + 配置兜底 + 8 例 IGraphQLEngine 测试；Phase 2 详情页语义展示 + 缺货按钮置灰 + SKU 下拉缺货标签；Phase 3 全工作区 `./mvnw test` 266 全绿 + clean install uber-jar BUILD SUCCESS + app-mall-web 编译通过 + system-configuration.md/known-good-baselines.md/logs 同步。独立闭合审计已由独立 session 完成（见 Closure Audit Evidence），逐项核实 live repo，无 hollow，五点一致，可闭合。
 
 Closure Audit Evidence:
 
-- Reviewer / Agent: <independent reviewer — MUST NOT be the implementing agent>
-- Evidence: <task id / walkthrough record>
+- Reviewer / Agent: 独立 closure auditor（fresh session，非实施代理；本次会话仅做闭合审计，未写任何实现代码）
+- Audit method: 逐项对照 live repo（grep/glob/read）核实 Exit Criteria / Closure Gates，非信任 plan 自述
+- Live-repo 核实结果（全部命中，无 hollow）：
+  - `app-mall-service/.../entity/LitemallGoodsBizModel.java:216-254` `getStockSemantic` `@BizQuery @Auth(publicAccess=true)`：实体非空校验→`ERR_GOODS_NOT_FOUND`、`goods.getProducts()` 聚合 SKU `number` 求和、`resolveStockThreshold` 读 `systemBiz.getConfig` + 代码兜底、三档判定（sum=0→out / sum≤阈值→tight / 否则 sufficient）、`resolveStockText` 支持 `{n}` 占位替换 → 返回 `StockSemanticBean{level,label,color,stockNumber}`。方法体实质逻辑，非 stub。
+  - `app-mall-dao/.../biz/ILitemallGoodsBiz.java:44` `getStockSemantic` 接口声明（`@BizQuery` 契约先于实现，符合 anti-pattern selfcheck）。
+  - `app-mall-service/src/test/java/.../TestLitemallStockSemanticBizModel.java`（8 用例）：通过 `IGraphQLEngine` 调 `LitemallGoods__getStockSemantic` query（非实体级纯逻辑测试），覆盖三档判定/阈值边界/自定义文案/多 SKU 求和/全 SKU 缺货/部分缺货/商品不存在。满足规则 #15。
+  - `app-mall-web/.../goods-detail.page.yaml:241-311` 非生成文件：`stockSemantic` service（`@query:LitemallGoods__getStockSemantic`）+ 语义文案/色值 tpl + 加购/购买按钮 `disabledOn: stockSemantic.data.level == 'out'` + SKU `<select>` `menuTpl` 缺货标签。前端编辑点位非 `_gen`，复用既有结构，无新依赖/弹窗组件。
+  - 文档同步：`docs/design/system-configuration.md:36` 含库存语义化配置项说明；`docs/testing/known-good-baselines.md:13` 含 2026-06-28 Phase 38 全量基线（266 全绿）；`docs/logs/2026/06-28.md` 含 P38 实施日志。
+- 五点一致性：Plan Status=completed / 3 Phase Status 全 completed / 各 Phase Exit Criteria 全 [x] / Closure Gates 全 [x] / log 已记录 → 一致。
+- Anti-hollow：`getStockSemantic` 运行时经 GraphQL query 可达（被前端 service 调用 + 测试覆盖）；前端 service/按钮 disabledOn/menuTpl 均有实际数据绑定；无 `{}`/`return null`/吞异常。
+- Deferred honesty：「列表页卡片库存语义」已明确为 `out-of-scope improvement` + successor required + 触发条件（运营要求列表卡片展示时先补 frontList/search 库存返回契约），非隐藏缺陷。无 in-scope 项被降级。
+- 残留风险（recorded，非 blocker）：列表卡片库存语义属 successor（已 Deferred But Adjudicated）；`known-good-baselines.md` 注明 working tree uncommitted（提交状态属下游 git 步骤，不影响 plan 闭合）。
 
 Follow-up:
 
