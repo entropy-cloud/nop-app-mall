@@ -24,6 +24,7 @@ import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 
+import static app.mall.service.AppMallErrors.ERR_CHECK_IN_ALREADY_TODAY;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -138,6 +139,10 @@ public class TestLitemallCheckInRecordBizModel extends JunitBaseTestCase {
         checkInToday();
         ApiResponse<?> second = rpc(GraphQLOperationType.mutation, "LitemallCheckInRecord__checkInToday", new HashMap<>());
         assertNotEquals(0, second.getStatus(), "second same-day check-in must be rejected");
+        assertEquals(ERR_CHECK_IN_ALREADY_TODAY.getErrorCode(), second.getCode(),
+                "duplicate same-day check-in must surface ERR_CHECK_IN_ALREADY_TODAY "
+                        + "(D2: non-unique index idx_check_in_record_user_date, app-level findRecord guards correctness): "
+                        + second.getCode());
     }
 
     @Test

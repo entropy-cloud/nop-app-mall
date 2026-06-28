@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static app.mall.service.AppMallErrors.ERR_POINTS_DUPLICATE_EARN;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -176,7 +177,32 @@ public class TestLitemallPointsAccountBizModel extends JunitBaseTestCase {
         data.put("remark", "duplicate");
         ApiResponse<?> r = rpc(GraphQLOperationType.mutation, "LitemallPointsAccount__earnPoints", data);
         assertNotEquals(0, r.getStatus(), "duplicate earn (same sourceType+sourceId) must be rejected");
+        assertEquals(ERR_POINTS_DUPLICATE_EARN.getErrorCode(), r.getCode(),
+                "duplicate earn must surface ERR_POINTS_DUPLICATE_EARN (consistent across app-level pre-check "
+                        + "and DB unique-key fallback uk_litemall_points_flow_source): " + r.getCode());
         assertEquals(100, getMyPoints(), "balance must not change after rejected duplicate");
+    }
+
+    @Test
+    public void testEarnDuplicateRejectedAfterDirectFlowInsert() {
+        // Insert a flow directly via dao (bypassing earnPoints), then call earnPoints with the same
+        // (sourceType, sourceId). Verifies the app-level countFlowBySource pre-check sees the seeded
+        // flow and rejects with ERR_POINTS_DUPLICATE_EARN — same code the concurrent-race DB fallback
+        // produces via isPointsFlowUniqueKeyConflict translation.
+        earn(USER_ID, 50, LitemallPointsAccountBizModel.SOURCE_TYPE_ORDER_CONFIRM_EARN, "seed-1");
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("userId", USER_ID);
+        data.put("amount", 30);
+        data.put("changeType", _AppMallDaoConstants.POINTS_CHANGE_TYPE_EARN);
+        data.put("sourceType", LitemallPointsAccountBizModel.SOURCE_TYPE_ORDER_CONFIRM_EARN);
+        data.put("sourceId", "seed-1");
+        ApiResponse<?> r = rpc(GraphQLOperationType.mutation, "LitemallPointsAccount__earnPoints", data);
+        assertNotEquals(0, r.getStatus(), "duplicate earn after seed insert must be rejected");
+        assertEquals(ERR_POINTS_DUPLICATE_EARN.getErrorCode(), r.getCode(),
+                "error code must be ERR_POINTS_DUPLICATE_EARN regardless of which layer detected the conflict: "
+                        + r.getCode());
+        assertEquals(50, getMyPoints(), "balance must not change after rejected duplicate");
     }
 
     @Test

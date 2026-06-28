@@ -1218,6 +1218,9 @@
                 <index name="idx_order_status" unique="false">
                     <column name="orderStatus"/>
                 </index>
+                <index name="idx_order_pickupCode" unique="false">
+                    <column name="pickupCode"/>
+                </index>
             </indexes>
             <relations>
                 <to-many cascadeDelete="true" displayName="订单商品" name="orderGoods"
@@ -1909,6 +1912,12 @@
                 <column code="DELETED" displayName="逻辑删除" domain="delFlag" name="deleted" propId="8"
                         stdDataType="boolean" stdSqlType="BOOLEAN" ui:show="X"/>
             </columns>
+            <indexes>
+                <index name="idx_check_in_record_user_date" unique="false">
+                    <column name="userId"/>
+                    <column name="checkInDate"/>
+                </index>
+            </indexes>
         </entity>
         <entity className="app.mall.dao.entity.LitemallPointsAccount" createTimeProp="addTime" displayName="积分账户表"
                 name="app.mall.dao.entity.LitemallPointsAccount" registerShortName="true"
@@ -1970,6 +1979,9 @@
                     </join>
                 </to-one>
             </relations>
+            <unique-keys>
+                <unique-key columns="sourceType,sourceId" name="uk_litemall_points_flow_source"/>
+            </unique-keys>
         </entity>
         <entity className="app.mall.dao.entity.LitemallWallet" createTimeProp="addTime" displayName="钱包账户表"
                 name="app.mall.dao.entity.LitemallWallet" registerShortName="true" tableName="litemall_wallet"

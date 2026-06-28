@@ -18,9 +18,11 @@ import io.nop.api.core.beans.FilterBeans;
 import io.nop.api.core.beans.query.QueryBean;
 import io.nop.api.core.exceptions.NopException;
 import io.nop.api.core.time.CoreMetrics;
+import io.nop.biz.BizErrors;
 import io.nop.biz.crud.CrudBizModel;
 import io.nop.commons.util.StringHelper;
 import io.nop.core.context.IServiceContext;
+import io.nop.dao.DaoErrors;
 import jakarta.inject.Inject;
 
 import static app.mall.service.AppMallErrors.ERR_POINTS_ACCOUNT_NOT_FOUND;
@@ -85,7 +87,8 @@ public class LitemallPointsAccountBizModel extends CrudBizModel<LitemallPointsAc
             throw new NopException(ERR_POINTS_EARN_FAILED).param("amount", amount);
         }
         // Idempotency: an earn with the same sourceType+sourceId is rejected as duplicate.
-        // (App-level check; DB-level unique key on (sourceType, sourceId) is a deferred model-gap.)
+        // App-level fast-path pre-check; the DB unique key uk_litemall_points_flow_source
+        // and CrudBizModel.checkUniqueForSaveEntity serve as concurrent-race fallbacks.
         if (!StringHelper.isEmpty(sourceType) && !StringHelper.isEmpty(sourceId)) {
             if (countFlowBySource(sourceType, sourceId, context) > 0) {
                 throw new NopException(ERR_POINTS_DUPLICATE_EARN)
@@ -93,7 +96,19 @@ public class LitemallPointsAccountBizModel extends CrudBizModel<LitemallPointsAc
                         .param("sourceId", sourceId);
             }
         }
-        return mutateBalance(userId, amount, changeType, sourceType, sourceId, remark, context, true);
+        try {
+            return mutateBalance(userId, amount, changeType, sourceType, sourceId, remark, context, true);
+        } catch (NopException e) {
+            // Concurrent-race fallback: the pre-check passed but another tx committed the same
+            // source first. Translate the pipeline/DB unique-key conflict to the business error
+            // code so callers (e.g. CommentBizModel idempotency catch) see a consistent code.
+            if (isPointsFlowUniqueKeyConflict(e)) {
+                throw new NopException(ERR_POINTS_DUPLICATE_EARN, e)
+                        .param("sourceType", sourceType)
+                        .param("sourceId", sourceId);
+            }
+            throw e;
+        }
     }
 
     @Override
@@ -251,5 +266,13 @@ public class LitemallPointsAccountBizModel extends CrudBizModel<LitemallPointsAc
 
     private static int safeInt(Integer value) {
         return value == null ? 0 : value;
+    }
+
+    private static boolean isPointsFlowUniqueKeyConflict(NopException e) {
+        String code = e.getErrorCode();
+        if (code == null)
+            return false;
+        return code.equals(BizErrors.ERR_BIZ_ENTITY_WITH_SAME_KEY_ALREADY_EXISTS.getErrorCode())
+                || code.equals(DaoErrors.ERR_SQL_DATA_INTEGRITY_VIOLATION.getErrorCode());
     }
 }
