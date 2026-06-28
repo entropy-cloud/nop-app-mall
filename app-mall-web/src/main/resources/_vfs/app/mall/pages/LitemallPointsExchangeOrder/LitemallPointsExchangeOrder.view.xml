@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<view x:extends="_gen/_LitemallPointsExchangeOrder.view.xml" x:schema="/nop/schema/xui/xview.xdef"
+      xmlns:x="/nop/schema/xdsl.xdef">
+
+    <grids>
+        <grid id="list">
+            <cols x:override="bounded-merge">
+                <col id="id"/>
+                <col id="userId"/>
+                <col id="goodsName"/>
+                <col id="pointsPrice"/>
+                <col id="quantity"/>
+                <col id="totalPoints"/>
+                <col id="consignee"/>
+                <col id="phone"/>
+                <col id="exchangeStatus"/>
+                <col id="shipCode"/>
+                <col id="addTime"/>
+            </cols>
+        </grid>
+        <grid id="pick-list"/>
+    </grids>
+
+    <forms>
+        <form id="query">
+            <layout>
+                userId exchangeStatus
+            </layout>
+        </form>
+        <form id="view"/>
+        <form id="edit" size="lg">
+            <layout>
+                userId[用户ID] goodsName[商品名称]
+                pointsPrice[积分单价] quantity[兑换数量]
+                totalPoints[消耗总积分] exchangeStatus[兑换状态]
+                consignee[收货人] phone[联系电话]
+                fullAddress[完整收货地址] shipCode[物流单号]
+                remark[备注]
+            </layout>
+        </form>
+    </forms>
+
+    <pages>
+        <crud name="main">
+            <rowActions x:override="bounded-merge">
+                <action id="row-view-button"/>
+                <action id="ship-button" label="发货" level="success"
+                        visibleOn="${exchangeStatus === 0}">
+                    <dialog title="兑换订单发货">
+                        <body>
+                            <form>
+                                <input-text name="shipCode" label="物流单号" required="true"
+                                            placeholder="请输入物流单号"/>
+                            </form>
+                        </body>
+                    </dialog>
+                    <api url="@mutation:LitemallPointsExchangeOrder__shipExchangeOrder">
+                        <data>
+                            <id>$id</id>
+                            <shipCode>${shipCode}</shipCode>
+                        </data>
+                    </api>
+                    <confirmText>确认发货吗？</confirmText>
+                </action>
+            </rowActions>
+        </crud>
+        <picker name="picker"/>
+    </pages>
+</view>

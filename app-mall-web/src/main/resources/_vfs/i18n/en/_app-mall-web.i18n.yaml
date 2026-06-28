@@ -148,9 +148,17 @@ site:
       displayName: ''
     FNPT:LitemallPointsAccount:query:
       displayName: ''
+    FNPT:LitemallPointsExchangeOrder:mutation:
+      displayName: ''
+    FNPT:LitemallPointsExchangeOrder:query:
+      displayName: ''
     FNPT:LitemallPointsFlow:mutation:
       displayName: ''
     FNPT:LitemallPointsFlow:query:
+      displayName: ''
+    FNPT:LitemallPointsGoods:mutation:
+      displayName: ''
+    FNPT:LitemallPointsGoods:query:
       displayName: ''
     FNPT:LitemallPromotionActivity:mutation:
       displayName: ''
@@ -290,7 +298,11 @@ site:
       displayName: ''
     LitemallPointsAccount-main:
       displayName: ''
+    LitemallPointsExchangeOrder-main:
+      displayName: ''
     LitemallPointsFlow-main:
+      displayName: ''
+    LitemallPointsGoods-main:
       displayName: ''
     LitemallPromotionActivity-main:
       displayName: ''
@@ -390,6 +402,10 @@ site:
       displayName: ''
     mall-pin-tuan-activity:
       displayName: ''
+    mall-points-exchange-order:
+      displayName: ''
+    mall-points-goods:
+      displayName: ''
     mall-promotion-activity:
       displayName: ''
     mall-search-history:
@@ -462,6 +478,8 @@ site:
       displayName: ''
     storefront-message-center:
       displayName: ''
+    storefront-my-exchange-orders:
+      displayName: ''
     storefront-my-points:
       displayName: ''
     storefront-order-detail:
@@ -475,6 +493,8 @@ site:
     storefront-pin-tuan-detail:
       displayName: ''
     storefront-pin-tuan-my:
+      displayName: ''
+    storefront-points-mall:
       displayName: ''
     storefront-search:
       displayName: ''

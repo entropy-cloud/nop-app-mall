@@ -1,0 +1,129 @@
+type: page
+title: 积分商城
+body:
+  - type: wrapper
+    className: storefront-header
+    body:
+      type: flex
+      justify: space-between
+      alignItems: center
+      style:
+        padding: 10px 20px
+        backgroundColor: '#fff'
+        borderBottom: 2px solid '#ff6b00'
+      items:
+        - type: wrapper
+          body:
+            - type: button
+              label: '<b style="font-size:24px;color:#ff6b00">商城</b>'
+              level: link
+              actionType: link
+              link: "/storefront-home"
+        - type: wrapper
+          body:
+            - type: button
+              label: 我的兑换
+              icon: gift
+              level: link
+              actionType: link
+              link: "/storefront-my-exchange-orders"
+            - type: button
+              label: 用户中心
+              icon: user
+              level: link
+              actionType: link
+              link: "/storefront-user-center"
+
+  - type: service
+    name: pointsBalance
+    api:
+      url: '@query:LitemallPointsAccount__getMyPoints'
+    body:
+      - type: wrapper
+        style:
+          padding: 20px
+          backgroundColor: '#ff6b00'
+          textAlign: center
+        body:
+          - type: tpl
+            tpl: '<div style="color:#fff;font-size:14px">我的积分</div>'
+          - type: tpl
+            tpl: '<div style="color:#fff;font-size:36px;font-weight:bold">${pointsBalance.data}</div>'
+
+  - type: service
+    name: pointsGoods
+    api:
+      url: '@query:LitemallPointsGoods__activePointsGoods'
+      data:
+        page: 1
+        pageSize: 20
+    body:
+      - type: wrapper
+        visibleOn: "${pointsGoods.data != null && pointsGoods.data.list != null && pointsGoods.data.list.length > 0}"
+        style:
+          padding: 10px 20px
+        body:
+          - type: tpl
+            tpl: '<h3 style="color:#ff6b00">🎁 积分兑换</h3>'
+          - type: grid
+            columns:
+              md: 2
+            body:
+              type: each
+              name: pointsGoods.data.list
+              items:
+                type: wrapper
+                style:
+                  background: '#fff'
+                  border: 1px solid '#eee'
+                  borderRadius: 8px
+                  margin: 5px
+                  padding: 15px
+                  textAlign: center
+                body:
+                  - type: tpl
+                    tpl: '<div style="font-size:16px;font-weight:bold">${goodsName}</div>'
+                  - type: tpl
+                    tpl: '<div style="color:#999;font-size:12px">${brief}</div>'
+                  - type: tpl
+                    tpl: '<div style="color:#ff6b00;font-size:24px;font-weight:bold;margin-top:8px">${pointsPrice} 积分</div>'
+                  - type: tpl
+                    visibleOn: "${exchangeStock != null && exchangeStock <= 5}"
+                    tpl: '<div style="color:#e74c3c;font-size:12px">仅剩 ${exchangeStock} 件</div>'
+                  - type: tpl
+                    visibleOn: "${!inWindow}"
+                    tpl: '<div style="color:#999;font-size:12px;margin-top:4px">不在兑换时间段</div>'
+                  - type: button
+                    label: 立即兑换
+                    level: primary
+                    size: lg
+                    disabledOn: "${!inWindow || exchangeStock == null || exchangeStock <= 0}"
+                    actionType: dialog
+                    dialog:
+                      title: 确认兑换
+                      body:
+                        - type: tpl
+                          tpl: '<div style="text-align:center;padding:10px"><p>商品：${goodsName}</p><p>积分单价：${pointsPrice} 积分</p><p>剩余库存：${exchangeStock} 件</p><p>当前积分：${pointsBalance.data}</p></div>'
+                        - type: input-number
+                          name: quantity
+                          label: 兑换数量
+                          value: 1
+                          min: 1
+                          max: "${exchangeStock != null ? exchangeStock : 99}"
+                      api:
+                        url: '@mutation:LitemallPointsExchangeOrder__exchange'
+                        data:
+                          pointsGoodsId: '${id}'
+                          quantity: '${quantity}'
+                        successMessage: 兑换成功，请到"我的兑换"查看
+                        redirect:
+                          link: "/storefront-my-exchange-orders"
+
+      - type: wrapper
+        visibleOn: "${pointsGoods.data == null || pointsGoods.data.list == null || pointsGoods.data.list.length == 0}"
+        style:
+          padding: 60px 20px
+          textAlign: center
+        body:
+          - type: tpl
+            tpl: '<div style="color:#999;font-size:16px">暂无可兑换的积分商品</div>'

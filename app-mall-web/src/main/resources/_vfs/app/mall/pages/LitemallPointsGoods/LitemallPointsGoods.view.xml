@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<view x:extends="_gen/_LitemallPointsGoods.view.xml" x:schema="/nop/schema/xui/xview.xdef"
+      xmlns:x="/nop/schema/xdsl.xdef">
+
+    <grids>
+        <grid id="list">
+            <cols x:override="bounded-merge">
+                <col id="id"/>
+                <col id="goodsId"/>
+                <col id="productId"/>
+                <col id="pointsPrice"/>
+                <col id="exchangeStock"/>
+                <col id="exchangedCount"/>
+                <col id="maxPerUser"/>
+                <col id="startTime"/>
+                <col id="endTime"/>
+                <col id="status"/>
+            </cols>
+        </grid>
+        <grid id="pick-list"/>
+    </grids>
+
+    <forms>
+        <form id="query">
+            <layout>
+                goodsId status
+            </layout>
+        </form>
+        <form id="view"/>
+        <form id="edit" size="lg">
+            <layout>
+                goodsId[商品ID] productId[SKU ID]
+                pointsPrice[积分单价] exchangeStock[兑换活动库存]
+                exchangedCount[已兑换数量] maxPerUser[每人限兑]
+                startTime[兑换开始时间] endTime[兑换结束时间]
+                status[上下架状态] remark[备注]
+            </layout>
+            <cells>
+                <cell id="productId">
+                    <placeholder>SKU ID，留空表示该商品全部 SKU 均参与</placeholder>
+                </cell>
+                <cell id="pointsPrice">
+                    <placeholder>单件所需积分（如 100）</placeholder>
+                </cell>
+                <cell id="exchangeStock">
+                    <placeholder>兑换活动库存（独立于零售库存）</placeholder>
+                </cell>
+                <cell id="maxPerUser">
+                    <placeholder>每人限兑次数（0=不限）</placeholder>
+                </cell>
+                <cell id="exchangedCount">
+                    <placeholder>已兑换数量（系统自动维护，无需手填）</placeholder>
+                </cell>
+            </cells>
+        </form>
+
+        <form id="add" x:prototype="edit">
+            <layout x:override="remove"/>
+        </form>
+    </forms>
+
+    <pages>
+        <crud name="main">
+            <rowActions x:override="bounded-merge">
+                <action id="row-view-button"/>
+                <action id="row-update-button" actionType="drawer"/>
+                <action id="publish-button" label="上架" level="success"
+                        visibleOn="${status !== 10 &amp;&amp; status !== 20}">
+                    <api url="@mutation:LitemallPointsGoods__publishActivity">
+                        <data>
+                            <id>$id</id>
+                        </data>
+                    </api>
+                    <confirmText>确认上架该积分商品吗？</confirmText>
+                </action>
+                <action id="unpublish-button" label="下架" level="warning"
+                        visibleOn="${status === 10 || status === 20}">
+                    <api url="@mutation:LitemallPointsGoods__unpublishActivity">
+                        <data>
+                            <id>$id</id>
+                        </data>
+                    </api>
+                    <confirmText>确认下架该积分商品吗？</confirmText>
+                </action>
+                <action id="row-delete-button"/>
+            </rowActions>
+        </crud>
+        <picker name="picker"/>
+    </pages>
+</view>

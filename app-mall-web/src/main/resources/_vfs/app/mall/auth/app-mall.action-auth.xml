@@ -173,6 +173,14 @@
                 <resource id="mall-pin-tuan-activity" displayName="拼团活动" orderNo="414"
                           icon="ant-design:appstore-twotone" component="AMIS"
                           resourceType="SUBM" url="/app/mall/pages/LitemallPinTuanActivity/main.page.yaml"/>
+
+                <resource id="mall-points-goods" displayName="积分商品" orderNo="415"
+                          icon="ant-design:gift-outlined" component="AMIS"
+                          resourceType="SUBM" url="/app/mall/pages/LitemallPointsGoods/main.page.yaml"/>
+
+                <resource id="mall-points-exchange-order" displayName="兑换订单" orderNo="416"
+                          icon="ant-design:gift-outlined" component="AMIS"
+                          resourceType="SUBM" url="/app/mall/pages/LitemallPointsExchangeOrder/main.page.yaml"/>
             </children>
         </resource>
 
@@ -342,6 +350,14 @@
                 <resource id="storefront-my-points" displayName="我的积分" orderNo="826"
                           icon="ant-design:diamond-outlined" component="AMIS"
                           resourceType="SUBM" url="/app/mall/pages/mall/points/my-points.page.yaml"/>
+
+                <resource id="storefront-points-mall" displayName="积分商城" orderNo="830"
+                          icon="ant-design:gift-outlined" component="AMIS"
+                          resourceType="SUBM" url="/app/mall/pages/mall/points/points-mall.page.yaml"/>
+
+                <resource id="storefront-my-exchange-orders" displayName="我的兑换" orderNo="831"
+                          icon="ant-design:gift-outlined" component="AMIS"
+                          resourceType="SUBM" url="/app/mall/pages/mall/points/my-exchange-orders.page.yaml"/>
 
                 <resource id="storefront-pin-tuan-detail" displayName="拼团详情" orderNo="827"
                           icon="ant-design:team-outlined" component="AMIS"

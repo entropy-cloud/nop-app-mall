@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<view x:schema="/nop/schema/xui/xview.xdef" bizObjName="LitemallPointsGoods" xmlns:i18n-en="i18n-en"
+      xmlns:x="/nop/schema/xdsl.xdef" xmlns:j="j" xmlns:c="c" xmlns:gql="gql" xmlns:view-gen="view-gen" xmlns:xpl="xpl">
+
+    <objMeta>/app/mall/model/LitemallPointsGoods/LitemallPointsGoods.xmeta</objMeta>
+
+    <controlLib>/nop/web/xlib/control.xlib</controlLib>
+
+    <x:gen-extends>
+        <view-gen:DefaultViewGenExtends xpl:lib="/nop/web/xlib/view-gen.xlib"/>
+    </x:gen-extends>
+
+    <x:post-extends>
+        <view-gen:DefaultViewPostExtends xpl:lib="/nop/web/xlib/view-gen.xlib"/>
+    </x:post-extends>
+
+    <grids>
+        <grid id="list" x:abstract="true">
+            <cols>
+
+                <!--Id-->
+                <col id="id" mandatory="true" sortable="true"/>
+
+                <!--商品ID-->
+                <col id="goodsId" mandatory="true" sortable="true"/>
+
+                <!--SKU ID（null表示全部SKU）-->
+                <col id="productId" sortable="true"/>
+
+                <!--积分单价（单件所需积分）-->
+                <col id="pointsPrice" mandatory="true" ui:number="true" sortable="true"/>
+
+                <!--兑换活动库存-->
+                <col id="exchangeStock" ui:number="true" sortable="true"/>
+
+                <!--已兑换数量-->
+                <col id="exchangedCount" ui:number="true" sortable="true"/>
+
+                <!--每人限兑次数（0=不限）-->
+                <col id="maxPerUser" ui:number="true" sortable="true"/>
+
+                <!--兑换开始时间-->
+                <col id="startTime" sortable="true"/>
+
+                <!--兑换结束时间-->
+                <col id="endTime" sortable="true"/>
+
+                <!--状态-->
+                <col id="status" ui:number="true" sortable="true"/>
+
+                <!--备注-->
+                <col id="remark" sortable="true"/>
+            </cols>
+        </grid>
+        <grid id="pick-list" x:prototype="list" x:abstract="true"/>
+    </grids>
+
+    <forms>
+        <form id="view" editMode="view" title="查看-积分商品表" i18n-en:title="">
+            <layout>
+ id[Id] goodsId[商品ID]
+ productId[SKU ID（null表示全部SKU）] pointsPrice[积分单价（单件所需积分）]
+ exchangeStock[兑换活动库存] exchangedCount[已兑换数量]
+ maxPerUser[每人限兑次数（0=不限）] startTime[兑换开始时间]
+ endTime[兑换结束时间] status[状态]
+ remark[备注] 
+</layout>
+        </form>
+        <form id="add" editMode="add" title="新增-积分商品表" i18n-en:title="" x:prototype="edit"/>
+        <form id="edit" editMode="edit" title="编辑-积分商品表" i18n-en:title="">
+            <layout>
+ goodsId[商品ID] productId[SKU ID（null表示全部SKU）]
+ pointsPrice[积分单价（单件所需积分）] exchangeStock[兑换活动库存]
+ exchangedCount[已兑换数量] maxPerUser[每人限兑次数（0=不限）]
+ startTime[兑换开始时间] endTime[兑换结束时间]
+ status[状态] remark[备注]
+</layout>
+        </form>
+        <form id="query" editMode="query" title="查询条件" i18n-en:title="Query Condition" x:abstract="true"/>
+        <form id="asideFilter" editMode="query" x:abstract="true" submitOnChange="true"/>
+        <form id="batchUpdate" editMode="edit" x:abstract="true" title="修改-积分商品表" i18n-en:title=""/>
+    </forms>
+
+    <pages>
+        <crud name="view-list" grid="list" asideFilterForm="asideFilter" filterForm="query" x:abstract="true">
+            <table autoFillHeight="true">
+                <api url="@query:LitemallPointsGoods__findPage" gql:selection="{@pageSelection}"/>
+            </table>
+        </crud>
+        <crud name="main" grid="list" asideFilterForm="asideFilter" filterForm="query" x:abstract="true">
+            <table autoFillHeight="true">
+                <api url="@query:LitemallPointsGoods__findPage" gql:selection="{@pageSelection}"/>
+            </table>
+            <listActions>
+                <action id="batch-delete-button" label="@i18n:common.batchDelete" batch="true">
+                    <api url="@mutation:LitemallPointsGoods__batchDelete?ids=$ids"/>
+                    <confirmText>@i18n:common.confirmBatchDelete</confirmText>
+                </action>
+                <action id="add-button" level="primary" label="@i18n:common.add" icon="fa fa-plus pull-left">
+                    <dialog page="add"/>
+                </action>
+            </listActions>
+            <rowActions>
+                <action id="row-view-button" level="primary" label="@i18n:common.view">
+                    <dialog page="view"/>
+                </action>
+                <action id="row-update-button" level="primary" label="@i18n:common.edit" x:abstract="true">
+                    <dialog page="update"/>
+                </action>
+                <action id="row-delete-button" level="danger" label="@i18n:common.delete" x:abstract="true">
+                    <api url="@mutation:LitemallPointsGoods__delete?id=$id"/>
+                    <confirmText>@i18n:common.confirmDelete</confirmText>
+                </action>
+                <actionGroup id="row-more-button" label="@i18n:common.more" level="primary">
+                    <action id="row-update-button" label="@i18n:common.edit">
+                        <dialog page="update"/>
+                    </action>
+                    <action id="row-delete-button" label="@i18n:common.delete">
+                        <api url="@mutation:LitemallPointsGoods__delete?id=$id"/>
+                        <confirmText>@i18n:common.confirmDelete</confirmText>
+                    </action>
+                </actionGroup>
+            </rowActions>
+        </crud>
+        <picker name="picker" grid="pick-list" asideFilterForm="asideFilter" filterForm="query" x:abstract="true">
+            <table noOperations="true">
+                <api url="@query:LitemallPointsGoods__findPage" gql:selection="{@pageSelection}"/>
+            </table>
+        </picker>
+        <simple name="add" form="add">
+            <api url="@mutation:LitemallPointsGoods__save/id"/>
+        </simple>
+        <simple name="view" form="view">
+            <initApi url="@query:LitemallPointsGoods__get?id=$id" gql:selection="{@formSelection}"/>
+        </simple>
+        <simple name="update" form="edit">
+            <initApi url="@query:LitemallPointsGoods__get?id=$id" gql:selection="{@formSelection}"/>
+            <api url="@mutation:LitemallPointsGoods__update/id?id=$id" withFormData="true"/>
+        </simple>
+    </pages>
+</view>

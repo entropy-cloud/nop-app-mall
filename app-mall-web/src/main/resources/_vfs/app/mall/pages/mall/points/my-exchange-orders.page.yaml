@@ -1,0 +1,112 @@
+type: page
+title: 我的兑换
+body:
+  - type: wrapper
+    className: storefront-header
+    body:
+      type: flex
+      justify: space-between
+      alignItems: center
+      style:
+        padding: 10px 20px
+        backgroundColor: '#fff'
+        borderBottom: 2px solid '#ff6b00'
+      items:
+        - type: wrapper
+          body:
+            - type: button
+              label: '<b style="font-size:24px;color:#ff6b00">积分商城</b>'
+              level: link
+              actionType: link
+              link: "/storefront-points-mall"
+        - type: wrapper
+          body:
+            - type: button
+              label: 用户中心
+              icon: user
+              level: link
+              actionType: link
+              link: "/storefront-user-center"
+
+  - type: service
+    name: exchangeOrders
+    api:
+      url: '@query:LitemallPointsExchangeOrder__myExchangeOrders'
+      data:
+        page: 1
+        pageSize: 20
+    body:
+      - type: wrapper
+        visibleOn: "${exchangeOrders.data != null && exchangeOrders.data.list != null && exchangeOrders.data.list.length > 0}"
+        style:
+          padding: 10px 20px
+        body:
+          type: each
+          name: exchangeOrders.data.list
+          items:
+            type: wrapper
+            style:
+              background: '#fff'
+              border: 1px solid '#eee'
+              borderRadius: 8px
+              margin: 5px 0
+              padding: 15px
+            body:
+              - type: flex
+                justify: space-between
+                alignItems: center
+                items:
+                  - type: wrapper
+                    body:
+                      - type: tpl
+                        tpl: '<div style="font-size:16px;font-weight:bold">${goodsName} x${quantity}</div>'
+                      - type: tpl
+                        tpl: '<div style="color:#ff6b00;font-size:14px;margin-top:4px">消耗 ${totalPoints} 积分</div>'
+                      - type: tpl
+                        visibleOn: "${consignee != null}"
+                        tpl: '<div style="color:#999;font-size:12px;margin-top:4px">${consignee} ${phone}</div>'
+                      - type: tpl
+                        visibleOn: "${shipCode != null}"
+                        tpl: '<div style="color:#999;font-size:12px">物流单号：${shipCode}</div>'
+                  - type: wrapper
+                    body:
+                      - type: status-tag
+                        status: '${exchangeStatus}'
+                  - type: wrapper
+                    body:
+                      - type: button
+                        label: 确认收货
+                        level: success
+                        size: sm
+                        visibleOn: "${exchangeStatus === 10}"
+                        actionType: ajax
+                        api:
+                          url: '@mutation:LitemallPointsExchangeOrder__confirmExchangeOrder'
+                          data:
+                            id: '${id}'
+                        confirmText: 确认已收到商品？
+                      - type: button
+                        label: 取消兑换
+                        level: danger
+                        size: sm
+                        visibleOn: "${exchangeStatus === 0}"
+                        actionType: ajax
+                        api:
+                          url: '@mutation:LitemallPointsExchangeOrder__cancelExchangeOrder'
+                          data:
+                            id: '${id}'
+                        confirmText: 确认取消该兑换？积分将原路退还
+
+      - type: wrapper
+        visibleOn: "${exchangeOrders.data == null || exchangeOrders.data.list == null || exchangeOrders.data.list.length === 0}"
+        style:
+          padding: 60px 20px
+          textAlign: center
+        body:
+          - type: tpl
+            tpl: '<div style="color:#999;font-size:16px">暂无兑换记录</div>'
+          - type: button
+            label: 去积分商城
+            level: primary
+            actionType: link
+            link: "/storefront-points-mall"
