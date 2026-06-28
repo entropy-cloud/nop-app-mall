@@ -1772,6 +1772,13 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
                 scope.setLocalValue("orderMetrics", buildOrderDataSet(
                         getOrderAnalysis(startDate, endDate, context)));
                 break;
+            case "user":
+                buildUserDataSet(scope, startDate, endDate, context);
+                break;
+            case "coupon":
+                scope.setLocalValue("couponMetrics", buildCouponDataSet(
+                        getCouponAnalysis(startDate, endDate, context)));
+                break;
             default:
                 throw new NopException(AppMallErrors.ERR_REPORT_NAME_INVALID)
                         .param(AppMallErrors.ARG_REPORT_NAME, reportName);
@@ -1796,7 +1803,8 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
                     .param(AppMallErrors.ARG_REPORT_NAME, reportName);
         }
         String n = reportName.trim().toLowerCase();
-        if (!n.equals("funnel") && !n.equals("product") && !n.equals("order")) {
+        if (!n.equals("funnel") && !n.equals("product") && !n.equals("order")
+                && !n.equals("user") && !n.equals("coupon")) {
             throw new NopException(AppMallErrors.ERR_REPORT_NAME_INVALID)
                     .param(AppMallErrors.ARG_REPORT_NAME, reportName);
         }
@@ -1811,6 +1819,10 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
                 return "product-analysis";
             case "order":
                 return "order-analysis";
+            case "user":
+                return "user-analysis";
+            case "coupon":
+                return "coupon-analysis";
             default:
                 throw new NopException(AppMallErrors.ERR_REPORT_NAME_INVALID)
                         .param(AppMallErrors.ARG_REPORT_NAME, reportName);
@@ -1884,6 +1896,98 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
         m.put("label", label);
         m.put("value", value);
         return m;
+    }
+
+    /**
+     * 用户分析导出数据集（多 sheet：retention/rfm/lifecycle/repurchase）。
+     * 各子分析同时含绝对计数与比率（见 plan 2026-06-29-0119-1 Decision 选项 A）。
+     * 导出适配层将中文段名映射为 Latin 代码：PDFBox 内置 Helvetica 仅 Latin（CJK 字体部署为本计划 Non-Goal，
+     * 见 owner doc system-configuration.md），与模板 Latin 表头先例保持一致；原 {@code getXxx} 口径不变。
+     */
+    private void buildUserDataSet(IEvalScope scope, String startDate, String endDate, IServiceContext context) {
+        List<Map<String, Object>> retention = new ArrayList<>();
+        for (UserRetentionPointBean b : getUserRetention(startDate, endDate, context)) {
+            Map<String, Object> m = new LinkedHashMap<>();
+            m.put("dateLabel", b.getDateLabel());
+            m.put("cohortSize", b.getCohortSize());
+            m.put("d1", b.getD1());
+            m.put("d7", b.getD7());
+            m.put("d30", b.getD30());
+            m.put("d1Rate", b.getD1Rate() == null ? "0" : b.getD1Rate().toPlainString());
+            m.put("d7Rate", b.getD7Rate() == null ? "0" : b.getD7Rate().toPlainString());
+            m.put("d30Rate", b.getD30Rate() == null ? "0" : b.getD30Rate().toPlainString());
+            retention.add(m);
+        }
+
+        List<Map<String, Object>> rfm = new ArrayList<>();
+        for (RfmSegmentBean b : getUserRfm(startDate, endDate, context)) {
+            Map<String, Object> m = new LinkedHashMap<>();
+            m.put("segment", latinRfmSegment(b.getSegment()));
+            m.put("userCount", b.getUserCount());
+            rfm.add(m);
+        }
+
+        List<Map<String, Object>> lifecycle = new ArrayList<>();
+        for (LifecycleSegmentBean b : getUserLifecycle(startDate, endDate, null, context)) {
+            Map<String, Object> m = new LinkedHashMap<>();
+            m.put("segment", latinLifecycleSegment(b.getSegment()));
+            m.put("userCount", b.getUserCount());
+            m.put("percent", b.getPercent() == null ? "0" : b.getPercent().toPlainString());
+            lifecycle.add(m);
+        }
+
+        List<Map<String, Object>> repurchase = new ArrayList<>();
+        for (RepurchaseRatePointBean b : getRepurchaseRate(startDate, endDate, context)) {
+            Map<String, Object> m = new LinkedHashMap<>();
+            m.put("dateLabel", b.getDateLabel());
+            m.put("paidUsers", b.getPaidUsers());
+            m.put("repurchaseUsers", b.getRepurchaseUsers());
+            m.put("rate", b.getRate() == null ? "0" : b.getRate().toPlainString());
+            repurchase.add(m);
+        }
+
+        scope.setLocalValue("retentionList", retention);
+        scope.setLocalValue("rfmList", rfm);
+        scope.setLocalValue("lifecycleList", lifecycle);
+        scope.setLocalValue("repurchaseList", repurchase);
+    }
+
+    private static String latinRfmSegment(String segment) {
+        if (segment == null) return "";
+        switch (segment) {
+            case "重要价值用户": return "vip-value";
+            case "重要保持用户": return "vip-retain";
+            case "重要发展用户": return "vip-develop";
+            case "重要挽留用户": return "vip-keep";
+            case "一般价值用户": return "general-value";
+            case "一般保持用户": return "general-retain";
+            case "一般发展用户": return "general-develop";
+            case "一般挽留用户": return "general-keep";
+            default: return segment;
+        }
+    }
+
+    private static String latinLifecycleSegment(String segment) {
+        if (segment == null) return "";
+        switch (segment) {
+            case "新客": return "new";
+            case "活跃": return "active";
+            case "沉睡": return "dormant";
+            case "流失": return "churned";
+            default: return segment;
+        }
+    }
+
+    /**
+     * 优惠券分析导出数据集（单 sheet，claimedCount/usedCount/pulledGmv）。
+     * 返回单行 List 以复用既有 `*=^ds!field` 展开模式（与 funnel/order 同构）。
+     */
+    private static List<Map<String, Object>> buildCouponDataSet(CouponUsageStatisticsBean bean) {
+        Map<String, Object> m = new LinkedHashMap<>();
+        m.put("claimedCount", bean.getClaimedCount());
+        m.put("usedCount", bean.getUsedCount());
+        m.put("pulledGmv", bean.getPulledGmv() == null ? "0" : bean.getPulledGmv().toPlainString());
+        return Collections.singletonList(m);
     }
 
     @Override

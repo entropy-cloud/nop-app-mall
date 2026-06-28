@@ -287,10 +287,48 @@ public class TestLitemallOrderStatisticsBizModel extends JunitBaseTestCase {
     }
 
     @Test
+    public void testExportReportUserXlsx() {
+        File f = renderReport("user", "xlsx");
+        assertTrue(f.length() > 0, "user xlsx should be non-empty");
+    }
+
+    @Test
+    public void testExportReportUserPdf() {
+        File f = renderReport("user", "pdf");
+        assertTrue(f.length() > 0, "user pdf should be non-empty");
+    }
+
+    @Test
+    public void testExportReportCouponXlsx() {
+        File f = renderReport("coupon", "xlsx");
+        assertTrue(f.length() > 0, "coupon xlsx should be non-empty");
+    }
+
+    @Test
+    public void testExportReportCouponPdf() {
+        File f = renderReport("coupon", "pdf");
+        assertTrue(f.length() > 0, "coupon pdf should be non-empty");
+    }
+
+    @Test
     public void testExportReportEmptyDataNotError() {
         // 空库：报表数据集为空，渲染不应报错
         ApiResponse<?> r = callExportReport("funnel", "xlsx");
         assertEquals(0, r.getStatus(), "empty funnel export should not error: " + r);
+    }
+
+    @Test
+    public void testExportReportUserEmptyDataNotError() {
+        // 空库：用户分析多 sheet 导出不应报错
+        ApiResponse<?> r = callExportReport("user", "xlsx");
+        assertEquals(0, r.getStatus(), "empty user export should not error: " + r);
+    }
+
+    @Test
+    public void testExportReportCouponEmptyDataNotError() {
+        // 空库：优惠券分析导出不应报错
+        ApiResponse<?> r = callExportReport("coupon", "pdf");
+        assertEquals(0, r.getStatus(), "empty coupon export should not error: " + r);
     }
 
     @Test

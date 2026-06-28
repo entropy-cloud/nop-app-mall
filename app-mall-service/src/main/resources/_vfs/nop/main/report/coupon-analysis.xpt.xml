@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<workbook x:schema="/nop/schema/excel/workbook.xdef" xmlns:x="/nop/schema/xdsl.xdef">
+
+    <defaultFont fontColor="0x0" fontFamily="swiss" fontName="Helvetica" fontSize="11.0"/>
+
+    <sheets>
+        <sheet name="coupon-analysis">
+            <table>
+                <rows>
+                    <row>
+                        <cells>
+                            <cell>
+                                <value>claimedCount</value>
+                            </cell>
+                            <cell>
+                                <value>usedCount</value>
+                            </cell>
+                            <cell>
+                                <value>pulledGmv</value>
+                            </cell>
+                        </cells>
+                    </row>
+                    <row>
+                        <cells>
+                            <cell>
+                                <value>*=^couponMetrics!claimedCount</value>
+                            </cell>
+                            <cell>
+                                <value>*=^couponMetrics!usedCount</value>
+                            </cell>
+                            <cell>
+                                <value>*=^couponMetrics!pulledGmv</value>
+                            </cell>
+                        </cells>
+                    </row>
+                </rows>
+            </table>
+        </sheet>
+    </sheets>
+</workbook>
