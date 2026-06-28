@@ -102,7 +102,7 @@
 - **机制抉择：周期内累计未达保级阈值则降一级**（备选 A）。
 - 评估周期：自然滚动周期（最近 N 天，N 由系统配置 `mall_member_eval_period_days` 控制，默认 365）。
 - 保级阈值取当前等级的 `LitemallMemberLevel.downgradeThreshold`：若周期内累计消费 < 该阈值，则 `userLevel` 下调一级（普通用户为最低，不再下调）。降级按当前等级逐级进行，不跨级直降。
-- 周期重置/触发：通过后台手动触发的 `@BizMutation`（`downgradeExpiredLevels`）批量评估。roadmap 中 nop-job 调度当前**未引入**，故本基线提供手动入口；未来引入 nop-job 后可由定时任务调用同一 BizMutation。
+- 周期重置/触发：通过后台手动触发的 `@BizMutation`（`downgradeExpiredLevels`）批量评估。nop-job-local 已装配（`scheduler.yaml` 6+ 个 scheduled job），可由定时任务调用同一 BizMutation；当前 `downgradeExpiredLevels` 保留手工入口。
 - 降级不可跳过：roadmap Phase 26 交付范围明确包含「降级机制（周期内未达标降级）」。
 
 ### 会员价（vipPrice）
@@ -114,9 +114,16 @@
 
 ### 权益配置
 
-- 权益项以 `LitemallMemberLevel.benefits`（JSON）配置。本基线**仅在模型中预留权益配置字段**，不实现权益发放逻辑：
+- 权益项以 `LitemallMemberLevel.benefits`（JSON）配置；自动发放经 LitemallSystem key/value 开关控制。
   - 专属价：已由 `vipPrice` 价格机制落地（见上）。
-  - 专属券 / 生日礼包 / 专享客服：roadmap 列为权益项，但其发放依赖 P8（券）+ P32（优惠券体系增强），属 Non-Goals，后续在 successor 计划实现。
+  - 专属券：`LitemallCoupon.minMemberLevel` 控制等级准入（≥该等级方可领取/被发放，0=全员可领）；等级提升自动发券由 `mall_benefit_level_coupon_{level}` 配置 couponId，受 `mall_benefit_level_up_enabled` 开关控制。
+  - 生日礼包：nop-job 定时任务 `dispatch-birthday-coupons` 扫描当日生日用户（基类 `NopAuthUser.birthday`），发放 `mall_benefit_birthday_coupon` 配置的券，受 `mall_benefit_birthday_enabled` 开关控制；同年幂等。
+
+### 自动权益发放（D3 自动升级触发）
+
+- 订单确认收货（`confirm` / `confirmExpiredOrders`）触发 `evaluateUserLevel`：基于累计消费（含本单）重新评估等级，命中升级阈值则自动升级并触发等级提升权益发放。
+- hysteresis（防等级抖动）：仅自动升级，降级仍由 `downgradeExpiredLevels` 周期任务负责。
+- 等级提升权益发放：`ensureUserLevel` 检测 upgrade（target > current）→ `dispatchLevelUpBenefit` 发放配置的专属券；发放计入 `limit`（D4），超限静默跳过；发放成功触发站内信通知。
 
 ### 个人中心等级展示
 

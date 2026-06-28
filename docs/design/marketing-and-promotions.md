@@ -91,19 +91,22 @@
 | ---- | --------- | -------- |
 | `goodsType` | `mall/coupon-goods-type`（0=ALL/1=CATEGORY/2=GOODS） | 商品范围类型 |
 | `goodsValue` | 字符串（逗号分隔 ID 列表） | 商品范围值：`goodsType=1` 时为分类 ID 列表；`goodsType=2` 时为商品 ID 列表；`goodsType=0` 时忽略 |
-| `limit` | int（0=不限，默认 1） | 用户领券限制数量 |
-| `tag` | 字符串（如「新人专用」） | 人群标签，**纯展示**，不参与会员级路由（当前无会员级范围机制，会员专属券自动发放属 P26 successor） |
+| `limit` | int（0=不限，默认 1） | 用户领券限制数量（含自动发放，D4 计入） |
+| `minMemberLevel` | int（dict `mall/user-level`，0=全员可领） | 最低会员等级：达到该等级方可领取/被自动发放（0=无限制，向后兼容历史券） |
+| `tag` | 字符串（如「新人专用」） | 人群标签，**纯展示**，不参与等级准入路由（等级准入由 `minMemberLevel` 字段控制） |
 | `type` | `mall/coupon-type`（0=COMMON/1=REGISTER/2=EXCHANGE） | 优惠券赠送类型 |
 | `timeType` | `mall/coupon-time-type`（0=DAYS/1=RANGE） | 有效期类型 |
 | `days` | int | 当 `timeType=0` 时生效：领后 N 天有效 |
 | `startTime` / `endTime` | datetime | 当 `timeType=1` 时生效：固定时间段 |
 
-**抉择与残留风险（Decision A：固化既有字典语义）：**
+**会员专属券（minMemberLevel 等级准入）：**
 
-- **抉择**：本计划固化 `goodsType`/`limit`/`tag`/`timeType` 的运营配置语义，写入字典与后台表单。**备选「引入会员级（member-level）范围机制」被否**——超出 P32 范围（属 P26 successor），且需新增模型字段。
-- **残留风险 1**：`tag` 当前为纯展示，不参与会员级路由；会员专属券仍需 P26 successor 自动发放能力。
-- **残留风险 2**：DIY 投放仅支持商品/分类维度（无品牌、无人群标签路由），更复杂的人群定向投放不在当前基线。
-- **残留风险 3**：`limit=0`（不限领）与 `total=0`（无限量）叠加时存在被刷风险，由运营在配置时合理设置上限控制（非系统强约束）。
+- `minMemberLevel > 0` 的券为会员专属券：`claimCouponForUser` 校验 `userLevel >= minMemberLevel`，不满足抛 `ERR_COUPON_MEMBER_LEVEL_INSUFFICIENT`。
+- 等级提升自动发放：`mall_benefit_level_coupon_{level}` 配置升级到该等级时的专属券 couponId，受 `mall_benefit_level_up_enabled` 开关控制。
+- 生日礼包：`mall_benefit_birthday_coupon` 配置生日券 couponId，nop-job 定时任务 `dispatch-birthday-coupons` 扫描当日生日用户发放，同年幂等。
+- 自动发放计入 `limit`（D4）：超限时静默跳过，不抛异常。
+- **残留风险 1**：DIY 投放仅支持商品/分类维度（无品牌、无人群标签路由），更复杂的人群定向投放不在当前基线。
+- **残留风险 2**：`limit=0`（不限领）与 `total=0`（无限量）叠加时存在被刷风险，由运营在配置时合理设置上限控制（非系统强约束）。
 
 ### 分类范围券兑换自洽（P32 修复）
 
