@@ -651,4 +651,41 @@ public interface AppMallErrors {
     ErrorCode ERR_REPORT_NAME_INVALID =
             define("nop.err.mall.report.name-invalid",
                     "报表名不合法", ARG_REPORT_NAME);
+
+    // 积分商城兑换错误码
+    ErrorCode ERR_POINTS_GOODS_NOT_FOUND =
+            define("nop.err.mall.points-goods.not-found",
+                    "积分商品不存在");
+
+    ErrorCode ERR_POINTS_GOODS_NOT_ACTIVE =
+            define("nop.err.mall.points-goods.not-active",
+                    "积分商品不在有效期内或未上架");
+
+    ErrorCode ERR_POINTS_GOODS_NOT_IN_WINDOW =
+            define("nop.err.mall.points-goods.not-in-window",
+                    "积分商品不在兑换时间段内");
+
+    ErrorCode ERR_POINTS_GOODS_SOLD_OUT =
+            define("nop.err.mall.points-goods.sold-out",
+                    "积分商品库存不足");
+
+    ErrorCode ERR_POINTS_GOODS_OVER_LIMIT_PER_USER =
+            define("nop.err.mall.points-goods.over-limit-per-user",
+                    "兑换次数超过每人限兑");
+
+    ErrorCode ERR_POINTS_GOODS_OFF_SHELF =
+            define("nop.err.mall.points-goods.goods-off-shelf",
+                    "积分商品关联零售商品未上架");
+
+    ErrorCode ERR_EXCHANGE_QUANTITY_INVALID =
+            define("nop.err.mall.points-exchange.quantity-invalid",
+                    "兑换数量无效");
+
+    ErrorCode ERR_EXCHANGE_ORDER_NOT_FOUND =
+            define("nop.err.mall.points-exchange.not-found",
+                    "兑换订单不存在");
+
+    ErrorCode ERR_EXCHANGE_STATUS_TRANSITION_INVALID =
+            define("nop.err.mall.points-exchange.status-transition-invalid",
+                    "兑换订单状态切换不合法");
 }

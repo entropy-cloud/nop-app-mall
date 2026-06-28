@@ -46,11 +46,13 @@ drop table litemall_groupon_rules;
 drop table litemall_time_discount;
 drop table litemall_flash_sale;
 drop table litemall_pin_tuan_activity;
+drop table litemall_points_goods;
 drop table litemall_aftersale;
 drop table litemall_groupon;
 drop table litemall_promotion_usage;
 drop table litemall_order_goods;
 drop table litemall_flash_sale_session;
 drop table litemall_pin_tuan_group;
+drop table litemall_points_exchange_order;
 drop table litemall_pin_tuan_member;
 

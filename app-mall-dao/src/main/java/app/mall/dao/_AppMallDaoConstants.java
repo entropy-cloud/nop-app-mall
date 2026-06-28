@@ -468,4 +468,24 @@ public interface _AppMallDaoConstants {
      */
     int COMMENT_AUDIT_STATUS_REJECTED = 2;
                     
+    /**
+     * 积分兑换订单状态: 待处理 
+     */
+    int EXCHANGE_STATUS_PENDING = 0;
+                    
+    /**
+     * 积分兑换订单状态: 已发货 
+     */
+    int EXCHANGE_STATUS_SHIPPED = 10;
+                    
+    /**
+     * 积分兑换订单状态: 已完成 
+     */
+    int EXCHANGE_STATUS_COMPLETED = 20;
+                    
+    /**
+     * 积分兑换订单状态: 已取消 
+     */
+    int EXCHANGE_STATUS_CANCELLED = 30;
+                    
 }

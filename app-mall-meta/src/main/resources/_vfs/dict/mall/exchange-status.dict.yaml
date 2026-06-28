@@ -1,0 +1,23 @@
+# __XGEN_FORCE_OVERRIDE__
+label: 积分兑换订单状态
+locale: zh-CN
+valueType: int
+description: 
+options:
+
+  - label: 待处理
+    value: 0
+    description: 
+  
+  - label: 已发货
+    value: 10
+    description: 
+  
+  - label: 已完成
+    value: 20
+    description: 
+  
+  - label: 已取消
+    value: 30
+    description: 
+  

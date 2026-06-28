@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<sql-lib x:schema="/nop/schema/orm/sql-lib.xdef" xmlns:x="/nop/schema/xdsl.xdef">
+
+    <sqls>
+        <eql name="reduceExchangeStock" sqlMethod="execute">
+            <arg name="id"/>
+            <arg name="num"/>
+
+            <source>
+                update LitemallPointsGoods
+                set exchangeStock = exchangeStock - ${num},
+                    exchangedCount = coalesce(exchangedCount, 0) + ${num},
+                    updateTime = now()
+                where id = ${id} and exchangeStock &gt;= ${num}
+            </source>
+        </eql>
+
+        <eql name="restoreExchangeStock" sqlMethod="execute">
+            <arg name="id"/>
+            <arg name="num"/>
+
+            <source>
+                update LitemallPointsGoods
+                set exchangeStock = exchangeStock + ${num},
+                    exchangedCount = case when coalesce(exchangedCount, 0) &gt; ${num} then exchangedCount - ${num} else 0 end,
+                    updateTime = now()
+                where id = ${id}
+            </source>
+        </eql>
+    </sqls>
+</sql-lib>

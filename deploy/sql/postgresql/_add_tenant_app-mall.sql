@@ -93,6 +93,8 @@ alter table litemall_flash_sale add NOP_TENANT_ID VARCHAR(32) DEFAULT '0' NOT NU
 
 alter table litemall_pin_tuan_activity add NOP_TENANT_ID VARCHAR(32) DEFAULT '0' NOT NULL;
 
+alter table litemall_points_goods add NOP_TENANT_ID VARCHAR(32) DEFAULT '0' NOT NULL;
+
 alter table litemall_aftersale add NOP_TENANT_ID VARCHAR(32) DEFAULT '0' NOT NULL;
 
 alter table litemall_groupon add NOP_TENANT_ID VARCHAR(32) DEFAULT '0' NOT NULL;
@@ -104,6 +106,8 @@ alter table litemall_order_goods add NOP_TENANT_ID VARCHAR(32) DEFAULT '0' NOT N
 alter table litemall_flash_sale_session add NOP_TENANT_ID VARCHAR(32) DEFAULT '0' NOT NULL;
 
 alter table litemall_pin_tuan_group add NOP_TENANT_ID VARCHAR(32) DEFAULT '0' NOT NULL;
+
+alter table litemall_points_exchange_order add NOP_TENANT_ID VARCHAR(32) DEFAULT '0' NOT NULL;
 
 alter table litemall_pin_tuan_member add NOP_TENANT_ID VARCHAR(32) DEFAULT '0' NOT NULL;
 
@@ -248,6 +252,9 @@ alter table litemall_flash_sale add constraint PK_litemall_flash_sale primary ke
 alter table litemall_pin_tuan_activity drop constraint PK_litemall_pin_tuan_activity;
 alter table litemall_pin_tuan_activity add constraint PK_litemall_pin_tuan_activity primary key (NOP_TENANT_ID, id);
 
+alter table litemall_points_goods drop constraint PK_litemall_points_goods;
+alter table litemall_points_goods add constraint PK_litemall_points_goods primary key (NOP_TENANT_ID, id);
+
 alter table litemall_aftersale drop constraint PK_litemall_aftersale;
 alter table litemall_aftersale add constraint PK_litemall_aftersale primary key (NOP_TENANT_ID, id);
 
@@ -265,6 +272,9 @@ alter table litemall_flash_sale_session add constraint PK_litemall_flash_sale_se
 
 alter table litemall_pin_tuan_group drop constraint PK_litemall_pin_tuan_group;
 alter table litemall_pin_tuan_group add constraint PK_litemall_pin_tuan_group primary key (NOP_TENANT_ID, id);
+
+alter table litemall_points_exchange_order drop constraint PK_litemall_points_exchange_order;
+alter table litemall_points_exchange_order add constraint PK_litemall_points_exchange_order primary key (NOP_TENANT_ID, id);
 
 alter table litemall_pin_tuan_member drop constraint PK_litemall_pin_tuan_member;
 alter table litemall_pin_tuan_member add constraint PK_litemall_pin_tuan_member primary key (NOP_TENANT_ID, id);

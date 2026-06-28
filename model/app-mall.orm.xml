@@ -154,6 +154,12 @@
             <option code="APPROVED" label="已通过" value="1"/>
             <option code="REJECTED" label="已拒绝" value="2"/>
         </dict>
+        <dict label="积分兑换订单状态" name="mall/exchange-status" valueType="int" i18n-en:label="Points Exchange Status">
+            <option code="PENDING" label="待处理" value="0"/>
+            <option code="SHIPPED" label="已发货" value="10"/>
+            <option code="COMPLETED" label="已完成" value="20"/>
+            <option code="CANCELLED" label="已取消" value="30"/>
+        </dict>
     </dicts>
 
     <domains>
@@ -2189,6 +2195,112 @@
             <unique-keys>
                 <unique-key columns="userId" name="uk_litemall_user_blacklist_user"/>
             </unique-keys>
+        </entity>
+        <entity className="app.mall.dao.entity.LitemallPointsGoods" createTimeProp="addTime"
+                deleteFlagProp="deleted" displayName="积分商品表" name="app.mall.dao.entity.LitemallPointsGoods"
+                registerShortName="true" tableName="litemall_points_goods" updateTimeProp="updateTime"
+                useLogicalDelete="true">
+            <columns>
+                <column code="ID" displayName="Id" mandatory="true" name="id" primary="true" propId="1"
+                        stdDataType="string" stdSqlType="INTEGER" tagSet="seq" ui:show="R"/>
+                <column code="GOODS_ID" displayName="商品ID" mandatory="true" name="goodsId" propId="2"
+                        stdDataType="string" stdSqlType="INTEGER"/>
+                <column code="PRODUCT_ID" displayName="SKU ID（null表示全部SKU）" name="productId" propId="3"
+                        stdDataType="string" stdSqlType="INTEGER"/>
+                <column code="POINTS_PRICE" displayName="积分单价（单件所需积分）" mandatory="true" name="pointsPrice" propId="4"
+                        stdDataType="int" stdSqlType="INTEGER"/>
+                <column code="EXCHANGE_STOCK" displayName="兑换活动库存" name="exchangeStock" propId="5"
+                        stdDataType="int" stdSqlType="INTEGER"/>
+                <column code="EXCHANGED_COUNT" displayName="已兑换数量" name="exchangedCount" propId="6"
+                        stdDataType="int" stdSqlType="INTEGER"/>
+                <column code="MAX_PER_USER" displayName="每人限兑次数（0=不限）" name="maxPerUser" propId="7"
+                        stdDataType="int" stdSqlType="INTEGER"/>
+                <column code="START_TIME" displayName="兑换开始时间" name="startTime" propId="8"
+                        stdDataType="datetime" stdSqlType="DATETIME"/>
+                <column code="END_TIME" displayName="兑换结束时间" name="endTime" propId="9"
+                        stdDataType="datetime" stdSqlType="DATETIME"/>
+                <column code="STATUS" displayName="状态" name="status" propId="10"
+                        stdDataType="int" stdSqlType="INTEGER" ext:dict="mall/promotion-status"/>
+                <column code="REMARK" displayName="备注" name="remark" precision="255" propId="11"
+                        stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="ADD_TIME" displayName="创建时间" domain="createTime" name="addTime" propId="12"
+                        stdDataType="datetime" stdSqlType="DATETIME" ui:show="X"/>
+                <column code="UPDATE_TIME" displayName="更新时间" domain="updateTime" name="updateTime" propId="13"
+                        stdDataType="datetime" stdSqlType="DATETIME" ui:show="X"/>
+                <column code="DELETED" displayName="逻辑删除" domain="delFlag" name="deleted" propId="14"
+                        stdDataType="boolean" stdSqlType="BOOLEAN" ui:show="X"/>
+            </columns>
+            <relations>
+                <to-one displayName="商品" name="goods" refEntityName="app.mall.dao.entity.LitemallGoods"
+                        tagSet="pub,ref-pub" i18n-en:displayName="Goods">
+                    <join>
+                        <on leftProp="goodsId" rightProp="id"/>
+                    </join>
+                </to-one>
+            </relations>
+        </entity>
+        <entity className="app.mall.dao.entity.LitemallPointsExchangeOrder" createTimeProp="addTime"
+                deleteFlagProp="deleted" displayName="积分兑换订单表" name="app.mall.dao.entity.LitemallPointsExchangeOrder"
+                registerShortName="true" tableName="litemall_points_exchange_order" updateTimeProp="updateTime"
+                useLogicalDelete="true">
+            <columns>
+                <column code="ID" displayName="Id" mandatory="true" name="id" primary="true" propId="1"
+                        stdDataType="string" stdSqlType="INTEGER" tagSet="seq" ui:show="R"/>
+                <column code="USER_ID" displayName="用户ID" domain="userId" mandatory="true" name="userId" precision="50" propId="2"
+                        stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="POINTS_GOODS_ID" displayName="积分商品ID" mandatory="true" name="pointsGoodsId" propId="3"
+                        stdDataType="string" stdSqlType="INTEGER"/>
+                <column code="GOODS_ID" displayName="商品ID" mandatory="true" name="goodsId" propId="4"
+                        stdDataType="string" stdSqlType="INTEGER"/>
+                <column code="PRODUCT_ID" displayName="SKU ID" name="productId" propId="5"
+                        stdDataType="string" stdSqlType="INTEGER"/>
+                <column code="GOODS_NAME" displayName="商品名称" name="goodsName" precision="127" propId="6"
+                        stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="PIC_URL" displayName="商品图片" name="picUrl" precision="255" propId="7"
+                        stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="POINTS_PRICE" displayName="积分单价" mandatory="true" name="pointsPrice" propId="8"
+                        stdDataType="int" stdSqlType="INTEGER"/>
+                <column code="QUANTITY" displayName="兑换数量" mandatory="true" name="quantity" propId="9"
+                        stdDataType="int" stdSqlType="INTEGER"/>
+                <column code="TOTAL_POINTS" displayName="消耗总积分" mandatory="true" name="totalPoints" propId="10"
+                        stdDataType="int" stdSqlType="INTEGER"/>
+                <column code="ADDRESS_ID" displayName="收货地址ID" name="addressId" propId="11"
+                        stdDataType="string" stdSqlType="INTEGER"/>
+                <column code="CONSIGNEE" displayName="收货人" name="consignee" precision="63" propId="12"
+                        stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="PHONE" displayName="联系电话" name="phone" precision="30" propId="13"
+                        stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="FULL_ADDRESS" displayName="完整收货地址" name="fullAddress" precision="255" propId="14"
+                        stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="EXCHANGE_STATUS" displayName="兑换状态" name="exchangeStatus" propId="15"
+                        stdDataType="int" stdSqlType="INTEGER" ext:dict="mall/exchange-status"/>
+                <column code="SHIP_CODE" displayName="物流单号" name="shipCode" precision="63" propId="16"
+                        stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="REMARK" displayName="备注" name="remark" precision="255" propId="17"
+                        stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="ADD_TIME" displayName="创建时间" domain="createTime" name="addTime" propId="18"
+                        stdDataType="datetime" stdSqlType="DATETIME" ui:show="X"/>
+                <column code="UPDATE_TIME" displayName="更新时间" domain="updateTime" name="updateTime" propId="19"
+                        stdDataType="datetime" stdSqlType="DATETIME" ui:show="X"/>
+                <column code="DELETED" displayName="逻辑删除" domain="delFlag" name="deleted" propId="20"
+                        stdDataType="boolean" stdSqlType="BOOLEAN" ui:show="X"/>
+            </columns>
+            <indexes>
+                <index name="idx_points_exchange_order_user" unique="false">
+                    <column name="userId"/>
+                </index>
+                <index name="idx_points_exchange_order_goods" unique="false">
+                    <column name="pointsGoodsId"/>
+                </index>
+            </indexes>
+            <relations>
+                <to-one displayName="积分商品" name="pointsGoods" refEntityName="app.mall.dao.entity.LitemallPointsGoods"
+                        tagSet="pub,ref-pub" i18n-en:displayName="Points Goods">
+                    <join>
+                        <on leftProp="pointsGoodsId" rightProp="id"/>
+                    </join>
+                </to-one>
+            </relations>
         </entity>
     </entities>
 </orm>

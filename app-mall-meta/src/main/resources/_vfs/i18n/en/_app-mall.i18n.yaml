@@ -37,7 +37,9 @@ entity:
     LitemallPinTuanGroup: null
     LitemallPinTuanMember: null
     LitemallPointsAccount: null
+    LitemallPointsExchangeOrder: null
     LitemallPointsFlow: null
+    LitemallPointsGoods: null
     LitemallPromotionActivity: null
     LitemallPromotionTier: null
     LitemallPromotionUsage: null
@@ -629,6 +631,29 @@ prop:
       version: null
       addTime: null
       updateTime: null
+    LitemallPointsExchangeOrder:
+      id: null
+      userId: null
+      pointsGoodsId: null
+      goodsId: null
+      productId: null
+      goodsName: null
+      picUrl: null
+      pointsPrice: null
+      quantity: null
+      totalPoints: null
+      addressId: null
+      consignee: null
+      phone: null
+      fullAddress: null
+      exchangeStatus: null
+      exchangeStatus_label: null
+      shipCode: null
+      remark: null
+      addTime: null
+      updateTime: null
+      deleted: null
+      pointsGoods: Points Goods
     LitemallPointsFlow:
       id: null
       accountId: null
@@ -643,6 +668,24 @@ prop:
       addTime: null
       updateTime: null
       account: Account
+    LitemallPointsGoods:
+      id: null
+      goodsId: null
+      productId: null
+      pointsPrice: null
+      exchangeStock: null
+      exchangedCount: null
+      maxPerUser: null
+      startTime: null
+      endTime: null
+      status: null
+      status_label: null
+      remark: null
+      addTime: null
+      updateTime: null
+      deleted: null
+      goods: Goods
+      goods.name: Goods
     LitemallPromotionActivity:
       id: null
       name: null
@@ -854,3 +897,4 @@ dict:
     mall/topic-status: Topic Status
     mall/groupon-status: Groupon Status
     mall/comment-audit-status: Comment Audit Status
+    mall/exchange-status: Points Exchange Status

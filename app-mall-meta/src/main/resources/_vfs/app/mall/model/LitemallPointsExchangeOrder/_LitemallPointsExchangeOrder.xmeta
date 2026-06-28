@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<meta x:schema="/nop/schema/xmeta.xdef" xmlns:x="/nop/schema/xdsl.xdef" xmlns:i18n-en="i18n-en" xmlns:ext="ext"
+      xmlns:xpl="xpl" ext:model="orm" xmlns:c="c" xmlns:graphql="graphql" xmlns:meta-gen="meta-gen" xmlns:biz="biz"
+      displayName="积分兑换订单表" xmlns:ui="ui" xmlns:orm="orm">
+
+    <entityName>app.mall.dao.entity.LitemallPointsExchangeOrder</entityName>
+
+    <primaryKey>id</primaryKey>
+
+    <x:gen-extends>
+        <meta-gen:DefaultMetaGenExtends xpl:lib="/nop/core/xlib/meta-gen.xlib"/>
+    </x:gen-extends>
+
+    <x:post-extends>
+        <meta-gen:DefaultMetaPostExtends xpl:lib="/nop/core/xlib/meta-gen.xlib"/>
+    </x:post-extends>
+
+    <keys/>
+
+    <props>
+        <prop name="id" displayName="Id" propId="1" tagSet="seq" mandatory="true" queryable="true" sortable="true"
+              insertable="false" updatable="false" ui:show="R">
+            <schema type="java.lang.String"/>
+        </prop>
+        <prop name="userId" displayName="用户ID" propId="2" mandatory="true" queryable="true" sortable="true"
+              insertable="true" updatable="true">
+            <schema domain="userId" type="java.lang.String" precision="50"/>
+        </prop>
+        <prop name="pointsGoodsId" displayName="积分商品ID" propId="3" mandatory="true" queryable="true" sortable="true"
+              insertable="true" updatable="true" ext:relation="pointsGoods">
+            <schema type="java.lang.String"/>
+        </prop>
+        <prop name="goodsId" displayName="商品ID" propId="4" mandatory="true" queryable="true" sortable="true"
+              insertable="true" updatable="true">
+            <schema type="java.lang.String"/>
+        </prop>
+        <prop name="productId" displayName="SKU ID" propId="5" queryable="true" sortable="true" insertable="true"
+              updatable="true">
+            <schema type="java.lang.String"/>
+        </prop>
+        <prop name="goodsName" displayName="商品名称" propId="6" queryable="true" sortable="true" insertable="true"
+              updatable="true">
+            <schema type="java.lang.String" precision="127"/>
+        </prop>
+        <prop name="picUrl" displayName="商品图片" propId="7" queryable="true" sortable="true" insertable="true"
+              updatable="true">
+            <schema type="java.lang.String" precision="255"/>
+        </prop>
+        <prop name="pointsPrice" displayName="积分单价" propId="8" mandatory="true" queryable="true" sortable="true"
+              insertable="true" updatable="true">
+            <schema type="java.lang.Integer"/>
+        </prop>
+        <prop name="quantity" displayName="兑换数量" propId="9" mandatory="true" queryable="true" sortable="true"
+              insertable="true" updatable="true">
+            <schema type="java.lang.Integer"/>
+        </prop>
+        <prop name="totalPoints" displayName="消耗总积分" propId="10" mandatory="true" queryable="true" sortable="true"
+              insertable="true" updatable="true">
+            <schema type="java.lang.Integer"/>
+        </prop>
+        <prop name="addressId" displayName="收货地址ID" propId="11" queryable="true" sortable="true" insertable="true"
+              updatable="true">
+            <schema type="java.lang.String"/>
+        </prop>
+        <prop name="consignee" displayName="收货人" propId="12" queryable="true" sortable="true" insertable="true"
+              updatable="true">
+            <schema type="java.lang.String" precision="63"/>
+        </prop>
+        <prop name="phone" displayName="联系电话" propId="13" queryable="true" sortable="true" insertable="true"
+              updatable="true">
+            <schema type="java.lang.String" precision="30"/>
+        </prop>
+        <prop name="fullAddress" displayName="完整收货地址" propId="14" queryable="true" sortable="true" insertable="true"
+              updatable="true">
+            <schema type="java.lang.String" precision="255"/>
+        </prop>
+        <prop name="exchangeStatus" displayName="兑换状态" propId="15" queryable="true" sortable="true" insertable="true"
+              updatable="true">
+            <schema type="java.lang.Integer" dict="mall/exchange-status"/>
+        </prop>
+        <prop name="shipCode" displayName="物流单号" propId="16" queryable="true" sortable="true" insertable="true"
+              updatable="true">
+            <schema type="java.lang.String" precision="63"/>
+        </prop>
+        <prop name="remark" displayName="备注" propId="17" queryable="true" sortable="true" insertable="true"
+              updatable="true">
+            <schema type="java.lang.String" precision="255"/>
+        </prop>
+        <prop name="addTime" displayName="创建时间" propId="18" queryable="true" sortable="true" insertable="false"
+              updatable="false" internal="true" ui:show="X">
+            <schema domain="createTime" type="java.time.LocalDateTime"/>
+        </prop>
+        <prop name="updateTime" displayName="更新时间" propId="19" queryable="true" sortable="true" insertable="false"
+              updatable="false" internal="true" ui:show="X">
+            <schema domain="updateTime" type="java.time.LocalDateTime"/>
+        </prop>
+        <prop name="deleted" displayName="逻辑删除" propId="20" queryable="true" sortable="true" insertable="false"
+              updatable="true" internal="true" ui:show="X">
+            <schema domain="delFlag" type="java.lang.Boolean"/>
+        </prop>
+        <prop name="pointsGoods" displayName="积分商品" i18n-en:displayName="Points Goods" tagSet="pub,ref-pub"
+              ext:kind="to-one" internal="true" queryable="true" ext:joinLeftProp="pointsGoodsId" ext:joinRightProp="id"
+              insertable="false" updatable="false" mandatory="true" lazy="true">
+            <schema bizObjName="LitemallPointsGoods"/>
+        </prop>
+    </props>
+</meta>

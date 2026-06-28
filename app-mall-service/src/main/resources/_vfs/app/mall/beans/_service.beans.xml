@@ -347,6 +347,13 @@
         <property name="bizObjName" value="LitemallPinTuanActivity"/>
     </bean>
 
+    <bean id="app.mall.service.entity.LitemallPointsGoodsBizModel" ioc:type="@bean:id" ioc:default="true"/>
+
+    <bean id="biz_LitemallPointsGoods" class="io.nop.biz.proxy.BizProxyFactoryBean"
+          ioc:type="app.mall.biz.ILitemallPointsGoodsBiz" ioc:force-lazy-property="true" lazy-init="true" primary="true">
+        <property name="bizObjName" value="LitemallPointsGoods"/>
+    </bean>
+
     <bean id="app.mall.service.entity.LitemallAftersaleBizModel" ioc:type="@bean:id" ioc:default="true"/>
 
     <bean id="biz_LitemallAftersale" class="io.nop.biz.proxy.BizProxyFactoryBean"
@@ -390,6 +397,14 @@
           ioc:type="app.mall.biz.ILitemallPinTuanGroupBiz" ioc:force-lazy-property="true" lazy-init="true"
           primary="true">
         <property name="bizObjName" value="LitemallPinTuanGroup"/>
+    </bean>
+
+    <bean id="app.mall.service.entity.LitemallPointsExchangeOrderBizModel" ioc:type="@bean:id" ioc:default="true"/>
+
+    <bean id="biz_LitemallPointsExchangeOrder" class="io.nop.biz.proxy.BizProxyFactoryBean"
+          ioc:type="app.mall.biz.ILitemallPointsExchangeOrderBiz" ioc:force-lazy-property="true" lazy-init="true"
+          primary="true">
+        <property name="bizObjName" value="LitemallPointsExchangeOrder"/>
     </bean>
 
     <bean id="app.mall.service.entity.LitemallPinTuanMemberBizModel" ioc:type="@bean:id" ioc:default="true"/>

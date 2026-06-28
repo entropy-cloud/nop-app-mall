@@ -1,0 +1,19 @@
+{
+  "id": "",
+  "goodsId": "",
+  "productId": "",
+  "pointsPrice": 0,
+  "exchangeStock": 0,
+  "exchangedCount": 0,
+  "maxPerUser": 0,
+  "startTime": "2000-01-01 14:00:00",
+  "endTime": "2000-01-01 14:00:00",
+  "status": 0,
+  "status_label": "",
+  "remark": "",
+  "addTime": "2000-01-01 14:00:00",
+  "updateTime": "2000-01-01 14:00:00",
+  "deleted": false,
+  "goods": null,
+  "goods.name": ""
+}

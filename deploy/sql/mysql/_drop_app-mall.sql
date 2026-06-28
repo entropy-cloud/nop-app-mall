@@ -46,11 +46,13 @@ drop table  if exists  litemall_groupon_rules;
 drop table  if exists  litemall_time_discount;
 drop table  if exists  litemall_flash_sale;
 drop table  if exists  litemall_pin_tuan_activity;
+drop table  if exists  litemall_points_goods;
 drop table  if exists  litemall_aftersale;
 drop table  if exists  litemall_groupon;
 drop table  if exists  litemall_promotion_usage;
 drop table  if exists  litemall_order_goods;
 drop table  if exists  litemall_flash_sale_session;
 drop table  if exists  litemall_pin_tuan_group;
+drop table  if exists  litemall_points_exchange_order;
 drop table  if exists  litemall_pin_tuan_member;
 

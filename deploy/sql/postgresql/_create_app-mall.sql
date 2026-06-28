@@ -691,6 +691,24 @@ CREATE TABLE litemall_pin_tuan_activity(
   constraint PK_litemall_pin_tuan_activity primary key (id)
 );
 
+CREATE TABLE litemall_points_goods(
+  id INT4 NOT NULL ,
+  goods_id INT4 NOT NULL ,
+  product_id INT4  ,
+  points_price INT4 NOT NULL ,
+  exchange_stock INT4  ,
+  exchanged_count INT4  ,
+  max_per_user INT4  ,
+  start_time TIMESTAMP  ,
+  end_time TIMESTAMP  ,
+  status INT4  ,
+  remark VARCHAR(255)  ,
+  add_time TIMESTAMP  ,
+  update_time TIMESTAMP  ,
+  deleted BOOLEAN  ,
+  constraint PK_litemall_points_goods primary key (id)
+);
+
 CREATE TABLE litemall_aftersale(
   id INT4 NOT NULL ,
   aftersale_sn VARCHAR(63)  ,
@@ -789,6 +807,30 @@ CREATE TABLE litemall_pin_tuan_group(
   update_time TIMESTAMP  ,
   deleted BOOLEAN  ,
   constraint PK_litemall_pin_tuan_group primary key (id)
+);
+
+CREATE TABLE litemall_points_exchange_order(
+  id INT4 NOT NULL ,
+  user_id VARCHAR(50) NOT NULL ,
+  points_goods_id INT4 NOT NULL ,
+  goods_id INT4 NOT NULL ,
+  product_id INT4  ,
+  goods_name VARCHAR(127)  ,
+  pic_url VARCHAR(255)  ,
+  points_price INT4 NOT NULL ,
+  quantity INT4 NOT NULL ,
+  total_points INT4 NOT NULL ,
+  address_id INT4  ,
+  consignee VARCHAR(63)  ,
+  phone VARCHAR(30)  ,
+  full_address VARCHAR(255)  ,
+  exchange_status INT4  ,
+  ship_code VARCHAR(63)  ,
+  remark VARCHAR(255)  ,
+  add_time TIMESTAMP  ,
+  update_time TIMESTAMP  ,
+  deleted BOOLEAN  ,
+  constraint PK_litemall_points_exchange_order primary key (id)
 );
 
 CREATE TABLE litemall_pin_tuan_member(
@@ -1903,6 +1945,36 @@ CREATE TABLE litemall_pin_tuan_member(
                     
       COMMENT ON COLUMN litemall_pin_tuan_activity.deleted IS '逻辑删除';
                     
+      COMMENT ON TABLE litemall_points_goods IS '积分商品表';
+                
+      COMMENT ON COLUMN litemall_points_goods.id IS 'Id';
+                    
+      COMMENT ON COLUMN litemall_points_goods.goods_id IS '商品ID';
+                    
+      COMMENT ON COLUMN litemall_points_goods.product_id IS 'SKU ID（null表示全部SKU）';
+                    
+      COMMENT ON COLUMN litemall_points_goods.points_price IS '积分单价（单件所需积分）';
+                    
+      COMMENT ON COLUMN litemall_points_goods.exchange_stock IS '兑换活动库存';
+                    
+      COMMENT ON COLUMN litemall_points_goods.exchanged_count IS '已兑换数量';
+                    
+      COMMENT ON COLUMN litemall_points_goods.max_per_user IS '每人限兑次数（0=不限）';
+                    
+      COMMENT ON COLUMN litemall_points_goods.start_time IS '兑换开始时间';
+                    
+      COMMENT ON COLUMN litemall_points_goods.end_time IS '兑换结束时间';
+                    
+      COMMENT ON COLUMN litemall_points_goods.status IS '状态';
+                    
+      COMMENT ON COLUMN litemall_points_goods.remark IS '备注';
+                    
+      COMMENT ON COLUMN litemall_points_goods.add_time IS '创建时间';
+                    
+      COMMENT ON COLUMN litemall_points_goods.update_time IS '更新时间';
+                    
+      COMMENT ON COLUMN litemall_points_goods.deleted IS '逻辑删除';
+                    
       COMMENT ON TABLE litemall_aftersale IS '售后表';
                 
       COMMENT ON COLUMN litemall_aftersale.id IS 'Id';
@@ -2066,6 +2138,48 @@ CREATE TABLE litemall_pin_tuan_member(
       COMMENT ON COLUMN litemall_pin_tuan_group.update_time IS '更新时间';
                     
       COMMENT ON COLUMN litemall_pin_tuan_group.deleted IS '逻辑删除';
+                    
+      COMMENT ON TABLE litemall_points_exchange_order IS '积分兑换订单表';
+                
+      COMMENT ON COLUMN litemall_points_exchange_order.id IS 'Id';
+                    
+      COMMENT ON COLUMN litemall_points_exchange_order.user_id IS '用户ID';
+                    
+      COMMENT ON COLUMN litemall_points_exchange_order.points_goods_id IS '积分商品ID';
+                    
+      COMMENT ON COLUMN litemall_points_exchange_order.goods_id IS '商品ID';
+                    
+      COMMENT ON COLUMN litemall_points_exchange_order.product_id IS 'SKU ID';
+                    
+      COMMENT ON COLUMN litemall_points_exchange_order.goods_name IS '商品名称';
+                    
+      COMMENT ON COLUMN litemall_points_exchange_order.pic_url IS '商品图片';
+                    
+      COMMENT ON COLUMN litemall_points_exchange_order.points_price IS '积分单价';
+                    
+      COMMENT ON COLUMN litemall_points_exchange_order.quantity IS '兑换数量';
+                    
+      COMMENT ON COLUMN litemall_points_exchange_order.total_points IS '消耗总积分';
+                    
+      COMMENT ON COLUMN litemall_points_exchange_order.address_id IS '收货地址ID';
+                    
+      COMMENT ON COLUMN litemall_points_exchange_order.consignee IS '收货人';
+                    
+      COMMENT ON COLUMN litemall_points_exchange_order.phone IS '联系电话';
+                    
+      COMMENT ON COLUMN litemall_points_exchange_order.full_address IS '完整收货地址';
+                    
+      COMMENT ON COLUMN litemall_points_exchange_order.exchange_status IS '兑换状态';
+                    
+      COMMENT ON COLUMN litemall_points_exchange_order.ship_code IS '物流单号';
+                    
+      COMMENT ON COLUMN litemall_points_exchange_order.remark IS '备注';
+                    
+      COMMENT ON COLUMN litemall_points_exchange_order.add_time IS '创建时间';
+                    
+      COMMENT ON COLUMN litemall_points_exchange_order.update_time IS '更新时间';
+                    
+      COMMENT ON COLUMN litemall_points_exchange_order.deleted IS '逻辑删除';
                     
       COMMENT ON TABLE litemall_pin_tuan_member IS '拼团参团记录表';
                 

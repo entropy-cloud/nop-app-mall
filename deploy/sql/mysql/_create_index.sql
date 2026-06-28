@@ -36,3 +36,5 @@ CREATE INDEX idx_orderGoods_productId ON litemall_order_goods (PRODUCT_ID);
 CREATE INDEX idx_region_pid ON litemall_region (PID);
 CREATE INDEX idx_searchHistory_userId ON litemall_search_history (USER_ID);
 CREATE INDEX idx_resetCode_mobile ON litemall_reset_code (MOBILE);
+CREATE INDEX idx_points_exchange_order_user ON litemall_points_exchange_order (USER_ID);
+CREATE INDEX idx_points_exchange_order_goods ON litemall_points_exchange_order (POINTS_GOODS_ID);

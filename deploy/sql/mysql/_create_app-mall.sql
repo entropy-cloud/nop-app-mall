@@ -691,6 +691,24 @@ CREATE TABLE litemall_pin_tuan_activity(
   constraint PK_litemall_pin_tuan_activity primary key (ID)
 )CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
 
+CREATE TABLE litemall_points_goods(
+  ID INTEGER NOT NULL    COMMENT 'Id',
+  GOODS_ID INTEGER NOT NULL    COMMENT '商品ID',
+  PRODUCT_ID INTEGER NULL    COMMENT 'SKU ID（null表示全部SKU）',
+  POINTS_PRICE INTEGER NOT NULL    COMMENT '积分单价（单件所需积分）',
+  EXCHANGE_STOCK INTEGER NULL    COMMENT '兑换活动库存',
+  EXCHANGED_COUNT INTEGER NULL    COMMENT '已兑换数量',
+  MAX_PER_USER INTEGER NULL    COMMENT '每人限兑次数（0=不限）',
+  START_TIME DATETIME NULL    COMMENT '兑换开始时间',
+  END_TIME DATETIME NULL    COMMENT '兑换结束时间',
+  STATUS INTEGER NULL    COMMENT '状态',
+  REMARK VARCHAR(255) NULL    COMMENT '备注',
+  ADD_TIME DATETIME NULL    COMMENT '创建时间',
+  UPDATE_TIME DATETIME NULL    COMMENT '更新时间',
+  DELETED BOOLEAN NULL    COMMENT '逻辑删除',
+  constraint PK_litemall_points_goods primary key (ID)
+)CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
+
 CREATE TABLE litemall_aftersale(
   ID INTEGER NOT NULL    COMMENT 'Id',
   AFTERSALE_SN VARCHAR(63) NULL    COMMENT '售后编号',
@@ -789,6 +807,30 @@ CREATE TABLE litemall_pin_tuan_group(
   UPDATE_TIME DATETIME NULL    COMMENT '更新时间',
   DELETED BOOLEAN NULL    COMMENT '逻辑删除',
   constraint PK_litemall_pin_tuan_group primary key (ID)
+)CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
+
+CREATE TABLE litemall_points_exchange_order(
+  ID INTEGER NOT NULL    COMMENT 'Id',
+  USER_ID VARCHAR(50) NOT NULL    COMMENT '用户ID',
+  POINTS_GOODS_ID INTEGER NOT NULL    COMMENT '积分商品ID',
+  GOODS_ID INTEGER NOT NULL    COMMENT '商品ID',
+  PRODUCT_ID INTEGER NULL    COMMENT 'SKU ID',
+  GOODS_NAME VARCHAR(127) NULL    COMMENT '商品名称',
+  PIC_URL VARCHAR(255) NULL    COMMENT '商品图片',
+  POINTS_PRICE INTEGER NOT NULL    COMMENT '积分单价',
+  QUANTITY INTEGER NOT NULL    COMMENT '兑换数量',
+  TOTAL_POINTS INTEGER NOT NULL    COMMENT '消耗总积分',
+  ADDRESS_ID INTEGER NULL    COMMENT '收货地址ID',
+  CONSIGNEE VARCHAR(63) NULL    COMMENT '收货人',
+  PHONE VARCHAR(30) NULL    COMMENT '联系电话',
+  FULL_ADDRESS VARCHAR(255) NULL    COMMENT '完整收货地址',
+  EXCHANGE_STATUS INTEGER NULL    COMMENT '兑换状态',
+  SHIP_CODE VARCHAR(63) NULL    COMMENT '物流单号',
+  REMARK VARCHAR(255) NULL    COMMENT '备注',
+  ADD_TIME DATETIME NULL    COMMENT '创建时间',
+  UPDATE_TIME DATETIME NULL    COMMENT '更新时间',
+  DELETED BOOLEAN NULL    COMMENT '逻辑删除',
+  constraint PK_litemall_points_exchange_order primary key (ID)
 )CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
 
 CREATE TABLE litemall_pin_tuan_member(
@@ -897,6 +939,8 @@ CREATE TABLE litemall_pin_tuan_member(
                 
    ALTER TABLE litemall_pin_tuan_activity COMMENT '拼团活动表';
                 
+   ALTER TABLE litemall_points_goods COMMENT '积分商品表';
+                
    ALTER TABLE litemall_aftersale COMMENT '售后表';
                 
    ALTER TABLE litemall_groupon COMMENT '团购活动表';
@@ -908,6 +952,8 @@ CREATE TABLE litemall_pin_tuan_member(
    ALTER TABLE litemall_flash_sale_session COMMENT '秒杀场次表';
                 
    ALTER TABLE litemall_pin_tuan_group COMMENT '拼团开团记录表';
+                
+   ALTER TABLE litemall_points_exchange_order COMMENT '积分兑换订单表';
                 
    ALTER TABLE litemall_pin_tuan_member COMMENT '拼团参团记录表';
                 

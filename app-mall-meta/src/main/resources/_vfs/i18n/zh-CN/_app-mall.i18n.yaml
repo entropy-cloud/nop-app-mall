@@ -37,7 +37,9 @@ entity:
     LitemallPinTuanGroup: 拼团开团记录表
     LitemallPinTuanMember: 拼团参团记录表
     LitemallPointsAccount: 积分账户表
+    LitemallPointsExchangeOrder: 积分兑换订单表
     LitemallPointsFlow: 积分流水表
+    LitemallPointsGoods: 积分商品表
     LitemallPromotionActivity: 促销活动表（满减送）
     LitemallPromotionTier: 满减档位表
     LitemallPromotionUsage: 满减参与记录表
@@ -629,6 +631,29 @@ prop:
       updateTime: 更新时间
       userId: 用户ID
       version: 数据版本
+    LitemallPointsExchangeOrder:
+      addTime: 创建时间
+      addressId: 收货地址ID
+      consignee: 收货人
+      deleted: 逻辑删除
+      exchangeStatus: 兑换状态
+      exchangeStatus_label: 兑换状态
+      fullAddress: 完整收货地址
+      goodsId: 商品ID
+      goodsName: 商品名称
+      id: Id
+      phone: 联系电话
+      picUrl: 商品图片
+      pointsGoods: 积分商品
+      pointsGoodsId: 积分商品ID
+      pointsPrice: 积分单价
+      productId: SKU ID
+      quantity: 兑换数量
+      remark: 备注
+      shipCode: 物流单号
+      totalPoints: 消耗总积分
+      updateTime: 更新时间
+      userId: 用户ID
     LitemallPointsFlow:
       account: 积分账户
       accountId: 积分账户ID
@@ -643,6 +668,24 @@ prop:
       sourceType: 来源类型
       updateTime: 更新时间
       userId: 用户ID
+    LitemallPointsGoods:
+      addTime: 创建时间
+      deleted: 逻辑删除
+      endTime: 兑换结束时间
+      exchangeStock: 兑换活动库存
+      exchangedCount: 已兑换数量
+      goods: 商品
+      goods.name: 商品
+      goodsId: 商品ID
+      id: Id
+      maxPerUser: 每人限兑次数（0=不限）
+      pointsPrice: 积分单价（单件所需积分）
+      productId: SKU ID（null表示全部SKU）
+      remark: 备注
+      startTime: 兑换开始时间
+      status: 状态
+      status_label: 状态
+      updateTime: 更新时间
     LitemallPromotionActivity:
       addTime: 创建时间
       deleted: 逻辑删除
