@@ -18,7 +18,7 @@
 > **状态更新只改这里，不改 Phase Details 中的状态行。**
 
 - 15. 满减送: `done`（`docs/plans/2026-06-27-1742-1-phase15-full-discount-promotion-plan.md`）
-- 16. 订单项级售后增强: `done`（`docs/plans/2026-06-27-1742-3-phase16-order-item-aftersale-plan.md`）
+- 16. 订单项级售后增强: `done`（`docs/plans/2026-06-27-1742-3-phase16-order-item-aftersale-plan.md`；P16/P21 Deferred successor「售后退货履约」已闭环：`docs/plans/2026-06-28-2042-1-aftersale-return-fulfillment-plan.md` done — GOODS_REQUIRED 走 APPROVED→RETURNED→REFUND 子状态机 + `submitReturnLogistics`/`confirmReturnReceived` mutation + 退货物流字段[returnShipChannel/returnShipSn/returnTime/receiveConfirmTime] + 还库从 refund() 拆到 confirmReturnReceived + Admin 待收货 Tab + 386 测试全绿）
 - 17. 微信小程序订单中心: `todo`
 - 18. Dashboard 重做: `done`（`docs/plans/2026-06-28-1027-1-phase18-dashboard-redesign-plan.md`；4 看板 `@BizQuery`[getDashboardMetrics/getSalesTrend/getRealtimeOrders/getTodoAggregation] + AMIS chart 指标卡/趋势/实时订单流/待办聚合 4 区块 + owner doc 口径；nop-report 引擎按引擎定位归 P19 导出场景）
 - 19. 报表体系扩展: `done`（`docs/plans/2026-06-28-1027-2-phase19-report-system-extension-plan.md`；销售漏斗/用户分析[含生命周期]/商品分析/订单分析/优惠券分析 + 4 报表页 + CSV 导出[E1 抉择 CSV 兜底，nop-report 为 successor]；8 新增 `@BizQuery` 挂 LitemallOrderBizModel[E2 抉择] + SQL-lib `<c:if>` 条件查询 + Java cohort/RFM/lifecycle 分组；289 测试全绿；活动 ROI 归 P22，毛利归 successor）

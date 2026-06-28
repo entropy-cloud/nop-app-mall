@@ -370,10 +370,50 @@
 | -------- | ---- | -------- | ---------- |
 | 可申请 | 该项已满足售后资格，当前尚未提交售后申请 | 发起售后 | 无 |
 | 用户已申请 | 用户已提交售后申请，等待处理 | 取消申请 | 审核通过、审核拒绝 |
-| 管理员审核通过 | 管理员已同意售后申请，等待执行退款或后续处理 | 无 | 执行退款 |
+| 管理员审核通过 | 管理员已同意售后申请，等待执行退款或后续处理 | 无 | 执行退款（仅 GOODS_MISS/GOODS_NEEDLESS）；GOODS_REQUIRED 等待用户回寄 |
+| 用户已退货待收货 | 用户已回寄退货商品，等待管理员确认收货（仅 GOODS_REQUIRED 经此态） | 提交退货物流 | 确认收货并退款 |
 | 管理员退款成功 | 售后退款已完成 | 查看结果 | 无 |
 | 管理员审核拒绝 | 售后申请被拒绝 | 查看结果 | 无 |
 | 用户已取消 | 用户主动撤回售后申请 | 无 | 无 |
+
+### 退货履约（GOODS_REQUIRED）子状态机
+
+退货退款类型（`GOODS_REQUIRED`）需要用户物理回寄商品，管理员确认收货后才执行退款，因此主状态机为其扩展一个 RETURNED 中间态。
+
+**状态流转：**
+
+- `GOODS_MISS`（未收货退款，未发货订单）与 `GOODS_NEEDLESS`（已收货无需退货退款，已收货订单）保持 `APPROVED → REFUND` 直达，不经过 RETURNED。
+- `GOODS_REQUIRED`（退货退款，已收货订单 401/402）走 `APPROVED → RETURNED → REFUND`：
+  1. **APPROVED → RETURNED：** 用户 mutation `submitReturnLogistics(id, returnShipChannel, returnShipSn, ctx)`。守卫 `status==APPROVED && type==GOODS_REQUIRED`，storefront 归属校验（仅售后归属用户可提交）。写入退货运单字段，置 RETURNED。
+  2. **RETURNED → REFUND：** 管理员 mutation `confirmReturnReceived(id, ctx)`。守卫 `status==RETURNED`，写 `receiveConfirmTime`，**执行还库**（GOODS_REQUIRED 的 `addStock` 发生在此），调用 `payService.refund` + 还券 + 还积分 + 通知，置 REFUND。
+
+**抉择 A（主状态机扩展 RETURNED，推荐）vs 备选 B（独立 returnStatus 标志位）：**
+
+- 选 A：在 `mall/aftersale-status` 字典新增 `RETURNED`(6, "用户已退货待收货")，主状态机直接表达售后生命周期。前端 Tab 过滤、状态时间线、订单级进行中聚合均单一来源（`status` 字段）。
+- 否 B：若新增平行 `returnStatus` 标志位 + `returnReceiveTime`，则前端需双字段组合判断"待收货"，订单级 `recomputeOrderAftersaleStatus` 需额外纳入该标志，与既有"售后状态机独立持有"设计（见上文 item 级售后状态存放）相悖，复杂度更高。
+
+**残留风险：** RETURNED 仅对 GOODS_REQUIRED 有意义；`refund()` 守卫按 type 区分（GOODS_REQUIRED 一律拒绝经 `refund()`，要求经 `confirmReturnReceived`；GOODS_MISS/GOODS_NEEDLESS 要求 APPROVED）。上线时已处于 APPROVED 的 GOODS_REQUIRED 售后会"搁浅"（`refund()` 拒绝、`confirmReturnReceived` 要求 RETURNED），需运营对搁浅单手工置 RETURNED 后走正常收货确认。
+
+**退货物流字段（`LitemallAftersale` propId 18-21）：**
+
+- `returnShipChannel`（退货物流公司，varchar 63）
+- `returnShipSn`（退货运单号，varchar 63）
+- `returnTime`（用户退货发货时间，datetime）
+- `receiveConfirmTime`（管理员确认收货时间，datetime）
+
+**还库归属：** GOODS_REQUIRED 的还库（`goodsProductMapper.addStock`）发生在 `confirmReturnReceived`（确认收货时），不再发生在 `refund()`。`refund()` 的还库仅保留 GOODS_MISS（未发货还库）语义；GOODS_NEEDLESS 不还库（货在用户处，用户无需退货）。
+
+**RETURNED 与订单级聚合：** RETURNED 视为进行中态，纳入 `recomputeOrderAftersaleStatus` 与 `hasInProgressAftersaleForItem` 的进行中状态集（`[REQUEST, APPROVED, RETURNED]`），保证订单级 `order.aftersaleStatus` 在 RETURNED 阶段保持 REQUEST，且 item 互斥在 RETURNED 阶段继续生效（同一 `orderItemId` 不可二开售后）。
+
+**Admin 视图：** 后台售后页增"待收货"Tab（filter `status=RETURNED`），单行"确认收货"按钮调 `confirmReturnReceived`；grid 增退货物流列；详情表单回显退货物流字段。
+
+**Non-Goals（移出本节）：**
+
+- 退货入库的库存估值/质检/二次上架流程（仅还库 `addStock`，与既有 `refund()` 还库口径一致）。
+- 第三方物流实时轨迹对接（运单号仅记录与展示）。
+- 小程序前端 UI（外部仓库；本节仅暴露 GraphQL mutation）。
+- 审核通过后通知用户回寄（属 P35 通知中心的新事件投递）。
+- Dashboard 待办计数新增"待收货"桶（RETURNED 在 Admin"待收货"Tab 暴露，不进 Dashboard 计数）。
 
 ### item 级售后状态存放（派生计算）
 
@@ -404,7 +444,7 @@ item 级退款时三个订单级副作用策略：
 - 管理员审核通过后，售后进入待退款或待后续处理状态。
 - 管理员审核拒绝后，本次售后流程结束；订单仍保持既有履约结果。
 - 用户在管理员处理前可以撤回申请；撤回后该次售后流程结束，该项恢复可申请。
-- 当售后类型要求退货退款时，退款完成意味着售后流程闭环；退货入库等实现动作属于技术和履约实现，不在本 owner doc 展开。
+- 当售后类型要求退货退款（GOODS_REQUIRED）时，退款需经 RETURNED 子状态机（用户回寄 → 管理员确认收货 → 退款），详见上文「退货履约（GOODS_REQUIRED）子状态机」段。
 
 ### 售后申请内容
 
