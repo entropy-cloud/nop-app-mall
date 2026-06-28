@@ -19,6 +19,27 @@ body:
         level: primary
         actionType: reload
         target: promotionEffect,couponUsage,pinTuanEffect,flashSaleEffect
+      - type: select
+        name: marketingFormat
+        label: 模板导出
+        value: xlsx
+        options:
+          - label: Excel (xlsx)
+            value: xlsx
+          - label: PDF
+            value: pdf
+      - type: button
+        label: 导出报表
+        level: primary
+        actionType: ajax
+        api:
+          url: '@query:LitemallPromotionActivity__exportMarketingReport'
+          data:
+            renderType: '${marketingFormat}'
+            startDate: "${dateRange[0] ? dateRange[0] | date : ''}"
+            endDate: "${dateRange[1] ? dateRange[1] | date : ''}"
+            promotionActivityId: '${promotionActivityId}'
+          responseType: blob
 
   - type: grid
     columns:
