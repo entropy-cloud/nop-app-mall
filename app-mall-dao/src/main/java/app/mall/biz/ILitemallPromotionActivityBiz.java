@@ -3,12 +3,15 @@ package app.mall.biz;
 
 import io.nop.api.core.annotations.biz.BizMutation;
 import io.nop.api.core.annotations.biz.BizQuery;
+import io.nop.api.core.annotations.biz.RequestBean;
 import io.nop.api.core.annotations.core.Name;
 import io.nop.api.core.annotations.core.Optional;
+import io.nop.api.core.beans.WebContentBean;
 import io.nop.api.core.exceptions.NopException;
 import io.nop.core.context.IServiceContext;
 import io.nop.orm.biz.ICrudBiz;
 
+import app.mall.dao.dto.MarketingReportRequest;
 import app.mall.dao.dto.PromotionEffectivenessBean;
 import app.mall.dao.dto.PromotionResolutionBean;
 import app.mall.dao.entity.LitemallPromotionActivity;
@@ -43,5 +46,9 @@ public interface ILitemallPromotionActivityBiz extends ICrudBiz<LitemallPromotio
                                                          @Optional @Name("startDate") String startDate,
                                                          @Optional @Name("endDate") String endDate,
                                                          IServiceContext context);
+
+    @BizQuery
+    WebContentBean exportMarketingReport(@RequestBean MarketingReportRequest request,
+                                         IServiceContext context);
 }
 

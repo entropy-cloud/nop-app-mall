@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<sql-lib x:schema="/nop/schema/orm/sql-lib.xdef" xmlns:x="/nop/schema/xdsl.xdef">
+<sql-lib x:schema="/nop/schema/orm/sql-lib.xdef" xmlns:x="/nop/schema/xdsl.xdef" xmlns:c="c">
     <sqls>
         <!-- 优惠券核销统计：领取数/已使用数/核销拉动 GMV。
              couponId 可空（空=全量券聚合）；startDate/endDate 由调用方填充 MIN/MAX 时间戳兜底。 -->
@@ -17,7 +17,9 @@
                 FROM litemall_coupon_user cu
                 LEFT JOIN litemall_order o ON o.ID = cu.ORDER_ID AND CAST(o.DELETED AS INT) = 0
                 WHERE CAST(cu.DELETED AS INT) = 0
-                  AND (${couponId} IS NULL OR cu.COUPON_ID = ${couponId})
+                <c:if test="${couponId != null and !couponId.isEmpty()}">
+                  AND cu.COUPON_ID = ${couponId}
+                </c:if>
                   AND cu.ADD_TIME &gt;= ${startDate}
                   AND cu.ADD_TIME &lt;= ${endDate}
             </source>
@@ -87,7 +89,9 @@
                      FROM litemall_pin_tuan_member m
                      INNER JOIN litemall_pin_tuan_group g2 ON g2.ID = m.GROUP_ID
                      WHERE CAST(m.DELETED AS INT) = 0
-                       AND (${activityId} IS NULL OR g2.ACTIVITY_ID = ${activityId})
+                     <c:if test="${activityId != null and !activityId.isEmpty()}">
+                       AND g2.ACTIVITY_ID = ${activityId}
+                     </c:if>
                        AND g2.ADD_TIME &gt;= ${startDate}
                        AND g2.ADD_TIME &lt;= ${endDate}) AS PARTICIPANT_COUNT,
                   (SELECT COALESCE(SUM(o.ACTUAL_PRICE), 0)
@@ -95,12 +99,16 @@
                      INNER JOIN litemall_pin_tuan_group g3 ON g3.ID = m.GROUP_ID
                      LEFT JOIN litemall_order o ON o.ID = m.ORDER_ID AND CAST(o.DELETED AS INT) = 0
                      WHERE CAST(m.DELETED AS INT) = 0
-                       AND (${activityId} IS NULL OR g3.ACTIVITY_ID = ${activityId})
+                     <c:if test="${activityId != null and !activityId.isEmpty()}">
+                       AND g3.ACTIVITY_ID = ${activityId}
+                     </c:if>
                        AND g3.ADD_TIME &gt;= ${startDate}
                        AND g3.ADD_TIME &lt;= ${endDate}) AS TOTAL_GMV
                 FROM litemall_pin_tuan_group g
                 WHERE CAST(g.DELETED AS INT) = 0
-                  AND (${activityId} IS NULL OR g.ACTIVITY_ID = ${activityId})
+                <c:if test="${activityId != null and !activityId.isEmpty()}">
+                  AND g.ACTIVITY_ID = ${activityId}
+                </c:if>
                   AND g.ADD_TIME &gt;= ${startDate}
                   AND g.ADD_TIME &lt;= ${endDate}
             </source>
@@ -130,9 +138,11 @@
                 WHERE CAST(o.DELETED AS INT) = 0
                   AND o.FLASH_SALE_SESSION_ID IS NOT NULL
                   AND CAST(o.ORDER_STATUS AS INT) NOT IN (102, 103)
-                  AND (${flashSaleId} IS NULL OR EXISTS (
+                <c:if test="${flashSaleId != null and !flashSaleId.isEmpty()}">
+                  AND EXISTS (
                        SELECT 1 FROM litemall_flash_sale_session s
-                       WHERE s.ID = o.FLASH_SALE_SESSION_ID AND s.FLASH_SALE_ID = ${flashSaleId}))
+                       WHERE s.ID = o.FLASH_SALE_SESSION_ID AND s.FLASH_SALE_ID = ${flashSaleId})
+                </c:if>
                   AND o.ADD_TIME &gt;= ${startDate}
                   AND o.ADD_TIME &lt;= ${endDate}
             </source>

@@ -20,6 +20,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
+import java.io.File;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -87,6 +88,62 @@ public class TestLitemallPromotionActivityBizModel extends JunitBaseTestCase {
         ApiResponse<?> result = graphQLEngine.executeRpc(ctx);
         assertEquals(0, result.getStatus(), "selectPromotionForOrder failed: " + result);
         return (BigDecimal) result.getData();
+    }
+
+    private ApiResponse<?> callExportMarketingReport(Map<String, Object> data) {
+        ApiRequest<Map<String, Object>> req = ApiRequest.build(data);
+        IGraphQLExecutionContext ctx = graphQLEngine.newRpcContext(
+                GraphQLOperationType.query, "LitemallPromotionActivity__exportMarketingReport", req);
+        return graphQLEngine.executeRpc(ctx);
+    }
+
+    private File renderMarketingReport(Map<String, Object> data) {
+        ApiResponse<?> r = callExportMarketingReport(data);
+        assertEquals(0, r.getStatus(), "exportMarketingReport failed: " + r);
+        File file = WebContentBeanFiles.contentFile(r.getData());
+        assertNotNull(file, "rendered file should not be null: " + r.getData());
+        assertTrue(file.exists(), "rendered file should exist: " + file);
+        return file;
+    }
+
+    @Test
+    public void testExportMarketingReportXlsx() {
+        File f = renderMarketingReport(Map.of("renderType", "xlsx"));
+        assertTrue(f.length() > 0, "marketing xlsx should be non-empty");
+    }
+
+    @Test
+    public void testExportMarketingReportPdf() {
+        File f = renderMarketingReport(Map.of("renderType", "pdf"));
+        assertTrue(f.length() > 0, "marketing pdf should be non-empty");
+    }
+
+    @Test
+    public void testExportMarketingReportWithAttribution() {
+        LitemallPromotionActivity activity = createActiveActivity(_AppMallDaoConstants.DISCOUNT_TYPE_AMOUNT,
+                _AppMallDaoConstants.GOODS_SCOPE_ALL, null, 1);
+        File f = renderMarketingReport(Map.of(
+                "renderType", "xlsx",
+                "promotionActivityId", activity.orm_idString(),
+                "flashSaleId", "non-existent-flash",
+                "pinTuanActivityId", "non-existent-pintuan",
+                "couponId", "non-existent-coupon"));
+        assertTrue(f.length() > 0, "marketing xlsx with attribution params should be non-empty");
+    }
+
+    @Test
+    public void testExportMarketingReportEmptyDataNotError() {
+        ApiResponse<?> r = callExportMarketingReport(Map.of(
+                "renderType", "xlsx",
+                "startDate", "2099-01-01",
+                "endDate", "2099-01-02"));
+        assertEquals(0, r.getStatus(), "empty marketing export should not error: " + r);
+    }
+
+    @Test
+    public void testExportMarketingReportInvalidRenderType() {
+        ApiResponse<?> r = callExportMarketingReport(Map.of("renderType", "docx"));
+        assertEquals(-1, r.getStatus(), "invalid renderType should be rejected: " + r);
     }
 
     @Test

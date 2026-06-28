@@ -1,8 +1,15 @@
 
 package app.mall.service.entity;
 
+import app.mall.biz.ILitemallCouponBiz;
+import app.mall.biz.ILitemallFlashSaleBiz;
+import app.mall.biz.ILitemallPinTuanActivityBiz;
 import app.mall.biz.ILitemallPromotionActivityBiz;
 import app.mall.dao._AppMallDaoConstants;
+import app.mall.dao.dto.CouponUsageStatisticsBean;
+import app.mall.dao.dto.FlashSaleEffectivenessBean;
+import app.mall.dao.dto.MarketingReportRequest;
+import app.mall.dao.dto.PinTuanEffectivenessBean;
 import app.mall.dao.dto.PromotionEffectivenessBean;
 import app.mall.dao.dto.PromotionResolutionBean;
 import app.mall.dao.entity.LitemallPromotionActivity;
@@ -11,15 +18,24 @@ import app.mall.dao.mapper.LitemallMarketingMapper;
 import io.nop.api.core.annotations.biz.BizModel;
 import io.nop.api.core.annotations.biz.BizMutation;
 import io.nop.api.core.annotations.biz.BizQuery;
+import io.nop.api.core.annotations.biz.RequestBean;
 import io.nop.api.core.annotations.core.Name;
 import io.nop.api.core.annotations.core.Optional;
+import io.nop.api.core.annotations.directive.Auth;
 import io.nop.api.core.beans.FilterBeans;
+import io.nop.api.core.beans.WebContentBean;
 import io.nop.api.core.beans.query.QueryBean;
 import io.nop.api.core.exceptions.NopException;
 import io.nop.api.core.json.JSON;
 import io.nop.biz.crud.CrudBizModel;
 import io.nop.core.context.IServiceContext;
+import io.nop.core.lang.eval.IEvalScope;
+import io.nop.core.resource.IResource;
+import io.nop.core.resource.ResourceHelper;
+import io.nop.core.resource.tpl.ITemplateOutput;
 import io.nop.orm.IOrmEntitySet;
+import io.nop.report.core.engine.IReportEngine;
+import io.nop.xlang.api.XLang;
 import jakarta.inject.Inject;
 
 import java.math.BigDecimal;
@@ -30,7 +46,9 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import static app.mall.service.AppMallErrors.ERR_PROMOTION_STATUS_TRANSITION_INVALID;
 
@@ -43,6 +61,18 @@ public class LitemallPromotionActivityBizModel extends CrudBizModel<LitemallProm
     // @SqlLibMapper for aggregation SQL (promotion GMV/discount) that QueryBean cannot express.
     @Inject
     LitemallMarketingMapper marketingMapper;
+
+    @Inject
+    IReportEngine reportEngine;
+
+    @Inject
+    ILitemallFlashSaleBiz flashSaleBiz;
+
+    @Inject
+    ILitemallPinTuanActivityBiz pinTuanActivityBiz;
+
+    @Inject
+    ILitemallCouponBiz couponBiz;
 
     private static final Timestamp MIN_TIMESTAMP = Timestamp.valueOf("1970-01-01 00:00:00");
     private static final Timestamp MAX_TIMESTAMP = Timestamp.valueOf("2099-12-31 23:59:59");
@@ -96,6 +126,89 @@ public class LitemallPromotionActivityBizModel extends CrudBizModel<LitemallProm
             return marketingMapper.getPromotionEffectivenessByActivity(activityId, start, end);
         }
         return marketingMapper.getPromotionEffectiveness(start, end);
+    }
+
+    @Override
+    @BizQuery
+    @Auth(roles = "admin")
+    public WebContentBean exportMarketingReport(@RequestBean MarketingReportRequest request,
+                                                IServiceContext context) {
+        String safeType = ReportRenderTypes.validate(request.getRenderType());
+        IEvalScope scope = XLang.newEvalScope();
+        scope.setLocalValue("promotionEffect", buildPromotionEffectDataSet(
+                getPromotionEffectiveness(request.getPromotionActivityId(),
+                        request.getStartDate(), request.getEndDate(), context)));
+        scope.setLocalValue("flashSaleEffect", buildFlashSaleEffectDataSet(
+                flashSaleBiz.getFlashSaleEffectiveness(request.getFlashSaleId(),
+                        request.getStartDate(), request.getEndDate(), context)));
+        scope.setLocalValue("pinTuanEffect", buildPinTuanEffectDataSet(
+                pinTuanActivityBiz.getPinTuanEffectiveness(request.getPinTuanActivityId(),
+                        request.getStartDate(), request.getEndDate(), context)));
+        scope.setLocalValue("couponUsage", buildCouponUsageDataSet(
+                couponBiz.getCouponUsageStatistics(request.getCouponId(),
+                        request.getStartDate(), request.getEndDate(), context)));
+
+        IResource resource = ResourceHelper.getTempResource("rpt");
+        try {
+            ITemplateOutput output = reportEngine.getRenderer(
+                    "/nop/main/report/marketing-effect.xpt.xml", safeType);
+            output.generateToResource(resource, scope);
+            String fileName = "marketing-effect." + safeType;
+            return new WebContentBean("application/octet-stream", resource.toFile(), fileName);
+        } catch (Exception e) {
+            resource.delete();
+            throw NopException.adapt(e);
+        }
+    }
+
+    private static List<Map<String, Object>> buildPromotionEffectDataSet(PromotionEffectivenessBean bean) {
+        Map<String, Object> m = new LinkedHashMap<>();
+        m.put("promotedOrderCount", bean != null ? bean.getPromotedOrderCount() : 0);
+        m.put("totalGmv", bean != null && bean.getTotalGmv() != null ? bean.getTotalGmv().toPlainString() : "0");
+        m.put("totalDiscount", bean != null && bean.getTotalDiscount() != null ? bean.getTotalDiscount().toPlainString() : "0");
+        m.put("participantCount", bean != null ? bean.getParticipantCount() : 0);
+        return Collections.singletonList(m);
+    }
+
+    private static List<Map<String, Object>> buildFlashSaleEffectDataSet(FlashSaleEffectivenessBean bean) {
+        Map<String, Object> m = new LinkedHashMap<>();
+        m.put("dealOrderCount", bean != null ? bean.getDealOrderCount() : 0);
+        m.put("totalGmv", bean != null && bean.getTotalGmv() != null ? bean.getTotalGmv().toPlainString() : "0");
+        m.put("participantCount", bean != null ? bean.getParticipantCount() : 0);
+        m.put("soldOutRate", bean != null && bean.getSoldOutRate() != null ? bean.getSoldOutRate().toPlainString() : "0");
+        m.put("rejectedCount", bean != null ? bean.getRejectedCount() : 0);
+        return Collections.singletonList(m);
+    }
+
+    private static List<Map<String, Object>> buildPinTuanEffectDataSet(PinTuanEffectivenessBean bean) {
+        int openedGroups = bean != null ? bean.getOpenedGroups() : 0;
+        int successGroups = bean != null ? bean.getSuccessGroups() : 0;
+        Map<String, Object> m = new LinkedHashMap<>();
+        m.put("openedGroups", openedGroups);
+        m.put("successGroups", successGroups);
+        m.put("participantCount", bean != null ? bean.getParticipantCount() : 0);
+        m.put("totalGmv", bean != null && bean.getTotalGmv() != null ? bean.getTotalGmv().toPlainString() : "0");
+        m.put("successRate", ratio(successGroups, openedGroups));
+        return Collections.singletonList(m);
+    }
+
+    private static List<Map<String, Object>> buildCouponUsageDataSet(CouponUsageStatisticsBean bean) {
+        int claimedCount = bean != null ? bean.getClaimedCount() : 0;
+        int usedCount = bean != null ? bean.getUsedCount() : 0;
+        Map<String, Object> m = new LinkedHashMap<>();
+        m.put("claimedCount", claimedCount);
+        m.put("usedCount", usedCount);
+        m.put("pulledGmv", bean != null && bean.getPulledGmv() != null ? bean.getPulledGmv().toPlainString() : "0");
+        m.put("usedRate", ratio(usedCount, claimedCount));
+        return Collections.singletonList(m);
+    }
+
+    private static BigDecimal ratio(int numerator, int denominator) {
+        if (denominator <= 0) {
+            return BigDecimal.ZERO;
+        }
+        return BigDecimal.valueOf(numerator)
+                .divide(BigDecimal.valueOf(denominator), 4, RoundingMode.HALF_UP);
     }
 
     @Override
