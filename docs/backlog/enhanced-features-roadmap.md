@@ -62,7 +62,7 @@
 | 字典管理 | nop-sys | 已引入 | 售后原因字典化（仅退款/退货退款两类） |
 | 通知模板 | nop-sys NopSysNoticeTemplate | 已引入 | 站内信/消息中心的模板复用 |
 | 定时任务调度 | nop-job-local | 已引入（Phase 11） | 秒杀场次状态切换、拼团超时失败、订单超时取消；签到采用即时计算无需调度 |
-| 报表引擎 | nop-report | 未引入 | Dashboard 看板、报表体系扩展 |
+| 报表引擎 | nop-report | 已引入（nop-report-core + nop-report-pdf，计划 `2026-06-28-2352-1`） | 模板化导出（商品 + funnel/product/order 报表 xlsx/pdf）；Dashboard 看板已由 AMIS chart 交付 |
 | SMS/Email 通道 | nop-integration | 未引入 | 站内信可扩展为多渠道通知 |
 | 文件存储 | nop-integration-file-* | 未引入 | 素材库的文件管理 |
 
@@ -91,8 +91,8 @@
 | 15 | 满减送 | `marketing-and-promotions.md` | Phase 5 + Phase 5b | — |
 | 16 | 订单项级售后增强 | `order-and-cart.md` | Phase 5c | — |
 | 17 | 微信小程序订单中心 | `order-and-cart.md` | Phase 5b | Protected Area (ask-first) |
-| 18 | Dashboard 重做 | `system-configuration.md` | Phase 13 | nop-report（需引入） |
-| 19 | 报表体系扩展 | `system-configuration.md` | Phase 13 | nop-report（需引入） |
+| 18 | Dashboard 重做 | `system-configuration.md` | Phase 13 | nop-report（已引入：core+pdf，导出场景） |
+| 19 | 报表体系扩展 | `system-configuration.md` | Phase 13 | nop-report（已引入：core+pdf + `.xpt.xml` 模板） |
 | 20 | 用户运营工作台 | `system-configuration.md` | Phase 1 + Phase 13 | nop-auth |
 | 21 | 订单运营工作台 | `system-configuration.md` | Phase 5 + Phase 5b + Phase 5c | — |
 | 22 | 营销活动管理后台 | `system-configuration.md` | Phase 15 + Phase 23 + Phase 24 + Phase 25 | — |
@@ -190,7 +190,7 @@
 - 销售趋势图（时/天/周/月 + 同环比）
 - 实时订单流
 - 待办事项聚合（待发货/待退款/售后待审核/库存预警）
-- 引入 nop-report 依赖
+- 引入 nop-report 依赖 ✅（已由 successor 计划 `2026-06-28-2352-1` 交付：nop-report-core + nop-report-pdf + `.xpt.xml` 模板，提供商品/报表 xlsx/pdf 导出）
 
 **模块：** app-mall-service、app-mall-web
 

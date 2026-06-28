@@ -88,6 +88,7 @@ Required Skill: `nop-backend-dev`, `nop-frontend-dev`, `nop-testing`
 - [x] **Skill Loading Gate:** 已加载 `nop-backend-dev` + `nop-frontend-dev`，并读取相关平台文档。
 - [x] **Decision — 看板技术方案：** 选项 B（AMIS chart + 现有统计 API）落地。
 - [x] **Add: 引入 nop-report 依赖（若选 A）。** N/A（选 B，不引入 nop-report）。
+  - **Reconcile（2026-06-29）**: 本计划选 AMIS Option B 交付**可视化看板**，与 successor 计划 `docs/plans/2026-06-28-2352-1-nop-report-engine-introduction-plan.md` 引入 nop-report 交付**模板化导出（xlsx/pdf）**为不同能力面，两者并行不冲突。本 Decision 状态不变（看板仍由 AMIS 承载）。
 - [x] **Add: 后台统计看板页面。** 已新增 `app-mall-web/.../mall/stat/stat-dashboard.page.yaml`。
 - [x] **Add: 菜单注册。** 已开放 `stat-manage` 菜单入口。
 - [x] **Proof: 编译验证 + 页面渲染冒烟。** `./mvnw -pl app-mall-dao,app-mall-service,app-mall-web,app-mall-app -am -DskipTests compile` -> BUILD SUCCESS。

@@ -169,6 +169,7 @@ Exit Criteria:
 - Classification: `out-of-scope improvement`
 - Why Not Blocking Closure: 导入已用 `ExcelHelper` xlsx（in-scope，有先例）；导出在无平台 xlsx 写出 helper 时走 CSV 兜底，数据导出能力不缺。
 - Successor Required: yes（当需要模板化 xlsx 导出时，可随 nop-report 引入续作）
+- **Successor Closed（2026-06-29）**: 已由 successor 计划 `docs/plans/2026-06-28-2352-1-nop-report-engine-introduction-plan.md` 关闭——`LitemallGoods__exportGoodsReport` 经 `IReportEngine` + `goods-export.xpt.xml` 模板提供商品 xlsx/pdf 模板化导出；CSV 兜底（`exportGoods`）保留。
 
 ## Closure
 

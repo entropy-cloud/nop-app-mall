@@ -164,6 +164,7 @@ Exit Criteria:
 - Classification: `out-of-scope improvement`（仅当 E1 Explore 结论为 CSV fallback 时适用）
 - Why Not Blocking Closure: 导出方式由 E1 Explore 在实施期决议；若 nop-report 可集成则已 in-scope 交付 xlsx/pdf，否则 CSV 兜底已满足基线数据导出。
 - Successor Required: yes（仅 CSV 兜底情形下，PDF/Excel 模板化报表为 successor）
+- **Successor Closed（2026-06-29）**: 已由 successor 计划 `docs/plans/2026-06-28-2352-1-nop-report-engine-introduction-plan.md` 关闭——funnel/product/order 三报表的 xlsx/pdf 模板化导出已交付（`exportReport` + `.xpt.xml` 模板）；用户分析/优惠券分析报表导出为本计划 successor 之 successor（同模式扩展）。
 
 ### 支付方式占比深度分析
 

@@ -25,6 +25,7 @@
 - **信心水平**: 确定
 - **误报排除**: glob 全工程扫描三类目标均 0 命中
 - **复核状态**: 已保留
+- **Remediation（2026-06-29）**: nop-report 引擎+模板部分已由 successor 计划 `docs/plans/2026-06-28-2352-1-nop-report-engine-introduction-plan.md` remediate——引入 `nop-report-core`+`nop-report-pdf` 依赖 + 4 个 `.xpt.xml` 模板（goods-export/sales-funnel/product-analysis/order-analysis）+ `exportGoodsReport`/`exportReport` 两个 `@BizQuery` 经 `IReportEngine` 渲染 xlsx/pdf。**后台看板部分**已由 AMIS chart 关闭（`2026-06-17-1830` Phase 2 Option B + P18 重做）。本维度三条缺口（依赖/模板/看板）至此全部关闭。
 
 ### [维度01-3] roadmap "Current Baseline" 文字与 Phase Status 自相矛盾
 - **文件**: `docs/backlog/implementation-roadmap.md:14-33` 与 `:61-74`

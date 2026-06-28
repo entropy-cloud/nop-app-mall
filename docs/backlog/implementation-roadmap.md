@@ -52,7 +52,7 @@
 | 字典管理 | `nop-sys` | `NopSysDict` + `NopSysDictOption`；已引入依赖 |
 | 通知模板 | `nop-sys` | `NopSysNoticeTemplate`；已引入依赖 |
 | 定时任务调度 | `nop-job-local` | CRON/fixed-rate/fixed-delay 调度引擎；已引入依赖（Phase 11 done） |
-| 报表引擎 | `nop-report` | 报表定义/数据集/数据源/权限/导出；**未引入依赖** |
+| 报表引擎 | `nop-report` | 报表定义/数据集/数据源/权限/导出；**已引入依赖**（nop-report-core + nop-report-pdf，Phase 13 L381/L383 补全：IReportEngine + `.xpt.xml` 模板导出，计划 `2026-06-28-2352-1`） |
 | SMS/Email 通道 | `nop-integration` | `ISmsSender` / `IEmailSender` 接口 + 多供应商实现；**未引入依赖** |
 | 文件存储 | `nop-integration-file-*` | 本地/OSS/SFTP 后端；**未引入依赖** |
 
@@ -72,7 +72,7 @@
 
 **Phase 11/13 partial 说明：**
 - Phase 11：系统配置/日志/公告/文件已交付；`nop-job-local` 调度引擎已引入（5 个定时任务自动执行：cancelExpiredOrders/confirmExpiredOrders/expireCoupons/expireGroupons/commentWindowExpire）
-- Phase 13：3 个统计 API（getOrderStatistics/getGoodsSalesRanking/getUserStatistics）+ SQL 数据集已交付；`nop-report` 引擎未引入，无看板模板和导出能力
+- Phase 13：3 个统计 API（getOrderStatistics/getGoodsSalesRanking/getUserStatistics）+ SQL 数据集已交付；后台统计看板由 AMIS chart 交付（P18 增强）；`nop-report` 引擎已引入（nop-report-core + nop-report-pdf，计划 `2026-06-28-2352-1`）——`IReportEngine` + `.xpt.xml` 模板提供商品导出与 funnel/product/order 报表的 xlsx/pdf 模板化导出（CSV 兜底保留）
 
 ---
 
@@ -103,7 +103,7 @@
 | 10 | 内容营销与反馈 | `marketing-and-promotions.md` | Phase 2 | — |
 | 11 | 系统运营与定时任务 | `system-configuration.md` | Phase 5；Phase 8/9（可选延后） | nop-sys NopSysVariable; nop-job-local（已引入）; nop-integration-file-*（需引入） |
 | 12 | 通知系统 | `system-configuration.md` | Phase 5b + Phase 5c | nop-integration ISmsSender/IEmailSender（需引入）; nop-sys NopSysNoticeTemplate |
-| 13 | 报表与统计 | `system-configuration.md` | Phase 5 + Phase 8/9 | nop-report（需引入）；仅需 SQL 数据集和报表模板 |
+| 13 | 报表与统计 | `system-configuration.md` | Phase 5 + Phase 8/9 | nop-report（已引入：core+pdf + `.xpt.xml` 模板）；SQL 数据集已交付 |
 | 14 | 微信支付集成 | `system-baseline.md` | Phase 5b | Protected Area (ask-first) |
 
 ---
@@ -378,9 +378,9 @@
 **目标：** 后台查看订单/商品/用户/运营统计。
 
 **交付范围：**
-- 引入 nop-report 依赖
+- 引入 nop-report 依赖 ✅（nop-report-core + nop-report-pdf，计划 `2026-06-28-2352-1`）
 - 定义数据集（SQL）：订单统计、商品统计、用户统计
-- 创建报表模板
+- 创建报表模板 ✅（`_vfs/nop/main/report/*.xpt.xml`：goods-export/sales-funnel/product-analysis/order-analysis，计划 `2026-06-28-2352-1`）
 - 后台统计看板
 - 单元测试
 

@@ -145,6 +145,7 @@ Exit Criteria:
 - Classification: `out-of-scope improvement`
 - Why Not Blocking Closure: Dashboard 可视化用 AMIS chart 完整覆盖；nop-report 价值在可导出报表，属 P19 导出场景，非看板阻塞项。
 - Successor Required: yes
+- **Successor Closed（2026-06-29）**: 已由 successor 计划 `docs/plans/2026-06-28-2352-1-nop-report-engine-introduction-plan.md` 关闭——引入 `nop-report-core`+`nop-report-pdf` + 4 个 `.xpt.xml` 模板 + `exportGoodsReport`/`exportReport` xlsx/pdf 导出能力。
 
 ## Closure
 
