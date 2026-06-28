@@ -22,6 +22,8 @@ import io.nop.commons.util.StringHelper;
 import io.nop.core.context.IServiceContext;
 import io.nop.core.lang.json.JsonTool;
 import jakarta.inject.Inject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -37,6 +39,8 @@ import static app.mall.service.AppMallErrors.ERR_RECHARGE_USE_REAL_PAYMENT;
 
 @BizModel("LitemallRecharge")
 public class LitemallRechargeBizModel extends CrudBizModel<LitemallRecharge> implements ILitemallRechargeBiz {
+    private static final Logger LOG = LoggerFactory.getLogger(LitemallRechargeBizModel.class);
+
     // Recharge packages are stored as a JSON array in LitemallSystem (keyName=recharge_packages)
     // rather than a dedicated ORM entity — see plan Phase 2 Decision (ORM change is a Protected Area).
     public static final String CONFIG_RECHARGE_PACKAGES = "recharge_packages";
@@ -201,6 +205,81 @@ public class LitemallRechargeBizModel extends CrudBizModel<LitemallRecharge> imp
             return;
         }
         creditRecharge(recharge, context);
+    }
+
+    @Override
+    @BizAction
+    public void refundRechargeByNotify(@Name("outTradeNo") String outTradeNo,
+                                       @Optional @Name("outRefundNo") String outRefundNo,
+                                       IServiceContext context) {
+        // Trusted entry invoked by PaymentCallbackImpl.onRefundSuccess after channel-side refund
+        // signature verification, when outTradeNo starts with the RC prefix (a recharge payment).
+        // Symmetric reversal of confirmRechargeByNotify: debits amount+giftAmount back so the wallet
+        // reflects that the channel returned the money to the user. Idempotent and replay-safe.
+        if (StringHelper.isEmpty(outTradeNo) || !outTradeNo.startsWith(OUT_TRADE_NO_PREFIX)) {
+            return;
+        }
+        String rechargeId;
+        try {
+            rechargeId = Long.toString(Long.parseLong(outTradeNo.substring(OUT_TRADE_NO_PREFIX.length())));
+        } catch (NumberFormatException e) {
+            return;
+        }
+        // ignoreUnknown=true: a non-existent rechargeId (e.g. channel-side test refund with an RC
+        // id that maps to no row) returns null rather than throwing UnknownEntityException.
+        LitemallRecharge recharge = get(rechargeId, true, context);
+        if (recharge == null) {
+            return;
+        }
+        // Idempotent guard 1: UNPAID was never credited, nothing to reverse.
+        if (recharge.getPayStatus() == _AppMallDaoConstants.PAY_STATUS_UNPAID) {
+            return;
+        }
+        // Idempotent guard 2: REFUNDED already reversed, channel replay is a no-op.
+        if (recharge.getPayStatus() == _AppMallDaoConstants.PAY_STATUS_REFUNDED) {
+            return;
+        }
+        // Only PAID proceeds to reversal. Any other unexpected status is surfaced (not silently
+        // advanced) — operator investigates via the WARN log + adminAdjust manual reconciliation.
+        if (recharge.getPayStatus() != _AppMallDaoConstants.PAY_STATUS_PAID) {
+            LOG.warn("refundRechargeByNotify: recharge {} in unexpected payStatus {}, skipping. outRefundNo={}",
+                    rechargeId, recharge.getPayStatus(), outRefundNo);
+            return;
+        }
+
+        String userId = recharge.getUserId();
+        BigDecimal total = nvl(recharge.getAmount()).add(nvl(recharge.getGiftAmount()));
+        try {
+            walletBiz.debitBalance(userId, total,
+                    _AppMallDaoConstants.WALLET_CHANGE_TYPE_REFUND,
+                    LitemallWalletBizModel.SOURCE_TYPE_RECHARGE_REFUND,
+                    rechargeId,
+                    "充值退款回冲 " + rechargeId,
+                    context);
+        } catch (NopException e) {
+            // D1a: ERR_WALLET_INSUFFICIENT — user spent the recharged balance before the refund
+            // notify arrived. Preserve the debitBalance fund-safety invariant (no negative balance):
+            // do NOT advance REFUNDED, surface for manual reconciliation (adminAdjust).
+            // D1b: ERR_WALLET_VERSION_CONFLICT — concurrent refund notifies for the same rechargeId
+            // raced on the wallet row version; the optimistic lock guarantees no double-debit (only
+            // one updateBalanceIfVersion hits affected=1), so the loser treats this as idempotent
+            // no-op. The winner already advanced payStatus to REFUNDED; the next channel retry will
+            // hit idempotent guard 2. Log WARN (symmetric with D1a and the order-side onRefundSuccess
+            // WARN at PaymentCallbackImpl:118) to leave an observable trace.
+            LOG.warn("refundRechargeByNotify: wallet debit failed for recharge {} (userId={}, outRefundNo={}). "
+                    + "errorCode={}, message={}. Manual reconciliation may be required; payStatus stays PAID.",
+                    rechargeId, userId, outRefundNo,
+                    e.getErrorCode() == null ? null : e.getErrorCode().toString(), e.getMessage());
+            return;
+        }
+
+        // debitBalance internally clears the entity session cache for the optimistic-lock UPDATE,
+        // detaching the recharge entity from the session. Reload it fresh before advancing status.
+        LitemallRecharge fresh = get(rechargeId, false, context);
+        fresh.setPayStatus(_AppMallDaoConstants.PAY_STATUS_REFUNDED);
+        updateEntity(fresh, "refundRechargeByNotify", context);
+        LOG.info("refundRechargeByNotify: reversed recharge {} (userId={}, amount+gift={}, outRefundNo={})",
+                rechargeId, userId, total, outRefundNo);
     }
 
     private LitemallRecharge creditRecharge(LitemallRecharge recharge, IServiceContext context) {

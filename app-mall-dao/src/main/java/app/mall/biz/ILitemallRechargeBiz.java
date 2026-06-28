@@ -39,4 +39,20 @@ public interface ILitemallRechargeBiz extends ICrudBiz<LitemallRecharge>{
     void confirmRechargeByNotify(@Name("outTradeNo") String outTradeNo,
                                  @Name("transactionId") String transactionId,
                                  IServiceContext context);
+
+    /**
+     * Trusted internal entry: reverse a PAID recharge (debit amount+giftAmount) after a channel-side
+     * refund async notify (WeChat/Alipay merchant-backend refund of the original recharge payment).
+     * Idempotent — already-REFUNDED recharges are skipped, UNPAID recharges (never credited) are
+     * skipped, and optimistic-version conflicts on the wallet are caught + logged as a no-op (the
+     * winner of the concurrent retry already completed the reversal). Insufficient balance degrades
+     * safely: logs a WARN for manual reconciliation without advancing REFUNDED, preserving the
+     * debitBalance fund-safety invariant (no negative balance). Not exposed as GraphQL (same
+     * fund-safety model as {@code confirmRechargeByNotify}). Invoked by {@code PaymentCallbackImpl}
+     * via injection when an {@code onRefundSuccess} notify's outTradeNo starts with {@code RC}.
+     */
+    @BizAction
+    void refundRechargeByNotify(@Name("outTradeNo") String outTradeNo,
+                                @Optional @Name("outRefundNo") String outRefundNo,
+                                IServiceContext context);
 }

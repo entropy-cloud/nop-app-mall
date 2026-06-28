@@ -75,7 +75,7 @@ public class PaymentCallbackImpl implements IPaymentCallback {
     }
 
     /**
-     * Refund async-notify reconciliation (P30, closes the P29 deferred "退款异步通知流程").
+     * Refund async-notify reconciliation (P30 order-side + P29 deferred successor recharge-side).
      *
      * <p>The synchronous refund path ({@code LitemallAftersaleBizModel.refund} / groupon / pin-tuan
      * refund) already advances the order and aftersale status on a synchronous channel success.
@@ -86,6 +86,13 @@ public class PaymentCallbackImpl implements IPaymentCallback {
      * warning for manual intervention rather than silently advancing, because the async notify alone
      * does not carry enough context (which aftersale line, restock, coupon/points return) to drive
      * the full refund side-effects safely.
+     *
+     * <p><b>Recharge-side reversal (P29 deferred successor):</b> when the refunded outTradeNo is a
+     * recharge payment ({@code RC} prefix), the notify is routed to
+     * {@code rechargeBiz.refundRechargeByNotify} which debits amount+giftAmount back from the wallet
+     * and advances {@code payStatus} PAID → REFUNDED. Idempotent (REFUNDED/UNPAID no-op) and
+     * degrades safely on insufficient balance (WARN, no advance). See
+     * {@code LitemallRechargeBizModel.refundRechargeByNotify}.
      */
     @Override
     public void onRefundSuccess(String outTradeNo, String outRefundNo) {
@@ -94,9 +101,11 @@ public class PaymentCallbackImpl implements IPaymentCallback {
             LOG.warn("onRefundSuccess: empty outTradeNo, ignoring");
             return;
         }
-        // Recharge refunds are not tracked here (recharge has no refund flow in baseline).
+        // Recharge-channel refund: reverse the wallet credit (amount+giftAmount) and advance payStatus.
         if (outTradeNo.startsWith(RECHARGE_OUT_TRADE_NO_PREFIX)) {
-            LOG.info("onRefundSuccess: ignoring recharge-channel refund notify for outTradeNo={}", outTradeNo);
+            rechargeBiz.refundRechargeByNotify(outTradeNo, outRefundNo, systemContext);
+            LOG.info("onRefundSuccess: reconciled recharge-channel refund for outTradeNo={}, outRefundNo={}",
+                    outTradeNo, outRefundNo);
             return;
         }
         LitemallOrder order = findOrderByOrderSn(outTradeNo, systemContext);

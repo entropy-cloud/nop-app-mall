@@ -36,6 +36,11 @@ public class LitemallWalletBizModel extends CrudBizModel<LitemallWallet> impleme
     public static final String SOURCE_TYPE_RECHARGE = "recharge";
     public static final String SOURCE_TYPE_PAY = "pay";
     public static final String SOURCE_TYPE_ADMIN_ADJUST = "admin-adjust";
+    // Recharge-channel refund async reconciliation (P29 deferred successor). Named recharge-refund
+    // rather than the owner-doc-reserved bare "refund" so the source remains unambiguously attributable
+    // to a recharge reversal (symmetric with SOURCE_TYPE_RECHARGE=recharge) and stays distinguishable
+    // from any future "order refund returns to wallet" scenario. Owner doc updated to record this choice.
+    public static final String SOURCE_TYPE_RECHARGE_REFUND = "recharge-refund";
 
     private static final BigDecimal ZERO = BigDecimal.ZERO;
 
