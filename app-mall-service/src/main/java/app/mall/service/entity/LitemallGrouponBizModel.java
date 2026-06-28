@@ -293,7 +293,9 @@ public class LitemallGrouponBizModel extends CrudBizModel<LitemallGroupon> imple
         // Notification is a fire-and-forget side effect: run after commit so its failure cannot roll back the refund.
         final String orderSn = order.getOrderSn();
         final String mobile = order.getMobile();
-        txn().afterCommit(null, () -> notificationService.sendGrouponFailRefundNotification(orderSn, mobile));
+        final String refundUserId = notificationService.isEventMessageEnabled("groupon-fail", context)
+                ? order.getUserId() : null;
+        txn().afterCommit(null, () -> notificationService.sendGrouponFailRefundNotification(orderSn, mobile, refundUserId));
     }
 
     private void returnOrderDeductedPoints(LitemallOrder order, IServiceContext context) {

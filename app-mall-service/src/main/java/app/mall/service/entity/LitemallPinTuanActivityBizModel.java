@@ -398,7 +398,9 @@ public class LitemallPinTuanActivityBizModel extends CrudBizModel<LitemallPinTua
 
         final String orderSn = order.getOrderSn();
         final String mobile = order.getMobile();
-        txn().afterCommit(null, () -> notificationService.sendPinTuanFailRefundNotification(orderSn, mobile));
+        final String refundUserId = notificationService.isEventMessageEnabled("pintuan-fail", context)
+                ? order.getUserId() : null;
+        txn().afterCommit(null, () -> notificationService.sendPinTuanFailRefundNotification(orderSn, mobile, refundUserId));
     }
 
     private void returnOrderDeductedPoints(LitemallOrder order, IServiceContext context) {

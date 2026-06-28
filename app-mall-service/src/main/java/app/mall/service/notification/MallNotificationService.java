@@ -1,7 +1,12 @@
 package app.mall.service.notification;
 
+import app.mall.biz.ILitemallSystemBiz;
+import app.mall.biz.ILitemallUserMessageBiz;
+import app.mall.dao._AppMallDaoConstants;
 import app.mall.service.consts.NotifyType;
 import io.nop.commons.util.StringHelper;
+import io.nop.core.context.IServiceContext;
+import io.nop.core.context.ServiceContextImpl;
 import io.nop.integration.api.email.EmailMessage;
 import io.nop.integration.api.email.IEmailSender;
 import io.nop.integration.api.sms.ISmsSender;
@@ -26,14 +31,32 @@ public class MallNotificationService {
     @Nullable
     IEmailSender emailSender;
 
-    public void sendOrderPaymentNotification(String orderSn, String mobile) {
+    // User-message (站内信) channel. Required beans (always present at runtime). The plain
+    // `new MallNotificationService()` in unit tests leaves these null, so sendUserMessage guards on null.
+    @Inject
+    ILitemallUserMessageBiz userMessageBiz;
+
+    @Inject
+    ILitemallSystemBiz systemBiz;
+
+    public void sendOrderPaymentNotification(String orderSn, String mobile, String userId) {
         sendSms(mobile, NotifyType.PAY_SUCCEED, Arrays.asList(StringHelper.tail(orderSn, 6)),
                 "sendOrderPaymentNotification", orderSn);
+        if (userId != null) {
+            String tail = StringHelper.tail(orderSn, 6);
+            sendUserMessage(userId, _AppMallDaoConstants.MSG_TYPE_ORDER,
+                    "支付成功", "您的订单 " + tail + " 已支付成功");
+        }
     }
 
-    public void sendOrderShipNotification(String orderSn, String mobile) {
+    public void sendOrderShipNotification(String orderSn, String mobile, String userId) {
         sendSms(mobile, NotifyType.SHIP, Arrays.asList(StringHelper.tail(orderSn, 6)),
                 "sendOrderShipNotification", orderSn);
+        if (userId != null) {
+            String tail = StringHelper.tail(orderSn, 6);
+            sendUserMessage(userId, _AppMallDaoConstants.MSG_TYPE_ORDER,
+                    "订单已发货", "您的订单 " + tail + " 已发货，请注意查收");
+        }
     }
 
     public void sendAdminOrderNotification(String orderSn) {
@@ -41,24 +64,76 @@ public class MallNotificationService {
         LOG.info("sendAdminOrderNotification: new order created, orderSn={}", orderSn);
     }
 
-    public void sendRefundNotification(String orderSn, String mobile) {
+    public void sendRefundNotification(String orderSn, String mobile, String userId) {
         sendSms(mobile, NotifyType.REFUND, Arrays.asList(StringHelper.tail(orderSn, 6)),
                 "sendRefundNotification", orderSn);
+        if (userId != null) {
+            String tail = StringHelper.tail(orderSn, 6);
+            sendUserMessage(userId, _AppMallDaoConstants.MSG_TYPE_ORDER,
+                    "退款成功", "您的订单 " + tail + " 已退款");
+        }
     }
 
-    public void sendGrouponFailRefundNotification(String orderSn, String mobile) {
+    public void sendGrouponFailRefundNotification(String orderSn, String mobile, String userId) {
         sendSms(mobile, NotifyType.REFUND, Arrays.asList(StringHelper.tail(orderSn, 6)),
                 "sendGrouponFailRefundNotification", orderSn);
+        if (userId != null) {
+            String tail = StringHelper.tail(orderSn, 6);
+            sendUserMessage(userId, _AppMallDaoConstants.MSG_TYPE_ORDER,
+                    "团购失败退款", "您的订单 " + tail + " 因团购未成团已退款");
+        }
     }
 
-    public void sendPinTuanFailRefundNotification(String orderSn, String mobile) {
+    public void sendPinTuanFailRefundNotification(String orderSn, String mobile, String userId) {
         sendSms(mobile, NotifyType.REFUND, Arrays.asList(StringHelper.tail(orderSn, 6)),
                 "sendPinTuanFailRefundNotification", orderSn);
+        if (userId != null) {
+            String tail = StringHelper.tail(orderSn, 6);
+            sendUserMessage(userId, _AppMallDaoConstants.MSG_TYPE_ORDER,
+                    "拼团失败退款", "您的订单 " + tail + " 因拼团未成团已退款");
+        }
     }
 
     public void sendCaptchaCode(String mobile, String code) {
         sendSms(mobile, NotifyType.CAPTCHA, Arrays.asList(code),
                 "sendCaptchaCode", mobile);
+    }
+
+    /**
+     * Event-toggle gate read by host BizModels in the main transaction (where a context is available).
+     * Defaults to enabled when the config key is absent or the read fails, so站内信 is opt-out.
+     */
+    public boolean isEventMessageEnabled(String eventKey, IServiceContext context) {
+        if (systemBiz == null) {
+            return true;
+        }
+        try {
+            String value = systemBiz.getConfig("mall_message_event_enabled_" + eventKey, context);
+            return value == null || value.isEmpty() || "true".equalsIgnoreCase(value.trim()) || "1".equals(value.trim());
+        } catch (Exception e) {
+            LOG.warn("isEventMessageEnabled: read failed for {}, defaulting enabled", eventKey, e);
+            return true;
+        }
+    }
+
+    /**
+     * Persist a站内信 record. Called from event hooks (txn().afterCommit). The CrudBizModel save queues
+     * the entity into the request-scoped ORM session, which flushes at request end, so the write
+     * persists after the business transaction commits. Failures are logged and swallowed: 站内信 is a
+     * side channel and must never roll back the core business fact.
+     */
+    public void sendUserMessage(String userId, int msgType, String title, String content) {
+        if (StringHelper.isEmpty(userId) || userMessageBiz == null) {
+            return;
+        }
+        try {
+            // System context: event hooks run in txn().afterCommit with no user session available
+            // (mirrors PaymentCallbackImpl's WeChat-callback handling).
+            IServiceContext systemContext = new ServiceContextImpl();
+            userMessageBiz.sendUserMessage(userId, msgType, title, content, systemContext);
+        } catch (Exception e) {
+            LOG.error("sendUserMessage: 站内信写入失败，已忽略。userId={}, title={}", userId, title, e);
+        }
     }
 
     private void sendSms(String mobile, NotifyType type, java.util.List<String> params,

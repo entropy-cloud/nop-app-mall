@@ -1,0 +1,317 @@
+type: page
+title: 消息中心
+body:
+  - type: wrapper
+    className: storefront-header
+    body:
+      type: flex
+      justify: space-between
+      alignItems: center
+      style:
+        padding: 10px 20px
+        backgroundColor: '#fff'
+        borderBottom: 2px solid '#ff6700'
+      items:
+        - type: wrapper
+          body:
+            - type: button
+              label: '<b style="font-size:24px;color:#ff6700">商城</b>'
+              level: link
+              actionType: link
+              link: "/storefront-home"
+        - type: wrapper
+          body:
+            - type: button
+              label: 用户中心
+              icon: user
+              level: link
+              actionType: link
+              link: "/storefront-user-center"
+
+  - type: wrapper
+    style:
+      padding: 20px
+    body:
+      - type: button
+        label: 全部已读
+        icon: check
+        level: primary
+        actionType: ajax
+        api:
+          url: '@mutation:LitemallUserMessage__markAllRead'
+        redirect: "/storefront-message-center"
+        messages:
+          success: '已将全部消息标记为已读'
+
+      - type: tabs
+        tabs:
+          - title: 全部
+            body:
+              - type: service
+                name: allMessages
+                api:
+                  url: '@query:LitemallUserMessage__getMyMessages'
+                  data:
+                    page: 1
+                  sendOn: true
+                body:
+                  type: each
+                  name: items
+                  placeholder: '<div style="padding:40px;text-align:center;color:#999">暂无消息</div>'
+                  items:
+                    type: card
+                    header:
+                      title: '${item.title}'
+                    body:
+                      - type: tpl
+                        visibleOn: '${!item.isRead}'
+                        tpl: '<span style="color:#fff;background:#ff6700;border-radius:50%;padding:1px 6px;font-size:12px">未读</span>'
+                      - type: tpl
+                        tpl: '<div style="color:#666;margin:6px 0">${item.content || ""}</div>'
+                      - type: tpl
+                        tpl: '<div style="color:#999;font-size:12px">${item.addTime}</div>'
+                      - type: flex
+                        style:
+                          marginTop: 10px
+                        items:
+                          - type: button
+                            label: 查看详情
+                            level: primary
+                            size: sm
+                            actionType: dialog
+                            dialog:
+                              title: '消息详情'
+                              actions:
+                                - type: button
+                                  label: '关闭'
+                                  actionType: close
+                              body:
+                                type: service
+                                api:
+                                  url: '@query:LitemallUserMessage__getMessageDetail'
+                                  data:
+                                    messageId: '${item.id}'
+                                  sendOn: true
+                                body:
+                                  - type: tpl
+                                    tpl: '<h3>${data.title}</h3>'
+                                  - type: tpl
+                                    tpl: '<div style="color:#999;font-size:12px;margin-bottom:8px">${data.addTime}</div>'
+                                  - type: tpl
+                                    tpl: '<div style="white-space:pre-wrap">${data.content || ""}</div>'
+                          - type: button
+                            label: 删除
+                            level: link
+                            size: sm
+                            actionType: ajax
+                            api:
+                              url: '@mutation:LitemallUserMessage__deleteMessage'
+                              data:
+                                messageId: '${item.id}'
+                            redirect: "/storefront-message-center"
+                            messages:
+                              success: '已删除'
+
+          - title: 订单消息
+            body:
+              - type: service
+                name: orderMessages
+                api:
+                  url: '@query:LitemallUserMessage__getMyMessages'
+                  data:
+                    msgType: 0
+                    page: 1
+                  sendOn: true
+                body:
+                  type: each
+                  name: items
+                  placeholder: '<div style="padding:40px;text-align:center;color:#999">暂无订单消息</div>'
+                  items:
+                    type: card
+                    header:
+                      title: '${item.title}'
+                    body:
+                      - type: tpl
+                        visibleOn: '${!item.isRead}'
+                        tpl: '<span style="color:#fff;background:#ff6700;border-radius:50%;padding:1px 6px;font-size:12px">未读</span>'
+                      - type: tpl
+                        tpl: '<div style="color:#666;margin:6px 0">${item.content || ""}</div>'
+                      - type: tpl
+                        tpl: '<div style="color:#999;font-size:12px">${item.addTime}</div>'
+                      - type: flex
+                        style:
+                          marginTop: 10px
+                        items:
+                          - type: button
+                            label: 查看详情
+                            level: primary
+                            size: sm
+                            actionType: dialog
+                            dialog:
+                              title: '消息详情'
+                              actions:
+                                - type: button
+                                  label: '关闭'
+                                  actionType: close
+                              body:
+                                type: service
+                                api:
+                                  url: '@query:LitemallUserMessage__getMessageDetail'
+                                  data:
+                                    messageId: '${item.id}'
+                                  sendOn: true
+                                body:
+                                  - type: tpl
+                                    tpl: '<h3>${data.title}</h3>'
+                                  - type: tpl
+                                    tpl: '<div style="color:#999;font-size:12px;margin-bottom:8px">${data.addTime}</div>'
+                                  - type: tpl
+                                    tpl: '<div style="white-space:pre-wrap">${data.content || ""}</div>'
+                          - type: button
+                            label: 删除
+                            level: link
+                            size: sm
+                            actionType: ajax
+                            api:
+                              url: '@mutation:LitemallUserMessage__deleteMessage'
+                              data:
+                                messageId: '${item.id}'
+                            redirect: "/storefront-message-center"
+                            messages:
+                              success: '已删除'
+
+          - title: 营销消息
+            body:
+              - type: service
+                name: marketingMessages
+                api:
+                  url: '@query:LitemallUserMessage__getMyMessages'
+                  data:
+                    msgType: 10
+                    page: 1
+                  sendOn: true
+                body:
+                  type: each
+                  name: items
+                  placeholder: '<div style="padding:40px;text-align:center;color:#999">暂无营销消息</div>'
+                  items:
+                    type: card
+                    header:
+                      title: '${item.title}'
+                    body:
+                      - type: tpl
+                        visibleOn: '${!item.isRead}'
+                        tpl: '<span style="color:#fff;background:#ff6700;border-radius:50%;padding:1px 6px;font-size:12px">未读</span>'
+                      - type: tpl
+                        tpl: '<div style="color:#666;margin:6px 0">${item.content || ""}</div>'
+                      - type: tpl
+                        tpl: '<div style="color:#999;font-size:12px">${item.addTime}</div>'
+                      - type: flex
+                        style:
+                          marginTop: 10px
+                        items:
+                          - type: button
+                            label: 查看详情
+                            level: primary
+                            size: sm
+                            actionType: dialog
+                            dialog:
+                              title: '消息详情'
+                              actions:
+                                - type: button
+                                  label: '关闭'
+                                  actionType: close
+                              body:
+                                type: service
+                                api:
+                                  url: '@query:LitemallUserMessage__getMessageDetail'
+                                  data:
+                                    messageId: '${item.id}'
+                                  sendOn: true
+                                body:
+                                  - type: tpl
+                                    tpl: '<h3>${data.title}</h3>'
+                                  - type: tpl
+                                    tpl: '<div style="color:#999;font-size:12px;margin-bottom:8px">${data.addTime}</div>'
+                                  - type: tpl
+                                    tpl: '<div style="white-space:pre-wrap">${data.content || ""}</div>'
+                          - type: button
+                            label: 删除
+                            level: link
+                            size: sm
+                            actionType: ajax
+                            api:
+                              url: '@mutation:LitemallUserMessage__deleteMessage'
+                              data:
+                                messageId: '${item.id}'
+                            redirect: "/storefront-message-center"
+                            messages:
+                              success: '已删除'
+
+          - title: 系统消息
+            body:
+              - type: service
+                name: systemMessages
+                api:
+                  url: '@query:LitemallUserMessage__getMyMessages'
+                  data:
+                    msgType: 20
+                    page: 1
+                  sendOn: true
+                body:
+                  type: each
+                  name: items
+                  placeholder: '<div style="padding:40px;text-align:center;color:#999">暂无系统消息</div>'
+                  items:
+                    type: card
+                    header:
+                      title: '${item.title}'
+                    body:
+                      - type: tpl
+                        visibleOn: '${!item.isRead}'
+                        tpl: '<span style="color:#fff;background:#ff6700;border-radius:50%;padding:1px 6px;font-size:12px">未读</span>'
+                      - type: tpl
+                        tpl: '<div style="color:#666;margin:6px 0">${item.content || ""}</div>'
+                      - type: tpl
+                        tpl: '<div style="color:#999;font-size:12px">${item.addTime}</div>'
+                      - type: flex
+                        style:
+                          marginTop: 10px
+                        items:
+                          - type: button
+                            label: 查看详情
+                            level: primary
+                            size: sm
+                            actionType: dialog
+                            dialog:
+                              title: '消息详情'
+                              actions:
+                                - type: button
+                                  label: '关闭'
+                                  actionType: close
+                              body:
+                                type: service
+                                api:
+                                  url: '@query:LitemallUserMessage__getMessageDetail'
+                                  data:
+                                    messageId: '${item.id}'
+                                  sendOn: true
+                                body:
+                                  - type: tpl
+                                    tpl: '<h3>${data.title}</h3>'
+                                  - type: tpl
+                                    tpl: '<div style="color:#999;font-size:12px;margin-bottom:8px">${data.addTime}</div>'
+                                  - type: tpl
+                                    tpl: '<div style="white-space:pre-wrap">${data.content || ""}</div>'
+                          - type: button
+                            label: 删除
+                            level: link
+                            size: sm
+                            actionType: ajax
+                            api:
+                              url: '@mutation:LitemallUserMessage__deleteMessage'
+                              data:
+                                messageId: '${item.id}'
+                            redirect: "/storefront-message-center"
+                            messages:
+                              success: '已删除'

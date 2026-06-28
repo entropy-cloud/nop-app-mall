@@ -177,6 +177,31 @@ body:
 
       - type: divider
 
+      - type: service
+        name: unreadMessages
+        api:
+          url: '@query:LitemallUserMessage__getUnreadCount'
+          sendOn: true
+        body:
+          - type: card
+            header:
+              title: 我的消息
+            body:
+              - type: wrapper
+                style:
+                  display: flex
+                  alignItems: center
+                  justifyContent: space-between
+                  padding: '10px 0'
+                body:
+                  - type: tpl
+                    tpl: '<span style="color:#999">未读消息 <b style="color:#ff6700;font-size:18px">${data || 0}</b> 条</span>'
+                  - type: button
+                    label: 进入消息中心
+                    level: primary
+                    actionType: link
+                    link: "/storefront-message-center"
+
       - type: grid
         columns:
           - md: 6
@@ -242,6 +267,15 @@ body:
               block: true
               actionType: link
               link: "/storefront-aftersale-list"
+          - md: 6
+            body:
+              type: button
+              label: 消息中心
+              icon: bell
+              level: primary
+              block: true
+              actionType: link
+              link: "/storefront-message-center"
           - md: 6
             body:
               type: button

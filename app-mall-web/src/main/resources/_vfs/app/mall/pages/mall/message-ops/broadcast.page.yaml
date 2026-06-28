@@ -1,0 +1,41 @@
+type: page
+title: 系统公告下发
+body:
+  - type: panel
+    title: 系统公告下发
+    body:
+      - type: alert
+        body: '填写公告标题与内容后下发。系统将为每位活跃用户生成一条「系统消息」（msgType=SYSTEM），用户可在前台「消息中心」查看。'
+        level: info
+        className: mb-2
+
+      - type: input-text
+        name: title
+        label: 公告标题
+        placeholder: '例如：系统维护通知'
+        required: true
+
+      - type: textarea
+        name: content
+        label: 公告内容
+        placeholder: '请输入公告正文'
+        required: true
+        minRows: 4
+
+      - type: button
+        label: 下发公告
+        level: primary
+        disabledOn: '${!title || !content}'
+        actionType: ajax
+        api:
+          url: '@mutation:LitemallUserMessage__broadcastSystemMessage'
+          data:
+            title: '${title}'
+            content: '${content}'
+        feedback:
+          title: 下发结果
+          body:
+            - type: tpl
+              tpl: '<div style="text-align:center;padding:10px">公告已下发，共送达 <b style="color:#ff6700;font-size:20px">${data}</b> 位活跃用户</div>'
+        messages:
+          success: '公告下发成功'

@@ -415,6 +415,15 @@ public interface AppMallErrors {
             define("nop.err.mall.user-tag.not-found",
                     "用户标签记录不存在", ARG_USER_ID, "tag");
 
+    // 站内信错误码
+    ErrorCode ERR_MESSAGE_NOT_FOUND =
+            define("nop.err.mall.message.not-found",
+                    "消息不存在", ARG_USER_ID);
+
+    ErrorCode ERR_MESSAGE_NOT_BELONG_USER =
+            define("nop.err.mall.message.not-belong-user",
+                    "消息不属于当前用户", ARG_USER_ID);
+
     // 积分错误码
     ErrorCode ERR_POINTS_INSUFFICIENT =
             define("nop.err.mall.points.insufficient",

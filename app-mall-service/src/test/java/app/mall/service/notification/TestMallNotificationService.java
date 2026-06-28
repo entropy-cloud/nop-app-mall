@@ -57,7 +57,7 @@ class TestMallNotificationService {
     @Test
     void testNullSenderSkipsSilently() {
         MallNotificationService svc = new MallNotificationService();
-        assertDoesNotThrow(() -> svc.sendOrderPaymentNotification("ORD123456", "13800138000"));
+        assertDoesNotThrow(() -> svc.sendOrderPaymentNotification("ORD123456", "13800138000", null));
         assertDoesNotThrow(() -> svc.sendAdminOrderNotification("ORD123456"));
         assertDoesNotThrow(() -> svc.sendCaptchaCode("13800138000", "1234"));
     }
@@ -68,7 +68,7 @@ class TestMallNotificationService {
         CapturingSmsSender mock = new CapturingSmsSender();
         setSmsSender(svc, mock);
 
-        svc.sendOrderPaymentNotification("ORD123456", "13800138000");
+        svc.sendOrderPaymentNotification("ORD123456", "13800138000", null);
 
         assertEquals(1, mock.sent.size());
         assertEquals("13800138000", mock.sent.get(0).getMobile());
@@ -81,7 +81,7 @@ class TestMallNotificationService {
         mock.throwOnSend = new RuntimeException("network down");
         setSmsSender(svc, mock);
 
-        assertDoesNotThrow(() -> svc.sendRefundNotification("ORD123456", "13800138000"));
+        assertDoesNotThrow(() -> svc.sendRefundNotification("ORD123456", "13800138000", null));
         assertTrue(mock.sent.isEmpty());
     }
 

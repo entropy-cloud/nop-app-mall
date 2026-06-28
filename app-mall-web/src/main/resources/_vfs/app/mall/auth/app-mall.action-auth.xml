@@ -70,6 +70,11 @@
                            icon="ant-design:warning-outlined" component="AMIS"
                            resourceType="SUBM" url="/app/mall/pages/mall/order-ops/order-exception.page.yaml"/>
 
+                <!-- P35 站内信/消息中心：管理员系统公告下发（全员 SYSTEM 消息） -->
+                <resource id="mall-message-broadcast" displayName="系统公告下发" orderNo="210"
+                           icon="ant-design:notification-outlined" component="AMIS"
+                           resourceType="SUBM" url="/app/mall/pages/mall/message-ops/broadcast.page.yaml"/>
+
                 <resource id="mall-aftersales-manage" displayName="售后管理" orderNo="205"
                           icon="ant-design:appstore-twotone" component="AMIS"
                           resourceType="SUBM" url="/app/mall/pages/LitemallAftersale/all.page.yaml"/>
@@ -320,6 +325,10 @@
                 <resource id="storefront-pin-tuan-my" displayName="我的拼团" orderNo="828"
                           icon="ant-design:team-outlined" component="AMIS"
                           resourceType="SUBM" url="/app/mall/pages/mall/pin-tuan/my-pin-tuan.page.yaml"/>
+
+                <resource id="storefront-message-center" displayName="消息中心" orderNo="829"
+                          icon="ant-design:bell-outlined" component="AMIS"
+                          resourceType="SUBM" url="/app/mall/pages/mall/user/message-center.page.yaml"/>
             </children>
         </resource>
 

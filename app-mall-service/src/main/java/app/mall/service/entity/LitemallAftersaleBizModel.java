@@ -216,7 +216,9 @@ public class LitemallAftersaleBizModel extends CrudBizModel<LitemallAftersale> i
         // order-level notification to avoid spamming the user across multiple item refunds.
         final String orderSn = order.getOrderSn();
         final String mobile = order.getMobile();
-        txn().afterCommit(null, () -> notificationService.sendRefundNotification(orderSn, mobile));
+        final String refundUserId = notificationService.isEventMessageEnabled("refund", context)
+                ? order.getUserId() : null;
+        txn().afterCommit(null, () -> notificationService.sendRefundNotification(orderSn, mobile, refundUserId));
 
         recomputeOrderAftersaleStatus(order, context);
 

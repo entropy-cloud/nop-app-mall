@@ -368,6 +368,8 @@ site:
       displayName: ''
     mall-marketing-overview:
       displayName: ''
+    mall-message-broadcast:
+      displayName: ''
     mall-order-batch-ship:
       displayName: ''
     mall-order-exception:
@@ -435,6 +437,8 @@ site:
     storefront-home:
       displayName: ''
     storefront-login:
+      displayName: ''
+    storefront-message-center:
       displayName: ''
     storefront-my-points:
       displayName: ''

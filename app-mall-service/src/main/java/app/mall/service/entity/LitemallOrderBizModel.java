@@ -617,7 +617,9 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
         updateEntity(order, "pay", context);
         final String payOrderSn = order.getOrderSn();
         final String payMobile = order.getMobile();
-        txn().afterCommit(null, () -> notificationService.sendOrderPaymentNotification(payOrderSn, payMobile));
+        final String payUserId = notificationService.isEventMessageEnabled("payment", context)
+                ? order.getUserId() : null;
+        txn().afterCommit(null, () -> notificationService.sendOrderPaymentNotification(payOrderSn, payMobile, payUserId));
         return order;
     }
 
@@ -649,7 +651,9 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
         updateEntity(order, "confirmPaidByNotify", context);
         final String orderSn = order.getOrderSn();
         final String mobile = order.getMobile();
-        txn().afterCommit(null, () -> notificationService.sendOrderPaymentNotification(orderSn, mobile));
+        final String notifyUserId = notificationService.isEventMessageEnabled("payment", context)
+                ? order.getUserId() : null;
+        txn().afterCommit(null, () -> notificationService.sendOrderPaymentNotification(orderSn, mobile, notifyUserId));
     }
 
     @Override
@@ -677,7 +681,9 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
         updateEntity(order, "ship", context);
         final String shipOrderSn = order.getOrderSn();
         final String shipMobile = order.getMobile();
-        txn().afterCommit(null, () -> notificationService.sendOrderShipNotification(shipOrderSn, shipMobile));
+        final String shipUserId = notificationService.isEventMessageEnabled("ship", context)
+                ? order.getUserId() : null;
+        txn().afterCommit(null, () -> notificationService.sendOrderShipNotification(shipOrderSn, shipMobile, shipUserId));
         logManager.logOrderSucceed("订单发货", "订单编号 " + order.getOrderSn());
         return order;
     }

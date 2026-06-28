@@ -342,7 +342,7 @@ CREATE TABLE litemall_wallet(
 
 CREATE TABLE litemall_user_message(
   id INT4 NOT NULL ,
-  user_id INT4 NOT NULL ,
+  user_id VARCHAR(50) NOT NULL ,
   msg_type INT4 NOT NULL ,
   title VARCHAR(127) NOT NULL ,
   content VARCHAR(1023)  ,

@@ -2013,8 +2013,8 @@
             <columns>
                 <column code="ID" displayName="Id" mandatory="true" name="id" primary="true" propId="1"
                         stdDataType="string" stdSqlType="INTEGER" tagSet="seq" ui:show="R"/>
-                <column code="USER_ID" displayName="用户ID" mandatory="true" name="userId" propId="2" stdDataType="string"
-                        stdSqlType="INTEGER"/>
+                <column code="USER_ID" displayName="用户ID" domain="userId" mandatory="true" name="userId" precision="50"
+                        propId="2" stdDataType="string" stdSqlType="VARCHAR"/>
                 <column code="MSG_TYPE" displayName="消息类型" mandatory="true" name="msgType" propId="3" stdDataType="int"
                         stdSqlType="INTEGER" ext:dict="mall/msg-type"/>
                 <column code="TITLE" displayName="标题" mandatory="true" name="title" precision="127" propId="4"
