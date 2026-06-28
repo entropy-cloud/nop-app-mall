@@ -333,6 +333,7 @@ prop:
       relatedProductList_ids: relatedProductList
       relatedProductList_label: relatedProductList
       retailPrice: 当前价格
+      safetyStock: 安全库存预警线（商品聚合级）
       shareUrl: 商品分享海报
       shareUrlComponentFileStatus: null
       sortOrder: 排序顺序

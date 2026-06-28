@@ -22,6 +22,7 @@ import io.nop.graphql.core.IGraphQLExecutionContext;
 import io.nop.graphql.core.ast.GraphQLOperationType;
 import io.nop.graphql.core.engine.IGraphQLEngine;
 import io.nop.ooxml.xlsx.util.ExcelHelper;
+import io.nop.orm.IOrmTemplate;
 import jakarta.inject.Inject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -56,6 +57,9 @@ public class TestLitemallGoodsOpsWorkbench extends JunitBaseTestCase {
 
     @Inject
     IFileStore fileStore;
+
+    @Inject
+    IOrmTemplate ormTemplate;
 
     String goodsId;
     String goodsId2;
@@ -403,6 +407,99 @@ public class TestLitemallGoodsOpsWorkbench extends JunitBaseTestCase {
         assertEquals(0, r.getStatus(), "stock warning failed: " + r);
         List<Map<String, Object>> data = (List<Map<String, Object>>) r.getData();
         assertTrue(data.isEmpty(), "should be empty when all stock above threshold");
+    }
+
+    // ===== 三级阈值优先（per-SKU → per-goods → global） =====
+
+    /**
+     * 场景：per-SKU safeStock 为空，per-goods safetyStock 命中。
+     * Goods B 的 SKU 没有 safeStock，但 goods 设置了 safetyStock=8；
+     * 当前 number=20 > 8 不预警；改 number=5 ≤ 8 应预警且 thresholdSource=safetyStock。
+     */
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testGetStockWarningListWithGoodsLevelSafetyStock() {
+        // 给 Goods B 设置 per-goods safetyStock=8
+        ormTemplate.runInSession(session -> {
+            LitemallGoods goodsB = daoProvider.daoFor(LitemallGoods.class).getEntityById(goodsId2);
+            goodsB.setSafetyStock(8);
+            daoProvider.daoFor(LitemallGoods.class).updateEntity(goodsB);
+            return null;
+        });
+        // 当前 Goods B SKU number=20，safetyStock=8 → 20 > 8 不预警
+        ApiResponse<?> r1 = callQuery("getStockWarningList", Map.of("onlyOnSale", true));
+        assertEquals(0, r1.getStatus());
+        List<Map<String, Object>> data1 = (List<Map<String, Object>>) r1.getData();
+        boolean goodsBWarnBefore = data1.stream().anyMatch(m -> "P36 Goods B".equals(m.get("goodsName")));
+        assertFalse(goodsBWarnBefore, "Goods B (number=20, safetyStock=8) should NOT be in warning");
+
+        // 调到 number=5 ≤ safetyStock=8 应预警，且 thresholdSource=safetyStock（per-SKU safeStock 为空）
+        callMutation("batchUpdateStock", Map.of(
+                "items", List.of(Map.of("productId", productIdOf(goodsId2), "number", "5"))
+        ));
+        ApiResponse<?> r2 = callQuery("getStockWarningList", Map.of("onlyOnSale", true));
+        assertEquals(0, r2.getStatus());
+        List<Map<String, Object>> data2 = (List<Map<String, Object>>) r2.getData();
+        Map<String, Object> goodsBWarn = data2.stream()
+                .filter(m -> "P36 Goods B".equals(m.get("goodsName")))
+                .findFirst().orElseThrow();
+        assertEquals("safetyStock", goodsBWarn.get("thresholdSource"),
+                "should hit per-goods tier when per-SKU safeStock is null");
+        assertEquals(8, goodsBWarn.get("threshold"));
+        assertEquals(8, goodsBWarn.get("safetyStock"));
+    }
+
+    /**
+     * 场景：per-SKU safeStock 优先于 per-goods safetyStock。
+     * Goods A 的 SKU safeStock=10，goods 同时设置 safetyStock=2；
+     * 应优先用 safeStock=10 作为阈值（thresholdSource=safeStock）。
+     */
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testGetStockWarningListSkuTierPriorityOverGoodsTier() {
+        ormTemplate.runInSession(session -> {
+            LitemallGoods goodsA = daoProvider.daoFor(LitemallGoods.class).getEntityById(goodsId);
+            goodsA.setSafetyStock(2);
+            daoProvider.daoFor(LitemallGoods.class).updateEntity(goodsA);
+            return null;
+        });
+
+        ApiResponse<?> r = callQuery("getStockWarningList", new HashMap<>());
+        assertEquals(0, r.getStatus());
+        List<Map<String, Object>> data = (List<Map<String, Object>>) r.getData();
+        Map<String, Object> goodsAWarn = data.stream()
+                .filter(m -> "P36 Goods A".equals(m.get("goodsName")))
+                .findFirst().orElseThrow();
+        // per-SKU safeStock=10 优先于 per-goods safetyStock=2
+        assertEquals("safeStock", goodsAWarn.get("thresholdSource"));
+        assertEquals(10, goodsAWarn.get("threshold"));
+        assertEquals(2, goodsAWarn.get("safetyStock"));
+    }
+
+    /**
+     * 场景：safetyStock=0 应被视为无效（与 null 等价），回退到 global 阈值。
+     */
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testGetStockWarningListSafetyStockZeroFallsBackToGlobal() {
+        ormTemplate.runInSession(session -> {
+            LitemallGoods goodsB = daoProvider.daoFor(LitemallGoods.class).getEntityById(goodsId2);
+            goodsB.setSafetyStock(0);
+            daoProvider.daoFor(LitemallGoods.class).updateEntity(goodsB);
+            return null;
+        });
+        // 调到 number=3 ≤ 全局阈值 10 应预警，thresholdSource=global（safetyStock=0 视为无效）
+        callMutation("batchUpdateStock", Map.of(
+                "items", List.of(Map.of("productId", productIdOf(goodsId2), "number", "3"))
+        ));
+        ApiResponse<?> r = callQuery("getStockWarningList", Map.of("onlyOnSale", true));
+        assertEquals(0, r.getStatus());
+        List<Map<String, Object>> data = (List<Map<String, Object>>) r.getData();
+        Map<String, Object> goodsBWarn = data.stream()
+                .filter(m -> "P36 Goods B".equals(m.get("goodsName")))
+                .findFirst().orElseThrow();
+        assertEquals("global", goodsBWarn.get("thresholdSource"),
+                "safetyStock=0 should be treated as invalid and fall back to global");
     }
 
     // ===== 辅助 =====

@@ -412,6 +412,7 @@ CREATE TABLE litemall_goods(
   DELETED CHAR(1)  ,
   IS_RECOMMEND CHAR(1)  ,
   VIDEO_URL VARCHAR2(255)  ,
+  SAFETY_STOCK INTEGER  ,
   constraint PK_litemall_goods primary key (ID)
 );
 
@@ -1495,6 +1496,8 @@ CREATE TABLE litemall_pin_tuan_member(
       COMMENT ON COLUMN litemall_goods.IS_RECOMMEND IS '是否推荐';
                     
       COMMENT ON COLUMN litemall_goods.VIDEO_URL IS '商品视频链接';
+                    
+      COMMENT ON COLUMN litemall_goods.SAFETY_STOCK IS '安全库存预警线（商品聚合级）';
                     
       COMMENT ON TABLE litemall_coupon_user IS '优惠券用户使用表';
                 

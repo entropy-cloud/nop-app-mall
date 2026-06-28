@@ -129,14 +129,17 @@
             <arg name="limit"/>
             <source>
                 SELECT g.ID AS GOODS_ID, g.NAME AS GOODS_NAME,
-                       COALESCE(SUM(p.NUMBER), 0) AS TOTAL_STOCK
+                       COALESCE(SUM(p.NUMBER), 0) AS TOTAL_STOCK,
+                       g.SAFETY_STOCK AS SAFETY_STOCK,
+                       CASE WHEN g.SAFETY_STOCK IS NOT NULL AND g.SAFETY_STOCK &gt; 0
+                            THEN 'safetyStock' ELSE 'global' END AS THRESHOLD_SOURCE
                 FROM litemall_goods g
                 LEFT JOIN litemall_goods_product p
                   ON p.GOODS_ID = g.ID AND CAST(p.DELETED AS INT) = 0
                 WHERE CAST(g.DELETED AS INT) = 0
                   AND CAST(g.IS_ON_SALE AS INT) = 1
-                GROUP BY g.ID, g.NAME
-                HAVING COALESCE(SUM(p.NUMBER), 0) &lt;= ${threshold}
+                GROUP BY g.ID, g.NAME, g.SAFETY_STOCK
+                HAVING COALESCE(SUM(p.NUMBER), 0) &lt;= COALESCE(NULLIF(g.SAFETY_STOCK, 0), ${threshold})
                 ORDER BY TOTAL_STOCK ASC
                 LIMIT ${limit}
             </source>

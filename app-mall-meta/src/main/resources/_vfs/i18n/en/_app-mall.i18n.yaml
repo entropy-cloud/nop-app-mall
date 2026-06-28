@@ -336,6 +336,7 @@ prop:
       deleted: Deleted
       isRecommend: Is Recommend
       videoUrl: Video Url
+      safetyStock: Safety Stock (Goods Level)
       category: Category
       category.name: Category
       brand: Brand

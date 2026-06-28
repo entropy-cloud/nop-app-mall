@@ -113,8 +113,12 @@ public class _LitemallGoods extends DynamicOrmEntity{
     public static final String PROP_NAME_videoUrl = "videoUrl";
     public static final int PROP_ID_videoUrl = 23;
     
+    /* 安全库存预警线（商品聚合级）: SAFETY_STOCK INTEGER */
+    public static final String PROP_NAME_safetyStock = "safetyStock";
+    public static final int PROP_ID_safetyStock = 24;
+    
 
-    private static int _PROP_ID_BOUND = 24;
+    private static int _PROP_ID_BOUND = 25;
 
     
     /* relation: 商品类目 */
@@ -151,7 +155,7 @@ public class _LitemallGoods extends DynamicOrmEntity{
     protected static final List<String> PK_PROP_NAMES = Arrays.asList(PROP_NAME_id);
     protected static final int[] PK_PROP_IDS = new int[]{PROP_ID_id};
 
-    private static final String[] PROP_ID_TO_NAME = new String[24];
+    private static final String[] PROP_ID_TO_NAME = new String[25];
     private static final Map<String,Integer> PROP_NAME_TO_ID = new HashMap<>();
     static{
       
@@ -224,6 +228,9 @@ public class _LitemallGoods extends DynamicOrmEntity{
           PROP_ID_TO_NAME[PROP_ID_videoUrl] = PROP_NAME_videoUrl;
           PROP_NAME_TO_ID.put(PROP_NAME_videoUrl, PROP_ID_videoUrl);
       
+          PROP_ID_TO_NAME[PROP_ID_safetyStock] = PROP_NAME_safetyStock;
+          PROP_NAME_TO_ID.put(PROP_NAME_safetyStock, PROP_ID_safetyStock);
+      
     }
 
     
@@ -295,6 +302,9 @@ public class _LitemallGoods extends DynamicOrmEntity{
     
     /* 商品视频链接: VIDEO_URL */
     private java.lang.String _videoUrl;
+    
+    /* 安全库存预警线（商品聚合级）: SAFETY_STOCK */
+    private java.lang.Integer _safetyStock;
     
 
     public _LitemallGoods(){
@@ -438,6 +448,9 @@ public class _LitemallGoods extends DynamicOrmEntity{
         
             case PROP_ID_videoUrl:
                return getVideoUrl();
+        
+            case PROP_ID_safetyStock:
+               return getSafetyStock();
         
            default:
               return super.orm_propValue(propId);
@@ -680,6 +693,16 @@ public class _LitemallGoods extends DynamicOrmEntity{
                break;
             }
         
+            case PROP_ID_safetyStock:{
+               java.lang.Integer typedValue = null;
+               if(value != null){
+                   typedValue = ConvertHelper.toInteger(value,
+                       err-> newTypeConversionError(PROP_NAME_safetyStock));
+               }
+               setSafetyStock(typedValue);
+               break;
+            }
+        
            default:
               super.orm_propValue(propId,value);
         }
@@ -846,6 +869,13 @@ public class _LitemallGoods extends DynamicOrmEntity{
             case PROP_ID_videoUrl:{
                onInitProp(propId);
                this._videoUrl = (java.lang.String)value;
+               
+               break;
+            }
+        
+            case PROP_ID_safetyStock:{
+               onInitProp(propId);
+               this._safetyStock = (java.lang.Integer)value;
                
                break;
             }
@@ -1289,6 +1319,25 @@ public class _LitemallGoods extends DynamicOrmEntity{
         if(onPropSet(PROP_ID_videoUrl,value)){
             this._videoUrl = value;
             internalClearRefs(PROP_ID_videoUrl);
+            
+        }
+    }
+    
+    /**
+     * 安全库存预警线（商品聚合级）: SAFETY_STOCK
+     */
+    public final java.lang.Integer getSafetyStock(){
+         onPropGet(PROP_ID_safetyStock);
+         return _safetyStock;
+    }
+
+    /**
+     * 安全库存预警线（商品聚合级）: SAFETY_STOCK
+     */
+    public final void setSafetyStock(java.lang.Integer value){
+        if(onPropSet(PROP_ID_safetyStock,value)){
+            this._safetyStock = value;
+            internalClearRefs(PROP_ID_safetyStock);
             
         }
     }

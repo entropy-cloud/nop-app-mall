@@ -291,6 +291,20 @@
         }
 
 
+        private Integer _safetyStock;
+
+    
+        @PropMeta(propId=24)
+    
+        public Integer getSafetyStock(){
+            return _safetyStock;
+        }
+
+        public void setSafetyStock(Integer value){
+            this._safetyStock = value;
+        }
+
+
         private String _goodsSn;
 
     

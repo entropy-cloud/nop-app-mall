@@ -681,6 +681,7 @@ public class LitemallGoodsBizModel extends CrudBizModel<LitemallGoods> implement
             if (products == null) {
                 continue;
             }
+            Integer goodsSafetyStock = goods.getSafetyStock();
             for (LitemallGoodsProduct product : products) {
                 int number = product.getNumber() != null ? product.getNumber() : 0;
                 Integer safeStock = product.getSafeStock();
@@ -689,6 +690,9 @@ public class LitemallGoodsBizModel extends CrudBizModel<LitemallGoods> implement
                 if (safeStock != null && safeStock > 0) {
                     threshold = safeStock;
                     thresholdSource = "safeStock";
+                } else if (goodsSafetyStock != null && goodsSafetyStock > 0) {
+                    threshold = goodsSafetyStock;
+                    thresholdSource = "safetyStock";
                 } else {
                     threshold = globalThreshold;
                     thresholdSource = "global";
@@ -701,6 +705,7 @@ public class LitemallGoodsBizModel extends CrudBizModel<LitemallGoods> implement
                     bean.setSpecifications(product.getSpecifications());
                     bean.setNumber(number);
                     bean.setSafeStock(safeStock);
+                    bean.setSafetyStock(goodsSafetyStock);
                     bean.setThreshold(threshold);
                     bean.setThresholdSource(thresholdSource);
                     result.add(bean);

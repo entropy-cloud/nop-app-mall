@@ -749,6 +749,8 @@
                         stdSqlType="BOOLEAN" i18n-en:displayName="Is Recommend"/>
                 <column code="VIDEO_URL" displayName="商品视频链接" domain="image" name="videoUrl" precision="255" propId="23"
                         stdDataType="string" stdDomain="file" stdSqlType="VARCHAR" i18n-en:displayName="Video Url"/>
+                <column code="SAFETY_STOCK" displayName="安全库存预警线（商品聚合级）" name="safetyStock" propId="24"
+                        stdDataType="int" stdSqlType="INTEGER" i18n-en:displayName="Safety Stock (Goods Level)"/>
             </columns>
             <indexes>
                 <index name="idx_goods_categoryId" unique="false">

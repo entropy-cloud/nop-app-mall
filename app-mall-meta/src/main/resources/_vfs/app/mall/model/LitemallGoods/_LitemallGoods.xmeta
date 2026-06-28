@@ -118,6 +118,11 @@
               sortable="true" insertable="true" updatable="true">
             <schema stdDomain="file" domain="image" type="java.lang.String" precision="255"/>
         </prop>
+        <prop name="safetyStock" displayName="安全库存预警线（商品聚合级）" propId="24"
+              i18n-en:displayName="Safety Stock (Goods Level)" queryable="true" sortable="true" insertable="true"
+              updatable="true">
+            <schema type="java.lang.Integer"/>
+        </prop>
         <prop name="category" displayName="商品类目" i18n-en:displayName="Category" tagSet="pub,ref-pub" ext:kind="to-one"
               internal="true" queryable="true" ext:joinLeftProp="categoryId" ext:joinRightProp="id"
               ext:joinRightDisplayProp="name" insertable="false" updatable="false" lazy="true">

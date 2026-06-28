@@ -4,7 +4,7 @@ import io.nop.api.core.annotations.data.DataBean;
 
 /**
  * 库存预警（P36）SKU 粒度明细项。当某 SKU {@code number} ≤ 有效阈值时返回。
- * 有效阈值优先用 per-SKU {@code safeStock}（非空且 >0），否则回退全局配置 {@code mall_stock_threshold_tight}。
+ * 有效阈值三级优先：per-SKU {@code safeStock}（非空且 >0）→ per-goods {@code safetyStock}（非空且 >0）→ 全局配置 {@code mall_stock_threshold_tight}。
  */
 @DataBean
 public class StockWarningSkuBean {
@@ -14,6 +14,7 @@ public class StockWarningSkuBean {
     private String specifications;
     private int number;
     private Integer safeStock;
+    private Integer safetyStock;
     private int threshold;
     private String thresholdSource;
 
@@ -63,6 +64,14 @@ public class StockWarningSkuBean {
 
     public void setSafeStock(Integer safeStock) {
         this.safeStock = safeStock;
+    }
+
+    public Integer getSafetyStock() {
+        return safetyStock;
+    }
+
+    public void setSafetyStock(Integer safetyStock) {
+        this.safetyStock = safetyStock;
     }
 
     public int getThreshold() {

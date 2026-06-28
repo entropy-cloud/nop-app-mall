@@ -1,5 +1,7 @@
 package app.mall.service.entity;
 
+import app.mall.dao.entity.LitemallGoods;
+import app.mall.dao.entity.LitemallGoodsProduct;
 import io.nop.api.core.annotations.autotest.NopTestConfig;
 import io.nop.api.core.annotations.core.OptionalBoolean;
 import io.nop.api.core.beans.ApiRequest;
@@ -10,15 +12,18 @@ import io.nop.dao.api.IDaoProvider;
 import io.nop.graphql.core.IGraphQLExecutionContext;
 import io.nop.graphql.core.ast.GraphQLOperationType;
 import io.nop.graphql.core.engine.IGraphQLEngine;
+import io.nop.orm.IOrmTemplate;
 import jakarta.inject.Inject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -30,6 +35,9 @@ public class TestLitemallOrderStatisticsBizModel extends JunitBaseTestCase {
 
     @Inject
     IDaoProvider daoProvider;
+
+    @Inject
+    IOrmTemplate ormTemplate;
 
     @SuppressWarnings("unchecked")
     @Test
@@ -122,6 +130,75 @@ public class TestLitemallOrderStatisticsBizModel extends JunitBaseTestCase {
         assertNotNull(data);
         assertNotNull(data.get("pendingShip"));
         assertNotNull(data.get("stockWarning"));
+    }
+
+    /**
+     * Path B（Dashboard 聚合）三级阈值优先验证：
+     * 在售商品 SKU 总库存 = 15 > 全局阈值 10，默认不预警；
+     * 设置 per-goods safetyStock=20 后 → 15 ≤ 20 应进入预警明细，thresholdSource=safetyStock。
+     */
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testGetTodoAggregationStockWarningWithGoodsLevelSafetyStock() {
+        ContextProvider.getOrCreateContext().setUserId("1");
+        ContextProvider.getOrCreateContext().setUserName("admin");
+
+        // 在售商品，总库存 15（> 全局阈值 10，默认不预警）
+        LitemallGoods goods = daoProvider.daoFor(LitemallGoods.class).newEntity();
+        goods.setGoodsSn("G-P18-SAFE-001");
+        goods.setName("P18 SafetyStock Goods");
+        goods.setRetailPrice(BigDecimal.valueOf(100));
+        goods.setIsOnSale(true);
+        goods.setPicUrl("");
+        daoProvider.daoFor(LitemallGoods.class).saveEntity(goods);
+
+        LitemallGoodsProduct product = daoProvider.daoFor(LitemallGoodsProduct.class).newEntity();
+        product.setGoodsId(goods.getId());
+        product.setNumber(15);
+        product.setPrice(BigDecimal.valueOf(100));
+        product.setSpecifications("[\"标准\"]");
+        product.setUrl("");
+        daoProvider.daoFor(LitemallGoodsProduct.class).saveEntity(product);
+
+        // 不设 safetyStock：聚合库存 15 > 全局阈值 10，不应出现在预警明细
+        ApiRequest<Map<String, Object>> req1 = ApiRequest.build(Map.of());
+        IGraphQLExecutionContext ctx1 = graphQLEngine.newRpcContext(
+                GraphQLOperationType.query, "LitemallOrder__getTodoAggregation", req1);
+        ApiResponse<?> r1 = graphQLEngine.executeRpc(ctx1);
+        assertEquals(0, r1.getStatus());
+        Map<String, Object> data1 = (Map<String, Object>) r1.getData();
+        List<Map<String, Object>> details1 = (List<Map<String, Object>>) data1.get("stockWarningDetails");
+        if (details1 != null) {
+            boolean presentBefore = details1.stream()
+                    .anyMatch(m -> "P18 SafetyStock Goods".equals(m.get("goodsName")));
+            assertFalse(presentBefore, "Goods (totalStock=15, no safetyStock) should NOT trigger warning under global threshold 10");
+        }
+
+        // 设置 per-goods safetyStock=20：聚合库存 15 ≤ 20 应预警，thresholdSource=safetyStock
+        String goodsIdLocal = goods.getId();
+        ormTemplate.runInSession(session -> {
+            LitemallGoods loaded = daoProvider.daoFor(LitemallGoods.class).getEntityById(goodsIdLocal);
+            loaded.setSafetyStock(20);
+            daoProvider.daoFor(LitemallGoods.class).updateEntity(loaded);
+            return null;
+        });
+
+        ApiRequest<Map<String, Object>> req2 = ApiRequest.build(Map.of());
+        IGraphQLExecutionContext ctx2 = graphQLEngine.newRpcContext(
+                GraphQLOperationType.query, "LitemallOrder__getTodoAggregation", req2);
+        ApiResponse<?> r2 = graphQLEngine.executeRpc(ctx2);
+        assertEquals(0, r2.getStatus());
+        Map<String, Object> data2 = (Map<String, Object>) r2.getData();
+        List<Map<String, Object>> details2 = (List<Map<String, Object>>) data2.get("stockWarningDetails");
+        assertNotNull(details2);
+        assertFalse(details2.isEmpty(), "stockWarningDetails should not be empty after setting safetyStock=20");
+        Map<String, Object> warn = details2.stream()
+                .filter(m -> "P18 SafetyStock Goods".equals(m.get("goodsName")))
+                .findFirst().orElseThrow(() -> new AssertionError("Goods should be in warning list after safetyStock=20"));
+        assertEquals("safetyStock", warn.get("thresholdSource"),
+                "per-goods safetyStock should drive Dashboard warning source");
+        assertEquals(20, warn.get("safetyStock"));
+        assertEquals(15, warn.get("totalStock"));
     }
 
     // ===== P19 报表体系扩展 =====

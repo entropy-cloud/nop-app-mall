@@ -33,6 +33,7 @@
   "deleted": false,
   "isRecommend": false,
   "videoUrl": "",
+  "safetyStock": 0,
   "category": null,
   "category.name": "",
   "brand": null,
