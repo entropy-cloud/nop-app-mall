@@ -9,6 +9,7 @@
                 <col id="goodsId"/>
                 <col id="productId"/>
                 <col id="pointsPrice"/>
+                <col id="cashPrice"/>
                 <col id="exchangeStock"/>
                 <col id="exchangedCount"/>
                 <col id="maxPerUser"/>
@@ -30,10 +31,11 @@
         <form id="edit" size="lg">
             <layout>
                 goodsId[商品ID] productId[SKU ID]
-                pointsPrice[积分单价] exchangeStock[兑换活动库存]
-                exchangedCount[已兑换数量] maxPerUser[每人限兑]
+                pointsPrice[积分单价] cashPrice[现金单价(组合)]
+                exchangeStock[兑换活动库存] exchangedCount[已兑换数量]
+                maxPerUser[每人限兑] status[上下架状态]
                 startTime[兑换开始时间] endTime[兑换结束时间]
-                status[上下架状态] remark[备注]
+                remark[备注]
             </layout>
             <cells>
                 <cell id="productId">
@@ -41,6 +43,9 @@
                 </cell>
                 <cell id="pointsPrice">
                     <placeholder>单件所需积分（如 100）</placeholder>
+                </cell>
+                <cell id="cashPrice">
+                    <placeholder>组合兑换现金单价，留空/0=仅纯积分兑换</placeholder>
                 </cell>
                 <cell id="exchangeStock">
                     <placeholder>兑换活动库存（独立于零售库存）</placeholder>

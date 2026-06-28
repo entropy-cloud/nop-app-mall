@@ -50,6 +50,9 @@
 
                 <!--备注-->
                 <col id="remark" sortable="true"/>
+
+                <!--现金单价（组合兑换，空/0=纯积分）-->
+                <col id="cashPrice" ui:number="true" sortable="true"/>
             </cols>
         </grid>
         <grid id="pick-list" x:prototype="list" x:abstract="true"/>
@@ -63,7 +66,7 @@
  exchangeStock[兑换活动库存] exchangedCount[已兑换数量]
  maxPerUser[每人限兑次数（0=不限）] startTime[兑换开始时间]
  endTime[兑换结束时间] status[状态]
- remark[备注] 
+ remark[备注] cashPrice[现金单价（组合兑换，空/0=纯积分）]
 </layout>
         </form>
         <form id="add" editMode="add" title="新增-积分商品表" i18n-en:title="" x:prototype="edit"/>
@@ -74,6 +77,7 @@
  exchangedCount[已兑换数量] maxPerUser[每人限兑次数（0=不限）]
  startTime[兑换开始时间] endTime[兑换结束时间]
  status[状态] remark[备注]
+ cashPrice[现金单价（组合兑换，空/0=纯积分）] 
 </layout>
         </form>
         <form id="query" editMode="query" title="查询条件" i18n-en:title="Query Condition" x:abstract="true"/>

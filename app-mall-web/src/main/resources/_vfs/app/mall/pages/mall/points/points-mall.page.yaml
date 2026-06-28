@@ -86,7 +86,14 @@ body:
                   - type: tpl
                     tpl: '<div style="color:#999;font-size:12px">${brief}</div>'
                   - type: tpl
+                    visibleOn: "${cashPrice == null || cashPrice <= 0}"
                     tpl: '<div style="color:#ff6b00;font-size:24px;font-weight:bold;margin-top:8px">${pointsPrice} 积分</div>'
+                  - type: tpl
+                    visibleOn: "${cashPrice != null && cashPrice > 0}"
+                    tpl: '<div style="color:#ff6b00;font-size:22px;font-weight:bold;margin-top:8px">${pointsPrice} 积分 + ¥${cashPrice}</div>'
+                  - type: tpl
+                    visibleOn: "${cashPrice != null && cashPrice > 0}"
+                    tpl: '<div style="color:#3498db;font-size:12px">积分+现金组合兑换</div>'
                   - type: tpl
                     visibleOn: "${exchangeStock != null && exchangeStock <= 5}"
                     tpl: '<div style="color:#e74c3c;font-size:12px">仅剩 ${exchangeStock} 件</div>'
@@ -97,6 +104,7 @@ body:
                     label: 立即兑换
                     level: primary
                     size: lg
+                    visibleOn: "${cashPrice == null || cashPrice <= 0}"
                     disabledOn: "${!inWindow || exchangeStock == null || exchangeStock <= 0}"
                     actionType: dialog
                     dialog:
@@ -116,6 +124,32 @@ body:
                           pointsGoodsId: '${id}'
                           quantity: '${quantity}'
                         successMessage: 兑换成功，请到"我的兑换"查看
+                        redirect:
+                          link: "/storefront-my-exchange-orders"
+                  - type: button
+                    label: 组合兑换
+                    level: primary
+                    size: lg
+                    visibleOn: "${cashPrice != null && cashPrice > 0}"
+                    disabledOn: "${!inWindow || exchangeStock == null || exchangeStock <= 0}"
+                    actionType: dialog
+                    dialog:
+                      title: 确认组合兑换（积分+现金）
+                      body:
+                        - type: tpl
+                          tpl: '<div style="text-align:center;padding:10px"><p>商品：${goodsName}</p><p>积分单价：${pointsPrice} 积分</p><p>现金单价：¥${cashPrice}</p><p>剩余库存：${exchangeStock} 件</p><p>当前积分：${pointsBalance.data}</p></div>'
+                        - type: input-number
+                          name: quantity
+                          label: 兑换数量
+                          value: 1
+                          min: 1
+                          max: "${exchangeStock != null ? exchangeStock : 99}"
+                      api:
+                        url: '@mutation:LitemallPointsExchangeOrder__exchangeCombo'
+                        data:
+                          pointsGoodsId: '${id}'
+                          quantity: '${quantity}'
+                        successMessage: 组合兑换单已创建，请完成现金支付
                         redirect:
                           link: "/storefront-my-exchange-orders"
 

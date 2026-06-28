@@ -61,7 +61,11 @@ body:
                       - type: tpl
                         tpl: '<div style="font-size:16px;font-weight:bold">${goodsName} x${quantity}</div>'
                       - type: tpl
+                        visibleOn: "${cashPrice == null || cashPrice <= 0}"
                         tpl: '<div style="color:#ff6b00;font-size:14px;margin-top:4px">消耗 ${totalPoints} 积分</div>'
+                      - type: tpl
+                        visibleOn: "${cashPrice != null && cashPrice > 0}"
+                        tpl: '<div style="color:#ff6b00;font-size:14px;margin-top:4px">消耗 ${totalPoints} 积分 + ¥${totalCash != null ? totalCash : (cashPrice * quantity)} 现金</div>'
                       - type: tpl
                         visibleOn: "${consignee != null}"
                         tpl: '<div style="color:#999;font-size:12px;margin-top:4px">${consignee} ${phone}</div>'
@@ -74,6 +78,30 @@ body:
                         status: '${exchangeStatus}'
                   - type: wrapper
                     body:
+                      - type: button
+                        label: 余额支付
+                        level: primary
+                        size: sm
+                        visibleOn: "${exchangeStatus === 5 && cashPrice != null && cashPrice > 0}"
+                        actionType: dialog
+                        dialog:
+                          title: 余额支付现金部分
+                          body:
+                            - type: tpl
+                              tpl: '<div style="text-align:center;padding:10px"><p>应付现金：¥${totalCash != null ? totalCash : (cashPrice * quantity)}</p><p>支付方式：钱包余额（需输入登录密码确认）</p></div>'
+                            - type: input-password
+                              name: confirmCredential
+                              label: 登录密码
+                              required: true
+                              placeholder: 输入登录密码以确认余额支付
+                          api:
+                            url: '@mutation:LitemallPointsExchangeOrder__payComboByBalance'
+                            data:
+                              id: '${id}'
+                              confirmCredential: '${confirmCredential}'
+                            successMessage: 支付成功，等待发货
+                            redirect:
+                              link: "/storefront-my-exchange-orders"
                       - type: button
                         label: 确认收货
                         level: success
@@ -89,13 +117,13 @@ body:
                         label: 取消兑换
                         level: danger
                         size: sm
-                        visibleOn: "${exchangeStatus === 0}"
+                        visibleOn: "${exchangeStatus === 0 || exchangeStatus === 5}"
                         actionType: ajax
                         api:
                           url: '@mutation:LitemallPointsExchangeOrder__cancelExchangeOrder'
                           data:
                             id: '${id}'
-                        confirmText: 确认取消该兑换？积分将原路退还
+                        confirmText: 确认取消该兑换？积分将原路退还${cashPrice != null && payStatus === 10 ? '，已付现金将退回' : ''}
 
       - type: wrapper
         visibleOn: "${exchangeOrders.data == null || exchangeOrders.data.list == null || exchangeOrders.data.list.length === 0}"

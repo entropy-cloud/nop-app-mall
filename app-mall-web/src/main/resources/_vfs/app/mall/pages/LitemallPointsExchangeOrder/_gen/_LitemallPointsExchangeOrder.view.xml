@@ -68,6 +68,18 @@
 
                 <!--备注-->
                 <col id="remark" sortable="true"/>
+
+                <!--支付状态（组合兑换现金部分）-->
+                <col id="payStatus" ui:number="true" sortable="true"/>
+
+                <!--支付通道（组合兑换现金部分）-->
+                <col id="payChannel" ui:number="true" sortable="true"/>
+
+                <!--现金单价快照（组合兑换）-->
+                <col id="cashPrice" ui:number="true" sortable="true"/>
+
+                <!--余额支付金额（组合兑换现金部分）-->
+                <col id="walletPayAmount" ui:number="true" sortable="true"/>
             </cols>
         </grid>
         <grid id="pick-list" x:prototype="list" x:abstract="true"/>
@@ -84,7 +96,9 @@
  addressId[收货地址ID] consignee[收货人]
  phone[联系电话] fullAddress[完整收货地址]
  exchangeStatus[兑换状态] shipCode[物流单号]
- remark[备注] 
+ remark[备注] payStatus[支付状态（组合兑换现金部分）]
+ payChannel[支付通道（组合兑换现金部分）] cashPrice[现金单价快照（组合兑换）]
+ walletPayAmount[余额支付金额（组合兑换现金部分）] 
 </layout>
         </form>
         <form id="add" editMode="add" title="新增-积分兑换订单表" i18n-en:title="" x:prototype="edit"/>
@@ -98,6 +112,8 @@
  consignee[收货人] phone[联系电话]
  fullAddress[完整收货地址] exchangeStatus[兑换状态]
  shipCode[物流单号] remark[备注]
+ payStatus[支付状态（组合兑换现金部分）] payChannel[支付通道（组合兑换现金部分）]
+ cashPrice[现金单价快照（组合兑换）] walletPayAmount[余额支付金额（组合兑换现金部分）]
 </layout>
         </form>
         <form id="query" editMode="query" title="查询条件" i18n-en:title="Query Condition" x:abstract="true"/>
