@@ -376,9 +376,15 @@
 - 取消/退款额受扣减后的 `actualPrice` 约束，已通过满减降低的实付金额即为退款上限基准。
 - 后续若实现订单项级退款（P16），需按行分摊满减优惠；该分摊机制由 P16 负责，本文件仅定义订单级满减语义。
 
+### 限购强一致与参与记录（maxPerUser）
+
+- 满减下单命中（`discount > 0`）时，`submit` 写入一条 `LitemallPromotionUsage`（userId/promotionActivityId/orderId/meetAmount/discountAmount）记录参与事实，与订单创建在同一 `@BizMutation` 事务内。
+- `maxPerUser`（每人限参与次数，0 不限）按 `(userId, promotionActivityId)` 计数现有 usage 强一致校验：超限抛 `ERR_PROMOTION_MAX_PER_USER` 拒绝下单（事务回滚，含库存扣减）。
+- **命中活动 id 的获取方式（Decision）：** `selectPromotionForOrder` 为 GraphQL-facing `@BizQuery`（前端预览用，仅返回 `BigDecimal` 折扣额）。submit 写 usage 需命中 activityId，故抽取内部 helper `resolvePromotionForOrderInternal(goodsPrice, scopeIds, ctx)` 返回 `{activityId, discount, meetAmount}`（null 表示无命中）；`selectPromotionForOrder` 改为委托它取 `.discount`，**不破坏既有 GraphQL 契约**。备选（改 `selectPromotionForOrder` 返回结构体）被否——破坏前端预览契约与已有测试。单一真相源在 helper，public 方法仅委托。
+- 退款回滚 usage 计数为 successor（见对应计划 Deferred）：当前参与过即计数，退款不回退。
+
 ### 已知约束
 
-- `maxPerUser`（每人限参与次数）字段已存在于模型中，但当前无用户参与记录实体，满减计算为纯计算不落库计数，故 `maxPerUser` 暂不强一致执行（属 model-gap，见对应计划 Deferred 项）。
 - 「送」（赠品）能力不在当前支持范围：档位表仅有 `meetAmount`/`discountValue`，无赠品字段。
 
 ## 限时折扣 / Time-Limited Discount
@@ -605,7 +611,7 @@
 - 一条秒杀活动（`LitemallFlashSale`）绑定到具体商品（`goodsId`），可选绑定到具体 SKU（`productId`，null 表示该商品的全部 SKU 均参与）。
 - 一个秒杀活动可配置多个场次（`LitemallFlashSaleSession`），每场有独立的开始时间（`sessionStart`）、结束时间（`sessionEnd`）与场次库存（`sessionStock`）。
 - 秒杀价 `flashPrice` 为成交单价（商品单价层），优先于会员价（`vipPrice`）与限时折扣价（秒杀场景例外）。
-- 限购：每单限购 `maxPerOrder`（在 `flashSaleBuy` 中以请求数量上限校验）；每人限购 `maxPerUser` 的强一致执行依赖 `Order↔FlashSaleSession` 关联列（当前为 model-gap，见「已知约束」）。
+- 限购：每单限购 `maxPerOrder`（在 `flashSaleBuy` 中以请求数量上限校验）；每人限购 `maxPerUser` 经 `LitemallOrder.flashSaleSessionId` 关联列按 `(userId, flashSaleSessionId)` 强一致计数（见「限购执行路径」）。
 
 ### 下单路径（Decision A：独立 flashSaleBuy 路径）
 
@@ -615,13 +621,13 @@
 - **理由：** roadmap 明确「秒杀不走购物车直接购买」「秒杀订单不支持优惠券」，独立路径最干净表达此语义；与 P25 拼团（改 submit() 接线 pinTuanPrice）解耦无跨计划耦合。
 - **下单步骤：** 校验场次状态、活动状态、商品在售、`maxPerOrder` 上限 → 原子扣减 `sessionStock`（售罄抛 ErrorCode）+ 复用既有 `goodsProductMapper.reduceStock` 扣减商品库存 → 以 `flashPrice` 为成交单价创建单行 OrderGoods 的订单（couponPrice / promotionPrice / integralPrice / grouponPrice / pinTuanPrice 全置 ZERO，不挂券、不判满减、不抵扣积分）。
 
-### 限购执行路径（Decision B：maxPerOrder + maxPerUser model-gap）
+### 限购执行路径（Decision B：maxPerOrder + maxPerUser 强一致）
 
 - `maxPerOrder`（每单限购）：在 `flashSaleBuy` 中以请求数量上限校验，**无需模型改动**。
-- `maxPerUser`（每人限购）：强一致执行需按用户累计计数其对该场次的秒杀成交订单数，依赖 `Order↔FlashSaleSession` 关联列（如 `LitemallOrder.flashSaleSessionId`）。
-  - 备选 Alt A（新增关联列，触发 ORM 重生成，标记为 Protected Area ask-first）：可强一致查询计数 + 服务 P22 秒杀效果报表。
-  - 备选 Alt B（**采纳**）：`maxPerUser` 延后为 model-gap，本计划仅执行 `maxPerOrder` + `sessionStock` 原子扣减；`maxPerUser` 强一致需求触发时由 successor 计划落地关联列。
-  - **理由：** ORM 模型（`model/app-mall.orm.xml`）为 Protected Area（ask-first），无人工批准不可改；参照 P15 满减 `maxPerUser` 同样的 model-gap 先例。秒杀「限量」语义已由场次库存原子扣减保证，限购为运营增强项，非阻塞。
+- `maxPerUser`（每人限购）：经 `LitemallOrder.flashSaleSessionId` 关联列按 `(userId, flashSaleSessionId)` 计数该用户对本场次的待支付+已成交订单数（`orderStatus IN (101,201,301,401,402)`，排除取消/退款态；`orderStatus` 的 xmeta filter-op 白名单仅允许 `[eq,in,dateBetween,dateTimeBetween]`，故用 `in` 而非 `notIn`），`maxPerUser>0 && count>=maxPerUser` 抛 `ERR_FLASH_SALE_OVER_LIMIT_PER_USER`。守卫置于库存扣减前，拒绝不留库存副作用。
+- **场次归因回填：** `flashSaleBuy` 调 `orderBiz.createFlashSaleOrder(...flashSaleSessionId...)` 将场次 id 写入 `order.flashSaleSessionId`（非秒杀订单为 null），既用于 maxPerUser 计数，也用于按场次效果归因（`getFlashSaleEffectiveness`）。
+- **拒绝审计日志：** 超限拒绝时在 `REQUIRES_NEW` 独立事务写一条 `LitemallLog`（action=`flashSaleBuy:maxPerUser`，result=拒绝上下文），使其不受业务事务回滚影响而持久化，供秒杀效果报表的「限购命中拒绝数」口径消费。
+- 历史 model-gap 先例（Alt B 延后）已由本 successor 计划关闭：ORM 关联列 `flashSaleSessionId` 已落地，maxPerUser 强一致与按场次归因均可用。
 
 ### 场次状态（sessionStatus）切换（Decision A：nop-job 持久化翻转）
 
@@ -689,7 +695,6 @@
 
 ### 已知约束
 
-- **`maxPerUser` 强一致执行为 model-gap**：缺 `Order↔FlashSaleSession` 关联列，本计划仅执行 `maxPerOrder`。`maxPerUser` 强一致执行（含按场次计数查询）由 successor 计划落地关联列后实现，触发条件：限购强一致需求或 P22 秒杀效果报表。参照 P15 满减 `maxPerUser` 同样的 model-gap 先例。
 - 秒杀场次库存无 DB 唯一键约束（`session_stock` 为可减为 0 的普通整数列），并发安全完全依赖应用层条件 UPDATE，已足够。
 
 ## 拼团 / Pin-Tuan（社交裂变拼团）
@@ -839,12 +844,13 @@
 
 | 指标面 | `@BizQuery` | 口径 |
 | ------ | ---------- | ---- |
-| 满减效果 | `getPromotionEffectiveness(startDate?, endDate?)` | **聚合口径**：`promotionPrice>0` 的订单的参与单数、`SUM(orderPrice)` GMV、`SUM(promotionPrice)` 优惠额。按活动归因需用户参与记录实体（model-gap，见下「已知约束」） |
+| 满减效果 | `getPromotionEffectiveness(activityId?, startDate?, endDate?)` | `activityId` 非空：按活动归因经 `PromotionUsage`（参与单数 distinct orderId、参与人数 distinct userId、GMV `SUM(order.actualPrice)`、优惠额 `SUM(discountAmount)`）；`activityId` 空：时间窗内 `promotionPrice>0` 订单聚合口径（参与单数/GMV/优惠额） |
 | 优惠券核销 | `getCouponUsageStatistics(couponId?, startDate?, endDate?)` | 领取数（CouponUser 总数）、已使用数（status=1）、核销率、拉动 GMV（used 关联订单 `actualPrice` 之和） |
 | 拼团效果 | `getPinTuanEffectiveness(activityId?, startDate?, endDate?)` | 开团数（Group 总数）、成团数（status=10）、成团率、参与人数（distinct member.userId）、GMV（member→order `actualPrice` 之和，按 group.addTime 时间窗） |
-| 秒杀按场次效果 | — | **model-gap**：需 `Order.flashSaleSessionId` 关联列（ORM ask-first，见下「已知约束」） |
+| 秒杀按场次效果 | `getFlashSaleEffectiveness(flashSaleId?, startDate?, endDate?)` | 经 `Order.flashSaleSessionId`→`Session.flashSaleId` 归因：成交单数（非取消态 flashSaleSessionId 非空订单）、GMV（`SUM(actualPrice)`）、参与人数（distinct userId）、限购命中拒绝数（`LitemallLog` action=`flashSaleBuy:maxPerUser`）、售罄率（`sessionStock=0` 场次/总场次，BizModel 计算） |
 
 - 效果统计 `@BizQuery` 经 `@SqlLibMapper`（`LitemallMarketing.sql-lib.xml`）实现聚合；时间窗由调用方传 `startDate`/`endDate`（空时兜底全量）。
+- 报表面板 `marketing-effect.page.yaml`：满减面板支持 `activityId` 输入切换按活动归因/时间窗聚合；秒杀面板消费 `getFlashSaleEffectiveness`（model-gap 占位已移除）。
 - 报表面向管理员后台，与 `system-configuration.md` 报表与统计章节一致。
 
 ### 活动日历与冲突检测口径
@@ -855,9 +861,3 @@
   - 满减 `goodsScope=CATEGORY`：经其分类下商品集与同时段 goodsId 活动求交集判定。
   - 满减 `goodsScope=GOODS`、限时折扣、秒杀、拼团：均按 goodsId（可选 productId）直接比对。
 - 冲突在前端按 4 类列表的 goodsId + 时间窗集合判定，无需后端冲突 API。
-
-### 已知约束（ORM model-gap，待 ask-first 授权）
-
-- **满减 `maxPerUser` 强一致 + 按活动效果归因**：需新增 `LitemallPromotionUsage` 实体（userId/promotionActivityId/orderId）记录参与。当前满减为纯计算不落库，`maxPerUser` 暂不强一致执行；满减效果仅能按时间窗聚合，不可按活动归因。
-- **秒杀 `maxPerUser` 强一致 + 按场次效果**：需 `LitemallOrder.flashSaleSessionId` 关联列。当前秒杀仅执行 `maxPerOrder`，`maxPerUser` 强一致与按场次 GMV/售罄率/限购命中数暂不可得。
-- 上述两项为 ORM `model/*.orm.xml` 改动（Protected Area ask-first），授权落地后由 successor 计划实施（见 P22 计划 `Deferred But Adjudicated`）。

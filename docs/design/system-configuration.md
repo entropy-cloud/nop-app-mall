@@ -400,7 +400,7 @@
 ### 运营动作
 
 - 运营可对满减/限时折扣/秒杀/拼团每类活动执行上下架（`publishActivity`/`unpublishActivity`），状态切换规则与冲突/效果口径由 `marketing-and-promotions.md`「营销活动管理后台」章节持有。
-- 效果分析看板消费满减聚合 GMV、优惠券核销、拼团效果统计 `@BizQuery`；秒杀按场次效果待 ORM 授权补齐。
+- 效果分析看板消费满减按活动归因（`getPromotionEffectiveness(activityId?)`，经 `PromotionUsage`）/ 时间窗聚合、优惠券核销、拼团效果、秒杀按场次归因（`getFlashSaleEffectiveness(flashSaleId?)`，经 `Order.flashSaleSessionId`：成交单数/GMV/参与人数/售罄率/限购命中拒绝数）统计 `@BizQuery`。口径见 `marketing-and-promotions.md`「效果分析口径」。
 
 ### 与其他 Owner Docs 的关系
 

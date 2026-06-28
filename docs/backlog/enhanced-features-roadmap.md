@@ -24,7 +24,7 @@
 - 19. 报表体系扩展: `done`（`docs/plans/2026-06-28-1027-2-phase19-report-system-extension-plan.md`；销售漏斗/用户分析[含生命周期]/商品分析/订单分析/优惠券分析 + 4 报表页 + CSV 导出[E1 抉择 CSV 兜底，nop-report 为 successor]；8 新增 `@BizQuery` 挂 LitemallOrderBizModel[E2 抉择] + SQL-lib `<c:if>` 条件查询 + Java cohort/RFM/lifecycle 分组；289 测试全绿；活动 ROI 归 P22，毛利归 successor）
 - 20. 用户运营工作台: `done`（`docs/plans/2026-06-28-0340-2-phase20-user-operations-workbench-plan.md`）
 - 21. 订单运营工作台: `done`（`docs/plans/2026-06-28-0340-3-phase21-order-operations-workbench-plan.md`）
-- 22. 营销活动管理后台: `planned`（`docs/plans/2026-06-28-0340-1-phase22-marketing-management-backend-plan.md`，ORM-independent slice delivered（4 类上下架 + 统一菜单 + 总览/日历/效果页 + 满减聚合/优惠券/拼团效果统计）；ORM-dependent slice（PromotionUsage 实体 + flashSaleSessionId 列 + maxPerUser 强一致 + 按活动/按场次归因）待 ask-first 授权）
+- 22. 营销活动管理后台: `done`（`docs/plans/2026-06-28-0340-1-phase22-marketing-management-backend-plan.md` ORM-independent slice + `docs/plans/2026-06-28-1610-1-phase22-promotion-usage-model-gap-plan.md` ORM-dependent slice：PromotionUsage 实体 + flashSaleSessionId 列 + maxPerUser 强一致 + 按活动/按场次归因 + 效果看板秒杀面板）
 - 23. 限时折扣: `done`（`docs/plans/2026-06-27-2029-2-phase23-time-discount-plan.md`）
 - 24. 秒杀: `done`（`docs/plans/2026-06-28-0125-1-phase24-flash-sale-plan.md`）
 - 25. 拼团: `done`（`docs/plans/2026-06-28-0125-2-phase25-pin-tuan-plan.md`）
