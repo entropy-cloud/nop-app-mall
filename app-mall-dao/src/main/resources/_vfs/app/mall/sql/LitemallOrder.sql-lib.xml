@@ -338,7 +338,7 @@
                        MIN(PAY_TIME) AS FIRST_PAY_TIME,
                        MAX(PAY_TIME) AS LAST_PAY_TIME,
                        COUNT(*) AS ORDER_COUNT,
-                       0 AS TOTAL_AMOUNT
+                       COALESCE(SUM(ACTUAL_PRICE), 0) AS TOTAL_AMOUNT
                 FROM litemall_order
                 WHERE CAST(DELETED AS INT) = 0
                   AND CAST(ORDER_STATUS AS INT) &gt;= 201

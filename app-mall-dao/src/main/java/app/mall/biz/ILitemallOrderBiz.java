@@ -23,10 +23,13 @@ import app.mall.dao.dto.LifecycleSegmentBean;
 import app.mall.dao.dto.RepurchaseRatePointBean;
 import app.mall.dao.dto.OrderAnalysisBean;
 import app.mall.dao.dto.CouponUsageStatisticsBean;
+import app.mall.dao.dto.UserPortraitBean;
+import app.mall.dao.dto.SegmentMemberBean;
 import app.mall.dao.entity.LitemallOrder;
 
 import java.util.Map;
 
+import io.nop.api.core.beans.PageBean;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -218,6 +221,30 @@ public interface ILitemallOrderBiz extends ICrudBiz<LitemallOrder> {
     CouponUsageStatisticsBean getCouponAnalysis(@Optional @Name("startDate") String startDate,
                                                   @Optional @Name("endDate") String endDate,
                                                   IServiceContext context);
+
+    /**
+     * 单用户算法画像（P20 算法化用户画像 successor）。all-time / 当前快照口径：
+     * 返回该用户的 R/F/M 原始值 + RFM 段（对 all-time R/F/M 用全量阈值分类，复用 labelRfm）+
+     * 生命周期阶段（活跃窗口=近 30 天、churn=90 天判定，复用 classifyLifecycleStage）+ 首末单时间。
+     * 无消费用户返回「未消费」画像（rfmSegment/lifecycleStage 空 + 计数 0）。
+     * 口径见 docs/design/system-configuration.md「报表与统计 - 用户分析」。
+     */
+    @BizQuery
+    UserPortraitBean getUserPortrait(@Name("userId") String userId,
+                                      IServiceContext context);
+
+    /**
+     * 算法化分群成员列表（P20 算法化用户画像 successor）。按 RFM 段（segmentType=rfm）或
+     * 生命周期阶段（segmentType=lifecycle）圈选命中用户。all-time 口径与 {@link #getUserPortrait} 一致。
+     * 全量用户逐个分类后 Java 端过滤命中段并分页（admin 上下文报表场景，沿用既有报表权限边界）。
+     * 口径见 docs/design/system-configuration.md「报表与统计 - 用户分析」。
+     */
+    @BizQuery
+    PageBean<SegmentMemberBean> getSegmentMembers(@Name("segmentType") String segmentType,
+                                                   @Name("segmentValue") String segmentValue,
+                                                   @Optional @Name("page") Integer page,
+                                                   @Optional @Name("pageSize") Integer pageSize,
+                                                   IServiceContext context);
 
     @BizMutation
     int cancelExpiredOrders(@Name("timeoutMinutes") int timeoutMinutes,

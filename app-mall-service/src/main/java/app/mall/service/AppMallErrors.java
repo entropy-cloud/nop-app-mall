@@ -411,6 +411,18 @@ public interface AppMallErrors {
             define("nop.err.mall.user.banned",
                     "账号已被封禁，无法下单", ARG_USER_ID);
 
+    // 用户画像算法化错误码（P20 successor）
+    String ARG_SEGMENT_TYPE = "segmentType";
+    String ARG_SEGMENT_VALUE = "segmentValue";
+
+    ErrorCode ERR_USER_PORTRAIT_INVALID_SEGMENT_TYPE =
+            define("nop.err.mall.user-portrait.invalid-segment-type",
+                    "分群维度无效，仅支持 rfm 或 lifecycle", ARG_SEGMENT_TYPE);
+
+    ErrorCode ERR_USER_PORTRAIT_INVALID_SEGMENT_VALUE =
+            define("nop.err.mall.user-portrait.invalid-segment-value",
+                    "分群段值不能为空", ARG_SEGMENT_VALUE);
+
     ErrorCode ERR_USER_TAG_DUPLICATE =
             define("nop.err.mall.user-tag.duplicate",
                     "该用户已存在此标签", ARG_USER_ID, "tag");

@@ -1,37 +1,153 @@
 type: page
-title: 按标签分群
+title: 用户分群
 body:
-  - type: form
-    title: 查询条件
-    mode: inline
-    submitOnChange: true
-    target: segmentList
-    body:
-      - type: input-text
-        name: tag
-        label: 标签码
-        placeholder: 输入标签码查询匹配用户
+  - type: tabs
+    tabs:
+      - title: 按标签分群
+        body:
+          - type: form
+            title: 查询条件
+            mode: inline
+            submitOnChange: true
+            target: segmentList
+            body:
+              - type: input-text
+                name: tag
+                label: 标签码
+                placeholder: 输入标签码查询匹配用户
 
-  - type: service
-    name: segmentList
-    api:
-      url: '@query:LitemallUserTag__findUsersByTag'
-      data:
-        tag: '${tag}'
-        page: 1
-      sendOn: '${!!tag}'
-    body:
-      - type: table
-        source: '${items}'
-        columns:
-          - name: userId
-            label: 用户ID
-          - name: tag
-            label: 标签码
-          - name: name
-            label: 标签名称
-          - name: addTime
-            label: 打标时间
-        footerToolbar:
-          - type: pagination
-          - type: statistics
+          - type: service
+            name: segmentList
+            api:
+              url: '@query:LitemallUserTag__findUsersByTag'
+              data:
+                tag: '${tag}'
+                page: 1
+              sendOn: '${!!tag}'
+            body:
+              - type: table
+                source: '${items}'
+                columns:
+                  - name: userId
+                    label: 用户ID
+                  - name: tag
+                    label: 标签码
+                  - name: name
+                    label: 标签名称
+                  - name: addTime
+                    label: 打标时间
+                footerToolbar:
+                  - type: pagination
+                  - type: statistics
+
+      - title: 按 RFM 段分群（算法化）
+        body:
+          - type: form
+            title: 查询条件
+            mode: inline
+            submitOnChange: true
+            target: rfmMemberList
+            body:
+              - type: select
+                name: segmentValue
+                label: RFM 段
+                placeholder: 选择 RFM 段
+                options:
+                  - label: 重要价值用户
+                    value: 重要价值用户
+                  - label: 重要保持用户
+                    value: 重要保持用户
+                  - label: 重要发展用户
+                    value: 重要发展用户
+                  - label: 重要挽留用户
+                    value: 重要挽留用户
+                  - label: 一般价值用户
+                    value: 一般价值用户
+                  - label: 一般保持用户
+                    value: 一般保持用户
+                  - label: 一般发展用户
+                    value: 一般发展用户
+                  - label: 一般挽留用户
+                    value: 一般挽留用户
+
+          - type: service
+            name: rfmMemberList
+            api:
+              url: '@query:LitemallOrder__getSegmentMembers'
+              data:
+                segmentType: rfm
+                segmentValue: '${segmentValue}'
+                page: 1
+                pageSize: 20
+              sendOn: '${!!segmentValue}'
+            body:
+              - type: table
+                source: '${items}'
+                columns:
+                  - name: userId
+                    label: 用户ID
+                  - name: rfmSegment
+                    label: RFM 段
+                  - name: lifecycleStage
+                    label: 生命周期
+                  - name: orderCount
+                    label: 累计单数
+                  - name: totalAmount
+                    label: 累计消费
+                  - name: lastPayTime
+                    label: 末单时间
+                footerToolbar:
+                  - type: pagination
+                  - type: statistics
+
+      - title: 按生命周期分群（算法化）
+        body:
+          - type: form
+            title: 查询条件
+            mode: inline
+            submitOnChange: true
+            target: lifecycleMemberList
+            body:
+              - type: select
+                name: segmentValue
+                label: 生命周期阶段
+                placeholder: 选择阶段
+                options:
+                  - label: 新客
+                    value: 新客
+                  - label: 活跃
+                    value: 活跃
+                  - label: 沉睡
+                    value: 沉睡
+                  - label: 流失
+                    value: 流失
+
+          - type: service
+            name: lifecycleMemberList
+            api:
+              url: '@query:LitemallOrder__getSegmentMembers'
+              data:
+                segmentType: lifecycle
+                segmentValue: '${segmentValue}'
+                page: 1
+                pageSize: 20
+              sendOn: '${!!segmentValue}'
+            body:
+              - type: table
+                source: '${items}'
+                columns:
+                  - name: userId
+                    label: 用户ID
+                  - name: rfmSegment
+                    label: RFM 段
+                  - name: lifecycleStage
+                    label: 生命周期
+                  - name: orderCount
+                    label: 累计单数
+                  - name: totalAmount
+                    label: 累计消费
+                  - name: lastPayTime
+                    label: 末单时间
+                footerToolbar:
+                  - type: pagination
+                  - type: statistics

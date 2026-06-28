@@ -51,6 +51,8 @@ import app.mall.dao.dto.LifecycleSegmentBean;
 import app.mall.dao.dto.RepurchaseRatePointBean;
 import app.mall.dao.dto.UserPaymentPointBean;
 import app.mall.dao.dto.UserPaymentSummaryBean;
+import app.mall.dao.dto.UserPortraitBean;
+import app.mall.dao.dto.SegmentMemberBean;
 import app.mall.dao.dto.AovDistributionBean;
 import app.mall.dao.dto.CouponUsageStatisticsBean;
 import app.mall.dao.dto.OrderAnalysisBean;
@@ -79,6 +81,7 @@ import io.nop.api.core.annotations.core.Name;
 import io.nop.api.core.annotations.core.Optional;
 import io.nop.api.core.annotations.directive.Auth;
 import io.nop.api.core.beans.FilterBeans;
+import io.nop.api.core.beans.PageBean;
 import io.nop.api.core.beans.query.QueryBean;
 import io.nop.api.core.exceptions.NopException;
 import io.nop.api.core.time.CoreMetrics;
@@ -1316,9 +1319,32 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
             return new ArrayList<>();
         }
 
+        RfmThresholds thresholds = computeRfmThresholds(summaries);
+
+        Map<String, Integer> segmentCounts = new LinkedHashMap<>();
+        for (UserPaymentSummaryBean s : summaries) {
+            String segment = classifyRfmSegment(s, thresholds);
+            segmentCounts.merge(segment, 1, Integer::sum);
+        }
+
+        List<RfmSegmentBean> result = new ArrayList<>();
+        for (Map.Entry<String, Integer> entry : segmentCounts.entrySet()) {
+            RfmSegmentBean bean = new RfmSegmentBean();
+            bean.setSegment(entry.getKey());
+            bean.setUserCount(entry.getValue());
+            result.add(bean);
+        }
+        return result;
+    }
+
+    /**
+     * P19 RFM 报表 + P20 用户画像共用：按当批数据中位数计算 R/F/M 三分位阈值。
+     * 同源抽取自原 getUserRfm 内联阈值计算（行为不变，P19 测试零回归）。
+     */
+    private static RfmThresholds computeRfmThresholds(List<UserPaymentSummaryBean> summaries) {
         List<UserPaymentSummaryBean> sorted = new ArrayList<>(summaries);
         sorted.sort((a, b) -> Integer.compare(b.getOrderCount(), a.getOrderCount()));
-        int fMedian = sorted.get(sorted.size() / 2).getOrderCount();
+        long fMedian = sorted.get(sorted.size() / 2).getOrderCount();
 
         sorted.sort((a, b) -> b.getTotalAmount().compareTo(a.getTotalAmount()));
         BigDecimal mMedian = sorted.get(sorted.size() / 2).getTotalAmount();
@@ -1332,26 +1358,36 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
         }
         Collections.sort(recencies);
         long rMedian = recencies.isEmpty() ? 0 : recencies.get(recencies.size() / 2);
+        return new RfmThresholds(rMedian, fMedian, mMedian);
+    }
 
-        Map<String, Integer> segmentCounts = new LinkedHashMap<>();
-        for (UserPaymentSummaryBean s : summaries) {
-            long r = s.getLastPayTime() != null
-                    ? (nowMillis - s.getLastPayTime().getTime()) / (24 * 60 * 60 * 1000) : Long.MAX_VALUE;
-            boolean rHigh = r <= rMedian;
-            boolean fHigh = s.getOrderCount() >= fMedian;
-            boolean mHigh = s.getTotalAmount().compareTo(mMedian) >= 0;
-            String segment = labelRfm(rHigh, fHigh, mHigh);
-            segmentCounts.merge(segment, 1, Integer::sum);
-        }
+    /**
+     * P19 RFM 报表 + P20 用户画像共用：用阈值把单用户的 R/F/M 标到 8 段之一。
+     * 同源抽取自原 getUserRfm 内联分类（无逻辑分叉，与 labelRfm 一致）。
+     */
+    private static String classifyRfmSegment(UserPaymentSummaryBean s, RfmThresholds thresholds) {
+        long nowMillis = CoreMetrics.currentTimeMillis();
+        long r = s.getLastPayTime() != null
+                ? (nowMillis - s.getLastPayTime().getTime()) / (24 * 60 * 60 * 1000) : Long.MAX_VALUE;
+        boolean rHigh = r <= thresholds.rMedian;
+        boolean fHigh = s.getOrderCount() >= thresholds.fMedian;
+        boolean mHigh = s.getTotalAmount().compareTo(thresholds.mMedian) >= 0;
+        return labelRfm(rHigh, fHigh, mHigh);
+    }
 
-        List<RfmSegmentBean> result = new ArrayList<>();
-        for (Map.Entry<String, Integer> entry : segmentCounts.entrySet()) {
-            RfmSegmentBean bean = new RfmSegmentBean();
-            bean.setSegment(entry.getKey());
-            bean.setUserCount(entry.getValue());
-            result.add(bean);
+    /**
+     * RFM 三分位阈值载体（私有静态类，仅供 computeRfmThresholds/classifyRfmSegment 同源使用）。
+     */
+    private static final class RfmThresholds {
+        final long rMedian;
+        final long fMedian;
+        final BigDecimal mMedian;
+
+        RfmThresholds(long rMedian, long fMedian, BigDecimal mMedian) {
+            this.rMedian = rMedian;
+            this.fMedian = fMedian;
+            this.mMedian = mMedian;
         }
-        return result;
     }
 
     private static String labelRfm(boolean rHigh, boolean fHigh, boolean mHigh) {
@@ -1398,16 +1434,20 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
 
             boolean inPeriod = periodUsers.contains(userId);
             boolean firstInPeriod = firstAll != null && !firstAll.isBefore(start) && !firstAll.isAfter(end);
-            long daysSinceLast = java.time.Duration.between(lastAll.atStartOfDay(), today.atStartOfDay()).toDays();
-
-            if (firstInPeriod) {
-                newCount++;
-            } else if (inPeriod) {
-                activeCount++;
-            } else if (daysSinceLast >= effectiveChurnDays) {
-                churnedCount++;
-            } else {
-                dormantCount++;
+            String stage = classifyLifecycleStage(firstInPeriod, inPeriod, lastAll, today, effectiveChurnDays);
+            switch (stage) {
+                case "新客":
+                    newCount++;
+                    break;
+                case "活跃":
+                    activeCount++;
+                    break;
+                case "流失":
+                    churnedCount++;
+                    break;
+                default:
+                    dormantCount++;
+                    break;
             }
         }
 
@@ -1418,6 +1458,32 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
         result.add(makeLifecycleSegment("沉睡", dormantCount, total));
         result.add(makeLifecycleSegment("流失", churnedCount, total));
         return result;
+    }
+
+    /**
+     * P19 生命周期报表 + P20 用户画像共用：按首单/末单时间 + 活跃窗口 + churn 阈值判定当前阶段。
+     * 同源抽取自原 getUserLifecycle 内联分类规则（行为不变，P19 测试零回归）。
+     * 返回值固定为「新客 / 活跃 / 沉睡 / 流失」四段之一。
+     *
+     * @param firstInPeriod 该用户首单是否落在活跃窗口内（窗口边界由调用方按报表/画像口径确定）
+     * @param inPeriod      该用户末单是否落在活跃窗口内
+     * @param lastAllDate   全量历史末单日期（不可为 null）
+     * @param today         当前日期
+     * @param churnDays     流失阈值天数
+     */
+    private static String classifyLifecycleStage(boolean firstInPeriod, boolean inPeriod,
+                                                  LocalDate lastAllDate, LocalDate today, int churnDays) {
+        if (firstInPeriod) {
+            return "新客";
+        }
+        if (inPeriod) {
+            return "活跃";
+        }
+        long daysSinceLast = java.time.Duration.between(lastAllDate.atStartOfDay(), today.atStartOfDay()).toDays();
+        if (daysSinceLast >= churnDays) {
+            return "流失";
+        }
+        return "沉睡";
     }
 
     private static LifecycleSegmentBean makeLifecycleSegment(String segment, int count, int total) {
@@ -1525,6 +1591,148 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
             bean.setPulledGmv(BigDecimal.ZERO);
         }
         return bean;
+    }
+
+    // ===== P20 算法化用户画像 successor =====
+
+    /**
+     * 活跃窗口默认 30 天（与 P19 报表默认 period 一致），churn 默认 90 天（与 DEFAULT_CHURN_DAYS 一致）。
+     * 画像口径见 docs/design/system-configuration.md「报表与统计 - 用户分析」。
+     */
+    private static final int PORTRAIT_ACTIVE_WINDOW_DAYS = 30;
+
+    @Override
+    @BizQuery
+    public UserPortraitBean getUserPortrait(@Name("userId") String userId,
+                                             IServiceContext context) {
+        if (StringHelper.isEmpty(userId)) {
+            throw new NopException(AppMallErrors.ERR_USER_NOT_FOUND).param(AppMallErrors.ARG_USER_ID, userId);
+        }
+
+        List<UserPaymentSummaryBean> allTimeSummaries = orderMapper.getUserPaymentSummaryAllTime();
+        UserPaymentSummaryBean target = null;
+        for (UserPaymentSummaryBean s : allTimeSummaries) {
+            if (userId.equals(s.getUserId())) {
+                target = s;
+                break;
+            }
+        }
+
+        UserPortraitBean portrait = new UserPortraitBean();
+        portrait.setUserId(userId);
+        if (target == null || target.getLastPayTime() == null) {
+            portrait.setFrequency(0);
+            portrait.setMonetary(BigDecimal.ZERO);
+            return portrait;
+        }
+
+        long nowMillis = CoreMetrics.currentTimeMillis();
+        long recencyDays = (nowMillis - target.getLastPayTime().getTime()) / (24 * 60 * 60 * 1000);
+        portrait.setRecencyDays(recencyDays);
+        portrait.setFrequency(target.getOrderCount());
+        portrait.setMonetary(target.getTotalAmount() != null ? target.getTotalAmount() : BigDecimal.ZERO);
+        portrait.setFirstPayTime(target.getFirstPayTime());
+        portrait.setLastPayTime(target.getLastPayTime());
+
+        RfmThresholds thresholds = computeRfmThresholds(allTimeSummaries);
+        portrait.setRfmSegment(classifyRfmSegment(target, thresholds));
+
+        LocalDate today = CoreMetrics.currentDate();
+        LocalDate activeWindowStart = today.minusDays(PORTRAIT_ACTIVE_WINDOW_DAYS - 1);
+        LocalDate firstAll = target.getFirstPayTime().toLocalDateTime().toLocalDate();
+        LocalDate lastAll = target.getLastPayTime().toLocalDateTime().toLocalDate();
+        boolean inPeriod = !lastAll.isBefore(activeWindowStart) && !lastAll.isAfter(today);
+        boolean firstInPeriod = !firstAll.isBefore(activeWindowStart) && !firstAll.isAfter(today);
+        portrait.setLifecycleStage(classifyLifecycleStage(firstInPeriod, inPeriod, lastAll, today, DEFAULT_CHURN_DAYS));
+        return portrait;
+    }
+
+    @Override
+    @BizQuery
+    public PageBean<SegmentMemberBean> getSegmentMembers(@Name("segmentType") String segmentType,
+                                                          @Name("segmentValue") String segmentValue,
+                                                          @Optional @Name("page") Integer page,
+                                                          @Optional @Name("pageSize") Integer pageSize,
+                                                          IServiceContext context) {
+        int effectivePage = page != null && page > 0 ? page : 1;
+        int effectivePageSize = pageSize != null && pageSize > 0 ? Math.min(pageSize, 500) : 20;
+
+        String normalizedType = segmentType == null ? "" : segmentType.trim().toLowerCase();
+        boolean byRfm = "rfm".equals(normalizedType);
+        boolean byLifecycle = "lifecycle".equals(normalizedType);
+        if (!byRfm && !byLifecycle) {
+            throw new NopException(AppMallErrors.ERR_USER_PORTRAIT_INVALID_SEGMENT_TYPE)
+                    .param(AppMallErrors.ARG_SEGMENT_TYPE, segmentType);
+        }
+        if (StringHelper.isEmpty(segmentValue)) {
+            throw new NopException(AppMallErrors.ERR_USER_PORTRAIT_INVALID_SEGMENT_VALUE)
+                    .param(AppMallErrors.ARG_SEGMENT_VALUE, segmentValue);
+        }
+
+        List<UserPaymentSummaryBean> allTimeSummaries = orderMapper.getUserPaymentSummaryAllTime();
+        if (allTimeSummaries.isEmpty()) {
+            return emptyMemberPage(effectivePage, effectivePageSize);
+        }
+
+        RfmThresholds thresholds = computeRfmThresholds(allTimeSummaries);
+        LocalDate today = CoreMetrics.currentDate();
+        LocalDate activeWindowStart = today.minusDays(PORTRAIT_ACTIVE_WINDOW_DAYS - 1);
+
+        List<SegmentMemberBean> matched = new ArrayList<>();
+        for (UserPaymentSummaryBean s : allTimeSummaries) {
+            if (s.getLastPayTime() == null) {
+                continue;
+            }
+            String rfmSegment = classifyRfmSegment(s, thresholds);
+            LocalDate firstAll = s.getFirstPayTime().toLocalDateTime().toLocalDate();
+            LocalDate lastAll = s.getLastPayTime().toLocalDateTime().toLocalDate();
+            boolean inPeriod = !lastAll.isBefore(activeWindowStart) && !lastAll.isAfter(today);
+            boolean firstInPeriod = !firstAll.isBefore(activeWindowStart) && !firstAll.isAfter(today);
+            String lifecycleStage = classifyLifecycleStage(firstInPeriod, inPeriod, lastAll, today, DEFAULT_CHURN_DAYS);
+
+            boolean hit = byRfm ? segmentValue.equals(rfmSegment) : segmentValue.equals(lifecycleStage);
+            if (!hit) {
+                continue;
+            }
+            SegmentMemberBean member = new SegmentMemberBean();
+            member.setUserId(s.getUserId());
+            member.setLastPayTime(s.getLastPayTime());
+            member.setOrderCount(s.getOrderCount());
+            member.setTotalAmount(s.getTotalAmount() != null ? s.getTotalAmount() : BigDecimal.ZERO);
+            member.setRfmSegment(rfmSegment);
+            member.setLifecycleStage(lifecycleStage);
+            matched.add(member);
+        }
+
+        matched.sort((a, b) -> {
+            int byCount = Integer.compare(b.getOrderCount(), a.getOrderCount());
+            if (byCount != 0) return byCount;
+            return b.getTotalAmount().compareTo(a.getTotalAmount());
+        });
+
+        return paginateMembers(matched, effectivePage, effectivePageSize);
+    }
+
+    private static PageBean<SegmentMemberBean> emptyMemberPage(int page, int pageSize) {
+        PageBean<SegmentMemberBean> p = new PageBean<>();
+        p.setOffset((long) (page - 1) * pageSize);
+        p.setLimit(pageSize);
+        p.setTotal(0L);
+        p.setItems(new ArrayList<>());
+        return p;
+    }
+
+    private static PageBean<SegmentMemberBean> paginateMembers(List<SegmentMemberBean> all, int page, int pageSize) {
+        int total = all.size();
+        int from = Math.min((page - 1) * pageSize, total);
+        int to = Math.min(from + pageSize, total);
+        List<SegmentMemberBean> slice = new ArrayList<>(all.subList(from, to));
+        PageBean<SegmentMemberBean> p = new PageBean<>();
+        p.setOffset((long) from);
+        p.setLimit(pageSize);
+        p.setTotal((long) total);
+        p.setItems(slice);
+        return p;
     }
 
     private static BigDecimal gmvOrZero(DashboardGmvBean bean) {

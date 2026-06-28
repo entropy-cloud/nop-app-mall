@@ -25,6 +25,32 @@ body:
                 tpl: '封禁原因：<b>${banReason}</b>'
                 visibleOn: "${!!banned}"
 
+      - type: service
+        name: portrait
+        api:
+          url: '@query:LitemallOrder__getUserPortrait'
+          data:
+            userId: "${userId}"
+          sendOn: "${!!userId}"
+        body:
+          - type: panel
+            title: 算法画像（RFM + 生命周期）
+            body:
+              - type: wrapper
+                className: b-a bg-white m-b-sm
+                body:
+                  - type: tpl
+                    tpl: 'RFM 段：<b>${rfmSegment | default: "未消费"}</b>　生命周期：<b>${lifecycleStage | default: "未消费"}</b>'
+                  - type: tpl
+                    tpl: '最近消费（R，距今天数）：<b>${recencyDays}</b>　累计单数（F）：<b>${frequency}</b>　累计消费（M）：<b>${monetary}</b>'
+                    visibleOn: "${frequency > 0}"
+                  - type: tpl
+                    tpl: '首单时间：<b>${firstPayTime}</b>　末单时间：<b>${lastPayTime}</b>'
+                    visibleOn: "${frequency > 0}"
+                  - type: tpl
+                    tpl: '<i>该用户暂无支付订单，仅有手工标签画像。</i>'
+                    visibleOn: "${!frequency || frequency == 0}"
+
       - type: grid
         columns:
           - md: 6
