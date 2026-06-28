@@ -197,6 +197,7 @@ Exit Criteria:
 - Classification: `out-of-scope improvement`
 - Why Not Blocking Closure: 依赖 nop-report 引擎（未引入），归 P18/P19。
 - Successor Required: `yes`（P18/P19 引入 nop-report 后）
+- **Successor Closed（2026-06-29）**: 已由 successor 计划 `docs/plans/2026-06-29-0830-1-marketing-effectiveness-report-export-plan.md` 关闭——`LitemallPromotionActivity__exportMarketingReport` 经 `IReportEngine` + `marketing-effect.xpt.xml`（4 sheet：满减/秒杀/拼团/优惠券）提供营销效果 xlsx/pdf 模板化导出，复用既有 4 效果 `@BizQuery`、不改口径；前端 `marketing-effect.page.yaml` 补 xlsx/pdf 导出入口。实施期顺带修复 `LitemallMarketing.sql-lib.xml` 3 条 query 的 null-id 可选过滤缺陷（见 `docs/bugs/04-marketing-effectiveness-queries-null-id-sql-grammar.md`）。
 
 ## Closure
 

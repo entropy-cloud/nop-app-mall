@@ -849,8 +849,9 @@
 | 拼团效果 | `getPinTuanEffectiveness(activityId?, startDate?, endDate?)` | 开团数（Group 总数）、成团数（status=10）、成团率、参与人数（distinct member.userId）、GMV（member→order `actualPrice` 之和，按 group.addTime 时间窗） |
 | 秒杀按场次效果 | `getFlashSaleEffectiveness(flashSaleId?, startDate?, endDate?)` | 经 `Order.flashSaleSessionId`→`Session.flashSaleId` 归因：成交单数（非取消态 flashSaleSessionId 非空订单）、GMV（`SUM(actualPrice)`）、参与人数（distinct userId）、限购命中拒绝数（`LitemallLog` action=`flashSaleBuy:maxPerUser`）、售罄率（`sessionStock=0` 场次/总场次，BizModel 计算） |
 
-- 效果统计 `@BizQuery` 经 `@SqlLibMapper`（`LitemallMarketing.sql-lib.xml`）实现聚合；时间窗由调用方传 `startDate`/`endDate`（空时兜底全量）。
+- 效果统计 `@BizQuery` 经 `@SqlLibMapper`（`LitemallMarketing.sql-lib.xml`）实现聚合；时间窗由调用方传 `startDate`/`endDate`（空时兜底全量）。可选 ID 过滤（`activityId`/`flashSaleId`/`couponId`）经 XPL `<c:if>` 条件块实现（null=全量聚合、非 null=按 id 过滤）。
 - 报表面板 `marketing-effect.page.yaml`：满减面板支持 `activityId` 输入切换按活动归因/时间窗聚合；秒杀面板消费 `getFlashSaleEffectiveness`（model-gap 占位已移除）。
+- 效果导出：`marketing-effect.page.yaml` 提供 xlsx/pdf 模板导出入口（格式选择 + blob 按钮，调 `LitemallPromotionActivity__exportMarketingReport`），渲染单 xlsx 多 sheet（满减/秒杀/拼团/优惠券 4 sheet，与面板展示同口径），复用上述 4 效果 query、不改口径，与 funnel/product/order/user/coupon 统计页 nop-report 导出同模式。
 - 报表面向管理员后台，与 `system-configuration.md` 报表与统计章节一致。
 
 ### 活动日历与冲突检测口径
