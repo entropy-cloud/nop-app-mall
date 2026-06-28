@@ -31,7 +31,7 @@
 - 26. 会员等级体系: `done`（`docs/plans/2026-06-27-1742-2-phase26-member-level-system-plan.md`）
 - 27. 积分体系: `done`（`docs/plans/2026-06-27-2029-1-phase27-points-system-plan.md`）
 - 28. 签到: `done`（`docs/plans/2026-06-27-2321-1-phase28-check-in-plan.md`）
-- 29. 钱包余额与充值: `todo`
+- 29. 钱包余额与充值: `done`（`docs/plans/2026-06-28-1400-1-phase29-wallet-recharge-plan.md`；钱包账户[懒创建+乐观锁原子操作]+流水[balanceAfter快照]+充值流程[套餐存LitemallSystem JSON + outTradeNo派生RC前缀 + PaymentCallback回调路由]）
 - 30. 多支付通道: `todo`
 - 31. 配送方式扩展（自提）: `done`（`docs/plans/2026-06-28-0530-3-phase31-pickup-delivery-plan.md`）
 - 32. 优惠券体系增强: `done`（`docs/plans/2026-06-27-2321-3-phase32-coupon-center-plan.md`）

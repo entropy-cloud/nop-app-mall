@@ -25,13 +25,38 @@
 
 - 每个商城用户有且只有一个钱包账户。
 - 钱包账户记录当前可用余额、累计充值总额和累计消费总额。
-- 钱包账户在用户注册时自动创建。
+- 钱包账户采用懒创建（lazy-create）：首次被访问（`getMyWallet` 查询或 `creditBalance` 入账）时按需创建，而非在用户注册时预创建。功能等价——0 余额账户在被访问前对用户不可见（`getMyWallet` 对未创建用户返回内存空壳 balance=0，不落库）。与积分账户的懒创建策略保持一致。
 - 钱包余额不可为负值。
+
+### 并发安全与原子操作
+
+- 钱包余额的入账（credit）与扣减（debit）均为**单事务内原子操作**：以 `version` 乐观锁执行 `update wallet set balance=balance±N where id=? and version=?`，version 不匹配即抛 `nop.err.mall.wallet.version-conflict`。
+- `debit` 前校验 `balance - N >= 0`（余额不可为负），余额不足抛 `nop.err.mall.wallet.insufficient`。
+- 每次变动同时写入一条流水记录（含 `balanceAfter` 变动后余额快照），使账户表与流水表可在任意时刻对账。
+- 高并发单账户需重试；本基线非秒杀场景，乐观锁失败即返回错误由调用方重试。
+
+### 暴露模型与资金安全
+
+- `creditBalance` / `debitBalance` 为 `@BizAction` 内部方法，**不暴露 GraphQL**，仅由受信 BizModel 通过 `ILitemallWalletBiz` 注入调用（如充值入账、P30 余额支付接线）。理由：钱包涉及资金，公开 `@BizMutation(userId, amount)` 会让任意登录用户可对任意 userId 加/扣余额（资金盗刷风险）。
+- `adminAdjust` 为 `@BizMutation @Auth(roles="admin")`，后台调账专用。
+
+### 钱包流水与 changeType × sourceType 分类法
+
+- 每笔钱包余额的增加或减少均产生一条流水记录（`LitemallWalletFlow`）。
+- 流水字段：钱包ID（`walletId`）、变动类型（`changeType`，字典 `mall/wallet-change-type`）、变动金额（`changeAmount`）、变动后余额（`balanceAfter`）、来源类型（`sourceType`，VARCHAR(50)）、来源业务 ID（`sourceId`）、备注（`remark`）、变动时间（`addTime`）。
+- **字典复用约定（不改模型）：** `mall/wallet-change-type` 字典有四值 `RECHARGE`(0, 充值) / `PAY`(10, 支付) / `REFUND`(20, 退款) / `WITHDRAW`(30, 提现)。`changeType` 严格映射这四值。**所有细分来源/去向落入 `sourceType` 字段**：
+  - 钱包充值入账 = `RECHARGE` + `sourceType=recharge`
+  - 后台调账（加） = `RECHARGE` + `sourceType=admin-adjust`
+  - 后台调账（扣） = `PAY` + `sourceType=admin-adjust`
+  - 余额支付扣款 = `PAY` + `sourceType=pay`（P30 接线）
+  - 退款返还 = `REFUND` + `sourceType=refund`（退款流程未实现，预留语义）
+  - 提现 = `WITHDRAW` + `sourceType=withdraw`（未实现，预留语义）
+- `sourceId` 记录来源业务 ID（rechargeId 等），支撑幂等查重（如同一 rechargeId 不重复入账）。
 
 ### 支持行为
 
-- 用户可查看钱包余额和收支汇总。
-- 用户可查看钱包流水，支持按时间和类型筛选。
+- 用户可查看钱包余额和收支汇总（累计充值/累计消费）。
+- 用户可查看钱包流水，支持按时间和类型（changeType / sourceType）筛选。
 
 ## 充值
 
@@ -45,6 +70,14 @@
 - 支付成功后，钱包余额增加对应金额。
 - 充值套餐支持赠送金额配置（如充 100 送 10）。
 
+### 实现说明
+
+- **充值套餐存储：** 套餐配置存入现有 `LitemallSystem` 表（keyName=`recharge_packages`，value 为 JSON 数组 `[{id, label, amount, giftAmount}]`），经 `ILitemallSystemBiz.getConfig` 读取、经现有 `LitemallSystem` 后台 CRUD 编辑。不新增 ORM 实体（ORM 变更为 Protected Area）。无配置时返回默认套餐 `[{amount:100, giftAmount:10}]` 兜底。
+- **outTradeNo 派生（非存储）：** `LitemallRecharge` 无 `outTradeNo` 列。outTradeNo = `"RC" + String.format("%08d", rechargeId)`（如 `RC00000001`），满足微信支付 6–32 字符要求。去掉 `RC` 前缀 parse 即得 rechargeId。
+- **回调路由：** `PaymentCallbackImpl.onPaymentSuccess` 按 outTradeNo 前缀分流——`RC` 开头 → `rechargeBiz.confirmRechargeByNotify`；否则 → `orderBiz.confirmPaidByNotify`（现有行为不变）。**不变量：** 订单 outTradeNo = `generateOrderSn()` = 32 位小写 hex UUID，永不以大写 `RC` 开头；若未来 `generateOrderSn()` 引入字母前缀，必须重新评估 RC 路由分流。
+- **confirmRechargeByNotify 暴露模型（资金安全）：** `@BizAction` 内部方法（不暴露 GraphQL），仅由 `PaymentCallbackImpl` 经 `ILitemallRechargeBiz` 注入调用。若为公开 `@BizMutation`，攻击者可先 `createRecharge(amount=1000)` 得 rechargeId，再按 `RC`+填充格式算出 outTradeNo 直接调确认接口给钱包充值（资金盗刷）。`confirmRecharge`（demo 手动确认）有 `!payService.isEnabled()` 守卫故风险低，保持 `@BizMutation`。
+- **充值入账：** `creditRecharge` 将充值金额 + 赠送金额一次性调 `creditBalance` 入账（`changeType=RECHARGE`，`sourceType=recharge`，`sourceId=rechargeId` 幂等），并回填 `walletId`、更新 `payStatus=PAID`。
+
 ### 业务规则
 
 - 充值订单走外部支付渠道（微信/支付宝），支付确认后余额到账。
@@ -55,6 +88,12 @@
 
 - 管理员可查看用户的充值记录。
 - 管理员可配置充值套餐（固定金额与赠送金额的组合）。
+
+### 前端页面（P29 落地）
+
+- **钱包页（`LitemallWallet.view.xml`）：** 后台视角的钱包账户列表（balance/totalRecharge/totalSpent 收支汇总）+ 「钱包调账」动作（`adminAdjust`，admin 鉴权）。bounded-merge 生成桩。
+- **充值记录页（`LitemallRecharge.view.xml`）：** 充值记录列表（userId/amount/giftAmount/payChannel/payStatus/addTime + userId/payStatus 筛选）+ 只读查看 + 「发起充值」入口（`createRecharge`）。套餐配置经现有 `LitemallSystem` 后台 CRUD 编辑（keyName=`recharge_packages` 的 JSON value），不新增独立富配置页。
+- **钱包流水页（`LitemallWalletFlow.view.xml`）：** 流水列表（changeType/changeAmount/balanceAfter 快照/sourceType/sourceId/remark/addTime + changeType/sourceType 筛选）。bounded-merge 生成桩。
 
 ## 余额支付
 
