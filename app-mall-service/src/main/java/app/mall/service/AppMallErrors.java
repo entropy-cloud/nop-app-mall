@@ -445,6 +445,36 @@ public interface AppMallErrors {
             define("nop.err.mall.points.duplicate-earn",
                     "积分已发放过，不可重复发放");
 
+    // 钱包错误码
+    ErrorCode ERR_WALLET_NOT_FOUND =
+            define("nop.err.mall.wallet.not-found",
+                    "钱包账户不存在");
+
+    ErrorCode ERR_WALLET_INSUFFICIENT =
+            define("nop.err.mall.wallet.insufficient",
+                    "钱包余额不足");
+
+    ErrorCode ERR_WALLET_VERSION_CONFLICT =
+            define("nop.err.mall.wallet.version-conflict",
+                    "钱包账户并发冲突请重试");
+
+    // 充值错误码
+    ErrorCode ERR_RECHARGE_NOT_FOUND =
+            define("nop.err.mall.recharge.not-found",
+                    "充值记录不存在");
+
+    ErrorCode ERR_RECHARGE_AMOUNT_INVALID =
+            define("nop.err.mall.recharge.amount-invalid",
+                    "充值金额无效");
+
+    ErrorCode ERR_RECHARGE_NOT_ALLOW_CONFIRM =
+            define("nop.err.mall.recharge.not-allow-confirm",
+                    "当前充值记录状态不允许确认");
+
+    ErrorCode ERR_RECHARGE_USE_REAL_PAYMENT =
+            define("nop.err.mall.recharge.use-real-payment",
+                    "真实支付模式下充值必须通过微信扫码支付，不可直接确认");
+
     // 签到错误码
     ErrorCode ERR_CHECK_IN_ALREADY_TODAY =
             define("nop.err.mall.check-in.already-today",

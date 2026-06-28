@@ -1,18 +1,74 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<view x:extends="_gen/_LitemallRecharge.view.xml" x:schema="/nop/schema/xui/xview.xdef" xmlns:x="/nop/schema/xdsl.xdef">
+<view x:extends="_gen/_LitemallRecharge.view.xml" x:schema="/nop/schema/xui/xview.xdef"
+      xmlns:x="/nop/schema/xdsl.xdef">
 
     <grids>
-        <grid id="list"/>
+        <grid id="list">
+            <cols x:override="bounded-merge">
+                <col id="id"/>
+                <col id="userId"/>
+                <col id="amount" ui:number="true" sortable="true"/>
+                <col id="giftAmount" ui:number="true"/>
+                <col id="payChannel" ui:number="true"/>
+                <col id="payStatus" ui:number="true" sortable="true"/>
+                <col id="addTime" sortable="true"/>
+            </cols>
+        </grid>
         <grid id="pick-list"/>
     </grids>
 
     <forms>
+        <form id="query">
+            <layout>
+                userId
+                payStatus
+            </layout>
+        </form>
         <form id="view"/>
-        <form id="edit"/>
+        <form id="edit">
+            <layout>
+                userId[用户ID]
+                walletId[钱包ID]
+                amount[充值金额]
+                giftAmount[赠送金额]
+                payChannel[支付渠道]
+                payStatus[支付状态]
+            </layout>
+        </form>
+
+        <!-- Recharge creation form: user selects amount (optionally from a package) and pays. -->
+        <form id="recharge" editMode="add" title="钱包充值">
+            <layout>
+                amount[充值金额]
+                packageId[套餐ID]
+            </layout>
+            <cells>
+                <cell id="amount">
+                    <placeholder>充值金额（选套餐时须匹配套餐金额）</placeholder>
+                </cell>
+                <cell id="packageId">
+                    <placeholder>可选：套餐ID（不填为自定义金额）</placeholder>
+                </cell>
+            </cells>
+        </form>
     </forms>
 
     <pages>
-        <crud name="main"/>
+        <crud name="main">
+            <listActions x:override="bounded-merge">
+                <action id="recharge-button" label="发起充值" level="primary" icon="fa fa-plus pull-left">
+                    <dialog page="recharge" title="钱包充值"/>
+                </action>
+            </listActions>
+            <rowActions x:override="bounded-merge">
+                <action id="row-view-button"/>
+            </rowActions>
+        </crud>
+
+        <simple name="recharge" form="recharge">
+            <api url="@mutation:LitemallRecharge__createRecharge"/>
+        </simple>
+
         <picker name="picker"/>
     </pages>
 </view>

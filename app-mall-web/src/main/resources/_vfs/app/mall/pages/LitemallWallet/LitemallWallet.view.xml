@@ -1,18 +1,70 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<view x:extends="_gen/_LitemallWallet.view.xml" x:schema="/nop/schema/xui/xview.xdef" xmlns:x="/nop/schema/xdsl.xdef">
+<view x:extends="_gen/_LitemallWallet.view.xml" x:schema="/nop/schema/xui/xview.xdef"
+      xmlns:x="/nop/schema/xdsl.xdef">
 
     <grids>
-        <grid id="list"/>
+        <grid id="list">
+            <cols x:override="bounded-merge">
+                <col id="id"/>
+                <col id="userId"/>
+                <col id="balance" ui:number="true" sortable="true"/>
+                <col id="totalRecharge" ui:number="true" sortable="true"/>
+                <col id="totalSpent" ui:number="true" sortable="true"/>
+            </cols>
+        </grid>
         <grid id="pick-list"/>
     </grids>
 
     <forms>
+        <form id="query">
+            <layout>
+                userId
+            </layout>
+        </form>
         <form id="view"/>
-        <form id="edit"/>
+        <form id="edit">
+            <layout>
+                userId[用户ID]
+                balance[可用余额]
+                totalRecharge[累计充值]
+                totalSpent[累计消费]
+            </layout>
+        </form>
+
+        <!-- Manual adjustment form: admin grants/deducts wallet balance for a user. -->
+        <form id="adjust" editMode="add" title="钱包调账">
+            <layout>
+                userId[用户ID]
+                amount[变动金额(正=入账,负=扣款)]
+                remark[备注]
+            </layout>
+            <cells>
+                <cell id="userId">
+                    <placeholder>目标用户ID</placeholder>
+                </cell>
+                <cell id="amount">
+                    <placeholder>正数入账，负数扣款</placeholder>
+                </cell>
+            </cells>
+        </form>
     </forms>
 
     <pages>
-        <crud name="main"/>
+        <crud name="main">
+            <listActions x:override="bounded-merge">
+                <action id="adjust-button" label="钱包调账" level="primary" icon="fa fa-balance-scale pull-left">
+                    <dialog page="adjust" title="钱包调账"/>
+                </action>
+            </listActions>
+            <rowActions x:override="bounded-merge">
+                <action id="row-view-button"/>
+            </rowActions>
+        </crud>
+
+        <simple name="adjust" form="adjust">
+            <api url="@mutation:LitemallWallet__adminAdjust"/>
+        </simple>
+
         <picker name="picker"/>
     </pages>
 </view>
