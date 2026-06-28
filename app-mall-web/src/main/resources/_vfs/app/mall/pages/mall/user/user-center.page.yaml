@@ -110,6 +110,10 @@ body:
                     visibleOn: '${!data.nextLevel}'
                     tpl: '<span style="color:#999">已达最高等级（已累计消费 ¥${data.totalSpending}）</span>'
 
+              - type: divider
+              - type: tpl
+                tpl: '<div style="color:#999;font-size:12px;line-height:1.8"><b>会员权益</b><br/>• 升级即发专属优惠券（自动到账）<br/>• 生日当月发放生日礼包券<br/>• 会员专属券仅限对应等级领取</div>'
+
       - type: service
         name: checkInStatus
         api:

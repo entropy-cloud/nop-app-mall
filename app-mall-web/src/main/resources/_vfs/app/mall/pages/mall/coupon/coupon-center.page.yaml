@@ -75,7 +75,7 @@ body:
                       type: wrapper
                       body:
                         - type: tpl
-                          tpl: '<div style="background:#fff8f0;padding:15px;border-radius:4px;margin:10px 0"><span style="color:#ff6700;font-size:24px;font-weight:bold">¥${item.discount}</span><span style="color:#999;margin-left:10px">满 ${item.min} 元可用</span></div>'
+                          tpl: '<div style="background:#fff8f0;padding:15px;border-radius:4px;margin:10px 0"><span style="color:#ff6700;font-size:24px;font-weight:bold">¥${item.discount}</span><span style="color:#999;margin-left:10px">满 ${item.min} 元可用</span>${item.minMemberLevel > 0 ? '<span style=\"color:#b94a48;margin-left:10px;font-size:12px;border:1px solid #b94a48;padding:1px 6px;border-radius:3px\">LV' + item.minMemberLevel + '+ 会员专属</span>' : ''}</div>'
                         - type: tpl
                           tpl: '<div style="color:#999;font-size:12px">${item.desc || ""}</div>'
                         - type: tpl
