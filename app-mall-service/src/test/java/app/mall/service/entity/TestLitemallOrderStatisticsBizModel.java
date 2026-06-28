@@ -14,6 +14,7 @@ import jakarta.inject.Inject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -119,6 +120,122 @@ public class TestLitemallOrderStatisticsBizModel extends JunitBaseTestCase {
         assertNotNull(data);
         assertNotNull(data.get("pendingShip"));
         assertNotNull(data.get("stockWarning"));
+    }
+
+    // ===== P19 报表体系扩展 =====
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testGetSalesFunnel() {
+        ApiRequest<Map<String, Object>> req = ApiRequest.build(Map.of());
+        IGraphQLExecutionContext ctx = graphQLEngine.newRpcContext(
+                GraphQLOperationType.query, "LitemallOrder__getSalesFunnel", req);
+        ApiResponse<?> result = graphQLEngine.executeRpc(ctx);
+        assertEquals(0, result.getStatus(), "getSalesFunnel failed: status=" + result.getStatus() + " msg=" + result.getMsg());
+        Map<String, Object> data = (Map<String, Object>) result.getData();
+        assertNotNull(data);
+        assertNotNull(data.get("viewCount"));
+        assertNotNull(data.get("cartCount"));
+        assertNotNull(data.get("orderCount"));
+        assertNotNull(data.get("payCount"));
+        assertNotNull(data.get("repurchaseCount"));
+        assertNotNull(data.get("payViewRatio"));
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testGetProductAnalysis() {
+        ApiRequest<Map<String, Object>> req = ApiRequest.build(Map.of());
+        IGraphQLExecutionContext ctx = graphQLEngine.newRpcContext(
+                GraphQLOperationType.query, "LitemallOrder__getProductAnalysis", req);
+        ApiResponse<?> result = graphQLEngine.executeRpc(ctx);
+        assertEquals(0, result.getStatus(), "getProductAnalysis failed: status=" + result.getStatus() + " msg=" + result.getMsg());
+        Map<String, Object> data = (Map<String, Object>) result.getData();
+        assertNotNull(data);
+        assertNotNull(data.get("salesRanking"));
+        assertNotNull(data.get("cartRanking"));
+        assertNotNull(data.get("unsalableGoods"));
+        assertNotNull(data.get("soldGoodsCount"));
+        assertNotNull(data.get("onSaleGoodsCount"));
+        assertNotNull(data.get("salabilityRate"));
+    }
+
+    // ===== P19 用户分析 =====
+
+    @Test
+    public void testGetUserRetention() {
+        ApiRequest<Map<String, Object>> req = ApiRequest.build(Map.of());
+        IGraphQLExecutionContext ctx = graphQLEngine.newRpcContext(
+                GraphQLOperationType.query, "LitemallOrder__getUserRetention", req);
+        ApiResponse<?> result = graphQLEngine.executeRpc(ctx);
+        assertEquals(0, result.getStatus(), "getUserRetention failed: status=" + result.getStatus() + " msg=" + result.getMsg());
+        assertNotNull(result.getData());
+    }
+
+    @Test
+    public void testGetUserRfm() {
+        ApiRequest<Map<String, Object>> req = ApiRequest.build(Map.of());
+        IGraphQLExecutionContext ctx = graphQLEngine.newRpcContext(
+                GraphQLOperationType.query, "LitemallOrder__getUserRfm", req);
+        ApiResponse<?> result = graphQLEngine.executeRpc(ctx);
+        assertEquals(0, result.getStatus(), "getUserRfm failed: status=" + result.getStatus() + " msg=" + result.getMsg());
+        assertNotNull(result.getData());
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testGetUserLifecycle() {
+        ApiRequest<Map<String, Object>> req = ApiRequest.build(Map.of());
+        IGraphQLExecutionContext ctx = graphQLEngine.newRpcContext(
+                GraphQLOperationType.query, "LitemallOrder__getUserLifecycle", req);
+        ApiResponse<?> result = graphQLEngine.executeRpc(ctx);
+        assertEquals(0, result.getStatus(), "getUserLifecycle failed: status=" + result.getStatus() + " msg=" + result.getMsg());
+        assertNotNull(result.getData());
+        List<Map<String, Object>> data = (List<Map<String, Object>>) result.getData();
+        assertNotNull(data);
+    }
+
+    @Test
+    public void testGetRepurchaseRate() {
+        ApiRequest<Map<String, Object>> req = ApiRequest.build(Map.of());
+        IGraphQLExecutionContext ctx = graphQLEngine.newRpcContext(
+                GraphQLOperationType.query, "LitemallOrder__getRepurchaseRate", req);
+        ApiResponse<?> result = graphQLEngine.executeRpc(ctx);
+        assertEquals(0, result.getStatus(), "getRepurchaseRate failed: status=" + result.getStatus() + " msg=" + result.getMsg());
+        assertNotNull(result.getData());
+    }
+
+    // ===== P19 订单分析 + 营销分析 =====
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testGetOrderAnalysis() {
+        ApiRequest<Map<String, Object>> req = ApiRequest.build(Map.of());
+        IGraphQLExecutionContext ctx = graphQLEngine.newRpcContext(
+                GraphQLOperationType.query, "LitemallOrder__getOrderAnalysis", req);
+        ApiResponse<?> result = graphQLEngine.executeRpc(ctx);
+        assertEquals(0, result.getStatus(), "getOrderAnalysis failed: status=" + result.getStatus() + " msg=" + result.getMsg());
+        Map<String, Object> data = (Map<String, Object>) result.getData();
+        assertNotNull(data);
+        assertNotNull(data.get("aovDistribution"));
+        assertNotNull(data.get("paymentMethodShare"));
+        assertNotNull(data.get("returnReasonShare"));
+        assertNotNull(data.get("totalPaidOrders"));
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testGetCouponAnalysis() {
+        ApiRequest<Map<String, Object>> req = ApiRequest.build(Map.of());
+        IGraphQLExecutionContext ctx = graphQLEngine.newRpcContext(
+                GraphQLOperationType.query, "LitemallOrder__getCouponAnalysis", req);
+        ApiResponse<?> result = graphQLEngine.executeRpc(ctx);
+        assertEquals(0, result.getStatus(), "getCouponAnalysis failed: status=" + result.getStatus() + " msg=" + result.getMsg());
+        Map<String, Object> data = (Map<String, Object>) result.getData();
+        assertNotNull(data);
+        assertNotNull(data.get("claimedCount"));
+        assertNotNull(data.get("usedCount"));
+        assertNotNull(data.get("pulledGmv"));
     }
 
     @BeforeEach

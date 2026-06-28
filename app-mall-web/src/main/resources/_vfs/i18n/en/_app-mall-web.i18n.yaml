@@ -384,6 +384,14 @@ site:
       displayName: ''
     mall-stat-dashboard:
       displayName: ''
+    mall-stat-funnel:
+      displayName: ''
+    mall-stat-order:
+      displayName: ''
+    mall-stat-product:
+      displayName: ''
+    mall-stat-user:
+      displayName: ''
     mall-time-discount:
       displayName: ''
     mall-topic-manage:

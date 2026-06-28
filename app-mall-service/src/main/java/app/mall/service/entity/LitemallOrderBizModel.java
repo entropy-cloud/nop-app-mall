@@ -29,6 +29,7 @@ import app.mall.dao.entity.LitemallGoodsProduct;
 import app.mall.dao.entity.LitemallGrouponRules;
 import app.mall.dao.entity.LitemallOrder;
 import app.mall.dao.dto.BatchShipResultBean;
+import app.mall.dao.dto.CartRankingItemBean;
 import app.mall.dao.dto.DashboardGmvBean;
 import app.mall.dao.dto.DashboardMetricsBean;
 import app.mall.dao.dto.GoodsStatisticsBean;
@@ -37,8 +38,23 @@ import app.mall.dao.dto.OrderStatisticsBean;
 import app.mall.dao.dto.SalesTrendPointBean;
 import app.mall.dao.dto.StockWarningItemBean;
 import app.mall.dao.dto.TodoAggregationBean;
+import app.mall.dao.dto.UnsalableGoodsBean;
 import app.mall.dao.dto.UserStatisticsBean;
 import app.mall.dao.dto.VerifyPickupResultBean;
+import app.mall.dao.dto.SalesFunnelBean;
+import app.mall.dao.dto.ProductAnalysisBean;
+import app.mall.dao.dto.ReportScalarCountBean;
+import app.mall.dao.dto.UserRetentionPointBean;
+import app.mall.dao.dto.RfmSegmentBean;
+import app.mall.dao.dto.LifecycleSegmentBean;
+import app.mall.dao.dto.RepurchaseRatePointBean;
+import app.mall.dao.dto.UserPaymentPointBean;
+import app.mall.dao.dto.UserPaymentSummaryBean;
+import app.mall.dao.dto.AovDistributionBean;
+import app.mall.dao.dto.CouponUsageStatisticsBean;
+import app.mall.dao.dto.OrderAnalysisBean;
+import app.mall.dao.dto.PaymentMethodShareBean;
+import app.mall.dao.dto.ReturnReasonShareBean;
 import app.mall.dao.entity.LitemallOrderGoods;
 import app.mall.dao.entity.LitemallPickupStore;
 import app.mall.dao.entity.LitemallPinTuanActivity;
@@ -85,11 +101,14 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
 import static app.mall.service.AppMallErrors.ERR_GROUPON_RULES_NOT_AVAILABLE;
 import static app.mall.service.AppMallErrors.ERR_ORDER_ADDRESS_INVALID;
@@ -1097,6 +1116,366 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
         result.setStockWarning(stockWarningDetails.size());
         result.setStockWarningDetails(stockWarningDetails);
         return result;
+    }
+
+    // ===== P19 报表体系扩展 =====
+
+    @Override
+    @BizQuery
+    public SalesFunnelBean getSalesFunnel(@Optional @Name("startDate") String startDate,
+                                           @Optional @Name("endDate") String endDate,
+                                           IServiceContext context) {
+        Timestamp start = parseStartDate(startDate);
+        Timestamp end = parseEndDate(endDate);
+        SalesFunnelBean bean = orderMapper.getSalesFunnel(start, end);
+        if (bean == null) {
+            bean = new SalesFunnelBean();
+        }
+        bean.setCartViewRatio(ratio(bean.getCartCount(), bean.getViewCount()));
+        bean.setOrderCartRatio(ratio(bean.getOrderCount(), bean.getCartCount()));
+        bean.setPayOrderRatio(ratio(bean.getPayCount(), bean.getOrderCount()));
+        bean.setRepurchasePayRatio(ratio(bean.getRepurchaseCount(), bean.getPayCount()));
+        bean.setPayViewRatio(ratio(bean.getPayCount(), bean.getViewCount()));
+        return bean;
+    }
+
+    @Override
+    @BizQuery
+    public ProductAnalysisBean getProductAnalysis(@Optional @Name("startDate") String startDate,
+                                                   @Optional @Name("endDate") String endDate,
+                                                   @Optional @Name("categoryId") String categoryId,
+                                                   IServiceContext context) {
+        Timestamp start = parseStartDate(startDate);
+        Timestamp end = parseEndDate(endDate);
+        String cat = StringHelper.isEmpty(categoryId) ? null : categoryId;
+
+        int effectiveLimit = 20;
+        List<GoodsStatisticsBean> ranking = orderMapper.getGoodsSalesRankingByCategory(start, end, cat, effectiveLimit);
+        List<CartRankingItemBean> cartRanking = orderMapper.getCartRanking(start, end, cat, effectiveLimit);
+        List<UnsalableGoodsBean> unsalable = orderMapper.getUnsalableGoods(start, end, cat, effectiveLimit);
+
+        ReportScalarCountBean soldBean = orderMapper.getSoldGoodsCount(start, end, cat);
+        ReportScalarCountBean onSaleBean = orderMapper.getOnSaleGoodsCount(cat);
+        int sold = soldBean != null ? soldBean.getTotalCount() : 0;
+        int onSale = onSaleBean != null ? onSaleBean.getTotalCount() : 0;
+
+        ProductAnalysisBean result = new ProductAnalysisBean();
+        result.setSalesRanking(ranking);
+        result.setCartRanking(cartRanking);
+        result.setUnsalableGoods(unsalable);
+        result.setSoldGoodsCount(sold);
+        result.setOnSaleGoodsCount(onSale);
+        result.setSalabilityRate(onSale > 0
+                ? BigDecimal.valueOf(sold).divide(BigDecimal.valueOf(onSale), 4, RoundingMode.HALF_UP)
+                : BigDecimal.ZERO);
+        return result;
+    }
+
+    private static Timestamp parseStartDate(String startDate) {
+        return startDate != null && !startDate.isEmpty()
+                ? Timestamp.valueOf(LocalDate.parse(startDate).atTime(LocalTime.MIN)) : MIN_TIMESTAMP;
+    }
+
+    private static Timestamp parseEndDate(String endDate) {
+        return endDate != null && !endDate.isEmpty()
+                ? Timestamp.valueOf(LocalDate.parse(endDate).atTime(LocalTime.MAX)) : MAX_TIMESTAMP;
+    }
+
+    private static BigDecimal ratio(int numerator, int denominator) {
+        if (denominator <= 0) {
+            return BigDecimal.ZERO;
+        }
+        return BigDecimal.valueOf(numerator).divide(BigDecimal.valueOf(denominator), 4, RoundingMode.HALF_UP);
+    }
+
+    // ===== P19 用户分析 =====
+
+    private static final int DEFAULT_CHURN_DAYS = 90;
+
+    @Override
+    @BizQuery
+    public List<UserRetentionPointBean> getUserRetention(@Optional @Name("startDate") String startDate,
+                                                          @Optional @Name("endDate") String endDate,
+                                                          IServiceContext context) {
+        LocalDate today = CoreMetrics.currentDate();
+        LocalDate start = (startDate != null && !startDate.isEmpty()) ? LocalDate.parse(startDate) : today.minusDays(29);
+        LocalDate end = (endDate != null && !endDate.isEmpty()) ? LocalDate.parse(endDate) : today;
+        if (start.isAfter(end)) {
+            start = end;
+        }
+
+        Timestamp startTs = Timestamp.valueOf(start.atTime(LocalTime.MIN));
+        Timestamp endTs = Timestamp.valueOf(end.atTime(LocalTime.MAX));
+
+        List<UserPaymentPointBean> points = orderMapper.getUserPaymentPoints(startTs, endTs);
+
+        Map<String, List<LocalDateTime>> userPayTimes = new HashMap<>();
+        for (UserPaymentPointBean p : points) {
+            if (p.getPayTime() == null || p.getUserId() == null) {
+                continue;
+            }
+            userPayTimes.computeIfAbsent(p.getUserId(), k -> new ArrayList<>())
+                    .add(p.getPayTime().toLocalDateTime());
+        }
+
+        Map<String, int[]> cohort = new LinkedHashMap<>();
+        for (Map.Entry<String, List<LocalDateTime>> entry : userPayTimes.entrySet()) {
+            List<LocalDateTime> times = entry.getValue();
+            times.sort(LocalDateTime::compareTo);
+            LocalDate firstPayDate = times.get(0).toLocalDate();
+            String key = firstPayDate.toString();
+            int[] counts = cohort.computeIfAbsent(key, k -> new int[4]);
+            counts[0]++;
+            for (LocalDateTime t : times) {
+                long daysBetween = java.time.Duration.between(firstPayDate.atStartOfDay(), t.toLocalDate().atStartOfDay()).toDays();
+                if (daysBetween >= 1 && daysBetween <= 1) counts[1]++;
+                else if (daysBetween >= 7 && daysBetween <= 7) counts[2]++;
+                else if (daysBetween >= 30 && daysBetween <= 30) counts[3]++;
+                else if (daysBetween > 1 && daysBetween < 7) {
+                    // D+1 window: any payment within next day counts for D1 retention
+                }
+            }
+        }
+
+        List<UserRetentionPointBean> result = new ArrayList<>();
+        for (Map.Entry<String, int[]> entry : cohort.entrySet()) {
+            int[] counts = entry.getValue();
+            UserRetentionPointBean bean = new UserRetentionPointBean();
+            bean.setDateLabel(entry.getKey());
+            bean.setCohortSize(counts[0]);
+            bean.setD1(counts[1]);
+            bean.setD7(counts[2]);
+            bean.setD30(counts[3]);
+            bean.setD1Rate(ratio(counts[1], counts[0]));
+            bean.setD7Rate(ratio(counts[2], counts[0]));
+            bean.setD30Rate(ratio(counts[3], counts[0]));
+            result.add(bean);
+        }
+        return result;
+    }
+
+    @Override
+    @BizQuery
+    public List<RfmSegmentBean> getUserRfm(@Optional @Name("startDate") String startDate,
+                                            @Optional @Name("endDate") String endDate,
+                                            IServiceContext context) {
+        Timestamp start = parseStartDate(startDate);
+        Timestamp end = parseEndDate(endDate);
+
+        List<UserPaymentSummaryBean> summaries = orderMapper.getUserPaymentSummaryInPeriod(start, end);
+        if (summaries.isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        List<UserPaymentSummaryBean> sorted = new ArrayList<>(summaries);
+        sorted.sort((a, b) -> Integer.compare(b.getOrderCount(), a.getOrderCount()));
+        int fMedian = sorted.get(sorted.size() / 2).getOrderCount();
+
+        sorted.sort((a, b) -> b.getTotalAmount().compareTo(a.getTotalAmount()));
+        BigDecimal mMedian = sorted.get(sorted.size() / 2).getTotalAmount();
+
+        long nowMillis = CoreMetrics.currentTimeMillis();
+        List<Long> recencies = new ArrayList<>();
+        for (UserPaymentSummaryBean s : summaries) {
+            if (s.getLastPayTime() != null) {
+                recencies.add((nowMillis - s.getLastPayTime().getTime()) / (24 * 60 * 60 * 1000));
+            }
+        }
+        Collections.sort(recencies);
+        long rMedian = recencies.isEmpty() ? 0 : recencies.get(recencies.size() / 2);
+
+        Map<String, Integer> segmentCounts = new LinkedHashMap<>();
+        for (UserPaymentSummaryBean s : summaries) {
+            long r = s.getLastPayTime() != null
+                    ? (nowMillis - s.getLastPayTime().getTime()) / (24 * 60 * 60 * 1000) : Long.MAX_VALUE;
+            boolean rHigh = r <= rMedian;
+            boolean fHigh = s.getOrderCount() >= fMedian;
+            boolean mHigh = s.getTotalAmount().compareTo(mMedian) >= 0;
+            String segment = labelRfm(rHigh, fHigh, mHigh);
+            segmentCounts.merge(segment, 1, Integer::sum);
+        }
+
+        List<RfmSegmentBean> result = new ArrayList<>();
+        for (Map.Entry<String, Integer> entry : segmentCounts.entrySet()) {
+            RfmSegmentBean bean = new RfmSegmentBean();
+            bean.setSegment(entry.getKey());
+            bean.setUserCount(entry.getValue());
+            result.add(bean);
+        }
+        return result;
+    }
+
+    private static String labelRfm(boolean rHigh, boolean fHigh, boolean mHigh) {
+        int score = (rHigh ? 4 : 0) + (fHigh ? 2 : 0) + (mHigh ? 1 : 0);
+        switch (score) {
+            case 7: return "重要价值用户";
+            case 6: return "重要保持用户";
+            case 5: return "重要发展用户";
+            case 4: return "重要挽留用户";
+            case 3: return "一般价值用户";
+            case 2: return "一般保持用户";
+            case 1: return "一般发展用户";
+            default: return "一般挽留用户";
+        }
+    }
+
+    @Override
+    @BizQuery
+    public List<LifecycleSegmentBean> getUserLifecycle(@Optional @Name("startDate") String startDate,
+                                                        @Optional @Name("endDate") String endDate,
+                                                        @Optional @Name("churnDays") Integer churnDays,
+                                                        IServiceContext context) {
+        LocalDate today = CoreMetrics.currentDate();
+        LocalDate start = (startDate != null && !startDate.isEmpty()) ? LocalDate.parse(startDate) : today.minusDays(29);
+        LocalDate end = (endDate != null && !endDate.isEmpty()) ? LocalDate.parse(endDate) : today;
+        int effectiveChurnDays = churnDays != null && churnDays > 0 ? churnDays : DEFAULT_CHURN_DAYS;
+
+        Timestamp startTs = Timestamp.valueOf(start.atTime(LocalTime.MIN));
+        Timestamp endTs = Timestamp.valueOf(end.atTime(LocalTime.MAX));
+
+        List<UserPaymentSummaryBean> periodSummaries = orderMapper.getUserPaymentSummaryInPeriod(startTs, endTs);
+        Set<String> periodUsers = new HashSet<>();
+        for (UserPaymentSummaryBean s : periodSummaries) {
+            periodUsers.add(s.getUserId());
+        }
+
+        List<UserPaymentSummaryBean> allTimeSummaries = orderMapper.getUserPaymentSummaryAllTime();
+        int newCount = 0, activeCount = 0, dormantCount = 0, churnedCount = 0;
+        for (UserPaymentSummaryBean s : allTimeSummaries) {
+            String userId = s.getUserId();
+            LocalDate firstAll = s.getFirstPayTime() != null ? s.getFirstPayTime().toLocalDateTime().toLocalDate() : null;
+            LocalDate lastAll = s.getLastPayTime() != null ? s.getLastPayTime().toLocalDateTime().toLocalDate() : null;
+            if (lastAll == null) continue;
+
+            boolean inPeriod = periodUsers.contains(userId);
+            boolean firstInPeriod = firstAll != null && !firstAll.isBefore(start) && !firstAll.isAfter(end);
+            long daysSinceLast = java.time.Duration.between(lastAll.atStartOfDay(), today.atStartOfDay()).toDays();
+
+            if (firstInPeriod) {
+                newCount++;
+            } else if (inPeriod) {
+                activeCount++;
+            } else if (daysSinceLast >= effectiveChurnDays) {
+                churnedCount++;
+            } else {
+                dormantCount++;
+            }
+        }
+
+        int total = newCount + activeCount + dormantCount + churnedCount;
+        List<LifecycleSegmentBean> result = new ArrayList<>();
+        result.add(makeLifecycleSegment("新客", newCount, total));
+        result.add(makeLifecycleSegment("活跃", activeCount, total));
+        result.add(makeLifecycleSegment("沉睡", dormantCount, total));
+        result.add(makeLifecycleSegment("流失", churnedCount, total));
+        return result;
+    }
+
+    private static LifecycleSegmentBean makeLifecycleSegment(String segment, int count, int total) {
+        LifecycleSegmentBean bean = new LifecycleSegmentBean();
+        bean.setSegment(segment);
+        bean.setUserCount(count);
+        bean.setPercent(total > 0
+                ? BigDecimal.valueOf(count).divide(BigDecimal.valueOf(total), 4, RoundingMode.HALF_UP)
+                : BigDecimal.ZERO);
+        return bean;
+    }
+
+    @Override
+    @BizQuery
+    public List<RepurchaseRatePointBean> getRepurchaseRate(@Optional @Name("startDate") String startDate,
+                                                            @Optional @Name("endDate") String endDate,
+                                                            IServiceContext context) {
+        LocalDate today = CoreMetrics.currentDate();
+        LocalDate start = (startDate != null && !startDate.isEmpty()) ? LocalDate.parse(startDate) : today.minusDays(29);
+        LocalDate end = (endDate != null && !endDate.isEmpty()) ? LocalDate.parse(endDate) : today;
+        if (start.isAfter(end)) {
+            start = end;
+        }
+
+        Timestamp startTs = Timestamp.valueOf(start.atTime(LocalTime.MIN));
+        Timestamp endTs = Timestamp.valueOf(end.atTime(LocalTime.MAX));
+
+        List<UserPaymentPointBean> points = orderMapper.getUserPaymentPoints(startTs, endTs);
+        Map<String, Set<String>> usersByDay = new LinkedHashMap<>();
+        Map<String, Map<String, Integer>> ordersByDayUser = new LinkedHashMap<>();
+        for (UserPaymentPointBean p : points) {
+            if (p.getPayTime() == null || p.getUserId() == null) {
+                continue;
+            }
+            String day = p.getPayTime().toLocalDateTime().toLocalDate().toString();
+            usersByDay.computeIfAbsent(day, k -> new HashSet<>()).add(p.getUserId());
+            ordersByDayUser.computeIfAbsent(day, k -> new HashMap<>())
+                    .merge(p.getUserId(), 1, Integer::sum);
+        }
+
+        List<RepurchaseRatePointBean> result = new ArrayList<>();
+        LocalDate d = start;
+        while (!d.isAfter(end)) {
+            String key = d.toString();
+            Set<String> users = usersByDay.getOrDefault(key, Collections.emptySet());
+            Map<String, Integer> orders = ordersByDayUser.getOrDefault(key, Collections.emptyMap());
+            int paidUsers = users.size();
+            int repurchaseUsers = 0;
+            for (Integer cnt : orders.values()) {
+                if (cnt != null && cnt >= 2) repurchaseUsers++;
+            }
+            RepurchaseRatePointBean bean = new RepurchaseRatePointBean();
+            bean.setDateLabel(key);
+            bean.setPaidUsers(paidUsers);
+            bean.setRepurchaseUsers(repurchaseUsers);
+            bean.setRate(ratio(repurchaseUsers, paidUsers));
+            result.add(bean);
+            d = d.plusDays(1);
+        }
+        return result;
+    }
+
+    // ===== P19 订单分析 + 营销分析 =====
+
+    @Override
+    @BizQuery
+    public OrderAnalysisBean getOrderAnalysis(@Optional @Name("startDate") String startDate,
+                                               @Optional @Name("endDate") String endDate,
+                                               IServiceContext context) {
+        Timestamp start = parseStartDate(startDate);
+        Timestamp end = parseEndDate(endDate);
+
+        List<AovDistributionBean> aov = orderMapper.getAovDistribution(start, end);
+        List<PaymentMethodShareBean> payment = orderMapper.getPaymentMethodShare(start, end);
+        List<ReturnReasonShareBean> returns = orderMapper.getReturnReasonShare(start, end);
+
+        int totalPaid = 0;
+        for (AovDistributionBean b : aov) {
+            totalPaid += b.getOrderCount();
+        }
+
+        OrderAnalysisBean result = new OrderAnalysisBean();
+        result.setAovDistribution(aov);
+        result.setPaymentMethodShare(payment);
+        result.setReturnReasonShare(returns);
+        result.setTotalPaidOrders(totalPaid);
+        return result;
+    }
+
+    @Override
+    @BizQuery
+    public CouponUsageStatisticsBean getCouponAnalysis(@Optional @Name("startDate") String startDate,
+                                                         @Optional @Name("endDate") String endDate,
+                                                         IServiceContext context) {
+        Timestamp start = parseStartDate(startDate);
+        Timestamp end = parseEndDate(endDate);
+        CouponUsageStatisticsBean bean = orderMapper.getCouponAnalysis(start, end);
+        if (bean == null) {
+            bean = new CouponUsageStatisticsBean();
+            bean.setClaimedCount(0);
+            bean.setUsedCount(0);
+            bean.setPulledGmv(BigDecimal.ZERO);
+        }
+        if (bean.getPulledGmv() == null) {
+            bean.setPulledGmv(BigDecimal.ZERO);
+        }
+        return bean;
     }
 
     private static BigDecimal gmvOrZero(DashboardGmvBean bean) {

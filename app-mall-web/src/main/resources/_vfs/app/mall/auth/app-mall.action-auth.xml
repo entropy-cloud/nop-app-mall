@@ -191,6 +191,18 @@
                 <resource id="mall-stat-dashboard" displayName="经营看板" orderNo="601"
                           icon="ant-design:bar-chart-outlined" component="AMIS"
                           resourceType="SUBM" url="/app/mall/pages/mall/stat/stat-dashboard.page.yaml"/>
+                <resource id="mall-stat-funnel" displayName="销售漏斗" orderNo="602"
+                          icon="ant-design:filter-outlined" component="AMIS"
+                          resourceType="SUBM" url="/app/mall/pages/mall/stat/stat-funnel.page.yaml"/>
+                <resource id="mall-stat-product" displayName="商品分析" orderNo="603"
+                          icon="ant-design:shopping-outlined" component="AMIS"
+                          resourceType="SUBM" url="/app/mall/pages/mall/stat/stat-product.page.yaml"/>
+                <resource id="mall-stat-user" displayName="用户分析" orderNo="604"
+                          icon="ant-design:team-outlined" component="AMIS"
+                          resourceType="SUBM" url="/app/mall/pages/mall/stat/stat-user.page.yaml"/>
+                <resource id="mall-stat-order" displayName="订单分析" orderNo="605"
+                          icon="ant-design:profile-outlined" component="AMIS"
+                          resourceType="SUBM" url="/app/mall/pages/mall/stat/stat-order.page.yaml"/>
             </children>
         </resource>
 

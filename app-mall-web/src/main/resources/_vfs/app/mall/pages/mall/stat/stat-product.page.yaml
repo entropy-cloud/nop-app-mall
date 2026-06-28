@@ -1,0 +1,107 @@
+type: page
+title: 商品分析
+body:
+  - type: form
+    title: 商品分析筛选
+    mode: inline
+    wrapWithPanel: false
+    body:
+      - type: input-date
+        name: startDate
+        label: 开始日期
+        format: YYYY-MM-DD
+      - type: input-date
+        name: endDate
+        label: 结束日期
+        format: YYYY-MM-DD
+      - type: input-text
+        name: categoryId
+        label: 类目ID
+        placeholder: 可选
+      - type: button
+        label: 查询
+        level: primary
+        actionType: reload
+        target: productAnalysis
+      - type: button
+        label: 导出CSV
+        level: default
+        actionType: ajax
+        api:
+          url: '@query:LitemallOrder__getProductAnalysis'
+          data:
+            startDate: "${startDate || ''}"
+            endDate: "${endDate || ''}"
+            categoryId: "${categoryId || ''}"
+          dataType: csv
+
+  - type: service
+    name: productAnalysis
+    api:
+      url: '@query:LitemallOrder__getProductAnalysis'
+      data:
+        startDate: "${startDate || ''}"
+        endDate: "${endDate || ''}"
+        categoryId: "${categoryId || ''}"
+      sendOn: true
+    body:
+      - type: grid
+        columns:
+          - md: 4
+            body:
+              - type: panel
+                title: 有销量商品数
+                body:
+                  - type: tpl
+                    tpl: '<b style="font-size:24px">${soldGoodsCount || 0}</b>'
+          - md: 4
+            body:
+              - type: panel
+                title: 在售商品数
+                body:
+                  - type: tpl
+                    tpl: '<b style="font-size:24px">${onSaleGoodsCount || 0}</b>'
+          - md: 4
+            body:
+              - type: panel
+                title: 动销率
+                body:
+                  - type: tpl
+                    tpl: '<b style="font-size:24px;color:#28a745">${((salabilityRate || 0) * 100).toFixed(2)}%</b>'
+      - type: divider
+      - type: grid
+        columns:
+          - md: 6
+            body:
+              - type: panel
+                title: 销量排行 TOP20
+                body:
+                  - type: table
+                    source: ${salesRanking}
+                    columns:
+                      - name: goodsName
+                        label: 商品
+                      - name: salesCount
+                        label: 销量
+                      - name: salesAmount
+                        label: 销售额
+          - md: 6
+            body:
+              - type: panel
+                title: 加购排行 TOP20
+                body:
+                  - type: table
+                    source: ${cartRanking}
+                    columns:
+                      - name: goodsName
+                        label: 商品
+                      - name: cartCount
+                        label: 加购次数
+      - type: panel
+        title: 滞销品（在售零销量）
+        body:
+          - type: table
+            source: ${unsalableGoods}
+            columns:
+              - name: goodsName
+                label: 商品

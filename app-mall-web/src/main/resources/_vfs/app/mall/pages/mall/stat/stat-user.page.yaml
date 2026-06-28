@@ -1,0 +1,152 @@
+type: page
+title: 用户分析
+body:
+  - type: form
+    title: 用户分析筛选
+    mode: inline
+    wrapWithPanel: false
+    body:
+      - type: input-date
+        name: startDate
+        label: 开始日期
+        format: YYYY-MM-DD
+      - type: input-date
+        name: endDate
+        label: 结束日期
+        format: YYYY-MM-DD
+      - type: button
+        label: 查询
+        level: primary
+        actionType: reload
+        target: retention,rfm,lifecycle,repurchase
+
+  # 留存时序
+  - type: service
+    name: retention
+    api:
+      url: '@query:LitemallOrder__getUserRetention'
+      data:
+        startDate: "${startDate || ''}"
+        endDate: "${endDate || ''}"
+      sendOn: true
+    body:
+      - type: panel
+        title: 用户留存（次留/7留/30留）
+        body:
+          - type: chart
+            config:
+              tooltip:
+                trigger: axis
+              legend:
+                data: [次留, 7留, 30留]
+              dataset:
+                source: ${data}
+              xAxis:
+                type: category
+              yAxis:
+                type: value
+                name: 留存率
+                axisLabel:
+                  formatter: '{value}%'
+              series:
+                - type: line
+                  name: 次留
+                  encode:
+                    x: dateLabel
+                    y: d1Rate
+                - type: line
+                  name: 7留
+                  encode:
+                    x: dateLabel
+                    y: d7Rate
+                - type: line
+                  name: 30留
+                  encode:
+                    x: dateLabel
+                    y: d30Rate
+
+  - type: grid
+    columns:
+      # RFM 分层
+      - md: 6
+        body:
+          - type: service
+            name: rfm
+            api:
+              url: '@query:LitemallOrder__getUserRfm'
+              data:
+                startDate: "${startDate || ''}"
+                endDate: "${endDate || ''}"
+              sendOn: true
+            body:
+              - type: panel
+                title: RFM 分层
+                body:
+                  - type: chart
+                    config:
+                      tooltip:
+                        trigger: item
+                      series:
+                        - type: pie
+                          radius: '60%'
+                          data: ${data | pick: segment,userCount}
+                          label:
+                            formatter: '${b}: ${c} (${d}%)'
+      # 生命周期
+      - md: 6
+        body:
+          - type: service
+            name: lifecycle
+            api:
+              url: '@query:LitemallOrder__getUserLifecycle'
+              data:
+                startDate: "${startDate || ''}"
+                endDate: "${endDate || ''}"
+              sendOn: true
+            body:
+              - type: panel
+                title: 生命周期分布
+                body:
+                  - type: chart
+                    config:
+                      tooltip:
+                        trigger: item
+                      series:
+                        - type: pie
+                          radius: '60%'
+                          data: ${data | pick: segment,percent}
+                          label:
+                            formatter: '${b}: ${c} (${d}%)'
+
+  # 复购率时序
+  - type: service
+    name: repurchase
+    api:
+      url: '@query:LitemallOrder__getRepurchaseRate'
+      data:
+        startDate: "${startDate || ''}"
+        endDate: "${endDate || ''}"
+      sendOn: true
+    body:
+      - type: panel
+        title: 复购率趋势
+        body:
+          - type: chart
+            config:
+              tooltip:
+                trigger: axis
+              dataset:
+                source: ${data}
+              xAxis:
+                type: category
+              yAxis:
+                type: value
+                name: 复购率
+                axisLabel:
+                  formatter: '{value}%'
+              series:
+                - type: line
+                  name: 复购率
+                  encode:
+                    x: dateLabel
+                    y: rate

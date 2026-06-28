@@ -15,6 +15,14 @@ import app.mall.dao.dto.VerifyPickupResultBean;
 import app.mall.dao.dto.DashboardMetricsBean;
 import app.mall.dao.dto.SalesTrendPointBean;
 import app.mall.dao.dto.TodoAggregationBean;
+import app.mall.dao.dto.SalesFunnelBean;
+import app.mall.dao.dto.ProductAnalysisBean;
+import app.mall.dao.dto.UserRetentionPointBean;
+import app.mall.dao.dto.RfmSegmentBean;
+import app.mall.dao.dto.LifecycleSegmentBean;
+import app.mall.dao.dto.RepurchaseRatePointBean;
+import app.mall.dao.dto.OrderAnalysisBean;
+import app.mall.dao.dto.CouponUsageStatisticsBean;
 import app.mall.dao.entity.LitemallOrder;
 
 import java.util.Map;
@@ -136,6 +144,80 @@ public interface ILitemallOrderBiz extends ICrudBiz<LitemallOrder> {
      */
     @BizQuery
     TodoAggregationBean getTodoAggregation(IServiceContext context);
+
+    /**
+     * 销售漏斗（P19）。浏览→加购→下单→支付→复购 5 段同期对比 + 各段转化率。
+     * 口径见 docs/design/system-configuration.md「报表与统计」。
+     */
+    @BizQuery
+    SalesFunnelBean getSalesFunnel(@Optional @Name("startDate") String startDate,
+                                    @Optional @Name("endDate") String endDate,
+                                    IServiceContext context);
+
+    /**
+     * 商品分析（P19）。销量排行、加购排行、滞销品、动销率，支持类目筛选。
+     * 口径见 docs/design/system-configuration.md「报表与统计」。
+     */
+    @BizQuery
+    ProductAnalysisBean getProductAnalysis(@Optional @Name("startDate") String startDate,
+                                           @Optional @Name("endDate") String endDate,
+                                           @Optional @Name("categoryId") String categoryId,
+                                           IServiceContext context);
+
+    /**
+     * 用户留存时序（P19）。次留/7 留/30 留按首次支付日分组，以支付订单为留存事件。
+     * 口径见 docs/design/system-configuration.md「报表与统计」。
+     */
+    @BizQuery
+    List<UserRetentionPointBean> getUserRetention(@Optional @Name("startDate") String startDate,
+                                                   @Optional @Name("endDate") String endDate,
+                                                   IServiceContext context);
+
+    /**
+     * RFM 分层用户分布（P19）。R=最近支付距今天数、F=期间支付订单数、M=期间支付金额，按三分位分段。
+     * 口径见 docs/design/system-configuration.md「报表与统计」。
+     */
+    @BizQuery
+    List<RfmSegmentBean> getUserRfm(@Optional @Name("startDate") String startDate,
+                                     @Optional @Name("endDate") String endDate,
+                                     IServiceContext context);
+
+    /**
+     * 生命周期分布（P19）。新客/活跃/沉睡/流失 按支付 recency 派生。
+     * 口径见 docs/design/system-configuration.md「报表与统计」。
+     */
+    @BizQuery
+    List<LifecycleSegmentBean> getUserLifecycle(@Optional @Name("startDate") String startDate,
+                                                 @Optional @Name("endDate") String endDate,
+                                                 @Optional @Name("churnDays") Integer churnDays,
+                                                 IServiceContext context);
+
+    /**
+     * 复购率时序（P19）。按天分组，复购率=期间≥2单支付用户数/期间支付用户数。
+     * 口径见 docs/design/system-configuration.md「报表与统计」。
+     */
+    @BizQuery
+    List<RepurchaseRatePointBean> getRepurchaseRate(@Optional @Name("startDate") String startDate,
+                                                     @Optional @Name("endDate") String endDate,
+                                                     IServiceContext context);
+
+    /**
+     * 订单分析（P19）。客单价分布 + 支付方式占比 + 退货原因占比。
+     * 口径见 docs/design/system-configuration.md「报表与统计」。
+     */
+    @BizQuery
+    OrderAnalysisBean getOrderAnalysis(@Optional @Name("startDate") String startDate,
+                                        @Optional @Name("endDate") String endDate,
+                                        IServiceContext context);
+
+    /**
+     * 优惠券分析（P19 营销分析）。领取数/核销数/核销率/拉动 GMV。
+     * 口径见 docs/design/system-configuration.md「报表与统计」。
+     */
+    @BizQuery
+    CouponUsageStatisticsBean getCouponAnalysis(@Optional @Name("startDate") String startDate,
+                                                  @Optional @Name("endDate") String endDate,
+                                                  IServiceContext context);
 
     @BizMutation
     int cancelExpiredOrders(@Name("timeoutMinutes") int timeoutMinutes,

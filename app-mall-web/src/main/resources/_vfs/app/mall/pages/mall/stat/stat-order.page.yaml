@@ -1,0 +1,122 @@
+type: page
+title: 订单分析
+body:
+  - type: form
+    title: 订单分析筛选
+    mode: inline
+    wrapWithPanel: false
+    body:
+      - type: input-date
+        name: startDate
+        label: 开始日期
+        format: YYYY-MM-DD
+      - type: input-date
+        name: endDate
+        label: 结束日期
+        format: YYYY-MM-DD
+      - type: button
+        label: 查询
+        level: primary
+        actionType: reload
+        target: orderAnalysis,couponAnalysis
+      - type: button
+        label: 导出CSV
+        level: default
+        actionType: ajax
+        api:
+          url: '@query:LitemallOrder__getOrderAnalysis'
+          data:
+            startDate: "${startDate || ''}"
+            endDate: "${endDate || ''}"
+          dataType: csv
+
+  - type: service
+    name: orderAnalysis
+    api:
+      url: '@query:LitemallOrder__getOrderAnalysis'
+      data:
+        startDate: "${startDate || ''}"
+        endDate: "${endDate || ''}"
+      sendOn: true
+    body:
+      - type: panel
+        title: '支付订单数：${totalPaidOrders || 0}'
+        body:
+      - type: grid
+        columns:
+          - md: 4
+            body:
+              - type: panel
+                title: 客单价分布
+                body:
+                  - type: chart
+                    config:
+                      tooltip:
+                        trigger: item
+                      series:
+                        - type: pie
+                          radius: '60%'
+                          data: ${aovDistribution | pick: segment,orderCount}
+                          label:
+                            formatter: '${b}: ${c} (${d}%)'
+          - md: 4
+            body:
+              - type: panel
+                title: 支付方式占比
+                body:
+                  - type: chart
+                    config:
+                      tooltip:
+                        trigger: item
+                      series:
+                        - type: pie
+                          radius: '60%'
+                          data: ${paymentMethodShare | pick: method,orderCount}
+                          label:
+                            formatter: '${b}: ${c} (${d}%)'
+          - md: 4
+            body:
+              - type: panel
+                title: 退货原因占比
+                body:
+                  - type: chart
+                    config:
+                      tooltip:
+                        trigger: item
+                      series:
+                        - type: pie
+                          radius: '60%'
+                          data: ${returnReasonShare | pick: reason,aftersaleCount}
+                          label:
+                            formatter: '${b}: ${c} (${d}%)'
+
+  - type: service
+    name: couponAnalysis
+    api:
+      url: '@query:LitemallOrder__getCouponAnalysis'
+      data:
+        startDate: "${startDate || ''}"
+        endDate: "${endDate || ''}"
+      sendOn: true
+    body:
+      - type: panel
+        title: 优惠券分析
+        body:
+          - type: grid
+            columns:
+              - md: 3
+                body:
+                  - type: tpl
+                    tpl: '领取数：<b style="font-size:20px">${claimedCount || 0}</b>'
+              - md: 3
+                body:
+                  - type: tpl
+                    tpl: '核销数：<b style="font-size:20px">${usedCount || 0}</b>'
+              - md: 3
+                body:
+                  - type: tpl
+                    tpl: '核销率：<b style="font-size:20px">${claimedCount > 0 ? ((usedCount / claimedCount) * 100).toFixed(1) : 0}%</b>'
+              - md: 3
+                body:
+                  - type: tpl
+                    tpl: '拉动 GMV：<b style="font-size:20px">¥${pulledGmv || 0}</b>'

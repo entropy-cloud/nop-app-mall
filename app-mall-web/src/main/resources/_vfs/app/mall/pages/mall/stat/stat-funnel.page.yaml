@@ -1,0 +1,102 @@
+type: page
+title: 销售漏斗
+body:
+  - type: form
+    title: 漏斗筛选
+    mode: inline
+    wrapWithPanel: false
+    body:
+      - type: input-date
+        name: startDate
+        label: 开始日期
+        format: YYYY-MM-DD
+      - type: input-date
+        name: endDate
+        label: 结束日期
+        format: YYYY-MM-DD
+      - type: button
+        label: 查询
+        level: primary
+        actionType: reload
+        target: funnel
+      - type: button
+        label: 导出CSV
+        level: default
+        actionType: ajax
+        api:
+          url: '@query:LitemallOrder__getSalesFunnel'
+          data:
+            startDate: "${startDate || ''}"
+            endDate: "${endDate || ''}"
+          dataType: csv
+
+  - type: service
+    name: funnel
+    api:
+      url: '@query:LitemallOrder__getSalesFunnel'
+      data:
+        startDate: "${startDate || ''}"
+        endDate: "${endDate || ''}"
+      sendOn: true
+    body:
+      - type: grid
+        columns:
+          - md: 2
+            body:
+              - type: panel
+                title: 浏览（去重商品数）
+                body:
+                  - type: tpl
+                    tpl: '<b style="font-size:24px">${viewCount || 0}</b>'
+          - md: 2
+            body:
+              - type: panel
+                title: 加购
+                body:
+                  - type: tpl
+                    tpl: '<b style="font-size:24px">${cartCount || 0}</b> <span style="color:#666">转化：${((cartViewRatio || 0) * 100).toFixed(1)}%</span>'
+          - md: 2
+            body:
+              - type: panel
+                title: 下单
+                body:
+                  - type: tpl
+                    tpl: '<b style="font-size:24px">${orderCount || 0}</b> <span style="color:#666">转化：${((orderCartRatio || 0) * 100).toFixed(1)}%</span>'
+          - md: 2
+            body:
+              - type: panel
+                title: 支付
+                body:
+                  - type: tpl
+                    tpl: '<b style="font-size:24px">${payCount || 0}</b> <span style="color:#666">转化：${((payOrderRatio || 0) * 100).toFixed(1)}%</span>'
+          - md: 2
+            body:
+              - type: panel
+                title: 复购用户
+                body:
+                  - type: tpl
+                    tpl: '<b style="font-size:24px">${repurchaseCount || 0}</b> <span style="color:#666">转化：${((repurchasePayRatio || 0) * 100).toFixed(1)}%</span>'
+          - md: 2
+            body:
+              - type: panel
+                title: 整体支付转化率
+                body:
+                  - type: tpl
+                    tpl: '<b style="font-size:24px;color:#dc3545">${((payViewRatio || 0) * 100).toFixed(2)}%</b>'
+      - type: divider
+      - type: panel
+        title: 漏斗图
+        body:
+          - type: chart
+            config:
+              tooltip:
+                trigger: item
+              series:
+                - type: funnel
+                  name: 漏斗
+                  data:
+                    - { value: '${viewCount || 0}', name: '浏览' }
+                    - { value: '${cartCount || 0}', name: '加购' }
+                    - { value: '${orderCount || 0}', name: '下单' }
+                    - { value: '${payCount || 0}', name: '支付' }
+                    - { value: '${repurchaseCount || 0}', name: '复购' }
