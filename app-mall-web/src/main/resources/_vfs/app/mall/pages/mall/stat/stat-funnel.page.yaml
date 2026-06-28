@@ -29,6 +29,27 @@ body:
             startDate: "${startDate || ''}"
             endDate: "${endDate || ''}"
           dataType: csv
+      - type: select
+        name: funnelFormat
+        label: 模板导出
+        value: xlsx
+        options:
+          - label: Excel (xlsx)
+            value: xlsx
+          - label: PDF
+            value: pdf
+      - type: button
+        label: 导出报表
+        level: primary
+        actionType: ajax
+        api:
+          url: '@query:LitemallOrder__exportReport'
+          data:
+            reportName: funnel
+            renderType: '${funnelFormat}'
+            startDate: "${startDate || ''}"
+            endDate: "${endDate || ''}"
+          responseType: blob
 
   - type: service
     name: funnel

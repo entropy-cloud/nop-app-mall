@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<workbook x:schema="/nop/schema/excel/workbook.xdef" xmlns:x="/nop/schema/xdsl.xdef">
+
+    <defaultFont fontColor="0x0" fontFamily="swiss" fontName="Helvetica" fontSize="11.0"/>
+
+    <sheets>
+        <sheet name="goods-export">
+            <table>
+                <rows>
+                    <row>
+                        <cells>
+                            <cell>
+                                <value>goodsId</value>
+                            </cell>
+                            <cell>
+                                <value>goodsSn</value>
+                            </cell>
+                            <cell>
+                                <value>name</value>
+                            </cell>
+                            <cell>
+                                <value>retailPrice</value>
+                            </cell>
+                            <cell>
+                                <value>counterPrice</value>
+                            </cell>
+                            <cell>
+                                <value>isOnSale</value>
+                            </cell>
+                        </cells>
+                    </row>
+                    <row>
+                        <cells>
+                            <cell>
+                                <value>*=^goodsList!id</value>
+                            </cell>
+                            <cell>
+                                <value>*=^goodsList!goodsSn</value>
+                            </cell>
+                            <cell>
+                                <value>*=^goodsList!name</value>
+                            </cell>
+                            <cell>
+                                <value>*=^goodsList!retailPrice</value>
+                            </cell>
+                            <cell>
+                                <value>*=^goodsList!counterPrice</value>
+                            </cell>
+                            <cell>
+                                <value>*=^goodsList!isOnSale</value>
+                            </cell>
+                        </cells>
+                    </row>
+                </rows>
+            </table>
+        </sheet>
+    </sheets>
+</workbook>

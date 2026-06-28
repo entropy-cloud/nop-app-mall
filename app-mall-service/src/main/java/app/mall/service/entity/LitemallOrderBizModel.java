@@ -87,6 +87,7 @@ import io.nop.api.core.annotations.core.Optional;
 import io.nop.api.core.annotations.directive.Auth;
 import io.nop.api.core.beans.FilterBeans;
 import io.nop.api.core.beans.PageBean;
+import io.nop.api.core.beans.WebContentBean;
 import io.nop.api.core.beans.query.QueryBean;
 import io.nop.api.core.exceptions.NopException;
 import io.nop.api.core.time.CoreMetrics;
@@ -94,12 +95,17 @@ import io.nop.auth.dao.entity.NopAuthUser;
 import io.nop.biz.crud.CrudBizModel;
 import io.nop.commons.util.StringHelper;
 import io.nop.core.context.IServiceContext;
+import io.nop.core.lang.eval.IEvalScope;
 import io.nop.core.resource.IResource;
+import io.nop.core.resource.ResourceHelper;
+import io.nop.core.resource.tpl.ITemplateOutput;
 import io.nop.file.core.IFileRecord;
 import io.nop.file.core.IFileStore;
 import io.nop.ooxml.xlsx.util.ExcelHelper;
 import io.nop.orm.IOrmEntity;
 import io.nop.orm.IOrmTemplate;
+import io.nop.report.core.engine.IReportEngine;
+import io.nop.xlang.api.XLang;
 import jakarta.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -223,6 +229,9 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
 
     @Inject
     IOrmTemplate ormTemplate;
+
+    @Inject
+    IReportEngine reportEngine;
 
     @Inject
     MallLogManager logManager;
@@ -1736,6 +1745,145 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
         result.setReturnReasonShare(returns);
         result.setTotalPaidOrders(totalPaid);
         return result;
+    }
+
+    @Override
+    @BizQuery
+    @Auth(roles = "admin")
+    public WebContentBean exportReport(@Name("reportName") String reportName,
+                                       @Name("renderType") String renderType,
+                                       @Optional @Name("startDate") String startDate,
+                                       @Optional @Name("endDate") String endDate,
+                                       @Optional @Name("categoryId") String categoryId,
+                                       IServiceContext context) {
+        String safeType = ReportRenderTypes.validate(renderType);
+        String name = normalizeReportName(reportName);
+        IEvalScope scope = XLang.newEvalScope();
+        switch (name) {
+            case "funnel":
+                scope.setLocalValue("funnelList", buildFunnelDataSet(
+                        getSalesFunnel(startDate, endDate, context)));
+                break;
+            case "product":
+                scope.setLocalValue("productList", buildProductDataSet(
+                        getProductAnalysis(startDate, endDate, categoryId, context)));
+                break;
+            case "order":
+                scope.setLocalValue("orderMetrics", buildOrderDataSet(
+                        getOrderAnalysis(startDate, endDate, context)));
+                break;
+            default:
+                throw new NopException(AppMallErrors.ERR_REPORT_NAME_INVALID)
+                        .param(AppMallErrors.ARG_REPORT_NAME, reportName);
+        }
+
+        String path = "/nop/main/report/" + reportTemplate(name) + ".xpt.xml";
+        IResource resource = ResourceHelper.getTempResource("rpt");
+        try {
+            ITemplateOutput output = reportEngine.getRenderer(path, safeType);
+            output.generateToResource(resource, scope);
+            String fileName = name + "-report." + safeType;
+            return new WebContentBean("application/octet-stream", resource.toFile(), fileName);
+        } catch (Exception e) {
+            resource.delete();
+            throw NopException.adapt(e);
+        }
+    }
+
+    private static String normalizeReportName(String reportName) {
+        if (reportName == null) {
+            throw new NopException(AppMallErrors.ERR_REPORT_NAME_INVALID)
+                    .param(AppMallErrors.ARG_REPORT_NAME, reportName);
+        }
+        String n = reportName.trim().toLowerCase();
+        if (!n.equals("funnel") && !n.equals("product") && !n.equals("order")) {
+            throw new NopException(AppMallErrors.ERR_REPORT_NAME_INVALID)
+                    .param(AppMallErrors.ARG_REPORT_NAME, reportName);
+        }
+        return n;
+    }
+
+    private static String reportTemplate(String reportName) {
+        switch (reportName) {
+            case "funnel":
+                return "sales-funnel";
+            case "product":
+                return "product-analysis";
+            case "order":
+                return "order-analysis";
+            default:
+                throw new NopException(AppMallErrors.ERR_REPORT_NAME_INVALID)
+                        .param(AppMallErrors.ARG_REPORT_NAME, reportName);
+        }
+    }
+
+    private static List<Map<String, Object>> buildFunnelDataSet(SalesFunnelBean bean) {
+        List<Map<String, Object>> list = new ArrayList<>();
+        list.add(funnelRow("view", bean.getViewCount(), "1.0"));
+        list.add(funnelRow("cart", bean.getCartCount(), bean.getCartViewRatio()));
+        list.add(funnelRow("order", bean.getOrderCount(), bean.getOrderCartRatio()));
+        list.add(funnelRow("pay", bean.getPayCount(), bean.getPayOrderRatio()));
+        list.add(funnelRow("repurchase", bean.getRepurchaseCount(), bean.getRepurchasePayRatio()));
+        return list;
+    }
+
+    private static Map<String, Object> funnelRow(String stage, int count, BigDecimal rate) {
+        Map<String, Object> m = new LinkedHashMap<>();
+        m.put("stage", stage);
+        m.put("count", count);
+        m.put("rate", rate == null ? "0" : rate.toPlainString());
+        return m;
+    }
+
+    private static Map<String, Object> funnelRow(String stage, int count, String rate) {
+        Map<String, Object> m = new LinkedHashMap<>();
+        m.put("stage", stage);
+        m.put("count", count);
+        m.put("rate", rate);
+        return m;
+    }
+
+    private static List<Map<String, Object>> buildProductDataSet(ProductAnalysisBean bean) {
+        List<Map<String, Object>> list = new ArrayList<>();
+        List<GoodsStatisticsBean> ranking = bean.getSalesRanking();
+        if (ranking != null) {
+            for (GoodsStatisticsBean g : ranking) {
+                Map<String, Object> m = new LinkedHashMap<>();
+                m.put("goodsId", g.getGoodsId());
+                m.put("goodsName", g.getGoodsName());
+                m.put("number", g.getSalesCount());
+                m.put("amount", g.getSalesAmount() == null ? "" : g.getSalesAmount().toPlainString());
+                list.add(m);
+            }
+        }
+        return list;
+    }
+
+    private static List<Map<String, Object>> buildOrderDataSet(OrderAnalysisBean bean) {
+        List<Map<String, Object>> list = new ArrayList<>();
+        if (bean.getAovDistribution() != null) {
+            for (AovDistributionBean b : bean.getAovDistribution()) {
+                list.add(orderRow("aov:" + b.getSegment(), b.getOrderCount()));
+            }
+        }
+        if (bean.getPaymentMethodShare() != null) {
+            for (PaymentMethodShareBean b : bean.getPaymentMethodShare()) {
+                list.add(orderRow("pay:" + b.getMethod(), b.getOrderCount()));
+            }
+        }
+        if (bean.getReturnReasonShare() != null) {
+            for (ReturnReasonShareBean b : bean.getReturnReasonShare()) {
+                list.add(orderRow("return:" + b.getReason(), b.getAftersaleCount()));
+            }
+        }
+        return list;
+    }
+
+    private static Map<String, Object> orderRow(String label, int value) {
+        Map<String, Object> m = new LinkedHashMap<>();
+        m.put("label", label);
+        m.put("value", value);
+        return m;
     }
 
     @Override

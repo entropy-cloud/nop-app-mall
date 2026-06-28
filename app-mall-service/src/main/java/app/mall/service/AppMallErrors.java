@@ -639,4 +639,16 @@ public interface AppMallErrors {
     ErrorCode ERR_MATERIAL_CATEGORY_NOT_FOUND =
             define("nop.err.mall.material.category-not-found",
                     "素材分类不存在");
+
+    // nop-report 报表导出错误码（Phase 13 L381/L383 引入）
+    String ARG_RENDER_TYPE = "renderType";
+    String ARG_REPORT_NAME = "reportName";
+
+    ErrorCode ERR_REPORT_RENDER_TYPE_INVALID =
+            define("nop.err.mall.report.render-type-invalid",
+                    "导出格式仅支持 xlsx 或 pdf", ARG_RENDER_TYPE);
+
+    ErrorCode ERR_REPORT_NAME_INVALID =
+            define("nop.err.mall.report.name-invalid",
+                    "报表名不合法", ARG_REPORT_NAME);
 }

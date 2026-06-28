@@ -29,6 +29,27 @@ body:
             startDate: "${startDate || ''}"
             endDate: "${endDate || ''}"
           dataType: csv
+      - type: select
+        name: orderFormat
+        label: 模板导出
+        value: xlsx
+        options:
+          - label: Excel (xlsx)
+            value: xlsx
+          - label: PDF
+            value: pdf
+      - type: button
+        label: 导出报表
+        level: primary
+        actionType: ajax
+        api:
+          url: '@query:LitemallOrder__exportReport'
+          data:
+            reportName: order
+            renderType: '${orderFormat}'
+            startDate: "${startDate || ''}"
+            endDate: "${endDate || ''}"
+          responseType: blob
 
   - type: service
     name: orderAnalysis
@@ -56,7 +77,7 @@ body:
                       series:
                         - type: pie
                           radius: '60%'
-                          data: ${aovDistribution | pick: segment,orderCount}
+                          data: '${aovDistribution | pick: segment,orderCount}'
                           label:
                             formatter: '${b}: ${c} (${d}%)'
           - md: 4
@@ -71,7 +92,7 @@ body:
                       series:
                         - type: pie
                           radius: '60%'
-                          data: ${paymentMethodShare | pick: method,orderCount}
+                          data: '${paymentMethodShare | pick: method,orderCount}'
                           label:
                             formatter: '${b}: ${c} (${d}%)'
           - md: 4
@@ -86,7 +107,7 @@ body:
                       series:
                         - type: pie
                           radius: '60%'
-                          data: ${returnReasonShare | pick: reason,aftersaleCount}
+                          data: '${returnReasonShare | pick: reason,aftersaleCount}'
                           label:
                             formatter: '${b}: ${c} (${d}%)'
 

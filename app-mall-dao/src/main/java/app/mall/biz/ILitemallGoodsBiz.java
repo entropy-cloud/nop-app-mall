@@ -6,6 +6,7 @@ import io.nop.api.core.annotations.biz.BizQuery;
 import io.nop.api.core.annotations.core.Name;
 import io.nop.api.core.annotations.core.Optional;
 import io.nop.api.core.beans.PageBean;
+import io.nop.api.core.beans.WebContentBean;
 import io.nop.core.context.IServiceContext;
 import io.nop.orm.biz.ICrudBiz;
 
@@ -96,5 +97,13 @@ public interface ILitemallGoodsBiz extends ICrudBiz<LitemallGoods>{
     @BizQuery
     List<StockWarningSkuBean> getStockWarningList(@Optional @Name("onlyOnSale") Boolean onlyOnSale,
                                                   IServiceContext context);
+
+    @BizQuery
+    WebContentBean exportGoodsReport(@Name("renderType") String renderType,
+                                     @Optional @Name("keyword") String keyword,
+                                     @Optional @Name("categoryId") String categoryId,
+                                     @Optional @Name("brandId") String brandId,
+                                     @Optional @Name("isOnSale") Boolean isOnSale,
+                                     IServiceContext context);
 }
 

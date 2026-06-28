@@ -31,6 +31,7 @@ import app.mall.dao.entity.LitemallOrder;
 import java.util.Map;
 
 import io.nop.api.core.beans.PageBean;
+import io.nop.api.core.beans.WebContentBean;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -362,4 +363,12 @@ public interface ILitemallOrderBiz extends ICrudBiz<LitemallOrder> {
     @BizQuery
     List<LitemallOrder> getOverdueUnpaidOrders(@Optional @Name("cutoffMinutes") Integer cutoffMinutes,
                                                 IServiceContext context);
+
+    @BizQuery
+    WebContentBean exportReport(@Name("reportName") String reportName,
+                                @Name("renderType") String renderType,
+                                @Optional @Name("startDate") String startDate,
+                                @Optional @Name("endDate") String endDate,
+                                @Optional @Name("categoryId") String categoryId,
+                                IServiceContext context);
 }

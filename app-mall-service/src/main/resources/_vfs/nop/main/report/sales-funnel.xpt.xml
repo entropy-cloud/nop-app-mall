@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<workbook x:schema="/nop/schema/excel/workbook.xdef" xmlns:x="/nop/schema/xdsl.xdef">
+
+    <defaultFont fontColor="0x0" fontFamily="swiss" fontName="Helvetica" fontSize="11.0"/>
+
+    <sheets>
+        <sheet name="sales-funnel">
+            <table>
+                <rows>
+                    <row>
+                        <cells>
+                            <cell>
+                                <value>stage</value>
+                            </cell>
+                            <cell>
+                                <value>count</value>
+                            </cell>
+                            <cell>
+                                <value>rate</value>
+                            </cell>
+                        </cells>
+                    </row>
+                    <row>
+                        <cells>
+                            <cell>
+                                <value>*=^funnelList!stage</value>
+                            </cell>
+                            <cell>
+                                <value>*=^funnelList!count</value>
+                            </cell>
+                            <cell>
+                                <value>*=^funnelList!rate</value>
+                            </cell>
+                        </cells>
+                    </row>
+                </rows>
+            </table>
+        </sheet>
+    </sheets>
+</workbook>

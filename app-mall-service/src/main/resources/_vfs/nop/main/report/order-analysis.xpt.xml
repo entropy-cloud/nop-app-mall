@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<workbook x:schema="/nop/schema/excel/workbook.xdef" xmlns:x="/nop/schema/xdsl.xdef">
+
+    <defaultFont fontColor="0x0" fontFamily="swiss" fontName="Helvetica" fontSize="11.0"/>
+
+    <sheets>
+        <sheet name="order-analysis">
+            <table>
+                <rows>
+                    <row>
+                        <cells>
+                            <cell>
+                                <value>label</value>
+                            </cell>
+                            <cell>
+                                <value>value</value>
+                            </cell>
+                        </cells>
+                    </row>
+                    <row>
+                        <cells>
+                            <cell>
+                                <value>*=^orderMetrics!label</value>
+                            </cell>
+                            <cell>
+                                <value>*=^orderMetrics!value</value>
+                            </cell>
+                        </cells>
+                    </row>
+                </rows>
+            </table>
+        </sheet>
+    </sheets>
+</workbook>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<workbook x:schema="/nop/schema/excel/workbook.xdef" xmlns:x="/nop/schema/xdsl.xdef">
+
+    <defaultFont fontColor="0x0" fontFamily="swiss" fontName="Helvetica" fontSize="11.0"/>
+
+    <sheets>
+        <sheet name="product-analysis">
+            <table>
+                <rows>
+                    <row>
+                        <cells>
+                            <cell>
+                                <value>goodsId</value>
+                            </cell>
+                            <cell>
+                                <value>goodsName</value>
+                            </cell>
+                            <cell>
+                                <value>number</value>
+                            </cell>
+                            <cell>
+                                <value>amount</value>
+                            </cell>
+                        </cells>
+                    </row>
+                    <row>
+                        <cells>
+                            <cell>
+                                <value>*=^productList!goodsId</value>
+                            </cell>
+                            <cell>
+                                <value>*=^productList!goodsName</value>
+                            </cell>
+                            <cell>
+                                <value>*=^productList!number</value>
+                            </cell>
+                            <cell>
+                                <value>*=^productList!amount</value>
+                            </cell>
+                        </cells>
+                    </row>
+                </rows>
+            </table>
+        </sheet>
+    </sheets>
+</workbook>

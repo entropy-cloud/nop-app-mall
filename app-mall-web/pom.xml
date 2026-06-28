@@ -30,10 +30,13 @@
             <groupId>io.github.entropy-cloud</groupId>
             <artifactId>nop-web</artifactId>
         </dependency>
+        <!-- nop-report-core（经 app-mall-service 传递到 compile 域）的 core 初始化会装载
+             XlsxDslModelLoaderFactory，它引用 nop-excel / nop-ooxml-xlsx 的类
+             （IExcelWorkbookGenerator / XlsxObjectLoader）。app-mall-web 的 precompile 在
+             compile 域运行 core 初始化，故需 nop-ooxml-xlsx 在 compile 域（此前仅 test 域）。 -->
         <dependency>
             <groupId>io.github.entropy-cloud</groupId>
             <artifactId>nop-ooxml-xlsx</artifactId>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>

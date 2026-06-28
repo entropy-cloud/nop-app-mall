@@ -97,6 +97,18 @@
             <artifactId>nop-ooxml-xlsx</artifactId>
         </dependency>
 
+        <!-- nop-report 引擎引入（Phase 13 交付范围 L381/L383 + 审计 01-2 P1 remediate）：
+             IReportEngine 渲染入口（xlsx/pdf/html），按 runbook 不引入 service/web/dao/docx。
+             core 提供 IReportEngine；pdf 提供 PDFBox 直接渲染器（非 xlsx 转 pdf）。 -->
+        <dependency>
+            <groupId>io.github.entropy-cloud</groupId>
+            <artifactId>nop-report-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.github.entropy-cloud</groupId>
+            <artifactId>nop-report-pdf</artifactId>
+        </dependency>
+
         <!-- 在测试阶段引入日志文件 -->
         <dependency>
             <groupId>ch.qos.logback</groupId>

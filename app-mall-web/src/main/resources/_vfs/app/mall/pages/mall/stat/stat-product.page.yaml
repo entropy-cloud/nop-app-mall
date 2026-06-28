@@ -34,6 +34,28 @@ body:
             endDate: "${endDate || ''}"
             categoryId: "${categoryId || ''}"
           dataType: csv
+      - type: select
+        name: productFormat
+        label: 模板导出
+        value: xlsx
+        options:
+          - label: Excel (xlsx)
+            value: xlsx
+          - label: PDF
+            value: pdf
+      - type: button
+        label: 导出报表
+        level: primary
+        actionType: ajax
+        api:
+          url: '@query:LitemallOrder__exportReport'
+          data:
+            reportName: product
+            renderType: '${productFormat}'
+            startDate: "${startDate || ''}"
+            endDate: "${endDate || ''}"
+            categoryId: "${categoryId || ''}"
+          responseType: blob
 
   - type: service
     name: productAnalysis

@@ -14,11 +14,13 @@ import jakarta.inject.Inject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.io.File;
 import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @NopTestConfig(localDb = true, initDatabaseSchema = OptionalBoolean.TRUE)
 public class TestLitemallOrderStatisticsBizModel extends JunitBaseTestCase {
@@ -236,6 +238,80 @@ public class TestLitemallOrderStatisticsBizModel extends JunitBaseTestCase {
         assertNotNull(data.get("claimedCount"));
         assertNotNull(data.get("usedCount"));
         assertNotNull(data.get("pulledGmv"));
+    }
+
+    // ===== nop-report 报表导出（funnel/product/order × xlsx/pdf + 空集）=====
+
+    private ApiResponse<?> callExportReport(String reportName, String renderType) {
+        ApiRequest<Map<String, Object>> req = ApiRequest.build(Map.of(
+                "reportName", reportName, "renderType", renderType));
+        IGraphQLExecutionContext ctx = graphQLEngine.newRpcContext(
+                GraphQLOperationType.query, "LitemallOrder__exportReport", req);
+        return graphQLEngine.executeRpc(ctx);
+    }
+
+    @Test
+    public void testExportReportFunnelXlsx() {
+        File f = renderReport("funnel", "xlsx");
+        assertTrue(f.length() > 0, "funnel xlsx should be non-empty");
+    }
+
+    @Test
+    public void testExportReportFunnelPdf() {
+        File f = renderReport("funnel", "pdf");
+        assertTrue(f.length() > 0, "funnel pdf should be non-empty");
+    }
+
+    @Test
+    public void testExportReportProductXlsx() {
+        File f = renderReport("product", "xlsx");
+        assertTrue(f.length() > 0, "product xlsx should be non-empty");
+    }
+
+    @Test
+    public void testExportReportProductPdf() {
+        File f = renderReport("product", "pdf");
+        assertTrue(f.length() > 0, "product pdf should be non-empty");
+    }
+
+    @Test
+    public void testExportReportOrderXlsx() {
+        File f = renderReport("order", "xlsx");
+        assertTrue(f.length() > 0, "order xlsx should be non-empty");
+    }
+
+    @Test
+    public void testExportReportOrderPdf() {
+        File f = renderReport("order", "pdf");
+        assertTrue(f.length() > 0, "order pdf should be non-empty");
+    }
+
+    @Test
+    public void testExportReportEmptyDataNotError() {
+        // 空库：报表数据集为空，渲染不应报错
+        ApiResponse<?> r = callExportReport("funnel", "xlsx");
+        assertEquals(0, r.getStatus(), "empty funnel export should not error: " + r);
+    }
+
+    @Test
+    public void testExportReportInvalidName() {
+        ApiResponse<?> r = callExportReport("unknown", "xlsx");
+        assertEquals(-1, r.getStatus(), "invalid reportName should be rejected: " + r);
+    }
+
+    @Test
+    public void testExportReportInvalidRenderType() {
+        ApiResponse<?> r = callExportReport("funnel", "docx");
+        assertEquals(-1, r.getStatus(), "invalid renderType should be rejected: " + r);
+    }
+
+    private File renderReport(String reportName, String renderType) {
+        ApiResponse<?> r = callExportReport(reportName, renderType);
+        assertEquals(0, r.getStatus(), "exportReport " + reportName + "/" + renderType + " failed: " + r);
+        File file = WebContentBeanFiles.contentFile(r.getData());
+        assertNotNull(file, "rendered file should not be null: " + r.getData());
+        assertTrue(file.exists(), "rendered file should exist: " + file);
+        return file;
     }
 
     @BeforeEach

@@ -25,8 +25,52 @@ body:
                 name: isOnSale
                 label: 仅在售
               - type: submit
+                label: 导出CSV
+                level: default
+          - type: alert
+            body: '模板化导出（nop-report）：选择格式后下载 xlsx 或 pdf。CSV 兜底格式见上方。'
+            level: info
+            className: mb-2 mt-2
+          - type: form
+            title: 模板化导出（xlsx / pdf）
+            mode: inline
+            wrapWithPanel: false
+            body:
+              - type: input-text
+                name: keyword
+                label: 关键字
+                placeholder: '商品名称或编号'
+              - type: input-text
+                name: categoryId
+                label: 分类ID
+              - type: input-text
+                name: brandId
+                label: 品牌ID
+              - type: switch
+                name: isOnSale
+                label: 仅在售
+              - type: select
+                name: renderType
+                label: 格式
+                value: xlsx
+                options:
+                  - label: Excel (xlsx)
+                    value: xlsx
+                  - label: PDF
+                    value: pdf
+              - type: button
                 label: 导出
                 level: primary
+                actionType: ajax
+                api:
+                  url: '@query:LitemallGoods__exportGoodsReport'
+                  data:
+                    renderType: '${renderType}'
+                    keyword: '${keyword}'
+                    categoryId: '${categoryId}'
+                    brandId: '${brandId}'
+                    isOnSale: '${isOnSale}'
+                  responseType: blob
           - type: service
             name: exportResult
             api:

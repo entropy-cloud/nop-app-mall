@@ -27,6 +27,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -266,6 +267,43 @@ public class TestLitemallGoodsOpsWorkbench extends JunitBaseTestCase {
         assertEquals(0, r.getStatus(), "export failed: " + r);
         Map<String, Object> data = (Map<String, Object>) r.getData();
         assertEquals(0, data.get("rowCount"));
+    }
+
+    // ===== nop-report 模板化导出（xlsx/pdf）=====
+
+    @Test
+    public void testExportGoodsReportXlsx() {
+        File f = renderGoodsReport("xlsx");
+        assertTrue(f.length() > 0, "xlsx file should be non-empty");
+    }
+
+    @Test
+    public void testExportGoodsReportPdf() {
+        File f = renderGoodsReport("pdf");
+        assertTrue(f.length() > 0, "pdf file should be non-empty");
+    }
+
+    @Test
+    public void testExportGoodsReportEmptyNotError() {
+        ApiResponse<?> r = callQuery("exportGoodsReport", Map.of(
+                "renderType", "xlsx", "keyword", "ZZZ-NOT-EXIST-ZZZ"));
+        assertEquals(0, r.getStatus(), "empty export should not error: " + r);
+    }
+
+    @Test
+    public void testExportGoodsReportInvalidRenderType() {
+        ApiResponse<?> r = callQuery("exportGoodsReport", Map.of("renderType", "docx"));
+        assertEquals(-1, r.getStatus(), "invalid renderType should be rejected: " + r);
+    }
+
+    private File renderGoodsReport(String renderType) {
+        ApiResponse<?> r = callQuery("exportGoodsReport", Map.of("renderType", renderType));
+        assertEquals(0, r.getStatus(), "exportGoodsReport failed: " + r);
+        Object data = r.getData();
+        File file = WebContentBeanFiles.contentFile(data);
+        assertNotNull(file, "rendered file should not be null: " + data);
+        assertTrue(file.exists(), "rendered file should exist: " + file);
+        return file;
     }
 
     // ===== 导入 =====

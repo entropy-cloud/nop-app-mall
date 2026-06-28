@@ -23,18 +23,24 @@ import io.nop.api.core.annotations.core.Optional;
 import io.nop.api.core.beans.FilterBeans;
 import io.nop.api.core.beans.PageBean;
 import io.nop.api.core.beans.TreeBean;
+import io.nop.api.core.beans.WebContentBean;
 import io.nop.api.core.beans.query.QueryBean;
 import io.nop.api.core.exceptions.NopException;
 import io.nop.biz.crud.CrudBizModel;
 import io.nop.biz.crud.EntityData;
 import io.nop.commons.util.StringHelper;
 import io.nop.core.context.IServiceContext;
+import io.nop.core.lang.eval.IEvalScope;
 import io.nop.core.resource.IResource;
+import io.nop.core.resource.ResourceHelper;
+import io.nop.core.resource.tpl.ITemplateOutput;
 import io.nop.file.core.IFileRecord;
 import io.nop.file.core.IFileStore;
 import io.nop.orm.IOrmEntityFileStore;
 import io.nop.orm.IOrmEntitySet;
 import io.nop.ooxml.xlsx.util.ExcelHelper;
+import io.nop.report.core.engine.IReportEngine;
+import io.nop.xlang.api.XLang;
 
 import jakarta.inject.Inject;
 import java.math.BigDecimal;
@@ -88,6 +94,9 @@ public class LitemallGoodsBizModel extends CrudBizModel<LitemallGoods> implement
 
     @Inject
     IOrmEntityFileStore ormEntityFileStore;
+
+    @Inject
+    IReportEngine reportEngine;
 
     public LitemallGoodsBizModel() {
         setEntityName(LitemallGoods.class.getName());
@@ -543,6 +552,37 @@ public class LitemallGoodsBizModel extends CrudBizModel<LitemallGoods> implement
         result.setCsvContent(sb.toString());
         result.setRowCount(list.size());
         return result;
+    }
+
+    @Override
+    @BizQuery
+    @Auth(roles = "admin")
+    public WebContentBean exportGoodsReport(@Name("renderType") String renderType,
+                                            @Optional @Name("keyword") String keyword,
+                                            @Optional @Name("categoryId") String categoryId,
+                                            @Optional @Name("brandId") String brandId,
+                                            @Optional @Name("isOnSale") Boolean isOnSale,
+                                            IServiceContext context) {
+        String safeType = ReportRenderTypes.validate(renderType);
+        QueryBean query = new QueryBean();
+        applyAdminExportFilters(query, keyword, categoryId, brandId, isOnSale);
+        query.addOrderField(LitemallGoods.PROP_NAME_addTime, true);
+        List<LitemallGoods> list = findList(query, null, context);
+
+        IEvalScope scope = XLang.newEvalScope();
+        scope.setLocalValue("goodsList", list);
+
+        IResource resource = ResourceHelper.getTempResource("rpt");
+        try {
+            ITemplateOutput output = reportEngine.getRenderer(
+                    "/nop/main/report/goods-export.xpt.xml", safeType);
+            output.generateToResource(resource, scope);
+            String fileName = "goods-export." + safeType;
+            return new WebContentBean("application/octet-stream", resource.toFile(), fileName);
+        } catch (Exception e) {
+            resource.delete();
+            throw NopException.adapt(e);
+        }
     }
 
     @Override
