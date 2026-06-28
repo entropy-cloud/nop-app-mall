@@ -546,4 +546,22 @@ public interface AppMallErrors {
     ErrorCode ERR_ORDER_PICKUP_NOT_SHIPPABLE =
             define("nop.err.mall.order.pickup-not-shippable",
                     "自提订单不可发货，请通过门店核销", ARG_ORDER_ID);
+
+    // 商品运营工作台错误码（P36）
+    ErrorCode ERR_GOODS_BATCH_EMPTY =
+            define("nop.err.mall.goods.batch-empty",
+                    "批量操作列表为空");
+
+    ErrorCode ERR_GOODS_IMPORT_EMPTY =
+            define("nop.err.mall.goods.import-empty",
+                    "导入 Excel 内容为空");
+
+    // 评论运营工作台错误码（P36）
+    ErrorCode ERR_COMMENT_BATCH_EMPTY =
+            define("nop.err.mall.comment.batch-empty",
+                    "批量操作列表为空");
+
+    ErrorCode ERR_COMMENT_MODERATION_ACTION_INVALID =
+            define("nop.err.mall.comment.moderation-action-invalid",
+                    "审核动作不合法（仅支持 hide/restore）");
 }

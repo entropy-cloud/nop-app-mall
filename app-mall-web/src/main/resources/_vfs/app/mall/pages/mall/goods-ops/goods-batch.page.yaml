@@ -1,0 +1,198 @@
+type: page
+title: 商品批量运营
+body:
+  - type: tabs
+    tabs:
+      - title: 批量改价
+        body:
+          - type: alert
+            body: '勾选商品行后填入新零售价，点击批量改价。逐行独立处理，部分失败不阻断成功行。'
+            level: info
+            className: mb-2
+          - type: crud
+            name: goodsListPrice
+            api:
+              url: '@query:LitemallGoods__findPage'
+            primaryField: id
+            keepItemSelectionOnPageChange: true
+            columns:
+              - type: checkbox
+              - name: id
+                label: ID
+              - name: goodsSn
+                label: 商品编号
+              - name: name
+                label: 商品名称
+              - name: retailPrice
+                label: 当前零售价
+              - name: isOnSale
+                label: 上架状态
+                type: mapping
+                map:
+                  'true': '<span class="label label-success">在售</span>'
+                  'false': '<span class="label label-default">下架</span>'
+          - type: form
+            title: 批量改价
+            mode: inline
+            wrapWithPanel: false
+            body:
+              - type: input-number
+                name: retailPrice
+                label: 新零售价
+                required: true
+                min: 0
+              - type: button
+                label: 批量改价
+                level: primary
+                disabledOn: '${!retailPrice || !goodsListPrice.selectedItems || goodsListPrice.selectedItems.length == 0}'
+                actionType: ajax
+                api:
+                  url: '@mutation:LitemallGoods__batchUpdatePrice'
+                  data:
+                    items: '${ARRAYMAP(goodsListPrice.selectedItems, item => {return {goodsId: item.id, retailPrice: retailPrice}})}'
+                feedback:
+                  title: 批量改价结果
+                  body:
+                    - type: table
+                      source: '${data}'
+                      columns:
+                        - name: goodsId
+                          label: 商品ID
+                        - name: goodsSn
+                          label: 商品编号
+                        - name: success
+                          label: 是否成功
+                          type: mapping
+                          map:
+                            'true': '<span class="label label-success">成功</span>'
+                            'false': '<span class="label label-danger">失败</span>'
+                        - name: reason
+                          label: 失败原因
+      - title: 批量改库存
+        body:
+          - type: alert
+            body: '输入 productId 与新库存数量，逐行处理，部分失败不阻断成功行。'
+            level: info
+            className: mb-2
+          - type: form
+            title: 批量改库存
+            api:
+              method: post
+              url: '@mutation:LitemallGoods__batchUpdateStock'
+              dataType: raw
+            body:
+              - type: input-array
+                name: items
+                label: 库存修改列表
+                addable: true
+                removable: true
+                minLength: 1
+                items:
+                  type: container
+                  body:
+                    - type: input-text
+                      name: productId
+                      label: SKU ID
+                      required: true
+                    - type: input-number
+                      name: number
+                      label: 库存数量
+                      required: true
+                      min: 0
+              - type: submit
+                label: 批量改库存
+                level: primary
+            feedback:
+              title: 批量改库存结果
+              body:
+                - type: table
+                  source: '${data}'
+                  columns:
+                    - name: goodsId
+                      label: 商品ID
+                    - name: success
+                      label: 是否成功
+                      type: mapping
+                      map:
+                        'true': '<span class="label label-success">成功</span>'
+                        'false': '<span class="label label-danger">失败</span>'
+                    - name: reason
+                      label: 失败原因
+      - title: 批量上下架
+        body:
+          - type: alert
+            body: '勾选商品行后选择批量上架或下架。上架需商品有 SKU。'
+            level: info
+            className: mb-2
+          - type: crud
+            name: goodsListSale
+            api:
+              url: '@query:LitemallGoods__findPage'
+            primaryField: id
+            keepItemSelectionOnPageChange: true
+            columns:
+              - type: checkbox
+              - name: id
+                label: ID
+              - name: goodsSn
+                label: 商品编号
+              - name: name
+                label: 商品名称
+              - name: isOnSale
+                label: 上架状态
+                type: mapping
+                map:
+                  'true': '<span class="label label-success">在售</span>'
+                  'false': '<span class="label label-default">下架</span>'
+          - type: button-toolbar
+            buttons:
+              - type: button
+                label: 批量上架
+                level: success
+                disabledOn: '${!goodsListSale.selectedItems || goodsListSale.selectedItems.length == 0}'
+                actionType: ajax
+                api:
+                  url: '@mutation:LitemallGoods__batchOnSale'
+                  data:
+                    goodsIds: '${ARRAYMAP(goodsListSale.selectedItems, item => item.id)}'
+                feedback:
+                  title: 批量上架结果
+                  body:
+                    - type: table
+                      source: '${data}'
+                      columns:
+                        - name: goodsId
+                          label: 商品ID
+                        - name: success
+                          label: 是否成功
+                          type: mapping
+                          map:
+                            'true': '<span class="label label-success">成功</span>'
+                            'false': '<span class="label label-danger">失败</span>'
+                        - name: reason
+                          label: 失败原因
+              - type: button
+                label: 批量下架
+                level: danger
+                disabledOn: '${!goodsListSale.selectedItems || goodsListSale.selectedItems.length == 0}'
+                actionType: ajax
+                api:
+                  url: '@mutation:LitemallGoods__batchOffSale'
+                  data:
+                    goodsIds: '${ARRAYMAP(goodsListSale.selectedItems, item => item.id)}'
+                feedback:
+                  title: 批量下架结果
+                  body:
+                    - type: table
+                      source: '${data}'
+                      columns:
+                        - name: goodsId
+                          label: 商品ID
+                        - name: success
+                          label: 是否成功
+                          type: mapping
+                          map:
+                            'true': '<span class="label label-success">成功</span>'
+                            'false': '<span class="label label-danger">失败</span>'
+                        - name: reason
+                          label: 失败原因

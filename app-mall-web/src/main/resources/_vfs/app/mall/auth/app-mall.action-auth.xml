@@ -97,8 +97,21 @@
                           icon="ant-design:appstore-twotone" component="AMIS"
                           resourceType="SUBM" url="/app/mall/pages/LitemallGoods/main.page.yaml"/>
                 <resource id="mall-goods-create" displayName="商品上架" orderNo="302"
-                          icon="ant-design:appstore-twotone" component="AMIS"
-                          resourceType="SUBM" url="/app/mall/pages/LitemallGoods/add.page.yaml"/>
+                           icon="ant-design:appstore-twotone" component="AMIS"
+                           resourceType="SUBM" url="/app/mall/pages/LitemallGoods/add.page.yaml"/>
+                <!-- P36 商品运营工作台：批量运营/导入导出/库存预警/评论工作台 -->
+                <resource id="mall-goods-batch" displayName="批量运营" orderNo="304"
+                           icon="ant-design:tool-outlined" component="AMIS"
+                           resourceType="SUBM" url="/app/mall/pages/mall/goods-ops/goods-batch.page.yaml"/>
+                <resource id="mall-goods-io" displayName="导入导出" orderNo="305"
+                           icon="ant-design:cloud-upload-outlined" component="AMIS"
+                           resourceType="SUBM" url="/app/mall/pages/mall/goods-ops/goods-io.page.yaml"/>
+                <resource id="mall-stock-warning" displayName="库存预警" orderNo="306"
+                           icon="ant-design:warning-outlined" component="AMIS"
+                           resourceType="SUBM" url="/app/mall/pages/mall/goods-ops/stock-warning.page.yaml"/>
+                <resource id="mall-comment-review" displayName="评论工作台" orderNo="307"
+                           icon="ant-design:comment-outlined" component="AMIS"
+                           resourceType="SUBM" url="/app/mall/pages/mall/goods-ops/comment-review.page.yaml"/>
 <!--                <resource id="mall-goods-comment" displayName="商品评论" orderNo="303"-->
 <!--                          icon="ant-design:appstore-twotone" component="AMIS"-->
 <!--                          resourceType="SUBM" url="/app/mall/pages/LitemallComment/main.page.yaml"/>-->

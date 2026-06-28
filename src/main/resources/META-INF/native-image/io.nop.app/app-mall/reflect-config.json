@@ -157,7 +157,137 @@
     "allPublicMethods": true,
     "fields": [],
     "methods": [],
+    "name": "app.mall.dao.dto.AovDistributionBean"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [],
+    "name": "app.mall.dao.dto.BatchCommentResultBean"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [],
+    "name": "app.mall.dao.dto.BatchGoodsResultBean"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [],
+    "name": "app.mall.dao.dto.BatchShipResultBean"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [],
+    "name": "app.mall.dao.dto.CartRankingItemBean"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [],
+    "name": "app.mall.dao.dto.CheckInResultBean"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [],
+    "name": "app.mall.dao.dto.CheckInRewardRuleBean"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [],
+    "name": "app.mall.dao.dto.CheckInStatusBean"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [],
+    "name": "app.mall.dao.dto.CouponUsageStatisticsBean"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [],
+    "name": "app.mall.dao.dto.DashboardMetricsBean"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [],
+    "name": "app.mall.dao.dto.GoodsExportResultBean"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [],
     "name": "app.mall.dao.dto.GoodsStatisticsBean"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [],
+    "name": "app.mall.dao.dto.LifecycleSegmentBean"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [],
+    "name": "app.mall.dao.dto.OrderAnalysisBean"
   },
   {
     "allDeclaredConstructors": true,
@@ -177,7 +307,177 @@
     "allPublicMethods": true,
     "fields": [],
     "methods": [],
+    "name": "app.mall.dao.dto.PaymentMethodShareBean"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [],
+    "name": "app.mall.dao.dto.PinTuanEffectivenessBean"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [],
+    "name": "app.mall.dao.dto.ProductAnalysisBean"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [],
+    "name": "app.mall.dao.dto.PromotionEffectivenessBean"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [],
+    "name": "app.mall.dao.dto.RepurchaseRatePointBean"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [],
+    "name": "app.mall.dao.dto.ReturnReasonShareBean"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [],
+    "name": "app.mall.dao.dto.RfmSegmentBean"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [],
+    "name": "app.mall.dao.dto.SalesFunnelBean"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [],
+    "name": "app.mall.dao.dto.SalesTrendPointBean"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [],
+    "name": "app.mall.dao.dto.StockSemanticBean"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [],
+    "name": "app.mall.dao.dto.StockWarningItemBean"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [],
+    "name": "app.mall.dao.dto.StockWarningSkuBean"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [],
+    "name": "app.mall.dao.dto.TodoAggregationBean"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [],
+    "name": "app.mall.dao.dto.UnsalableGoodsBean"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [],
+    "name": "app.mall.dao.dto.UserRetentionPointBean"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [],
     "name": "app.mall.dao.dto.UserStatisticsBean"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [],
+    "name": "app.mall.dao.dto.UserWorkbenchSummaryBean"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [],
+    "name": "app.mall.dao.dto.VerifyPickupResultBean"
   },
   {
     "allDeclaredConstructors": true,
@@ -247,6 +547,26 @@
     "allPublicMethods": true,
     "fields": [],
     "methods": [],
+    "name": "app.mall.dao.entity.LitemallCheckInRecord"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [],
+    "name": "app.mall.dao.entity.LitemallCheckInRule"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [],
     "name": "app.mall.dao.entity.LitemallCollect"
   },
   {
@@ -288,6 +608,26 @@
     "fields": [],
     "methods": [],
     "name": "app.mall.dao.entity.LitemallFeedback"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [],
+    "name": "app.mall.dao.entity.LitemallFlashSale"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [],
+    "name": "app.mall.dao.entity.LitemallFlashSaleSession"
   },
   {
     "allDeclaredConstructors": true,
@@ -397,6 +737,36 @@
     "allPublicMethods": true,
     "fields": [],
     "methods": [],
+    "name": "app.mall.dao.entity.LitemallMaterial"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [],
+    "name": "app.mall.dao.entity.LitemallMaterialCategory"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [],
+    "name": "app.mall.dao.entity.LitemallMemberLevel"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [],
     "name": "app.mall.dao.entity.LitemallNotice"
   },
   {
@@ -428,6 +798,96 @@
     "fields": [],
     "methods": [],
     "name": "app.mall.dao.entity.LitemallOrderGoods"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [],
+    "name": "app.mall.dao.entity.LitemallPickupStore"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [],
+    "name": "app.mall.dao.entity.LitemallPinTuanActivity"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [],
+    "name": "app.mall.dao.entity.LitemallPinTuanGroup"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [],
+    "name": "app.mall.dao.entity.LitemallPinTuanMember"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [],
+    "name": "app.mall.dao.entity.LitemallPointsAccount"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [],
+    "name": "app.mall.dao.entity.LitemallPointsFlow"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [],
+    "name": "app.mall.dao.entity.LitemallPromotionActivity"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [],
+    "name": "app.mall.dao.entity.LitemallPromotionTier"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [],
+    "name": "app.mall.dao.entity.LitemallRecharge"
   },
   {
     "allDeclaredConstructors": true,
@@ -487,7 +947,67 @@
     "allPublicMethods": true,
     "fields": [],
     "methods": [],
+    "name": "app.mall.dao.entity.LitemallTimeDiscount"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [],
     "name": "app.mall.dao.entity.LitemallTopic"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [],
+    "name": "app.mall.dao.entity.LitemallUserBlacklist"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [],
+    "name": "app.mall.dao.entity.LitemallUserMessage"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [],
+    "name": "app.mall.dao.entity.LitemallUserTag"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [],
+    "name": "app.mall.dao.entity.LitemallWallet"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [],
+    "name": "app.mall.dao.entity.LitemallWalletFlow"
   },
   {
     "allDeclaredConstructors": true,
@@ -592,6 +1112,36 @@
         "parameterTypes": []
       }
     ],
+    "name": "app.mall.dao.entity._gen._LitemallCheckInRecord"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [
+      {
+        "name": "newInstance",
+        "parameterTypes": []
+      }
+    ],
+    "name": "app.mall.dao.entity._gen._LitemallCheckInRule"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [
+      {
+        "name": "newInstance",
+        "parameterTypes": []
+      }
+    ],
     "name": "app.mall.dao.entity._gen._LitemallCollect"
   },
   {
@@ -653,6 +1203,36 @@
       }
     ],
     "name": "app.mall.dao.entity._gen._LitemallFeedback"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [
+      {
+        "name": "newInstance",
+        "parameterTypes": []
+      }
+    ],
+    "name": "app.mall.dao.entity._gen._LitemallFlashSale"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [
+      {
+        "name": "newInstance",
+        "parameterTypes": []
+      }
+    ],
+    "name": "app.mall.dao.entity._gen._LitemallFlashSaleSession"
   },
   {
     "allDeclaredConstructors": true,
@@ -817,6 +1397,51 @@
         "parameterTypes": []
       }
     ],
+    "name": "app.mall.dao.entity._gen._LitemallMaterial"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [
+      {
+        "name": "newInstance",
+        "parameterTypes": []
+      }
+    ],
+    "name": "app.mall.dao.entity._gen._LitemallMaterialCategory"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [
+      {
+        "name": "newInstance",
+        "parameterTypes": []
+      }
+    ],
+    "name": "app.mall.dao.entity._gen._LitemallMemberLevel"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [
+      {
+        "name": "newInstance",
+        "parameterTypes": []
+      }
+    ],
     "name": "app.mall.dao.entity._gen._LitemallNotice"
   },
   {
@@ -863,6 +1488,141 @@
       }
     ],
     "name": "app.mall.dao.entity._gen._LitemallOrderGoods"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [
+      {
+        "name": "newInstance",
+        "parameterTypes": []
+      }
+    ],
+    "name": "app.mall.dao.entity._gen._LitemallPickupStore"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [
+      {
+        "name": "newInstance",
+        "parameterTypes": []
+      }
+    ],
+    "name": "app.mall.dao.entity._gen._LitemallPinTuanActivity"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [
+      {
+        "name": "newInstance",
+        "parameterTypes": []
+      }
+    ],
+    "name": "app.mall.dao.entity._gen._LitemallPinTuanGroup"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [
+      {
+        "name": "newInstance",
+        "parameterTypes": []
+      }
+    ],
+    "name": "app.mall.dao.entity._gen._LitemallPinTuanMember"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [
+      {
+        "name": "newInstance",
+        "parameterTypes": []
+      }
+    ],
+    "name": "app.mall.dao.entity._gen._LitemallPointsAccount"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [
+      {
+        "name": "newInstance",
+        "parameterTypes": []
+      }
+    ],
+    "name": "app.mall.dao.entity._gen._LitemallPointsFlow"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [
+      {
+        "name": "newInstance",
+        "parameterTypes": []
+      }
+    ],
+    "name": "app.mall.dao.entity._gen._LitemallPromotionActivity"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [
+      {
+        "name": "newInstance",
+        "parameterTypes": []
+      }
+    ],
+    "name": "app.mall.dao.entity._gen._LitemallPromotionTier"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [
+      {
+        "name": "newInstance",
+        "parameterTypes": []
+      }
+    ],
+    "name": "app.mall.dao.entity._gen._LitemallRecharge"
   },
   {
     "allDeclaredConstructors": true,
@@ -952,7 +1712,97 @@
         "parameterTypes": []
       }
     ],
+    "name": "app.mall.dao.entity._gen._LitemallTimeDiscount"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [
+      {
+        "name": "newInstance",
+        "parameterTypes": []
+      }
+    ],
     "name": "app.mall.dao.entity._gen._LitemallTopic"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [
+      {
+        "name": "newInstance",
+        "parameterTypes": []
+      }
+    ],
+    "name": "app.mall.dao.entity._gen._LitemallUserBlacklist"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [
+      {
+        "name": "newInstance",
+        "parameterTypes": []
+      }
+    ],
+    "name": "app.mall.dao.entity._gen._LitemallUserMessage"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [
+      {
+        "name": "newInstance",
+        "parameterTypes": []
+      }
+    ],
+    "name": "app.mall.dao.entity._gen._LitemallUserTag"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [
+      {
+        "name": "newInstance",
+        "parameterTypes": []
+      }
+    ],
+    "name": "app.mall.dao.entity._gen._LitemallWallet"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [
+      {
+        "name": "newInstance",
+        "parameterTypes": []
+      }
+    ],
+    "name": "app.mall.dao.entity._gen._LitemallWalletFlow"
   },
   {
     "allDeclaredConstructors": true,
@@ -1158,6 +2008,14 @@
       {
         "allowWrite": true,
         "name": "payService"
+      },
+      {
+        "allowWrite": true,
+        "name": "pointsAccountBiz"
+      },
+      {
+        "allowWrite": true,
+        "name": "pointsFlowBiz"
       }
     ],
     "methods": [],
@@ -1217,6 +2075,35 @@
     "allPublicConstructors": true,
     "allPublicFields": true,
     "allPublicMethods": true,
+    "fields": [
+      {
+        "allowWrite": true,
+        "name": "checkInRuleBiz"
+      },
+      {
+        "allowWrite": true,
+        "name": "pointsAccountBiz"
+      }
+    ],
+    "methods": [],
+    "name": "app.mall.service.entity.LitemallCheckInRecordBizModel"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [],
+    "name": "app.mall.service.entity.LitemallCheckInRuleBizModel"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
     "fields": [],
     "methods": [],
     "name": "app.mall.service.entity.LitemallCollectBizModel"
@@ -1235,6 +2122,14 @@
       {
         "allowWrite": true,
         "name": "orderGoodsMapper"
+      },
+      {
+        "allowWrite": true,
+        "name": "pointsAccountBiz"
+      },
+      {
+        "allowWrite": true,
+        "name": "systemBiz"
       }
     ],
     "methods": [],
@@ -1250,6 +2145,14 @@
       {
         "allowWrite": true,
         "name": "couponUserBiz"
+      },
+      {
+        "allowWrite": true,
+        "name": "goodsBiz"
+      },
+      {
+        "allowWrite": true,
+        "name": "marketingMapper"
       }
     ],
     "methods": [],
@@ -1269,6 +2172,14 @@
       {
         "allowWrite": true,
         "name": "couponUserMapper"
+      },
+      {
+        "allowWrite": true,
+        "name": "goodsBiz"
+      },
+      {
+        "allowWrite": true,
+        "name": "logManager"
       }
     ],
     "methods": [],
@@ -1283,6 +2194,67 @@
     "fields": [],
     "methods": [],
     "name": "app.mall.service.entity.LitemallFeedbackBizModel"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [
+      {
+        "allowWrite": true,
+        "name": "addressBiz"
+      },
+      {
+        "allowWrite": true,
+        "name": "flashSaleSessionBiz"
+      },
+      {
+        "allowWrite": true,
+        "name": "flashSaleSessionMapper"
+      },
+      {
+        "allowWrite": true,
+        "name": "goodsBiz"
+      },
+      {
+        "allowWrite": true,
+        "name": "goodsProductBiz"
+      },
+      {
+        "allowWrite": true,
+        "name": "goodsProductMapper"
+      },
+      {
+        "allowWrite": true,
+        "name": "notificationService"
+      },
+      {
+        "allowWrite": true,
+        "name": "orderBiz"
+      },
+      {
+        "allowWrite": true,
+        "name": "orderGoodsBiz"
+      },
+      {
+        "allowWrite": true,
+        "name": "systemBiz"
+      }
+    ],
+    "methods": [],
+    "name": "app.mall.service.entity.LitemallFlashSaleBizModel"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [],
+    "name": "app.mall.service.entity.LitemallFlashSaleSessionBizModel"
   },
   {
     "allDeclaredConstructors": true,
@@ -1313,7 +2285,15 @@
     "fields": [
       {
         "allowWrite": true,
+        "name": "fileStore"
+      },
+      {
+        "allowWrite": true,
         "name": "goodsMapper"
+      },
+      {
+        "allowWrite": true,
+        "name": "goodsProductBiz"
       },
       {
         "allowWrite": true,
@@ -1322,6 +2302,14 @@
       {
         "allowWrite": true,
         "name": "orderGoodsBiz"
+      },
+      {
+        "allowWrite": true,
+        "name": "ormEntityFileStore"
+      },
+      {
+        "allowWrite": true,
+        "name": "systemBiz"
       }
     ],
     "methods": [
@@ -1406,6 +2394,14 @@
       {
         "allowWrite": true,
         "name": "payService"
+      },
+      {
+        "allowWrite": true,
+        "name": "pointsAccountBiz"
+      },
+      {
+        "allowWrite": true,
+        "name": "pointsFlowBiz"
       }
     ],
     "methods": [],
@@ -1464,6 +2460,53 @@
     "allPublicMethods": true,
     "fields": [],
     "methods": [],
+    "name": "app.mall.service.entity.LitemallMaterialBizModel"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [],
+    "name": "app.mall.service.entity.LitemallMaterialCategoryBizModel"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [
+      {
+        "allowWrite": true,
+        "name": "logManager"
+      },
+      {
+        "allowWrite": true,
+        "name": "orderBiz"
+      },
+      {
+        "allowWrite": true,
+        "name": "ormTemplate"
+      },
+      {
+        "allowWrite": true,
+        "name": "systemBiz"
+      }
+    ],
+    "methods": [],
+    "name": "app.mall.service.entity.LitemallMemberLevelBizModel"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [],
     "name": "app.mall.service.entity.LitemallNoticeAdminBizModel"
   },
   {
@@ -1489,11 +2532,27 @@
       },
       {
         "allowWrite": true,
+        "name": "aftersaleBiz"
+      },
+      {
+        "allowWrite": true,
         "name": "cartBiz"
       },
       {
         "allowWrite": true,
         "name": "couponUserBiz"
+      },
+      {
+        "allowWrite": true,
+        "name": "fileStore"
+      },
+      {
+        "allowWrite": true,
+        "name": "footprintBiz"
+      },
+      {
+        "allowWrite": true,
+        "name": "goodsBiz"
       },
       {
         "allowWrite": true,
@@ -1529,11 +2588,47 @@
       },
       {
         "allowWrite": true,
+        "name": "ormEntityFileStore"
+      },
+      {
+        "allowWrite": true,
+        "name": "ormTemplate"
+      },
+      {
+        "allowWrite": true,
         "name": "payService"
       },
       {
         "allowWrite": true,
+        "name": "pickupStoreBiz"
+      },
+      {
+        "allowWrite": true,
+        "name": "pinTuanActivityBiz"
+      },
+      {
+        "allowWrite": true,
+        "name": "pointsAccountBiz"
+      },
+      {
+        "allowWrite": true,
+        "name": "pointsFlowBiz"
+      },
+      {
+        "allowWrite": true,
+        "name": "promotionActivityBiz"
+      },
+      {
+        "allowWrite": true,
         "name": "systemBiz"
+      },
+      {
+        "allowWrite": true,
+        "name": "timeDiscountBiz"
+      },
+      {
+        "allowWrite": true,
+        "name": "timeDiscountMapper"
       }
     ],
     "methods": [],
@@ -1548,6 +2643,155 @@
     "fields": [],
     "methods": [],
     "name": "app.mall.service.entity.LitemallOrderGoodsBizModel"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [],
+    "name": "app.mall.service.entity.LitemallPickupStoreBizModel"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [
+      {
+        "allowWrite": true,
+        "name": "couponUserBiz"
+      },
+      {
+        "allowWrite": true,
+        "name": "goodsProductMapper"
+      },
+      {
+        "allowWrite": true,
+        "name": "marketingMapper"
+      },
+      {
+        "allowWrite": true,
+        "name": "notificationService"
+      },
+      {
+        "allowWrite": true,
+        "name": "orderBiz"
+      },
+      {
+        "allowWrite": true,
+        "name": "payService"
+      },
+      {
+        "allowWrite": true,
+        "name": "pinTuanGroupBiz"
+      },
+      {
+        "allowWrite": true,
+        "name": "pinTuanMemberBiz"
+      },
+      {
+        "allowWrite": true,
+        "name": "pointsAccountBiz"
+      },
+      {
+        "allowWrite": true,
+        "name": "pointsFlowBiz"
+      }
+    ],
+    "methods": [],
+    "name": "app.mall.service.entity.LitemallPinTuanActivityBizModel"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [],
+    "name": "app.mall.service.entity.LitemallPinTuanGroupBizModel"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [],
+    "name": "app.mall.service.entity.LitemallPinTuanMemberBizModel"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [
+      {
+        "allowWrite": true,
+        "name": "flowBiz"
+      },
+      {
+        "allowWrite": true,
+        "name": "pointsAccountMapper"
+      },
+      {
+        "allowWrite": true,
+        "name": "systemBiz"
+      }
+    ],
+    "methods": [],
+    "name": "app.mall.service.entity.LitemallPointsAccountBizModel"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [],
+    "name": "app.mall.service.entity.LitemallPointsFlowBizModel"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [
+      {
+        "allowWrite": true,
+        "name": "marketingMapper"
+      }
+    ],
+    "methods": [],
+    "name": "app.mall.service.entity.LitemallPromotionActivityBizModel"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [],
+    "name": "app.mall.service.entity.LitemallPromotionTierBizModel"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [],
+    "name": "app.mall.service.entity.LitemallRechargeBizModel"
   },
   {
     "allDeclaredConstructors": true,
@@ -1612,7 +2856,105 @@
       }
     ],
     "methods": [],
+    "name": "app.mall.service.entity.LitemallTimeDiscountBizModel"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [
+      {
+        "allowWrite": true,
+        "name": "goodsBiz"
+      }
+    ],
+    "methods": [],
     "name": "app.mall.service.entity.LitemallTopicBizModel"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [
+      {
+        "allowWrite": true,
+        "name": "couponUserBiz"
+      },
+      {
+        "allowWrite": true,
+        "name": "feedbackBiz"
+      },
+      {
+        "allowWrite": true,
+        "name": "footprintBiz"
+      },
+      {
+        "allowWrite": true,
+        "name": "logManager"
+      },
+      {
+        "allowWrite": true,
+        "name": "orderBiz"
+      },
+      {
+        "allowWrite": true,
+        "name": "ormTemplate"
+      },
+      {
+        "allowWrite": true,
+        "name": "pointsAccountBiz"
+      },
+      {
+        "allowWrite": true,
+        "name": "userTagBiz"
+      }
+    ],
+    "methods": [],
+    "name": "app.mall.service.entity.LitemallUserBlacklistBizModel"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [],
+    "name": "app.mall.service.entity.LitemallUserMessageBizModel"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [],
+    "name": "app.mall.service.entity.LitemallUserTagBizModel"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [],
+    "name": "app.mall.service.entity.LitemallWalletBizModel"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [],
+    "name": "app.mall.service.entity.LitemallWalletFlowBizModel"
   },
   {
     "allDeclaredConstructors": true,
@@ -1628,6 +2970,14 @@
       {
         "allowWrite": true,
         "name": "smsSender"
+      },
+      {
+        "allowWrite": true,
+        "name": "systemBiz"
+      },
+      {
+        "allowWrite": true,
+        "name": "userMessageBiz"
       }
     ],
     "methods": [],
@@ -1661,6 +3011,10 @@
       },
       {
         "allowWrite": true,
+        "name": "flashSaleSessionBiz"
+      },
+      {
+        "allowWrite": true,
         "name": "grouponBiz"
       },
       {
@@ -1670,6 +3024,10 @@
       {
         "allowWrite": true,
         "name": "orderGoodsBiz"
+      },
+      {
+        "allowWrite": true,
+        "name": "pinTuanActivityBiz"
       }
     ],
     "methods": [],
@@ -2549,6 +3907,43 @@
     "fields": [],
     "methods": [],
     "name": "io.nop.auth.core.login.UserContextConfig"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [],
+    "name": "io.nop.auth.core.model.ActionAuthModel"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [
+      {
+        "name": "copyTo",
+        "parameterTypes": [
+          "io.nop.auth.core.model.ActionAuthModel"
+        ]
+      },
+      {
+        "name": "newInstance",
+        "parameterTypes": []
+      },
+      {
+        "name": "outputJson",
+        "parameterTypes": [
+          "io.nop.core.lang.json.IJsonHandler"
+        ]
+      }
+    ],
+    "name": "io.nop.auth.core.model._gen._ActionAuthModel"
   },
   {
     "allDeclaredConstructors": true,
@@ -8740,6 +10135,16 @@
     "allPublicMethods": true,
     "fields": [],
     "methods": [],
+    "name": "io.nop.sys.dao.entity.NopSysCompactExtField"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [],
     "name": "io.nop.sys.dao.entity.NopSysDict"
   },
   {
@@ -8921,6 +10326,21 @@
       }
     ],
     "name": "io.nop.sys.dao.entity._gen._NopSysCodeRule"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [
+      {
+        "name": "newInstance",
+        "parameterTypes": []
+      }
+    ],
+    "name": "io.nop.sys.dao.entity._gen._NopSysCompactExtField"
   },
   {
     "allDeclaredConstructors": true,
@@ -9195,6 +10615,201 @@
       }
     ],
     "name": "io.nop.sys.dao.seq.SysSequenceGenerator"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [],
+    "name": "io.nop.sys.service.entity.NopSysChangeLogBizModel"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [],
+    "name": "io.nop.sys.service.entity.NopSysCheckerRecordBizModel"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [],
+    "name": "io.nop.sys.service.entity.NopSysClusterLeaderBizModel"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [],
+    "name": "io.nop.sys.service.entity.NopSysCodeRuleBizModel"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [],
+    "name": "io.nop.sys.service.entity.NopSysCompactExtFieldBizModel"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [],
+    "name": "io.nop.sys.service.entity.NopSysDictBizModel"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [],
+    "name": "io.nop.sys.service.entity.NopSysDictOptionBizModel"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [],
+    "name": "io.nop.sys.service.entity.NopSysEventBizModel"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [],
+    "name": "io.nop.sys.service.entity.NopSysExtFieldBizModel"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [],
+    "name": "io.nop.sys.service.entity.NopSysI18nBizModel"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [],
+    "name": "io.nop.sys.service.entity.NopSysLockBizModel"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [],
+    "name": "io.nop.sys.service.entity.NopSysNoticeTemplateBizModel"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [],
+    "name": "io.nop.sys.service.entity.NopSysObjTagBizModel"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [],
+    "name": "io.nop.sys.service.entity.NopSysSequenceBizModel"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [],
+    "name": "io.nop.sys.service.entity.NopSysServiceInstanceBizModel"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [],
+    "name": "io.nop.sys.service.entity.NopSysTagBizModel"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [],
+    "name": "io.nop.sys.service.entity.NopSysUserVariableBizModel"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [],
+    "name": "io.nop.sys.service.entity.NopSysVariableBizModel"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [
+      {
+        "allowWrite": true,
+        "name": "daoProvider"
+      }
+    ],
+    "methods": [],
+    "name": "io.nop.sys.service.impl.SysCompactExtFieldHelper"
   },
   {
     "allDeclaredConstructors": true,

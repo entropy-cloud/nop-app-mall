@@ -1,0 +1,150 @@
+type: page
+title: 评论工作台
+body:
+  - type: form
+    title: 筛选条件
+    mode: inline
+    wrapWithPanel: false
+    target: commentReview
+    submitOnInit: true
+    body:
+      - type: input-text
+        name: keyword
+        label: 关键字
+        placeholder: '评论内容关键字'
+      - type: select
+        name: star
+        label: 星级
+        clearable: true
+        options:
+          - label: 5星
+            value: 5
+          - label: 4星
+            value: 4
+          - label: 3星
+            value: 3
+          - label: 2星
+            value: 2
+          - label: 1星
+            value: 1
+      - type: switch
+        name: hasPicture
+        label: 仅看有图
+      - type: submit
+        label: 查询
+        level: primary
+  - type: crud
+    name: commentReview
+    api:
+      url: '@query:LitemallComment__getCommentReviewList'
+    primaryField: id
+    keepItemSelectionOnPageChange: true
+    columns:
+      - type: checkbox
+      - name: id
+        label: ID
+      - name: content
+        label: 评论内容
+      - name: star
+        label: 星级
+        type: mapping
+        map:
+          '5': '<span class="label label-success">★★★★★</span>'
+          '4': '<span class="label label-success">★★★★</span>'
+          '3': '<span class="label label-info">★★★</span>'
+          '2': '<span class="label label-warning">★★</span>'
+          '1': '<span class="label label-danger">★</span>'
+      - name: hasPicture
+        label: 有图
+        type: mapping
+        map:
+          'true': '<span class="label label-info">有</span>'
+          'false': '<span class="label label-default">无</span>'
+      - name: adminContent
+        label: 管理员回复
+      - name: addTime
+        label: 评论时间
+    bulkActions:
+      - label: 批量回复
+        level: primary
+        actionType: dialog
+        dialog:
+          title: 批量回复评论
+          body:
+            type: form
+            api:
+              url: '@mutation:LitemallComment__batchAdminReply'
+              data:
+                items: '${ARRAYMAP(selectedItems, item => {return {commentId: item.id, adminContent: adminContent}})}'
+            body:
+              - type: textarea
+                name: adminContent
+                label: 回复内容
+                required: true
+                minRows: 3
+        feedback:
+          title: 批量回复结果
+          body:
+            - type: table
+              source: '${data}'
+              columns:
+                - name: commentId
+                  label: 评论ID
+                - name: success
+                  label: 是否成功
+                  type: mapping
+                  map:
+                    'true': '<span class="label label-success">成功</span>'
+                    'false': '<span class="label label-danger">失败</span>'
+                - name: reason
+                  label: 失败原因
+      - label: 批量下架
+        level: danger
+        confirmText: '确认下架选中的评论？'
+        actionType: ajax
+        api:
+          url: '@mutation:LitemallComment__batchModerateComments'
+          data:
+            commentIds: '${ARRAYMAP(selectedItems, item => item.id)}'
+            action: hide
+        feedback:
+          title: 批量下架结果
+          body:
+            - type: table
+              source: '${data}'
+              columns:
+                - name: commentId
+                  label: 评论ID
+                - name: success
+                  label: 是否成功
+                  type: mapping
+                  map:
+                    'true': '<span class="label label-success">成功</span>'
+                    'false': '<span class="label label-danger">失败</span>'
+                - name: reason
+                  label: 失败原因
+      - label: 批量恢复
+        level: success
+        confirmText: '确认恢复选中的评论？'
+        actionType: ajax
+        api:
+          url: '@mutation:LitemallComment__batchModerateComments'
+          data:
+            commentIds: '${ARRAYMAP(selectedItems, item => item.id)}'
+            action: restore
+        feedback:
+          title: 批量恢复结果
+          body:
+            - type: table
+              source: '${data}'
+              columns:
+                - name: commentId
+                  label: 评论ID
+                - name: success
+                  label: 是否成功
+                  type: mapping
+                  map:
+                    'true': '<span class="label label-success">成功</span>'
+                    'false': '<span class="label label-danger">失败</span>'
+                - name: reason
+                  label: 失败原因

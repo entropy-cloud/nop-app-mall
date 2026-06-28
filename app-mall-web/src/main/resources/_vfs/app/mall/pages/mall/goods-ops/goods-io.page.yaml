@@ -1,0 +1,86 @@
+type: page
+title: 商品导入导出
+body:
+  - type: tabs
+    tabs:
+      - title: 导出商品
+        body:
+          - type: form
+            title: 导出筛选条件
+            mode: inline
+            wrapWithPanel: false
+            target: exportResult
+            body:
+              - type: input-text
+                name: keyword
+                label: 关键字
+                placeholder: '商品名称或编号'
+              - type: input-text
+                name: categoryId
+                label: 分类ID
+              - type: input-text
+                name: brandId
+                label: 品牌ID
+              - type: switch
+                name: isOnSale
+                label: 仅在售
+              - type: submit
+                label: 导出
+                level: primary
+          - type: service
+            name: exportResult
+            api:
+              url: '@query:LitemallGoods__exportGoods'
+              sendOn: true
+            body:
+              - type: alert
+                body: '导出 ${data.rowCount} 行商品数据（CSV 兜底格式）。点击下方按钮下载。'
+                level: success
+                className: mb-2
+                visibleOn: '${data}'
+              - type: button
+                label: 下载 CSV
+                level: primary
+                visibleOn: '${data}'
+                actionType: download
+                api:
+                  method: post
+                  url: '${EXPORT_CSV(data.fileName, data.csvContent)}'
+      - title: 导入商品
+        body:
+          - type: alert
+            body: '上传包含 goodsSn、name、retailPrice、counterPrice 列的 xlsx 文件。系统将按 goodsSn 匹配新增或更新，部分失败不阻断成功行。'
+            level: info
+            className: mb-2
+          - type: input-file
+            name: excelUpload
+            label: 商品 Excel
+            receiver:
+              url: '/f/upload/LitemallGoods/importGoods'
+            accept: '.xlsx'
+            required: true
+          - type: button
+            label: 开始导入
+            level: primary
+            disabledOn: '${!excelUpload}'
+            actionType: ajax
+            api:
+              url: '@mutation:LitemallGoods__importGoods'
+              data:
+                excelUpload: '${excelUpload}'
+            feedback:
+              title: 导入结果
+              body:
+                - type: table
+                  source: '${data}'
+                  columns:
+                    - name: goodsSn
+                      label: 商品编号
+                    - name: success
+                      label: 是否成功
+                      type: mapping
+                      map:
+                        'true': '<span class="label label-success">成功</span>'
+                        'false': '<span class="label label-danger">失败</span>'
+                    - name: reason
+                      label: 失败原因

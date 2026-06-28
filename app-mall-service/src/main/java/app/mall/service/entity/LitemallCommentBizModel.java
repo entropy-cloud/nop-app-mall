@@ -5,6 +5,7 @@ import app.mall.biz.ILitemallOrderGoodsBiz;
 import app.mall.biz.ILitemallPointsAccountBiz;
 import app.mall.biz.ILitemallSystemBiz;
 import app.mall.dao._AppMallDaoConstants;
+import app.mall.dao.dto.BatchCommentResultBean;
 import app.mall.dao.entity.LitemallComment;
 import app.mall.dao.entity.LitemallOrder;
 import app.mall.dao.entity.LitemallOrderGoods;
@@ -25,6 +26,8 @@ import io.nop.core.context.IServiceContext;
 import io.nop.core.lang.json.JsonTool;
 import jakarta.inject.Inject;
 
+import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -254,6 +257,126 @@ public class LitemallCommentBizModel extends CrudBizModel<LitemallComment> imple
         LitemallComment comment = requireEntity(id, null, context);
         comment.setAdminContent(adminContent);
         return comment;
+    }
+
+    // ===== P36 评论运营工作台：批量回复 + 后置 Moderation + 工作台列表 =====
+
+    static final String MODERATION_ACTION_HIDE = "hide";
+    static final String MODERATION_ACTION_RESTORE = "restore";
+
+    @Override
+    @BizMutation
+    @Auth(roles = "admin")
+    public List<BatchCommentResultBean> batchAdminReply(@Name("items") List<Map<String, Object>> items,
+                                                         IServiceContext context) {
+        if (items == null || items.isEmpty()) {
+            throw new NopException(ERR_COMMENT_BATCH_EMPTY);
+        }
+        List<BatchCommentResultBean> results = new ArrayList<>();
+        int rowIndex = 0;
+        for (Map<String, Object> item : items) {
+            rowIndex++;
+            String commentId = stringValue(item, "commentId");
+            String adminContent = stringValue(item, "adminContent");
+
+            if (StringHelper.isEmpty(commentId) || StringHelper.isEmpty(adminContent)) {
+                results.add(new BatchCommentResultBean(commentId, false,
+                        "数据行 " + rowIndex + " 字段缺失（commentId/adminContent 必填）"));
+                continue;
+            }
+            try {
+                LitemallComment comment = requireEntity(commentId, null, context);
+                comment.setAdminContent(adminContent);
+                results.add(new BatchCommentResultBean(commentId, true, null));
+            } catch (NopException e) {
+                results.add(new BatchCommentResultBean(commentId, false,
+                        e.getDescription() != null ? e.getDescription() : e.getMessage()));
+            } catch (Exception e) {
+                results.add(new BatchCommentResultBean(commentId, false, e.getMessage()));
+            }
+        }
+        return results;
+    }
+
+    @Override
+    @BizMutation
+    @Auth(roles = "admin")
+    public List<BatchCommentResultBean> batchModerateComments(@Name("commentIds") List<String> commentIds,
+                                                               @Name("action") String action,
+                                                               IServiceContext context) {
+        if (commentIds == null || commentIds.isEmpty()) {
+            throw new NopException(ERR_COMMENT_BATCH_EMPTY);
+        }
+        boolean hide;
+        if (MODERATION_ACTION_HIDE.equals(action)) {
+            hide = true;
+        } else if (MODERATION_ACTION_RESTORE.equals(action)) {
+            hide = false;
+        } else {
+            throw new NopException(ERR_COMMENT_MODERATION_ACTION_INVALID).param("action", action);
+        }
+        List<BatchCommentResultBean> results = new ArrayList<>();
+        for (String commentId : commentIds) {
+            try {
+                // 后置 Moderation 需操作已删除（deleted=true）的评论：requireEntity 走管道会被 deleted 过滤，
+                // 此处用 dao().getEntityById() 按 PK 直取以支持 restore（合理例外，与 hide/restore 语义匹配）。
+                LitemallComment comment = dao().getEntityById(commentId);
+                if (comment == null) {
+                    results.add(new BatchCommentResultBean(commentId, false, "评论不存在"));
+                    continue;
+                }
+                comment.setDeleted(hide);
+                results.add(new BatchCommentResultBean(commentId, true, null));
+            } catch (Exception e) {
+                results.add(new BatchCommentResultBean(commentId, false, e.getMessage()));
+            }
+        }
+        return results;
+    }
+
+    @Override
+    @BizQuery
+    @Auth(roles = "admin")
+    public PageBean<LitemallComment> getCommentReviewList(@Optional @Name("keyword") String keyword,
+                                                           @Optional @Name("star") Integer star,
+                                                           @Optional @Name("hasPicture") Boolean hasPicture,
+                                                           @Optional @Name("startTime") String startTime,
+                                                           @Optional @Name("endTime") String endTime,
+                                                           @Optional @Name("page") Integer page,
+                                                           @Optional @Name("pageSize") Integer pageSize,
+                                                           IServiceContext context) {
+        QueryBean query = new QueryBean();
+        // content 字段 xmeta 仅允许 eq/in，contains 需绕过管道校验，故用 doFindPageByQueryDirectly。
+        if (!StringHelper.isEmpty(keyword)) {
+            query.addFilter(FilterBeans.contains(LitemallComment.PROP_NAME_content, keyword));
+        }
+        if (star != null) {
+            query.addFilter(FilterBeans.eq(LitemallComment.PROP_NAME_star, star));
+        }
+        if (hasPicture != null) {
+            query.addFilter(FilterBeans.eq(LitemallComment.PROP_NAME_hasPicture, hasPicture));
+        }
+        if (!StringHelper.isEmpty(startTime)) {
+            Timestamp startTs = Timestamp.valueOf(LocalDate.parse(startTime).atTime(0, 0));
+            query.addFilter(FilterBeans.ge(LitemallComment.PROP_NAME_addTime, startTs));
+        }
+        if (!StringHelper.isEmpty(endTime)) {
+            Timestamp endTs = Timestamp.valueOf(LocalDate.parse(endTime).atTime(23, 59, 59));
+            query.addFilter(FilterBeans.le(LitemallComment.PROP_NAME_addTime, endTs));
+        }
+        query.setOffset(page != null && page > 0 ? (page - 1) * (pageSize != null ? pageSize : 10) : 0);
+        query.setLimit(pageSize != null && pageSize > 0 ? pageSize : 10);
+        query.addOrderField(LitemallComment.PROP_NAME_addTime, true);
+        return doFindPageByQueryDirectly(query, null, context);
+    }
+
+    private static String stringValue(Map<String, Object> row, String key) {
+        Object v = row.get(key);
+        if (v == null) {
+            return null;
+        }
+        String s = v.toString().trim();
+        return s.isEmpty() ? null : s;
     }
 
     private void applyShowTypeFilter(QueryBean query, String showType) {

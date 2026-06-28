@@ -2,9 +2,13 @@
 package app.mall.service.entity;
 
 import app.mall.biz.ILitemallGoodsBiz;
+import app.mall.biz.ILitemallGoodsProductBiz;
 import app.mall.biz.ILitemallOrderGoodsBiz;
 import app.mall.biz.ILitemallSystemBiz;
+import app.mall.dao.dto.BatchGoodsResultBean;
+import app.mall.dao.dto.GoodsExportResultBean;
 import app.mall.dao.dto.StockSemanticBean;
+import app.mall.dao.dto.StockWarningSkuBean;
 import app.mall.dao.entity.LitemallGoods;
 import app.mall.dao.entity.LitemallGoodsProduct;
 import app.mall.dao.entity.LitemallOrderGoods;
@@ -25,10 +29,18 @@ import io.nop.biz.crud.CrudBizModel;
 import io.nop.biz.crud.EntityData;
 import io.nop.commons.util.StringHelper;
 import io.nop.core.context.IServiceContext;
+import io.nop.core.resource.IResource;
+import io.nop.file.core.IFileRecord;
+import io.nop.file.core.IFileStore;
+import io.nop.orm.IOrmEntityFileStore;
 import io.nop.orm.IOrmEntitySet;
+import io.nop.ooxml.xlsx.util.ExcelHelper;
 
 import jakarta.inject.Inject;
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static io.nop.api.core.beans.FilterBeans.contains;
@@ -67,6 +79,15 @@ public class LitemallGoodsBizModel extends CrudBizModel<LitemallGoods> implement
 
     @Inject
     ILitemallSystemBiz systemBiz;
+
+    @Inject
+    ILitemallGoodsProductBiz goodsProductBiz;
+
+    @Inject
+    IFileStore fileStore;
+
+    @Inject
+    IOrmEntityFileStore ormEntityFileStore;
 
     public LitemallGoodsBizModel() {
         setEntityName(LitemallGoods.class.getName());
@@ -350,5 +371,375 @@ public class LitemallGoodsBizModel extends CrudBizModel<LitemallGoods> implement
         }
 
         return findPage(query, null, null);
+    }
+
+    // ===== P36 商品运营工作台：批量运营 + 导入导出 + 库存预警 =====
+
+    @Override
+    @BizMutation
+    @Auth(roles = "admin")
+    public List<BatchGoodsResultBean> batchUpdatePrice(@Name("items") List<Map<String, Object>> items,
+                                                        IServiceContext context) {
+        if (items == null || items.isEmpty()) {
+            throw new NopException(ERR_GOODS_BATCH_EMPTY);
+        }
+        List<BatchGoodsResultBean> results = new ArrayList<>();
+        int rowIndex = 0;
+        for (Map<String, Object> item : items) {
+            rowIndex++;
+            String goodsId = stringValue(item, "goodsId");
+            String rawPrice = stringValue(item, "retailPrice");
+
+            if (StringHelper.isEmpty(goodsId) || StringHelper.isEmpty(rawPrice)) {
+                results.add(new BatchGoodsResultBean(goodsId, null, false,
+                        "数据行 " + rowIndex + " 字段缺失（goodsId/retailPrice 必填）"));
+                continue;
+            }
+            BigDecimal price;
+            try {
+                price = new BigDecimal(rawPrice.trim());
+            } catch (NumberFormatException e) {
+                results.add(new BatchGoodsResultBean(goodsId, null, false,
+                        "数据行 " + rowIndex + " 价格格式无效"));
+                continue;
+            }
+            if (price.compareTo(BigDecimal.ZERO) < 0) {
+                results.add(new BatchGoodsResultBean(goodsId, null, false,
+                        "数据行 " + rowIndex + " 价格不可为负"));
+                continue;
+            }
+            try {
+                LitemallGoods goods = requireEntity(goodsId, null, context);
+                // 直接设置 retailPrice：不经 update() 管道，defaultPrepareUpdate 的 syncRetailPrice 不触发，
+                // 运营批量改价语义为「直接改 goods.retailPrice」（与单条 CRUD 的 syncRetailPrice 派生口径隔离）。
+                goods.setRetailPrice(price);
+                results.add(new BatchGoodsResultBean(goodsId, goods.getGoodsSn(), true, null));
+            } catch (NopException e) {
+                results.add(new BatchGoodsResultBean(goodsId, null, false,
+                        e.getDescription() != null ? e.getDescription() : e.getMessage()));
+            } catch (Exception e) {
+                results.add(new BatchGoodsResultBean(goodsId, null, false, e.getMessage()));
+            }
+        }
+        logBatchResult("批量改价", results);
+        return results;
+    }
+
+    @Override
+    @BizMutation
+    @Auth(roles = "admin")
+    public List<BatchGoodsResultBean> batchUpdateStock(@Name("items") List<Map<String, Object>> items,
+                                                        IServiceContext context) {
+        if (items == null || items.isEmpty()) {
+            throw new NopException(ERR_GOODS_BATCH_EMPTY);
+        }
+        List<BatchGoodsResultBean> results = new ArrayList<>();
+        int rowIndex = 0;
+        for (Map<String, Object> item : items) {
+            rowIndex++;
+            String productId = stringValue(item, "productId");
+            String rawNumber = stringValue(item, "number");
+
+            if (StringHelper.isEmpty(productId) || StringHelper.isEmpty(rawNumber)) {
+                results.add(new BatchGoodsResultBean(null, null, false,
+                        "数据行 " + rowIndex + " 字段缺失（productId/number 必填）"));
+                continue;
+            }
+            int number;
+            try {
+                number = Integer.parseInt(rawNumber.trim());
+            } catch (NumberFormatException e) {
+                results.add(new BatchGoodsResultBean(null, null, false,
+                        "数据行 " + rowIndex + " 库存格式无效"));
+                continue;
+            }
+            if (number < 0) {
+                results.add(new BatchGoodsResultBean(null, null, false,
+                        "数据行 " + rowIndex + " 库存不可为负"));
+                continue;
+            }
+            try {
+                // 跨实体经 ILitemallGoodsProductBiz（既有先例，禁止 daoProvider().daoFor() 绕过）
+                LitemallGoodsProduct product = goodsProductBiz.requireEntity(productId, null, context);
+                product.setNumber(number);
+                results.add(new BatchGoodsResultBean(
+                        product.orm_idString(), product.getGoodsId(), true, null));
+            } catch (NopException e) {
+                results.add(new BatchGoodsResultBean(null, null, false,
+                        e.getDescription() != null ? e.getDescription() : e.getMessage()));
+            } catch (Exception e) {
+                results.add(new BatchGoodsResultBean(null, null, false, e.getMessage()));
+            }
+        }
+        logBatchResult("批量改库存", results);
+        return results;
+    }
+
+    @Override
+    @BizMutation
+    @Auth(roles = "admin")
+    public List<BatchGoodsResultBean> batchOnSale(@Name("goodsIds") List<String> goodsIds,
+                                                   IServiceContext context) {
+        return doBatchSale(goodsIds, true, context);
+    }
+
+    @Override
+    @BizMutation
+    @Auth(roles = "admin")
+    public List<BatchGoodsResultBean> batchOffSale(@Name("goodsIds") List<String> goodsIds,
+                                                    IServiceContext context) {
+        return doBatchSale(goodsIds, false, context);
+    }
+
+    private List<BatchGoodsResultBean> doBatchSale(List<String> goodsIds, boolean onSale,
+                                                   IServiceContext context) {
+        if (goodsIds == null || goodsIds.isEmpty()) {
+            throw new NopException(ERR_GOODS_BATCH_EMPTY);
+        }
+        List<BatchGoodsResultBean> results = new ArrayList<>();
+        for (String goodsId : goodsIds) {
+            try {
+                // 复用 onSale/offSale 单行逻辑（含上架 SKU 守卫）
+                LitemallGoods goods = onSale
+                        ? onSale(goodsId, context)
+                        : offSale(goodsId, context);
+                results.add(new BatchGoodsResultBean(goodsId, goods.getGoodsSn(), true, null));
+            } catch (NopException e) {
+                results.add(new BatchGoodsResultBean(goodsId, null, false,
+                        e.getDescription() != null ? e.getDescription() : e.getMessage()));
+            } catch (Exception e) {
+                results.add(new BatchGoodsResultBean(goodsId, null, false, e.getMessage()));
+            }
+        }
+        logBatchResult(onSale ? "批量上架" : "批量下架", results);
+        return results;
+    }
+
+    @Override
+    @BizQuery
+    @Auth(roles = "admin")
+    public GoodsExportResultBean exportGoods(@Optional @Name("keyword") String keyword,
+                                             @Optional @Name("categoryId") String categoryId,
+                                             @Optional @Name("brandId") String brandId,
+                                             @Optional @Name("isOnSale") Boolean isOnSale,
+                                             IServiceContext context) {
+        QueryBean query = new QueryBean();
+        applyAdminExportFilters(query, keyword, categoryId, brandId, isOnSale);
+        query.addOrderField(LitemallGoods.PROP_NAME_addTime, true);
+        List<LitemallGoods> list = findList(query, null, context);
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("goodsId,goodsSn,name,retailPrice,counterPrice,isOnSale\n");
+        for (LitemallGoods g : list) {
+            sb.append(csv(g.getId())).append(',')
+                    .append(csv(g.getGoodsSn())).append(',')
+                    .append(csv(g.getName())).append(',')
+                    .append(g.getRetailPrice() != null ? g.getRetailPrice().toPlainString() : "").append(',')
+                    .append(g.getCounterPrice() != null ? g.getCounterPrice().toPlainString() : "").append(',')
+                    .append(Boolean.TRUE.equals(g.getIsOnSale()) ? "1" : "0").append('\n');
+        }
+        GoodsExportResultBean result = new GoodsExportResultBean();
+        result.setFileName("goods-export.csv");
+        result.setCsvContent(sb.toString());
+        result.setRowCount(list.size());
+        return result;
+    }
+
+    @Override
+    @BizMutation
+    @Auth(roles = "admin")
+    public List<BatchGoodsResultBean> importGoods(@Name("excelUpload") String excelUpload,
+                                                   IServiceContext context) {
+        List<Map<String, Object>> rows = parseGoodsImportExcel(excelUpload);
+        List<BatchGoodsResultBean> results = new ArrayList<>();
+        int rowIndex = 1; // 表头是第 1 行，数据从第 2 行起
+        for (Map<String, Object> row : rows) {
+            rowIndex++;
+            String goodsSn = stringValue(row, "goodsSn");
+            String name = stringValue(row, "name");
+            String rawRetail = stringValue(row, "retailPrice");
+
+            if (StringHelper.isEmpty(goodsSn) || StringHelper.isEmpty(name)) {
+                results.add(new BatchGoodsResultBean(null, goodsSn, false,
+                        "数据行 " + rowIndex + " 字段缺失（goodsSn/name 必填）"));
+                continue;
+            }
+            BigDecimal retailPrice = null;
+            if (!StringHelper.isEmpty(rawRetail)) {
+                try {
+                    retailPrice = new BigDecimal(rawRetail.trim());
+                } catch (NumberFormatException e) {
+                    results.add(new BatchGoodsResultBean(null, goodsSn, false,
+                            "数据行 " + rowIndex + " 零售价格式无效"));
+                    continue;
+                }
+            }
+            String rawCounter = stringValue(row, "counterPrice");
+            BigDecimal counterPrice = null;
+            if (!StringHelper.isEmpty(rawCounter)) {
+                try {
+                    counterPrice = new BigDecimal(rawCounter.trim());
+                } catch (NumberFormatException e) {
+                    results.add(new BatchGoodsResultBean(null, goodsSn, false,
+                            "数据行 " + rowIndex + " 专柜价格式无效"));
+                    continue;
+                }
+            }
+            try {
+                // 按 goodsSn 定位，存在则更新，不存在则新增
+                QueryBean q = new QueryBean();
+                q.addFilter(FilterBeans.eq(LitemallGoods.PROP_NAME_goodsSn, goodsSn));
+                LitemallGoods goods = findFirst(q, null, context);
+                if (goods == null) {
+                    goods = newEntity();
+                    goods.setGoodsSn(goodsSn);
+                    goods.setName(name);
+                    if (retailPrice != null) {
+                        goods.setRetailPrice(retailPrice);
+                    }
+                    if (counterPrice != null) {
+                        goods.setCounterPrice(counterPrice);
+                    }
+                    saveEntity(goods, null, context);
+                } else {
+                    goods.setName(name);
+                    if (retailPrice != null) {
+                        goods.setRetailPrice(retailPrice);
+                    }
+                    if (counterPrice != null) {
+                        goods.setCounterPrice(counterPrice);
+                    }
+                }
+                results.add(new BatchGoodsResultBean(goods.orm_idString(), goodsSn, true, null));
+            } catch (NopException e) {
+                results.add(new BatchGoodsResultBean(null, goodsSn, false,
+                        e.getDescription() != null ? e.getDescription() : e.getMessage()));
+            } catch (Exception e) {
+                results.add(new BatchGoodsResultBean(null, goodsSn, false, e.getMessage()));
+            }
+        }
+        logBatchResult("商品导入", results);
+        return results;
+    }
+
+    @Override
+    @BizQuery
+    @Auth(roles = "admin")
+    public List<StockWarningSkuBean> getStockWarningList(@Optional @Name("onlyOnSale") Boolean onlyOnSale,
+                                                          IServiceContext context) {
+        int globalThreshold = resolveStockThreshold(context);
+        QueryBean query = new QueryBean();
+        if (Boolean.TRUE.equals(onlyOnSale)) {
+            query.addFilter(FilterBeans.eq(LitemallGoods.PROP_NAME_isOnSale, true));
+        }
+        query.addOrderField(LitemallGoods.PROP_NAME_addTime, true);
+        List<LitemallGoods> goodsList = findList(query, null, context);
+
+        List<StockWarningSkuBean> result = new ArrayList<>();
+        for (LitemallGoods goods : goodsList) {
+            IOrmEntitySet<LitemallGoodsProduct> products = goods.getProducts();
+            if (products == null) {
+                continue;
+            }
+            for (LitemallGoodsProduct product : products) {
+                int number = product.getNumber() != null ? product.getNumber() : 0;
+                Integer safeStock = product.getSafeStock();
+                int threshold;
+                String thresholdSource;
+                if (safeStock != null && safeStock > 0) {
+                    threshold = safeStock;
+                    thresholdSource = "safeStock";
+                } else {
+                    threshold = globalThreshold;
+                    thresholdSource = "global";
+                }
+                if (number <= threshold) {
+                    StockWarningSkuBean bean = new StockWarningSkuBean();
+                    bean.setGoodsId(goods.getId());
+                    bean.setGoodsName(goods.getName());
+                    bean.setProductId(product.orm_idString());
+                    bean.setSpecifications(product.getSpecifications());
+                    bean.setNumber(number);
+                    bean.setSafeStock(safeStock);
+                    bean.setThreshold(threshold);
+                    bean.setThresholdSource(thresholdSource);
+                    result.add(bean);
+                }
+            }
+        }
+        // 按库存升序
+        result.sort(java.util.Comparator.comparingInt(StockWarningSkuBean::getNumber));
+        return result;
+    }
+
+    // package-private for test access (avoids file-store roundtrip in tests)
+    List<Map<String, Object>> parseGoodsImportExcel(String excelUpload) {
+        if (excelUpload == null || excelUpload.isEmpty()) {
+            throw new NopException(ERR_GOODS_IMPORT_EMPTY);
+        }
+        String fileId = ormEntityFileStore.decodeFileId(excelUpload);
+        if (fileId == null || fileId.isEmpty()) {
+            fileId = excelUpload;
+        }
+        IFileRecord fileRecord = fileStore.getFile(fileId);
+        IResource xlsx = fileRecord != null ? fileRecord.getResource() : null;
+        if (xlsx == null) {
+            throw new NopException(ERR_GOODS_IMPORT_EMPTY);
+        }
+        try {
+            List<Map<String, Object>> rows = ExcelHelper.readSheet(xlsx, null, 0);
+            if (rows == null || rows.isEmpty()) {
+                throw new NopException(ERR_GOODS_IMPORT_EMPTY);
+            }
+            return rows;
+        } catch (NopException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new NopException(ERR_GOODS_IMPORT_EMPTY);
+        }
+    }
+
+    private void applyAdminExportFilters(QueryBean query, String keyword, String categoryId,
+                                         String brandId, Boolean isOnSale) {
+        if (keyword != null && !keyword.isEmpty()) {
+            query.addFilter(or(
+                    contains(LitemallGoods.PROP_NAME_name, keyword),
+                    contains(LitemallGoods.PROP_NAME_goodsSn, keyword)
+            ));
+        }
+        if (categoryId != null && !categoryId.isEmpty()) {
+            query.addFilter(FilterBeans.eq(LitemallGoods.PROP_NAME_categoryId, categoryId));
+        }
+        if (brandId != null && !brandId.isEmpty()) {
+            query.addFilter(FilterBeans.eq(LitemallGoods.PROP_NAME_brandId, brandId));
+        }
+        if (isOnSale != null) {
+            query.addFilter(FilterBeans.eq(LitemallGoods.PROP_NAME_isOnSale, isOnSale));
+        }
+    }
+
+    private void logBatchResult(String action, List<BatchGoodsResultBean> results) {
+        int success = (int) results.stream().filter(BatchGoodsResultBean::isSuccess).count();
+        logManager.logGeneralSucceed(action,
+                "共 " + results.size() + " 行，成功 " + success + " 行");
+    }
+
+    private static String csv(String value) {
+        if (value == null) {
+            return "";
+        }
+        if (value.contains(",") || value.contains("\"") || value.contains("\n")) {
+            return "\"" + value.replace("\"", "\"\"") + "\"";
+        }
+        return value;
+    }
+
+    private static String stringValue(Map<String, Object> row, String key) {
+        Object v = row.get(key);
+        if (v == null) {
+            return null;
+        }
+        String s = v.toString().trim();
+        return s.isEmpty() ? null : s;
     }
 }

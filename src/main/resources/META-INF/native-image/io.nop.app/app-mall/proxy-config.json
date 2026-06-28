@@ -3,9 +3,21 @@
     "app.mall.dao.mapper.LitemallCouponUserMapper"
   ],
   [
+    "app.mall.dao.mapper.LitemallFlashSaleSessionMapper"
+  ],
+  [
+    "app.mall.dao.mapper.LitemallMarketingMapper"
+  ],
+  [
     "app.mall.dao.mapper.LitemallOrderGoodsMapper"
   ],
   [
     "app.mall.dao.mapper.LitemallOrderMapper"
+  ],
+  [
+    "app.mall.dao.mapper.LitemallPointsAccountMapper"
+  ],
+  [
+    "app.mall.dao.mapper.LitemallTimeDiscountMapper"
   ]
 ]

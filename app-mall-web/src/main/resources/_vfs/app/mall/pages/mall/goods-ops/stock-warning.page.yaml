@@ -1,0 +1,48 @@
+type: page
+title: 库存预警
+body:
+  - type: alert
+    body: '低库存 SKU 列表。阈值优先用 per-SKU safeStock（非空且 >0 时），否则回退全局配置 mall_stock_threshold_tight。按库存数量升序排列。'
+    level: info
+    className: mb-2
+  - type: form
+    title: 筛选条件
+    mode: inline
+    wrapWithPanel: false
+    target: stockWarning
+    submitOnInit: true
+    body:
+      - type: switch
+        name: onlyOnSale
+        label: 仅在售商品
+      - type: submit
+        label: 查询
+        level: primary
+  - type: service
+    name: stockWarning
+    api:
+      url: '@query:LitemallGoods__getStockWarningList'
+      sendOn: true
+    body:
+      - type: table
+        source: '${data}'
+        placeholder: '暂无低库存预警商品'
+        columns:
+          - name: goodsName
+            label: 商品名称
+          - name: productId
+            label: SKU ID
+          - name: specifications
+            label: 规格
+          - name: number
+            label: 当前库存
+          - name: safeStock
+            label: 安全库存
+          - name: threshold
+            label: 有效阈值
+          - name: thresholdSource
+            label: 阈值来源
+            type: mapping
+            map:
+              safeStock: '<span class="label label-info">per-SKU</span>'
+              global: '<span class="label label-warning">全局回退</span>'

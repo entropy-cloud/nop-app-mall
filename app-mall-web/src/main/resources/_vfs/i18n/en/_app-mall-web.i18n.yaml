@@ -336,6 +336,8 @@ site:
       displayName: ''
     mall-category-manage:
       displayName: ''
+    mall-comment-review:
+      displayName: ''
     mall-coupon-manage:
       displayName: ''
     mall-customer-addr:
@@ -348,7 +350,11 @@ site:
       displayName: ''
     mall-flash-sale:
       displayName: ''
+    mall-goods-batch:
+      displayName: ''
     mall-goods-create:
+      displayName: ''
+    mall-goods-io:
       displayName: ''
     mall-goods-list:
       displayName: ''
@@ -391,6 +397,8 @@ site:
     mall-stat-product:
       displayName: ''
     mall-stat-user:
+      displayName: ''
+    mall-stock-warning:
       displayName: ''
     mall-time-discount:
       displayName: ''
