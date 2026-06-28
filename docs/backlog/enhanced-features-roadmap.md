@@ -580,6 +580,8 @@ graph TD
 | UserMessage（站内信） | 35 | |
 | Material（素材资源） | 37 | |
 
+> **P27 Deferred successor 已闭环：** PointsGoods（积分商品目录）/ PointsExchangeOrder（积分兑换订单）由 `docs/plans/2026-06-29-0900-1-points-mall-exchange-plan.md` 交付（纯积分兑换 firm 结果面）。
+
 | 扩展字段（现有实体新增字段） | Phase | 字段 |
 |---------------------------|-------|------|
 | LitemallGoods | 34 | 无新增（isNew/isHot/isRecommend 均已存在，P34 仅接线启用推荐位） |

@@ -210,10 +210,40 @@
 - **积分抵扣返还：** 订单取消或整单退款时，返还用户已扣的抵扣积分（调用 earn API，`changeType=EARN`, `sourceType=refund-return`, `sourceId=orderId`）。item 级部分退款**不返还抵扣积分**（积分抵扣为订单级构件，同券恢复 Decision）。
 - **购物赠送积分不追回：** 若订单已确认收货（已赠送积分）后发生售后退款，**不追回赠送积分**（简化语义，残留风险记录于计划 Deferred）。理由：避免 item 级碎片化与跨账户追回的复杂度。
 
-### 积分商城兑换（交接）
+### 积分商城兑换
 
-- **本计划不实现积分商城兑换**（纯积分或积分+现金）——需积分商品目录（积分商品实体/兑换价）未建模，属独立子特性。本计划建立积分账户/流水/抵扣/获取 API 基座，积分商城兑换作为 successor（触发条件：积分商品目录建模需求出现）。
-- 未来积分商城兑换将复用账户 spend API（`changeType=SPEND`, `sourceType=mall-exchange`, `sourceId=exchangeOrderId`）。
+- **本特性已交付（纯积分兑换，firm 结果面）：** 用户可在积分商城浏览可用积分商品、按积分单价兑换，扣减积分 + 扣减兑换活动库存 + 生成可履约的兑换订单。建模与履约路径采用独立实体，不侵入核心商品表 / 订单主流程（见本节 Decisions）。
+- **积分+现金组合兑换 Deferred：** 首期不交付组合兑换（需收银台与现金支付编排）；列为显式 scope change（见 `docs/plans/2026-06-29-0900-1-points-mall-exchange-plan.md` Decision D3 抉择方案 B），属非静默降级。触发条件：组合兑换需求出现时重开 successor。
+
+#### Decisions（积分商城兑换 successor）
+
+- **D1 兑换商品目录建模 → 方案 A（独立 `LitemallPointsGoods` 实体）。** 关联 `goodsId`/`productId`（null 表示全部 SKU）+ `pointsPrice` 积分单价 + `exchangeStock` 活动库存 + `exchangedCount` 已兑换数量 + `maxPerUser` 每人限兑 + `startTime`/`endTime` 时间段 + `status` 上下架（复用 `mall/promotion-status`）。备选 B（在 `LitemallGoods` 加积分价字段）被否——侵入核心商品表、污染零售商品语义、与营销价字段混淆。残留风险：积分商品与零售商品两套上下架状态需前台联合判断（兑换动作同时校验零售 `isOnSale` 与积分商品 `status`）。
+- **D2 兑换订单建模与履约 → 方案 A（独立 `LitemallPointsExchangeOrder` 实体）。** 字段：`userId` + `pointsGoodsId`/`goodsId`/`productId` + 商品快照（`goodsName`/`picUrl`）+ `pointsPrice`/`quantity`/`totalPoints` + 收货信息（`addressId`/`consignee`/`phone`/`fullAddress`，实物兑换时从 `LitemallAddress` 拷贝快照）+ 状态机 `exchangeStatus`（`mall/exchange-status`：PENDING/SHIPPED/COMPLETED/CANCELLED）+ `shipCode`。备选 B（复用 `LitemallOrder` 加订单类型）被否——侵入订单主流程与价格构成、抵扣/优惠券/团购槽位语义错配、对账复杂度陡增。履约路径：兑换订单挂独立状态机，复用快递发货（管理员 `shipExchangeOrder` mutation 推进 PENDING→SHIPPED，用户 `confirmExchangeOrder` 推进 SHIPPED→COMPLETED）。**实物兑换的收货地址采集**采用独立兑换订单挂 `addressId`，从既有 `LitemallAddress` 地址簿校验归属并拷贝快照（与秒杀 `flashSaleBuy` 同先例）。虚拟兑换（无需物流）当前不区分实体，`addressId` 可空，直接走 PENDING→COMPLETED。
+- **D3 积分+现金组合兑换的现金收银 → 方案 B（首期只交付纯积分兑换，组合兑换列 Deferred）。** 抉择理由：保持单一 firm 结果面（纯积分），组合兑换的现金收银编排（独立 outTradeNo 走既有 P30 多支付通道 + P29 钱包、与主订单支付流不串账）属额外复杂度，首期不交付不阻塞纯积分闭环。记录为显式 scope change（非静默降级），符合 plan guide Rule #10。备选 A（纳入组合兑换消费已 done 的 P30/P29 通道能力）作为 successor 触发时的实现路径备忘。触发条件：业务要求积分+现金组合兑换时重开 successor。
+
+#### 兑换价构成
+
+- 兑换价为**纯积分单价**（`pointsPrice`，单件所需积分），兑换总消耗 = `pointsPrice × quantity`。
+- 不与零售价格构成（`orderPrice`/`couponPrice`/`promotionPrice`/`grouponPrice`/`integralPrice`/`actualPrice`）混用——积分商城兑换不走订单价格构成层（D2 备选 B 被否的根因）。
+- 兑换不触发积分抵扣（`mall_points_deduct_max_ratio` 不适用）；兑换消耗的是积分本身，与结算页积分抵扣是两条独立路径。
+
+#### 库存语义
+
+- 兑换活动库存（`exchangeStock`）独立于零售商品库存（`LitemallGoodsProduct.number`），是活动级配额，不与零售扣减共享。理由：兑换是营销配额行为，与零售库存语义解耦便于运营独立调控兑换额度；与秒杀 `sessionStock`（活动库存）+ 零售 `goodsProduct.number`（主库存）双扣减的模型不同——兑换**不扣减零售主库存**（兑换品可视作营销配额单独采购/拨备的池子，简化履约模型）。
+- 备选「兑换同时扣减零售主库存」被否——增加跨实体双写复杂度且与营销配额语义不符。残留风险：兑换品零售展示库存与兑换活动库存不一致（已知取舍，运营需独立维护兑换配额）。
+- 兑换库存扣减采用乐观锁条件 UPDATE（`update LitemallPointsGoods set exchangeStock = exchangeStock - n, exchangedCount = exchangedCount + n where id = ? and exchangeStock >= n`），与秒杀场次库存扣减同先例，避免并发超兑。
+
+#### 履约流转
+
+- 兑换订单状态机（`mall/exchange-status`）：
+  - `PENDING(0)` 待处理 → 管理员发货（`shipExchangeOrder`，挂 `shipCode`）→ `SHIPPED(10)` 已发货 → 用户确认收货（`confirmExchangeOrder`）→ `COMPLETED(20)` 已完成。
+  - `PENDING(0)` 待处理 → 用户/管理员取消（`cancelExchangeOrder`，退还积分）→ `CANCELLED(30)` 已取消。
+- 取消/履约失败的积分退还：调用账户 earn API（`changeType=EARN`, `sourceType=mall-exchange-refund`, `sourceId=exchangeOrderId`），幂等继承积分账户 `(sourceType, sourceId)` 查重。
+
+#### 与 spendPoints 的约定
+
+- 兑换扣减积分复用 P27 账户 spend API：`pointsAccountBiz.spendPoints(userId, totalPoints, SPEND, "mall-exchange", exchangeOrderId, remark)`。
+- 幂等性：兑换订单创建后 `id` 作为 `sourceId` 传入 `spendPoints`，积分账户的 `(sourceType, sourceId)` 应用层查重保证同一兑换订单不重复扣分（与 P27 既有 earn/spend 一致）。
 
 ### 积分有效期（交接）
 

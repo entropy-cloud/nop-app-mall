@@ -207,8 +207,9 @@ Exit Criteria:
 ### 积分商城兑换（纯积分或积分+现金）
 
 - Classification: `out-of-scope improvement`
+- **Successor Closed:** 已由 `docs/plans/2026-06-29-0900-1-points-mall-exchange-plan.md` 交付（纯积分兑换 firm 结果面；积分+现金组合兑换为该计划 Decision D3 抉择方案 B，再次 Deferred）。Phase 27 本身已 done，不改 Phase Status 行。
 - Why Not Blocking Closure: 需积分商品目录（积分商品实体/兑换价）未建模，属独立子特性；本计划建立积分账户/流水/抵扣/获取 API 基座，积分商城兑换可在此基础上独立交付。**注：** 此项为 roadmap P27 明列交付项（`enhanced-features-roadmap.md:334`）的范围收窄，已显式 adjudicated 并记录 successor + 触发条件，待人工确认收窄。
-- Successor Required: `yes`（触发条件：积分商品目录建模需求出现）
+- Successor Required: `yes`（触发条件：积分商品目录建模需求出现）→ **已触发并闭环**
 
 ### 购物赠送幂等的并发安全（sourceType+sourceId 唯一键）
 
