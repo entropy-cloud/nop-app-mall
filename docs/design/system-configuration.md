@@ -453,6 +453,69 @@
 - 改价安全策略、改地址/标记/批量发货/异常监控的业务语义与状态守卫见 `order-and-cart.md`「订单运营工作台」。
 - 本文件仅持有「后台菜单结构与运营可达性」语义。
 
+## 商品运营工作台（P36）
+
+### 业务角色
+
+- 商品运营工作台为运营提供商品批量运营（改价/改库存/上下架）、批量导入导出（xlsx via ExcelHelper）、库存预警与评论运营能力。
+- 把商品管理从「单行 CRUD + 单行上下架」升级为可批量操作的运营工具，评论管理从「只能删除」升级为可批量回复/后置审核。
+
+### 运营动作
+
+| 动作 | BizModel 方法 | 语义 |
+| ---- | ------------- | ---- |
+| 批量改价 | `LitemallGoods__batchUpdatePrice` | goodsId→retailPrice 列表，逐行直接设 `retailPrice`（不经 update 管道，与单条 CRUD 的 `syncRetailPrice` 派生口径隔离），部分失败不阻断成功行 |
+| 批量改库存 | `LitemallGoods__batchUpdateStock` | productId→number 列表，经 `ILitemallGoodsProductBiz` 跨实体设 `number`（禁止 `daoProvider().daoFor()` 绕过），部分失败不阻断 |
+| 批量上架 | `LitemallGoods__batchOnSale` | goodsId 列表，复用 `onSale` 单行逻辑（含上架 SKU 守卫），部分失败不阻断 |
+| 批量下架 | `LitemallGoods__batchOffSale` | goodsId 列表，复用 `offSale` 单行逻辑，部分失败不阻断 |
+| 导出商品 | `LitemallGoods__exportGoods` | 按筛选条件导出 CSV（xlsx 写出为 successor），含 SKU 关键字段 |
+| 导入商品 | `LitemallGoods__importGoods` | xlsx via `ExcelHelper.readSheet`（复用 batchShip 先例），按 goodsSn 匹配新增/更新，含字段校验 + 错误报告 |
+| 库存预警 | `LitemallGoods__getStockWarningList` | SKU 粒度低库存列表，阈值 = per-SKU `safeStock`（非空且 >0）否则全局 `mall_stock_threshold_tight`，按库存升序 |
+| 批量回复评论 | `LitemallComment__batchAdminReply` | commentId→adminContent 列表，逐行写 `adminContent`，复用 `adminReply` 校验，结果报告 |
+| 批量评论审核 | `LitemallComment__batchModerateComments` | commentId 列表 + action=hide/restore，置 `deleted`（后置 Moderation，复用既有字段），结果报告 |
+| 评论工作台列表 | `LitemallComment__getCommentReviewList` | 支持按 star/hasPicture/关键字/时间筛选 + 分页，供工作台消费 |
+
+### 批量操作事务边界与部分失败策略（Decision G1）
+
+- 逐行独立处理 + 聚合结果报告（复刻 `LitemallOrder__batchShip` 先例：catch-and-continue + `BatchShipResultBean`/`BatchGoodsResultBean` 聚合）。
+- 单行失败记入错误列表不回滚其他行，返回 `{successCount, failedCount, failures:[{id, reason}]}` 形式（每行一条 `BatchGoodsResultBean`）。
+- 调用方需读结果报告处理失败行。
+
+### 导入导出格式（Decision G2）
+
+- 导入用 xlsx，复用平台 `ExcelHelper.readSheet`（本仓库已在 `batchShip` 落地，无新依赖）。
+- 导出按可用写出入口抉择：本基线无平台 xlsx 写出 helper，走 CSV 兜底（数据导出能力不缺；模板化 xlsx 导出为 successor，可随 nop-report 引入续作）。
+
+### 库存预警阈值来源（Decision G3）
+
+- 优先用既有 per-SKU `LitemallGoodsProduct.safeStock`（`orm.xml:806`，已存在）；`safeStock` 为空/0 时回退全局配置 `mall_stock_threshold_tight`（P38 已落地）。
+- 返回 `thresholdSource`（`safeStock` / `global`）标注每行阈值来源，运营可据此逐步填充 `safeStock` 过渡到 per-SKU。
+- 历史 SKU 的 `safeStock` 多为空，初期预警依赖全局回退阈值。
+
+### 评论审核模型（Decision G4）
+
+- 后置 Moderation：工作台列已发布评论，提供批量下架（置 `deleted=true`）/恢复（`deleted=false`）/批量回复（写 `adminContent`），复用既有字段，无 ORM 改动。
+- 前置审核状态机（pending→approved/rejected）需新 `status` 字段，为 model-gap successor（见计划 Deferred）。
+
+### 权限与审计
+
+- 所有批量/导入导出/评论审核动作标注 `@Auth(roles="admin")`，仅管理员/运营可达。
+- 批量动作写入 `LitemallLog` 管理员操作日志（共 N 行，成功 M 行）。
+
+### 后台菜单结构
+
+- `goods-manage`(300) 下新增子项：
+  - `mall-goods-batch` 批量运营 → `mall/goods-ops/goods-batch.page.yaml`
+  - `mall-goods-io` 导入导出 → `mall/goods-ops/goods-io.page.yaml`
+  - `mall-stock-warning` 库存预警 → `mall/goods-ops/stock-warning.page.yaml`
+  - `mall-comment-review` 评论工作台 → `mall/goods-ops/comment-review.page.yaml`
+
+### 与其他 Owner Docs 的关系
+
+- 商品批量运营语义边界（批量改价与单条 CRUD `syncRetailPrice` 派生口径隔离、跨实体经 `I*Biz`）见 `product-catalog.md`。
+- 库存语义化阈值复用 P38 全局配置族（`mall_stock_threshold_*`），见本文件「库存语义化」段。
+- 本文件仅持有「后台菜单结构、运营可达性、批量口径」语义。
+
 ## 自提门店管理（P31）
 
 ### 业务角色

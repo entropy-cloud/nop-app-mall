@@ -38,7 +38,7 @@
 - 33. 商品评价结构化: `done`（`docs/plans/2026-06-27-2321-2-phase33-structured-comment-plan.md`）
 - 34. 首页运营打标: `done`（`docs/plans/2026-06-27-2029-3-phase34-homepage-operation-tagging-plan.md`）
 - 35. 站内信/消息中心: `done`（`docs/plans/2026-06-28-0530-1-phase35-message-center-plan.md`）
-- 36. 商品运营增强: `planned`（`docs/plans/2026-06-28-1027-3-phase36-goods-operations-enhancement-plan.md`；批量改价/改库存/上下架 + 导入[xlsx via ExcelHelper]/导出 + 库存预警[per-SKU `safeStock`+全局回退] + 评论工作台[回复/后置 Moderation]；前置审核状态机为 successor）
+- 36. 商品运营增强: `done`（`docs/plans/2026-06-28-1027-3-phase36-goods-operations-enhancement-plan.md`；批量改价/改库存/上下架 + 导入[xlsx via ExcelHelper]/导出[CSV 兜底] + 库存预警[per-SKU `safeStock`+全局回退] + 评论工作台[回复/后置 Moderation]；前置审核状态机为 successor）
 - 37. 内容/素材管理: `todo`
 - 38. 库存语义化: `done`（`docs/plans/2026-06-28-0530-2-phase38-stock-semantics-plan.md`）
 
