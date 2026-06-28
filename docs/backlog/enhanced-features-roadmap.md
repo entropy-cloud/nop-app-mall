@@ -38,7 +38,7 @@
 - 33. 商品评价结构化: `done`（`docs/plans/2026-06-27-2321-2-phase33-structured-comment-plan.md`）
 - 34. 首页运营打标: `done`（`docs/plans/2026-06-27-2029-3-phase34-homepage-operation-tagging-plan.md`）
 - 35. 站内信/消息中心: `done`（`docs/plans/2026-06-28-0530-1-phase35-message-center-plan.md`）
-- 36. 商品运营增强: `done`（`docs/plans/2026-06-28-1027-3-phase36-goods-operations-enhancement-plan.md`；批量改价/改库存/上下架 + 导入[xlsx via ExcelHelper]/导出[CSV 兜底] + 库存预警[per-SKU `safeStock`+全局回退] + 评论工作台[回复/后置 Moderation]；前置审核状态机为 successor）
+- 36. 商品运营增强: `done`（`docs/plans/2026-06-28-1027-3-phase36-goods-operations-enhancement-plan.md`；批量改价/改库存/上下架 + 导入[xlsx via ExcelHelper]/导出[CSV 兜底] + 库存预警[per-SKU `safeStock`+全局回退] + 评论工作台[回复/后置 Moderation]；前置审核状态机 successor 已闭环：`docs/plans/2026-06-28-2042-2-comment-pre-moderation-plan.md` done — `auditStatus` 字段+字典 + 预审开关 `mall_comment_pre_moderation` + `batchAuditComments`(approve/reject) + 公共查询过滤[doFind*ByQueryDirectly OR isNull/eq APPROVED] + 积分延迟至 approve 发放[幂等] + 工作台 auditStatus 筛选/批量通过拒绝；397 测试全绿）
 - 37. 内容/素材管理: `done`（`docs/plans/2026-06-28-1400-2-phase37-material-management-plan.md`；素材上传[复用 IFileStore，MIME/扩展名推断 fileType]/搜索[keyword/categoryId/fileType/tag 组合]/分类树[内存组树按 sortOrder] + 前端素材库页[缩略图+上传弹窗+多维筛选]/分类管理页；跨实体引用关系追踪 + 云存储[nop-integration-file-*]为 Deferred successor[roadmap 偏差已裁定]）
 - 38. 库存语义化: `done`（`docs/plans/2026-06-28-0530-2-phase38-stock-semantics-plan.md`）
 
