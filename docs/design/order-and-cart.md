@@ -167,6 +167,23 @@
 - 生产环境支付行为属于集成能力；微信支付细节应放在对应的集成架构和代码中。
 - 开发或本地测试中的支付替代机制必须明确标注为非生产行为，且不能重定义正式商业支付语义。
 
+### 多支付通道（P30）
+
+商城支持**可插拔支付通道**：微信 Native 扫码、支付宝（H5/小程序）、钱包余额作为独立通道共存，由收银台动态选择。
+
+**通道抽象（Decision A）：** 通道以策略接口 `app.mall.pay.PayChannel` 表达（`getCode()/isEnabled()/prepay(req)/query(outTradeNo)/refund(req)`），各通道实现该接口，`IPayChannelRegistry` 按 `code` 路由。`code` 对齐 `mall/pay-channel` 字典（`WECHAT`/`ALIPAY`/`BALANCE`）。既有 `PayService`（微信）保留为**兼容 facade**——订单 `prepay`、充值 `createRecharge`、售后 `refund` 仍走 `PayService` 注入点，不破坏既有流程；新增的多通道路由经 `PayChannelRegistry`。
+
+- 备选「扩展 `PayService` 为多实现 bean 列表」被否：通道增删会冲击既有 byType 注入。备选「单 `PayService` + switch」被否：违反开闭。残留风险：facade 兼容层增加一层间接性。
+- `MockPayServiceImpl`（非 IoC 注册、仅测试桩）**保留为测试通道桩、不纳入生产 `PayChannelRegistry`**，避免测试桩污染生产路由（与现状「生产运行时非生效」一致）。
+
+**通道启停（Decision C）：** 通道配置存 `LitemallSystem` JSON（keyName=`pay_channels`，value 为 `[{code,enabled},...]`），**不改 ORM**（与 P29 充值套餐 `recharge_packages` JSON 模式一致）。通道是否在收银台暴露 = **能力位（`PayChannel.isEnabled()`，SDK 启用/凭证就绪）AND 操作开关（`pay_channels` 配置）**。默认（无配置/通道未列出）：**微信启用、其余禁用**（灰度开启，与单微信基线向后兼容）。凭证明文存 JSON 的安全为 follow-up（运维侧密钥管理/加密）。
+
+- 备选「新增 `LitemallPayChannel` 实体」被否：ORM ask-first 且基线通道数少，JSON 足够。残留风险：凭证明文安全（建议平台密钥加密/运行时注入）。
+
+**余额支付确认（Decision B）：** 余额支付需确认凭证（资金安全面）。确认机制复用既有用户凭证（登录密码），不新建独立支付密码账户实体，不引入 SMS 通道基建。安全边界：`payByBalance(orderId, confirmCredential)` 校验订单归属 + 订单待支付 + 余额可用额 ≥ actualPrice + 确认凭证校验后原子扣款。残留风险：确认机制选型直接影响资金保护强度（真实凭证联调为 successor）。
+
+- 备选「短信验证码」被否：依赖未引入的 SMS 通道基建（`nop-integration`）。备选「密码/短信二选一可配」被否：复杂度高且当前无 SMS 基建。
+
 ### 微信支付流程（Native 扫码）
 
 微信支付（Native 扫码）的集成流程如下：
@@ -176,6 +193,17 @@
 3. **前端二维码渲染** — 前台支付页根据 `codeUrl` 渲染二维码供用户扫码（详见下方「前台支付消费者」）。
 4. **支付回调** — 微信服务器异步通知 `POST /wxpay/notify`，`WxPayNotifyResource` 验签解析后调用 `IPaymentCallback.onPaymentSuccess(outTradeNo, transactionId)`（`PaymentCallbackImpl` 实现），由 `LitemallOrderBizModel.confirmPaidByNotify` 幂等推进订单到已支付（已支付则跳过；系统上下文执行，回调无用户会话）。仅 `tradeState==SUCCESS` 触发推进。
 5. **pay()**（`ILitemallOrderBiz.pay()`）— model-level 确认，与外部支付渠道无关。接受边界：**零金额订单（actualPrice==0）任意模式直接确认**；**示例模式（`wxpay.enabled=false`）任意金额由「模拟支付完成」按钮调用**；**真实模式非零金额一律拒绝（`ERR_ORDER_USE_REAL_PAYMENT`），必须经回调 confirmPaidByNotify 推进**。
+
+### 余额支付流程（P30）
+
+余额支付（`BALANCE` 通道）的流程：
+
+1. **收银台通道列表** — 非零金额待支付订单进入收银台，先 `getEnabledPayChannels(orderId)` 加载动态通道列表（`PayChannelRegistry` 按能力位 + 操作开关过滤）。余额通道在列表中展示可用余额。
+2. **payByBalance**（`ILitemallOrderBiz.payByBalance(orderId, confirmCredential)`，`@BizMutation`）— 用户在余额通道输入登录密码确认后调用。校验：订单归属 + 订单待支付(101) + 余额可用额 ≥ actualPrice + 确认凭证（Decision B，经 `IPasswordEncoder` 校验登录密码）→ 原子扣款 `walletBiz.debitBalance(userId, actualPrice, PAY, sourceType=pay, sourceId=orderSn)` → 写 `order.walletPayAmount` + `order.payChannel=20(BALANCE)` → 推进已支付。
+3. **双层幂等** — 订单状态守卫（重复调用见 status≠101 拒绝 `ERR_ORDER_NOT_ALLOW_PAY`，幂等层 1）+ `debitBalance` 乐观锁（并发扣款版本冲突 `ERR_WALLET_VERSION_CONFLICT`，幂等层 2）。
+4. **markOrderPaidCore 复用** — `pay()`、`confirmPaidByNotify()`、`payByBalance()` 共用「状态推进尾」（set `ORDER_STATUS_PAY` + `payTime` + `updateEntity` + `afterCommit` 通知）抽取的 `markOrderPaidCore(order, context)` 内部方法，分歧守卫/payId/payChannel 留调用侧。余额支付不复用带真实支付守卫的 `pay()`（真实模式非零订单会被 `ERR_ORDER_USE_REAL_PAYMENT` 拒绝），而是直接 debit + 写通道字段后调用 `markOrderPaidCore`。
+
+余额通道仅服务非零金额订单；零金额订单（`actualPrice==0`）在收银台零金额分支直接 `pay()` 确认，无需扣余额。
 
 ### 前台支付消费者
 
@@ -197,6 +225,20 @@
 退款流程：
 
 6. **refund**（`PayService.refund()`）— 管理员对已支付订单发起退款，调用微信退款 API 进行原路退款。同步返回退款结果。退款异步通知（微信 → 服务器）预留为后续对账功能。
+
+### 退款异步通知对账（P30）
+
+退款异步通知（第三方 → 服务器）推进退款完成对账：`PaymentCallbackImpl` 支持按通道路由退款通知，验签后推进售后/退款状态（幂等，已退款跳过）。关闭 P29 deferred「退款异步通知流程」。微信退款 `notifyUrl` 与支付通知共用部署约束（公网可达）；支付宝退款通知同此模式。
+
+### 支付宝通道流程（P30）
+
+支付宝（`ALIPAY` 通道）的集成流程（骨架，真实 SDK 联调为 Deferred successor）：
+
+1. **prepay**（`AlipayPayChannel.prepay()`）— 构造支付宝下单请求（H5/小程序 `tradeType`），返回 `payUrl`/`payId`。`alipay.enabled=false`（基线）时返回示例回退响应，`isEnabled()=false`，通道不在收银台暴露。
+2. **支付回调** — 支付宝异步通知 `POST /alipay/notify`（form 参数），`AlipayNotifyResource` 验签解析后调用 `IPaymentCallback.onPaymentSuccess(outTradeNo, tradeNo)`，复用 `PaymentCallbackImpl` → `confirmPaidByNotify` 幂等推进。仅 `trade_status == TRADE_SUCCESS/TRADE_FINISHED` 触发推进。
+3. **query / refund** — 通道策略方法（`PayChannel.query/refund`），示例回退与微信先例一致。
+
+**真实凭证联调为 Deferred successor**（触发条件：获取真实商户凭证 appId/私钥/公钥/网关后）。本计划交付代码骨架 + 示例回退 + 接线点（`AlipayPayChannel` 各方法的 successor integration point 标注），`alipay.enabled` 默认 false（灰度，与微信 Phase 14 先例一致，明确标注非生产行为）。
 
 ### 发货
 

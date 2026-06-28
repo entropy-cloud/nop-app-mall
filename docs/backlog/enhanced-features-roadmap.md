@@ -32,7 +32,7 @@
 - 27. 积分体系: `done`（`docs/plans/2026-06-27-2029-1-phase27-points-system-plan.md`）
 - 28. 签到: `done`（`docs/plans/2026-06-27-2321-1-phase28-check-in-plan.md`）
 - 29. 钱包余额与充值: `done`（`docs/plans/2026-06-28-1400-1-phase29-wallet-recharge-plan.md`；钱包账户[懒创建+乐观锁原子操作]+流水[balanceAfter快照]+充值流程[套餐存LitemallSystem JSON + outTradeNo派生RC前缀 + PaymentCallback回调路由]）
-- 30. 多支付通道: `todo`
+- 30. 多支付通道: `done`（`docs/plans/2026-06-28-1822-1-phase30-multi-payment-channels-plan.md`；PayChannel 策略抽象[<ioc:collect-beans> 注册表，能力位 AND pay_channels JSON 操作开关]+微信适配为通道保持 PayService facade + 余额支付[payByBalance @BizMutation，debitBalance PAY/sourceType=pay，markOrderPaidCore 抽取，IPasswordEncoder 校验登录密码]+ 支付宝通道骨架[enabled=false 示例回退，真实 SDK 为 successor]+ 收银台动态通道列表 + 退款异步通知对账[onRefundSuccess 幂等]）
 - 31. 配送方式扩展（自提）: `done`（`docs/plans/2026-06-28-0530-3-phase31-pickup-delivery-plan.md`）
 - 32. 优惠券体系增强: `done`（`docs/plans/2026-06-27-2321-3-phase32-coupon-center-plan.md`）
 - 33. 商品评价结构化: `done`（`docs/plans/2026-06-27-2321-2-phase33-structured-comment-plan.md`）
@@ -550,7 +550,6 @@ graph TD
     P15 -->|Parallel| P38
 
     style P17 fill:#fdd,stroke:#c33
-    style P30 fill:#fdd,stroke:#c33
 ```
 
 ## Entity Coverage

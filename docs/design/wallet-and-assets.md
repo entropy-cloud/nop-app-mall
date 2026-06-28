@@ -97,9 +97,11 @@
 
 ## 余额支付
 
-- 余额作为支付通道之一在收银台展示（详见 `order-and-cart.md`）。
-- 余额支付需要有支付确认环节（支付密码或短信验证码）。
-- 余额支付成功后，钱包余额扣减对应金额，并产生余额扣减流水。
+- 余额作为支付通道之一在收银台展示（详见 `order-and-cart.md`「多支付通道」）。
+- 余额支付需要有支付确认环节（P30 Decision B：复用用户登录密码，经平台 `IPasswordEncoder` 校验；不新建独立支付密码账户实体，不引入 SMS 通道基建）。
+- 余额支付成功后，钱包余额扣减对应金额，并产生余额扣减流水（`changeType=PAY(10)` + `sourceType=pay` + `sourceId=orderSn`）。
+- **扣款接线（P30 已落地）：** 收银台 `payByBalance(orderId, confirmCredential)`（`@BizMutation`）调用 `ILitemallWalletBiz.debitBalance(userId, actualPrice, WALLET_CHANGE_TYPE_PAY, SOURCE_TYPE_PAY, orderSn, ...)` 原子扣款（乐观锁），写 `order.walletPayAmount` + `order.payChannel=20(BALANCE)` 后推进订单已支付。关闭 P29 deferred「余额支付扣款 = PAY + sourceType=pay」。余额通道仅服务非零金额订单（零金额订单走收银台零金额分支直接 `pay()`，不扣余额）。
+- **双层幂等：** 订单状态守卫（重复调用见 status≠101 拒绝 `ERR_ORDER_NOT_ALLOW_PAY`）+ `debitBalance` 乐观锁（并发扣款版本冲突 `ERR_WALLET_VERSION_CONFLICT`）。
 
 ## 积分账户
 
