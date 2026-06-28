@@ -93,7 +93,7 @@
                 goodsSn[商品编号] name[商品名称]
                 counterPrice[市场价格]
                 isNew[是否新品首发] isHot[是否人气推荐] isRecommend[是否推荐]
-                isOnSale[是否上架]
+                isOnSale[是否上架] safetyStock[安全库存预警线（商品聚合级），空或0表示不启用商品级阈值，回退到 SKU safeStock 与全局配置]
                 picUrl[商品页面商品图片]
                 gallery[商品宣传图片列表，采用JSON数组格式]
                 unit[商品单位，例如件、盒]

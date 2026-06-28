@@ -75,6 +75,9 @@
                 <!--商品视频链接-->
                 <col id="videoUrl" sortable="true"/>
 
+                <!--安全库存预警线（商品聚合级）-->
+                <col id="safetyStock" ui:number="true" sortable="true"/>
+
                 <!--商品编号-->
                 <col id="goodsSn" mandatory="true" sortable="true" x:abstract="true"/>
             </cols>
@@ -94,7 +97,8 @@
  isHot[是否热品] unit[商品单位]
  counterPrice[市场售价] retailPrice[当前价格]
  detail[详情] isRecommend[是否推荐]
- videoUrl[商品视频链接] goodsSn[商品编号]
+ videoUrl[商品视频链接] safetyStock[安全库存预警线（商品聚合级）]
+ goodsSn[商品编号] 
 </layout>
         </form>
         <form id="add" editMode="add" title="新增-商品基本信息" i18n-en:title="" x:prototype="edit"/>
@@ -109,7 +113,7 @@
  unit[商品单位] counterPrice[市场售价]
  retailPrice[当前价格] detail[详情]
  isRecommend[是否推荐] videoUrl[商品视频链接]
- goodsSn[商品编号] 
+ safetyStock[安全库存预警线（商品聚合级）] goodsSn[商品编号]
 </layout>
         </form>
         <form id="query" editMode="query" title="查询条件" i18n-en:title="Query Condition" x:abstract="true"/>

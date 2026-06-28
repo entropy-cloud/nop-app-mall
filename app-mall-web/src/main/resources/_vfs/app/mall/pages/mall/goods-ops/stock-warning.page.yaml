@@ -2,7 +2,7 @@ type: page
 title: 库存预警
 body:
   - type: alert
-    body: '低库存 SKU 列表。阈值优先用 per-SKU safeStock（非空且 >0 时），否则回退全局配置 mall_stock_threshold_tight。按库存数量升序排列。'
+    body: '低库存 SKU 列表。阈值三级优先：per-SKU safeStock（非空且 >0）→ per-goods safetyStock（非空且 >0）→ 全局配置 mall_stock_threshold_tight。按库存数量升序排列。'
     level: info
     className: mb-2
   - type: form
@@ -37,7 +37,9 @@ body:
           - name: number
             label: 当前库存
           - name: safeStock
-            label: 安全库存
+            label: SKU 安全库存
+          - name: safetyStock
+            label: 商品安全库存
           - name: threshold
             label: 有效阈值
           - name: thresholdSource
@@ -45,4 +47,5 @@ body:
             type: mapping
             map:
               safeStock: '<span class="label label-info">per-SKU</span>'
+              safetyStock: '<span class="label label-success">商品级</span>'
               global: '<span class="label label-warning">全局回退</span>'
