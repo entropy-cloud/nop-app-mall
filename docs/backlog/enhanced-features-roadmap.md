@@ -1,6 +1,6 @@
 # Enhanced Features Roadmap
 
-> Last Updated: 2026-06-28 (P18 → done)
+> Last Updated: 2026-06-28 (P17 → out-of-scope reconciliation)
 > Source: `docs/analysis/2026-06-21-mobile-mall-functional-design-analysis.md`, `docs/design/*.md`
 
 ## Purpose
@@ -19,7 +19,7 @@
 
 - 15. 满减送: `done`（`docs/plans/2026-06-27-1742-1-phase15-full-discount-promotion-plan.md`）
 - 16. 订单项级售后增强: `done`（`docs/plans/2026-06-27-1742-3-phase16-order-item-aftersale-plan.md`；P16/P21 Deferred successor「售后退货履约」已闭环：`docs/plans/2026-06-28-2042-1-aftersale-return-fulfillment-plan.md` done — GOODS_REQUIRED 走 APPROVED→RETURNED→REFUND 子状态机 + `submitReturnLogistics`/`confirmReturnReceived` mutation + 退货物流字段[returnShipChannel/returnShipSn/returnTime/receiveConfirmTime] + 还库从 refund() 拆到 confirmReturnReceived + Admin 待收货 Tab + 386 测试全绿）
-- 17. 微信小程序订单中心: `todo`
+- 17. 微信小程序订单中心: `out-of-scope（reconciliation）`（`docs/plans/2026-06-28-2319-1-phase17-wx-mini-program-order-center-plan.md` Phase 1 Decision = Option A，三轮独立 plan audit 共识确认）— 本商城不交付微信小程序前端（`user-and-address.md` H5/Web 定位 + `mobile-frontend-roadmap.md` React/nop-chaos-flux 技术栈），合规义务无附着主体；契约设计与未来 successor 触发条件已落地 `order-and-cart.md`「微信小程序订单中心」章节。触发条件：微信小程序立项 + WeChat 合规 ask-first 授权时重开 successor 计划。
 - 18. Dashboard 重做: `done`（`docs/plans/2026-06-28-1027-1-phase18-dashboard-redesign-plan.md`；4 看板 `@BizQuery`[getDashboardMetrics/getSalesTrend/getRealtimeOrders/getTodoAggregation] + AMIS chart 指标卡/趋势/实时订单流/待办聚合 4 区块 + owner doc 口径；nop-report 引擎按引擎定位归 P19 导出场景）
 - 19. 报表体系扩展: `done`（`docs/plans/2026-06-28-1027-2-phase19-report-system-extension-plan.md`；销售漏斗/用户分析[含生命周期]/商品分析/订单分析/优惠券分析 + 4 报表页 + CSV 导出[E1 抉择 CSV 兜底，nop-report 为 successor]；8 新增 `@BizQuery` 挂 LitemallOrderBizModel[E2 抉择] + SQL-lib `<c:if>` 条件查询 + Java cohort/RFM/lifecycle 分组；289 测试全绿；活动 ROI 归 P22，毛利归 successor）
 - 20. 用户运营工作台: `done`（`docs/plans/2026-06-28-0340-2-phase20-user-operations-workbench-plan.md`；P20 deferred successor「算法化用户画像/RFM/生命周期」已闭环：`docs/plans/2026-06-28-1822-2-user-portrait-algorithmization-plan.md` done — per-user all-time 画像 `getUserPortrait` + 算法化分群 `getSegmentMembers` + 用户详情算法画像面板 + segment 三 Tab[手工标签/RFM/生命周期] + P19 分类逻辑同源抽取 `computeRfmThresholds`/`classifyLifecycleStage`[零回归] + `getUserPaymentSummaryAllTime` SQL TOTAL_AMOUNT 修正；360 测试全绿）
@@ -164,6 +164,8 @@
 ### 17. 微信小程序订单中心
 
 > Status: see Phase Status above
+
+**范围裁定（Option A，三轮 plan audit 共识）：** 不在当前 H5/Web 基线交付。详见 `docs/plans/2026-06-28-2319-1-phase17-wx-mini-program-order-center-plan.md` Phase 1 Decision 与 `docs/design/order-and-cart.md`「微信小程序订单中心」章节。触发条件：微信小程序立项 + WeChat 合规 ask-first 授权时重开 successor 计划。
 
 **目标：** 满足微信小程序电商监管要求的订单中心对接。
 
@@ -599,7 +601,7 @@ graph TD
 | Dev Log | 每次实现后更新 docs/logs/ |
 | 并发安全 | 秒杀抢购、拼团参团等场景需处理并发库存扣减 |
 | Protected Area | 支付集成（Phase 17 微信订单中心、Phase 30 多支付通道）涉及第三方平台合规，实施前需 ask-first |
-| 合规 | 微信小程序订单中心为监管要求，不可跳过 |
+| 合规 | 微信小程序订单中心为监管要求，不可跳过 — **该监管义务仅当商户实际交付并运营微信小程序时才附着**；本项目不交付小程序（`user-and-address.md` H5/Web 定位），故触发条件无附着主体，Phase 17 经裁定移出当前基线（见 plan + `order-and-cart.md`） |
 
 ## Rule
 

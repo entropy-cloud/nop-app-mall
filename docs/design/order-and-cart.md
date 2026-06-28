@@ -529,6 +529,48 @@ item 级退款时三个订单级副作用策略：
 - 状态迁移必须遵循允许的业务流转，不得静默跳过本应存在的中间业务含义。
 - 售后状态流转不得反向篡改订单主状态机已经表达的履约结果，只能在其基础上补充后置服务结果。
 
+## 微信小程序订单中心（范围裁定：不在当前基线）
+
+> 范围裁定来源：`docs/plans/2026-06-28-2319-1-phase17-wx-mini-program-order-center-plan.md`（Phase 1 Decision = Option A，经三轮独立 plan audit 共识确认）。
+> 审计状态：Option A（移出当前 H5/Web 基线）经独立 subagent 对抗审计确认为**可辩护的范围裁定**（reconciliation，非自主 scope 变更）；裁定理由见下。若未来 audit/人工认为应保留 P17，则回退 Option B。
+
+### 为什么不在当前基线交付
+
+微信小程序订单中心是为「实际运营微信小程序的电商商户」着附的监管合规对接（微信平台要求小程序订单进入微信侧订单中心，便于售后/投诉监管）。本商城**不交付微信小程序前端**，合规义务无可落地的附着主体：
+
+- 产品定位为 **H5/Web 商城**，`user-and-address.md` 明确「产品定位为 H5/Web 商城，未交付微信小程序前端」。
+- 移动端技术栈为 **nop-chaos-flux（React 19）**，`mobile-frontend-roadmap.md` M5「支付 & 售后」交付范围为「微信支付 Native 调起」（扫码 / H5），**非微信小程序**。
+- 全仓代码搜索 `orderCenter / weappOrder / openBusinessView / mini_program` 零命中，`app-mall-wx/` 仅有微信支付/支付宝支付代码，无订单中心任何代码。
+- 故 `enhanced-features-roadmap.md` Cross-Cutting「微信小程序订单中心为监管要求，不可跳过」中的「不可跳过」**以「实际交付并运营微信小程序」为前提**——本项目权威设计文档确立不交付小程序，「不可跳过」的触发条件无附着主体，并非对在交付合规义务的跳过。
+
+### 裁定性质（非自主 scope 变更）
+
+依 `source-of-truth-and-precedence.md`，supported app behavior 由 `docs/design/` 权威定义，`user-and-address.md` 明确 H5/Web（非 ambiguous）。roadmap 的 `todo` 是实现排序意图，与权威设计文档冲突时按冲突解决规则更新陈旧方（roadmap）。故本裁定是**冲突裁定（reconciliation）**，不是 `ai-autonomy-policy.md` 要求 ask 的「ambiguous scope change」。为保守与诚实，裁定结论标注「需人工/audit 确认」，已由 plan audit 三轮独立 subagent 确认可辩护。
+
+### 合规对接契约四要素（供未来小程序立项参考）
+
+当未来启动微信小程序工程时，订单中心合规对接涉及四个契约要素。本基线**不实现**其中任何一个（详见该计划 `Deferred But Adjudicated`），仅记录契约语义：
+
+| 要素 | 业务含义 | 触发场景 | 当前基线接入点 |
+|------|----------|----------|----------------|
+| **path 配置** | 微信抓取商户订单列表/详情的端点路径，属合规契约 hook | 小程序后台「订单中心 path」配置项 | **无**（合规端点格式未实现，属 ask-first 外部集成行为） |
+| **payOrderNo 反查** | 微信侧凭支付订单号反查商户订单，用于对齐微信侧交易记录 | 用户在微信订单中心点开订单时 | 既有 `LitemallOrder.payId`（propId 17，微信支付回调写入的 transactionId，见「微信支付流程」回调路径）**可直接充当 payOrderNo 反查键**，无需 ORM 改动 |
+| **weappOrderConfirm**（`wx.openBusinessView`） | 小程序前端 API，在用户确认收货时调起微信侧的订单确认半屏页面，同步收货状态到微信 | 用户在小程序内点「确认收货」 | **无**（小程序前端 API，本项目无小程序宿主；移动端属 `mobile-frontend-roadmap.md` 独立 React/H5 范围） |
+| **wechat_extra_data** | 微信合规要求的订单附加数据（商户自定义字段，微信抓取并展示在订单中心） | 微信抓取订单时随附返回 | **无**（`LitemallOrder` 无此列；落库需 ORM 新增 JSON 字段，属 ORM Protected Area ask-first） |
+
+### 未来小程序立项时的接入边界
+
+当「微信小程序立项 + WeChat 合规 ask-first 授权」双满足时，开 successor 计划实现合规对接，届时须遵守以下边界（已在该计划 `Deferred But Adjudicated` 记录）：
+
+- **真实合规端点格式 + path 配置**：外部系统集成行为（`ai-autonomy-policy.md` ask-first），且本项目无小程序宿主，需 successor。
+- **小程序前端 `wx.openBusinessView`/`weappOrderConfirm`**：归 `mobile-frontend-roadmap.md` / 小程序前端 roadmap。
+- **`wechat_extra_data` 持久化字段**：`model/app-mall.orm.xml` 的 `LitemallOrder` 当前无此列（model-gap）；建议小程序立项时新增可空 JSON 列，属 ORM Protected Area ask-first。
+- **payOrderNo 反查**：复用既有 `payId` 字段即可，无需 ORM 改动（successor 实现时如需 Option B 的通用反查查询能力，可参考该计划 Phase 2 的 `findOrderByPayId` 设计草案）。
+
+### 与现有 H5/Web 订单流程的关系
+
+本基线的订单创建、支付、发货、收货、退款、售后流程（见上文各章节）**不受**小程序订单中心影响——它们是 H5/Web 商城的完整订单生命周期。小程序订单中心只是「当商户另开小程序工程时」附加在订单域之上的**合规对接层**，独立于核心履约主链路。
+
 ## 跨域引用
 
 订单域是商城主链路的枢纽，与多个域存在交接：
