@@ -2,17 +2,126 @@
 <view x:extends="_gen/_LitemallMaterial.view.xml" x:schema="/nop/schema/xui/xview.xdef" xmlns:x="/nop/schema/xdsl.xdef">
 
     <grids>
-        <grid id="list"/>
+        <grid id="list">
+            <!-- bounded-merge：仅保留下方显式列。url 列用 gen-control 渲染图片/视频缩略图。-->
+            <cols x:override="bounded-merge">
+                <col id="id"/>
+                <col id="url" label="预览">
+                    <gen-control>
+                        <wrapper>
+                            <body>
+                                <img src="${url}" alt="${name}" style="max-width:80px;max-height:80px;object-fit:contain;"/>
+                            </body>
+                        </wrapper>
+                    </gen-control>
+                </col>
+                <col id="name" label="文件名"/>
+                <col id="fileType" label="类型"/>
+                <col id="fileSize" label="大小(bytes)" ui:number="true"/>
+                <col id="categoryId" label="分类ID"/>
+                <col id="tag" label="标签"/>
+                <col id="addTime" label="上传时间"/>
+            </cols>
+        </grid>
         <grid id="pick-list"/>
     </grids>
 
     <forms>
+        <!-- 多维筛选：name(contains)/categoryId/fileType/tag。xmeta 已为 name/tag 启用 contains。-->
+        <form id="query">
+            <layout>
+                name fileType categoryId tag
+            </layout>
+            <cells>
+                <cell id="categoryId">
+                    <gen-control>
+                        <select clearable="@:true">
+                            <source>
+                                <url>@query:LitemallMaterialCategory__findList/value:id,label:name</url>
+                            </source>
+                        </select>
+                    </gen-control>
+                </cell>
+            </cells>
+        </form>
+
         <form id="view"/>
-        <form id="edit"/>
+
+        <!-- 上传弹窗：fileUpload(file-upload 控件 → fileRef) + categoryId + tag → 调 uploadMaterial。-->
+        <form id="upload" editMode="add" title="上传素材">
+            <layout>
+                fileUpload[选择文件]
+                categoryId[分类]
+                tag[标签]
+            </layout>
+            <cells>
+                <cell id="fileUpload" custom="true" mandatory="true">
+                    <gen-control>
+                        <input-file name="fileUpload"
+                                    receiver="/f/upload/LitemallMaterial/url"
+                                    accept="image/*,video/*"
+                                    placeholder="选择图片或视频文件"/>
+                    </gen-control>
+                </cell>
+                <cell id="categoryId">
+                    <gen-control>
+                        <select clearable="@:true">
+                            <source>
+                                <url>@query:LitemallMaterialCategory__findList/value:id,label:name</url>
+                            </source>
+                        </select>
+                    </gen-control>
+                </cell>
+            </cells>
+        </form>
+
+        <form id="edit">
+            <layout>
+                name[文件名]
+                fileType[类型]
+                categoryId[分类ID]
+                tag[标签]
+            </layout>
+            <cells>
+                <cell id="categoryId">
+                    <gen-control>
+                        <select clearable="@:true">
+                            <source>
+                                <url>@query:LitemallMaterialCategory__findList/value:id,label:name</url>
+                            </source>
+                        </select>
+                    </gen-control>
+                </cell>
+            </cells>
+        </form>
     </forms>
 
     <pages>
-        <crud name="main"/>
+        <crud name="main">
+            <listActions x:override="bounded-merge">
+                <action id="upload-button" label="上传素材" level="primary" icon="fa fa-upload pull-left">
+                    <dialog page="upload" title="上传素材"/>
+                </action>
+                <action id="add-button">
+                    <dialog page="add"/>
+                </action>
+            </listActions>
+            <rowActions x:override="bounded-merge">
+                <action id="row-view-button"/>
+                <action id="row-update-button" actionType="drawer"/>
+                <!-- 删除走自定义 deleteMaterial（逻辑删除，不物理删除 IFileStore 文件）。-->
+                <action id="row-delete-material-button" label="删除" actionType="ajax"
+                        url="@mutation:LitemallMaterial__deleteMaterial?id=$id" level="danger">
+                    <confirmText>确认删除该素材？文件记录将逻辑删除。</confirmText>
+                </action>
+            </rowActions>
+        </crud>
+
+        <!-- 上传页：表单数据（fileUpload/categoryId/tag）作为 uploadMaterial 参数。-->
+        <simple name="upload" form="upload">
+            <api url="@mutation:LitemallMaterial__uploadMaterial"/>
+        </simple>
+
         <picker name="picker"/>
     </pages>
 </view>

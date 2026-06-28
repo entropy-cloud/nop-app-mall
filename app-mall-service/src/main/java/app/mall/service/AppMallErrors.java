@@ -594,4 +594,13 @@ public interface AppMallErrors {
     ErrorCode ERR_COMMENT_MODERATION_ACTION_INVALID =
             define("nop.err.mall.comment.moderation-action-invalid",
                     "审核动作不合法（仅支持 hide/restore）");
+
+    // 素材管理错误码（P37）
+    ErrorCode ERR_MATERIAL_FILE_EMPTY =
+            define("nop.err.mall.material.file-empty",
+                    "上传文件为空");
+
+    ErrorCode ERR_MATERIAL_CATEGORY_NOT_FOUND =
+            define("nop.err.mall.material.category-not-found",
+                    "素材分类不存在");
 }

@@ -3,17 +3,66 @@
       xmlns:x="/nop/schema/xdsl.xdef">
 
     <grids>
-        <grid id="list"/>
+        <grid id="list">
+            <!-- bounded-merge：仅保留下方显式列，按 sortOrder 升序展示。-->
+            <cols x:override="bounded-merge">
+                <col id="id"/>
+                <col id="name" label="分类名称"/>
+                <col id="parentId" label="父分类ID"/>
+                <col id="sortOrder" label="排序" ui:number="true" sortable="true"/>
+            </cols>
+        </grid>
         <grid id="pick-list"/>
     </grids>
 
     <forms>
+        <form id="query">
+            <layout>
+                name
+            </layout>
+        </form>
         <form id="view"/>
-        <form id="edit"/>
+        <!-- 新增/编辑：name + parentId（从 getCategoryTree 拉取树形结构）+ sortOrder。-->
+        <form id="edit">
+            <layout>
+                name[分类名称]
+                parentId[父分类]
+                sortOrder[排序]
+            </layout>
+            <cells>
+                <cell id="parentId">
+                    <gen-control>
+                        <select clearable="@:true">
+                            <source>
+                                <url>@query:LitemallMaterialCategory__findList/value:id,label:name</url>
+                            </source>
+                        </select>
+                    </gen-control>
+                </cell>
+                <cell id="sortOrder">
+                    <placeholder>数字越小越靠前</placeholder>
+                </cell>
+            </cells>
+        </form>
     </forms>
 
     <pages>
-        <crud name="main"/>
+        <crud name="main">
+            <table>
+                <api url="@query:LitemallMaterialCategory__findPage" gql:selection="{@pageSelection}"/>
+            </table>
+            <listActions x:override="bounded-merge">
+                <action id="add-button" level="primary" label="新增分类" icon="fa fa-plus pull-left">
+                    <dialog page="add"/>
+                </action>
+            </listActions>
+            <rowActions x:override="bounded-merge">
+                <action id="row-view-button"/>
+                <action id="row-update-button" actionType="drawer"/>
+                <action id="row-delete-button"/>
+            </rowActions>
+        </crud>
+
         <picker name="picker"/>
     </pages>
 </view>
