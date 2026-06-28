@@ -393,6 +393,38 @@
 - 改价安全策略、改地址/标记/批量发货/异常监控的业务语义与状态守卫见 `order-and-cart.md`「订单运营工作台」。
 - 本文件仅持有「后台菜单结构与运营可达性」语义。
 
+## 自提门店管理（P31）
+
+### 业务角色
+
+- 自提门店管理为运营提供自提门店（`LitemallPickupStore`）的 CRUD 与启停能力，以及门店核销工作台。
+- 配送方式扩展/自提核销的业务语义（状态流转、四项隔离、核销码、售后路径）见 `order-and-cart.md`「配送方式扩展/自提核销」。
+
+### 运营动作
+
+| 动作 | BizModel 方法 | 语义 |
+| ---- | ------------- | ---- |
+| 门店 CRUD | `LitemallPickupStore__save/update/delete` | 标准 `CrudBizModel`，门店仅作提货点，不持有独立库存 |
+| 门店启停 | 门店 `status`（0=启用/1=停用） | 停用门店不再出现在结算页 `listActiveStores`，但不影响已下单的自提订单核销 |
+| 启用门店列表 | `LitemallPickupStore__listActiveStores` | `@BizQuery`：返回 status=启用的门店（含经纬度/营业时间），结算页选店消费者 |
+| 自提核销 | `LitemallOrder__verifyPickupOrder` | `@BizMutation @Auth(roles="admin")`：按 pickupCode 核销，推进 401 + 复制 confirm 副作用 |
+
+### 权限与审计
+
+- 门店 CRUD 复用既有 RBAC（管理员可达）；核销工作台标注 `@Auth(roles="admin")`，仅管理员/门店员可达。
+- 本基线不引入门店员独立角色（roadmap 未列门店员 RBAC）。
+
+### 后台菜单结构
+
+- `mall-manage`(200) 下新增子项：
+  - `mall-pickup-store` 自提门店管理 → `LitemallPickupStore/LitemallPickupStore.view.xml`
+  - `mall-pickup-verify` 自提核销工作台 → `mall/order-ops/pickup-verify.page.yaml`
+
+### 与其他 Owner Docs 的关系
+
+- 自提下单分支、核销状态流转、四项隔离、售后路径的业务语义见 `order-and-cart.md`「配送方式扩展/自提核销」。
+- 本文件仅持有「后台菜单结构、门店 CRUD/启停、核销可达性」语义。
+
 ## 与其他 Owner Docs 的关系
 
 系统配置域向主链路提供配置开关与运营消费能力：

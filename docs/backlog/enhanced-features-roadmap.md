@@ -33,7 +33,7 @@
 - 28. 签到: `done`（`docs/plans/2026-06-27-2321-1-phase28-check-in-plan.md`）
 - 29. 钱包余额与充值: `todo`
 - 30. 多支付通道: `todo`
-- 31. 配送方式扩展（自提）: `planned`（`docs/plans/2026-06-28-0530-3-phase31-pickup-delivery-plan.md`）
+- 31. 配送方式扩展（自提）: `done`（`docs/plans/2026-06-28-0530-3-phase31-pickup-delivery-plan.md`）
 - 32. 优惠券体系增强: `done`（`docs/plans/2026-06-27-2321-3-phase32-coupon-center-plan.md`）
 - 33. 商品评价结构化: `done`（`docs/plans/2026-06-27-2321-2-phase33-structured-comment-plan.md`）
 - 34. 首页运营打标: `done`（`docs/plans/2026-06-27-2029-3-phase34-homepage-operation-tagging-plan.md`）
@@ -72,7 +72,7 @@
 
 **已有设计文档覆盖：**
 - `docs/design/marketing-and-promotions.md`：已包含满减送、限时折扣、秒杀、拼团、积分商城、签到的业务设计
-- `docs/design/order-and-cart.md`：已包含配送方式扩展、自提核销、订单项级售后、积分抵扣、多支付通道的业务设计
+- `docs/design/order-and-cart.md`：已包含订单项级售后、积分抵扣、多支付通道的业务设计；配送方式扩展/自提核销设计由 P31 计划（`docs/plans/2026-06-28-0530-3-phase31-pickup-delivery-plan.md`）补齐
 - `docs/design/user-and-address.md`：已包含会员等级、登录方式扩展的业务设计
 - `docs/design/product-catalog.md`：已包含库存语义化、营销价拼接到列表、结构化评价、首页运营打标的业务设计
 - `docs/design/system-configuration.md`：已包含 Dashboard、报表扩展、用户运营工作台、订单运营工作台、营销活动管理后台的业务设计

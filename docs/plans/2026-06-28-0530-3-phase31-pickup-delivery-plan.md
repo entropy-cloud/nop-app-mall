@@ -1,6 +1,6 @@
 # P31 配送方式扩展（门店自提 / Store Pickup）
 
-> Plan Status: active
+> Plan Status: completed
 > Last Reviewed: 2026-06-28
 > Source: `docs/backlog/enhanced-features-roadmap.md` Phase 31；`docs/design/order-and-cart.md`（自提核销设计待补，feature-inventory/domain-glossary 已登记归属）
 > Related: P21 订单运营工作台（`docs/plans/2026-06-28-0340-3-phase21-order-operations-workbench-plan.md`，发货工作台 successor「合单/拆单」等同列 Non-Goals）；P35 站内信（自提核销成功可选触发站内信，依赖 P35 done 后接线）
@@ -92,119 +92,119 @@
 
 ### Phase 1 — 业务设计合成：自提核销语义（Decision-heavy）
 
-Status: planned
+Status: completed
 Targets: `docs/design/order-and-cart.md`（新增「配送方式扩展/自提核销」章节）
 Required Skill: `none`（纯 docs 业务语义合成，模型已就绪不改；无 skill 匹配「写设计文档」——与 P28/P35 Phase 1 同模式）
 
 - Item Types: `Decision | Add`
 - Prereqs: Phase 5/5b done
 
-- [ ] **Skill loading gate:** 扫描 available skills；docs-only，无匹配。读 owner doc：`order-and-cart.md`（全文，订单状态机/下单/发货/收货）、`system-configuration.md`（运费规则）、`enhanced-features-roadmap.md` Phase 31、`LitemallOrderBizModel.submit()`/`ship()`/`confirm()` 既有实现。
-  - Docs read: <列出实际读取路径>
-- [ ] **Decision A: 自提订单状态流转 + 既有订单作业/调度隔离。** 抉择（自提订单支付后保持「已支付(201)」，以 `deliveryType=PICKUP` + pickupCode 标识「待自提」；核销 `verifyPickupOrder` 推进到 **401（用户已收货）** 终态，**不经 301**）。新增「待自提」独立主状态码（备选）被否——冲击主状态机且需改字典/模型。**须同时落定四项隔离（非可选）**：
+- [x] **Skill loading gate:** 扫描 available skills；docs-only，无匹配。读 owner doc：`order-and-cart.md`（全文，订单状态机/下单/发货/收货）、`system-configuration.md`（运费规则）、`enhanced-features-roadmap.md` Phase 31、`LitemallOrderBizModel.submit()`/`ship()`/`confirm()` 既有实现。
+  - Docs read: `docs/design/order-and-cart.md`（全文）、`docs/design/system-configuration.md`（运费规则章节）、`docs/backlog/enhanced-features-roadmap.md`（Phase 31 + line 75 owner-doc 漂移）、`app-mall-service/.../entity/LitemallOrderBizModel.java`（submit/ship/confirm/confirmExpiredOrders/getOverdueUnshippedOrders 既有实现）、`model/app-mall.orm.xml`（Order deliveryType/pickupStoreId/pickupCode/pickupTime + PickupStore + delivery-type 字典）
+- [x] **Decision A: 自提订单状态流转 + 既有订单作业/调度隔离。** 抉择（自提订单支付后保持「已支付(201)」，以 `deliveryType=PICKUP` + pickupCode 标识「待自提」；核销 `verifyPickupOrder` 推进到 **401（用户已收货）** 终态，**不经 301**）。新增「待自提」独立主状态码（备选）被否——冲击主状态机且需改字典/模型。**须同时落定四项隔离（非可选）**：
   - (a) `ship()` 增加守卫**拒绝** `deliveryType=PICKUP` 订单发货（`ERR_ORDER_PICKUP_NOT_SHIPPABLE`），防止误发货；
   - (b) `verifyPickupOrder` **不复用** `confirm()`（后者要求 301），须**自行复制 confirm 的真实副作用**：仅 `earnPointsForOrderConfirm`（`:705`）+ 写 `pickupTime`(propId 35)；**不得**复用 ship 的 `sendOrderShipNotification`/`logOrderSucceed("订单发货")`（自提无发货语义，强复用会发错误通知），pickup 完成通知 deferred 至 P35；
   - (c) `getOverdueUnshippedOrders` 查询**排除** `deliveryType=PICKUP`（自提订单合法停留在 201，不应污染逾期未发货列表）；
   - (d) 已支付未自提订单生命周期：复用既有 `confirmExpiredOrders` 不触及 201 的事实，**新增显式残留风险**——已支付长期未自提订单无自动超时取消/退款路径（本基线由运营人工在订单运营工作台处理；自动超时取消作为 successor，触发条件见 Deferred）。
   - 终态语义模糊残留风险：401 语义原为「用户主动确认」，门店核销为操作员驱动，复用 401 存在 cause 语义模糊（已记录，无更优既有状态可用）。
-- [ ] **Decision B: `addressId` 在自提分支的处理。** 抉择（`submit()` 自提分支**放宽 `addressId` 必填**——自提无收货地址，`addressId`/consignee/mobile/fullAddress 置空，改以 `pickupStoreId` 记录提货点；`addressId` 必填校验仅在 `deliveryType=EXPRESS`（含 null 兼容存量）时生效）。备选（强制自提也填地址用于记录）被否——徒增用户摩擦且语义冗余。
-- [ ] **Decision C: 运费=0 接入点。** 抉择（`submit()` 内 `deliveryType=PICKUP` 时 freightPrice 直接置 0，绕过运费/包邮门槛计算）。备选（统一计算后抵扣）被否——自提不产生配送成本，置 0 语义最清晰；价格公式其余构件（coupon/promotion/integral）派生自 goodsPriceTotal/orderPrice，freight=0 安全。
-- [ ] **Decision D: 核销码生成与校验。** 抉择（下单时应用层生成 pickupCode 唯一短码写入 Order；核销按 pickupCode 反查订单 + 状态守卫 + 幂等；唯一性应用层保证，DB 唯一键见 Deferred model-gap）。备选（二维码承载 orderId）被否——短码便于门店手动输入/扫码通用。残留风险：pickupCode 可预测性（生成需避免可枚举，采用随机短码）。
-- [ ] **Decision E: 核销权属。** 抉择（门店核销由 `@Auth(roles="admin")` 管理员/门店员执行，本基线不引入门店员独立角色；roadmap 未列门店员 RBAC）。
-- [ ] **Decision F: 自提订单售后路径。** 抉择（核销→401 后自提订单具备售后资格，售后类型限定 `GOODS_NEEDLESS`(无需退货退款)——已收货且无物理回寄，见 `order-and-cart.md:240`；不开放退货退款）。在自提核销章节显式记录。
-- [ ] **Fix（源真相）:** `enhanced-features-roadmap.md:75` 称自提核销设计已存在于 `order-and-cart.md`——不实。Phase 1 记录此 owner-doc 漂移，并在 doc-sync 中**订正**该 roadmap 陈述为「设计由本计划补齐」。
-- [ ] **Add:** 自提核销业务设计写入 `order-and-cart.md` 新增「配送方式扩展/自提核销」章节（含状态流转图、四项隔离、运费规则、核销码语义、核销动作、售后路径、6 个 Decision 抉择/备选/理由/残留风险）；与既有订单状态机/发货/收货章节衔接。
+- [x] **Decision B: `addressId` 在自提分支的处理。** 抉择（`submit()` 自提分支**放宽 `addressId` 必填**——自提无收货地址，`addressId`/consignee/mobile/fullAddress 置空，改以 `pickupStoreId` 记录提货点；`addressId` 必填校验仅在 `deliveryType=EXPRESS`（含 null 兼容存量）时生效）。备选（强制自提也填地址用于记录）被否——徒增用户摩擦且语义冗余。
+- [x] **Decision C: 运费=0 接入点。** 抉择（`submit()` 内 `deliveryType=PICKUP` 时 freightPrice 直接置 0，绕过运费/包邮门槛计算）。备选（统一计算后抵扣）被否——自提不产生配送成本，置 0 语义最清晰；价格公式其余构件（coupon/promotion/integral）派生自 goodsPriceTotal/orderPrice，freight=0 安全。
+- [x] **Decision D: 核销码生成与校验。** 抉择（下单时应用层生成 pickupCode 唯一短码写入 Order；核销按 pickupCode 反查订单 + 状态守卫 + 幂等；唯一性应用层保证，DB 唯一键见 Deferred model-gap）。备选（二维码承载 orderId）被否——短码便于门店手动输入/扫码通用。残留风险：pickupCode 可预测性（生成需避免可枚举，采用随机短码）。
+- [x] **Decision E: 核销权属。** 抉择（门店核销由 `@Auth(roles="admin")` 管理员/门店员执行，本基线不引入门店员独立角色；roadmap 未列门店员 RBAC）。
+- [x] **Decision F: 自提订单售后路径。** 抉择（核销→401 后自提订单具备售后资格，售后类型限定 `GOODS_NEEDLESS`(无需退货退款)——已收货且无物理回寄，见 `order-and-cart.md:240`；不开放退货退款）。在自提核销章节显式记录。
+- [x] **Fix（源真相）:** `enhanced-features-roadmap.md:75` 称自提核销设计已存在于 `order-and-cart.md`——不实。Phase 1 记录此 owner-doc 漂移，并在 doc-sync 中**订正**该 roadmap 陈述为「设计由本计划补齐」。
+- [x] **Add:** 自提核销业务设计写入 `order-and-cart.md` 新增「配送方式扩展/自提核销」章节（含状态流转图、四项隔离、运费规则、核销码语义、核销动作、售后路径、6 个 Decision 抉择/备选/理由/残留风险）；与既有订单状态机/发货/收货章节衔接。
 
 Exit Criteria:
 
-- [ ] `order-and-cart.md` 含自提核销完整业务设计（含状态流转 + 四项隔离 + 6 个 Decision）
-- [ ] `enhanced-features-roadmap.md:75` 陈述订正（owner-doc 漂移闭合）
-- [ ] Phase 3 模型改动清单由本阶段 Decision 确定（预期零新增列/关系；若需字典则显式列出）—— 结论写入本阶段
+- [x] `order-and-cart.md` 含自提核销完整业务设计（含状态流转 + 四项隔离 + 6 个 Decision）
+- [x] `enhanced-features-roadmap.md:75` 陈述订正（owner-doc 漂移闭合）
+- [x] Phase 3 模型改动清单由本阶段 Decision 确定（预期零新增列/关系；若需字典则显式列出）—— 结论写入本阶段：**零模型改动**（Order deliveryType/pickupStoreId/pickupCode/pickupTime + PickupStore + `mall/delivery-type` 字典均已存在，Decision A 选择复用 201/401 不新增状态码，Decision B-D 均不改模型）
 
 ### Phase 2 — 模型准备（按 Phase 1 Decision）
 
-Status: planned
+Status: completed
 Targets: `model/app-mall.orm.xml`（仅当 Decision 要求）、codegen 重生成
 Required Skill: `nop-orm-modeler`、`nop-database-design`
 
 - Item Types: `Add`
 - Prereqs: Phase 1
 
-- [ ] **Skill loading gate:** 加载 `nop-orm-modeler` + `nop-database-design`，读 routing 必读文档。复核 Order deliveryType/pickupStoreId/pickupCode + PickupStore + delivery-type 字典已就绪。
-  - Docs read: <列出实际读取路径>
-- [ ] **Add:** 按 Phase 1 Decision —— 预期零模型改动。仅验证 codegen 产物完整（`_gen/_LitemallPickupStore.java`、Order pick 相关字段 getter/setter）。
-- [ ] **Proof:** `./mvnw install -pl app-mall-codegen -am -DskipTests` + `./mvnw install -pl app-mall-dao -am -DskipTests` BUILD SUCCESS。
+- [x] **Skill loading gate:** 加载 `nop-orm-modeler` + `nop-database-design`，读 routing 必读文档。复核 Order deliveryType/pickupStoreId/pickupCode + PickupStore + delivery-type 字典已就绪。
+  - Docs read: 实读 `model/app-mall.orm.xml:1126-1129`(Order deliveryType/pickupStoreId/pickupCode/pickupTime)、`:1144-1149`(Order→pickupStore to-one)、`:126-129`(mall/delivery-type 字典 EXPRESS/PICKUP)、`:1938-1970`(LitemallPickupStore 实体)；`_AppMallDaoConstants`（`DELIVERY_TYPE_EXPRESS=0`/`DELIVERY_TYPE_PICKUP=10` 已生成）；`_gen/_LitemallOrder.java`(getDeliveryType/getPickupStoreId/getPickupCode/getPickupTime + PROP_NAME_* 已生成)、`_gen/_LitemallPickupStore.java`(getName/getAddress/getPhone/getLatitude/getLongitude/getOpeningHours/getStatus 已生成)。零模型改动（Phase 1 Decision 结论）。
+- [x] **Add:** 按 Phase 1 Decision —— 零模型改动。验证 codegen 产物完整（`_gen/_LitemallPickupStore.java`、Order pick 相关字段 getter/setter、`_AppMallDaoConstants.DELIVERY_TYPE_*`）。
+- [x] **Proof:** `./mvnw install -pl app-mall-codegen -am -DskipTests` + `./mvnw install -pl app-mall-dao -am -DskipTests` BUILD SUCCESS。
 
 Exit Criteria:
 
-- [ ] 模型就绪（零改动或 Decision 要求的改动落地），codegen 通过，编译成功
-- [ ] 不在模型准备阶段写业务逻辑（rule #11）
+- [x] 模型就绪（零改动或 Decision 要求的改动落地），codegen 通过，编译成功
+- [x] 不在模型准备阶段写业务逻辑（rule #11）
 
 ### Phase 3 — 后端：自提下单分支 + 核销 + 门店查询 + ErrorCode（Add-heavy）
 
-Status: planned
+Status: completed
 Targets: `app-mall-service/.../entity/LitemallOrderBizModel.java`（submit 自提分支、ship 守卫、verifyPickupOrder、getOverdueUnshippedOrders 排除）、`LitemallPickupStoreBizModel.java`（listActiveStores）、`AppMallErrors.java`
 Required Skill: `nop-backend-dev`、`nop-testing`（新增 `@BizMutation`/`@BizQuery`，规则 #15）
 
 - Item Types: `Add | Fix`
 - Prereqs: Phase 2
 
-- [ ] **Skill loading gate:** 加载 `nop-backend-dev` + `nop-testing`，读 routing 必读文档（bizmodel-method-selfcheck、error-handling、safe-api-reference、test-examples）。每方法 selfcheck。
-  - Docs read: <列出实际读取路径>
-- [ ] **Add:** `submit()` 内 `deliveryType=PICKUP` 分支：校验 pickupStoreId 对应门店启用（拒 `ERR_PICKUP_STORE_NOT_ACTIVE`）、**放宽 `addressId` 必填**（Decision B，自提不写 consignee/mobile/fullAddress）、freightPrice=0、生成 pickupCode（随机短码）、写入 pickupStoreId/deliveryType。
-- [ ] **Fix（隔离 a）:** `ship()` 增加守卫——`deliveryType=PICKUP` 订单拒绝发货（`ERR_ORDER_PICKUP_NOT_SHIPPABLE`），防止误发货。
-- [ ] **Fix（隔离 c）:** `getOverdueUnshippedOrders` 查询排除 `deliveryType=PICKUP`（自提订单合法停留 201，不污染逾期未发货列表）。
-- [ ] **Add:** `LitemallPickupStoreBizModel.listActiveStores(context)` —— `@BizQuery`：返回 status=启用的门店列表（含经纬度/营业时间）。
-- [ ] **Add（隔离 b）:** `LitemallOrderBizModel.verifyPickupOrder(pickupCode,context)` —— `@BizMutation` `@Auth(roles="admin")`：按 pickupCode 反查订单，校验状态（须为已支付且 deliveryType=PICKUP，拒 `ERR_PICKUP_ORDER_NOT_VERIFIABLE`）、幂等（已核销跳过）、推进到 **401** 终态并**复制 confirm 的真实副作用**：`earnPointsForOrderConfirm`（`:705`）+ 写 `pickupTime`(propId 35)；**不复用** ship 的 `sendOrderShipNotification`/`logOrderSucceed("订单发货")`（自提无发货语义）。跨实体门店查询经 `ILitemallPickupStoreBiz`。
-- [ ] **Add:** `AppMallErrors` 新增 pickup 域 ErrorCode（`ERR_PICKUP_STORE_NOT_ACTIVE`、`ERR_PICKUP_STORE_NOT_FOUND`、`ERR_PICKUP_ORDER_NOT_VERIFIABLE`、`ERR_PICKUP_CODE_INVALID`、`ERR_ORDER_PICKUP_NOT_SHIPPABLE`，中文描述）。DTO：`PickupStoreListBean`/`VerifyPickupResultBean`（`app-mall-dao/.../dto/`，@DataBean）。接口声明。
-- [ ] **Proof:** submit 自提分支 + ship 拒绝 PICKUP + getOverdueUnshippedOrders 排除 + listActiveStores + verifyPickupOrder 通过 `IGraphQLEngine`（`JunitBaseTestCase`）：覆盖自提下单 freightPrice=0/pickupCode 生成/addressId 放宽、门店未启用拒绝、**ship() 拒绝自提订单**、**自提订单不进逾期未发货列表**、核销成功推进 401 且触发积分赠送 + 写 pickupTime（不发 ship 通知）、重复核销幂等、非自提订单核销拒绝、无效码拒绝。全量回归无失败。
+- [x] **Skill loading gate:** 加载 `nop-backend-dev` + `nop-testing`，读 routing 必读文档（bizmodel-method-selfcheck、error-handling、safe-api-reference、test-examples）。每方法 selfcheck。
+  - Docs read: `.opencode/skills/nop-backend-dev/SKILL.md`、`.opencode/skills/nop-testing/SKILL.md`；既有 `TestLitemallOrderOpsWorkbench.java`（IGraphQLEngine + JunitBaseTestCase 模式）、`TestLitemallOrderBizModel.java`（积分测试 getMyPointsForTest）、`LitemallOrderBizModel.submit/ship/confirm` 既有实现。每方法按 bizmodel-method-selfcheck 校验（IBiz 先声明、注解齐全、@Inject 非 private、NopException+ErrorCode、跨实体经 I*Biz）。
+- [x] **Add:** `submit()` 内 `deliveryType=PICKUP` 分支：校验 pickupStoreId 对应门店启用（拒 `ERR_PICKUP_STORE_NOT_ACTIVE`）、**放宽 `addressId` 必填**（Decision B，`addressId` 改 @Optional；自提订单 consignee/mobile/address 以门店信息填入——NOT NULL 列约束，门店即履约目的地）、freightPrice=0、生成 pickupCode（随机短码）、写入 pickupStoreId/deliveryType。
+- [x] **Fix（隔离 a）:** `ship()` 增加守卫——`deliveryType=PICKUP` 订单拒绝发货（`ERR_ORDER_PICKUP_NOT_SHIPPABLE`），防止误发货。
+- [x] **Fix（隔离 c）:** `getOverdueUnshippedOrders` 排除 `deliveryType=PICKUP`（deliveryType xmeta 查询算子仅 eq/in/dateBetween，无法 ne/isNull，故 Java 层 post-filter；null deliveryType 存量订单视为快递保留）。
+- [x] **Add:** `LitemallPickupStoreBizModel.listActiveStores(context)` —— `@BizQuery`：返回 status=启用的门店列表（含经纬度/营业时间）。
+- [x] **Add（隔离 b）:** `LitemallOrderBizModel.verifyPickupOrder(pickupCode,context)` —— `@BizMutation @Auth(roles="admin")`：按 pickupCode 反查订单，校验状态（须为已支付且 deliveryType=PICKUP，拒 `ERR_PICKUP_ORDER_NOT_VERIFIABLE`）、幂等（已核销返回 `alreadyVerified=true` 跳过）、推进到 **401** 终态并**复制 confirm 的真实副作用**：`earnPointsForOrderConfirm` + 写 `pickupTime`；**不复用** ship 的 `sendOrderShipNotification`/`logOrderSucceed("订单发货")`（自提无发货语义）。跨实体门店查询经 `ILitemallPickupStoreBiz`。
+- [x] **Add:** `AppMallErrors` 新增 pickup 域 ErrorCode（`ERR_PICKUP_STORE_NOT_ACTIVE`、`ERR_PICKUP_STORE_NOT_FOUND`、`ERR_PICKUP_ORDER_NOT_VERIFIABLE`、`ERR_PICKUP_CODE_INVALID`、`ERR_ORDER_PICKUP_NOT_SHIPPABLE`，中文描述）。DTO：`VerifyPickupResultBean`（`app-mall-dao/.../dto/`，@DataBean，orderId/orderSn/pickupCode/alreadyVerified/message）；listActiveStores 返回 `List<LitemallPickupStore>`（实体，与 myOrders/getOverdueUnshippedOrders 风格一致，免多余包装）。`ILitemallOrderBiz`/`ILitemallPickupStoreBiz` 接口同步。
+- [x] **Proof:** submit 自提分支 + ship 拒绝 PICKUP + getOverdueUnshippedOrders 排除 + listActiveStores + verifyPickupOrder 通过 `IGraphQLEngine`（`TestLitemallPickupDeliveryBizModel` 10 例）：覆盖自提下单 freightPrice=0/pickupCode 生成/addressId 放宽、门店未启用拒绝、**ship() 拒绝自提订单**、**自提订单不进逾期未发货列表**、核销成功推进 401 且触发积分赠送 + 写 pickupTime（不发 ship 通知）、重复核销幂等、非自提订单核销拒绝、无效码拒绝、listActiveStores 仅启用门店。全量回归 **276 全绿**（+10 新增）。
 
 Exit Criteria:
 
-- [ ] 自提下单（freight=0 + pickupCode + 门店校验 + addressId 放宽）与核销（推进 401 + 复制副作用 + 幂等 + 拒绝路径）按设计工作
-- [ ] 四项隔离全部落地（ship 拒绝、overdue 排除、副作用复制、abandoned 残留风险记录）
-- [ ] **API 测试：** listActiveStores（`@BizQuery`）+ verifyPickupOrder（`@BizMutation`）通过 `IGraphQLEngine` 验证；submit 自提分支 + ship/overdue 隔离通过 IGraphQLEngine 验证
+- [x] 自提下单（freight=0 + pickupCode + 门店校验 + addressId 放宽）与核销（推进 401 + 复制副作用 + 幂等 + 拒绝路径）按设计工作
+- [x] 四项隔离全部落地（ship 拒绝、overdue 排除、副作用复制、abandoned 残留风险记录）
+- [x] **API 测试：** listActiveStores（`@BizQuery`）+ verifyPickupOrder（`@BizMutation`）通过 `IGraphQLEngine` 验证；submit 自提分支 + ship/overdue 隔离通过 IGraphQLEngine 验证
 
 ### Phase 4 — 前端：结算切换 + 自提订单详情 + 后台门店管理/核销（Add-heavy）
 
-Status: planned
+Status: completed
 Targets: `app-mall-web/.../pages/mall/checkout/checkout.page.yaml`（配送方式切换 + 门店选择）、订单详情（核销码展示）、后台 PickupStore 管理 + 核销工作台
 Required Skill: `nop-frontend-dev`
 
 - Item Types: `Add`
 - Prereqs: Phase 3
 
-- [ ] **Skill loading gate:** 加载 `nop-frontend-dev`，读 routing 必读文档（XView 三层、bounded-merge、page-dsl）。文件完成后 selfcheck。
-  - Docs read: <列出实际读取路径>
-- [ ] **Add:** 结算页配送方式切换：快递（既有地址 + 运费展示）/ 门店自提（调 `listActiveStores` 选门店、运费=0 提示）；submit 时透传 `deliveryType`/`pickupStoreId`。
-- [ ] **Add:** 自提订单详情：展示 pickupCode（核销码，支持二维码/短码）+ 「待自提」状态标识；与快递订单详情区分。
-- [ ] **Add:** 后台 `LitemallPickupStore.view.xml` 管理（grid bounded-merge：name/address/phone/status；edit drawer 全字段）；核销工作台页（输入/扫码 pickupCode → 调 `verifyPickupOrder` → 结果反馈）。
+- [x] **Skill loading gate:** 加载 `nop-frontend-dev`，读 routing 必读文档（XView 三层、bounded-merge、page-dsl）。文件完成后 selfcheck（未改 `_gen`、保留层 view bounded-merge、page.yaml 复用既有 AMIS 模式）。
+  - Docs read: `.opencode/skills/nop-frontend-dev/SKILL.md`；既有 `checkout.page.yaml`、`order-detail.page.yaml`、`order-ops/order-exception.page.yaml`（admin 工作台 page.yaml 模式）、`_gen/_LitemallPickupStore.view.xml`（生成物，仅作 bounded-merge 基类）。
+- [x] **Add:** 结算页配送方式切换：快递（既有地址 + 运费展示）/ 门店自提（调 `listActiveStores` 选门店、运费=0 提示）；submit 时透传 `deliveryType`/`pickupStoreId`（自提时 addressId 传 null、freightPrice 传 0）。
+- [x] **Add:** 自提订单详情：展示 pickupCode（核销码，支持二维码 `qr-code` + 短码大字展示）+ 「待自提」状态标识（orderStatus==201 && deliveryType==10）；与快递订单详情区分。
+- [x] **Add:** 后台 `LitemallPickupStore.view.xml` 管理（grid bounded-merge：name/address/contact/phone/openingHours/经纬度/status/remark；继承既有 _gen 全字段 edit form）；核销工作台页 `mall/order-ops/pickup-verify.page.yaml`（输入 pickupCode → 调 `verifyPickupOrder` → 已核销/新核销结果反馈）。
 
 Exit Criteria:
 
-- [ ] 结算页可切换快递/自提并选门店，自提订单运费=0
-- [ ] 自提订单详情展示核销码，后台可管理门店与核销
-- [ ] 复用既有 AMIS 三层定制模式，无新前端依赖（`./mvnw compile -pl app-mall-web` BUILD SUCCESS）
+- [x] 结算页可切换快递/自提并选门店，自提订单运费=0
+- [x] 自提订单详情展示核销码，后台可管理门店与核销
+- [x] 复用既有 AMIS 三层定制模式，无新前端依赖（`./mvnw compile -pl app-mall-web -am` BUILD SUCCESS）
 
 ### Phase 5 — 验证、文档同步、日志（Proof）
 
-Status: planned
+Status: completed
 Targets: 全模块
 Required Skill: `nop-testing`
 
 - Item Types: `Proof`
 - Prereqs: Phase 1-4
 
-- [ ] **Skill loading gate:** 加载 `nop-testing`（Phase 3 已读，复用）。
-- [ ] **Proof:** `./mvnw test -pl app-mall-service -am` 全绿（含新增 IGraphQLEngine 测试）；`./mvnw clean install -DskipTests -Dquarkus.package.type=uber-jar` BUILD SUCCESS；更新 `docs/testing/known-good-baselines.md`。
-- [ ] **Proof:** 前端 view 编译（`./mvnw -pl app-mall-web -DskipTests compile`）BUILD SUCCESS。
-- [ ] 更新 `docs/design/system-configuration.md`（自提门店管理归属）+ `docs/logs/2026/{month}-{day}.md`。
+- [x] **Skill loading gate:** 加载 `nop-testing`（Phase 3 已读，复用）。
+- [x] **Proof:** `./mvnw test -pl app-mall-service -am` 全绿（含新增 IGraphQLEngine 测试）；`./mvnw clean install -DskipTests -Dquarkus.package.type=uber-jar` BUILD SUCCESS；更新 `docs/testing/known-good-baselines.md`。全工作区 `./mvnw test` **276 全绿**（含新增 `TestLitemallPickupDeliveryBizModel` 10 例）。
+- [x] **Proof:** 前端 view 编译（`./mvnw -pl app-mall-web -am -DskipTests compile`）BUILD SUCCESS。
+- [x] 更新 `docs/design/system-configuration.md`（自提门店管理归属）+ `docs/logs/2026/06-28.md`。
 
 Exit Criteria:
 
-- [ ] 全量验证命令通过（含本计划新增 IGraphQLEngine 测试）
-- [ ] `system-configuration.md` 含自提门店管理归属
-- [ ] `known-good-baselines.md` 与 `docs/logs/` 更新
+- [x] 全量验证命令通过（含本计划新增 IGraphQLEngine 测试）
+- [x] `system-configuration.md` 含自提门店管理归属
+- [x] `known-good-baselines.md` 与 `docs/logs/` 更新
 
 ## Plan Audit
 
@@ -218,17 +218,17 @@ Exit Criteria:
 
 ## Closure Gates
 
-- [ ] in-scope behavior is complete（自提下单 + 四项隔离 + 核销 + 门店管理 + 前后台）
-- [ ] relevant docs are aligned（`order-and-cart.md` 自提核销章节 / `system-configuration.md` 门店管理归属 / `enhanced-features-roadmap.md:75` 陈述订正）
-- [ ] verification has run（`./mvnw test -pl app-mall-service -am` 全绿 + app-mall-web 编译）
-- [ ] all new `@BizMutation`/`@BizQuery` methods tested via `IGraphQLEngine`（listActiveStores/verifyPickupOrder + submit 自提分支 + ship/overdue 隔离）
-- [ ] no in-scope item downgraded to deferred/follow-up
-- [ ] plan audit passed before implementation
-- [ ] each phase has `Required Skill` listed，Nop-platform phases 不写 `none` 无 justify（Phase 1 `none` 含 justify）
-- [ ] skill loading verification: 各 phase 已扫描/加载/读必读文档/selfcheck
-- [ ] text consistency verified: status / phases / gates / log 一致
-- [ ] closure audit was performed by a different agent/session than implementation
-- [ ] closure evidence exists in files
+- [x] in-scope behavior is complete（自提下单 + 四项隔离 + 核销 + 门店管理 + 前后台）
+- [x] relevant docs are aligned（`order-and-cart.md` 自提核销章节 / `system-configuration.md` 门店管理归属 / `enhanced-features-roadmap.md:75` 陈述订正）
+- [x] verification has run（`./mvnw test`（全工作区）276 全绿 + `./mvnw clean install -DskipTests -Dquarkus.package.type=uber-jar` BUILD SUCCESS + app-mall-web 编译 BUILD SUCCESS）
+- [x] all new `@BizMutation`/`@BizQuery` methods tested via `IGraphQLEngine`（listActiveStores/verifyPickupOrder + submit 自提分支 + ship/overdue 隔离）
+- [x] no in-scope item downgraded to deferred/follow-up
+- [x] plan audit passed before implementation
+- [x] each phase has `Required Skill` listed，Nop-platform phases 不写 `none` 无 justify（Phase 1 `none` 含 justify）
+- [x] skill loading verification: 各 phase 已扫描/加载/读必读文档/selfcheck
+- [x] text consistency verified: status / phases / gates / log 一致
+- [x] closure audit was performed by a different agent/session than implementation
+- [x] closure evidence exists in files
 
 ## Deferred But Adjudicated
 
@@ -261,12 +261,21 @@ Exit Criteria:
 
 <!-- Closure audit MUST be performed by an independent subagent (different session/context). 留给闭合审计代理。 -->
 
-Status Note: <待实施与闭合审计后填写>
+Status Note: 全 5 Phase completed 并通过独立闭合审计。模型零改动（Order deliveryType/pickupStoreId/pickupCode/pickupTime + PickupStore + `mall/delivery-type` 字典均预置）；自提下单分支（freight=0/pickupCode/addressId 放宽/门店校验）+ 四项隔离（ship 拒 PICKUP / overdue Java post-filter 排 PICKUP / verifyPickupOrder 复制 confirm 真实副作用不复用 ship 通知 / 已支付未自提残留风险记录）+ 核销推进 401 + 门店管理 + 前后台均已落地。新增 IGraphQLEngine 测试 10 例实测全绿（BUILD SUCCESS）。所有 owner-doc（order-and-cart.md/system-configuration.md/roadmap:75/logs/known-good-baselines）同步。可闭合。
 
 Closure Audit Evidence:
 
-- Reviewer / Agent: <independent reviewer — MUST NOT be the implementing agent>
-- Evidence: <task id / walkthrough record>
+- Reviewer / Agent: 独立 closure auditor（fresh session，非实施 agent；mission-driver closure-audit step）
+- Evidence: 逐项核对 live repo：
+  - **模型**（`model/app-mall.orm.xml:1126-1129,1144-1149` + `_app.orm.xml:136` 字典 EXPRESS=0/PICKUP=10）：Order deliveryType/pickupStoreId/pickupCode/pickupTime 列 + Order→pickupStore to-one 关系 + `mall/delivery-type` 字典均存在，零改动，与 baseline 一致。
+  - **后端**（`LitemallOrderBizModel.java`）：`submit()` `:195-335` PICKUP 分支（门店存在+启用校验→ERR_PICKUP_STORE_NOT_FOUND/NOT_ACTIVE；freightPrice=0 line 325-327；generatePickupCode line 312；addressId 放宽 line 258-270；consignee/mobile/address 承载门店信息 line 307-309）；`ship()` `:731-736` 拒绝 PICKUP（隔离 a，ERR_ORDER_PICKUP_NOT_SHIPPABLE）；`getOverdueUnshippedOrders` `:1503-1513` Java post-filter 排 PICKUP（隔离 c）；`verifyPickupOrder()` `:782-835` 完整实现（@BizMutation @Auth(admin)，按码反查，状态守卫 201+PICKUP，幂等 alreadyVerified，推进 401，复制 confirm 副作用 earnPointsForOrderConfirm+pickupTime，不发 ship 通知/日志——隔离 b）。无 hollow body / return-null 占位。
+  - **ErrorCode**（`AppMallErrors.java:530-546`）：5 项 pickup 域码（ERR_PICKUP_STORE_NOT_FOUND/NOT_ACTIVE、ERR_PICKUP_ORDER_NOT_VERIFIABLE、ERR_PICKUP_CODE_INVALID、ERR_ORDER_PICKUP_NOT_SHIPPABLE）均 NopException 抛出。`VerifyPickupResultBean` DTO + `ILitemallOrderBiz`/`ILitemallPickupStoreBiz` 接口同步。
+  - **门店查询**（`LitemallPickupStoreBizModel.java:23`）：`listActiveStores` @BizQuery 返回启用门店。
+  - **前端**（`app-mall-web`）：`checkout.page.yaml` 配送方式 radios（EXPRESS/PICKUP）切换 + listActiveStores 选店 + 自提运费=0 + submit 透传 deliveryType/pickupStoreId/addressId=null；`order-detail.page.yaml` 自提核销码 card（qr-code + 短码大字 + 「待自提」状态 201&&deliveryType==10）；`pickup-verify.page.yaml` 核销工作台（输入码→verifyPickupOrder→新核销/已核销反馈）；`LitemallPickupStore.view.xml` grid bounded-merge（name/address/contact/phone/openingHours/经纬度/status/remark，extends _gen）。无 hollow。
+  - **测试**（`TestLitemallPickupDeliveryBizModel.java`，10 @Test）：实测 `./mvnw test -pl app-mall-service -am -Dtest=TestLitemallPickupDeliveryBizModel` → **Tests run: 10, Failures: 0, Errors: 0, Skipped: 0 — BUILD SUCCESS**。覆盖 listActiveStores 仅启用门店 / 自提下单 freight=0+pickupCode+addressId 放宽 / 门店未启用拒 / 门店不存在拒 / ship() 拒自提（隔离 a）/ 自提不进 overdue（隔离 c）/ 核销成功推进 401+pickupTime+积分（隔离 b）/ 重复核销幂等 / 无效码拒 / 非自提订单核销拒。全量 276 绿见 known-good-baselines.md。
+  - **文档同步**：`order-and-cart.md:212-281`「配送方式扩展/自提核销」章节（状态流转图 201→401 不经 301 + 四项隔离 + 6 Decision + 售后 GOODS_NEEDLESS）；`system-configuration.md:396-426` 自提门店管理归属；`enhanced-features-roadmap.md:75` owner-doc 漂移订正（自提设计「由本计划补齐」）；`docs/logs/2026/06-28.md` Phase 31 条目；`docs/testing/known-good-baselines.md` 2026-06-28 P31 基线条目。
+  - **Deferred 诚实性**：3 项 Deferred（pickupCode DB 唯一键 model-gap / 已支付未自提自动超时 out-of-scope / 站内信通知依赖 P35）均为合法非降级，无 in-scope 缺陷隐藏。
+- Verdict: **APPROVED** — 所有 Exit Criteria / Closure Gates 经 live repo 证据复核通过，五点一致性（Plan Status / Phase Status / Exit Criteria / Closure Gates / Closure evidence）一致，无 hollow 代码，无隐藏降级。
 
 Follow-up:
 

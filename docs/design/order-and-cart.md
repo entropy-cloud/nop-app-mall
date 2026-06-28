@@ -209,6 +209,77 @@
 - 收货确认标志着核心履约流程完成，也是评价资格的边界；售后资格更宽，见退款与售后章节。
 - 当用户未在规定时间内确认时，系统自动确认作为兜底机制存在。
 
+## 配送方式扩展 / 自提核销（P31）
+
+在快递（EXPRESS）配送之外，商城支持**门店自提（PICKUP）**配送方式。自提订单不经过发货流转，由用户到店出示核销码、门店核销后完成收货。持久化字段、字典与状态码以 `model/app-mall.orm.xml` 为准（`LitemallOrder.deliveryType`(propId 32, dict `mall/delivery-type`) / `pickupStoreId`(33) / `pickupCode`(34) / `pickupTime`(35)；`LitemallPickupStore` 实体）。
+
+### 业务概念
+
+- **配送方式（deliveryType）：** `EXPRESS`(0,快递，走既有地址+发货+收货主流程) 与 `PICKUP`(10,门店自提，选门店+核销)。下单时选定，订单存续期内不可变更。
+- **自提门店（PickupStore）：** 提货点，记录名称/地址/联系人/电话/经纬度/营业时间/启用状态。门店仅为提货点，**不持有独立库存**——自提订单仍扣减统一商品库存（多门店库存属 Non-Goal）。
+- **核销码（pickupCode）：** 下单时应用层生成的随机短码，写入 Order。门店凭码反查订单并核销。唯一性由应用层保证（DB 唯一键见 Deferred）。
+
+### 状态流转（Decision A）
+
+自提订单**不引入新的主状态码**，复用既有订单状态机：支付成功后保持「已支付(201)」即「待自提」语义（以 `deliveryType=PICKUP` + `pickupCode` 标识），门店核销 `verifyPickupOrder` 直接推进到 **401（用户已收货）** 终态，**不经 301（已发货）**。
+
+```text
+待支付(101) --pay--> 已支付(201, 待自提) --verifyPickupOrder--> 用户已收货(401)
+```
+
+**为何不复用 confirm()：** `confirm()` 要求状态==301（已发货），自提订单从未进入 301，故核销无法复用 confirm 的状态守卫。核销须**自行复制 confirm 的真实收货副作用**。
+
+**为何不复用新增「待自提」独立主状态：** 冲击订单主状态机，需改字典/模型且波及全部既有的 status=201 判定（发货/逾期/售后资格等）。复用 201 + deliveryType 标识更小侵入。
+
+### 四项隔离（非可选，与既有订单作业/调度共存的前提）
+
+自提订单合法停留在 201，与「已支付待发货」快递订单共享 201 状态码，故必须显式隔离：
+
+1. **发货隔离：** `ship()` 增加守卫，`deliveryType=PICKUP` 订单**拒绝发货**（`ERR_ORDER_PICKUP_NOT_SHIPPABLE`），防止运营误把自提订单当快递订单发货。
+2. **核销副作用隔离（复制 confirm 真实副作用，不复用 ship）：** `verifyPickupOrder` 仅复制 `confirm()` 的真实收货副作用——积分赠送（`earnPointsForOrderConfirm`）+ 写 `pickupTime`；**不得**复用 `ship()` 的 `sendOrderShipNotification`/`logOrderSucceed("订单发货")`（自提无发货语义，强复用会向用户发出错误的「已发货」通知）。核销成功的站内信通知 deferred 至 P35（依赖 P35 done 后接线）。
+3. **逾期未发货查询隔离：** `getOverdueUnshippedOrders` 查询**排除** `deliveryType=PICKUP`（自提订单合法停留 201，不应污染逾期未发货列表）。
+4. **已支付未自提订单生命周期：** 复用既有 `confirmExpiredOrders` 仅处理 SHIP(301) 的事实（不触及 201）。**新增显式残留风险**——已支付长期未自提订单**无自动超时取消/退款路径**（本基线由运营在订单运营工作台人工处理；自动超时取消作为 successor）。
+
+### 终态语义残留风险
+
+401 语义原为「用户主动确认收货」，门店核销为操作员驱动。复用 401 存在 cause 语义模糊（无法仅凭 orderStatus=401 区分「用户主动确认」与「门店核销」）。可通过 `deliveryType=PICKUP && pickupTime != null` 派生区分，但主状态码无更优既有值可用，本基线接受此模糊。
+
+### 下单（Decision B/C/D）
+
+- **配送方式选择：** 结算页提供快递/门店自提切换；选自提时调 `listActiveStores` 选门店。
+- **addressId 放宽（Decision B）：** `submit()` 自提分支**放宽 `addressId` 必填**——自提无用户收货地址，不再要求 `addressId` 入参；订单的 `consignee/mobile/address`（NOT NULL 列）以**自提门店**的名称/电话/地址填入（门店即提货/履约目的地），`pickupStoreId` 记录门店引用。`addressId` 必填校验仅在 `deliveryType=EXPRESS`（含 null 兼容存量）时生效。备选（强制自提也填地址）被否——徒增用户摩擦且语义冗余；备选（consignee/mobile/address 留空）不可行——三列为 NOT NULL。
+- **门店校验：** 自提分支校验 `pickupStoreId` 对应门店存在且启用（`status=0`），拒 `ERR_PICKUP_STORE_NOT_ACTIVE`/`ERR_PICKUP_STORE_NOT_FOUND`。
+- **运费=0（Decision C）：** `submit()` 内 `deliveryType=PICKUP` 时 freightPrice 直接置 0，绕过运费/包邮门槛计算。备选（统一计算后抵扣）被否——自提不产生配送成本，置 0 语义最清晰；价格公式其余构件（coupon/promotion/integral）派生自 goodsPriceTotal/orderPrice，freight=0 安全。
+- **核销码生成（Decision D）：** 下单时应用层生成 pickupCode 随机短码写入 Order。备选（二维码承载 orderId）被否——短码便于门店手动输入/扫码通用。残留风险：pickupCode 可预测性（生成采用随机短码避免可枚举）。
+
+### 核销动作
+
+- `verifyPickupOrder(pickupCode)` `@BizMutation @Auth(roles="admin")`：按 pickupCode 反查订单。
+- **状态守卫：** 仅 `orderStatus==201(已支付) && deliveryType==PICKUP` 可核销，拒 `ERR_PICKUP_ORDER_NOT_VERIFIABLE`；无效码拒 `ERR_PICKUP_CODE_INVALID`。
+- **幂等：** 已核销（已进入 401）跳过（重复核销返回当前订单，不报错、不重复发积分）。
+- **副作用：** 推进到 **401** 终态 + 复制 confirm 真实副作用（积分赠送 + 写 `pickupTime`），**不发** ship 通知/日志。
+- 跨实体门店查询经 `ILitemallPickupStoreBiz`。
+
+### 核销权属（Decision E）
+
+门店核销由 `@Auth(roles="admin")` 管理员/门店员执行。本基线**不引入门店员独立角色**（roadmap 未列门店员 RBAC）；管理员角色覆盖门店核销场景。
+
+### 门店管理
+
+- `LitemallPickupStoreBizModel` 提供标准 CRUD（`CrudBizModel`）+ `listActiveStores` `@BizQuery`（返回 status=启用的门店列表，含经纬度/营业时间，供结算页选店）。
+- 门店启停：`status` 字段（0=启用，1=停用）；停用门店不出现在 `listActiveStores`，但不影响已下单的自提订单核销。
+- 门店管理后台归属见 `system-configuration.md`。
+
+### 自提订单售后路径（Decision F）
+
+核销→401 后自提订单具备售后资格，售后类型限定 **`GOODS_NEEDLESS`(已收货无需退货退款)**——已收货且无物理回寄（见「售后类型与订单状态的自动映射」表）；不开放退货退款（自提无物流回寄）。核销前的自提订单（201 待自提）售后资格同快递未发货订单（仅未收货退款 `GOODS_MISS`）。
+
+### 与既有订单作业的边界
+
+- 自提订单不走 `ship()`/`batchShip()`/`confirm()`/`confirmExpiredOrders`（发货/收货主流程）。
+- 自提订单走 `pay()`/`confirmPaidByNotify`/`cancel()`/`deleteOrder()`/售后/改价（仅待支付可改价）/改地址（仅待支付/已支付未发货可改，自提订单无地址但字段可写不冲突）。
+- 自提订单参与 `myOrders`/`getMyOrder`/统计查询（deliveryType 仅区分履约路径，不改变订单可见性）。
+
 ## 退款与售后
 
 ### 售后粒度：订单商品项（Order Goods）级
