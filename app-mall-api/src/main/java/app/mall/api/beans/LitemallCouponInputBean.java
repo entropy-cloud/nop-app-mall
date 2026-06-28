@@ -82,6 +82,20 @@
         }
 
 
+        private Integer _minMemberLevel;
+
+    
+        @PropMeta(propId=21)
+    
+        public Integer getMinMemberLevel(){
+            return _minMemberLevel;
+        }
+
+        public void setMinMemberLevel(Integer value){
+            this._minMemberLevel = value;
+        }
+
+
         private Integer _total;
 
     

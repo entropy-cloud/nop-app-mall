@@ -65,3 +65,14 @@ jobs:
     invoker:
       bean: app.mall.service.scheduler.MallJobInvoker
       method: switchFlashSaleSessions
+
+  - jobName: dispatch-birthday-coupons
+    displayName: Dispatch Birthday Coupons
+    description: Dispatch birthday gift coupons to users whose birthday matches today
+    trigger:
+      repeatInterval: 86400000
+      repeatFixedDelay: true
+      maxExecutionCount: 0
+    invoker:
+      bean: app.mall.service.scheduler.MallJobInvoker
+      method: dispatchBirthdayCoupons

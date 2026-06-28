@@ -111,6 +111,7 @@ CREATE TABLE litemall_coupon(
   ADD_TIME DATETIME NULL    COMMENT '创建时间',
   UPDATE_TIME DATETIME NULL    COMMENT '更新时间',
   DELETED BOOLEAN NULL    COMMENT '逻辑删除',
+  MIN_MEMBER_LEVEL INTEGER NULL    COMMENT '最低会员等级',
   constraint PK_litemall_coupon primary key (ID)
 )CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
 

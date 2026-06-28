@@ -111,6 +111,7 @@ CREATE TABLE litemall_coupon(
   ADD_TIME DATE  ,
   UPDATE_TIME DATE  ,
   DELETED CHAR(1)  ,
+  MIN_MEMBER_LEVEL INTEGER  ,
   constraint PK_litemall_coupon primary key (ID)
 );
 
@@ -1032,6 +1033,8 @@ CREATE TABLE litemall_pin_tuan_member(
       COMMENT ON COLUMN litemall_coupon.UPDATE_TIME IS '更新时间';
                     
       COMMENT ON COLUMN litemall_coupon.DELETED IS '逻辑删除';
+                    
+      COMMENT ON COLUMN litemall_coupon.MIN_MEMBER_LEVEL IS '最低会员等级';
                     
       COMMENT ON TABLE litemall_feedback IS '意见反馈表';
                 

@@ -101,15 +101,19 @@ public class _LitemallCoupon extends DynamicOrmEntity{
     public static final String PROP_NAME_deleted = "deleted";
     public static final int PROP_ID_deleted = 20;
     
+    /* 最低会员等级: MIN_MEMBER_LEVEL INTEGER */
+    public static final String PROP_NAME_minMemberLevel = "minMemberLevel";
+    public static final int PROP_ID_minMemberLevel = 21;
+    
 
-    private static int _PROP_ID_BOUND = 21;
+    private static int _PROP_ID_BOUND = 22;
 
     
 
     protected static final List<String> PK_PROP_NAMES = Arrays.asList(PROP_NAME_id);
     protected static final int[] PK_PROP_IDS = new int[]{PROP_ID_id};
 
-    private static final String[] PROP_ID_TO_NAME = new String[21];
+    private static final String[] PROP_ID_TO_NAME = new String[22];
     private static final Map<String,Integer> PROP_NAME_TO_ID = new HashMap<>();
     static{
       
@@ -173,6 +177,9 @@ public class _LitemallCoupon extends DynamicOrmEntity{
           PROP_ID_TO_NAME[PROP_ID_deleted] = PROP_NAME_deleted;
           PROP_NAME_TO_ID.put(PROP_NAME_deleted, PROP_ID_deleted);
       
+          PROP_ID_TO_NAME[PROP_ID_minMemberLevel] = PROP_NAME_minMemberLevel;
+          PROP_NAME_TO_ID.put(PROP_NAME_minMemberLevel, PROP_ID_minMemberLevel);
+      
     }
 
     
@@ -235,6 +242,9 @@ public class _LitemallCoupon extends DynamicOrmEntity{
     
     /* 逻辑删除: DELETED */
     private java.lang.Boolean _deleted;
+    
+    /* 最低会员等级: MIN_MEMBER_LEVEL */
+    private java.lang.Integer _minMemberLevel;
     
 
     public _LitemallCoupon(){
@@ -369,6 +379,9 @@ public class _LitemallCoupon extends DynamicOrmEntity{
         
             case PROP_ID_deleted:
                return getDeleted();
+        
+            case PROP_ID_minMemberLevel:
+               return getMinMemberLevel();
         
            default:
               return super.orm_propValue(propId);
@@ -581,6 +594,16 @@ public class _LitemallCoupon extends DynamicOrmEntity{
                break;
             }
         
+            case PROP_ID_minMemberLevel:{
+               java.lang.Integer typedValue = null;
+               if(value != null){
+                   typedValue = ConvertHelper.toInteger(value,
+                       err-> newTypeConversionError(PROP_NAME_minMemberLevel));
+               }
+               setMinMemberLevel(typedValue);
+               break;
+            }
+        
            default:
               super.orm_propValue(propId,value);
         }
@@ -726,6 +749,13 @@ public class _LitemallCoupon extends DynamicOrmEntity{
             case PROP_ID_deleted:{
                onInitProp(propId);
                this._deleted = (java.lang.Boolean)value;
+               
+               break;
+            }
+        
+            case PROP_ID_minMemberLevel:{
+               onInitProp(propId);
+               this._minMemberLevel = (java.lang.Integer)value;
                
                break;
             }
@@ -1112,6 +1142,25 @@ public class _LitemallCoupon extends DynamicOrmEntity{
         if(onPropSet(PROP_ID_deleted,value)){
             this._deleted = value;
             internalClearRefs(PROP_ID_deleted);
+            
+        }
+    }
+    
+    /**
+     * 最低会员等级: MIN_MEMBER_LEVEL
+     */
+    public final java.lang.Integer getMinMemberLevel(){
+         onPropGet(PROP_ID_minMemberLevel);
+         return _minMemberLevel;
+    }
+
+    /**
+     * 最低会员等级: MIN_MEMBER_LEVEL
+     */
+    public final void setMinMemberLevel(java.lang.Integer value){
+        if(onPropSet(PROP_ID_minMemberLevel,value)){
+            this._minMemberLevel = value;
+            internalClearRefs(PROP_ID_minMemberLevel);
             
         }
     }

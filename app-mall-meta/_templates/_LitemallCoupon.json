@@ -7,6 +7,8 @@
   "addTime": "2000-01-01 14:00:00",
   "updateTime": "2000-01-01 14:00:00",
   "deleted": false,
+  "minMemberLevel": 0,
+  "minMemberLevel_label": "",
   "total": 0,
   "discount": 0.0,
   "min": 0.0,

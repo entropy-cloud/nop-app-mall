@@ -265,6 +265,11 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
     @Inject
     IFileStore fileStore;
 
+    // Member level auto-evaluation on order confirm (D3): evaluates cumulative spending →
+    // auto-upgrade → triggers level-up benefit dispatch.
+    @Inject
+    app.mall.biz.ILitemallMemberLevelBiz memberLevelBiz;
+
     public LitemallOrderBizModel() {
         setEntityName(LitemallOrder.class.getName());
     }
@@ -1034,6 +1039,13 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
         updateEntity(order, "confirm", context);
         // Shopping reward (P27): earn points on receipt confirmation. Idempotent per orderId.
         earnPointsForOrderConfirm(order, context);
+        // Member level auto-evaluation (D3): cumulative spending may cross upgrade threshold.
+        // evaluateUserLevel is idempotent (no change → no dispatch); only upgrades trigger benefits.
+        try {
+            memberLevelBiz.evaluateUserLevel(order.getUserId(), context);
+        } catch (NopException e) {
+            LOG.warn("confirm: member level evaluation failed for user {}", order.getUserId(), e);
+        }
         return order;
     }
 
@@ -2314,6 +2326,12 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
             // Auto-confirm is also a receipt completion (P27): earns the same shopping reward as
             // manual confirm. Idempotent per orderId.
             earnPointsForOrderConfirm(order, context);
+            // Member level auto-evaluation (D3): same as manual confirm.
+            try {
+                memberLevelBiz.evaluateUserLevel(order.getUserId(), context);
+            } catch (NopException e) {
+                LOG.warn("confirmExpiredOrders: member level evaluation failed for user {}", order.getUserId(), e);
+            }
             count++;
         }
         return count;

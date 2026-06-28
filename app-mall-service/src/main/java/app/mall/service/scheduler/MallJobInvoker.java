@@ -3,6 +3,7 @@ package app.mall.service.scheduler;
 import app.mall.biz.ILitemallCouponUserBiz;
 import app.mall.biz.ILitemallFlashSaleSessionBiz;
 import app.mall.biz.ILitemallGrouponBiz;
+import app.mall.biz.ILitemallMemberLevelBiz;
 import app.mall.biz.ILitemallOrderBiz;
 import app.mall.biz.ILitemallOrderGoodsBiz;
 import app.mall.biz.ILitemallPinTuanActivityBiz;
@@ -38,6 +39,9 @@ public class MallJobInvoker {
 
     @Inject
     ILitemallPinTuanActivityBiz pinTuanActivityBiz;
+
+    @Inject
+    ILitemallMemberLevelBiz memberLevelBiz;
 
     public void cancelExpiredOrders() {
         IServiceContext context = new ServiceContextImpl();
@@ -83,5 +87,14 @@ public class MallJobInvoker {
         IServiceContext context = new ServiceContextImpl();
         int count = pinTuanActivityBiz.expirePinTuans(context);
         LOG.info("mall-job expirePinTuans finished, affected={}", count);
+    }
+
+    // Member birthday benefit dispatch: scans users whose birthday matches today (month-day)
+    // and dispatches the configured birthday coupon. Idempotent per (userId, year).
+    // See docs/design/user-and-address.md 会员等级权益 "生日礼包".
+    public void dispatchBirthdayCoupons() {
+        IServiceContext context = new ServiceContextImpl();
+        int count = memberLevelBiz.dispatchBirthdayCoupons(context);
+        LOG.info("mall-job dispatchBirthdayCoupons finished, affected={}", count);
     }
 }

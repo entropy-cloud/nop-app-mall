@@ -1,13 +1,16 @@
 
 package app.mall.service.entity;
 
+import app.mall.biz.ILitemallCouponUserBiz;
 import app.mall.biz.ILitemallMemberLevelBiz;
 import app.mall.biz.ILitemallOrderBiz;
 import app.mall.biz.ILitemallSystemBiz;
 import app.mall.dao._AppMallDaoConstants;
+import app.mall.dao.entity.LitemallCouponUser;
 import app.mall.dao.entity.LitemallMemberLevel;
 import app.mall.dao.entity.LitemallOrder;
 import app.mall.dao.manager.MallLogManager;
+import app.mall.service.notification.MallNotificationService;
 import io.nop.api.core.annotations.biz.BizModel;
 import io.nop.api.core.annotations.biz.BizMutation;
 import io.nop.api.core.annotations.biz.BizQuery;
@@ -25,9 +28,13 @@ import io.nop.dao.api.IEntityDao;
 import io.nop.orm.IOrmEntity;
 import io.nop.orm.IOrmTemplate;
 import jakarta.inject.Inject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.MonthDay;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -35,14 +42,22 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import static app.mall.service.AppMallErrors.ERR_COUPON_LIMIT_EXCEEDED;
 import static app.mall.service.AppMallErrors.ERR_MEMBER_LEVEL_INVALID;
 import static app.mall.service.AppMallErrors.ERR_MEMBER_LEVEL_NOT_CONFIGURED;
 import static app.mall.service.AppMallErrors.ERR_MEMBER_LEVEL_USER_NOT_FOUND;
 
 @BizModel("LitemallMemberLevel")
 public class LitemallMemberLevelBizModel extends CrudBizModel<LitemallMemberLevel> implements ILitemallMemberLevelBiz {
+    static final Logger LOG = LoggerFactory.getLogger(LitemallMemberLevelBizModel.class);
     public static final String CONFIG_MEMBER_EVAL_PERIOD_DAYS = "mall_member_eval_period_days";
     public static final int DEFAULT_EVAL_PERIOD_DAYS = 365;
+
+    // Benefit auto-dispatch config keys (LitemallSystem key/value).
+    public static final String CONFIG_BENEFIT_LEVEL_UP_ENABLED = "mall_benefit_level_up_enabled";
+    public static final String CONFIG_BENEFIT_LEVEL_COUPON_PREFIX = "mall_benefit_level_coupon_";
+    public static final String CONFIG_BENEFIT_BIRTHDAY_ENABLED = "mall_benefit_birthday_enabled";
+    public static final String CONFIG_BENEFIT_BIRTHDAY_COUPON = "mall_benefit_birthday_coupon";
 
     // userLevel is a Delta extension column on nop_auth_user (see model/nop-auth-delta.orm.xml).
     // The app's INopAuthUserBiz lives in app-mall-delta, which is test-scoped in app-mall-service,
@@ -66,6 +81,12 @@ public class LitemallMemberLevelBizModel extends CrudBizModel<LitemallMemberLeve
 
     @Inject
     MallLogManager logManager;
+
+    @Inject
+    ILitemallCouponUserBiz couponUserBiz;
+
+    @Inject
+    MallNotificationService notificationService;
 
     public LitemallMemberLevelBizModel() {
         setEntityName(LitemallMemberLevel.class.getName());
@@ -129,12 +150,12 @@ public class LitemallMemberLevelBizModel extends CrudBizModel<LitemallMemberLeve
         List<LitemallMemberLevel> sorted = sortedByLevel(findLevelRules(context));
         if (sorted.isEmpty()) {
             // No level rules configured: keep user at ordinary level.
-            return ensureUserLevel(user, 0);
+            return ensureUserLevel(user, 0, context);
         }
 
         BigDecimal totalSpending = computeSpending(userId, null, context);
         int target = computeTargetLevel(sorted, totalSpending);
-        return ensureUserLevel(user, target);
+        return ensureUserLevel(user, target, context);
     }
 
     @Override
@@ -157,7 +178,7 @@ public class LitemallMemberLevelBizModel extends CrudBizModel<LitemallMemberLeve
             throw new NopException(ERR_MEMBER_LEVEL_USER_NOT_FOUND).param("userId", userId);
         }
         int previous = readUserLevel(user);
-        ensureUserLevel(user, targetLevel);
+        ensureUserLevel(user, targetLevel, context);
         // Manual level change is an auditable admin operation (not a points flow): record it in the
         // admin operation log (LitemallLog) with before/after so the reason is traceable.
         logManager.logGeneralSucceed("setUserLevel",
@@ -211,6 +232,98 @@ public class LitemallMemberLevelBizModel extends CrudBizModel<LitemallMemberLeve
         return downgraded;
     }
 
+    @Override
+    @BizMutation
+    public int dispatchBirthdayCoupons(IServiceContext context) {
+        if (!isBenefitEnabled(CONFIG_BENEFIT_BIRTHDAY_ENABLED, context)) {
+            return 0;
+        }
+        String birthdayCouponId = systemBiz.getConfig(CONFIG_BENEFIT_BIRTHDAY_COUPON, context);
+        if (StringHelper.isEmpty(birthdayCouponId)) {
+            return 0;
+        }
+
+        MonthDay today = MonthDay.now();
+        int year = LocalDate.now().getYear();
+        LocalDateTime yearStart = LocalDate.of(year, 1, 1).atStartOfDay();
+        LocalDateTime yearEnd = LocalDate.of(year + 1, 1, 1).atStartOfDay();
+
+        // Scan users whose birthday matches today's month-day. The birthday field is on the base
+        // NopAuthUser (propId=15). We load users with non-null birthday and filter in Java, since
+        // SQL month/day extraction is dialect-specific.
+        QueryBean userQuery = new QueryBean();
+        userQuery.addFilter(FilterBeans.notNull("birthday"));
+        IEntityDao<NopAuthUser> userDao = daoProvider().daoFor(NopAuthUser.class);
+        List<NopAuthUser> users = userDao.findAllByQuery(userQuery);
+
+        int dispatched = 0;
+        for (NopAuthUser user : users) {
+            LocalDate birthday = user.getBirthday();
+            if (birthday == null) {
+                continue;
+            }
+            if (!MonthDay.from(birthday).equals(today)) {
+                continue;
+            }
+            String userId = user.orm_idString();
+            // Year idempotency (D2): skip if already dispatched this calendar year.
+            if (alreadyDispatchedThisYear(userId, birthdayCouponId, yearStart, yearEnd, context)) {
+                continue;
+            }
+            if (dispatchBenefitCoupon(birthdayCouponId, userId, context, "生日礼包")) {
+                dispatched++;
+            }
+        }
+        return dispatched;
+    }
+
+    private void dispatchLevelUpBenefit(String userId, int targetLevel, IServiceContext context) {
+        if (context == null) {
+            return;
+        }
+        if (!isBenefitEnabled(CONFIG_BENEFIT_LEVEL_UP_ENABLED, context)) {
+            return;
+        }
+        String couponId = systemBiz.getConfig(CONFIG_BENEFIT_LEVEL_COUPON_PREFIX + targetLevel, context);
+        if (StringHelper.isEmpty(couponId)) {
+            return;
+        }
+        dispatchBenefitCoupon(couponId, userId, context, "会员升级权益");
+    }
+
+    private boolean dispatchBenefitCoupon(String couponId, String userId, IServiceContext context, String benefitName) {
+        try {
+            couponUserBiz.claimCouponForUser(couponId, userId, context);
+            notificationService.sendUserMessage(userId, _AppMallDaoConstants.MSG_TYPE_MARKETING,
+                    benefitName + "到账", "您的「" + benefitName + "」优惠券已到账，请到「我的优惠券」查看");
+            return true;
+        } catch (NopException e) {
+            // D4: auto-dispatch counts toward limit; if limit exceeded, skip silently.
+            if (ERR_COUPON_LIMIT_EXCEEDED.getErrorCode().equals(e.getErrorCode())) {
+                LOG.debug("dispatchBenefitCoupon: user {} already at limit for coupon {}", userId, couponId);
+                return false;
+            }
+            LOG.warn("dispatchBenefitCoupon failed: userId={}, couponId={}, benefit={}", userId, couponId, benefitName, e);
+            return false;
+        }
+    }
+
+    private boolean alreadyDispatchedThisYear(String userId, String couponId,
+                                               LocalDateTime yearStart, LocalDateTime yearEnd,
+                                               IServiceContext context) {
+        QueryBean query = new QueryBean();
+        query.addFilter(FilterBeans.eq(LitemallCouponUser.PROP_NAME_userId, userId));
+        query.addFilter(FilterBeans.eq(LitemallCouponUser.PROP_NAME_couponId, couponId));
+        // xmeta restricts addTime to dateTimeBetween, so use it instead of ge/lt.
+        query.addFilter(FilterBeans.dateTimeBetween(LitemallCouponUser.PROP_NAME_addTime, yearStart, yearEnd));
+        return couponUserBiz.findCount(query, context) > 0;
+    }
+
+    private boolean isBenefitEnabled(String configKey, IServiceContext context) {
+        String value = systemBiz.getConfig(configKey, context);
+        return StringHelper.isEmpty(value) || "true".equalsIgnoreCase(value.trim()) || "1".equals(value.trim());
+    }
+
     private IOrmEntity loadUser(String userId) {
         if (StringHelper.isEmpty(userId)) {
             return null;
@@ -219,12 +332,21 @@ public class LitemallMemberLevelBizModel extends CrudBizModel<LitemallMemberLeve
     }
 
     private int ensureUserLevel(IOrmEntity user, int target) {
+        return ensureUserLevel(user, target, null);
+    }
+
+    private int ensureUserLevel(IOrmEntity user, int target, IServiceContext context) {
         Integer current = readUserLevel(user);
         if (current == null || current != target) {
             // user is MANAGED in the current session (loaded via ormTemplate.get / findAllByQuery),
             // so a dirty property change auto-flushes on transaction commit without an explicit save.
             user.orm_propValueByName(PROP_USER_LEVEL, target);
             ormTemplate.flushSession();
+            // Benefit dispatch (D3): only on upgrade (target > current), not downgrade.
+            // Downgrade is handled separately by downgradeExpiredLevels periodic task.
+            if (target > (current == null ? 0 : current)) {
+                dispatchLevelUpBenefit(user.orm_idString(), target, context);
+            }
         }
         return target;
     }

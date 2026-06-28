@@ -223,6 +223,8 @@ prop:
       id: Id
       limit: 用户领券限制数量
       min: 最少消费金额
+      minMemberLevel: 最低会员等级
+      minMemberLevel_label: 最低会员等级
       name: 优惠券名称
       startTime: 使用券开始时间
       status: 优惠券状态

@@ -35,6 +35,9 @@ public interface ILitemallMemberLevelBiz extends ICrudBiz<LitemallMemberLevel> {
     @BizMutation
     int downgradeExpiredLevels(@Optional @Name("periodDays") Integer periodDays, IServiceContext context);
 
+    @BizMutation
+    int dispatchBirthdayCoupons(IServiceContext context);
+
     @BizQuery
     List<LitemallMemberLevel> findLevelRules(IServiceContext context);
 }

@@ -22,6 +22,8 @@ import io.nop.api.core.exceptions.NopException;
 import io.nop.biz.crud.CrudBizModel;
 import io.nop.commons.util.StringHelper;
 import io.nop.core.context.IServiceContext;
+import io.nop.orm.IOrmEntity;
+import io.nop.orm.IOrmTemplate;
 import jakarta.inject.Inject;
 
 import java.math.BigDecimal;
@@ -51,6 +53,13 @@ public class LitemallCouponUserBizModel extends CrudBizModel<LitemallCouponUser>
     @Inject
     MallLogManager logManager;
 
+    @Inject
+    IOrmTemplate ormTemplate;
+
+    // NopAuthUser base entity name for reading userLevel (Delta extension column).
+    private static final String NOP_AUTH_USER_NAME = io.nop.auth.dao.entity.NopAuthUser.class.getName();
+    private static final String PROP_USER_LEVEL = "userLevel";
+
     public LitemallCouponUserBizModel() {
         setEntityName(LitemallCouponUser.class.getName());
     }
@@ -78,6 +87,17 @@ public class LitemallCouponUserBizModel extends CrudBizModel<LitemallCouponUser>
                 }
                 if (coupon.getStatus() != 0) {
                     throw new NopException(ERR_COUPON_NOT_AVAILABLE).param("couponId", couponId);
+                }
+                // Member-exclusive coupon access control (D1): user must meet minMemberLevel.
+                Integer minLevel = coupon.getMinMemberLevel();
+                if (minLevel != null && minLevel > 0) {
+                    int userLevel = readUserLevel(userId);
+                    if (userLevel < minLevel) {
+                        throw new NopException(ERR_COUPON_MEMBER_LEVEL_INSUFFICIENT)
+                                .param("couponId", couponId)
+                                .param("userLevel", userLevel)
+                                .param("minMemberLevel", minLevel);
+                    }
                 }
                 if (coupon.getTotal() != null) {
                     QueryBean usedQuery = new QueryBean();
@@ -302,5 +322,17 @@ public class LitemallCouponUserBizModel extends CrudBizModel<LitemallCouponUser>
             return java.util.Collections.emptyList();
         }
         return io.nop.commons.util.StringHelper.split(goodsValue, ',');
+    }
+
+    private int readUserLevel(String userId) {
+        if (StringHelper.isEmpty(userId)) {
+            return 0;
+        }
+        IOrmEntity user = ormTemplate.get(NOP_AUTH_USER_NAME, userId);
+        if (user == null) {
+            return 0;
+        }
+        Object value = user.orm_propValueByName(PROP_USER_LEVEL);
+        return value instanceof Integer ? (Integer) value : 0;
     }
 }

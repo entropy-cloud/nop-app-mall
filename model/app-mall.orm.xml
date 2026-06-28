@@ -550,6 +550,9 @@
                         stdDataType="datetime" stdSqlType="DATETIME" ui:show="X"/>
                 <column code="DELETED" displayName="逻辑删除" domain="delFlag" name="deleted" propId="20"
                         stdDataType="boolean" stdSqlType="BOOLEAN" ui:show="X"/>
+                <column code="MIN_MEMBER_LEVEL" comment="会员专属券：达到该等级方可领取/被自动发放，0=全员可领"
+                        displayName="最低会员等级" name="minMemberLevel" propId="21" stdDataType="int"
+                        stdSqlType="INTEGER" ext:dict="mall/user-level" i18n-en:displayName="Min Member Level"/>
             </columns>
         </entity>
         <entity className="app.mall.dao.entity.LitemallCouponUser" createTimeProp="addTime" deleteFlagProp="deleted"

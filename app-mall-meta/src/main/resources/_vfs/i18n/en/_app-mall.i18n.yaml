@@ -218,6 +218,8 @@ prop:
       addTime: null
       updateTime: null
       deleted: null
+      minMemberLevel: Min Member Level
+      minMemberLevel_label: null
       total: null
       discount: null
       min: null

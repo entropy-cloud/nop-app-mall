@@ -233,6 +233,10 @@ public interface AppMallErrors {
             define("nop.err.mall.coupon.limit-exceeded",
                     "用户领券超限");
 
+    ErrorCode ERR_COUPON_MEMBER_LEVEL_INSUFFICIENT =
+            define("nop.err.mall.coupon.member-level-insufficient",
+                    "会员等级不足，不可领取该优惠券");
+
     ErrorCode ERR_COUPON_CODE_INVALID =
             define("nop.err.mall.coupon.code-invalid",
                     "兑换码无效");

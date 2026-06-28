@@ -125,6 +125,32 @@
         }
 
 
+        private Integer _minMemberLevel;
+
+    
+        @PropMeta(propId=21)
+    
+        public Integer getMinMemberLevel(){
+            return _minMemberLevel;
+        }
+
+        public void setMinMemberLevel(Integer value){
+            this._minMemberLevel = value;
+        }
+
+
+        private String _minMemberLevel_label;
+
+    
+        public String getMinMemberLevel_label(){
+            return _minMemberLevel_label;
+        }
+
+        public void setMinMemberLevel_label(String value){
+            this._minMemberLevel_label = value;
+        }
+
+
         private Integer _total;
 
     

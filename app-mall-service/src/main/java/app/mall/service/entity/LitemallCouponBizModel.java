@@ -19,7 +19,10 @@ import io.nop.api.core.beans.FilterBeans;
 import io.nop.api.core.beans.PageBean;
 import io.nop.api.core.beans.query.QueryBean;
 import io.nop.biz.crud.CrudBizModel;
+import io.nop.commons.util.StringHelper;
 import io.nop.core.context.IServiceContext;
+import io.nop.orm.IOrmEntity;
+import io.nop.orm.IOrmTemplate;
 import jakarta.inject.Inject;
 
 import java.sql.Timestamp;
@@ -45,6 +48,12 @@ public class LitemallCouponBizModel extends CrudBizModel<LitemallCoupon> impleme
     // is the sanctioned cross-entity aggregation path per AGENTS.md cross-entity rule.
     @Inject
     LitemallMarketingMapper marketingMapper;
+
+    @Inject
+    IOrmTemplate ormTemplate;
+
+    private static final String NOP_AUTH_USER_NAME = io.nop.auth.dao.entity.NopAuthUser.class.getName();
+    private static final String PROP_USER_LEVEL = "userLevel";
 
     private static final Timestamp MIN_TIMESTAMP = Timestamp.valueOf("1970-01-01 00:00:00");
     private static final Timestamp MAX_TIMESTAMP = Timestamp.valueOf("2099-12-31 23:59:59");
@@ -145,6 +154,7 @@ public class LitemallCouponBizModel extends CrudBizModel<LitemallCoupon> impleme
         List<LitemallCoupon> candidates = findList(query, null, context);
 
         String userId = context.getUserId();
+        int userLevel = readUserLevel(userId);
         Map<String, Long> claimedCounts = collectClaimedCounts(userId, candidates, context);
 
         List<Map<String, Object>> result = new ArrayList<>();
@@ -155,7 +165,7 @@ public class LitemallCouponBizModel extends CrudBizModel<LitemallCoupon> impleme
 
             long claimedCount = claimedCounts.getOrDefault(coupon.getId(), 0L);
             boolean claimedByMe = claimedCount > 0;
-            boolean claimable = computeClaimable(coupon, claimedCount, userId != null);
+            boolean claimable = computeClaimable(coupon, claimedCount, userId != null, userLevel);
 
             Map<String, Object> entry = new LinkedHashMap<>();
             entry.put("id", coupon.orm_idString());
@@ -172,6 +182,7 @@ public class LitemallCouponBizModel extends CrudBizModel<LitemallCoupon> impleme
             entry.put("days", coupon.getDays());
             entry.put("startTime", coupon.getStartTime());
             entry.put("endTime", coupon.getEndTime());
+            entry.put("minMemberLevel", coupon.getMinMemberLevel());
             entry.put("claimedByMe", claimedByMe);
             entry.put("claimable", claimable);
             result.add(entry);
@@ -200,14 +211,31 @@ public class LitemallCouponBizModel extends CrudBizModel<LitemallCoupon> impleme
         return result;
     }
 
-    private boolean computeClaimable(LitemallCoupon coupon, long userClaimedCount, boolean isLoggedIn) {
+    private boolean computeClaimable(LitemallCoupon coupon, long userClaimedCount, boolean isLoggedIn, int userLevel) {
         if (isLoggedIn) {
             Integer limit = coupon.getLimit();
             if (limit != null && limit > 0 && userClaimedCount >= limit) {
                 return false;
             }
         }
+        // Member-exclusive coupon: user must meet minMemberLevel to claim.
+        Integer minLevel = coupon.getMinMemberLevel();
+        if (minLevel != null && minLevel > 0 && userLevel < minLevel) {
+            return false;
+        }
         return true;
+    }
+
+    private int readUserLevel(String userId) {
+        if (StringHelper.isEmpty(userId)) {
+            return 0;
+        }
+        IOrmEntity user = ormTemplate.get(NOP_AUTH_USER_NAME, userId);
+        if (user == null) {
+            return 0;
+        }
+        Object value = user.orm_propValueByName(PROP_USER_LEVEL);
+        return value instanceof Integer ? (Integer) value : 0;
     }
 
     private boolean matchesGoodsScope(LitemallCoupon coupon, String goodsId, String goodsCategoryId, IServiceContext context) {
