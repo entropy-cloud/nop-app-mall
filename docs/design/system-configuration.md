@@ -278,9 +278,10 @@
 
 - 采用 AMIS chart 组件 + 现有 GraphQL 统计 API（`getOrderStatistics`/`getGoodsSalesRanking`/`getUserStatistics`），未引入 nop-report 引擎
 - P18 经营看板重做新增 4 个 `@BizQuery`（`getDashboardMetrics`/`getSalesTrend`/`getRealtimeOrders`/`getTodoAggregation`，挂载于 `LitemallOrderBizModel`），支撑指标卡 / 趋势图 / 实时订单流 / 待办聚合 4 区块
-- 后台统计看板页面：`app-mall-web/.../mall/stat/stat-dashboard.page.yaml`
+- P19 报表体系扩展新增销售漏斗 / 商品分析 / 用户分析 / 订单分析 / 营销分析（优惠券）5 大主题域 `@BizQuery`（同挂 `LitemallOrderBizModel`），经 SQL-lib 聚合 + AMIS chart 消费
+- 后台统计看板页面：`app-mall-web/.../mall/stat/stat-dashboard.page.yaml`（经营看板）+ `mall/stat/stat-funnel.page.yaml`（销售漏斗）+ `mall/stat/stat-product.page.yaml`（商品分析）+ `mall/stat/stat-user.page.yaml`（用户分析）+ `mall/stat/stat-order.page.yaml`（订单分析）
 - 后台菜单入口：`stat-manage`（`app-mall.action-auth.xml` 已开放）
-- 复杂报表导出（PDF/Excel）需 nop-report 引擎，当前不在范围内（归 P19 续作）
+- 导出方式：CSV 兜底（前端 AMIS 导出，零新依赖）。nop-report xlsx/pdf 引擎为 successor（复杂模板化报表需求出现时引入）。
 
 ### 经营看板指标口径（P18）
 
@@ -300,6 +301,45 @@
   - 待退款 = 订单 `orderStatus = 202`（退款中）计数；
   - 售后待审核 = `LitemallAftersale.status = 1`（REQUEST 用户已申请）计数；
   - 库存预警 = 在售商品中聚合库存（`SUM(LitemallGoodsProduct.number)`）≤ 阈值的商品计数，阈值复用全局配置 `mall_stock_threshold_tight`（默认 10，经 `ILitemallSystemBiz.getConfig()` 读取），明细含商品名 / 聚合库存。
+
+### 销售漏斗指标口径（P19）
+
+销售漏斗为同口径同期对比（非跨期留存），5 段按时间区间聚合，口径如下：
+
+- **浏览（view）**：期间 `LitemallFootprint` 去重商品数（`COUNT(DISTINCT goodsId)`），按 `addTime` 归属期间。匿名访客未持久化，不含匿名浏览。
+- **加购（cart）**：期间 `LitemallCart` 新增条数（`COUNT(*)`），按 `addTime` 归属期间。
+- **下单（order）**：期间下单商品件数（`SUM(LitemallOrderGoods.number)`），排除已取消订单（`orderStatus NOT IN (102,103)`），按订单 `addTime` 归属期间。
+- **支付（pay）**：期间支付商品件数（`SUM(LitemallOrderGoods.number)`），仅含已支付及之后各态订单（`orderStatus ≥ 201`），按订单 `payTime` 归属期间。
+- **复购（repurchase）**：期间 ≥ 2 单支付用户数（按 `userId` 分组 `COUNT(*) ≥ 2`），按 `payTime` 归属期间。
+- **转化率**：各相邻段比值（cart/view、order/cart、pay/order、repurchase/pay）+ 整体 pay/view，分母为 0 时返回 0。
+
+### 商品分析指标口径（P19）
+
+商品分析聚合销量排行、加购排行、滞销品与动销率，支持类目筛选（`categoryId` 可选），口径如下：
+
+- **销量排行**：期间下单商品件数降序前 N（复用 `getGoodsSalesRanking` 口径，扩展类目筛选），排除已取消订单。
+- **加购排行**：期间 `LitemallCart` 按 `goodsId` 聚合 `COUNT(*)` 降序前 N。
+- **滞销品**：期间在售（`isOnSale=1`）但零销量的商品前 N（`NOT EXISTS` 期间有销量的子查询）。
+- **动销率**：有销量商品数 / 在售商品数；有销量商品数 = 期间 `COUNT(DISTINCT goodsId)`（排除已取消订单）；在售商品数 = `isOnSale=1` 商品计数。
+
+### 用户分析指标口径（P19）
+
+用户分析包含留存、RFM、生命周期、复购率 4 类，以**支付订单**为行为事件，口径如下：
+
+- **留存（次留/7 留/30 留）**：以用户在分析期间内的**首次支付日**（D0）分组形成 cohort，D+N 留存 = 该 cohort 用户在 D0+N 当天有支付行为的用户数 / cohort 用户数。留存事件为支付订单（`orderStatus ≥ 201`），按 `payTime` 归属。每 cohort 返回 cohortSize / d1 / d7 / d30 计数 + 留存率。
+- **RFM 分层**：R=最近支付距今天数（越小越优）、F=期间支付订单数、M=期间支付金额。按三分位（中位数）分高/低，组合成 8 类：重要价值 / 重要保持 / 重要发展 / 重要挽留 / 一般价值 / 一般保持 / 一般发展 / 一般挽留。阈值采用当批数据中位数（非后台可配，后续可扩展为配置项）。
+- **生命周期**：按支付 recency 派生 4 类——新客（首次支付在分析期间）/活跃（期间有支付但首单不在期间）/沉睡（历史有支付但期间无，且距上次支付 < 流失线）/流失（距上次支付 ≥ 流失线）。流失线默认 90 天（`churnDays` 参数可调）。基于全量历史支付数据（非仅期间）派生。
+- **复购率时序**：按天分组，复购率 = 当天 ≥ 2 单支付用户数 / 当天支付用户数。返回每日 paidUsers / repurchaseUsers / rate 三元组时序。
+
+### 订单分析与营销分析指标口径（P19）
+
+订单分析聚合客单价分布、支付方式占比、退货原因占比；营销分析覆盖优惠券核销率与拉动 GMV，口径如下：
+
+- **客单价分布**：期间支付订单（`orderStatus ≥ 201`，按 `payTime` 归属）按 `actualPrice` 分段计数（0-50 / 50-100 / 100-200 / 200-500 / 500+），返回各段订单数。
+- **支付方式占比**：期间支付订单按 `payChannel` 聚合（1=微信支付、2=余额支付、`walletPayAmount > 0`=混合支付、其他），返回各方式订单数。当前以微信支付为主（多通道 P30 后丰富）。
+- **退货原因占比**：期间售后单（`LitemallAftersale.status ≥ 1`，按 `addTime` 归属）按 `reason` 字典聚合，空值归"未填写"，返回各原因售后单数。
+- **优惠券分析**：期间领取券数（`LitemallCouponUser` 按 `addTime` 归属）/ 核销数（`status=1`）/ 核销率（核销数/领取数）/ 拉动 GMV（核销券关联订单 `actualPrice` 之和）。
+- **导出方式（E1）**：CSV 兜底（前端 AMIS 导出按钮，零新依赖）。nop-report xlsx/pdf 引擎为 successor（复杂模板化报表需求出现时引入）。
 
 ### 业务规则
 
