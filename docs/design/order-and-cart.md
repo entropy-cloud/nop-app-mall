@@ -310,6 +310,12 @@ item 级退款时三个订单级副作用策略：
 - 退款通知维持**订单级去重**：同一订单的多次 item 级退款按 `orderSn` 触发，通知内容附带被退款的商品项信息（商品名/规格/退款额）。
 - 抉择理由：避免多次 item 退款对用户造成通知轰炸；订单级聚合通知更符合用户心智。残留风险：多次退款仅一条通知，需用户在订单详情核对明细。
 
+### 站内信投递交接（P35）
+
+- 支付成功（`pay` / `confirmPaidByNotify`）、发货（`ship`）、售后退款（`refund`）三个用户面向事件在触发 SMS 通知的同一 `txn().afterCommit` 钩子内**额外写入站内信**（`msgType=ORDER`），由 `MallNotificationService.sendUserMessage` 落地到 `LitemallUserMessage`。
+- 新订单事件（`submit` / `createFlashSaleOrder`）的 `sendAdminOrderNotification` 收件人是管理员邮箱，**不写站内信**（无用户收件人），维持 Email-only。
+- userId 由宿主 BizModel 从订单上下文传入通知方法（签名扩为 `(orderSn,mobile,userId)`），站内信归属校验、已读/未读语义见 `system-configuration.md`「站内信/消息中心」。
+
 ### 角色与可见性
 
 - 商城用户可以查看自己订单各商品项的售后申请状态与处理结果。

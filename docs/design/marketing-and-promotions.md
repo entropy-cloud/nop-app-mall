@@ -792,6 +792,11 @@
 ### 与取消 / 退款的关系
 
 - 拼团超时失败触发全单退款（还库存/券/积分/通知），参照团购既有退款链路。
+
+### 站内信投递交接（P35）
+
+- 团购失败退款（`expireGroupons`）与拼团失败退款（`expirePinTuans`）两个用户面向事件在触发 SMS 通知的同一 `txn().afterCommit` 钩子内**额外写入站内信**（`msgType=ORDER`），由 `MallNotificationService.sendUserMessage` 落地到 `LitemallUserMessage`。
+- userId 由宿主 BizModel 从退款订单上下文传入通知方法（签名扩为 `(orderSn,mobile,userId)`），站内信归属校验、已读/未读语义见 `system-configuration.md`「站内信/消息中心」。
 - 退款额受订单 `actualPrice` 约束。
 
 ### 已知约束

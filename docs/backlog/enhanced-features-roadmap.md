@@ -33,14 +33,14 @@
 - 28. 签到: `done`（`docs/plans/2026-06-27-2321-1-phase28-check-in-plan.md`）
 - 29. 钱包余额与充值: `todo`
 - 30. 多支付通道: `todo`
-- 31. 配送方式扩展（自提）: `todo`
+- 31. 配送方式扩展（自提）: `planned`（`docs/plans/2026-06-28-0530-3-phase31-pickup-delivery-plan.md`）
 - 32. 优惠券体系增强: `done`（`docs/plans/2026-06-27-2321-3-phase32-coupon-center-plan.md`）
 - 33. 商品评价结构化: `done`（`docs/plans/2026-06-27-2321-2-phase33-structured-comment-plan.md`）
 - 34. 首页运营打标: `done`（`docs/plans/2026-06-27-2029-3-phase34-homepage-operation-tagging-plan.md`）
-- 35. 站内信/消息中心: `todo`
+- 35. 站内信/消息中心: `done`（`docs/plans/2026-06-28-0530-1-phase35-message-center-plan.md`）
 - 36. 商品运营增强: `todo`
 - 37. 内容/素材管理: `todo`
-- 38. 库存语义化: `todo`
+- 38. 库存语义化: `planned`（`docs/plans/2026-06-28-0530-2-phase38-stock-semantics-plan.md`）
 
 ## Status Values
 

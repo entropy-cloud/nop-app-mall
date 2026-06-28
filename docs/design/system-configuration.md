@@ -82,6 +82,71 @@
 - 公告是一种内容对象。
 - 公告不同于支付确认、发货更新这类由事件触发的通知消息。
 
+## 站内信 / 消息中心
+
+### 业务角色
+
+- 站内信是面向单个商城用户的、持久化在用户侧的站内消息。它把订单/退款/履约等业务事件的结果落成用户可在「消息中心」查看的记录，并为管理员提供系统公告下发能力。
+- 站内信关注「用户能随时回看哪些业务结果与系统公告」，区别于「通知」关注送达、「公告」关注内容传播——三者关系：业务事件既触发通知（SMS/Email 等外部通道），也写入站内信（站内可回看记录）；管理员公告通过站内信的 SYSTEM 类别下发为全员可见的消息。
+- 站内信是**拉取式**能力：消息持久化到 `LitemallUserMessage`，用户前台主动拉取，不做服务端实时推送（WebSocket / 小程序订阅消息 push 超出本基线）。
+
+### 消息分类与事件映射
+
+消息类型由 `mall/msg-type` 字典定义（`model/app-mall.orm.xml` 持有），映射关系：
+
+| msgType（字典码） | 业务语义 | 产生方式 | 触发事件 |
+| ----------------- | -------- | -------- | -------- |
+| `ORDER`(0, 订单消息) | 订单/履约/退款类业务结果 | 业务事件触发，由 `MallNotificationService` 在事件钩子内写入 | 支付成功、发货、售后退款、团购失败退款、拼团失败退款 |
+| `MARKETING`(10, 营销消息) | 营销活动类消息 | 本基线不主动产生（事件不映射到此类别） | 定向投放依赖 P20 标签分群，作为 successor |
+| `SYSTEM`(20, 系统消息) | 管理员系统公告 | `broadcastSystemMessage` 下发，全员可见 | 管理员后台主动发布 |
+
+事件→站内信通道接入清单（P35 落地）：
+
+| 事件 | 宿主 BizModel 钩子 | 收件人 | msgType | 接入 |
+| ---- | ------------------ | ------ | ------- | ---- |
+| 支付成功（`pay` / `confirmPaidByNotify`） | `LitemallOrderBizModel` | 订单用户 | ORDER | 写 UserMessage（同时保留 SMS） |
+| 发货（`ship`） | `LitemallOrderBizModel` | 订单用户 | ORDER | 写 UserMessage（同时保留 SMS） |
+| 售后退款（`refund`） | `LitemallAftersaleBizModel` | 订单用户 | ORDER | 写 UserMessage（同时保留 SMS） |
+| 团购失败退款（`expireGroupons`） | `LitemallGrouponBizModel` | 订单用户 | ORDER | 写 UserMessage（同时保留 SMS） |
+| 拼团失败退款（`expirePinTuans`） | `LitemallPinTuanActivityBizModel` | 订单用户 | ORDER | 写 UserMessage（同时保留 SMS） |
+| 新订单（管理员提醒） | `LitemallOrderBizModel` | 管理员邮箱 | — | **不写 UserMessage**（收件人是管理员，无 userId；维持 Email-only） |
+
+> 退款类事件（售后/团购失败/拼团失败）统一映射到 `ORDER` 类别，因它们都是订单交易链路的结果；`MARKETING` 仅用于营销定向投放（successor）。
+
+### 用户侧能力
+
+| 动作 | BizModel 方法 | 语义 |
+| ---- | ------------- | ---- |
+| 我的消息列表 | `LitemallUserMessage__getMyMessages` | 按当前用户 userId + 可选 msgType 过滤，分页，按 addTime 倒序 |
+| 未读数 | `LitemallUserMessage__getUnreadCount` | 当前用户未读消息数（驱动个人中心徽章），可按 msgType 过滤 |
+| 标记已读 | `LitemallUserMessage__markRead` | 校验归属当前用户，置 `isRead=true`/`readTime=now` |
+| 全部已读 | `LitemallUserMessage__markAllRead` | 批量置当前用户未读为已读（可按 msgType 限定） |
+| 删除消息 | `LitemallUserMessage__deleteMessage` | 归属校验后逻辑删除（走既有 logical delete） |
+| 消息详情 | `LitemallUserMessage__getMessageDetail` | 拉取详情，首次拉取未读则顺带标记已读（单事务） |
+| 系统公告下发 | `LitemallUserMessage__broadcastSystemMessage` | `@Auth(roles="admin")`，下发 `msgType=SYSTEM` 消息 |
+
+### 业务规则
+
+- 站内信写入与 SMS/Email 外部通道**并列触发、互不阻断**：业务事件钩子在 `txn().afterCommit` 内同时调用 SMS/Email 发送与站内信写入；任一通道失败不应回滚核心业务事实（订单/退款/发货状态）。
+- 用户只能查看、已读、删除**归属自己**的站内信；归属校验不通过抛 `nop.err.mall.message.not-belong-user`。
+- 管理员系统公告（`broadcastSystemMessage`）按「逐活跃用户写入一条 `msgType=SYSTEM` 的 UserMessage」模型实现，仅管理员可达（`@Auth(roles="admin")`）。
+- 事件触发的 ORDER 消息受开关 `mall_message_event_enabled_<event>` 控制（存于系统配置，默认开启），允许运营关闭某类事件站内信。
+- 站内信内容（title/content）由应用层在事件方法内**直接拼装**（不引入 `NopSysNoticeTemplate` 模板渲染）；模板可视化运营编辑作为 successor。
+
+### 关键设计抉择（Decision）
+
+1. **事件→消息投递通道接入方式与收件人范围。** 抉择 A（在 `MallNotificationService` 内新增 `sendUserMessage(userId,msgType,title,content)`；仅 5 个用户面向事件方法在同钩子中额外调用它写 UserMessage；userId 由调用方 BizModel 传入，因宿主 BizModel 持有 order/user 上下文）。备选 B（服务端按 orderSn 反查 userId）被否——反查增加跨实体依赖且重复查询。残留风险：需微调 5 个用户方法签名补 userId + 联动更新 `TestMallNotificationService`。
+2. **userId 来源与签名变更范围。** 5 个用户方法签名由 `(orderSn,mobile)` 扩为 `(orderSn,mobile,userId)`（userId 可空降级时仅发 SMS）；同步更新 6 处用户面向 `afterCommit` 调用点（4 个调用方 BizModel）补 userId 实参（2 处 admin 调用点不变）；同步更新 `TestMallNotificationService` 中 3 个调用变更方法的用例（第 4 个 admin 用例不变）。`sendAdminOrderNotification(orderSn)` 不变。
+3. **已读语义与未读徽章。** 抉择 A（`isRead` 单字段 + `readTime`；进入详情即 markRead，未读数 = `findCount(userId,isRead=false)`）。备选 B（未读/已读双状态机）被否——单字段足以表达。
+4. **管理员系统公告下发模型。** 抉择 A（`broadcastSystemMessage` 下发时为每个活跃用户生成一条 `msgType=SYSTEM` 的 UserMessage）。备选 B（「公告表 + 用户读位」惰性可见）被否——基线用户量非超大，直接写入实现最简、未读计数语义一致。残留风险：写入放大（大用户量下逐用户插入成本），触发条件见各计划 Deferred。
+5. **消息内容拼装方式。** 抉择 A（应用层直接拼装 title/content，事件方法内就地组装文案）。备选 B（引入 `NopSysNoticeTemplate` 模板渲染）作为 successor——模板可视化运营编辑需求出现时再引入。理由：基线文案稳定，直接拼装最简、零额外依赖。
+
+### 与通知/公告的边界
+
+- **通知（Notification）**：业务事件触发的外部通道送达（SMS/Email），强调「结果已送达」，不可回看。
+- **站内信（UserMessage）**：业务事件触发或管理员下发，持久化在用户侧，强调「用户可随时回看」。
+- **公告（Announcement）**：管理员主动发布的内容对象；在本基线中，面向全体用户的公告**通过站内信的 SYSTEM 类别下发**，二者在「全员系统消息」语义上合流；事件触发的通知**不**等同公告（沿用本文件「通知」章节 line 73-77 既有界定）。
+
 ## 优惠券 DIY 投放配置
 
 ### 业务角色
