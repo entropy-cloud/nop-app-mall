@@ -277,9 +277,29 @@
 ### 技术装配
 
 - 采用 AMIS chart 组件 + 现有 GraphQL 统计 API（`getOrderStatistics`/`getGoodsSalesRanking`/`getUserStatistics`），未引入 nop-report 引擎
+- P18 经营看板重做新增 4 个 `@BizQuery`（`getDashboardMetrics`/`getSalesTrend`/`getRealtimeOrders`/`getTodoAggregation`，挂载于 `LitemallOrderBizModel`），支撑指标卡 / 趋势图 / 实时订单流 / 待办聚合 4 区块
 - 后台统计看板页面：`app-mall-web/.../mall/stat/stat-dashboard.page.yaml`
 - 后台菜单入口：`stat-manage`（`app-mall.action-auth.xml` 已开放）
-- 复杂报表导出（PDF/Excel）需 nop-report 引擎，当前不在范围内
+- 复杂报表导出（PDF/Excel）需 nop-report 引擎，当前不在范围内（归 P19 续作）
+
+### 经营看板指标口径（P18）
+
+经营看板为拉取式刷新，所有指标基于稳定业务状态聚合，口径如下：
+
+- **今日 GMV**：当日支付订单（`orderStatus ≥ 201`，含已支付及之后各态）`actualPrice` 之和；时间窗口按 `payTime`（支付时间）归属当日。
+- **订单数**：当日支付订单数（同 GMV 口径的订单计数）。
+- **客单价（AOV）**：GMV / 订单数。
+- **UV（登录用户）**：当日有足迹行为（`LitemallFootprint`）的去重 `userId` 数（下单用户必有前置浏览足迹，故以足迹为 UV 主信号，与下单用户天然重合）。匿名访客未持久化，不含匿名浏览（model-gap successor）。
+- **转化率**：当日支付用户数 / 当日 UV。
+- **退货率**：当日售后已完成退款单数（`LitemallAftersale.status = 3 REFUND`，按 `addTime` 归属当日）/ 当日支付订单数。
+- **同环比**：日环比 = (今日 GMV − 昨日 GMV) / 昨日 GMV；周同比 = (今日 GMV − 上周同日 GMV) / 上周同日 GMV；对比期为 0 时返回空（前端显示 `--`）。
+- **销售趋势**：按 `granularity`(hour/day/week/month) + 时间区间分组聚合 GMV 与订单数，按 `payTime` 归属；时序点含零值补齐（连续图表）。
+- **实时订单流**：最近 N 条订单（默认 20），按 `addTime` 倒序。
+- **待办聚合**：
+  - 待发货 = 订单 `orderStatus = 201` 计数；
+  - 待退款 = 订单 `orderStatus = 202`（退款中）计数；
+  - 售后待审核 = `LitemallAftersale.status = 1`（REQUEST 用户已申请）计数；
+  - 库存预警 = 在售商品中聚合库存（`SUM(LitemallGoodsProduct.number)`）≤ 阈值的商品计数，阈值复用全局配置 `mall_stock_threshold_tight`（默认 10，经 `ILitemallSystemBiz.getConfig()` 读取），明细含商品名 / 聚合库存。
 
 ### 业务规则
 

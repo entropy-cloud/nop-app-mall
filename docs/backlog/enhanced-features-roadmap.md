@@ -1,6 +1,6 @@
 # Enhanced Features Roadmap
 
-> Last Updated: 2026-06-28
+> Last Updated: 2026-06-28 (P18 → done)
 > Source: `docs/analysis/2026-06-21-mobile-mall-functional-design-analysis.md`, `docs/design/*.md`
 
 ## Purpose
@@ -20,8 +20,8 @@
 - 15. 满减送: `done`（`docs/plans/2026-06-27-1742-1-phase15-full-discount-promotion-plan.md`）
 - 16. 订单项级售后增强: `done`（`docs/plans/2026-06-27-1742-3-phase16-order-item-aftersale-plan.md`）
 - 17. 微信小程序订单中心: `todo`
-- 18. Dashboard 重做: `todo`
-- 19. 报表体系扩展: `todo`
+- 18. Dashboard 重做: `done`（`docs/plans/2026-06-28-1027-1-phase18-dashboard-redesign-plan.md`；4 看板 `@BizQuery`[getDashboardMetrics/getSalesTrend/getRealtimeOrders/getTodoAggregation] + AMIS chart 指标卡/趋势/实时订单流/待办聚合 4 区块 + owner doc 口径；nop-report 引擎按引擎定位归 P19 导出场景）
+- 19. 报表体系扩展: `planned`（`docs/plans/2026-06-28-1027-2-phase19-report-system-extension-plan.md`；销售漏斗/用户分析[含生命周期]/商品分析/订单分析/优惠券分析 + 报表页 + 导出[E1 Explore 抉择 nop-report 或 CSV]；依赖 P18；活动 ROI 归 P22，毛利归 successor）
 - 20. 用户运营工作台: `done`（`docs/plans/2026-06-28-0340-2-phase20-user-operations-workbench-plan.md`）
 - 21. 订单运营工作台: `done`（`docs/plans/2026-06-28-0340-3-phase21-order-operations-workbench-plan.md`）
 - 22. 营销活动管理后台: `planned`（`docs/plans/2026-06-28-0340-1-phase22-marketing-management-backend-plan.md`，ORM-independent slice delivered（4 类上下架 + 统一菜单 + 总览/日历/效果页 + 满减聚合/优惠券/拼团效果统计）；ORM-dependent slice（PromotionUsage 实体 + flashSaleSessionId 列 + maxPerUser 强一致 + 按活动/按场次归因）待 ask-first 授权）
@@ -38,7 +38,7 @@
 - 33. 商品评价结构化: `done`（`docs/plans/2026-06-27-2321-2-phase33-structured-comment-plan.md`）
 - 34. 首页运营打标: `done`（`docs/plans/2026-06-27-2029-3-phase34-homepage-operation-tagging-plan.md`）
 - 35. 站内信/消息中心: `done`（`docs/plans/2026-06-28-0530-1-phase35-message-center-plan.md`）
-- 36. 商品运营增强: `todo`
+- 36. 商品运营增强: `planned`（`docs/plans/2026-06-28-1027-3-phase36-goods-operations-enhancement-plan.md`；批量改价/改库存/上下架 + 导入[xlsx via ExcelHelper]/导出 + 库存预警[per-SKU `safeStock`+全局回退] + 评论工作台[回复/后置 Moderation]；前置审核状态机为 successor）
 - 37. 内容/素材管理: `todo`
 - 38. 库存语义化: `done`（`docs/plans/2026-06-28-0530-2-phase38-stock-semantics-plan.md`）
 
