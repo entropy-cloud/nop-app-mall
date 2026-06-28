@@ -1,0 +1,41 @@
+type: page
+title: 自提核销工作台
+body:
+  - type: form
+    title: 核销
+    mode: normal
+    style:
+      padding: 20px
+    body:
+      - type: tpl
+        tpl: '<h3>输入或扫描用户自提核销码</h3>'
+      - type: input-text
+        name: pickupCode
+        label: 核销码
+        placeholder: '8 位自提核销码'
+        required: true
+        size: lg
+        clearable: true
+      - type: button-toolbar
+        buttons:
+          - type: submit
+            label: 确认核销
+            level: primary
+            size: lg
+            icon: fa fa-check
+  - type: service
+    name: verifyResult
+    api:
+      url: '@mutation:LitemallOrder__verifyPickupOrder'
+      data:
+        pickupCode: '${pickupCode}'
+      sendOn: '${pickupCode}'
+    body:
+      - type: alert
+        level: success
+        visibleOn: '${!data.alreadyVerified}'
+        body: '<b>核销成功</b><br/>订单编号：${data.orderSn}<br/>核销码：${data.pickupCode}'
+      - type: alert
+        level: warning
+        visibleOn: '${data.alreadyVerified}'
+        body: '<b>该订单已核销，跳过重复核销</b><br/>订单编号：${data.orderSn}<br/>核销码：${data.pickupCode}'

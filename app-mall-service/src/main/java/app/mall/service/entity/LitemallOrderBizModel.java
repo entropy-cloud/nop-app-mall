@@ -13,6 +13,7 @@ import app.mall.biz.ILitemallPinTuanActivityBiz;
 import app.mall.biz.ILitemallPointsAccountBiz;
 import app.mall.biz.ILitemallPointsFlowBiz;
 import app.mall.biz.ILitemallPromotionActivityBiz;
+import app.mall.biz.ILitemallPickupStoreBiz;
 import app.mall.biz.ILitemallSystemBiz;
 import app.mall.biz.ILitemallTimeDiscountBiz;
 import app.mall.dao._AppMallDaoConstants;
@@ -27,7 +28,9 @@ import app.mall.dao.dto.BatchShipResultBean;
 import app.mall.dao.dto.GoodsStatisticsBean;
 import app.mall.dao.dto.OrderStatisticsBean;
 import app.mall.dao.dto.UserStatisticsBean;
+import app.mall.dao.dto.VerifyPickupResultBean;
 import app.mall.dao.entity.LitemallOrderGoods;
+import app.mall.dao.entity.LitemallPickupStore;
 import app.mall.dao.entity.LitemallPinTuanActivity;
 import app.mall.dao.entity.LitemallPointsFlow;
 import app.mall.dao.manager.MallLogManager;
@@ -88,6 +91,7 @@ import static app.mall.service.AppMallErrors.ERR_ORDER_NOT_ALLOW_DELETE;
 import static app.mall.service.AppMallErrors.ERR_ORDER_NOT_ALLOW_PAY;
 import static app.mall.service.AppMallErrors.ERR_ORDER_NOT_ALLOW_SHIP;
 import static app.mall.service.AppMallErrors.ERR_ORDER_NOT_FOUND;
+import static app.mall.service.AppMallErrors.ERR_ORDER_PICKUP_NOT_SHIPPABLE;
 import static app.mall.service.AppMallErrors.ERR_ORDER_PRICE_INVALID;
 import static app.mall.service.AppMallErrors.ERR_ORDER_PRICE_MODIFY_DISCOUNT_ACTIVE;
 import static app.mall.service.AppMallErrors.ERR_ORDER_NOT_ALLOW_MODIFY_PRICE;
@@ -98,6 +102,10 @@ import static app.mall.service.AppMallErrors.ERR_PIN_TUAN_NOT_ACTIVE;
 import static app.mall.service.AppMallErrors.ERR_PIN_TUAN_PRICE_INVALID;
 import static app.mall.service.AppMallErrors.ERR_POINTS_DEDUCT_EXCEED_LIMIT;
 import static app.mall.service.AppMallErrors.ERR_PROMOTION_STACKING_NOT_ALLOWED;
+import static app.mall.service.AppMallErrors.ERR_PICKUP_CODE_INVALID;
+import static app.mall.service.AppMallErrors.ERR_PICKUP_ORDER_NOT_VERIFIABLE;
+import static app.mall.service.AppMallErrors.ERR_PICKUP_STORE_NOT_ACTIVE;
+import static app.mall.service.AppMallErrors.ERR_PICKUP_STORE_NOT_FOUND;
 import static app.mall.service.AppMallErrors.ERR_TIME_DISCOUNT_SOLD_OUT;
 import static app.mall.service.AppMallErrors.ERR_USER_BANNED;
 
@@ -155,6 +163,9 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
     ILitemallSystemBiz systemBiz;
 
     @Inject
+    ILitemallPickupStoreBiz pickupStoreBiz;
+
+    @Inject
     IOrmTemplate ormTemplate;
 
     @Inject
@@ -182,7 +193,7 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
 
     @Override
     @BizMutation
-    public LitemallOrder submit(@Name("addressId") String addressId,
+    public LitemallOrder submit(@Optional @Name("addressId") String addressId,
                                  @Optional @Name("message") String message,
                                  @Name("freightPrice") BigDecimal freightPrice,
                                  @Optional @Name("couponUserId") String couponUserId,
@@ -191,8 +202,29 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
                                  @Optional @Name("usePoints") Integer usePoints,
                                  @Optional @Name("pinTuanActivityId") String pinTuanActivityId,
                                  @Optional @Name("pinTuanGroupId") String pinTuanGroupId,
+                                 @Optional @Name("deliveryType") Integer deliveryType,
+                                 @Optional @Name("pickupStoreId") String pickupStoreId,
                                  IServiceContext context) {
         String userId = context.getUserId();
+
+        // P31 配送方式：PICKUP(10) 走自提分支（无收货地址、运费=0、生成核销码）；
+        // 其余（EXPRESS(0) 或 null 兼容存量）走既有快递流程。
+        boolean isPickup = deliveryType != null
+                && deliveryType == _AppMallDaoConstants.DELIVERY_TYPE_PICKUP;
+
+        LitemallPickupStore pickupStore = null;
+        if (isPickup) {
+            if (pickupStoreId == null || pickupStoreId.isEmpty()) {
+                throw new NopException(ERR_PICKUP_STORE_NOT_FOUND).param("pickupStoreId", pickupStoreId);
+            }
+            pickupStore = pickupStoreBiz.get(pickupStoreId, false, context);
+            if (pickupStore == null || Boolean.TRUE.equals(pickupStore.getDeleted())) {
+                throw new NopException(ERR_PICKUP_STORE_NOT_FOUND).param("pickupStoreId", pickupStoreId);
+            }
+            if (pickupStore.getStatus() == null || pickupStore.getStatus() != PICKUP_STORE_STATUS_ACTIVE) {
+                throw new NopException(ERR_PICKUP_STORE_NOT_ACTIVE).param("pickupStoreId", pickupStoreId);
+            }
+        }
 
         // Pin-tuan × Groupon mutex (P25 Decision): a single order may use groupon OR pin-tuan,
         // never both. They occupy the same actualPrice deduction layer (grouponPrice /
@@ -222,15 +254,19 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
             throw new NopException(ERR_USER_BANNED).param("userId", userId);
         }
 
-        LitemallAddress address = addressBiz.get(addressId, false, context);
-        if (address == null || Boolean.TRUE.equals(address.getDeleted())) {
-            throw new NopException(ERR_ORDER_ADDRESS_INVALID)
-                    .param("addressId", addressId);
-        }
-        if (!Objects.equals(userId, address.getUserId())) {
-            throw new NopException(ERR_ORDER_ADDRESS_INVALID)
-                    .param("addressId", addressId)
-                    .param("userId", userId);
+        LitemallAddress address = null;
+        if (!isPickup) {
+            // EXPRESS: addressId 必填，校验归属（Decision B）。PICKUP 放宽必填，无收货地址。
+            address = addressBiz.get(addressId, false, context);
+            if (address == null || Boolean.TRUE.equals(address.getDeleted())) {
+                throw new NopException(ERR_ORDER_ADDRESS_INVALID)
+                        .param("addressId", addressId);
+            }
+            if (!Objects.equals(userId, address.getUserId())) {
+                throw new NopException(ERR_ORDER_ADDRESS_INVALID)
+                        .param("addressId", addressId)
+                        .param("userId", userId);
+            }
         }
 
         QueryBean cartQuery = new QueryBean();
@@ -263,19 +299,38 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
         order.setOrderStatus(_AppMallDaoConstants.ORDER_STATUS_CREATED);
         order.setAftersaleStatus(_AppMallDaoConstants.AFTERSALE_STATUS_INIT);
 
-        order.setConsignee(address.getName());
-        order.setMobile(address.getTel());
-        String fullAddress = (address.getProvince() != null ? address.getProvince() : "")
-                + (address.getCity() != null ? address.getCity() : "")
-                + (address.getCounty() != null ? address.getCounty() : "")
-                + (address.getAddressDetail() != null ? address.getAddressDetail() : "");
-        order.setAddress(fullAddress);
-
         order.setMessage(message != null ? message : "");
-        BigDecimal effectiveFreightPrice = freightPrice;
-        if (effectiveFreightPrice == null) {
-            String freightConfig = systemBiz.getConfig("mall_freight_price", context);
-            effectiveFreightPrice = freightConfig != null ? new BigDecimal(freightConfig) : BigDecimal.ZERO;
+
+        if (isPickup) {
+            // P31 自提分支：无用户收货地址（Decision B），但 consignee/mobile/address 为 NOT NULL 列，
+            // 以「自提门店」作为履约目的地填入（门店即提货点），运费=0（Decision C），写核销码 + 门店 + 配送方式。
+            order.setConsignee(pickupStore.getName());
+            order.setMobile(pickupStore.getPhone() != null ? pickupStore.getPhone() : "");
+            order.setAddress(pickupStore.getAddress() != null ? pickupStore.getAddress() : "");
+            order.setDeliveryType(_AppMallDaoConstants.DELIVERY_TYPE_PICKUP);
+            order.setPickupStoreId(pickupStore.orm_idString());
+            order.setPickupCode(generatePickupCode());
+        } else {
+            order.setDeliveryType(_AppMallDaoConstants.DELIVERY_TYPE_EXPRESS);
+            order.setConsignee(address.getName());
+            order.setMobile(address.getTel());
+            String fullAddress = (address.getProvince() != null ? address.getProvince() : "")
+                    + (address.getCity() != null ? address.getCity() : "")
+                    + (address.getCounty() != null ? address.getCounty() : "")
+                    + (address.getAddressDetail() != null ? address.getAddressDetail() : "");
+            order.setAddress(fullAddress);
+        }
+
+        BigDecimal effectiveFreightPrice;
+        if (isPickup) {
+            // Decision C: 自提不产生配送成本，freightPrice 直接置 0，绕过运费/包邮门槛计算
+            effectiveFreightPrice = BigDecimal.ZERO;
+        } else {
+            effectiveFreightPrice = freightPrice;
+            if (effectiveFreightPrice == null) {
+                String freightConfig = systemBiz.getConfig("mall_freight_price", context);
+                effectiveFreightPrice = freightConfig != null ? new BigDecimal(freightConfig) : BigDecimal.ZERO;
+            }
         }
         order.setFreightPrice(effectiveFreightPrice);
         order.setCouponPrice(BigDecimal.ZERO);
@@ -673,6 +728,12 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
                     .param("orderId", orderId)
                     .param("status", order.getOrderStatus());
         }
+        // P31 隔离 (a): 自提订单不可发货（自提订单走门店核销，不应进入发货流转）
+        if (order.getDeliveryType() != null
+                && order.getDeliveryType() == _AppMallDaoConstants.DELIVERY_TYPE_PICKUP) {
+            throw new NopException(ERR_ORDER_PICKUP_NOT_SHIPPABLE)
+                    .param(AppMallErrors.ARG_ORDER_ID, orderId);
+        }
 
         order.setOrderStatus(_AppMallDaoConstants.ORDER_STATUS_SHIP);
         order.setShipSn(shipSn);
@@ -711,6 +772,77 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
         earnPointsForOrderConfirm(order, context);
         return order;
     }
+
+    /**
+     * 门店自提核销（P31）。见 {@code docs/design/order-and-cart.md}「配送方式扩展/自提核销」：
+     * 按 pickupCode 反查订单；仅已支付(201)且 deliveryType=PICKUP 可核销；幂等（已核销跳过）；
+     * 推进到 401 终态并**复制 confirm 的真实收货副作用**（积分赠送 + 写 pickupTime），
+     * **不复用** ship 的通知/日志（自提无发货语义，Decision A 隔离 b）。
+     */
+    @Override
+    @BizMutation
+    @Auth(roles = "admin")
+    public VerifyPickupResultBean verifyPickupOrder(@Name("pickupCode") String pickupCode,
+                                                     IServiceContext context) {
+        if (pickupCode == null || pickupCode.isEmpty()) {
+            throw new NopException(ERR_PICKUP_CODE_INVALID).param("pickupCode", pickupCode);
+        }
+        QueryBean query = new QueryBean();
+        query.addFilter(FilterBeans.eq(LitemallOrder.PROP_NAME_pickupCode, pickupCode));
+        LitemallOrder order = findFirst(query, null, context);
+        if (order == null || Boolean.TRUE.equals(order.getDeleted())) {
+            throw new NopException(ERR_PICKUP_CODE_INVALID).param("pickupCode", pickupCode);
+        }
+
+        VerifyPickupResultBean result = new VerifyPickupResultBean();
+        result.setOrderId(order.orm_idString());
+        result.setOrderSn(order.getOrderSn());
+        result.setPickupCode(pickupCode);
+
+        // 幂等：已核销（已进入 401/402 收货终态）直接跳过，返回 alreadyVerified 反馈
+        if (order.getOrderStatus() != null
+                && (order.getOrderStatus() == _AppMallDaoConstants.ORDER_STATUS_CONFIRM
+                || order.getOrderStatus() == _AppMallDaoConstants.ORDER_STATUS_AUTO_CONFIRM)) {
+            result.setAlreadyVerified(true);
+            result.setMessage("订单已核销，跳过重复核销");
+            return result;
+        }
+
+        // 状态守卫：仅已支付(201)且自提订单可核销
+        if (order.getOrderStatus() != _AppMallDaoConstants.ORDER_STATUS_PAY) {
+            throw new NopException(ERR_PICKUP_ORDER_NOT_VERIFIABLE)
+                    .param(AppMallErrors.ARG_ORDER_ID, order.orm_idString())
+                    .param(AppMallErrors.ARG_CURRENT_STATUS, order.getOrderStatus());
+        }
+        if (order.getDeliveryType() == null
+                || order.getDeliveryType() != _AppMallDaoConstants.DELIVERY_TYPE_PICKUP) {
+            throw new NopException(ERR_PICKUP_ORDER_NOT_VERIFIABLE)
+                    .param(AppMallErrors.ARG_ORDER_ID, order.orm_idString())
+                    .param(AppMallErrors.ARG_CURRENT_STATUS, order.getOrderStatus());
+        }
+
+        // 推进到 401（用户已收货）终态，不经 301。复制 confirm 的真实副作用：
+        // 积分赠送 + 写 pickupTime。不发 ship 通知/日志（自提无发货语义）。
+        order.setOrderStatus(_AppMallDaoConstants.ORDER_STATUS_CONFIRM);
+        order.setConfirmTime(LocalDateTime.now());
+        order.setPickupTime(LocalDateTime.now());
+        updateEntity(order, "verifyPickupOrder", context);
+        earnPointsForOrderConfirm(order, context);
+
+        result.setAlreadyVerified(false);
+        result.setMessage("核销成功");
+        return result;
+    }
+
+    /**
+     * 生成自提核销码（P31 Decision D）。基于 UUID 去掉连字符取前 8 位大写，随机且不可枚举。
+     * 唯一性应用层保证（DB 唯一键见 Deferred model-gap）。
+     */
+    private String generatePickupCode() {
+        return StringHelper.generateUUID().replace("-", "").toUpperCase().substring(0, 8);
+    }
+
+    private static final int PICKUP_STORE_STATUS_ACTIVE = 0;
 
     @Override
     @BizMutation
@@ -1368,7 +1500,18 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
         query.addFilter(FilterBeans.le(LitemallOrder.PROP_NAME_addTime, cutoff));
         query.addOrderField(LitemallOrder.PROP_NAME_addTime, false);
         query.setLimit(100);
-        return findList(query, null, context);
+        // P31 隔离 (c): 自提订单合法停留 201 待核销，不污染逾期未发货列表。
+        // deliveryType 的 xmeta 查询算子受限（仅 eq/in/dateBetween），无法用 ne/isNull，
+        // 故在 Java 层过滤 PICKUP 订单（null deliveryType 的存量订单视为快递，保留）。
+        List<LitemallOrder> orders = findList(query, null, context);
+        List<LitemallOrder> result = new ArrayList<>();
+        for (LitemallOrder o : orders) {
+            if (o.getDeliveryType() == null
+                    || o.getDeliveryType() != _AppMallDaoConstants.DELIVERY_TYPE_PICKUP) {
+                result.add(o);
+            }
+        }
+        return result;
     }
 
     /**

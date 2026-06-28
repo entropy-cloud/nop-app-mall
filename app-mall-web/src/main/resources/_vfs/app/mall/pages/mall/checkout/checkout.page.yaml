@@ -36,12 +36,29 @@ body:
           type: wrapper
           body:
             - type: tpl
+              tpl: '<h3>配送方式</h3>'
+            - type: form
+              name: deliveryForm
+              title: ''
+              mode: normal
+              body:
+                - type: radios
+                  name: deliveryType
+                  label: 配送方式
+                  value: 0
+                  options:
+                    - {label: '快递配送', value: 0}
+                    - {label: '门店自提', value: 10}
+
+            - type: tpl
               tpl: '<h3>收货地址</h3>'
+              visibleOn: '${deliveryForm.deliveryType != 10}'
             - type: service
               name: addressList
               api:
                 url: '@query:LitemallAddress__list'
-                sendOn: true
+                sendOn: '${deliveryForm.deliveryType != 10}'
+              visibleOn: '${deliveryForm.deliveryType != 10}'
               body:
                 type: form
                 name: selectedAddress
@@ -56,6 +73,30 @@ body:
                     valueField: id
                     required: true
                     description: "${item ? item.province + item.city + item.county + item.addressDetail : ''}"
+
+            - type: tpl
+              tpl: '<h3>自提门店（运费 ¥0.00）</h3>'
+              visibleOn: '${deliveryForm.deliveryType == 10}'
+            - type: service
+              name: pickupStoreList
+              api:
+                url: '@query:LitemallPickupStore__listActiveStores'
+                sendOn: '${deliveryForm.deliveryType == 10}'
+              visibleOn: '${deliveryForm.deliveryType == 10}'
+              body:
+                type: form
+                name: selectedStore
+                title: ''
+                mode: normal
+                body:
+                  - type: select
+                    name: pickupStoreId
+                    label: 选择门店
+                    source: '${items}'
+                    labelField: name
+                    valueField: id
+                    required: true
+                    description: "${item ? item.address + '（' + item.openingHours + '）' + (item.phone ? ' 电话：' + item.phone : '') : ''}"
 
             - type: divider
             - type: tpl
@@ -177,7 +218,7 @@ body:
               name: freightService
               api:
                 url: '@query:LitemallSystem__getFreightPrice'
-                sendOn: true
+                sendOn: "${deliveryForm.deliveryType != 10}"
               body:
                 type: wrapper
                 body:
@@ -196,7 +237,7 @@ body:
                       - type: tpl
                         tpl: '运费：'
                       - type: tpl
-                        tpl: '<span>¥${data}</span>'
+                        tpl: '<span>¥${deliveryForm.deliveryType == 10 ? "0.00" : (data || 0)}</span>'
                   - type: flex
                     justify: space-between
                     visibleOn: "${promotionService.data > 0}"
@@ -215,7 +256,7 @@ body:
                       - type: tpl
                         tpl: '<b>应付金额：</b>'
                       - type: tpl
-                        tpl: '<span style="color:#ff6700;font-size:28px;font-weight:bold">¥${(cartItems.items ? SUM(cartItems.items, "price * number") : 0) + (data || 0) - (promotionService.data || 0)}</span>'
+                        tpl: '<span style="color:#ff6700;font-size:28px;font-weight:bold">¥${(cartItems.items ? SUM(cartItems.items, "price * number") : 0) + (deliveryForm.deliveryType == 10 ? 0 : (data || 0)) - (promotionService.data || 0)}</span>'
                   - type: button
                     label: 提交订单
                     level: primary
@@ -224,13 +265,15 @@ body:
                     api:
                       url: '@mutation:LitemallOrder__submit'
                       data:
-                        addressId: "${selectedAddress.addressId}"
+                        addressId: "${deliveryForm.deliveryType == 10 ? null : selectedAddress.addressId}"
                         message: "${orderForm.message}"
-                        freightPrice: "${freightService.data}"
+                        freightPrice: "${deliveryForm.deliveryType == 10 ? 0 : freightService.data}"
                         couponUserId: "${couponForm.couponUserId}"
                         grouponRulesId: "${grouponRulesId}"
                         grouponId: "${grouponId}"
                         usePoints: "${pointsForm.usePoints}"
+                        deliveryType: "${deliveryForm.deliveryType}"
+                        pickupStoreId: "${selectedStore.pickupStoreId}"
                     redirect: "/storefront-order-result?orderId=${event.data.result.id}"
                     messages:
                       success: '订单提交成功'

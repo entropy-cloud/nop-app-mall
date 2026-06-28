@@ -525,4 +525,25 @@ public interface AppMallErrors {
     ErrorCode ERR_ORDER_BATCH_SHIP_INVALID_ROW =
             define("nop.err.mall.order.batch-ship-invalid-row",
                     "批量发货行数据无效", ARG_ROW, ARG_REASON);
+
+    // 自提核销错误码（P31）
+    ErrorCode ERR_PICKUP_STORE_NOT_FOUND =
+            define("nop.err.mall.pickup-store.not-found",
+                    "自提门店不存在");
+
+    ErrorCode ERR_PICKUP_STORE_NOT_ACTIVE =
+            define("nop.err.mall.pickup-store.not-active",
+                    "自提门店未启用");
+
+    ErrorCode ERR_PICKUP_ORDER_NOT_VERIFIABLE =
+            define("nop.err.mall.pickup-order.not-verifiable",
+                    "当前订单状态不允许核销", ARG_ORDER_ID, ARG_CURRENT_STATUS);
+
+    ErrorCode ERR_PICKUP_CODE_INVALID =
+            define("nop.err.mall.pickup-code.invalid",
+                    "自提核销码无效");
+
+    ErrorCode ERR_ORDER_PICKUP_NOT_SHIPPABLE =
+            define("nop.err.mall.order.pickup-not-shippable",
+                    "自提订单不可发货，请通过门店核销", ARG_ORDER_ID);
 }

@@ -11,6 +11,7 @@ import app.mall.dao.dto.GoodsStatisticsBean;
 import app.mall.dao.dto.OrderStatisticsBean;
 import app.mall.dao.dto.UserStatisticsBean;
 import app.mall.dao.dto.BatchShipResultBean;
+import app.mall.dao.dto.VerifyPickupResultBean;
 import app.mall.dao.entity.LitemallOrder;
 
 import java.util.Map;
@@ -21,7 +22,7 @@ import java.util.List;
 public interface ILitemallOrderBiz extends ICrudBiz<LitemallOrder> {
 
     @BizMutation
-    LitemallOrder submit(@Name("addressId") String addressId,
+    LitemallOrder submit(@Optional @Name("addressId") String addressId,
                          @Optional @Name("message") String message,
                          @Name("freightPrice") BigDecimal freightPrice,
                          @Optional @Name("couponUserId") String couponUserId,
@@ -30,6 +31,8 @@ public interface ILitemallOrderBiz extends ICrudBiz<LitemallOrder> {
                          @Optional @Name("usePoints") Integer usePoints,
                          @Optional @Name("pinTuanActivityId") String pinTuanActivityId,
                          @Optional @Name("pinTuanGroupId") String pinTuanGroupId,
+                         @Optional @Name("deliveryType") Integer deliveryType,
+                         @Optional @Name("pickupStoreId") String pickupStoreId,
                          IServiceContext context);
 
     @BizMutation
@@ -64,6 +67,15 @@ public interface ILitemallOrderBiz extends ICrudBiz<LitemallOrder> {
     @BizMutation
     LitemallOrder confirm(@Name("orderId") String orderId,
                           IServiceContext context);
+
+    /**
+     * 门店自提核销（P31）。按 pickupCode 反查订单，校验状态（须为已支付且 deliveryType=PICKUP），
+     * 幂等（已核销跳过），推进到 401 终态并复制 confirm 的真实收货副作用（积分赠送 + 写 pickupTime），
+     * 不复用 ship 的通知/日志（自提无发货语义）。{@code @Auth(roles="admin")} 限定管理员/门店员可达。
+     */
+    @BizMutation
+    VerifyPickupResultBean verifyPickupOrder(@Name("pickupCode") String pickupCode,
+                                              IServiceContext context);
 
     @BizMutation
     void deleteOrder(@Name("orderId") String orderId,

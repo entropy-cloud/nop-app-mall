@@ -3,7 +3,19 @@
       xmlns:x="/nop/schema/xdsl.xdef">
 
     <grids>
-        <grid id="list"/>
+        <grid id="list">
+            <cols x:override="bounded-merge">
+                <col id="name" label="门店名称"/>
+                <col id="address" label="门店地址"/>
+                <col id="contact" label="联系人"/>
+                <col id="phone" label="联系电话"/>
+                <col id="openingHours" label="营业时间"/>
+                <col id="latitude" label="纬度" ui:number="true"/>
+                <col id="longitude" label="经度" ui:number="true"/>
+                <col id="status" label="启用状态" ui:number="true"/>
+                <col id="remark" label="备注"/>
+            </cols>
+        </grid>
         <grid id="pick-list"/>
     </grids>
 
