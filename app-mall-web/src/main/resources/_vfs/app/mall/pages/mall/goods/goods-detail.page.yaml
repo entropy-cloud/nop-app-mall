@@ -235,6 +235,21 @@ body:
                                 success: '领取成功'
                               reload: 'goodsCoupons'
 
+                # P38 库存语义化：聚合商品下全部 SKU 的 number（后端 getStockSemantic），
+                # 按后台可配阈值返回三档语义（充足/紧张/缺货）+ 文案 + 色值。
+                # 缺货（聚合库存=0）时购买按钮置灰，文案展示「已售罄」。
+                - type: service
+                  name: stockSemantic
+                  api:
+                    url: '@query:LitemallGoods__getStockSemantic'
+                    data:
+                      goodsId: "${id}"
+                    sendOn: "${id != null}"
+                  body:
+                    - type: tpl
+                      visibleOn: "${stockSemantic.data != null}"
+                      tpl: '<div style="margin:5px 0;padding:6px 10px;background:#f7f7f7;border-radius:4px"><span style="color:#999;font-size:13px">库存状态：</span><b style="color:${stockSemantic.data.color}">${stockSemantic.data.label}</b></div>'
+
                 - type: form
                   name: skuForm
                   title: 选择规格
@@ -243,6 +258,9 @@ body:
                     - type: select
                       name: productId
                       label: 规格
+                      # P38：缺货 SKU（number=0）在下拉项后追加「（缺货）」标签，不影响其他有货 SKU 选择。
+                      # 购买已选缺货 SKU 由后端 addGoods 的 ERR_CART_STOCK_INSUFFICIENT 兜底拒绝。
+                      menuTpl: '${specifications}${number == 0 ? "（缺货）" : ""}'
                       source:
                         url: '@query:LitemallGoodsProduct__findList'
                         data:
@@ -265,6 +283,8 @@ body:
                       label: 加入购物车
                       level: primary
                       size: lg
+                      # P38：聚合缺货（level=out）时置灰，阻止购买已售罄商品。
+                      disabledOn: "${stockSemantic.data != null && stockSemantic.data.level == 'out'}"
                       actionType: ajax
                       api:
                         url: '@mutation:LitemallCart__addGoods'
@@ -278,6 +298,7 @@ body:
                       label: 立即购买
                       level: danger
                       size: lg
+                      disabledOn: "${stockSemantic.data != null && stockSemantic.data.level == 'out'}"
                       actionType: ajax
                       api:
                         url: '@mutation:LitemallCart__addGoods'

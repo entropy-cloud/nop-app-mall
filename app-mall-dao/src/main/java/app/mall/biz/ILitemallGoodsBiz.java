@@ -9,6 +9,7 @@ import io.nop.api.core.beans.PageBean;
 import io.nop.core.context.IServiceContext;
 import io.nop.orm.biz.ICrudBiz;
 
+import app.mall.dao.dto.StockSemanticBean;
 import app.mall.dao.entity.LitemallGoods;
 
 public interface ILitemallGoodsBiz extends ICrudBiz<LitemallGoods>{
@@ -38,6 +39,9 @@ public interface ILitemallGoodsBiz extends ICrudBiz<LitemallGoods>{
 
     @BizQuery
     LitemallGoods frontDetail(@Name("id") String id, IServiceContext context);
+
+    @BizQuery
+    StockSemanticBean getStockSemantic(@Name("goodsId") String goodsId, IServiceContext context);
 
     @BizQuery
     PageBean<LitemallGoods> search(@Optional @Name("keyword") String keyword,

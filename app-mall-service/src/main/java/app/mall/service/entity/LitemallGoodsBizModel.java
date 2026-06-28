@@ -3,6 +3,8 @@ package app.mall.service.entity;
 
 import app.mall.biz.ILitemallGoodsBiz;
 import app.mall.biz.ILitemallOrderGoodsBiz;
+import app.mall.biz.ILitemallSystemBiz;
+import app.mall.dao.dto.StockSemanticBean;
 import app.mall.dao.entity.LitemallGoods;
 import app.mall.dao.entity.LitemallGoodsProduct;
 import app.mall.dao.entity.LitemallOrderGoods;
@@ -21,7 +23,9 @@ import io.nop.api.core.beans.query.QueryBean;
 import io.nop.api.core.exceptions.NopException;
 import io.nop.biz.crud.CrudBizModel;
 import io.nop.biz.crud.EntityData;
+import io.nop.commons.util.StringHelper;
 import io.nop.core.context.IServiceContext;
+import io.nop.orm.IOrmEntitySet;
 
 import jakarta.inject.Inject;
 import java.util.List;
@@ -34,6 +38,24 @@ import static app.mall.service.AppMallErrors.*;
 @BizModel("LitemallGoods")
 public class LitemallGoodsBizModel extends CrudBizModel<LitemallGoods> implements ILitemallGoodsBiz {
 
+    // P38 库存语义化阈值/文案配置键（存于 LitemallSystem，复用 ILitemallSystemBiz.getConfig + 代码兜底默认）。
+    public static final String CONFIG_STOCK_THRESHOLD_TIGHT = "mall_stock_threshold_tight";
+    public static final String CONFIG_STOCK_LABEL_SUFFICIENT = "mall_stock_label_sufficient";
+    public static final String CONFIG_STOCK_LABEL_TIGHT = "mall_stock_label_tight";
+    public static final String CONFIG_STOCK_LABEL_OUT = "mall_stock_label_out";
+    public static final String CONFIG_STOCK_COLOR_SUFFICIENT = "mall_stock_color_sufficient";
+    public static final String CONFIG_STOCK_COLOR_TIGHT = "mall_stock_color_tight";
+    public static final String CONFIG_STOCK_COLOR_OUT = "mall_stock_color_out";
+
+    // 默认：充足 > 10；紧张 1-10（含边界）；缺货 = 0。文案与色值可后台覆盖。
+    public static final int DEFAULT_STOCK_THRESHOLD_TIGHT = 10;
+    public static final String DEFAULT_STOCK_LABEL_SUFFICIENT = "库存充足";
+    public static final String DEFAULT_STOCK_LABEL_TIGHT = "仅剩 {n}";
+    public static final String DEFAULT_STOCK_LABEL_OUT = "已售罄";
+    public static final String DEFAULT_STOCK_COLOR_SUFFICIENT = "#17a2b8";
+    public static final String DEFAULT_STOCK_COLOR_TIGHT = "#dc3545";
+    public static final String DEFAULT_STOCK_COLOR_OUT = "#999999";
+
     @Inject
     LitemallGoodsMapper goodsMapper;
 
@@ -42,6 +64,9 @@ public class LitemallGoodsBizModel extends CrudBizModel<LitemallGoods> implement
 
     @Inject
     ILitemallOrderGoodsBiz orderGoodsBiz;
+
+    @Inject
+    ILitemallSystemBiz systemBiz;
 
     public LitemallGoodsBizModel() {
         setEntityName(LitemallGoods.class.getName());
@@ -186,6 +211,66 @@ public class LitemallGoodsBizModel extends CrudBizModel<LitemallGoods> implement
                     .param("goodsId", id);
         }
         return goods;
+    }
+
+    @Override
+    @BizQuery
+    @Auth(publicAccess = true)
+    public StockSemanticBean getStockSemantic(@Name("goodsId") String goodsId, IServiceContext context) {
+        LitemallGoods goods = get(goodsId, false, context);
+        if (goods == null) {
+            throw new NopException(ERR_GOODS_NOT_FOUND).param("goodsId", goodsId);
+        }
+
+        // 聚合商品下全部 SKU 的可用库存（求和，Decision A：求和更贴合「该商品是否还可买」的用户心智）。
+        IOrmEntitySet<LitemallGoodsProduct> products = goods.getProducts();
+        int totalStock = 0;
+        if (products != null) {
+            for (LitemallGoodsProduct product : products) {
+                if (product.getNumber() != null) {
+                    totalStock += product.getNumber();
+                }
+            }
+        }
+
+        int tightThreshold = resolveStockThreshold(context);
+
+        StockSemanticBean result = new StockSemanticBean();
+        result.setStockNumber(totalStock);
+        if (totalStock <= 0) {
+            result.setLevel(StockSemanticBean.LEVEL_OUT);
+            result.setLabel(resolveStockText(CONFIG_STOCK_LABEL_OUT, DEFAULT_STOCK_LABEL_OUT, totalStock, context));
+            result.setColor(resolveStockText(CONFIG_STOCK_COLOR_OUT, DEFAULT_STOCK_COLOR_OUT, totalStock, context));
+        } else if (totalStock <= tightThreshold) {
+            result.setLevel(StockSemanticBean.LEVEL_TIGHT);
+            result.setLabel(resolveStockText(CONFIG_STOCK_LABEL_TIGHT, DEFAULT_STOCK_LABEL_TIGHT, totalStock, context));
+            result.setColor(resolveStockText(CONFIG_STOCK_COLOR_TIGHT, DEFAULT_STOCK_COLOR_TIGHT, totalStock, context));
+        } else {
+            result.setLevel(StockSemanticBean.LEVEL_SUFFICIENT);
+            result.setLabel(resolveStockText(CONFIG_STOCK_LABEL_SUFFICIENT, DEFAULT_STOCK_LABEL_SUFFICIENT, totalStock, context));
+            result.setColor(resolveStockText(CONFIG_STOCK_COLOR_SUFFICIENT, DEFAULT_STOCK_COLOR_SUFFICIENT, totalStock, context));
+        }
+        return result;
+    }
+
+    private int resolveStockThreshold(IServiceContext context) {
+        String raw = systemBiz.getConfig(CONFIG_STOCK_THRESHOLD_TIGHT, context);
+        if (StringHelper.isEmpty(raw)) {
+            return DEFAULT_STOCK_THRESHOLD_TIGHT;
+        }
+        try {
+            int parsed = Integer.parseInt(raw.trim());
+            return parsed >= 0 ? parsed : DEFAULT_STOCK_THRESHOLD_TIGHT;
+        } catch (NumberFormatException e) {
+            return DEFAULT_STOCK_THRESHOLD_TIGHT;
+        }
+    }
+
+    private String resolveStockText(String key, String defaultValue, int stockNumber, IServiceContext context) {
+        String raw = systemBiz.getConfig(key, context);
+        String tpl = StringHelper.isEmpty(raw) ? defaultValue : raw;
+        // 紧张档位文案支持 {n} 占位符替换为实际聚合库存（充足/缺货档位通常不含 {n}，替换无副作用）。
+        return tpl.replace("{n}", String.valueOf(stockNumber));
     }
 
     @Override
