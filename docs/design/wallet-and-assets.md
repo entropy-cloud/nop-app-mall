@@ -49,7 +49,7 @@
   - 后台调账（加） = `RECHARGE` + `sourceType=admin-adjust`
   - 后台调账（扣） = `PAY` + `sourceType=admin-adjust`
   - 余额支付扣款 = `PAY` + `sourceType=pay`（P30 接线）
-  - 退款返还 = `REFUND` + `sourceType=refund`（退款流程未实现，预留语义）
+  - 退款返还 = `REFUND` + `sourceType=recharge-refund`（充值退款异步对账已落地，见下「充值退款对账」）
   - 提现 = `WITHDRAW` + `sourceType=withdraw`（未实现，预留语义）
 - `sourceId` 记录来源业务 ID（rechargeId 等），支撑幂等查重（如同一 rechargeId 不重复入账）。
 
@@ -77,6 +77,17 @@
 - **回调路由：** `PaymentCallbackImpl.onPaymentSuccess` 按 outTradeNo 前缀分流——`RC` 开头 → `rechargeBiz.confirmRechargeByNotify`；否则 → `orderBiz.confirmPaidByNotify`（现有行为不变）。**不变量：** 订单 outTradeNo = `generateOrderSn()` = 32 位小写 hex UUID，永不以大写 `RC` 开头；若未来 `generateOrderSn()` 引入字母前缀，必须重新评估 RC 路由分流。
 - **confirmRechargeByNotify 暴露模型（资金安全）：** `@BizAction` 内部方法（不暴露 GraphQL），仅由 `PaymentCallbackImpl` 经 `ILitemallRechargeBiz` 注入调用。若为公开 `@BizMutation`，攻击者可先 `createRecharge(amount=1000)` 得 rechargeId，再按 `RC`+填充格式算出 outTradeNo 直接调确认接口给钱包充值（资金盗刷）。`confirmRecharge`（demo 手动确认）有 `!payService.isEnabled()` 守卫故风险低，保持 `@BizMutation`。
 - **充值入账：** `creditRecharge` 将充值金额 + 赠送金额一次性调 `creditBalance` 入账（`changeType=RECHARGE`，`sourceType=recharge`，`sourceId=rechargeId` 幂等），并回填 `walletId`、更新 `payStatus=PAID`。
+
+### 充值退款对账（P29 deferred successor）
+
+- **触发场景：** 微信/支付宝商户后台对一笔充值支付主动发起退款（重复扣款客诉、运营手工退款等）。渠道侧退款异步通知到达 `PaymentCallbackImpl.onRefundSuccess`，按 outTradeNo 前缀 `RC` 路由到 `LitemallRechargeBizModel.refundRechargeByNotify`（与正向 `confirmRechargeByNotify` 对称的受信 `@BizAction` 内部入口，不暴露 GraphQL）。
+- **回冲语义：** `payStatus==PAID` 的充值被回冲——调 `walletBiz.debitBalance(userId, amount+giftAmount, changeType=REFUND, sourceType=recharge-refund, sourceId=rechargeId)` 原子扣减（乐观锁），写 `WalletFlow(REFUND, recharge-refund)` 含 `balanceAfter` 快照，并将 `payStatus` 推进至 `REFUNDED`。`sourceType=recharge-refund` 而非 owner doc 此前预留的宽泛 `refund`，以明确归属充值退款对账、与正向 `sourceType=recharge` 对称可追溯（未来若出现「订单退款返还到钱包」场景可再用独立 sourceType 区分）。
+- **幂等（渠道重放安全）：**
+  - `payStatus==REFUNDED` → 已回冲，no-op（重放通知安全）。
+  - `payStatus==UNPAID` → 从未入账，无需回冲，no-op。
+  - `payStatus==PAID` 的并发退款通知（渠道重放/并发）→ `debitBalance` 乐观锁保证不双扣（仅一个 `updateBalanceIfVersion` 命中），败者 catch `ERR_WALLET_VERSION_CONFLICT` 后记 WARN 并视为幂等 return（胜者已推进 REFUNDED，下一次重试命中 REFUNDED 守卫）。
+- **降级（余额不足）：** 用户在退款通知到达前已花完充值余额时，`debitBalance` 抛 `ERR_WALLET_INSUFFICIENT`。`refundRechargeByNotify` catch + 记 WARN 人工对账，**不推进 REFUNDED**、**不允许负余额**（保留 `debitBalance` 资金安全不变量）。运营经 `adminAdjust` 负向调账 + 标记兜底。残留风险（充值→快速消费→渠道退款三连）为低频边缘，记为 watch-only successor。
+- **与正向入账对称：** `confirmRechargeByNotify`（UNPAID→PAID，credit amount+gift，RECHARGE/recharge）↔ `refundRechargeByNotify`（PAID→REFUNDED，debit amount+gift，REFUND/recharge-refund），同为 `@BizAction` 受信内部入口、同按 outTradeNo `RC` 前缀路由、同幂等（状态守卫 + sourceId 源级去重 + 乐观锁）。
 
 ### 业务规则
 
