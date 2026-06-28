@@ -29,3 +29,7 @@ options:
     value: 5
     description: 
   
+  - label: 用户已退货待收货
+    value: 6
+    description: 
+  

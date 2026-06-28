@@ -106,6 +106,10 @@ prop:
       orderItemId: null
       processNote: null
       processTime: null
+      returnShipChannel: null
+      returnShipSn: null
+      returnTime: null
+      receiveConfirmTime: null
       order: Order
       order.orderSn: Order
       picturesComponentFileStatusList: null

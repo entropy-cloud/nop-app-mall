@@ -20,6 +20,10 @@
                 <col id="handleTime"/>
                 <col id="processTime"/>
                 <col id="processNote"/>
+                <col id="returnShipChannel"/>
+                <col id="returnShipSn"/>
+                <col id="returnTime"/>
+                <col id="receiveConfirmTime"/>
             </cols>
         </grid>
         <grid id="pick-list"/>
@@ -35,6 +39,12 @@
                 <eq name="status" value="#{AppMallDaoConstants.AFTERSALE_STATUS_APPROVED}"/>
             </filter>
         </grid>
+
+        <grid id="wait-receive-list" x:prototype="list">
+            <filter>
+                <eq name="status" value="#{AppMallDaoConstants.AFTERSALE_STATUS_RETURNED}"/>
+            </filter>
+        </grid>
     </grids>
 
     <forms>
@@ -46,6 +56,8 @@
                 amount[退款金额] comment[退款说明]
                 addTime[申请时间] handleTime[审核处理时间]
                 processTime[退款完成时间] processNote[处理备注]
+                returnShipChannel[退货物流公司] returnShipSn[退货运单号]
+                returnTime[用户退货发货时间] receiveConfirmTime[管理员确认收货时间]
             </layout>
         </form>
         <form id="edit"/>
@@ -102,9 +114,25 @@
             </rowActions>
         </crud>
 
+        <crud name="wait-receive" x:prototype="main" grid="wait-receive-list">
+            <listActions x:prototype-override="remove" />
+            <rowActions x:prototype-override="bounded-merge">
+                <action id="row-view-button" />
+                <action id="confirm-return-button" label="确认收货" level="primary">
+                    <api url="@mutation:LitemallAftersale__confirmReturnReceived">
+                        <data>
+                            <id>$id</id>
+                        </data>
+                    </api>
+                    <confirmText>确认已收到退货并退款吗？</confirmText>
+                </action>
+            </rowActions>
+        </crud>
+
         <tabs name="all" mountOnEnter="true" unmountOnExit="true" >
             <tab name="main" title="全部"/>
             <tab name="wait-approve" title="待审批"/>
+            <tab name="wait-receive" title="待收货"/>
             <tab name="wait-refund" title="待退款" />
         </tabs>
     </pages>

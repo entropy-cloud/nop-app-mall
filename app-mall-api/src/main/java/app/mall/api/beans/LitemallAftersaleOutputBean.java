@@ -287,6 +287,62 @@
         }
 
 
+        private String _returnShipChannel;
+
+    
+        @PropMeta(propId=18)
+    
+        public String getReturnShipChannel(){
+            return _returnShipChannel;
+        }
+
+        public void setReturnShipChannel(String value){
+            this._returnShipChannel = value;
+        }
+
+
+        private String _returnShipSn;
+
+    
+        @PropMeta(propId=19)
+    
+        public String getReturnShipSn(){
+            return _returnShipSn;
+        }
+
+        public void setReturnShipSn(String value){
+            this._returnShipSn = value;
+        }
+
+
+        private java.time.LocalDateTime _returnTime;
+
+    
+        @PropMeta(propId=20)
+    
+        public java.time.LocalDateTime getReturnTime(){
+            return _returnTime;
+        }
+
+        public void setReturnTime(java.time.LocalDateTime value){
+            this._returnTime = value;
+        }
+
+
+        private java.time.LocalDateTime _receiveConfirmTime;
+
+    
+        @PropMeta(propId=21)
+    
+        public java.time.LocalDateTime getReceiveConfirmTime(){
+            return _receiveConfirmTime;
+        }
+
+        public void setReceiveConfirmTime(java.time.LocalDateTime value){
+            this._receiveConfirmTime = value;
+        }
+
+
         private java.util.List<io.nop.api.core.beans.file.FileStatusBean> _picturesComponentFileStatusList;
 
     

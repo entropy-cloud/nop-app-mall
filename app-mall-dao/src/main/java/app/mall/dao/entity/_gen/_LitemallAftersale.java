@@ -89,8 +89,24 @@ public class _LitemallAftersale extends DynamicOrmEntity{
     public static final String PROP_NAME_processTime = "processTime";
     public static final int PROP_ID_processTime = 17;
     
+    /* 退货物流公司: RETURN_SHIP_CHANNEL VARCHAR */
+    public static final String PROP_NAME_returnShipChannel = "returnShipChannel";
+    public static final int PROP_ID_returnShipChannel = 18;
+    
+    /* 退货运单号: RETURN_SHIP_SN VARCHAR */
+    public static final String PROP_NAME_returnShipSn = "returnShipSn";
+    public static final int PROP_ID_returnShipSn = 19;
+    
+    /* 用户退货发货时间: RETURN_TIME DATETIME */
+    public static final String PROP_NAME_returnTime = "returnTime";
+    public static final int PROP_ID_returnTime = 20;
+    
+    /* 管理员确认收货时间: RECEIVE_CONFIRM_TIME DATETIME */
+    public static final String PROP_NAME_receiveConfirmTime = "receiveConfirmTime";
+    public static final int PROP_ID_receiveConfirmTime = 21;
+    
 
-    private static int _PROP_ID_BOUND = 18;
+    private static int _PROP_ID_BOUND = 22;
 
     
     /* relation: 订单 */
@@ -103,7 +119,7 @@ public class _LitemallAftersale extends DynamicOrmEntity{
     protected static final List<String> PK_PROP_NAMES = Arrays.asList(PROP_NAME_id);
     protected static final int[] PK_PROP_IDS = new int[]{PROP_ID_id};
 
-    private static final String[] PROP_ID_TO_NAME = new String[18];
+    private static final String[] PROP_ID_TO_NAME = new String[22];
     private static final Map<String,Integer> PROP_NAME_TO_ID = new HashMap<>();
     static{
       
@@ -158,6 +174,18 @@ public class _LitemallAftersale extends DynamicOrmEntity{
           PROP_ID_TO_NAME[PROP_ID_processTime] = PROP_NAME_processTime;
           PROP_NAME_TO_ID.put(PROP_NAME_processTime, PROP_ID_processTime);
       
+          PROP_ID_TO_NAME[PROP_ID_returnShipChannel] = PROP_NAME_returnShipChannel;
+          PROP_NAME_TO_ID.put(PROP_NAME_returnShipChannel, PROP_ID_returnShipChannel);
+      
+          PROP_ID_TO_NAME[PROP_ID_returnShipSn] = PROP_NAME_returnShipSn;
+          PROP_NAME_TO_ID.put(PROP_NAME_returnShipSn, PROP_ID_returnShipSn);
+      
+          PROP_ID_TO_NAME[PROP_ID_returnTime] = PROP_NAME_returnTime;
+          PROP_NAME_TO_ID.put(PROP_NAME_returnTime, PROP_ID_returnTime);
+      
+          PROP_ID_TO_NAME[PROP_ID_receiveConfirmTime] = PROP_NAME_receiveConfirmTime;
+          PROP_NAME_TO_ID.put(PROP_NAME_receiveConfirmTime, PROP_ID_receiveConfirmTime);
+      
     }
 
     
@@ -211,6 +239,18 @@ public class _LitemallAftersale extends DynamicOrmEntity{
     
     /* 处理时间: PROCESS_TIME */
     private java.time.LocalDateTime _processTime;
+    
+    /* 退货物流公司: RETURN_SHIP_CHANNEL */
+    private java.lang.String _returnShipChannel;
+    
+    /* 退货运单号: RETURN_SHIP_SN */
+    private java.lang.String _returnShipSn;
+    
+    /* 用户退货发货时间: RETURN_TIME */
+    private java.time.LocalDateTime _returnTime;
+    
+    /* 管理员确认收货时间: RECEIVE_CONFIRM_TIME */
+    private java.time.LocalDateTime _receiveConfirmTime;
     
 
     public _LitemallAftersale(){
@@ -336,6 +376,18 @@ public class _LitemallAftersale extends DynamicOrmEntity{
         
             case PROP_ID_processTime:
                return getProcessTime();
+        
+            case PROP_ID_returnShipChannel:
+               return getReturnShipChannel();
+        
+            case PROP_ID_returnShipSn:
+               return getReturnShipSn();
+        
+            case PROP_ID_returnTime:
+               return getReturnTime();
+        
+            case PROP_ID_receiveConfirmTime:
+               return getReceiveConfirmTime();
         
            default:
               return super.orm_propValue(propId);
@@ -518,6 +570,46 @@ public class _LitemallAftersale extends DynamicOrmEntity{
                break;
             }
         
+            case PROP_ID_returnShipChannel:{
+               java.lang.String typedValue = null;
+               if(value != null){
+                   typedValue = ConvertHelper.toString(value,
+                       err-> newTypeConversionError(PROP_NAME_returnShipChannel));
+               }
+               setReturnShipChannel(typedValue);
+               break;
+            }
+        
+            case PROP_ID_returnShipSn:{
+               java.lang.String typedValue = null;
+               if(value != null){
+                   typedValue = ConvertHelper.toString(value,
+                       err-> newTypeConversionError(PROP_NAME_returnShipSn));
+               }
+               setReturnShipSn(typedValue);
+               break;
+            }
+        
+            case PROP_ID_returnTime:{
+               java.time.LocalDateTime typedValue = null;
+               if(value != null){
+                   typedValue = ConvertHelper.toLocalDateTime(value,
+                       err-> newTypeConversionError(PROP_NAME_returnTime));
+               }
+               setReturnTime(typedValue);
+               break;
+            }
+        
+            case PROP_ID_receiveConfirmTime:{
+               java.time.LocalDateTime typedValue = null;
+               if(value != null){
+                   typedValue = ConvertHelper.toLocalDateTime(value,
+                       err-> newTypeConversionError(PROP_NAME_receiveConfirmTime));
+               }
+               setReceiveConfirmTime(typedValue);
+               break;
+            }
+        
            default:
               super.orm_propValue(propId,value);
         }
@@ -642,6 +734,34 @@ public class _LitemallAftersale extends DynamicOrmEntity{
             case PROP_ID_processTime:{
                onInitProp(propId);
                this._processTime = (java.time.LocalDateTime)value;
+               
+               break;
+            }
+        
+            case PROP_ID_returnShipChannel:{
+               onInitProp(propId);
+               this._returnShipChannel = (java.lang.String)value;
+               
+               break;
+            }
+        
+            case PROP_ID_returnShipSn:{
+               onInitProp(propId);
+               this._returnShipSn = (java.lang.String)value;
+               
+               break;
+            }
+        
+            case PROP_ID_returnTime:{
+               onInitProp(propId);
+               this._returnTime = (java.time.LocalDateTime)value;
+               
+               break;
+            }
+        
+            case PROP_ID_receiveConfirmTime:{
+               onInitProp(propId);
+               this._receiveConfirmTime = (java.time.LocalDateTime)value;
                
                break;
             }
@@ -971,6 +1091,82 @@ public class _LitemallAftersale extends DynamicOrmEntity{
         if(onPropSet(PROP_ID_processTime,value)){
             this._processTime = value;
             internalClearRefs(PROP_ID_processTime);
+            
+        }
+    }
+    
+    /**
+     * 退货物流公司: RETURN_SHIP_CHANNEL
+     */
+    public final java.lang.String getReturnShipChannel(){
+         onPropGet(PROP_ID_returnShipChannel);
+         return _returnShipChannel;
+    }
+
+    /**
+     * 退货物流公司: RETURN_SHIP_CHANNEL
+     */
+    public final void setReturnShipChannel(java.lang.String value){
+        if(onPropSet(PROP_ID_returnShipChannel,value)){
+            this._returnShipChannel = value;
+            internalClearRefs(PROP_ID_returnShipChannel);
+            
+        }
+    }
+    
+    /**
+     * 退货运单号: RETURN_SHIP_SN
+     */
+    public final java.lang.String getReturnShipSn(){
+         onPropGet(PROP_ID_returnShipSn);
+         return _returnShipSn;
+    }
+
+    /**
+     * 退货运单号: RETURN_SHIP_SN
+     */
+    public final void setReturnShipSn(java.lang.String value){
+        if(onPropSet(PROP_ID_returnShipSn,value)){
+            this._returnShipSn = value;
+            internalClearRefs(PROP_ID_returnShipSn);
+            
+        }
+    }
+    
+    /**
+     * 用户退货发货时间: RETURN_TIME
+     */
+    public final java.time.LocalDateTime getReturnTime(){
+         onPropGet(PROP_ID_returnTime);
+         return _returnTime;
+    }
+
+    /**
+     * 用户退货发货时间: RETURN_TIME
+     */
+    public final void setReturnTime(java.time.LocalDateTime value){
+        if(onPropSet(PROP_ID_returnTime,value)){
+            this._returnTime = value;
+            internalClearRefs(PROP_ID_returnTime);
+            
+        }
+    }
+    
+    /**
+     * 管理员确认收货时间: RECEIVE_CONFIRM_TIME
+     */
+    public final java.time.LocalDateTime getReceiveConfirmTime(){
+         onPropGet(PROP_ID_receiveConfirmTime);
+         return _receiveConfirmTime;
+    }
+
+    /**
+     * 管理员确认收货时间: RECEIVE_CONFIRM_TIME
+     */
+    public final void setReceiveConfirmTime(java.time.LocalDateTime value){
+        if(onPropSet(PROP_ID_receiveConfirmTime,value)){
+            this._receiveConfirmTime = value;
+            internalClearRefs(PROP_ID_receiveConfirmTime);
             
         }
     }

@@ -532,4 +532,254 @@ public class TestLitemallAftersaleBizModel extends JunitBaseTestCase {
         approve(aftersaleId);
         return aftersaleId;
     }
+
+    // ============ Phase 16b: GOODS_REQUIRED return fulfillment (RETURNED substate) ============
+
+    /**
+     * Build a CONFIRM-state order so GOODS_REQUIRED (type=2) aftersale is allowed.
+     * submit → pay → ship → confirm → returns orderId.
+     */
+    @SuppressWarnings("unchecked")
+    private String createPaidShippedAndConfirmedOrder(boolean multiItem) {
+        String orderId = createAndPayOrder(multiItem);
+
+        ApiRequest<Map<String, Object>> shipReq = ApiRequest.build(Map.of(
+                "orderId", orderId, "shipSn", "SF-RETURN-001", "shipChannel", "顺丰"));
+        IGraphQLExecutionContext shipCtx = graphQLEngine.newRpcContext(
+                GraphQLOperationType.mutation, "LitemallOrder__ship", shipReq);
+        ApiResponse<?> shipResult = graphQLEngine.executeRpc(shipCtx);
+        assertEquals(0, shipResult.getStatus(), "ship failed: " + shipResult);
+
+        ApiRequest<Map<String, Object>> confirmReq = ApiRequest.build(Map.of("orderId", orderId));
+        IGraphQLExecutionContext confirmCtx = graphQLEngine.newRpcContext(
+                GraphQLOperationType.mutation, "LitemallOrder__confirm", confirmReq);
+        ApiResponse<?> confirmResult = graphQLEngine.executeRpc(confirmCtx);
+        assertEquals(0, confirmResult.getStatus(), "confirm failed: " + confirmResult);
+        Map<String, Object> confirmed = (Map<String, Object>) confirmResult.getData();
+        assertEquals(_AppMallDaoConstants.ORDER_STATUS_CONFIRM, confirmed.get("orderStatus"));
+        return orderId;
+    }
+
+    private ApiResponse<?> submitReturnLogistics(String aftersaleId, String channel, String sn) {
+        ApiRequest<Map<String, Object>> req = ApiRequest.build(Map.of(
+                "id", aftersaleId, "returnShipChannel", channel, "returnShipSn", sn));
+        IGraphQLExecutionContext ctx = graphQLEngine.newRpcContext(
+                GraphQLOperationType.mutation, "LitemallAftersale__submitReturnLogistics", req);
+        return graphQLEngine.executeRpc(ctx);
+    }
+
+    private ApiResponse<?> confirmReturnReceived(String aftersaleId) {
+        ApiRequest<Map<String, Object>> req = ApiRequest.build(Map.of("id", aftersaleId));
+        IGraphQLExecutionContext ctx = graphQLEngine.newRpcContext(
+                GraphQLOperationType.mutation, "LitemallAftersale__confirmReturnReceived", req);
+        return graphQLEngine.executeRpc(ctx);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testGoodsRequiredFullReturnChain() {
+        String orderId = createPaidShippedAndConfirmedOrder(false);
+        String orderItemId = null; // whole-order GOODS_REQUIRED
+
+        // apply whole-order GOODS_REQUIRED on CONFIRM(401) order
+        ApiResponse<?> applyResult = apply(Map.of(
+                "orderId", orderId,
+                "type", 2,
+                "reason", "质量问题",
+                "amount", BigDecimal.valueOf(198)
+        ));
+        assertEquals(0, applyResult.getStatus(), "apply GOODS_REQUIRED failed: " + applyResult);
+        Map<String, Object> aftersale = (Map<String, Object>) applyResult.getData();
+        String aftersaleId = (String) aftersale.get("id");
+
+        // approve
+        approve(aftersaleId);
+
+        // user submits return logistics: APPROVED -> RETURNED
+        ApiResponse<?> submitResult = submitReturnLogistics(aftersaleId, "顺丰", "RETURN-SN-001");
+        assertEquals(0, submitResult.getStatus(), "submitReturnLogistics failed: " + submitResult);
+        Map<String, Object> submitted = (Map<String, Object>) submitResult.getData();
+        assertEquals(_AppMallDaoConstants.AFTERSALE_STATUS_RETURNED, submitted.get("status"));
+        assertEquals("RETURN-SN-001", submitted.get("returnShipSn"));
+        assertNotNull(submitted.get("returnTime"));
+
+        // While RETURNED is in progress, order-level aftersaleStatus stays REQUEST.
+        LitemallOrder orderMid = daoProvider.daoFor(LitemallOrder.class).getEntityById(orderId);
+        assertEquals(_AppMallDaoConstants.AFTERSALE_STATUS_REQUEST, orderMid.getAftersaleStatus(),
+                "RETURNED should be treated as in-progress -> order aftersaleStatus=REQUEST");
+
+        // Stock before confirmReturnReceived: should be reduced by the order's quantity (the goods are with the user).
+        LitemallGoodsProduct productBefore = daoProvider.daoFor(LitemallGoodsProduct.class).getEntityById(productId);
+        int stockBefore = productBefore.getNumber();
+
+        // admin confirms receipt + refund: RETURNED -> REFUND, restock happens here
+        ApiResponse<?> confirmResult = confirmReturnReceived(aftersaleId);
+        assertEquals(0, confirmResult.getStatus(), "confirmReturnReceived failed: " + confirmResult);
+
+        LitemallAftersale updated = daoProvider.daoFor(LitemallAftersale.class).getEntityById(aftersaleId);
+        assertEquals(_AppMallDaoConstants.AFTERSALE_STATUS_REFUND, updated.getStatus());
+        assertNotNull(updated.getReceiveConfirmTime(), "receiveConfirmTime must be set on confirm");
+
+        // Restock happened in confirmReturnReceived (+2 units for the whole-order line of quantity 2).
+        LitemallGoodsProduct productAfter = daoProvider.daoFor(LitemallGoodsProduct.class).getEntityById(productId);
+        assertEquals(stockBefore + 2, productAfter.getNumber(),
+                "stock should be restored (+2) on confirmReturnReceived: before=" + stockBefore
+                        + " after=" + productAfter.getNumber());
+
+        // Order aggregate aftersaleStatus returns to INIT after REFUND terminal.
+        LitemallOrder order = daoProvider.daoFor(LitemallOrder.class).getEntityById(orderId);
+        assertEquals(_AppMallDaoConstants.AFTERSALE_STATUS_INIT, order.getAftersaleStatus());
+    }
+
+    @Test
+    public void testGoodsRequiredRejectRefundPath() {
+        String orderId = createPaidShippedAndConfirmedOrder(false);
+
+        ApiResponse<?> applyResult = apply(Map.of(
+                "orderId", orderId,
+                "type", 2,
+                "reason", "质量问题",
+                "amount", BigDecimal.valueOf(198)
+        ));
+        assertEquals(0, applyResult.getStatus());
+        String aftersaleId = ((Map<String, Object>) applyResult.getData()).get("id").toString();
+        approve(aftersaleId);
+
+        // GOODS_REQUIRED at APPROVED must NOT go through refund() — it must be rejected.
+        ApiResponse<?> refundResult = refund(aftersaleId);
+        assertTrue(refundResult.getStatus() != 0,
+                "GOODS_REQUIRED must not use refund(); should be rejected: " + refundResult);
+
+        // Status remains APPROVED (refund rejected).
+        LitemallAftersale unchanged = daoProvider.daoFor(LitemallAftersale.class).getEntityById(aftersaleId);
+        assertEquals(_AppMallDaoConstants.AFTERSALE_STATUS_APPROVED, unchanged.getStatus());
+    }
+
+    @Test
+    public void testSubmitReturnLogisticsGuardRejections() {
+        String orderId = createPaidShippedAndConfirmedOrder(false);
+
+        // REQUEST (not yet approved) → submit logistics rejected (status guard)
+        ApiResponse<?> applyResult = apply(Map.of(
+                "orderId", orderId, "type", 2, "reason", "质量问题",
+                "amount", BigDecimal.valueOf(198)));
+        assertEquals(0, applyResult.getStatus());
+        String aftersaleId = ((Map<String, Object>) applyResult.getData()).get("id").toString();
+
+        ApiResponse<?> r1 = submitReturnLogistics(aftersaleId, "顺丰", "SN-1");
+        assertTrue(r1.getStatus() != 0, "submit logistics on REQUEST state should be rejected: " + r1);
+    }
+
+    @Test
+    public void testSubmitReturnLogisticsTypeGuard() {
+        // GOODS_MISS type at APPROVED → submit logistics rejected (type guard: only GOODS_REQUIRED qualifies).
+        String orderId = createAndPayOrder(false);
+        ApiResponse<?> applyResult = apply(Map.of(
+                "orderId", orderId, "type", 0, "reason", "质量问题",
+                "amount", BigDecimal.valueOf(50)));
+        assertEquals(0, applyResult.getStatus());
+        String aftersaleId = ((Map<String, Object>) applyResult.getData()).get("id").toString();
+        approve(aftersaleId);
+
+        ApiResponse<?> r2 = submitReturnLogistics(aftersaleId, "顺丰", "SN-2");
+        assertTrue(r2.getStatus() != 0,
+                "submit logistics on GOODS_MISS type should be rejected: " + r2);
+    }
+
+    @Test
+    public void testConfirmReturnReceivedGuardRejection() {
+        String orderId = createPaidShippedAndConfirmedOrder(false);
+
+        // Apply + approve GOODS_REQUIRED, then try confirm-receive BEFORE submitting logistics (still APPROVED).
+        ApiResponse<?> applyResult = apply(Map.of(
+                "orderId", orderId, "type", 2, "reason", "质量问题",
+                "amount", BigDecimal.valueOf(198)));
+        assertEquals(0, applyResult.getStatus());
+        String aftersaleId = ((Map<String, Object>) applyResult.getData()).get("id").toString();
+        approve(aftersaleId);
+
+        ApiResponse<?> r = confirmReturnReceived(aftersaleId);
+        assertTrue(r.getStatus() != 0,
+                "confirmReturnReceived on APPROVED (not RETURNED) should be rejected: " + r);
+    }
+
+    @Test
+    public void testReturnedStateItemMutex() {
+        // GOODS_REQUIRED in RETURNED state must keep the item mutex: same item cannot open a second aftersale.
+        String orderId = createPaidShippedAndConfirmedOrder(false);
+        String orderItemId = orderGoodsOf(orderId).get(0).getId();
+
+        // apply item-level GOODS_REQUIRED
+        ApiResponse<?> first = apply(Map.of(
+                "orderId", orderId, "orderItemId", orderItemId,
+                "type", 2, "reason", "质量问题",
+                "amount", BigDecimal.valueOf(99)));
+        assertEquals(0, first.getStatus(), "first apply failed: " + first);
+        String aftersaleId = ((Map<String, Object>) first.getData()).get("id").toString();
+        approve(aftersaleId);
+        assertEquals(0, submitReturnLogistics(aftersaleId, "顺丰", "SN-X").getStatus(),
+                "submitReturnLogistics should succeed");
+
+        // Second apply on same item while RETURNED in progress → must be rejected.
+        ApiResponse<?> second = apply(Map.of(
+                "orderId", orderId, "orderItemId", orderItemId,
+                "type", 2, "reason", "质量问题",
+                "amount", BigDecimal.valueOf(50)));
+        assertEquals(-1, second.getStatus(),
+                "RETURNED in-progress item mutex should reject second apply: " + second);
+
+        // Order aggregate reflects in-progress (RETURNED counts).
+        LitemallOrder order = daoProvider.daoFor(LitemallOrder.class).getEntityById(orderId);
+        assertEquals(_AppMallDaoConstants.AFTERSALE_STATUS_REQUEST, order.getAftersaleStatus());
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testGoodsNeedlessRefundNoRegression() {
+        // GOODS_NEEDLESS (type=1) on CONFIRM order keeps the direct APPROVED -> REFUND path (no RETURNED),
+        // and does NOT restock (goods stay with the user).
+        String orderId = createPaidShippedAndConfirmedOrder(false);
+
+        ApiResponse<?> applyResult = apply(Map.of(
+                "orderId", orderId, "type", 1, "reason", "质量问题",
+                "amount", BigDecimal.valueOf(198)));
+        assertEquals(0, applyResult.getStatus(), "apply GOODS_NEEDLESS failed: " + applyResult);
+        String aftersaleId = ((Map<String, Object>) applyResult.getData()).get("id").toString();
+        approve(aftersaleId);
+
+        LitemallGoodsProduct productBefore = daoProvider.daoFor(LitemallGoodsProduct.class).getEntityById(productId);
+        int stockBefore = productBefore.getNumber();
+
+        // refund() on GOODS_NEEDLESS/CONFIRM order must work (no RETURNED required).
+        ApiResponse<?> refundResult = refund(aftersaleId);
+        assertEquals(0, refundResult.getStatus(), "refund GOODS_NEEDLESS failed: " + refundResult);
+
+        LitemallAftersale updated = daoProvider.daoFor(LitemallAftersale.class).getEntityById(aftersaleId);
+        assertEquals(_AppMallDaoConstants.AFTERSALE_STATUS_REFUND, updated.getStatus());
+
+        // GOODS_NEEDLESS does NOT restock (goods stay with the user).
+        LitemallGoodsProduct productAfter = daoProvider.daoFor(LitemallGoodsProduct.class).getEntityById(productId);
+        assertEquals(stockBefore, productAfter.getNumber(),
+                "GOODS_NEEDLESS must not restock (goods stay with the user)");
+    }
+
+    @Test
+    public void testSubmitReturnLogisticsOwnershipGuard() {
+        String orderId = createPaidShippedAndConfirmedOrder(false);
+
+        ApiResponse<?> applyResult = apply(Map.of(
+                "orderId", orderId, "type", 2, "reason", "质量问题",
+                "amount", BigDecimal.valueOf(198)));
+        assertEquals(0, applyResult.getStatus());
+        String aftersaleId = ((Map<String, Object>) applyResult.getData()).get("id").toString();
+        approve(aftersaleId);
+
+        // Switch to a different user — submit logistics must be rejected as not-owner.
+        ContextProvider.getOrCreateContext().setUserId("999");
+        ApiResponse<?> r = submitReturnLogistics(aftersaleId, "顺丰", "SN-OTHER");
+        assertTrue(r.getStatus() != 0, "non-owner submitReturnLogistics should be rejected: " + r);
+
+        // restore user
+        ContextProvider.getOrCreateContext().setUserId("1");
+    }
 }

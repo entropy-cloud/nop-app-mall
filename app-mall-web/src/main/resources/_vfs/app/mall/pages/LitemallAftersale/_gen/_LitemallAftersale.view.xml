@@ -59,6 +59,18 @@
 
                 <!--处理时间-->
                 <col id="processTime" sortable="true"/>
+
+                <!--退货物流公司-->
+                <col id="returnShipChannel" sortable="true"/>
+
+                <!--退货运单号-->
+                <col id="returnShipSn" sortable="true"/>
+
+                <!--用户退货发货时间-->
+                <col id="returnTime" sortable="true"/>
+
+                <!--管理员确认收货时间-->
+                <col id="receiveConfirmTime" sortable="true"/>
             </cols>
         </grid>
         <grid id="pick-list" x:prototype="list" x:abstract="true"/>
@@ -74,6 +86,8 @@
  comment[退款说明] status[售后状态]
  handleTime[管理员操作时间] orderItemId[订单商品项ID]
  processNote[处理备注] processTime[处理时间]
+ returnShipChannel[退货物流公司] returnShipSn[退货运单号]
+ returnTime[用户退货发货时间] receiveConfirmTime[管理员确认收货时间]
 </layout>
         </form>
         <form id="add" editMode="add" title="新增-售后表" i18n-en:title="" x:prototype="edit"/>
@@ -85,7 +99,9 @@
  pictures[退款凭证图片链接数组] comment[退款说明]
  status[售后状态] handleTime[管理员操作时间]
  orderItemId[订单商品项ID] processNote[处理备注]
- processTime[处理时间] 
+ processTime[处理时间] returnShipChannel[退货物流公司]
+ returnShipSn[退货运单号] returnTime[用户退货发货时间]
+ receiveConfirmTime[管理员确认收货时间] 
 </layout>
         </form>
         <form id="query" editMode="query" title="查询条件" i18n-en:title="Query Condition" x:abstract="true"/>

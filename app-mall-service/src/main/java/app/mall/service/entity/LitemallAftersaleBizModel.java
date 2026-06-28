@@ -42,7 +42,9 @@ import static app.mall.service.AppMallErrors.ERR_AFTERSALE_ITEM_IN_PROGRESS;
 import static app.mall.service.AppMallErrors.ERR_AFTERSALE_ITEM_NOT_IN_ORDER;
 import static app.mall.service.AppMallErrors.ERR_AFTERSALE_NOT_ALLOW_APPLY;
 import static app.mall.service.AppMallErrors.ERR_AFTERSALE_NOT_ALLOW_CANCEL;
+import static app.mall.service.AppMallErrors.ERR_AFTERSALE_NOT_ALLOW_CONFIRM_RETURN;
 import static app.mall.service.AppMallErrors.ERR_AFTERSALE_NOT_ALLOW_REFUND;
+import static app.mall.service.AppMallErrors.ERR_AFTERSALE_NOT_ALLOW_SUBMIT_RETURN;
 import static app.mall.service.AppMallErrors.ERR_AFTERSALE_NOT_FOUND;
 import static app.mall.service.AppMallErrors.ERR_AFTERSALE_REASON_INVALID;
 import static app.mall.service.AppMallErrors.ERR_AFTERSALE_REFUND_FAILED;
@@ -87,6 +89,7 @@ public class LitemallAftersaleBizModel extends CrudBizModel<LitemallAftersale> i
         setEntityName(LitemallAftersale.class.getName());
     }
 
+    @Override
     @BizMutation
     public void batchApprove(@Name("ids") Set<String> ids, IServiceContext context) {
         List<LitemallAftersale> list = batchGet(ids, false, context);
@@ -103,6 +106,7 @@ public class LitemallAftersaleBizModel extends CrudBizModel<LitemallAftersale> i
         }
     }
 
+    @Override
     @BizMutation
     public void batchReject(@Name("ids") Set<String> ids, IServiceContext context) {
         List<LitemallAftersale> list = batchGet(ids, false, context);
@@ -120,12 +124,19 @@ public class LitemallAftersaleBizModel extends CrudBizModel<LitemallAftersale> i
         }
     }
 
+    @Override
     @BizMutation
     public void refund(@Name("id") String id, IServiceContext context) {
         LitemallAftersale entity = get(id, false, context);
         int status = entity.getStatus();
         if (status != AppMallDaoConstants.AFTERSALE_STATUS_APPROVED) {
             throw new NopException(ERR_AFTERSALE_NOT_ALLOW_REFUND);
+        }
+        // GOODS_REQUIRED must go through confirmReturnReceived (RETURNED -> REFUND with restock), not refund().
+        if (entity.getType() == AppMallDaoConstants.AFTERSALE_TYPE_GOODS_REQUIRED) {
+            throw new NopException(ERR_AFTERSALE_NOT_ALLOW_REFUND)
+                    .param("id", id)
+                    .param("type", entity.getType());
         }
 
         LitemallOrder order = entity.getOrder();
@@ -175,11 +186,10 @@ public class LitemallAftersaleBizModel extends CrudBizModel<LitemallAftersale> i
             order.setEndTime(now);
         }
 
-        // Restock (Decision 5b): whole-order → restock every line; item-level → restock only the refunded line.
-        // Restock when goods are still in the warehouse (unshipped PAY order, regardless of aftersale type)
-        // or when the user returns received goods (GOODS_REQUIRED). GOODS_NEEDLESS on received orders keeps goods.
-        boolean shouldRestock = wasUnshipped
-                || entity.getType() == AppMallDaoConstants.AFTERSALE_TYPE_GOODS_REQUIRED;
+        // Restock (Decision 5b): refund() now only handles GOODS_MISS (unshipped, restock) and
+        // GOODS_NEEDLESS (received, no restock). GOODS_REQUIRED restock moved to confirmReturnReceived.
+        // wasUnshipped covers GOODS_MISS on PAY orders (the only type allowed on PAY per isTypeAllowedForStatus).
+        boolean shouldRestock = wasUnshipped;
         if (shouldRestock) {
             if (isWholeOrder) {
                 for (LitemallOrderGoods orderGoods : order.getOrderGoods()) {
@@ -223,6 +233,132 @@ public class LitemallAftersaleBizModel extends CrudBizModel<LitemallAftersale> i
         recomputeOrderAftersaleStatus(order, context);
 
         logManager.logOrderSucceed("退款", "订单编号 " + order.getOrderSn() + " 售后编号 " + entity.getAftersaleSn());
+    }
+
+    @Override
+    @BizMutation
+    public LitemallAftersale submitReturnLogistics(@Name("id") String id,
+                                                    @Name("returnShipChannel") String returnShipChannel,
+                                                    @Name("returnShipSn") String returnShipSn,
+                                                    IServiceContext context) {
+        LitemallAftersale entity = get(id, false, context);
+        if (entity == null || Boolean.TRUE.equals(entity.getDeleted())) {
+            throw new NopException(ERR_AFTERSALE_NOT_FOUND)
+                    .param("id", id);
+        }
+        // Storefront ownership: only the aftersale owner can submit return logistics.
+        if (!entity.getUserId().equals(context.getUserId())) {
+            throw new NopException(ERR_AFTERSALE_NOT_FOUND)
+                    .param("id", id);
+        }
+        int status = entity.getStatus();
+        int type = entity.getType();
+        if (status != AppMallDaoConstants.AFTERSALE_STATUS_APPROVED
+                || type != AppMallDaoConstants.AFTERSALE_TYPE_GOODS_REQUIRED) {
+            throw new NopException(ERR_AFTERSALE_NOT_ALLOW_SUBMIT_RETURN)
+                    .param("id", id)
+                    .param("status", status)
+                    .param("type", type);
+        }
+        if (StringHelper.isBlank(returnShipChannel) || StringHelper.isBlank(returnShipSn)) {
+            throw new NopException(ERR_AFTERSALE_NOT_ALLOW_SUBMIT_RETURN)
+                    .param("id", id);
+        }
+
+        entity.setReturnShipChannel(returnShipChannel);
+        entity.setReturnShipSn(returnShipSn);
+        entity.setReturnTime(CoreMetrics.currentDateTime());
+        entity.setStatus(AppMallDaoConstants.AFTERSALE_STATUS_RETURNED);
+
+        updateEntity(entity, "submitReturnLogistics", context);
+
+        recomputeOrderAftersaleStatus(entity.getOrder(), context);
+
+        return entity;
+    }
+
+    @Override
+    @BizMutation
+    public LitemallAftersale confirmReturnReceived(@Name("id") String id, IServiceContext context) {
+        LitemallAftersale entity = get(id, false, context);
+        int status = entity.getStatus();
+        if (status != AppMallDaoConstants.AFTERSALE_STATUS_RETURNED) {
+            throw new NopException(ERR_AFTERSALE_NOT_ALLOW_CONFIRM_RETURN)
+                    .param("id", id)
+                    .param("status", status);
+        }
+
+        LitemallOrder order = entity.getOrder();
+        boolean isWholeOrder = StringHelper.isEmpty(entity.getOrderItemId());
+
+        // Defensive amount recheck (same as refund()).
+        BigDecimal cap = isWholeOrder ? order.getActualPrice() : itemRefundCap(order, entity.getOrderItemId(), context);
+        if (entity.getAmount() == null || entity.getAmount().signum() <= 0
+                || entity.getAmount().compareTo(cap) > 0) {
+            throw new NopException(ERR_AFTERSALE_AMOUNT_EXCEED)
+                    .param("aftersaleId", id)
+                    .param("amount", entity.getAmount())
+                    .param("cap", cap);
+        }
+
+        PayRefundRequestBean wxPayRefundRequest = new PayRefundRequestBean();
+        wxPayRefundRequest.setOutTradeNo(order.getOrderSn());
+        wxPayRefundRequest.setOutRefundNo("refund_" + order.getOrderSn());
+        wxPayRefundRequest.setTotalFee(order.getActualPrice());
+        wxPayRefundRequest.setRefundFee(entity.getAmount());
+
+        PayRefundResponseBean refundResult = payService.refund(wxPayRefundRequest);
+        if (!refundResult.isSuccess()) {
+            throw new NopException(ERR_AFTERSALE_REFUND_FAILED)
+                    .param("aftersaleId", id)
+                    .param("orderSn", order.getOrderSn());
+        }
+
+        LocalDateTime now = CoreMetrics.currentDateTime();
+        entity.setStatus(AppMallDaoConstants.AFTERSALE_STATUS_REFUND);
+        entity.setReceiveConfirmTime(now);
+        entity.setHandleTime(now);
+        entity.setProcessTime(now);
+        entity.setProcessNote("确认收货并退款成功");
+        orm().flushSession();
+
+        // Restock the returned goods (moved from refund() GOODS_REQUIRED branch). On a received order
+        // (CONFIRM/AUTO_CONFIRM) the goods are with the user, so we restock upon return confirmation.
+        if (isWholeOrder) {
+            for (LitemallOrderGoods orderGoods : order.getOrderGoods()) {
+                goodsProductMapper.addStock(orderGoods.getProductId(), orderGoods.getNumber());
+            }
+        } else {
+            LitemallOrderGoods line = findOrderGoods(order, entity.getOrderItemId());
+            if (line != null) {
+                goodsProductMapper.addStock(line.getProductId(), line.getNumber());
+            }
+        }
+
+        // Coupon restore + points return (mirrors refund() whole-order branch).
+        if (isWholeOrder) {
+            QueryBean cuQuery = new QueryBean();
+            cuQuery.addFilter(FilterBeans.eq(LitemallCouponUser.PROP_NAME_orderId, order.orm_idString()));
+            cuQuery.addFilter(FilterBeans.eq(LitemallCouponUser.PROP_NAME_status, 1));
+            List<LitemallCouponUser> usedCoupons = couponUserBiz.findList(cuQuery, null, context);
+            for (LitemallCouponUser cu : usedCoupons) {
+                couponUserBiz.returnCoupon(cu.orm_idString(), context);
+            }
+            returnOrderDeductedPoints(order, context);
+        }
+
+        final String orderSn = order.getOrderSn();
+        final String mobile = order.getMobile();
+        final String refundUserId = notificationService.isEventMessageEnabled("refund", context)
+                ? order.getUserId() : null;
+        txn().afterCommit(null, () -> notificationService.sendRefundNotification(orderSn, mobile, refundUserId));
+
+        recomputeOrderAftersaleStatus(order, context);
+
+        logManager.logOrderSucceed("退货确认退款",
+                "订单编号 " + order.getOrderSn() + " 售后编号 " + entity.getAftersaleSn());
+
+        return entity;
     }
 
     private void returnOrderDeductedPoints(LitemallOrder order, IServiceContext context) {
@@ -443,7 +579,8 @@ public class LitemallAftersaleBizModel extends CrudBizModel<LitemallAftersale> i
         q.addFilter(FilterBeans.eq(LitemallAftersale.PROP_NAME_orderItemId, orderItemId));
         q.addFilter(FilterBeans.in(LitemallAftersale.PROP_NAME_status, List.of(
                 AppMallDaoConstants.AFTERSALE_STATUS_REQUEST,
-                AppMallDaoConstants.AFTERSALE_STATUS_APPROVED)));
+                AppMallDaoConstants.AFTERSALE_STATUS_APPROVED,
+                AppMallDaoConstants.AFTERSALE_STATUS_RETURNED)));
         return !findList(q, null, context).isEmpty();
     }
 
@@ -491,7 +628,8 @@ public class LitemallAftersaleBizModel extends CrudBizModel<LitemallAftersale> i
         q.addFilter(FilterBeans.eq(LitemallAftersale.PROP_NAME_orderId, order.orm_idString()));
         q.addFilter(FilterBeans.in(LitemallAftersale.PROP_NAME_status, List.of(
                 AppMallDaoConstants.AFTERSALE_STATUS_REQUEST,
-                AppMallDaoConstants.AFTERSALE_STATUS_APPROVED)));
+                AppMallDaoConstants.AFTERSALE_STATUS_APPROVED,
+                AppMallDaoConstants.AFTERSALE_STATUS_RETURNED)));
         boolean inProgress = !findList(q, null, context).isEmpty();
         order.setAftersaleStatus(inProgress
                 ? AppMallDaoConstants.AFTERSALE_STATUS_REQUEST

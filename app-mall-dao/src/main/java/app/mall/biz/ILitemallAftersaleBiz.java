@@ -11,6 +11,7 @@ import app.mall.dao.dto.AftersaleApplyRequest;
 import app.mall.dao.entity.LitemallAftersale;
 
 import java.util.List;
+import java.util.Set;
 
 public interface ILitemallAftersaleBiz extends ICrudBiz<LitemallAftersale> {
 
@@ -28,4 +29,22 @@ public interface ILitemallAftersaleBiz extends ICrudBiz<LitemallAftersale> {
     @BizQuery
     LitemallAftersale userDetail(@Name("id") String id,
                                  IServiceContext context);
+
+    @BizMutation
+    void batchApprove(@Name("ids") Set<String> ids, IServiceContext context);
+
+    @BizMutation
+    void batchReject(@Name("ids") Set<String> ids, IServiceContext context);
+
+    @BizMutation
+    void refund(@Name("id") String id, IServiceContext context);
+
+    @BizMutation
+    LitemallAftersale submitReturnLogistics(@Name("id") String id,
+                                            @Name("returnShipChannel") String returnShipChannel,
+                                            @Name("returnShipSn") String returnShipSn,
+                                            IServiceContext context);
+
+    @BizMutation
+    LitemallAftersale confirmReturnReceived(@Name("id") String id, IServiceContext context);
 }

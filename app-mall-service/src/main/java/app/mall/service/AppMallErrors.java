@@ -108,6 +108,14 @@ public interface AppMallErrors {
             define("nop.err.mall.aftersale.reason-invalid",
                     "售后原因不在字典选项内");
 
+    ErrorCode ERR_AFTERSALE_NOT_ALLOW_SUBMIT_RETURN =
+            define("nop.err.mall.aftersale.not-allow-submit-return",
+                    "当前售后状态不允许提交退货物流");
+
+    ErrorCode ERR_AFTERSALE_NOT_ALLOW_CONFIRM_RETURN =
+            define("nop.err.mall.aftersale.not-allow-confirm-return",
+                    "当前售后状态不允许确认收货");
+
     String ARG_USERNAME = "username";
 
     ErrorCode ERR_USER_USERNAME_EXISTS =

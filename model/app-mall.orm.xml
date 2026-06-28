@@ -12,6 +12,7 @@
             <option code="REFUND" label="管理员退款成功" value="3"/>
             <option code="REJECT" label="管理员审核拒绝" value="4"/>
             <option code="CANCELLED" label="用户已取消" value="5"/>
+            <option code="RETURNED" label="用户已退货待收货" value="6"/>
         </dict>
         <dict label="售后类型" name="mall/aftersale-type" valueType="int" i18n-en:label="Aftersale Type">
             <option code="GOODS_MISS" label="未收货退款" value="0"/>
@@ -274,6 +275,10 @@
                 <column code="ORDER_ITEM_ID" displayName="订单商品项ID" name="orderItemId" propId="15" stdDataType="string" stdSqlType="INTEGER"/>
                 <column code="PROCESS_NOTE" displayName="处理备注" name="processNote" precision="511" propId="16" stdDataType="string" stdSqlType="VARCHAR"/>
                 <column code="PROCESS_TIME" displayName="处理时间" name="processTime" propId="17" stdDataType="datetime" stdSqlType="DATETIME"/>
+                <column code="RETURN_SHIP_CHANNEL" displayName="退货物流公司" name="returnShipChannel" precision="63" propId="18" stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="RETURN_SHIP_SN" displayName="退货运单号" name="returnShipSn" precision="63" propId="19" stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="RETURN_TIME" displayName="用户退货发货时间" name="returnTime" propId="20" stdDataType="datetime" stdSqlType="DATETIME"/>
+                <column code="RECEIVE_CONFIRM_TIME" displayName="管理员确认收货时间" name="receiveConfirmTime" propId="21" stdDataType="datetime" stdSqlType="DATETIME"/>
             </columns>
             <relations>
                 <to-one displayName="订单" name="order" refEntityName="app.mall.dao.entity.LitemallOrder"

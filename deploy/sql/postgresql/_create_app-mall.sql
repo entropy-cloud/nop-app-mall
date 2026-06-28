@@ -708,6 +708,10 @@ CREATE TABLE litemall_aftersale(
   order_item_id INT4  ,
   process_note VARCHAR(511)  ,
   process_time TIMESTAMP  ,
+  return_ship_channel VARCHAR(63)  ,
+  return_ship_sn VARCHAR(63)  ,
+  return_time TIMESTAMP  ,
+  receive_confirm_time TIMESTAMP  ,
   constraint PK_litemall_aftersale primary key (id)
 );
 
@@ -1931,6 +1935,14 @@ CREATE TABLE litemall_pin_tuan_member(
       COMMENT ON COLUMN litemall_aftersale.process_note IS '处理备注';
                     
       COMMENT ON COLUMN litemall_aftersale.process_time IS '处理时间';
+                    
+      COMMENT ON COLUMN litemall_aftersale.return_ship_channel IS '退货物流公司';
+                    
+      COMMENT ON COLUMN litemall_aftersale.return_ship_sn IS '退货运单号';
+                    
+      COMMENT ON COLUMN litemall_aftersale.return_time IS '用户退货发货时间';
+                    
+      COMMENT ON COLUMN litemall_aftersale.receive_confirm_time IS '管理员确认收货时间';
                     
       COMMENT ON TABLE litemall_groupon IS '团购活动表';
                 

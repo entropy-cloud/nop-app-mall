@@ -34,6 +34,11 @@ public interface _AppMallDaoConstants {
     int AFTERSALE_STATUS_CANCELLED = 5;
                     
     /**
+     * 售后状态: 用户已退货待收货 
+     */
+    int AFTERSALE_STATUS_RETURNED = 6;
+                    
+    /**
      * 售后类型: 未收货退款 
      */
     int AFTERSALE_TYPE_GOODS_MISS = 0;

@@ -19,6 +19,10 @@
   "orderItemId": "",
   "processNote": "",
   "processTime": "2000-01-01 14:00:00",
+  "returnShipChannel": "",
+  "returnShipSn": "",
+  "returnTime": "2000-01-01 14:00:00",
+  "receiveConfirmTime": "2000-01-01 14:00:00",
   "order": null,
   "order.orderSn": "",
   "picturesComponentFileStatusList": null
