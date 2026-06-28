@@ -19,6 +19,27 @@ body:
         level: primary
         actionType: reload
         target: retention,rfm,lifecycle,repurchase
+      - type: select
+        name: userFormat
+        label: 模板导出
+        value: xlsx
+        options:
+          - label: Excel (xlsx)
+            value: xlsx
+          - label: PDF
+            value: pdf
+      - type: button
+        label: 导出报表
+        level: primary
+        actionType: ajax
+        api:
+          url: '@query:LitemallOrder__exportReport'
+          data:
+            reportName: user
+            renderType: '${userFormat}'
+            startDate: "${startDate || ''}"
+            endDate: "${endDate || ''}"
+          responseType: blob
 
   # 留存时序
   - type: service
@@ -40,7 +61,7 @@ body:
               legend:
                 data: [次留, 7留, 30留]
               dataset:
-                source: ${data}
+                source: '${data}'
               xAxis:
                 type: category
               yAxis:
@@ -89,7 +110,7 @@ body:
                       series:
                         - type: pie
                           radius: '60%'
-                          data: ${data | pick: segment,userCount}
+                          data: '${data | pick: segment,userCount}'
                           label:
                             formatter: '${b}: ${c} (${d}%)'
       # 生命周期
@@ -114,7 +135,7 @@ body:
                       series:
                         - type: pie
                           radius: '60%'
-                          data: ${data | pick: segment,percent}
+                          data: '${data | pick: segment,percent}'
                           label:
                             formatter: '${b}: ${c} (${d}%)'
 
@@ -136,7 +157,7 @@ body:
               tooltip:
                 trigger: axis
               dataset:
-                source: ${data}
+                source: '${data}'
               xAxis:
                 type: category
               yAxis:

@@ -141,3 +141,24 @@ body:
                 body:
                   - type: tpl
                     tpl: '拉动 GMV：<b style="font-size:20px">¥${pulledGmv || 0}</b>'
+          - type: button
+            label: 导出优惠券报表
+            level: primary
+            actionType: ajax
+            api:
+              url: '@query:LitemallOrder__exportReport'
+              data:
+                reportName: coupon
+                renderType: '${couponFormat}'
+                startDate: "${startDate || ''}"
+                endDate: "${endDate || ''}"
+              responseType: blob
+      - type: select
+        name: couponFormat
+        label: 优惠券模板导出
+        value: xlsx
+        options:
+          - label: Excel (xlsx)
+            value: xlsx
+          - label: PDF
+            value: pdf

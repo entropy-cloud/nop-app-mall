@@ -48,4 +48,9 @@ public class TestReportExportPageLoad extends JunitBaseTestCase {
     public void testStatOrderPageLoads() {
         assertPageLoads("/app/mall/pages/mall/stat/stat-order.page.yaml");
     }
+
+    @Test
+    public void testStatUserPageLoads() {
+        assertPageLoads("/app/mall/pages/mall/stat/stat-user.page.yaml");
+    }
 }
