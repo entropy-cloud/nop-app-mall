@@ -7,6 +7,10 @@ import app.mall.dao.entity.LitemallOrderGoods;
 import app.mall.dao.entity.LitemallPinTuanActivity;
 import app.mall.dao.entity.LitemallPinTuanGroup;
 import app.mall.dao.entity.LitemallPinTuanMember;
+import app.mall.dao.entity.LitemallPromotionActivity;
+import app.mall.dao.entity.LitemallPromotionTier;
+import app.mall.dao.entity.LitemallPromotionUsage;
+import app.mall.dao._AppMallDaoConstants;
 import io.nop.api.core.annotations.autotest.NopTestConfig;
 import io.nop.api.core.annotations.core.OptionalBoolean;
 import io.nop.api.core.beans.ApiRequest;
@@ -368,6 +372,94 @@ public class TestLitemallPinTuanActivityBizModel extends JunitBaseTestCase {
         LitemallPinTuanGroup updated = daoProvider.daoFor(LitemallPinTuanGroup.class)
                 .requireEntityById(groupId);
         assertEquals(20, updated.getStatus(), "group should be FAILED after expire");
+    }
+
+    @Test
+    public void testExpirePinTuansReleasesPromotionUsage() {
+        // (f) pintuan-fail whole-order refund releases a coexisting PromotionUsage (满减 may coexist
+        //     with a pin-tuan on the same order). Self-contained setup mirrors testExpirePinTuans,
+        //     plus a seeded usage asserted released after expire.
+        ContextProvider.getOrCreateContext().setUserId("1");
+        LitemallOrder order = daoProvider.daoFor(LitemallOrder.class).newEntity();
+        order.setUserId("1");
+        order.setOrderSn("PT_EXPIRE_RBK_001");
+        order.setOrderStatus(201);
+        order.setAftersaleStatus(0);
+        order.setConsignee("测试收货人");
+        order.setMobile("13800138000");
+        order.setAddress("测试地址");
+        order.setMessage("expire-rollback");
+        order.setGoodsPrice(new BigDecimal("100.00"));
+        order.setFreightPrice(BigDecimal.ZERO);
+        order.setCouponPrice(BigDecimal.ZERO);
+        order.setIntegralPrice(BigDecimal.ZERO);
+        order.setGrouponPrice(BigDecimal.ZERO);
+        order.setPromotionPrice(BigDecimal.ZERO);
+        order.setPinTuanPrice(BigDecimal.ZERO);
+        order.setOrderPrice(new BigDecimal("100.00"));
+        order.setActualPrice(new BigDecimal("100.00"));
+        order.setDeleted(false);
+        daoProvider.daoFor(LitemallOrder.class).saveEntity(order);
+        String orderId = order.orm_idString();
+
+        savePromotionUsage(orderId);
+        assertEquals(1, usageCountByOrder(orderId), "usage seeded");
+
+        LitemallPinTuanGroup group = daoProvider.daoFor(LitemallPinTuanGroup.class).newEntity();
+        group.setActivityId(activityId);
+        group.setCreatorUserId("1");
+        group.setOrderId(orderId);
+        group.setStatus(0);
+        group.setExpireTime(LocalDateTime.now().minusHours(1));
+        daoProvider.daoFor(LitemallPinTuanGroup.class).saveEntity(group);
+        String groupId = group.orm_idString();
+
+        LitemallPinTuanMember member = daoProvider.daoFor(LitemallPinTuanMember.class).newEntity();
+        member.setGroupId(groupId);
+        member.setUserId("1");
+        member.setOrderId(orderId);
+        daoProvider.daoFor(LitemallPinTuanMember.class).saveEntity(member);
+
+        ApiRequest<Map<String, Object>> req = ApiRequest.build(Map.of());
+        IGraphQLExecutionContext ctx = graphQLEngine.newRpcContext(
+                GraphQLOperationType.mutation, "LitemallPinTuanActivity__expirePinTuans", req);
+        ApiResponse<?> result = graphQLEngine.executeRpc(ctx);
+        assertEquals(0, result.getStatus(), "expirePinTuans failed: " + result);
+
+        assertEquals(0, usageCountByOrder(orderId),
+                "pintuan-fail refund should release coexisting PromotionUsage");
+    }
+
+    private void savePromotionUsage(String orderId) {
+        LitemallPromotionActivity a = daoProvider.daoFor(LitemallPromotionActivity.class).newEntity();
+        a.setName("满减拼团共存");
+        a.setDiscountType(_AppMallDaoConstants.DISCOUNT_TYPE_AMOUNT);
+        a.setStatus(_AppMallDaoConstants.PROMOTION_STATUS_ACTIVE);
+        a.setGoodsScope(_AppMallDaoConstants.GOODS_SCOPE_ALL);
+        a.setPriority(1);
+        a.setStartTime(LocalDateTime.now().minusDays(1));
+        a.setEndTime(LocalDateTime.now().plusDays(1));
+        daoProvider.daoFor(LitemallPromotionActivity.class).saveEntity(a);
+
+        LitemallPromotionTier t = daoProvider.daoFor(LitemallPromotionTier.class).newEntity();
+        t.setActivityId(a.getId());
+        t.setMeetAmount(new BigDecimal("100"));
+        t.setDiscountValue(new BigDecimal("20"));
+        daoProvider.daoFor(LitemallPromotionTier.class).saveEntity(t);
+
+        LitemallPromotionUsage u = daoProvider.daoFor(LitemallPromotionUsage.class).newEntity();
+        u.setUserId("1");
+        u.setPromotionActivityId(a.orm_idString());
+        u.setOrderId(orderId);
+        u.setMeetAmount(new BigDecimal("100"));
+        u.setDiscountAmount(new BigDecimal("20"));
+        daoProvider.daoFor(LitemallPromotionUsage.class).saveEntity(u);
+    }
+
+    private long usageCountByOrder(String orderId) {
+        QueryBean q = new QueryBean();
+        q.addFilter(FilterBeans.eq(LitemallPromotionUsage.PROP_NAME_orderId, orderId));
+        return daoProvider.daoFor(LitemallPromotionUsage.class).findAllByQuery(q).size();
     }
 
     @SuppressWarnings("unchecked")

@@ -281,6 +281,17 @@ public interface ILitemallOrderBiz extends ICrudBiz<LitemallOrder> {
     int cancelExpiredOrders(@Name("timeoutMinutes") int timeoutMinutes,
                             IServiceContext context);
 
+    /**
+     * Release the promotion participation quota an order occupies on a whole-order cancel/refund.
+     * Internal helper (no {@code @BizMutation}/@BizQuery}/{@code @BizAction}, not GraphQL-exposed),
+     * called from the 6 whole-order refund sites (cancel / cancelExpiredOrders / aftersale refund /
+     * aftersale confirmReturnReceived / groupon refundGrouponOrder / pintuan refundMemberOrder).
+     * Soft-deletes the PromotionUsage row(s) for this order so the user can re-participate within
+     * maxPerUser. Idempotent: a repeat call finds 0 non-deleted rows. Partial-item refunds do NOT
+     * call this (promotion is an order-level discount).
+     */
+    void releasePromotionUsage(@Name("orderId") String orderId, IServiceContext context);
+
     @BizMutation
     int confirmExpiredOrders(@Name("timeoutMinutes") int timeoutMinutes,
                              IServiceContext context);

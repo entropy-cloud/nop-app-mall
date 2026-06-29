@@ -5,10 +5,16 @@ import app.mall.dao.entity.LitemallGoodsProduct;
 import app.mall.dao.entity.LitemallGroupon;
 import app.mall.dao.entity.LitemallGrouponRules;
 import app.mall.dao.entity.LitemallOrder;
+import app.mall.dao.entity.LitemallPromotionActivity;
+import app.mall.dao.entity.LitemallPromotionTier;
+import app.mall.dao.entity.LitemallPromotionUsage;
+import app.mall.dao._AppMallDaoConstants;
 import io.nop.api.core.annotations.autotest.NopTestConfig;
 import io.nop.api.core.annotations.core.OptionalBoolean;
 import io.nop.api.core.beans.ApiRequest;
 import io.nop.api.core.beans.ApiResponse;
+import io.nop.api.core.beans.FilterBeans;
+import io.nop.api.core.beans.query.QueryBean;
 import io.nop.api.core.context.ContextProvider;
 import io.nop.autotest.junit.JunitBaseTestCase;
 import io.nop.dao.api.IDaoProvider;
@@ -112,5 +118,57 @@ public class TestLitemallGrouponExpireBizModel extends JunitBaseTestCase {
 
         LitemallGroupon updated = daoProvider.daoFor(LitemallGroupon.class).requireEntityById(grouponId);
         assertEquals(2, updated.getStatus());
+    }
+
+    @Test
+    public void testExpireGrouponsReleasesPromotionUsage() {
+        // (e) groupon-fail whole-order refund releases a coexisting PromotionUsage (满减 may coexist
+        //     with a groupon on the same order). Seed a usage on the @BeforeEach order, run expire,
+        //     assert the usage is released.
+        LitemallGroupon seeded = daoProvider.daoFor(LitemallGroupon.class).requireEntityById(grouponId);
+        String orderId = seeded.getOrderId();
+        savePromotionUsage(orderId);
+        assertEquals(1, usageCountByOrder(orderId), "usage seeded");
+
+        ApiRequest<Map<String, Object>> req = ApiRequest.build(Map.of());
+        IGraphQLExecutionContext ctx = graphQLEngine.newRpcContext(
+                GraphQLOperationType.mutation, "LitemallGroupon__expireGroupons", req);
+        ApiResponse<?> result = graphQLEngine.executeRpc(ctx);
+        assertEquals(0, result.getStatus(), "expireGroupons failed: " + result);
+
+        assertEquals(0, usageCountByOrder(orderId),
+                "groupon-fail refund should release coexisting PromotionUsage");
+    }
+
+    private void savePromotionUsage(String orderId) {
+        LitemallPromotionActivity a = daoProvider.daoFor(LitemallPromotionActivity.class).newEntity();
+        a.setName("满减团购共存");
+        a.setDiscountType(_AppMallDaoConstants.DISCOUNT_TYPE_AMOUNT);
+        a.setStatus(_AppMallDaoConstants.PROMOTION_STATUS_ACTIVE);
+        a.setGoodsScope(_AppMallDaoConstants.GOODS_SCOPE_ALL);
+        a.setPriority(1);
+        a.setStartTime(LocalDateTime.now().minusDays(1));
+        a.setEndTime(LocalDateTime.now().plusDays(1));
+        daoProvider.daoFor(LitemallPromotionActivity.class).saveEntity(a);
+
+        LitemallPromotionTier t = daoProvider.daoFor(LitemallPromotionTier.class).newEntity();
+        t.setActivityId(a.getId());
+        t.setMeetAmount(new BigDecimal("100"));
+        t.setDiscountValue(new BigDecimal("20"));
+        daoProvider.daoFor(LitemallPromotionTier.class).saveEntity(t);
+
+        LitemallPromotionUsage u = daoProvider.daoFor(LitemallPromotionUsage.class).newEntity();
+        u.setUserId("1");
+        u.setPromotionActivityId(a.orm_idString());
+        u.setOrderId(orderId);
+        u.setMeetAmount(new BigDecimal("100"));
+        u.setDiscountAmount(new BigDecimal("20"));
+        daoProvider.daoFor(LitemallPromotionUsage.class).saveEntity(u);
+    }
+
+    private long usageCountByOrder(String orderId) {
+        QueryBean q = new QueryBean();
+        q.addFilter(FilterBeans.eq(LitemallPromotionUsage.PROP_NAME_orderId, orderId));
+        return daoProvider.daoFor(LitemallPromotionUsage.class).findAllByQuery(q).size();
     }
 }

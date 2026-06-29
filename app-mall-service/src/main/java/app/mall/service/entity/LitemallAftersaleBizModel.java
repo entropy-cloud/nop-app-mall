@@ -220,6 +220,11 @@ public class LitemallAftersaleBizModel extends CrudBizModel<LitemallAftersale> i
             // (deduction is an order-level component, symmetric with coupon restore). Idempotent per
             // orderId via sourceType=refund-return dedupe in earnPoints.
             returnOrderDeductedPoints(order, context);
+
+            // Release promotion participation quota (mirrors coupon/points restore): whole-order
+            // refund soft-deletes the PromotionUsage so maxPerUser lets the user re-participate.
+            // Item-level partial refund does NOT release (promotion is order-level, same boundary).
+            orderBiz.releasePromotionUsage(order.orm_idString(), context);
         }
 
         // Notification (Decision 8): order-level dedupe by orderSn. Item-level refunds reuse the same
@@ -345,6 +350,11 @@ public class LitemallAftersaleBizModel extends CrudBizModel<LitemallAftersale> i
                 couponUserBiz.returnCoupon(cu.orm_idString(), context);
             }
             returnOrderDeductedPoints(order, context);
+
+            // Release promotion participation quota (mirrors refund() whole-order branch): soft-delete
+            // the PromotionUsage so maxPerUser lets the user re-participate. Partial-item return does
+            // NOT release (promotion is order-level).
+            orderBiz.releasePromotionUsage(order.orm_idString(), context);
         }
 
         final String orderSn = order.getOrderSn();

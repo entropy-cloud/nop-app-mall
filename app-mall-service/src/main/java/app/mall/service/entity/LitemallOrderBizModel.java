@@ -730,6 +730,9 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
         // Return deducted points (P27): order-level cancel returns the points the user spent
         // deducting on this order. Idempotent per orderId (sourceType=refund-return).
         returnDeductedPoints(order, context);
+        // Release promotion participation quota (whole-order cancel mirrors coupon/points return):
+        // soft-delete the PromotionUsage so maxPerUser lets the user re-participate. Idempotent.
+        releasePromotionUsage(order.orm_idString(), context);
         logManager.logOrderSucceed("订单取消", "订单编号 " + order.getOrderSn());
         return order;
     }
@@ -2325,6 +2328,8 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
             updateEntity(order, "cancelExpiredOrders", context);
             // Return deducted points (P27): whole-order cancel mirrors coupon return.
             returnDeductedPoints(order, context);
+            // Release promotion participation quota (mirrors cancel): soft-delete the PromotionUsage.
+            releasePromotionUsage(order.orm_idString(), context);
             count++;
         }
         return count;
@@ -2536,6 +2541,23 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
                 LitemallPointsAccountBizModel.SOURCE_TYPE_REFUND_RETURN,
                 order.orm_idString(),
                 "取消/退款返还积分 " + order.getOrderSn(), context);
+    }
+
+    @Override
+    public void releasePromotionUsage(@Name("orderId") String orderId, IServiceContext context) {
+        // Mirrors the coupon-return / points-return precedent at all 6 whole-order refund sites.
+        // PromotionUsage uses logical delete (useLogicalDelete + deleteFlagProp=deleted), so
+        // deleteEntity is a soft delete; the maxPerUser findCount auto-applies deleted=false ->
+        // the released quota lets the user re-participate. Idempotent: findList auto-filters
+        // deleted=true, so a repeat call finds 0 rows and deletes nothing. Partial-item refunds
+        // do NOT reach this helper (promotion is an order-level discount; partial refund keeps the
+        // participation, same boundary as partial refunds not returning coupons/points).
+        QueryBean query = new QueryBean();
+        query.addFilter(FilterBeans.eq(LitemallPromotionUsage.PROP_NAME_orderId, orderId));
+        List<LitemallPromotionUsage> usages = promotionUsageBiz.findList(query, null, context);
+        for (LitemallPromotionUsage usage : usages) {
+            promotionUsageBiz.deleteEntity(usage, null, context);
+        }
     }
 
     private void copyGoodsPicToOrderGoods(LitemallOrderGoods orderGoods, String goodsPicUrl) {

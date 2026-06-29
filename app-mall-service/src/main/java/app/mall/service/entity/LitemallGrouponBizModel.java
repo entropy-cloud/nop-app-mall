@@ -288,6 +288,11 @@ public class LitemallGrouponBizModel extends CrudBizModel<LitemallGroupon> imple
         // user spent deducting on this order, mirroring the coupon return above. Idempotent per orderId.
         returnOrderDeductedPoints(order, context);
 
+        // Release promotion participation quota (whole-order refund mirrors coupon/points return):
+        // a full-discount promotion can coexist with a groupon on the same order, so release the
+        // PromotionUsage too. Soft-delete is idempotent.
+        orderBiz.releasePromotionUsage(order.orm_idString(), context);
+
         orderBiz.updateEntity(order, "expireGroupons:refundOrder", context);
 
         // Notification is a fire-and-forget side effect: run after commit so its failure cannot roll back the refund.

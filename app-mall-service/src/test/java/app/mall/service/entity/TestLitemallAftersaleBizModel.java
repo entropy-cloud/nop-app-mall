@@ -8,6 +8,9 @@ import app.mall.dao.entity.LitemallGoods;
 import app.mall.dao.entity.LitemallGoodsProduct;
 import app.mall.dao.entity.LitemallOrder;
 import app.mall.dao.entity.LitemallOrderGoods;
+import app.mall.dao.entity.LitemallPromotionActivity;
+import app.mall.dao.entity.LitemallPromotionTier;
+import app.mall.dao.entity.LitemallPromotionUsage;
 import app.mall.pay.PayService;
 import app.mall.wx.WxPayServiceImpl;
 import io.nop.api.core.annotations.autotest.NopTestConfig;
@@ -27,6 +30,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -781,5 +785,92 @@ public class TestLitemallAftersaleBizModel extends JunitBaseTestCase {
 
         // restore user
         ContextProvider.getOrCreateContext().setUserId("1");
+    }
+
+    // ============ PromotionUsage refund-rollback (whole-order refund releases, item-level keeps) ============
+
+    private void savePromotionUsage(String orderId) {
+        LitemallPromotionActivity a = daoProvider.daoFor(LitemallPromotionActivity.class).newEntity();
+        a.setName("满减回滚测试");
+        a.setDiscountType(_AppMallDaoConstants.DISCOUNT_TYPE_AMOUNT);
+        a.setStatus(_AppMallDaoConstants.PROMOTION_STATUS_ACTIVE);
+        a.setGoodsScope(_AppMallDaoConstants.GOODS_SCOPE_ALL);
+        a.setPriority(1);
+        a.setStartTime(LocalDateTime.now().minusDays(1));
+        a.setEndTime(LocalDateTime.now().plusDays(1));
+        daoProvider.daoFor(LitemallPromotionActivity.class).saveEntity(a);
+
+        LitemallPromotionTier t = daoProvider.daoFor(LitemallPromotionTier.class).newEntity();
+        t.setActivityId(a.getId());
+        t.setMeetAmount(new BigDecimal("100"));
+        t.setDiscountValue(new BigDecimal("20"));
+        daoProvider.daoFor(LitemallPromotionTier.class).saveEntity(t);
+
+        LitemallPromotionUsage u = daoProvider.daoFor(LitemallPromotionUsage.class).newEntity();
+        u.setUserId("1");
+        u.setPromotionActivityId(a.orm_idString());
+        u.setOrderId(orderId);
+        u.setMeetAmount(new BigDecimal("198"));
+        u.setDiscountAmount(new BigDecimal("20"));
+        daoProvider.daoFor(LitemallPromotionUsage.class).saveEntity(u);
+    }
+
+    private long usageCountByOrder(String orderId) {
+        QueryBean q = new QueryBean();
+        q.addFilter(eq(LitemallPromotionUsage.PROP_NAME_orderId, orderId));
+        return daoProvider.daoFor(LitemallPromotionUsage.class).findAllByQuery(q).size();
+    }
+
+    @Test
+    public void testWholeRefundReleasesPromotionUsage() {
+        // (c) whole-order aftersale refund releases the PromotionUsage (mirrors coupon/points return).
+        String orderId = createAndPayOrder();
+        savePromotionUsage(orderId);
+        assertEquals(1, usageCountByOrder(orderId), "usage seeded");
+
+        String aftersaleId = createApplyAndApprove(orderId);
+        ApiResponse<?> refundResult = refund(aftersaleId);
+        assertEquals(0, refundResult.getStatus(), "refund failed: " + refundResult);
+
+        assertEquals(0, usageCountByOrder(orderId), "whole-order refund should release usage");
+    }
+
+    @Test
+    public void testWholeConfirmReturnReceivedReleasesPromotionUsage() {
+        // (d) whole-order return-received refund releases the PromotionUsage (mirrors refund() whole branch).
+        String orderId = createPaidShippedAndConfirmedOrder(false);
+        savePromotionUsage(orderId);
+        assertEquals(1, usageCountByOrder(orderId), "usage seeded");
+
+        // whole-order GOODS_REQUIRED apply + approve + submit return logistics + confirm receipt.
+        ApiResponse<?> applyResult = apply(Map.of(
+                "orderId", orderId, "type", 2, "reason", "质量问题",
+                "amount", BigDecimal.valueOf(198)));
+        assertEquals(0, applyResult.getStatus(), "apply GOODS_REQUIRED failed: " + applyResult);
+        String aftersaleId = ((Map<String, Object>) applyResult.getData()).get("id").toString();
+        approve(aftersaleId);
+        assertEquals(0, submitReturnLogistics(aftersaleId, "顺丰", "RETURN-RL-001").getStatus(),
+                "submitReturnLogistics failed");
+
+        ApiResponse<?> confirmResult = confirmReturnReceived(aftersaleId);
+        assertEquals(0, confirmResult.getStatus(), "confirmReturnReceived failed: " + confirmResult);
+
+        assertEquals(0, usageCountByOrder(orderId), "whole-order return refund should release usage");
+    }
+
+    @Test
+    public void testItemLevelRefundKeepsPromotionUsage() {
+        // (g) partial item-level refund does NOT release usage (promotion is order-level, same boundary
+        //     as partial refund not returning coupons/points).
+        String orderId = createAndPayOrder(true);
+        savePromotionUsage(orderId);
+        assertEquals(1, usageCountByOrder(orderId), "usage seeded");
+
+        LitemallOrderGoods line = orderGoodsOf(orderId).get(0);
+        String aftersaleId = createApplyAndApprove(orderId, line.getId(),
+                line.getPrice().multiply(BigDecimal.valueOf(line.getNumber())));
+        assertEquals(0, refund(aftersaleId).getStatus(), "item refund failed");
+
+        assertEquals(1, usageCountByOrder(orderId), "partial item refund must keep usage");
     }
 }

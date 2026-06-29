@@ -394,6 +394,11 @@ public class LitemallPinTuanActivityBizModel extends CrudBizModel<LitemallPinTua
 
         returnOrderDeductedPoints(order, context);
 
+        // Release promotion participation quota (whole-order refund mirrors coupon/points return):
+        // a full-discount promotion can coexist with a pin-tuan on the same order, so release the
+        // PromotionUsage too. Soft-delete is idempotent.
+        orderBiz.releasePromotionUsage(order.orm_idString(), context);
+
         orderBiz.updateEntity(order, "expirePinTuans:refundOrder", context);
 
         final String orderSn = order.getOrderSn();

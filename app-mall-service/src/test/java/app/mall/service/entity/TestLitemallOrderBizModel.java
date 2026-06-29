@@ -13,6 +13,7 @@ import app.mall.dao.entity.LitemallPromotionTier;
 import app.mall.dao.entity.LitemallPromotionUsage;
 import app.mall.dao.entity.LitemallSystem;
 import app.mall.dao.entity.LitemallTimeDiscount;
+import app.mall.biz.ILitemallOrderBiz;
 import app.mall.dao._AppMallDaoConstants;
 import io.nop.api.core.annotations.autotest.NopTestConfig;
 import io.nop.api.core.annotations.core.OptionalBoolean;
@@ -29,6 +30,7 @@ import io.nop.graphql.core.IGraphQLExecutionContext;
 import io.nop.graphql.core.ast.GraphQLOperationType;
 import io.nop.graphql.core.engine.IGraphQLEngine;
 import io.nop.orm.IOrmTemplate;
+import io.nop.core.context.ServiceContextImpl;
 import jakarta.inject.Inject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -55,6 +57,9 @@ public class TestLitemallOrderBizModel extends JunitBaseTestCase {
 
     @Inject
     IOrmTemplate ormTemplate;
+
+    @Inject
+    ILitemallOrderBiz orderBiz;
 
     String goodsId;
     String productId;
@@ -308,6 +313,133 @@ public class TestLitemallOrderBizModel extends JunitBaseTestCase {
         assertEquals(0, getResult.getStatus(), "getMyOrder failed: " + getResult);
         Map<String, Object> cancelled = (Map<String, Object>) getResult.getData();
         assertEquals(103, cancelled.get("orderStatus"), "order should be AUTO_CANCEL after batch");
+    }
+
+    // ============ PromotionUsage refund-rollback (whole-order cancel/refund releases quota) ============
+
+    private void seedCart() {
+        LitemallCart cart = daoProvider.daoFor(LitemallCart.class).newEntity();
+        cart.setUserId("1");
+        cart.setGoodsId(goodsId);
+        cart.setProductId(productId);
+        cart.setNumber(2);
+        cart.setPrice(BigDecimal.valueOf(99));
+        cart.setChecked(true);
+        cart.setGoodsSn("G001");
+        cart.setGoodsName("Test Goods");
+        cart.setPicUrl("/f/download/cart-pic");
+        cart.setSpecifications("[\"标准\"]");
+        daoProvider.daoFor(LitemallCart.class).saveEntity(cart);
+    }
+
+    private long usageCountByOrder(String orderId) {
+        QueryBean q = new QueryBean();
+        q.addFilter(FilterBeans.eq(LitemallPromotionUsage.PROP_NAME_orderId, orderId));
+        return daoProvider.daoFor(LitemallPromotionUsage.class).findAllByQuery(q).size();
+    }
+
+    private long usageCountByUserActivity(String userId, String activityId) {
+        QueryBean q = new QueryBean();
+        q.addFilter(FilterBeans.eq(LitemallPromotionUsage.PROP_NAME_userId, userId));
+        q.addFilter(FilterBeans.eq(LitemallPromotionUsage.PROP_NAME_promotionActivityId, activityId));
+        return daoProvider.daoFor(LitemallPromotionUsage.class).findAllByQuery(q).size();
+    }
+
+    private String submitPromotionOrder() {
+        ApiRequest<Map<String, Object>> submitReq = ApiRequest.build(Map.of(
+                "addressId", addressId, "message", "满减回滚", "freightPrice", BigDecimal.ZERO));
+        IGraphQLExecutionContext ctx = graphQLEngine.newRpcContext(
+                GraphQLOperationType.mutation, "LitemallOrder__submit", submitReq);
+        ApiResponse<?> res = graphQLEngine.executeRpc(ctx);
+        assertEquals(0, res.getStatus(), "submit failed: " + res);
+        return (String) ((Map<String, Object>) res.getData()).get("id");
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testCancelReleasesPromotionUsageAndAllowsReparticipate() {
+        // (a) Promotion hit writes usage -> cancel soft-deletes usage -> user can re-participate.
+        LitemallPromotionActivity a = createActiveAmountPromotion(new BigDecimal("100"), new BigDecimal("20"), 1);
+
+        String orderId = submitPromotionOrder();
+        assertEquals(1, usageCountByOrder(orderId), "usage written on promotion hit");
+        assertEquals(1, usageCountByUserActivity("1", a.orm_idString()), "at limit (maxPerUser=1)");
+
+        // cancel the CREATED order -> release usage (mirrors coupon/points return).
+        ApiRequest<Map<String, Object>> cancelReq = ApiRequest.build(Map.of("orderId", orderId));
+        ApiResponse<?> cancelResult = graphQLEngine.executeRpc(graphQLEngine.newRpcContext(
+                GraphQLOperationType.mutation, "LitemallOrder__cancel", cancelReq));
+        assertEquals(0, cancelResult.getStatus(), "cancel failed: " + cancelResult);
+
+        // usage soft-deleted -> count by order and by (user,activity) both 0 -> quota released.
+        assertEquals(0, usageCountByOrder(orderId), "usage released after cancel");
+        assertEquals(0, usageCountByUserActivity("1", a.orm_idString()), "quota released -> eligible");
+
+        // Re-participation proof: re-seed cart + submit again under maxPerUser=1 succeeds (was at limit before cancel).
+        seedCart();
+        String orderId2 = submitPromotionOrder();
+        assertEquals(1, usageCountByOrder(orderId2), "new usage written on re-participation");
+    }
+
+    @Test
+    public void testCancelExpiredOrdersReleasesPromotionUsage() {
+        // (b) batch timeout-cancel releases usage (mirrors cancel).
+        createActiveAmountPromotion(new BigDecimal("100"), new BigDecimal("20"));
+        String orderId = submitPromotionOrder();
+        assertEquals(1, usageCountByOrder(orderId), "usage written");
+
+        // timeoutMinutes=0 -> cutoff=now, catches the just-created CREATED order
+        ApiResponse<?> cancelResult = graphQLEngine.executeRpc(graphQLEngine.newRpcContext(
+                GraphQLOperationType.mutation, "LitemallOrder__cancelExpiredOrders",
+                ApiRequest.build(Map.of("timeoutMinutes", 0))));
+        assertEquals(0, cancelResult.getStatus(), "cancelExpiredOrders failed: " + cancelResult);
+        assertEquals(0, usageCountByOrder(orderId), "usage released by batch cancel");
+    }
+
+    @Test
+    public void testReleasePromotionUsageIdempotent() {
+        // (h) releasing usage is idempotent: a repeat call (after the row is already soft-deleted) finds
+        //     0 non-deleted rows via findList and is a harmless no-op (D3: 重复调用软删 0 行无副作用).
+        //     The first release goes through the real cancel flow (its ambient @BizMutation tx is what
+        //     makes findList+deleteEntity share a session); the repeat call then proves the no-op path.
+        createActiveAmountPromotion(new BigDecimal("100"), new BigDecimal("20"));
+        String orderId = submitPromotionOrder();
+        assertEquals(1, usageCountByOrder(orderId), "usage written");
+
+        // First release via cancel (hook 1) — ambient tx, releases the usage.
+        ApiResponse<?> cancelResult = graphQLEngine.executeRpc(graphQLEngine.newRpcContext(
+                GraphQLOperationType.mutation, "LitemallOrder__cancel",
+                ApiRequest.build(Map.of("orderId", orderId))));
+        assertEquals(0, cancelResult.getStatus(), "cancel failed: " + cancelResult);
+        assertEquals(0, usageCountByOrder(orderId), "released by cancel");
+
+        // Repeat release: findList returns 0 non-deleted rows -> loop body never runs -> no-op, no error.
+        orderBiz.releasePromotionUsage(orderId, new ServiceContextImpl());
+        assertEquals(0, usageCountByOrder(orderId), "repeat release is a no-op");
+    }
+
+    @Test
+    public void testCancelNonPromotionOrderNoUsageSideEffect() {
+        // (i) non-promotion order: no PromotionUsage to delete, cancel has no usage side effect.
+        String orderId = submitPromotionOrderNoPromotion();
+        assertEquals(0, usageCountByOrder(orderId), "no usage written for non-promotion order");
+
+        ApiRequest<Map<String, Object>> cancelReq = ApiRequest.build(Map.of("orderId", orderId));
+        ApiResponse<?> cancelResult = graphQLEngine.executeRpc(graphQLEngine.newRpcContext(
+                GraphQLOperationType.mutation, "LitemallOrder__cancel", cancelReq));
+        assertEquals(0, cancelResult.getStatus(), "cancel should succeed with no usage to release: " + cancelResult);
+        assertEquals(0, usageCountByOrder(orderId), "still no usage after cancel");
+    }
+
+    private String submitPromotionOrderNoPromotion() {
+        // No promotion activity seeded -> submit writes no usage. Cart goodsPrice=198.
+        ApiRequest<Map<String, Object>> submitReq = ApiRequest.build(Map.of(
+                "addressId", addressId, "message", "no-promo", "freightPrice", BigDecimal.ZERO));
+        IGraphQLExecutionContext ctx = graphQLEngine.newRpcContext(
+                GraphQLOperationType.mutation, "LitemallOrder__submit", submitReq);
+        ApiResponse<?> res = graphQLEngine.executeRpc(ctx);
+        assertEquals(0, res.getStatus(), "submit failed: " + res);
+        return (String) ((Map<String, Object>) res.getData()).get("id");
     }
 
     @SuppressWarnings("unchecked")
