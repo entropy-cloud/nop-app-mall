@@ -10,6 +10,7 @@ import io.nop.api.core.time.CoreMetrics;
 import io.nop.biz.crud.CrudBizModel;
 import io.nop.core.context.IServiceContext;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 // 积分有效期批次账本：每笔 earn（含正向调账）生成一条带 expireTime 的批次，spend/负向调账
@@ -56,5 +57,17 @@ public class LitemallPointsExpireBatchBizModel extends CrudBizModel<LitemallPoin
         query.setLimit(1);
         List<LitemallPointsExpireBatch> list = doFindListByQueryDirectly(query, context);
         return list.isEmpty() ? null : list.get(0);
+    }
+
+    @Override
+    public List<LitemallPointsExpireBatch> findBatchesExpiringWithin(int days, int limit, IServiceContext context) {
+        LocalDateTime now = CoreMetrics.currentDateTime();
+        QueryBean query = new QueryBean();
+        query.addFilter(FilterBeans.gt(LitemallPointsExpireBatch.PROP_NAME_remainingPoints, 0));
+        query.addFilter(FilterBeans.ge(LitemallPointsExpireBatch.PROP_NAME_expireTime, now));
+        query.addFilter(FilterBeans.le(LitemallPointsExpireBatch.PROP_NAME_expireTime, now.plusDays(days)));
+        query.addOrderField(LitemallPointsExpireBatch.PROP_NAME_expireTime, false);
+        query.setLimit(limit);
+        return doFindListByQueryDirectly(query, context);
     }
 }

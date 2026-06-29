@@ -26,4 +26,12 @@ public interface ILitemallPointsExpireBatchBiz extends ICrudBiz<LitemallPointsEx
     /** 「即将过期」提示用：指定用户最近一笔未到期且 remainingPoints>0 的批次（无则 null）。 */
     LitemallPointsExpireBatch findSoonestNonExpiredForUser(@Name("userId") String userId,
                                                            IServiceContext context);
+
+    /**
+     * 过期预警推送用：所有未到期且 remainingPoints>0、expireTime 落在 [now, now+days] 窗口内的批次，
+     * 按 expireTime ASC，限 limit 条。跨用户窗口扫描，供每日预警 job 聚合推送使用。
+     */
+    List<LitemallPointsExpireBatch> findBatchesExpiringWithin(@Name("days") int days,
+                                                              @Name("limit") int limit,
+                                                              IServiceContext context);
 }

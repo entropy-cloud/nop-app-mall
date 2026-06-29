@@ -5,11 +5,14 @@ import app.mall.biz.ILitemallPointsFlowBiz;
 import app.mall.biz.ILitemallPointsAccountBiz;
 import app.mall.biz.ILitemallPointsExpireBatchBiz;
 import app.mall.biz.ILitemallSystemBiz;
+import app.mall.biz.ILitemallUserMessageBiz;
 import app.mall.dao._AppMallDaoConstants;
 import app.mall.dao.entity.LitemallPointsAccount;
 import app.mall.dao.entity.LitemallPointsExpireBatch;
 import app.mall.dao.entity.LitemallPointsFlow;
+import app.mall.dao.entity.LitemallUserMessage;
 import app.mall.dao.mapper.LitemallPointsAccountMapper;
+import app.mall.service.notification.MallNotificationService;
 import io.nop.api.core.annotations.biz.BizModel;
 import io.nop.api.core.annotations.biz.BizMutation;
 import io.nop.api.core.annotations.biz.BizQuery;
@@ -27,8 +30,10 @@ import io.nop.core.context.IServiceContext;
 import io.nop.dao.DaoErrors;
 import jakarta.inject.Inject;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -56,14 +61,24 @@ public class LitemallPointsAccountBizModel extends CrudBizModel<LitemallPointsAc
     public static final String CONFIG_POINTS_DEDUCT_MAX_RATIO = "mall_points_deduct_max_ratio";
     // 积分有效期（天）：缺失时走 DEFAULT_POINTS_VALIDITY_DAYS（Decision D1）。
     public static final String CONFIG_POINTS_VALIDITY_DAYS = "mall_points_validity_days";
+    // 过期预警提前天数：缺失时走 DEFAULT_POINTS_EXPIRY_REMIND_DAYS。
+    public static final String CONFIG_POINTS_EXPIRY_REMIND_DAYS = "mall_points_expiry_remind_days";
 
     public static final int DEFAULT_POINTS_EARN_PER_YUAN = 1;
     public static final int DEFAULT_POINTS_TO_YUAN_RATIO = 100;
     public static final double DEFAULT_POINTS_DEDUCT_MAX_RATIO = 0.3d;
     // Decision D1：默认 730 天（2 年），后台 mall_points_validity_days 可覆盖。
     public static final int DEFAULT_POINTS_VALIDITY_DAYS = 730;
+    // 过期预警默认提前 3 天推送（D1 of this successor plan）。
+    public static final int DEFAULT_POINTS_EXPIRY_REMIND_DAYS = 3;
     // expirePoints 单轮扫描批次数上限，避免长事务；剩余下轮处理。
     static final int EXPIRE_BATCH_LIMIT = 500;
+    // 过期预警单轮扫描批次数上限。
+    static final int EXPIRY_REMIND_BATCH_LIMIT = 1000;
+
+    // 站内信事件开关 key 与标题（D2 幂等查询依据：当日同 userId+msgType+title 已存在则跳过）。
+    static final String EVENT_KEY_POINTS_EXPIRY_REMIND = "points-expiry-remind";
+    static final String EXPIRY_REMIND_TITLE = "积分即将过期";
 
     @Inject
     ILitemallSystemBiz systemBiz;
@@ -76,6 +91,12 @@ public class LitemallPointsAccountBizModel extends CrudBizModel<LitemallPointsAc
 
     @Inject
     LitemallPointsAccountMapper pointsAccountMapper;
+
+    @Inject
+    MallNotificationService notificationService;
+
+    @Inject
+    ILitemallUserMessageBiz userMessageBiz;
 
     public LitemallPointsAccountBizModel() {
         setEntityName(LitemallPointsAccount.class.getName());
@@ -272,6 +293,83 @@ public class LitemallPointsAccountBizModel extends CrudBizModel<LitemallPointsAc
         hint.put("points", safeInt(batch.getRemainingPoints()));
         hint.put("expireTime", batch.getExpireTime());
         return hint;
+    }
+
+    @Override
+    @BizMutation
+    public int sendPointsExpiryReminders(IServiceContext context) {
+        // Successor of getMyPointsExpiryHint: from pull-style hint to proactive daily push.
+        // Scan batches whose expireTime is within [now, now+remindDays] (D3 of this plan),
+        // aggregate per userId (Σ remainingPoints + earliest expireTime), and push one SYSTEM
+        // 站内信 per user. Idempotent per (userId, msgType=SYSTEM, title, addTime=today): if a
+        // same-title message already exists today for the user, skip (D2).
+        if (!notificationService.isEventMessageEnabled(EVENT_KEY_POINTS_EXPIRY_REMIND, context)) {
+            return 0;
+        }
+        int remindDays = resolveIntConfig(CONFIG_POINTS_EXPIRY_REMIND_DAYS, DEFAULT_POINTS_EXPIRY_REMIND_DAYS, context);
+        List<LitemallPointsExpireBatch> batches = expireBatchBiz.findBatchesExpiringWithin(
+                remindDays, EXPIRY_REMIND_BATCH_LIMIT, context);
+
+        // Aggregate per userId preserving expireTime ASC order so the earliest expiry becomes the
+        // reminder date. LinkedHashMap iteration follows first-seen order.
+        Map<String, int[]> sumByUser = new HashMap<>();
+        Map<String, LocalDateTime> earliestByUser = new LinkedHashMap<>();
+        for (LitemallPointsExpireBatch batch : batches) {
+            String uid = batch.getUserId();
+            if (StringHelper.isEmpty(uid)) {
+                continue;
+            }
+            int remaining = safeInt(batch.getRemainingPoints());
+            if (remaining <= 0) {
+                continue;
+            }
+            sumByUser.computeIfAbsent(uid, k -> new int[]{0})[0] += remaining;
+            earliestByUser.putIfAbsent(uid, batch.getExpireTime());
+        }
+
+        int pushed = 0;
+        for (Map.Entry<String, LocalDateTime> entry : earliestByUser.entrySet()) {
+            String uid = entry.getKey();
+            LocalDateTime earliest = entry.getValue();
+            int sum = sumByUser.get(uid)[0];
+            if (sum <= 0) {
+                continue;
+            }
+            if (hasTodayExpiryReminder(uid, context)) {
+                continue;
+            }
+            String dateText = formatDateOnly(earliest);
+            String content = "您有 " + sum + " 积分将于 " + dateText + " 过期，请尽快使用";
+            notificationService.sendUserMessage(uid, _AppMallDaoConstants.MSG_TYPE_SYSTEM,
+                    EXPIRY_REMIND_TITLE, content);
+            pushed++;
+        }
+        return pushed;
+    }
+
+    /**
+     * Idempotency check (D2): has the user already received an SYSTEM 站内信 with the reminder
+     * title today? addTime domain is createTime; the dateTimeBetween filter on addTime is in the
+     * xmeta default prop filter whitelist.
+     */
+    private boolean hasTodayExpiryReminder(String userId, IServiceContext context) {
+        LocalDate today = CoreMetrics.currentDateTime().toLocalDate();
+        LocalDateTime dayStart = today.atStartOfDay();
+        LocalDateTime dayEnd = today.plusDays(1).atStartOfDay();
+        QueryBean query = new QueryBean();
+        query.addFilter(FilterBeans.eq(LitemallUserMessage.PROP_NAME_userId, userId));
+        query.addFilter(FilterBeans.eq(LitemallUserMessage.PROP_NAME_msgType, _AppMallDaoConstants.MSG_TYPE_SYSTEM));
+        query.addFilter(FilterBeans.eq(LitemallUserMessage.PROP_NAME_title, EXPIRY_REMIND_TITLE));
+        query.addFilter(FilterBeans.dateTimeBetween(LitemallUserMessage.PROP_NAME_addTime, dayStart, dayEnd));
+        return userMessageBiz.findCount(query, context) > 0;
+    }
+
+    private static String formatDateOnly(LocalDateTime time) {
+        if (time == null) {
+            return "";
+        }
+        LocalDate date = time.toLocalDate();
+        return date.getYear() + " 年 " + date.getMonthValue() + " 月 " + date.getDayOfMonth() + " 日";
     }
 
     private LitemallPointsAccount mutateBalance(String userId, int amount, int changeType,

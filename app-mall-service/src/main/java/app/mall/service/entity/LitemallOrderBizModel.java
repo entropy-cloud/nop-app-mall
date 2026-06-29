@@ -1108,6 +1108,16 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
         updateEntity(order, "verifyPickupOrder", context);
         earnPointsForOrderConfirm(order, context);
 
+        // 自提核销成功站内信（successor of P31 deferred）：沿用 payment/ship 的 afterCommit +
+        // isEventMessageEnabled + uid-null-skip 模式（:817-819 / :1017-1019）。事件开关
+        // mall_message_event_enabled_pickup_verify 关闭时 uid=null，sendUserMessage 内部 null-guard 跳过。
+        final String verifyOrderSn = order.getOrderSn();
+        final String verifyUserId = notificationService.isEventMessageEnabled("pickup_verify", context)
+                ? order.getUserId() : null;
+        txn().afterCommit(null, () -> notificationService.sendUserMessage(
+                verifyUserId, _AppMallDaoConstants.MSG_TYPE_ORDER,
+                "订单核销成功", "订单 " + verifyOrderSn + " 已核销成功"));
+
         result.setAlreadyVerified(false);
         result.setMessage("核销成功");
         return result;

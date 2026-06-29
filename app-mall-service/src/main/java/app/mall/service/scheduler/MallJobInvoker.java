@@ -124,4 +124,14 @@ public class MallJobInvoker {
         int count = pointsAccountBiz.expirePoints(context);
         LOG.info("mall-job expirePoints finished, affected={}", count);
     }
+
+    // Points expiry pre-warning push (successor of getMyPointsExpiryHint): scan batches expiring
+    // within N days (mall_points_expiry_remind_days, default 3), aggregate per user, push one
+    // SYSTEM 站内信 per user. Idempotent per (userId, title, today). Daily.
+    // See docs/design/wallet-and-assets.md 积分有效期 过期预警.
+    public void sendPointsExpiryReminders() {
+        IServiceContext context = new ServiceContextImpl();
+        int count = pointsAccountBiz.sendPointsExpiryReminders(context);
+        LOG.info("mall-job sendPointsExpiryReminders finished, pushed={}", count);
+    }
 }

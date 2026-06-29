@@ -5,6 +5,7 @@ import app.mall.dao.entity.LitemallPointsAccount;
 import app.mall.dao.entity.LitemallPointsExpireBatch;
 import app.mall.dao.entity.LitemallPointsFlow;
 import app.mall.dao.entity.LitemallSystem;
+import app.mall.dao.entity.LitemallUserMessage;
 import io.nop.api.core.annotations.autotest.NopTestConfig;
 import io.nop.api.core.annotations.core.OptionalBoolean;
 import io.nop.api.core.beans.ApiRequest;
@@ -119,6 +120,22 @@ public class TestLitemallPointsAccountBizModel extends JunitBaseTestCase {
         ApiResponse<?> r = rpc(GraphQLOperationType.mutation, "LitemallPointsAccount__expirePoints", new HashMap<>());
         assertEquals(0, r.getStatus(), "expirePoints failed: " + r);
         return ((Number) r.getData()).intValue();
+    }
+
+    private int sendPointsExpiryReminders() {
+        ApiResponse<?> r = rpc(GraphQLOperationType.mutation, "LitemallPointsAccount__sendPointsExpiryReminders", new HashMap<>());
+        assertEquals(0, r.getStatus(), "sendPointsExpiryReminders failed: " + r);
+        return ((Number) r.getData()).intValue();
+    }
+
+    private long countExpiryReminders(String userId) {
+        QueryBean q = new QueryBean();
+        q.addFilter(io.nop.api.core.beans.FilterBeans.eq(LitemallUserMessage.PROP_NAME_userId, userId));
+        q.addFilter(io.nop.api.core.beans.FilterBeans.eq(LitemallUserMessage.PROP_NAME_msgType,
+                _AppMallDaoConstants.MSG_TYPE_SYSTEM));
+        q.addFilter(io.nop.api.core.beans.FilterBeans.eq(LitemallUserMessage.PROP_NAME_title,
+                LitemallPointsAccountBizModel.EXPIRY_REMIND_TITLE));
+        return daoProvider.daoFor(LitemallUserMessage.class).findAllByQuery(q).size();
     }
 
     @SuppressWarnings("unchecked")
@@ -483,5 +500,68 @@ public class TestLitemallPointsAccountBizModel extends JunitBaseTestCase {
         assertEquals(60, batch.getRemainingPoints(), "spend must decrement the batch by the consumed amount");
         assertFalse(batch.getExpireTime().isBefore(LocalDateTime.now()),
                 "batch must still be unexpired");
+    }
+
+    // ===== 过期预警推送（successor of getMyPointsExpiryHint）=====
+
+    @Test
+    public void testSendPointsExpiryRemindersPushesAggregatedMessageForWindowBatch() {
+        // Default remindDays=3: a batch expiring in 2 days is in window → user gets ONE aggregated
+        // SYSTEM 站内信 even with multiple in-window batches.
+        String accountId = seedAccount(USER_ID, 200).orm_idString();
+        seedBatch(accountId, USER_ID, 80, 80, LocalDateTime.now().plusDays(2), "remind-a");
+        seedBatch(accountId, USER_ID, 50, 50, LocalDateTime.now().plusDays(3), "remind-b");
+
+        int pushed = sendPointsExpiryReminders();
+        assertEquals(1, pushed, "one aggregated reminder per user");
+        assertEquals(1, countExpiryReminders(USER_ID), "exactly one SYSTEM reminder message persisted");
+    }
+
+    @Test
+    public void testSendPointsExpiryRemindersSkipsOutOfWindowAndZeroRemaining() {
+        // Out-of-window batch (expire in 10 days, remindDays=3) and remainingPoints=0 batch must
+        // not trigger a reminder.
+        String accountId = seedAccount(USER_ID, 200).orm_idString();
+        seedBatch(accountId, USER_ID, 100, 100, LocalDateTime.now().plusDays(10), "remind-far");
+        seedBatch(accountId, USER_ID, 100, 0, LocalDateTime.now().plusDays(1), "remind-empty");
+
+        int pushed = sendPointsExpiryReminders();
+        assertEquals(0, pushed, "no in-window non-empty batch ⇒ no push");
+        assertEquals(0, countExpiryReminders(USER_ID));
+    }
+
+    @Test
+    public void testSendPointsExpiryRemindersIsIdempotentOnReplaySameDay() {
+        String accountId = seedAccount(USER_ID, 100).orm_idString();
+        seedBatch(accountId, USER_ID, 80, 80, LocalDateTime.now().plusDays(2), "remind-idem");
+
+        assertEquals(1, sendPointsExpiryReminders(), "first run pushes one reminder");
+        // Replay same day: idempotency guard (today same-title SYSTEM 站内信 exists) skips.
+        assertEquals(0, sendPointsExpiryReminders(), "re-run same day must skip (idempotent)");
+        assertEquals(1, countExpiryReminders(USER_ID), "still only one reminder after replay");
+    }
+
+    @Test
+    public void testSendPointsExpiryRemindersRespectsEventToggle() {
+        // Event toggle mall_message_event_enabled_points-expiry-remind=false ⇒ no push.
+        setConfig("mall_message_event_enabled_" + LitemallPointsAccountBizModel.EVENT_KEY_POINTS_EXPIRY_REMIND, "false");
+        String accountId = seedAccount(USER_ID, 100).orm_idString();
+        seedBatch(accountId, USER_ID, 80, 80, LocalDateTime.now().plusDays(2), "remind-toggle");
+
+        int pushed = sendPointsExpiryReminders();
+        assertEquals(0, pushed, "event toggle off ⇒ no push");
+        assertEquals(0, countExpiryReminders(USER_ID));
+    }
+
+    @Test
+    public void testSendPointsExpiryRemindersUsesConfiguredRemindDays() {
+        // Override remindDays to 30 ⇒ a batch expiring in 20 days is in window.
+        setConfig(LitemallPointsAccountBizModel.CONFIG_POINTS_EXPIRY_REMIND_DAYS, "30");
+        String accountId = seedAccount(USER_ID, 100).orm_idString();
+        seedBatch(accountId, USER_ID, 80, 80, LocalDateTime.now().plusDays(20), "remind-wide-window");
+
+        int pushed = sendPointsExpiryReminders();
+        assertEquals(1, pushed, "remindDays=30 should include batch expiring in 20 days");
+        assertEquals(1, countExpiryReminders(USER_ID));
     }
 }

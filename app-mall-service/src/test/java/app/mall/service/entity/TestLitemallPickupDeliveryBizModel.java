@@ -7,6 +7,8 @@ import app.mall.dao.entity.LitemallGoods;
 import app.mall.dao.entity.LitemallGoodsProduct;
 import app.mall.dao.entity.LitemallOrder;
 import app.mall.dao.entity.LitemallPickupStore;
+import app.mall.dao.entity.LitemallSystem;
+import app.mall.dao.entity.LitemallUserMessage;
 import io.nop.api.core.annotations.autotest.NopTestConfig;
 import io.nop.api.core.annotations.autotest.NopTestProperty;
 import io.nop.api.core.annotations.core.OptionalBoolean;
@@ -371,5 +373,68 @@ public class TestLitemallPickupDeliveryBizModel extends JunitBaseTestCase {
         assertEquals(-1, r.getStatus(), "verify on express order must be rejected: " + r);
         assertTrue(r.getMsg().contains("not-verifiable") || r.getMsg().contains("核销"),
                 "expected not-verifiable error: " + r.getMsg());
+    }
+
+    // ===== 自提核销成功站内信（successor of P31 deferred）=====
+
+    private void setConfig(String key, String value) {
+        LitemallSystem cfg = daoProvider.daoFor(LitemallSystem.class).newEntity();
+        cfg.orm_propValueByName("keyName", key);
+        cfg.orm_propValueByName("keyValue", value);
+        daoProvider.daoFor(LitemallSystem.class).saveEntity(cfg);
+    }
+
+    private long countPickupVerifyMessages(String userId) {
+        QueryBean q = new QueryBean();
+        q.addFilter(eq(LitemallUserMessage.PROP_NAME_userId, userId));
+        q.addFilter(eq(LitemallUserMessage.PROP_NAME_msgType, _AppMallDaoConstants.MSG_TYPE_ORDER));
+        q.addFilter(eq(LitemallUserMessage.PROP_NAME_title, "订单核销成功"));
+        return daoProvider.daoFor(LitemallUserMessage.class).findAllByQuery(q).size();
+    }
+
+    @Test
+    public void testVerifyPickupOrderPushesInAppMessageOnSuccess() {
+        Map<String, Object> order = submitPickupAndPay(activeStoreId);
+        String pickupCode = (String) order.get("pickupCode");
+        String userId = (String) order.get("userId");
+
+        long before = countPickupVerifyMessages(userId);
+
+        ApiResponse<?> r = callMutation("LitemallOrder", "verifyPickupOrder", Map.of("pickupCode", pickupCode));
+        assertEquals(0, r.getStatus(), "verify failed: " + r);
+
+        long after = countPickupVerifyMessages(userId);
+        assertEquals(before + 1, after, "verify success must push exactly one ORDER 站内信");
+    }
+
+    @Test
+    public void testVerifyPickupOrderIdempotentReverifyDoesNotDuplicateMessage() {
+        Map<String, Object> order = submitPickupAndPay(activeStoreId);
+        String pickupCode = (String) order.get("pickupCode");
+        String userId = (String) order.get("userId");
+
+        callMutation("LitemallOrder", "verifyPickupOrder", Map.of("pickupCode", pickupCode));
+        long afterFirst = countPickupVerifyMessages(userId);
+
+        // Idempotent re-verify: alreadyVerified branch must NOT push a second message.
+        ApiResponse<?> r2 = callMutation("LitemallOrder", "verifyPickupOrder", Map.of("pickupCode", pickupCode));
+        assertEquals(0, r2.getStatus(), "re-verify should succeed (skip)");
+        long afterSecond = countPickupVerifyMessages(userId);
+        assertEquals(afterFirst, afterSecond, "idempotent re-verify must not push a duplicate message");
+    }
+
+    @Test
+    public void testVerifyPickupOrderRespectsEventToggle() {
+        // Event toggle mall_message_event_enabled_pickup_verify=false ⇒ no message pushed.
+        setConfig("mall_message_event_enabled_pickup_verify", "false");
+        Map<String, Object> order = submitPickupAndPay(activeStoreId);
+        String pickupCode = (String) order.get("pickupCode");
+        String userId = (String) order.get("userId");
+
+        long before = countPickupVerifyMessages(userId);
+        ApiResponse<?> r = callMutation("LitemallOrder", "verifyPickupOrder", Map.of("pickupCode", pickupCode));
+        assertEquals(0, r.getStatus(), "verify must still succeed with toggle off: " + r);
+        long after = countPickupVerifyMessages(userId);
+        assertEquals(before, after, "event toggle off ⇒ no 站内信 pushed");
     }
 }

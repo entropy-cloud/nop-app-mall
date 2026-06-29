@@ -98,3 +98,14 @@ jobs:
     invoker:
       bean: app.mall.service.scheduler.MallJobInvoker
       method: expirePoints
+
+  - jobName: send-points-expiry-reminders
+    displayName: Send Points Expiry Reminders
+    description: Push a daily SYSTEM in-app message for each user with batches expiring within N days
+    trigger:
+      repeatInterval: 86400000
+      repeatFixedDelay: true
+      maxExecutionCount: 0
+    invoker:
+      bean: app.mall.service.scheduler.MallJobInvoker
+      method: sendPointsExpiryReminders

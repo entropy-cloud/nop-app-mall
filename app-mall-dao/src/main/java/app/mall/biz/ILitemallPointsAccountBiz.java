@@ -54,6 +54,13 @@ public interface ILitemallPointsAccountBiz extends ICrudBiz<LitemallPointsAccoun
     @BizQuery
     Map<String, Object> getMyPointsExpiryHint(IServiceContext context);
 
+    // 过期预警推送（successor of getMyPointsExpiryHint，从拉取式升级为主动推送）：扫描近 N 天
+    // （mall_points_expiry_remind_days，缺省 3）到期的非空批次，按 userId 聚合为一条 SYSTEM 站内信，
+    // 幂等（当日同标题已存在则跳过）。系统定时任务入口（MallJobInvoker.sendPointsExpiryReminders），
+    // 亦可通过 GraphQL 触发用于测试。返回本轮推送的用户数。
+    @BizMutation
+    int sendPointsExpiryReminders(IServiceContext context);
+
     // Internal config-resolution helpers (not GraphQL-exposed): read NopSysVariable defaults
     // for points ratios. Used by LitemallOrderBizModel to compute integralPrice / shopping rewards.
     int resolveEarnPerYuan(IServiceContext context);
