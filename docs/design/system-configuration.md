@@ -357,6 +357,7 @@
 - **加购排行**：期间 `LitemallCart` 按 `goodsId` 聚合 `COUNT(*)` 降序前 N。
 - **滞销品**：期间在售（`isOnSale=1`）但零销量的商品前 N（`NOT EXISTS` 期间有销量的子查询）。
 - **动销率**：有销量商品数 / 在售商品数；有销量商品数 = 期间 `COUNT(DISTINCT goodsId)`（排除已取消订单）；在售商品数 = `isOnSale=1` 商品计数。
+- **毛利维度（商品聚合级）**：销量排行每行附带成本额/毛利额/毛利率，口径 = 商品销售额 − 销售成本（Σ 销售数量 × 当前 `LitemallGoods.costPrice`，无订单快照）。`costPrice` 为空或 0 视为「未维护成本」，三列输出空且不计入毛利率分母（避免 0 成本→100% 毛利失真）。成本/毛利为内部数据，`getProductAnalysis` 与 `exportReport` 均为 `@Auth(roles="admin")`（同 admin 边界），前台/列表/详情不展示 `costPrice`。`product` 主题导出（xlsx/pdf）沿用 `product-analysis.xpt.xml` 扩展毛利列（Latin 列名 costAmount/grossProfit/marginRate）。残留风险：商品调价后历史毛利会随 `costPrice` 变动漂移（无订单级成本快照，历史精确成本为 successor）。
 
 ### 用户分析指标口径（P19）
 

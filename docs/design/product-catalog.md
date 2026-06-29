@@ -151,6 +151,12 @@
 
 字段在商品编辑表单可空输入，空或 0 视为不启用对应粒度阈值，逐级回退至全局，保证存量商品零回归。
 
+### 商品成本价（内部字段，支撑毛利分析）
+
+- **`LitemallGoods.costPrice`**（propId=25，可空 DECIMAL(10,2)）：商品聚合级**内部成本价**，仅 admin 可见可维护（后台商品编辑表单 + 列表列），前台/列表/详情均不展示（ORM `ui:show="X"` + 前端 page.yaml 不消费）。
+- **用途**：商品分析报表毛利维度计算（销售额 − Σ 销量 × costPrice），口径详见 `docs/design/system-configuration.md`「商品分析指标口径 - 毛利维度」。空或 0 视为「未维护成本」，毛利列输出空且不计入毛利率分母。
+- **非订单快照**：毛利取当前 costPrice（无 OrderGoods 级成本快照）；商品调价后历史毛利会漂移，历史精确成本为 successor（`LitemallOrderGoods.costSnapshot`）。
+
 ## 营销价拼接到列表
 
 ### 业务意图

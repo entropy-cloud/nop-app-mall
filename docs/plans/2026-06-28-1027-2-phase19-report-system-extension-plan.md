@@ -158,6 +158,7 @@ Exit Criteria:
 - Why Not Blocking Closure: 商品分析交付销量/加购/滞销/动销率已满足基线；毛利需成本价，本基线无此字段，强行估算会失真。
 - Successor Required: yes
 - Model Gap Detail: `LitemallGoods` 缺 `costPrice` 列。建议新增可空 decimal 列。触发条件：财务/毛利分析需求出现时（与财务模块 successor A-07 合并）。
+- **Successor Closed（2026-06-29）**: 已由 successor 计划 `docs/plans/2026-06-29-1921-1-goods-cost-price-margin-report-plan.md` 关闭——`LitemallGoods.costPrice`(propId=25) 新增 + 商品分析毛利维度[成本额/毛利额/毛利率，D1/D3 口径] + `getProductAnalysis`/`exportReport` 补 @Auth(admin) + product 主题 xlsx/pdf 毛利列 + admin 商品编辑页成本价字段；493 测试全绿。订单项级精细毛利分摊与历史成本快照为本计划 successor 之 successor（见 successor 计划 Deferred）。
 
 ### nop-report PDF/Excel 导出（E1）
 
