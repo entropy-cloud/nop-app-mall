@@ -87,3 +87,14 @@ jobs:
     invoker:
       bean: app.mall.service.scheduler.MallJobInvoker
       method: cancelExpiredExchangeOrders
+
+  - jobName: expire-points
+    displayName: Expire Points Batches
+    description: Decrement balance for points batches past their expireTime and write EXPIRE flow
+    trigger:
+      repeatInterval: 3600000
+      repeatFixedDelay: true
+      maxExecutionCount: 0
+    invoker:
+      bean: app.mall.service.scheduler.MallJobInvoker
+      method: expirePoints

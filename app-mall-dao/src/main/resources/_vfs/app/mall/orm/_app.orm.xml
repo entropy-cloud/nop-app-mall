@@ -1986,6 +1986,51 @@
                 <unique-key columns="sourceType,sourceId" name="uk_litemall_points_flow_source"/>
             </unique-keys>
         </entity>
+        <entity className="app.mall.dao.entity.LitemallPointsExpireBatch" createTimeProp="addTime"
+                displayName="积分有效期批次表" name="app.mall.dao.entity.LitemallPointsExpireBatch" registerShortName="true"
+                tableName="litemall_points_expire_batch" updateTimeProp="updateTime" versionProp="version">
+            <columns>
+                <column code="ID" displayName="Id" mandatory="true" name="id" primary="true" propId="1"
+                        stdDataType="string" stdSqlType="INTEGER" tagSet="seq" ui:show="R"/>
+                <column code="ACCOUNT_ID" displayName="积分账户ID" mandatory="true" name="accountId" propId="2"
+                        stdDataType="string" stdSqlType="INTEGER"/>
+                <column code="USER_ID" displayName="用户ID" mandatory="true" name="userId" propId="3" stdDataType="string"
+                        stdSqlType="INTEGER"/>
+                <column code="TOTAL_POINTS" displayName="原始获取量" mandatory="true" name="totalPoints" propId="4"
+                        stdDataType="int" stdSqlType="INTEGER"/>
+                <column code="REMAINING_POINTS" displayName="未消耗量" mandatory="true" name="remainingPoints" propId="5"
+                        stdDataType="int" stdSqlType="INTEGER"/>
+                <column code="EXPIRE_TIME" displayName="过期时间" mandatory="true" name="expireTime" propId="6"
+                        stdDataType="datetime" stdSqlType="DATETIME"/>
+                <column code="SOURCE_TYPE" displayName="来源类型" name="sourceType" precision="50" propId="7"
+                        stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="SOURCE_ID" displayName="来源业务ID" name="sourceId" precision="50" propId="8"
+                        stdDataType="string" stdSqlType="VARCHAR"/>
+                <column code="VERSION" displayName="数据版本" domain="version" mandatory="true" name="version" propId="9"
+                        stdDataType="int" stdSqlType="INTEGER" ui:show="X"/>
+                <column code="ADD_TIME" displayName="创建时间" domain="createTime" name="addTime" propId="10"
+                        stdDataType="datetime" stdSqlType="DATETIME" ui:show="X"/>
+                <column code="UPDATE_TIME" displayName="更新时间" domain="updateTime" name="updateTime" propId="11"
+                        stdDataType="datetime" stdSqlType="DATETIME" ui:show="X"/>
+            </columns>
+            <indexes>
+                <index name="idx_points_expire_batch_user_expire" unique="false">
+                    <column name="userId"/>
+                    <column name="expireTime"/>
+                </index>
+            </indexes>
+            <relations>
+                <to-one displayName="积分账户" name="account" refEntityName="app.mall.dao.entity.LitemallPointsAccount"
+                        tagSet="pub,ref-pub" i18n-en:displayName="Account">
+                    <join>
+                        <on leftProp="accountId" rightProp="id"/>
+                    </join>
+                </to-one>
+            </relations>
+            <unique-keys>
+                <unique-key columns="sourceType,sourceId" name="uk_points_expire_batch_source"/>
+            </unique-keys>
+        </entity>
         <entity className="app.mall.dao.entity.LitemallWallet" createTimeProp="addTime" displayName="钱包账户表"
                 name="app.mall.dao.entity.LitemallWallet" registerShortName="true" tableName="litemall_wallet"
                 updateTimeProp="updateTime" versionProp="version">

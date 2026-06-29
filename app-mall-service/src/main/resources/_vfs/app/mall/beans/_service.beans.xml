@@ -250,6 +250,14 @@
         <property name="bizObjName" value="LitemallPointsFlow"/>
     </bean>
 
+    <bean id="app.mall.service.entity.LitemallPointsExpireBatchBizModel" ioc:type="@bean:id" ioc:default="true"/>
+
+    <bean id="biz_LitemallPointsExpireBatch" class="io.nop.biz.proxy.BizProxyFactoryBean"
+          ioc:type="app.mall.biz.ILitemallPointsExpireBatchBiz" ioc:force-lazy-property="true" lazy-init="true"
+          primary="true">
+        <property name="bizObjName" value="LitemallPointsExpireBatch"/>
+    </bean>
+
     <bean id="app.mall.service.entity.LitemallWalletFlowBizModel" ioc:type="@bean:id" ioc:default="true"/>
 
     <bean id="biz_LitemallWalletFlow" class="io.nop.biz.proxy.BizProxyFactoryBean"

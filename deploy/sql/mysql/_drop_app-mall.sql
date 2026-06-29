@@ -33,6 +33,7 @@ drop table  if exists  litemall_coupon_user;
 drop table  if exists  litemall_order;
 drop table  if exists  litemall_promotion_tier;
 drop table  if exists  litemall_points_flow;
+drop table  if exists  litemall_points_expire_batch;
 drop table  if exists  litemall_wallet_flow;
 drop table  if exists  litemall_recharge;
 drop table  if exists  litemall_material;

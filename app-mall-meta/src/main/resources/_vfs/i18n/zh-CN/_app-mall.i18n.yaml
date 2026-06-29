@@ -38,6 +38,7 @@ entity:
     LitemallPinTuanMember: 拼团参团记录表
     LitemallPointsAccount: 积分账户表
     LitemallPointsExchangeOrder: 积分兑换订单表
+    LitemallPointsExpireBatch: 积分有效期批次表
     LitemallPointsFlow: 积分流水表
     LitemallPointsGoods: 积分商品表
     LitemallPromotionActivity: 促销活动表（满减送）
@@ -663,6 +664,19 @@ prop:
       updateTime: 更新时间
       userId: 用户ID
       walletPayAmount: 余额支付金额（组合兑换现金部分）
+    LitemallPointsExpireBatch:
+      account: 积分账户
+      accountId: 积分账户ID
+      addTime: 创建时间
+      expireTime: 过期时间
+      id: Id
+      remainingPoints: 未消耗量
+      sourceId: 来源业务ID
+      sourceType: 来源类型
+      totalPoints: 原始获取量
+      updateTime: 更新时间
+      userId: 用户ID
+      version: 数据版本
     LitemallPointsFlow:
       account: 积分账户
       accountId: 积分账户ID

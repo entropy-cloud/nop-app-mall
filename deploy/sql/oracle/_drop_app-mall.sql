@@ -33,6 +33,7 @@ drop table litemall_coupon_user;
 drop table litemall_order;
 drop table litemall_promotion_tier;
 drop table litemall_points_flow;
+drop table litemall_points_expire_batch;
 drop table litemall_wallet_flow;
 drop table litemall_recharge;
 drop table litemall_material;

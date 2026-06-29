@@ -7,6 +7,7 @@ import app.mall.biz.ILitemallMemberLevelBiz;
 import app.mall.biz.ILitemallOrderBiz;
 import app.mall.biz.ILitemallOrderGoodsBiz;
 import app.mall.biz.ILitemallPinTuanActivityBiz;
+import app.mall.biz.ILitemallPointsAccountBiz;
 import app.mall.biz.ILitemallPointsExchangeOrderBiz;
 import io.nop.core.context.IServiceContext;
 import io.nop.core.context.ServiceContextImpl;
@@ -47,6 +48,9 @@ public class MallJobInvoker {
 
     @Inject
     ILitemallPointsExchangeOrderBiz exchangeOrderBiz;
+
+    @Inject
+    ILitemallPointsAccountBiz pointsAccountBiz;
 
     public void cancelExpiredOrders() {
         IServiceContext context = new ServiceContextImpl();
@@ -110,5 +114,14 @@ public class MallJobInvoker {
         IServiceContext context = new ServiceContextImpl();
         int count = exchangeOrderBiz.cancelExpiredExchangeOrders(EXCHANGE_CANCEL_TIMEOUT_MINUTES, context);
         LOG.info("mall-job cancelExpiredExchangeOrders finished, affected={}", count);
+    }
+
+    // Points validity auto-expiry: scans batches whose expireTime has passed, decrements balance and
+    // writes an EXPIRE flow. Idempotent + concurrent-safe (PointsAccount optimistic lock). Hourly.
+    // See docs/design/wallet-and-assets.md 积分有效期.
+    public void expirePoints() {
+        IServiceContext context = new ServiceContextImpl();
+        int count = pointsAccountBiz.expirePoints(context);
+        LOG.info("mall-job expirePoints finished, affected={}", count);
     }
 }

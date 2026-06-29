@@ -1,0 +1,14 @@
+{
+  "id": "",
+  "accountId": "",
+  "userId": "",
+  "totalPoints": 0,
+  "remainingPoints": 0,
+  "expireTime": "2000-01-01 14:00:00",
+  "sourceType": "",
+  "sourceId": "",
+  "version": 0,
+  "addTime": "2000-01-01 14:00:00",
+  "updateTime": "2000-01-01 14:00:00",
+  "account": null
+}

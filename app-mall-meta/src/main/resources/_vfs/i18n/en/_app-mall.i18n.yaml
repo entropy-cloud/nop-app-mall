@@ -38,6 +38,7 @@ entity:
     LitemallPinTuanMember: null
     LitemallPointsAccount: null
     LitemallPointsExchangeOrder: null
+    LitemallPointsExpireBatch: null
     LitemallPointsFlow: null
     LitemallPointsGoods: null
     LitemallPromotionActivity: null
@@ -663,6 +664,19 @@ prop:
       cashPrice: null
       walletPayAmount: null
       pointsGoods: Points Goods
+    LitemallPointsExpireBatch:
+      id: null
+      accountId: null
+      userId: null
+      totalPoints: null
+      remainingPoints: null
+      expireTime: null
+      sourceType: null
+      sourceId: null
+      version: null
+      addTime: null
+      updateTime: null
+      account: Account
     LitemallPointsFlow:
       id: null
       accountId: null

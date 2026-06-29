@@ -502,6 +502,21 @@ CREATE TABLE litemall_points_flow(
   constraint PK_litemall_points_flow primary key (ID)
 );
 
+CREATE TABLE litemall_points_expire_batch(
+  ID INTEGER NOT NULL ,
+  ACCOUNT_ID INTEGER NOT NULL ,
+  USER_ID INTEGER NOT NULL ,
+  TOTAL_POINTS INTEGER NOT NULL ,
+  REMAINING_POINTS INTEGER NOT NULL ,
+  EXPIRE_TIME DATE NOT NULL ,
+  SOURCE_TYPE VARCHAR2(50)  ,
+  SOURCE_ID VARCHAR2(50)  ,
+  VERSION INTEGER NOT NULL ,
+  ADD_TIME DATE  ,
+  UPDATE_TIME DATE  ,
+  constraint PK_litemall_points_expire_batch primary key (ID)
+);
+
 CREATE TABLE litemall_wallet_flow(
   ID INTEGER NOT NULL ,
   WALLET_ID INTEGER NOT NULL ,
@@ -1651,6 +1666,30 @@ CREATE TABLE litemall_pin_tuan_member(
       COMMENT ON COLUMN litemall_points_flow.ADD_TIME IS '创建时间';
                     
       COMMENT ON COLUMN litemall_points_flow.UPDATE_TIME IS '更新时间';
+                    
+      COMMENT ON TABLE litemall_points_expire_batch IS '积分有效期批次表';
+                
+      COMMENT ON COLUMN litemall_points_expire_batch.ID IS 'Id';
+                    
+      COMMENT ON COLUMN litemall_points_expire_batch.ACCOUNT_ID IS '积分账户ID';
+                    
+      COMMENT ON COLUMN litemall_points_expire_batch.USER_ID IS '用户ID';
+                    
+      COMMENT ON COLUMN litemall_points_expire_batch.TOTAL_POINTS IS '原始获取量';
+                    
+      COMMENT ON COLUMN litemall_points_expire_batch.REMAINING_POINTS IS '未消耗量';
+                    
+      COMMENT ON COLUMN litemall_points_expire_batch.EXPIRE_TIME IS '过期时间';
+                    
+      COMMENT ON COLUMN litemall_points_expire_batch.SOURCE_TYPE IS '来源类型';
+                    
+      COMMENT ON COLUMN litemall_points_expire_batch.SOURCE_ID IS '来源业务ID';
+                    
+      COMMENT ON COLUMN litemall_points_expire_batch.VERSION IS '数据版本';
+                    
+      COMMENT ON COLUMN litemall_points_expire_batch.ADD_TIME IS '创建时间';
+                    
+      COMMENT ON COLUMN litemall_points_expire_batch.UPDATE_TIME IS '更新时间';
                     
       COMMENT ON TABLE litemall_wallet_flow IS '钱包流水表';
                 

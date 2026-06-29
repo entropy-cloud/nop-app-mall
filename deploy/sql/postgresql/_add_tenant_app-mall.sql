@@ -67,6 +67,8 @@ alter table litemall_promotion_tier add NOP_TENANT_ID VARCHAR(32) DEFAULT '0' NO
 
 alter table litemall_points_flow add NOP_TENANT_ID VARCHAR(32) DEFAULT '0' NOT NULL;
 
+alter table litemall_points_expire_batch add NOP_TENANT_ID VARCHAR(32) DEFAULT '0' NOT NULL;
+
 alter table litemall_wallet_flow add NOP_TENANT_ID VARCHAR(32) DEFAULT '0' NOT NULL;
 
 alter table litemall_recharge add NOP_TENANT_ID VARCHAR(32) DEFAULT '0' NOT NULL;
@@ -212,6 +214,9 @@ alter table litemall_promotion_tier add constraint PK_litemall_promotion_tier pr
 
 alter table litemall_points_flow drop constraint PK_litemall_points_flow;
 alter table litemall_points_flow add constraint PK_litemall_points_flow primary key (NOP_TENANT_ID, id);
+
+alter table litemall_points_expire_batch drop constraint PK_litemall_points_expire_batch;
+alter table litemall_points_expire_batch add constraint PK_litemall_points_expire_batch primary key (NOP_TENANT_ID, id);
 
 alter table litemall_wallet_flow drop constraint PK_litemall_wallet_flow;
 alter table litemall_wallet_flow add constraint PK_litemall_wallet_flow primary key (NOP_TENANT_ID, id);

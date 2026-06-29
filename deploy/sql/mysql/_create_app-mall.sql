@@ -502,6 +502,21 @@ CREATE TABLE litemall_points_flow(
   constraint PK_litemall_points_flow primary key (ID)
 )CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
 
+CREATE TABLE litemall_points_expire_batch(
+  ID INTEGER NOT NULL    COMMENT 'Id',
+  ACCOUNT_ID INTEGER NOT NULL    COMMENT '积分账户ID',
+  USER_ID INTEGER NOT NULL    COMMENT '用户ID',
+  TOTAL_POINTS INTEGER NOT NULL    COMMENT '原始获取量',
+  REMAINING_POINTS INTEGER NOT NULL    COMMENT '未消耗量',
+  EXPIRE_TIME DATETIME NOT NULL    COMMENT '过期时间',
+  SOURCE_TYPE VARCHAR(50) NULL    COMMENT '来源类型',
+  SOURCE_ID VARCHAR(50) NULL    COMMENT '来源业务ID',
+  VERSION INTEGER NOT NULL    COMMENT '数据版本',
+  ADD_TIME DATETIME NULL    COMMENT '创建时间',
+  UPDATE_TIME DATETIME NULL    COMMENT '更新时间',
+  constraint PK_litemall_points_expire_batch primary key (ID)
+)CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
+
 CREATE TABLE litemall_wallet_flow(
   ID INTEGER NOT NULL    COMMENT 'Id',
   WALLET_ID INTEGER NOT NULL    COMMENT '钱包ID',
@@ -919,6 +934,8 @@ CREATE TABLE litemall_pin_tuan_member(
    ALTER TABLE litemall_promotion_tier COMMENT '满减档位表';
                 
    ALTER TABLE litemall_points_flow COMMENT '积分流水表';
+                
+   ALTER TABLE litemall_points_expire_batch COMMENT '积分有效期批次表';
                 
    ALTER TABLE litemall_wallet_flow COMMENT '钱包流水表';
                 

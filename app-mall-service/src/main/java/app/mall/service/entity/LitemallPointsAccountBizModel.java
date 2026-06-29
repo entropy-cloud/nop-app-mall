@@ -3,9 +3,11 @@ package app.mall.service.entity;
 
 import app.mall.biz.ILitemallPointsFlowBiz;
 import app.mall.biz.ILitemallPointsAccountBiz;
+import app.mall.biz.ILitemallPointsExpireBatchBiz;
 import app.mall.biz.ILitemallSystemBiz;
 import app.mall.dao._AppMallDaoConstants;
 import app.mall.dao.entity.LitemallPointsAccount;
+import app.mall.dao.entity.LitemallPointsExpireBatch;
 import app.mall.dao.entity.LitemallPointsFlow;
 import app.mall.dao.mapper.LitemallPointsAccountMapper;
 import io.nop.api.core.annotations.biz.BizModel;
@@ -25,6 +27,11 @@ import io.nop.core.context.IServiceContext;
 import io.nop.dao.DaoErrors;
 import jakarta.inject.Inject;
 
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import static app.mall.service.AppMallErrors.ERR_POINTS_ACCOUNT_NOT_FOUND;
 import static app.mall.service.AppMallErrors.ERR_POINTS_DUPLICATE_EARN;
 import static app.mall.service.AppMallErrors.ERR_POINTS_EARN_FAILED;
@@ -40,21 +47,32 @@ public class LitemallPointsAccountBizModel extends CrudBizModel<LitemallPointsAc
     public static final String SOURCE_TYPE_ADMIN_ADJUST = "admin-adjust";
     public static final String SOURCE_TYPE_CHECK_IN = "check-in";
     public static final String SOURCE_TYPE_COMMENT_REWARD = "comment-reward";
+    // EXPIRE flow source: sourceId = expired batch id (idempotent via uk_litemall_points_flow_source).
+    public static final String SOURCE_TYPE_EXPIRE = "expire";
 
     public static final String CONFIG_POINTS_EARN_PER_YUAN = "mall_points_earn_per_yuan";
     public static final String CONFIG_POINTS_COMMENT_REWARD = "mall_points_comment_reward";
     public static final String CONFIG_POINTS_TO_YUAN_RATIO = "mall_points_to_yuan_ratio";
     public static final String CONFIG_POINTS_DEDUCT_MAX_RATIO = "mall_points_deduct_max_ratio";
+    // 积分有效期（天）：缺失时走 DEFAULT_POINTS_VALIDITY_DAYS（Decision D1）。
+    public static final String CONFIG_POINTS_VALIDITY_DAYS = "mall_points_validity_days";
 
     public static final int DEFAULT_POINTS_EARN_PER_YUAN = 1;
     public static final int DEFAULT_POINTS_TO_YUAN_RATIO = 100;
     public static final double DEFAULT_POINTS_DEDUCT_MAX_RATIO = 0.3d;
+    // Decision D1：默认 730 天（2 年），后台 mall_points_validity_days 可覆盖。
+    public static final int DEFAULT_POINTS_VALIDITY_DAYS = 730;
+    // expirePoints 单轮扫描批次数上限，避免长事务；剩余下轮处理。
+    static final int EXPIRE_BATCH_LIMIT = 500;
 
     @Inject
     ILitemallSystemBiz systemBiz;
 
     @Inject
     ILitemallPointsFlowBiz flowBiz;
+
+    @Inject
+    ILitemallPointsExpireBatchBiz expireBatchBiz;
 
     @Inject
     LitemallPointsAccountMapper pointsAccountMapper;
@@ -170,6 +188,92 @@ public class LitemallPointsAccountBizModel extends CrudBizModel<LitemallPointsAc
         }
     }
 
+    @Override
+    @BizMutation
+    public int expirePoints(IServiceContext context) {
+        // Scan batches whose expireTime has passed and remainingPoints > 0. Per batch, decrement
+        // balance via the same optimistic-lock CAS sequence as mutateBalance (flush→detach→
+        // updateBalanceIfVersion), write an EXPIRE(20) flow, then zero the batch. Concurrency
+        // (job vs job, job vs spend) is serialized by PointsAccount.version: the CAS loser sees
+        // affected==0 and defers the batch to the next round, so balance is never double-decremented.
+        // Idempotent on re-run: remainingPoints>0 selection guard + EXPIRE flow (sourceType=expire,
+        // sourceId=batchId) unique key uk_litemall_points_flow_source. Decision D2 invariant
+        // (balance >= SUM(remainingPoints)) guarantees newBalance stays non-negative.
+        List<LitemallPointsExpireBatch> batches = expireBatchBiz.findExpiredBatches(EXPIRE_BATCH_LIMIT, context);
+
+        int count = 0;
+        for (LitemallPointsExpireBatch batch : batches) {
+            int remaining = safeInt(batch.getRemainingPoints());
+            if (remaining <= 0) {
+                continue;
+            }
+            String batchUserId = batch.getUserId();
+            String batchId = batch.orm_idString();
+            LitemallPointsAccount account = findAccountByUserId(batchUserId, context);
+            if (account == null) {
+                continue;
+            }
+            int currentBalance = safeInt(account.getBalance());
+            int currentVersion = safeInt(account.getVersion());
+            int totalEarned = safeInt(account.getTotalEarned());
+            int newBalance = currentBalance - remaining;
+            int newTotalSpent = safeInt(account.getTotalSpent()) + remaining;
+            String accountId = account.orm_idString();
+
+            // Flush pending inserts then detach the session-managed account so the conditional
+            // EQL UPDATE executes as real SQL (in-memory routing on a managed entity yields 0).
+            dao().flushSession();
+            dao().clearEntitySessionCache();
+            int affected = pointsAccountMapper.updateBalanceIfVersion(
+                    accountId, newBalance, totalEarned, newTotalSpent, currentVersion);
+            if (affected == 0) {
+                // Lost an optimistic-lock race (concurrent spend or another expire round).
+                // Defer this batch; the winner already reconciled balance for this version.
+                continue;
+            }
+
+            LitemallPointsFlow flow = flowBiz.newEntity();
+            flow.setAccountId(accountId);
+            flow.setUserId(batchUserId);
+            flow.setChangeType(_AppMallDaoConstants.POINTS_CHANGE_TYPE_EXPIRE);
+            flow.setChangeAmount(remaining);
+            flow.setBalanceAfter(newBalance);
+            flow.setSourceType(SOURCE_TYPE_EXPIRE);
+            flow.setSourceId(batchId);
+            flow.setRemark("积分过期");
+            flowBiz.saveEntity(flow, null, context);
+
+            // Reload the batch fresh (clearEntitySessionCache detached the originally selected row)
+            // and zero its remaining points.
+            LitemallPointsExpireBatch fresh = expireBatchBiz.get(batchId, false, context);
+            if (fresh != null) {
+                fresh.setRemainingPoints(0);
+                expireBatchBiz.updateEntity(fresh, "expirePoints", context);
+            }
+            count++;
+        }
+        return count;
+    }
+
+    @Override
+    @BizQuery
+    public Map<String, Object> getMyPointsExpiryHint(IServiceContext context) {
+        // Returns the soonest-expiring non-empty batch ({points, expireTime}) for the current user,
+        // or null when there is no expirable batch (stock-only balance per Decision D3 → no hint).
+        String userId = context.getUserId();
+        if (StringHelper.isEmpty(userId)) {
+            return null;
+        }
+        LitemallPointsExpireBatch batch = expireBatchBiz.findSoonestNonExpiredForUser(userId, context);
+        if (batch == null) {
+            return null;
+        }
+        Map<String, Object> hint = new HashMap<>();
+        hint.put("points", safeInt(batch.getRemainingPoints()));
+        hint.put("expireTime", batch.getExpireTime());
+        return hint;
+    }
+
     private LitemallPointsAccount mutateBalance(String userId, int amount, int changeType,
                                                 String sourceType, String sourceId, String remark,
                                                 IServiceContext context, boolean isEarn) {
@@ -215,6 +319,17 @@ public class LitemallPointsAccountBizModel extends CrudBizModel<LitemallPointsAc
         flow.setRemark(remark);
         flowBiz.saveEntity(flow, null, context);
 
+        // Synchronize the expire-batch ledger in the same tx (Decision D2 invariant:
+        // balance is the truth source, batches track the expirable portion earned after
+        // this feature went live). earn/positive-adjust create an expirable batch; spend
+        // and negative-adjust consume batches FIFO (earliest-expire first). Stock balance
+        // earned before this feature has no batch and is consumed last (Decision D3).
+        if (isEarn) {
+            createExpireBatch(accountId, userId, amount, sourceType, sourceId, context);
+        } else {
+            consumeBatchesFifo(userId, amount, context);
+        }
+
         // Re-read fresh so the returned managed entity reflects the committed balance.
         LitemallPointsAccount updated = findAccountByUserId(userId, context);
         return updated != null ? updated : account;
@@ -249,6 +364,46 @@ public class LitemallPointsAccountBizModel extends CrudBizModel<LitemallPointsAc
         query.addFilter(FilterBeans.eq(LitemallPointsFlow.PROP_NAME_sourceType, sourceType));
         query.addFilter(FilterBeans.eq(LitemallPointsFlow.PROP_NAME_sourceId, sourceId));
         return flowBiz.findCount(query, context);
+    }
+
+    private void createExpireBatch(String accountId, String userId, int amount,
+                                   String sourceType, String sourceId, IServiceContext context) {
+        // One batch per earn; (sourceType, sourceId) mirrors the earn flow, so the batch unique key
+        // uk_points_expire_batch_source provides the same dedupe guarantee as the flow unique key.
+        int validityDays = resolveValidityDays(context);
+        LocalDateTime expireTime = CoreMetrics.currentDateTime().plusDays(validityDays);
+        LitemallPointsExpireBatch batch = expireBatchBiz.newEntity();
+        batch.setAccountId(accountId);
+        batch.setUserId(userId);
+        batch.setTotalPoints(amount);
+        batch.setRemainingPoints(amount);
+        batch.setExpireTime(expireTime);
+        batch.setSourceType(sourceType);
+        batch.setSourceId(sourceId);
+        batch.setVersion(0);
+        expireBatchBiz.saveEntity(batch, "earn-batch", context);
+    }
+
+    private void consumeBatchesFifo(String userId, int amount, IServiceContext context) {
+        // FIFO by expireTime ASC. Only the expirable portion (sum of remaining) is consumed from
+        // batches; any remainder came from stock balance (Decision D3) and is left untouched here
+        // (balance was already decremented uniformly by the caller's CAS).
+        List<LitemallPointsExpireBatch> batches = expireBatchBiz.findExpirableBatchesForUser(userId, context);
+        int toCover = amount;
+        for (LitemallPointsExpireBatch batch : batches) {
+            if (toCover <= 0) {
+                break;
+            }
+            int remaining = safeInt(batch.getRemainingPoints());
+            int take = Math.min(remaining, toCover);
+            batch.setRemainingPoints(remaining - take);
+            expireBatchBiz.updateEntity(batch, "spend-fifo", context);
+            toCover -= take;
+        }
+    }
+
+    private int resolveValidityDays(IServiceContext context) {
+        return resolveIntConfig(CONFIG_POINTS_VALIDITY_DAYS, DEFAULT_POINTS_VALIDITY_DAYS, context);
     }
 
     private int resolveIntConfig(String key, int defaultValue, IServiceContext context) {
