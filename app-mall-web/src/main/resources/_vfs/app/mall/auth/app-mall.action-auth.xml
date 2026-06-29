@@ -75,6 +75,12 @@
                            icon="ant-design:notification-outlined" component="AMIS"
                            resourceType="SUBM" url="/app/mall/pages/mall/message-ops/broadcast.page.yaml"/>
 
+                <!-- 分群定向推送 successor（P35 deferred「MARKETING 定向投放」）：选定分群（手工标签/RFM/生命周期）
+                     向全部匹配成员逐人写入 MARKETING 站内信，返回送达人数。与「系统公告下发」并列。 -->
+                <resource id="mall-message-segment-push" displayName="分群定向推送" orderNo="211"
+                           icon="ant-design:notification-outlined" component="AMIS"
+                           resourceType="SUBM" url="/app/mall/pages/mall/message-ops/segment-push.page.yaml"/>
+
                 <resource id="mall-aftersales-manage" displayName="售后管理" orderNo="205"
                           icon="ant-design:appstore-twotone" component="AMIS"
                           resourceType="SUBM" url="/app/mall/pages/LitemallAftersale/all.page.yaml"/>

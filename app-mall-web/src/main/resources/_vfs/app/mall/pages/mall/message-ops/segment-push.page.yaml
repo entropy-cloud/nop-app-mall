@@ -1,0 +1,103 @@
+type: page
+title: 分群定向推送
+body:
+  - type: panel
+    title: 分群定向推送
+    body:
+      - type: alert
+        body: '选择一个分群（手工标签 / RFM 段 / 生命周期阶段）与段值，填写标题与内容后推送。系统将向该分群的全部匹配成员逐人写入一条「营销消息」（msgType=MARKETING），并返回送达人数。注意：RFM 段 / 生命周期阶段分群仅含有支付历史的用户。'
+        level: info
+        className: mb-2
+
+      - type: select
+        name: segmentType
+        label: 分群类型
+        value: tag
+        required: true
+        options:
+          - label: 手工标签
+            value: tag
+          - label: RFM 段
+            value: rfm
+          - label: 生命周期阶段
+            value: lifecycle
+
+      - type: input-text
+        name: tagValue
+        label: 标签码
+        placeholder: '输入手工标签码，如 vip-customer'
+        required: true
+        visibleOn: '${segmentType == "tag"}'
+
+      - type: select
+        name: rfmValue
+        label: RFM 段
+        placeholder: 选择 RFM 段
+        required: true
+        visibleOn: '${segmentType == "rfm"}'
+        options:
+          - label: 重要价值用户
+            value: 重要价值用户
+          - label: 重要保持用户
+            value: 重要保持用户
+          - label: 重要发展用户
+            value: 重要发展用户
+          - label: 重要挽留用户
+            value: 重要挽留用户
+          - label: 一般价值用户
+            value: 一般价值用户
+          - label: 一般保持用户
+            value: 一般保持用户
+          - label: 一般发展用户
+            value: 一般发展用户
+          - label: 一般挽留用户
+            value: 一般挽留用户
+
+      - type: select
+        name: lifecycleValue
+        label: 生命周期阶段
+        placeholder: 选择阶段
+        required: true
+        visibleOn: '${segmentType == "lifecycle"}'
+        options:
+          - label: 新客
+            value: 新客
+          - label: 活跃
+            value: 活跃
+          - label: 沉睡
+            value: 沉睡
+          - label: 流失
+            value: 流失
+
+      - type: input-text
+        name: title
+        label: 推送标题
+        placeholder: '例如：会员专享大促'
+        required: true
+
+      - type: textarea
+        name: content
+        label: 推送内容
+        placeholder: '请输入推送正文'
+        required: true
+        minRows: 4
+
+      - type: button
+        label: 推送
+        level: primary
+        disabledOn: '${!title || !content || !segmentType || (segmentType == "tag" && !tagValue) || (segmentType == "rfm" && !rfmValue) || (segmentType == "lifecycle" && !lifecycleValue)}'
+        actionType: ajax
+        api:
+          url: '@mutation:LitemallUserMessage__sendSegmentMessage'
+          data:
+            segmentType: '${segmentType}'
+            segmentValue: '${segmentType == "tag" ? tagValue : (segmentType == "rfm" ? rfmValue : lifecycleValue)}'
+            title: '${title}'
+            content: '${content}'
+        feedback:
+          title: 推送结果
+          body:
+            - type: tpl
+              tpl: '<div style="text-align:center;padding:10px">分群定向推送完成，共送达 <b style="color:#ff6700;font-size:20px">${data}</b> 位用户</div>'
+        messages:
+          success: '分群定向推送成功'

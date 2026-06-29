@@ -400,6 +400,8 @@ site:
       displayName: ''
     mall-message-broadcast:
       displayName: ''
+    mall-message-segment-push:
+      displayName: ''
     mall-order-batch-ship:
       displayName: ''
     mall-order-exception:
