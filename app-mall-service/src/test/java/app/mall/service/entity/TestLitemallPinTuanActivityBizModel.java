@@ -10,6 +10,8 @@ import app.mall.dao.entity.LitemallPinTuanMember;
 import app.mall.dao.entity.LitemallPromotionActivity;
 import app.mall.dao.entity.LitemallPromotionTier;
 import app.mall.dao.entity.LitemallPromotionUsage;
+import app.mall.dao.entity.LitemallSystem;
+import app.mall.dao.entity.LitemallUserMessage;
 import app.mall.dao._AppMallDaoConstants;
 import io.nop.api.core.annotations.autotest.NopTestConfig;
 import io.nop.api.core.annotations.core.OptionalBoolean;
@@ -514,6 +516,107 @@ public class TestLitemallPinTuanActivityBizModel extends JunitBaseTestCase {
         assertEquals(3, ((Number) data.get("participantCount")).intValue(), "participantCount");
         assertEquals(0, new BigDecimal("300").compareTo(new BigDecimal(data.get("totalGmv").toString())),
                 "totalGmv should be sum of the 3 member orders' actualPrice");
+    }
+
+    // ===== 成团站内信通知（successor：拼团成功 ORDER 消息）=====
+
+    private String createActivityWithMinUsers(int minUserCount) {
+        LitemallPinTuanActivity activity = daoProvider.daoFor(LitemallPinTuanActivity.class).newEntity();
+        activity.setGoodsId(goodsId);
+        activity.setPinTuanPrice(new BigDecimal("80.00"));
+        activity.setMinUserCount(minUserCount);
+        activity.setMaxUserCount(minUserCount + 5);
+        activity.setExpireHours(24);
+        activity.setStatus(10);
+        daoProvider.daoFor(LitemallPinTuanActivity.class).saveEntity(activity);
+        return activity.orm_idString();
+    }
+
+    @SuppressWarnings("unchecked")
+    private String openGroup(String actId, String userId, String orderId) {
+        ContextProvider.getOrCreateContext().setUserId(userId);
+        ApiRequest<Map<String, Object>> req = ApiRequest.build(Map.of(
+                "pinTuanActivityId", actId,
+                "orderId", orderId
+        ));
+        IGraphQLExecutionContext ctx = graphQLEngine.newRpcContext(
+                GraphQLOperationType.mutation, "LitemallPinTuanActivity__openPinTuan", req);
+        ApiResponse<?> result = graphQLEngine.executeRpc(ctx);
+        assertEquals(0, result.getStatus(), "openPinTuan failed: " + result);
+        return (String) ((Map<String, Object>) result.getData()).get("id");
+    }
+
+    @SuppressWarnings("unchecked")
+    private void joinGroup(String groupId, String userId, String orderId) {
+        ContextProvider.getOrCreateContext().setUserId(userId);
+        ApiRequest<Map<String, Object>> req = ApiRequest.build(Map.of(
+                "groupId", groupId,
+                "orderId", orderId
+        ));
+        IGraphQLExecutionContext ctx = graphQLEngine.newRpcContext(
+                GraphQLOperationType.mutation, "LitemallPinTuanActivity__joinPinTuan", req);
+        ApiResponse<?> result = graphQLEngine.executeRpc(ctx);
+        assertEquals(0, result.getStatus(), "joinPinTuan failed: " + result);
+    }
+
+    private void setConfig(String key, String value) {
+        LitemallSystem cfg = daoProvider.daoFor(LitemallSystem.class).newEntity();
+        cfg.orm_propValueByName("keyName", key);
+        cfg.orm_propValueByName("keyValue", value);
+        daoProvider.daoFor(LitemallSystem.class).saveEntity(cfg);
+    }
+
+    private long countPinTuanSuccessMessages(String userId) {
+        QueryBean q = new QueryBean();
+        q.addFilter(FilterBeans.eq(LitemallUserMessage.PROP_NAME_userId, userId));
+        q.addFilter(FilterBeans.eq(LitemallUserMessage.PROP_NAME_msgType, _AppMallDaoConstants.MSG_TYPE_ORDER));
+        q.addFilter(FilterBeans.eq(LitemallUserMessage.PROP_NAME_title, "拼团成功"));
+        return daoProvider.daoFor(LitemallUserMessage.class).findAllByQuery(q).size();
+    }
+
+    @Test
+    public void testPinTuanSuccessNotifiesAllMembers() {
+        // minUserCount=2: creator opens (ACTIVE, no success), 2nd join flips to SUCCESS → both members
+        // each receive one ORDER 站内信.
+        String actId = createActivityWithMinUsers(2);
+        String openOrderId = createOrderWithGoods("1", "PT-NOTIFY-OPEN");
+        String groupId = openGroup(actId, "1", openOrderId);
+
+        String joinOrderId = createOrderWithGoods("2", "PT-NOTIFY-JOIN");
+        joinGroup(groupId, "2", joinOrderId);
+
+        assertEquals(1, countPinTuanSuccessMessages("1"),
+                "creator must receive one 拼团成功 message on group success");
+        assertEquals(1, countPinTuanSuccessMessages("2"),
+                "joining member must receive one 拼团成功 message on group success");
+    }
+
+    @Test
+    public void testPinTuanNoMessageWhenStillActive() {
+        // minUserCount=3: open + 1 join still leaves group ACTIVE (2 < 3) → no success message.
+        String actId = createActivityWithMinUsers(3);
+        String openOrderId = createOrderWithGoods("1", "PT-NOTIFY-ACT-OPEN");
+        String groupId = openGroup(actId, "1", openOrderId);
+
+        String joinOrderId = createOrderWithGoods("2", "PT-NOTIFY-ACT-JOIN");
+        joinGroup(groupId, "2", joinOrderId);
+
+        assertEquals(0, countPinTuanSuccessMessages("1"), "no message while still ACTIVE");
+        assertEquals(0, countPinTuanSuccessMessages("2"), "no message while still ACTIVE");
+    }
+
+    @Test
+    public void testPinTuanSuccessRespectsEventToggle() {
+        setConfig("mall_message_event_enabled_pintuan-success", "false");
+        String actId = createActivityWithMinUsers(2);
+        String openOrderId = createOrderWithGoods("1", "PT-NOTIFY-TOG-OPEN");
+        String groupId = openGroup(actId, "1", openOrderId);
+
+        String joinOrderId = createOrderWithGoods("2", "PT-NOTIFY-TOG-JOIN");
+        joinGroup(groupId, "2", joinOrderId);
+
+        assertEquals(0, countPinTuanSuccessMessages("1"), "toggle off ⇒ no message");
+        assertEquals(0, countPinTuanSuccessMessages("2"), "toggle off ⇒ no message");
     }
 
     @SuppressWarnings("unchecked")

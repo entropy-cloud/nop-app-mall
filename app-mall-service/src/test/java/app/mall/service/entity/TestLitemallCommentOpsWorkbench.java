@@ -2,6 +2,8 @@ package app.mall.service.entity;
 
 import app.mall.dao._AppMallDaoConstants;
 import app.mall.dao.entity.LitemallComment;
+import app.mall.dao.entity.LitemallSystem;
+import app.mall.dao.entity.LitemallUserMessage;
 import io.nop.api.core.annotations.autotest.NopTestConfig;
 import io.nop.api.core.annotations.core.OptionalBoolean;
 import io.nop.api.core.beans.ApiRequest;
@@ -414,5 +416,87 @@ public class TestLitemallCommentOpsWorkbench extends JunitBaseTestCase {
         List<Map<String, Object>> allItems = (List<Map<String, Object>>)
                 ((Map<String, Object>) allRes.getData()).get("items");
         assertEquals(6, allItems.size(), "auditStatus 未指定时应返回全部（含各审核状态）");
+    }
+
+    // ===== 评价奖励站内信（approve / reject 路径 + 非聚合语义，successor）=====
+
+    private void seedCommentRewardConfig(String value) {
+        LitemallSystem cfg = daoProvider.daoFor(LitemallSystem.class).newEntity();
+        cfg.orm_propValueByName("keyName",
+                LitemallPointsAccountBizModel.CONFIG_POINTS_COMMENT_REWARD);
+        cfg.orm_propValueByName("keyValue", value);
+        daoProvider.daoFor(LitemallSystem.class).saveEntity(cfg);
+    }
+
+    private long countCommentRewardMessages(String userId) {
+        QueryBean q = new QueryBean();
+        q.addFilter(eq(LitemallUserMessage.PROP_NAME_userId, userId));
+        q.addFilter(eq(LitemallUserMessage.PROP_NAME_msgType, _AppMallDaoConstants.MSG_TYPE_SYSTEM));
+        q.addFilter(eq(LitemallUserMessage.PROP_NAME_title, "评价奖励到账"));
+        return daoProvider.daoFor(LitemallUserMessage.class).findAllByQuery(q).size();
+    }
+
+    @Test
+    public void testBatchAuditApprovePushesRewardMessage() {
+        seedCommentRewardConfig("10");
+        // userId must be numeric: litemall_points_account.user_id is an INTEGER-backed column, so a
+        // non-numeric id fails type conversion when earnPoints auto-creates the account.
+        String c1 = createCommentWithAuditStatus("待审-reward", 5, "1",
+                _AppMallDaoConstants.COMMENT_AUDIT_STATUS_PENDING, "1001");
+
+        long before = countCommentRewardMessages("1001");
+        ApiResponse<?> r = callMutation("batchAuditComments", Map.of(
+                "commentIds", List.of(c1), "action", "approve"));
+        List<Map<String, Object>> results = resultMaps(r);
+        assertEquals(1, successCount(results));
+        assertEquals(before + 1, countCommentRewardMessages("1001"),
+                "approve with reward>0 must push one SYSTEM 评价奖励到账 message");
+    }
+
+    @Test
+    public void testBatchAuditApproveNoMessageWhenRewardZero() {
+        // No reward config ⇒ reward=0 ⇒ approve transitions status but pushes no message (Decision D3).
+        String c1 = createCommentWithAuditStatus("待审-zero", 5, "1",
+                _AppMallDaoConstants.COMMENT_AUDIT_STATUS_PENDING, "1002");
+        long before = countCommentRewardMessages("1002");
+        ApiResponse<?> r = callMutation("batchAuditComments", Map.of(
+                "commentIds", List.of(c1), "action", "approve"));
+        List<Map<String, Object>> results = resultMaps(r);
+        assertEquals(1, successCount(results));
+        assertEquals(before, countCommentRewardMessages("1002"),
+                "reward=0 approve must NOT push any message");
+    }
+
+    @Test
+    public void testBatchAuditRejectPushesNoMessage() {
+        seedCommentRewardConfig("10");
+        String c1 = createCommentWithAuditStatus("待审-reject", 5, "1",
+                _AppMallDaoConstants.COMMENT_AUDIT_STATUS_PENDING, "1003");
+        long before = countCommentRewardMessages("1003");
+        ApiResponse<?> r = callMutation("batchAuditComments", Map.of(
+                "commentIds", List.of(c1), "action", "reject"));
+        List<Map<String, Object>> results = resultMaps(r);
+        assertEquals(1, successCount(results));
+        assertEquals(before, countCommentRewardMessages("1003"),
+                "reject must NOT push any reward message");
+    }
+
+    @Test
+    public void testCommentRewardNonAggregateSameUserTwoComments() {
+        // Decision D4 non-aggregate: same user, same day, two distinct comments approved → each earns
+        // reward → each receives one message (total 2), NOT deduplicated by a same-day title guard.
+        seedCommentRewardConfig("5");
+        String c1 = createCommentWithAuditStatus("待审-非聚合-1", 5, "1",
+                _AppMallDaoConstants.COMMENT_AUDIT_STATUS_PENDING, "1004");
+        String c2 = createCommentWithAuditStatus("待审-非聚合-2", 4, "1",
+                _AppMallDaoConstants.COMMENT_AUDIT_STATUS_PENDING, "1004");
+
+        long before = countCommentRewardMessages("1004");
+        ApiResponse<?> r = callMutation("batchAuditComments", Map.of(
+                "commentIds", List.of(c1, c2), "action", "approve"));
+        List<Map<String, Object>> results = resultMaps(r);
+        assertEquals(2, successCount(results), "both comments should be approved");
+        assertEquals(before + 2, countCommentRewardMessages("1004"),
+                "non-aggregate: two distinct comments each push one message (total 2)");
     }
 }

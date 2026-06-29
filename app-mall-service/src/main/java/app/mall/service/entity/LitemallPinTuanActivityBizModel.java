@@ -2,6 +2,7 @@
 package app.mall.service.entity;
 
 import app.mall.biz.ILitemallCouponUserBiz;
+import app.mall.biz.ILitemallGoodsBiz;
 import app.mall.biz.ILitemallOrderBiz;
 import app.mall.biz.ILitemallPinTuanActivityBiz;
 import app.mall.biz.ILitemallPinTuanGroupBiz;
@@ -11,6 +12,7 @@ import app.mall.biz.ILitemallPointsFlowBiz;
 import app.mall.dao._AppMallDaoConstants;
 import app.mall.dao.dto.PinTuanEffectivenessBean;
 import app.mall.dao.entity.LitemallCouponUser;
+import app.mall.dao.entity.LitemallGoods;
 import app.mall.dao.entity.LitemallOrder;
 import app.mall.dao.entity.LitemallOrderGoods;
 import app.mall.dao.entity.LitemallPinTuanActivity;
@@ -72,8 +74,16 @@ public class LitemallPinTuanActivityBizModel extends CrudBizModel<LitemallPinTua
     @Inject
     LitemallGoodsProductMapper goodsProductMapper;
 
+    // 成团通知 content 需展示商品名（Decision D1 方案 C：主事务内组装载荷）。
+    @Inject
+    ILitemallGoodsBiz goodsBiz;
+
     @Inject
     MallNotificationService notificationService;
+
+    // 成团站内信事件开关 key 与标题（与 PointsAccountBizModel/CouponUserBizModel EVENT_KEY 先例一致）。
+    static final String EVENT_KEY_PINTUAN_SUCCESS = "pintuan-success";
+    static final String PINTUAN_SUCCESS_TITLE = "拼团成功";
 
     // @SqlLibMapper for aggregation SQL (pintuan effectiveness) that I*Biz/QueryBean cannot express.
     @Inject
@@ -307,11 +317,63 @@ public class LitemallPinTuanActivityBizModel extends CrudBizModel<LitemallPinTua
         // Unlike Groupon's markGrouponSuccess which only mutates in-memory entities, here we
         // explicitly persist the status transition so SUCCESS is durable in the database.
         LitemallPinTuanGroup group = pinTuanGroupBiz.get(groupId, false, context);
-        if (group != null && group.getStatus() != null
-                && group.getStatus() == _AppMallDaoConstants.PIN_TUAN_GROUP_STATUS_ACTIVE) {
-            group.setStatus(_AppMallDaoConstants.PIN_TUAN_GROUP_STATUS_SUCCESS);
-            pinTuanGroupBiz.updateEntity(group, "markPinTuanSuccess", context);
+        if (group == null || group.getStatus() == null
+                || group.getStatus() != _AppMallDaoConstants.PIN_TUAN_GROUP_STATUS_ACTIVE) {
+            // 状态级幂等（Decision D2）：ACTIVE→SUCCESS 守卫保证成团只触发一次投递，重复调用 no-op。
+            return;
         }
+        group.setStatus(_AppMallDaoConstants.PIN_TUAN_GROUP_STATUS_SUCCESS);
+        pinTuanGroupBiz.updateEntity(group, "markPinTuanSuccess", context);
+
+        // 成团站内信（Decision D1 方案 C）：主事务内读开关 + 查成员集 + 组装载荷，
+        // afterCommit 内零 DB 查询，仅遍历载荷逐人投递（与 refundMemberOrder:396-400 / verifyPickupOrder
+        // 主事务捕获先例对齐）。关 → 直接返回（uid-null-skip 由调用方不投递实现）。
+        if (!notificationService.isEventMessageEnabled(EVENT_KEY_PINTUAN_SUCCESS, context)) {
+            return;
+        }
+        // 刷新待入库的成员记录（joinPinTuan/openPinTuan 刚 saveEntity 的成员尚未落库），保证
+        // findList 查到成团时刻的完整成员快照（团长 + 全部已参团成员，含触发成团的本次 join）。
+        dao().flushSession();
+        List<String> memberUserIds = collectGroupMemberUserIds(groupId, context);
+        if (memberUserIds.isEmpty()) {
+            return;
+        }
+        final String content = buildPinTuanSuccessContent(group, context);
+        txn().afterCommit(null, () -> {
+            for (String uid : memberUserIds) {
+                notificationService.sendUserMessage(
+                        uid, _AppMallDaoConstants.MSG_TYPE_ORDER, PINTUAN_SUCCESS_TITLE, content);
+            }
+        });
+    }
+
+    private List<String> collectGroupMemberUserIds(String groupId, IServiceContext context) {
+        QueryBean q = new QueryBean();
+        q.addFilter(FilterBeans.eq(LitemallPinTuanMember.PROP_NAME_groupId, groupId));
+        List<LitemallPinTuanMember> members = pinTuanMemberBiz.findList(q, null, context);
+        List<String> userIds = new ArrayList<>();
+        if (members != null) {
+            for (LitemallPinTuanMember m : members) {
+                if (m.getUserId() != null) {
+                    userIds.add(m.getUserId());
+                }
+            }
+        }
+        return userIds;
+    }
+
+    private String buildPinTuanSuccessContent(LitemallPinTuanGroup group, IServiceContext context) {
+        String goodsName = "";
+        LitemallPinTuanActivity activity = get(group.getActivityId(), false, context);
+        if (activity != null && activity.getGoodsId() != null) {
+            LitemallGoods goods = goodsBiz.get(activity.getGoodsId(), false, context);
+            if (goods != null && goods.getName() != null) {
+                goodsName = goods.getName();
+            }
+        }
+        return goodsName.isEmpty()
+                ? "您参与的拼团已成功成团"
+                : "您参与的拼团已成功成团（商品：" + goodsName + "）";
     }
 
     private long countMembers(String groupId, IServiceContext context) {

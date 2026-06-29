@@ -576,6 +576,49 @@ public class TestLitemallCommentBizModel extends JunitBaseTestCase {
         assertEquals(0, count, "default config 0 must NOT earn points");
     }
 
+    // ===== 评价奖励站内信（submit 预审关即时路径，successor）=====
+
+    private long countCommentRewardMessages(String userId) {
+        QueryBean q = new QueryBean();
+        q.addFilter(FilterBeans.eq(LitemallUserMessage.PROP_NAME_userId, userId));
+        q.addFilter(FilterBeans.eq(LitemallUserMessage.PROP_NAME_msgType,
+                _AppMallDaoConstants.MSG_TYPE_SYSTEM));
+        q.addFilter(FilterBeans.eq(LitemallUserMessage.PROP_NAME_title, "评价奖励到账"));
+        return daoProvider.daoFor(LitemallUserMessage.class).findAllByQuery(q).size();
+    }
+
+    @Test
+    public void testSubmitCommentRewardPushesMessage() {
+        // reward>0 (pre-moderation OFF ⇒ submit 即发) ⇒ one SYSTEM 评价奖励到账 message.
+        LitemallSystem cfg = daoProvider.daoFor(LitemallSystem.class).newEntity();
+        cfg.orm_propValueByName("keyName",
+                LitemallPointsAccountBizModel.CONFIG_POINTS_COMMENT_REWARD);
+        cfg.orm_propValueByName("keyValue", "10");
+        daoProvider.daoFor(LitemallSystem.class).saveEntity(cfg);
+
+        long before = countCommentRewardMessages("1");
+        ApiRequest<Map<String, Object>> req = ApiRequest.build(Map.of(
+                "orderGoodsId", orderGoodsId, "content", "rewarded-msg", "star", 5));
+        ApiResponse<?> submitRes = graphQLEngine.executeRpc(graphQLEngine.newRpcContext(
+                GraphQLOperationType.mutation, "LitemallComment__submitComment", req));
+        assertEquals(0, submitRes.getStatus(), "submitComment w/ reward failed: " + submitRes);
+        assertEquals(before + 1, countCommentRewardMessages("1"),
+                "reward>0 submit must push exactly one SYSTEM 评价奖励到账 message");
+    }
+
+    @Test
+    public void testSubmitCommentNoMessageWhenRewardZero() {
+        // No reward config ⇒ reward=0 ⇒ no message (Decision D3).
+        long before = countCommentRewardMessages("1");
+        ApiRequest<Map<String, Object>> req = ApiRequest.build(Map.of(
+                "orderGoodsId", orderGoodsId, "content", "zero-reward", "star", 4));
+        ApiResponse<?> submitRes = graphQLEngine.executeRpc(graphQLEngine.newRpcContext(
+                GraphQLOperationType.mutation, "LitemallComment__submitComment", req));
+        assertEquals(0, submitRes.getStatus());
+        assertEquals(before, countCommentRewardMessages("1"),
+                "reward=0 must NOT push any message");
+    }
+
     @SuppressWarnings("unchecked")
     @Test
     public void testCommentListBackwardCompatNoShowType() {

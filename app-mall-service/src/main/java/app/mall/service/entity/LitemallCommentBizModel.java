@@ -10,6 +10,7 @@ import app.mall.dao.entity.LitemallComment;
 import app.mall.dao.entity.LitemallOrder;
 import app.mall.dao.entity.LitemallOrderGoods;
 import app.mall.dao.mapper.LitemallOrderGoodsMapper;
+import app.mall.service.notification.MallNotificationService;
 import io.nop.api.core.annotations.biz.BizModel;
 import io.nop.api.core.annotations.biz.BizMutation;
 import io.nop.api.core.annotations.biz.BizQuery;
@@ -66,6 +67,14 @@ public class LitemallCommentBizModel extends CrudBizModel<LitemallComment> imple
 
     @Inject
     ILitemallSystemBiz systemBiz;
+
+    // 评价奖励站内信事件开关 key 与标题（Decision D3：reward>0 才投递；D4 方案 B 靠 PENDING→APPROVED
+    // / 提交守卫保证幂等，非聚合，不加 query 守卫）。
+    static final String EVENT_KEY_COMMENT_REWARD = "comment-reward";
+    static final String COMMENT_REWARD_TITLE = "评价奖励到账";
+
+    @Inject
+    MallNotificationService notificationService;
 
     public LitemallCommentBizModel() {
         setEntityName(LitemallComment.class.getName());
@@ -171,6 +180,8 @@ public class LitemallCommentBizModel extends CrudBizModel<LitemallComment> imple
                         comment.orm_idString(),
                         "商品评价奖励",
                         context);
+                // 评价奖励站内信（submit 预审关即时路径，Decision D3：reward>0 才投递）。
+                notifyCommentReward(userId, reward, comment.orm_idString(), context);
             }
         }
 
@@ -419,6 +430,9 @@ public class LitemallCommentBizModel extends CrudBizModel<LitemallComment> imple
                             }
                             // 幂等：积分已发放过，视为成功（状态推进仍继续）
                         }
+                        // 评价奖励站内信（approve 路径，Decision D3：reward>0 才投递；D4 方案 B 靠 PENDING→APPROVED
+                        // 守卫保证幂等，非聚合——同用户同日不同评价各得奖励各收消息）。
+                        notifyCommentReward(comment.getUserId(), reward, comment.orm_idString(), context);
                     }
                 } else {
                     comment.setAuditStatus(_AppMallDaoConstants.COMMENT_AUDIT_STATUS_REJECTED);
@@ -561,6 +575,22 @@ public class LitemallCommentBizModel extends CrudBizModel<LitemallComment> imple
         } catch (NumberFormatException e) {
             return 0;
         }
+    }
+
+    /**
+     * 评价奖励 SYSTEM 站内信（Decision D3：reward>0 才投递；D4 方案 B：靠上游 PENDING→APPROVED /
+     * 提交守卫保证幂等，不加消息层 query 守卫，非聚合语义）。主事务内读开关解析 notifyUid
+     * （关 → null），afterCommit 内 sendUserMessage（uid-null-skip 模式，与 pickup_verify 先例一致）。
+     */
+    private void notifyCommentReward(String userId, int reward, String commentId, IServiceContext context) {
+        final String notifyUid = notificationService.isEventMessageEnabled(EVENT_KEY_COMMENT_REWARD, context)
+                ? userId : null;
+        final int rewardVal = reward;
+        final String commentIdStr = commentId;
+        txn().afterCommit(null, () -> notificationService.sendUserMessage(
+                notifyUid, _AppMallDaoConstants.MSG_TYPE_SYSTEM,
+                COMMENT_REWARD_TITLE,
+                "您的商品评价获得 " + rewardVal + " 积分奖励（评价编号 " + commentIdStr + "）"));
     }
 
     // ===== P36 successor 前置审核：公共查询过滤 + 预审开关读取 =====
