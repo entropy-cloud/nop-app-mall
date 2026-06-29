@@ -192,6 +192,7 @@ Exit Criteria:
 - Classification: `optimization candidate`
 - Why Not Blocking Closure: 本计划 PromotionUsage 记录的是"参与事实"（命中即记录），用于限购计数与效果归因。订单取消/退款时是否回退 usage 计数（从而释放限购额度）涉及退款↔营销交互的额外语义，非本 model-gap 关闭的核心。当前行为：退款不回退计数（与"每人限参与 N 次"的严格语义一致——参与过即计数）。
 - Successor Required: `yes`（触发条件：业务要求退款释放限购额度时）
+- **已由 successor 关闭（2026-06-29）：** `docs/plans/2026-06-29-1921-2-promotion-usage-refund-rollback-plan.md` 交付 `releasePromotionUsage` + 6 处全额取消/退款镜像 hook（cancel/cancelExpiredOrders/售后 refund/售后 confirmReturnReceived/团购 refundGrouponOrder/拼团 refundMemberOrder），全额取消/退款软删除 PromotionUsage 释放 maxPerUser 额度；部分项退款保留 usage（满减为订单级折扣）。
 
 ## Closure
 

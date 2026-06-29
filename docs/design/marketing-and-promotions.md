@@ -449,7 +449,8 @@
 
 ### 与取消 / 退款的关系
 
-- 满减为订单提交时自动触发的非逆转优惠，不产生可恢复的实例，因此取消或退款时无需（也无从）单独回滚满减。
+- 满减折扣金额为订单提交时自动触发的非逆转优惠，不产生可恢复的价格实例，因此取消或退款时无需（也无从）单独「取消已应用的满减折扣金额」。
+- **参与额度（PromotionUsage）在整单取消/退款时释放：** 虽折扣金额不回退，但「参与事实记录」会在全额取消/退款时软删除，从而释放 `maxPerUser` 限购额度（详见下节「限购强一致与参与记录」的退款回滚语义）。
 - 取消/退款额受扣减后的 `actualPrice` 约束，已通过满减降低的实付金额即为退款上限基准。
 - 后续若实现订单项级退款（P16），需按行分摊满减优惠；该分摊机制由 P16 负责，本文件仅定义订单级满减语义。
 
@@ -458,7 +459,7 @@
 - 满减下单命中（`discount > 0`）时，`submit` 写入一条 `LitemallPromotionUsage`（userId/promotionActivityId/orderId/meetAmount/discountAmount）记录参与事实，与订单创建在同一 `@BizMutation` 事务内。
 - `maxPerUser`（每人限参与次数，0 不限）按 `(userId, promotionActivityId)` 计数现有 usage 强一致校验：超限抛 `ERR_PROMOTION_MAX_PER_USER` 拒绝下单（事务回滚，含库存扣减）。
 - **命中活动 id 的获取方式（Decision）：** `selectPromotionForOrder` 为 GraphQL-facing `@BizQuery`（前端预览用，仅返回 `BigDecimal` 折扣额）。submit 写 usage 需命中 activityId，故抽取内部 helper `resolvePromotionForOrderInternal(goodsPrice, scopeIds, ctx)` 返回 `{activityId, discount, meetAmount}`（null 表示无命中）；`selectPromotionForOrder` 改为委托它取 `.discount`，**不破坏既有 GraphQL 契约**。备选（改 `selectPromotionForOrder` 返回结构体）被否——破坏前端预览契约与已有测试。单一真相源在 helper，public 方法仅委托。
-- 退款回滚 usage 计数为 successor（见对应计划 Deferred）：当前参与过即计数，退款不回退。
+- **退款回滚 usage（已实现）：** 全额取消/退款时释放该订单占用的满减参与额度——`LitemallOrderBizModel.releasePromotionUsage(orderId, ctx)` 按 `orderId` 查 PromotionUsage 并软删除（实体 `useLogicalDelete`，`deleteEntity` 即软删；`maxPerUser` 的 `findCount` 自动应用 `deleted=false` 过滤，故额度释放）。镜像既有「还券 + 还积分」的全部 6 处全额取消/退款先例（`cancel` / `cancelExpiredOrders` / 售后 `refund` / 售后 `confirmReturnReceived` / 团购 `refundGrouponOrder` / 拼团 `refundMemberOrder`），复用相同的「全额 vs 部分项级」边界（`isWholeOrder`）：部分项退款**不**回滚 usage（满减为订单整体级折扣，部分项退款后订单仍参与了满减，参与事实成立——与部分项退款不还券/不还积分同口径）。按 `(userId, orderId)` 唯一键定位，重复调用软删 0 行天然幂等。
 
 ### 已知约束
 
