@@ -165,6 +165,7 @@ Exit Criteria:
 - Why Not Blocking Closure: 当前实现采用惰性清理（每次 `sendResetCode` 时删除该手机号的旧验证码，`resetPassword` 成功后删除已使用的验证码）。对于已发送但从未验证、也未重发的手机号，其验证码记录会持续累积。但在正常使用模式下（用户发送→验证或发送→重发），累积量极小。项目当前未引入 `nop-job` 定时任务引擎，无法实现定期清理。
 - Successor Required: `yes`
 - Trigger: 当引入 `nop-job` 时，或 `litemall_reset_code` 表行数超过 10 万行时。
+- **已由 successor 关闭（2026-06-30）：** Phase 11 引入 `nop-job-local`，触发条件满足。由 `docs/plans/2026-06-29-2330-3-reset-code-periodic-cleanup-plan.md` 实施并关闭——新增 `cleanup-expired-reset-codes` 定时任务（`MallJobInvoker.cleanupExpiredResetCodes()` → `LitemallResetCodeBizModel.cleanupExpiredResetCodes`），逻辑删除超过保留期（`mall_reset_code_retention_days` 缺省 7 天）的验证码记录。
 
 ## Closure
 

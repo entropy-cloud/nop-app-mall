@@ -170,6 +170,15 @@
 - 微信小程序登录和自动注册不在当前产品范围内（见 `docs/backlog/implementation-roadmap.md` Phase 1 明确「不在范围内：微信登录、外部登录渠道」）。产品定位为 H5/Web 商城，未交付微信小程序前端；Phase 14 仅覆盖微信支付（Native 扫码），不含微信登录。
 - `NopAuthUser.openId` 与扩展字段 `sessionKey` 作为预留保留，未来启用微信登录时可直接复用，无需再改模型。
 
+### 密码重置与验证码
+
+- 找回密码通过手机号验证码：`LoginApiExBizModel.sendResetCode` 发码、`resetPassword` 验码并改密（`app-mall-delta`，对 nop-auth 的 Delta 扩展）。
+- 验证码记录持久化于 `litemall_reset_code`（`LitemallResetCode`，逻辑删除）。发送频率与有效期由 `LoginApiExBizModel` 常量控制。
+- **清理路径（惰性 + 定期，互补）：**
+  - 惰性清理：发送新码时删除该手机号旧码（`sendResetCode`），验证成功/过期时删除已用码（`resetPassword`）。
+  - 定期清理（successor of deferred「验证码过期记录的定期清理」）：覆盖惰性路径未触及的「已发送但从未验证、也未重发」的累积记录。定时任务 `cleanup-expired-reset-codes`（每日，入口 `MallJobInvoker.cleanupExpiredResetCodes()` → `LitemallResetCodeBizModel.cleanupExpiredResetCodes`）逻辑删除超过保留期的记录（`addTime < now - mall_reset_code_retention_days`，缺省 **7 天**）。单轮限 500 条，超出顺延下一轮；与惰性清理一致采用逻辑删除（`deleteEntity`，`deleted=true`）。
+  - 抉择：逻辑删除（与既有惰性清理一致，避免引入第二种删除语义）；保留期缺省 7 天（验证码为短生命周期临时数据）；ORM 管道批量查询逐条删除（参照 `cancelExpiredOrders`/`expirePoints` 先例）。
+
 ## 地址管理
 
 ### 业务规则

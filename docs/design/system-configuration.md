@@ -263,13 +263,14 @@
 - 团购过期处理
 - 评价窗口过期处理
 - 自提订单超时取消退款（successor of P31 deferred）：扫描已支付未自提订单（201 + `deliveryType=PICKUP` + `payTime` 早于 `mall_pickup_timeout_days` 缺省 14 天），CAS-guard 翻转 201→203 + 按 `payChannel` 分流退款（BALANCE→wallet credit-back / 其余→payService.refund）+ 复用还库/还券/还积分/释放满减/通知副作用链。每小时。
+- 验证码过期记录定期清理（successor of deferred「验证码过期记录的定期清理」）：逻辑删除超过保留期的密码重置验证码记录（`addTime < now - mall_reset_code_retention_days`，缺省 7 天），覆盖惰性清理未触及的「已发送但从未验证、也未重发」的累积记录。入口 `MallJobInvoker.cleanupExpiredResetCodes()`。每日。详见 `user-and-address.md` 密码重置章节。
 
 ### 技术装配
 
 - 调度引擎采用 `nop-job-local`（本地内存调度器，非分布式）
 - 定时任务通过 `_vfs/nop/job/conf/scheduler.yaml` 注册，绑定 `MallJobInvoker` 的方法
 - `application.yaml` 配置 `nop.job.scheduler.config-path` 指向调度配置
-- 调度频率：cancelExpiredOrders=15min, confirmExpiredOrders=1h, cancelExpiredPickupOrders=1h, expireCoupons=1h, expireGroupons=30min, expireCommentWindow=1h
+- 调度频率：cancelExpiredOrders=15min, confirmExpiredOrders=1h, cancelExpiredPickupOrders=1h, expireCoupons=1h, expireGroupons=30min, expireCommentWindow=1h, cleanupExpiredResetCodes=每日(86400000ms)
 
 ## 字典维护
 

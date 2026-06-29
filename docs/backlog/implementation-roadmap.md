@@ -15,7 +15,7 @@
 
 > **这是唯一的动态状态区域。更新状态只改这里，不改 Phase Details 中的状态行。**
 
-- 1. 用户注册登录: `done`
+- 1. 用户注册登录: `done`（Phase 1 deferred successor「验证码过期记录的定期清理」已闭环：`docs/plans/2026-06-29-2330-3-reset-code-periodic-cleanup-plan.md` done — `cleanup-expired-reset-codes` 每日 job（`MallJobInvoker.cleanupExpiredResetCodes()` → `LitemallResetCodeBizModel.cleanupExpiredResetCodes`）逻辑删除超过保留期 `mall_reset_code_retention_days` 缺省 7 天的验证码记录，覆盖惰性清理未触及的累积记录；521 测试全绿）
 - 2. 商品目录管理: `done`
 - 3. 地址管理: `done`
 - 4. 购物车: `done`
