@@ -1,6 +1,7 @@
 package app.mall.service.entity;
 
 import app.mall.dao._AppMallDaoConstants;
+import app.mall.dao.entity.LitemallOrder;
 import app.mall.dao.entity.LitemallSystem;
 import app.mall.dao.entity.LitemallUserMessage;
 import app.mall.service.notification.MallNotificationService;
@@ -23,6 +24,8 @@ import jakarta.inject.Inject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -107,6 +110,35 @@ public class TestLitemallUserMessageBizModel extends JunitBaseTestCase {
         ApiResponse<?> r = rpc(GraphQLOperationType.query, "LitemallUserMessage__getUnreadCount", data);
         assertEquals(0, r.getStatus(), "getUnreadCount failed: " + r);
         return ((Number) r.getData()).intValue();
+    }
+
+    // Paid-order seeder (same shape as TestLitemallUserPortraitBizModel) so RFM/lifecycle
+    // algorithmic segments are non-empty for the segment-directed-marketing push tests.
+    private void createPaidOrder(String userId, String sn, BigDecimal actualPrice, LocalDateTime payTime) {
+        LitemallOrder o = daoProvider.daoFor(LitemallOrder.class).newEntity();
+        o.setUserId(userId);
+        o.setOrderSn(sn);
+        o.setOrderStatus(_AppMallDaoConstants.ORDER_STATUS_PAY);
+        o.setConsignee("收货人");
+        o.setMobile("13800138000");
+        o.setAddress("测试地址");
+        o.setMessage("segment-push-test-order");
+        o.setGoodsPrice(actualPrice);
+        o.setFreightPrice(BigDecimal.ZERO);
+        o.setCouponPrice(BigDecimal.ZERO);
+        o.setIntegralPrice(BigDecimal.ZERO);
+        o.setGrouponPrice(BigDecimal.ZERO);
+        o.setOrderPrice(actualPrice);
+        o.setActualPrice(actualPrice);
+        o.setPromotionPrice(BigDecimal.ZERO);
+        o.setPinTuanPrice(BigDecimal.ZERO);
+        o.setPayTime(payTime);
+        daoProvider.daoFor(LitemallOrder.class).saveEntity(o);
+    }
+
+    private void actAsAdmin() {
+        ContextProvider.getOrCreateContext().setUserId("0");
+        ContextProvider.getOrCreateContext().setUserName("admin");
     }
 
     @Test
@@ -250,5 +282,138 @@ public class TestLitemallUserMessageBizModel extends JunitBaseTestCase {
         daoProvider.daoFor(LitemallSystem.class).saveEntity(cfg);
         daoProvider.daoFor(LitemallSystem.class).flushSession();
         assertEquals(false, notificationService.isEventMessageEnabled("payment", new ServiceContextImpl()));
+    }
+
+    // ===== 分群定向营销推送（successor of P35 deferred「MARKETING 定向投放」） =====
+
+    @Test
+    public void testSendSegmentMessageByTag() {
+        NopAuthUser user = signUpUser("segpushtag", "13900002002");
+        actAsAdmin();
+        // Seed a manual tag on the user via the admin addUserTag mutation.
+        Map<String, Object> tagData = new HashMap<>();
+        tagData.put("userId", user.getUserId());
+        tagData.put("tag", "vip-customer");
+        tagData.put("name", "VIP客户");
+        ApiResponse<?> tr = rpc(GraphQLOperationType.mutation, "LitemallUserTag__addUserTag", tagData);
+        assertEquals(0, tr.getStatus(), "addUserTag helper failed: " + tr);
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("segmentType", "tag");
+        data.put("segmentValue", "vip-customer");
+        data.put("title", "标签定向推送");
+        data.put("content", "会员专享优惠");
+        ApiResponse<?> r = rpc(GraphQLOperationType.mutation, "LitemallUserMessage__sendSegmentMessage", data);
+        assertEquals(0, r.getStatus(), "sendSegmentMessage(tag) failed: " + r);
+        assertEquals(1, ((Number) r.getData()).intValue(),
+                "tag push should deliver to exactly the 1 tagged user");
+
+        // The tagged user sees a MARKETING message.
+        actAs(user);
+        List<Map<String, Object>> mktMsgs = myList(_AppMallDaoConstants.MSG_TYPE_MARKETING);
+        assertTrue(mktMsgs.stream().anyMatch(m -> "标签定向推送".equals(m.get("title"))),
+                "tagged user should receive the MARKETING message");
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testSendSegmentMessageByRfm() {
+        NopAuthUser user = signUpUser("segpushrfm", "13900002001");
+        actAsAdmin();
+        createPaidOrder(user.getUserId(), "SN-SEG-PUSH-RFM", new BigDecimal("100"),
+                LocalDateTime.now().minusDays(1));
+
+        // Determine the actual RFM segment the seeded paying user falls into (threshold-based, so
+        // query the portrait rather than hard-coding a segment label).
+        Map<String, Object> portraitData = new HashMap<>();
+        portraitData.put("userId", user.getUserId());
+        ApiResponse<?> pr = rpc(GraphQLOperationType.query, "LitemallOrder__getUserPortrait", portraitData);
+        assertEquals(0, pr.getStatus(), "getUserPortrait helper failed: " + pr);
+        String segment = (String) ((Map<String, Object>) pr.getData()).get("rfmSegment");
+        assertNotNull(segment, "paid user must be assigned an RFM segment");
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("segmentType", "rfm");
+        data.put("segmentValue", segment);
+        data.put("title", "RFM定向推送");
+        data.put("content", "专享回归优惠");
+        ApiResponse<?> r = rpc(GraphQLOperationType.mutation, "LitemallUserMessage__sendSegmentMessage", data);
+        assertEquals(0, r.getStatus(), "sendSegmentMessage(rfm) failed: " + r);
+        assertTrue(((Number) r.getData()).intValue() >= 1,
+                "rfm push should deliver to at least the seeded paying user");
+
+        actAs(user);
+        List<Map<String, Object>> mktMsgs = myList(_AppMallDaoConstants.MSG_TYPE_MARKETING);
+        assertTrue(mktMsgs.stream().anyMatch(m -> "RFM定向推送".equals(m.get("title"))),
+                "rfm-segment user should receive the MARKETING message");
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testSendSegmentMessageByLifecycle() {
+        NopAuthUser user = signUpUser("segpushlife", "13900002003");
+        actAsAdmin();
+        createPaidOrder(user.getUserId(), "SN-SEG-PUSH-LIFE", new BigDecimal("50"),
+                LocalDateTime.now().minusDays(1));
+
+        Map<String, Object> portraitData = new HashMap<>();
+        portraitData.put("userId", user.getUserId());
+        ApiResponse<?> pr = rpc(GraphQLOperationType.query, "LitemallOrder__getUserPortrait", portraitData);
+        assertEquals(0, pr.getStatus(), "getUserPortrait helper failed: " + pr);
+        String stage = (String) ((Map<String, Object>) pr.getData()).get("lifecycleStage");
+        assertNotNull(stage, "paid user must be assigned a lifecycle stage");
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("segmentType", "lifecycle");
+        data.put("segmentValue", stage);
+        data.put("title", "生命周期定向推送");
+        data.put("content", "专属唤醒礼");
+        ApiResponse<?> r = rpc(GraphQLOperationType.mutation, "LitemallUserMessage__sendSegmentMessage", data);
+        assertEquals(0, r.getStatus(), "sendSegmentMessage(lifecycle) failed: " + r);
+        assertTrue(((Number) r.getData()).intValue() >= 1,
+                "lifecycle push should deliver to at least the seeded paying user");
+
+        actAs(user);
+        List<Map<String, Object>> mktMsgs = myList(_AppMallDaoConstants.MSG_TYPE_MARKETING);
+        assertTrue(mktMsgs.stream().anyMatch(m -> "生命周期定向推送".equals(m.get("title"))),
+                "lifecycle-segment user should receive the MARKETING message");
+    }
+
+    @Test
+    public void testSendSegmentMessageEmptySegmentReturnsZero() {
+        actAsAdmin();
+        // A tag nobody carries → empty segment → delivered 0, not an error (Decision D3).
+        Map<String, Object> data = new HashMap<>();
+        data.put("segmentType", "tag");
+        data.put("segmentValue", "nonexistent-tag-xyz");
+        data.put("title", "空分群推送");
+        data.put("content", "无人送达");
+        ApiResponse<?> r = rpc(GraphQLOperationType.mutation, "LitemallUserMessage__sendSegmentMessage", data);
+        assertEquals(0, r.getStatus(), "empty segment push must succeed");
+        assertEquals(0, ((Number) r.getData()).intValue(), "empty segment must deliver 0");
+    }
+
+    @Test
+    public void testSendSegmentMessageInvalidTypeRejected() {
+        actAsAdmin();
+        Map<String, Object> data = new HashMap<>();
+        data.put("segmentType", "unknown");
+        data.put("segmentValue", "x");
+        data.put("title", "T");
+        data.put("content", "C");
+        ApiResponse<?> r = rpc(GraphQLOperationType.mutation, "LitemallUserMessage__sendSegmentMessage", data);
+        assertNotEquals(0, r.getStatus(), "invalid segmentType must be rejected");
+    }
+
+    @Test
+    public void testSendSegmentMessageEmptyTitleRejected() {
+        actAsAdmin();
+        Map<String, Object> data = new HashMap<>();
+        data.put("segmentType", "tag");
+        data.put("segmentValue", "vip");
+        data.put("title", "");
+        data.put("content", "C");
+        ApiResponse<?> r = rpc(GraphQLOperationType.mutation, "LitemallUserMessage__sendSegmentMessage", data);
+        assertNotEquals(0, r.getStatus(), "empty title must be rejected");
     }
 }

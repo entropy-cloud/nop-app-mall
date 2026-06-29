@@ -469,6 +469,10 @@ public interface AppMallErrors {
             define("nop.err.mall.message.not-belong-user",
                     "消息不属于当前用户", ARG_USER_ID);
 
+    ErrorCode ERR_MESSAGE_SEGMENT_TITLE_OR_CONTENT_EMPTY =
+            define("nop.err.mall.message.segment-title-or-content-empty",
+                    "分群定向推送的标题与内容不能为空");
+
     // 积分错误码
     ErrorCode ERR_POINTS_INSUFFICIENT =
             define("nop.err.mall.points.insufficient",

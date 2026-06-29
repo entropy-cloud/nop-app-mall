@@ -2315,9 +2315,23 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
                     .param(AppMallErrors.ARG_SEGMENT_VALUE, segmentValue);
         }
 
+        List<SegmentMemberBean> matched = collectRfmLifecycleMatches(segmentValue, byRfm, context);
+        return paginateMembers(matched, effectivePage, effectivePageSize);
+    }
+
+    /**
+     * 全量分群成员解析（successor of P20 user-portrait）。装载全量 all-time 支付汇总 → 三分位阈值 →
+     * 逐用户分类（RFM / 生命周期）→ 命中段过滤 → 排序。仅 {@code lastPayTime != null}（有支付历史）的用户参与分类，
+     * 与 {@link #getSegmentMembers} / {@link #getUserPortrait} 同源口径。本方法为 {@link #getSegmentMembers}
+     * 的分页前全量实现，同时供分群定向投放（{@code LitemallUserMessageBizModel.sendSegmentMessage}）复用，
+     * 避免投放与查询口径分叉。调用方负责 segmentType/segmentValue 校验。
+     */
+    @Override
+    public List<SegmentMemberBean> collectRfmLifecycleMatches(String segmentValue, boolean byRfm,
+                                                               IServiceContext context) {
         List<UserPaymentSummaryBean> allTimeSummaries = orderMapper.getUserPaymentSummaryAllTime();
         if (allTimeSummaries.isEmpty()) {
-            return emptyMemberPage(effectivePage, effectivePageSize);
+            return new ArrayList<>();
         }
 
         RfmThresholds thresholds = computeRfmThresholds(allTimeSummaries);
@@ -2355,17 +2369,7 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
             if (byCount != 0) return byCount;
             return b.getTotalAmount().compareTo(a.getTotalAmount());
         });
-
-        return paginateMembers(matched, effectivePage, effectivePageSize);
-    }
-
-    private static PageBean<SegmentMemberBean> emptyMemberPage(int page, int pageSize) {
-        PageBean<SegmentMemberBean> p = new PageBean<>();
-        p.setOffset((long) (page - 1) * pageSize);
-        p.setLimit(pageSize);
-        p.setTotal(0L);
-        p.setItems(new ArrayList<>());
-        return p;
+        return matched;
     }
 
     private static PageBean<SegmentMemberBean> paginateMembers(List<SegmentMemberBean> all, int page, int pageSize) {

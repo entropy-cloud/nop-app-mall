@@ -299,6 +299,24 @@ public interface ILitemallOrderBiz extends ICrudBiz<LitemallOrder> {
                                                    @Optional @Name("pageSize") Integer pageSize,
                                                    IServiceContext context);
 
+    /**
+     * Shared full-set segment member resolution (successor of P20 user-portrait). Loads all-time
+     * payment summaries, computes RFM thresholds, classifies every paying user, and returns the
+     * FULL sorted list matching {@code segmentValue} (no paging). {@code byRfm=true} matches the
+     * RFM segment, {@code false} matches the lifecycle stage. Only users with a payment history
+     * ({@code lastPayTime != null}) are classified — same guard as {@link #getSegmentMembers}.
+     * Same all-time口径 as {@link #getUserPortrait}.
+     *
+     * <p>Internal helper (no {@code @BizQuery}/@BizMutation}/{@code @BizAction}, not GraphQL-exposed),
+     * called by {@code getSegmentMembers} (paging wrapper) and by the segment-directed-marketing
+     * successor ({@code LitemallUserMessageBizModel.sendSegmentMessage}, injected via
+     * {@code ILitemallOrderBiz}) so the push action and the query page share one resolution path.
+     * The caller is responsible for segmentType/segmentValue validation.
+     */
+    List<SegmentMemberBean> collectRfmLifecycleMatches(@Name("segmentValue") String segmentValue,
+                                                        @Name("byRfm") boolean byRfm,
+                                                        IServiceContext context);
+
     @BizMutation
     int cancelExpiredOrders(@Name("timeoutMinutes") int timeoutMinutes,
                             IServiceContext context);
