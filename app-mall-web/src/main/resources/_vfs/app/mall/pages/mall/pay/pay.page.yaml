@@ -154,6 +154,110 @@ body:
 
               # 微信扫码支付通道（既有）：仅当通道列表返回 WECHAT 时展示。
 
+              # 组合支付通道（successor：余额抵扣 + 微信补差）：仅当 BALANCE 通道可用时展示，
+              # 与既有「余额全额」通道并列（用户可选全额余额或组合抵扣）。
+              - type: wrapper
+                visibleOn: "${channels && channels.length > 0 && channels.some(c => c.code == 'BALANCE') && data.actualPrice > 0}"
+                style:
+                  padding: 10px 20px
+                  maxWidth: 600px
+                  margin: 0 auto
+                body:
+                  - type: flex
+                    justify: space-between
+                    alignItems: center
+                    style:
+                      padding: 12px
+                      backgroundColor: '#fff'
+                      borderRadius: 4px
+                      border: 1px solid '#eee'
+                    items:
+                      - type: tpl
+                        tpl: '<b>组合支付</b><br/><span style="color:#999;font-size:12px">余额抵扣一部分 + 微信补差剩余</span>'
+                      - type: button
+                        label: 组合支付
+                        level: primary
+                        actionType: dialog
+                        dialog:
+                          type: dialog
+                          title: 组合支付确认
+                          body:
+                            - type: alert
+                              level: info
+                              body: '使用余额抵扣一部分，剩余用微信扫码补差。请输入抵扣金额并确认登录密码。'
+                            - type: tpl
+                              tpl: '<div style="margin:8px 0">实付金额：<b>¥${data.actualPrice}</b>　可用余额：<b>¥${channels.filter(c => c.code == "BALANCE")[0].balanceAvailable}</b></div>'
+                            - type: input-number
+                              name: useBalanceAmount
+                              label: 余额抵扣金额
+                              required: true
+                              min: 0.01
+                              max: "${MIN(channels.filter(c => c.code == 'BALANCE')[0].balanceAvailable, data.actualPrice)}"
+                              step: 0.01
+                              precision: 2
+                              value: "${MIN(channels.filter(c => c.code == 'BALANCE')[0].balanceAvailable, data.actualPrice)}"
+                              placeholder: '输入抵扣金额'
+                              description: '剩余需微信支付：¥${data.actualPrice - useBalanceAmount}'
+                            - type: input-password
+                              name: confirmCredential
+                              label: 登录密码
+                              required: true
+                              placeholder: '请输入登录密码'
+                          actions:
+                            - type: button
+                              label: 取消
+                              actionType: close
+                            - type: button
+                              label: 确认组合支付
+                              level: primary
+                              actionType: ajax
+                              api:
+                                url: '@mutation:LitemallOrder__payWithCombo'
+                                data:
+                                  orderId: "${orderId}"
+                                  useBalanceAmount: "${useBalanceAmount}"
+                                  confirmCredential: "${confirmCredential}"
+                              messages:
+                                success: '组合支付受理成功'
+                              feedback:
+                                title: 组合支付
+                                body:
+                                  - type: wrapper
+                                    visibleOn: "${paid}"
+                                    style:
+                                      padding: 20px
+                                      textAlign: center
+                                    body:
+                                      - type: alert
+                                        level: success
+                                        body: '<b>支付成功！</b>余额已抵扣全部金额，订单已支付完成。'
+                                      - type: button
+                                        label: 查看订单
+                                        level: primary
+                                        actionType: link
+                                        link: "/storefront-order-detail?orderId=${orderId}"
+                                  - type: wrapper
+                                    visibleOn: "${!paid && codeUrl}"
+                                    style:
+                                      padding: 20px
+                                      textAlign: center
+                                    body:
+                                      - type: tpl
+                                        tpl: '<p style="color:#333;margin-bottom:10px">余额已抵扣 <b>¥${order.walletPayAmount}</b>，请扫码支付剩余 <b>¥${remainder}</b></p>'
+                                      - type: qr-code
+                                        value: "${codeUrl}"
+                                        codeSize: 200
+                                        level: M
+                                        placeholder: '二维码生成中...'
+                                      - type: alert
+                                        level: warning
+                                        body: '扫码完成微信补差支付后，点击下方查看订单确认支付状态。'
+                                      - type: button
+                                        label: 查看订单
+                                        level: primary
+                                        actionType: link
+                                        link: "/storefront-order-detail?orderId=${orderId}"
+
           - type: service
             name: payPrepare
             visibleOn: "${!channels || channels.length == 0 || channels.some(c => c.code == 'WECHAT')}"
