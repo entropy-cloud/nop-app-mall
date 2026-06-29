@@ -107,6 +107,12 @@ body:
                         label: 销量
                       - name: salesAmount
                         label: 销售额
+                      - name: costAmount
+                        label: 成本额
+                      - name: grossProfit
+                        label: 毛利额
+                      - name: marginRate
+                        label: 毛利率
           - md: 6
             body:
               - type: panel
