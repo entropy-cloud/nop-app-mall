@@ -245,6 +245,7 @@ Exit Criteria:
 - Classification: `out-of-scope improvement`
 - Why Not Blocking Closure: 本基线自提订单合法停留在 201 待用户到店核销，无自然超时语义；长期未自提订单由运营在订单运营工作台人工处理。自动超时取消需引入「最大待自提时长」配置 + 调度任务 + 退款编排。
 - Successor Required: `yes`（触发条件：运营要求自提订单自动超时取消退款时）
+- Successor Closed: 已由 `docs/plans/2026-06-29-2330-1-pickup-delivery-auto-timeout-plan.md` 交付（`LitemallOrderBizModel.cancelExpiredPickupOrders` `@BizMutation` 扫描 `orderStatus=201 && deliveryType=PICKUP && payTime<=cutoff`（cutoff=`now - mall_pickup_timeout_days` 天，缺省 14）→ CAS `updateStatusIfMatch(orderId, 203, 201)` 守卫 → 按 `order.payChannel` 分流退款（BALANCE→`walletBiz.creditBalance` changeType=REFUND 原路退回钱包 / 其余→`payService.refund`）→ 还库/还券/还积分/释放满减/通知/日志；`MallJobInvoker.cancelExpiredPickupOrders` 每小时调度；D4 并发修复 `verifyPickupOrder` 改 CAS 201→401 防止 stale `updateEntity` double-spend；9 IGraphQLEngine 测试全绿）。
 
 ### 自提核销成功触发站内信
 

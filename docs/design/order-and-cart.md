@@ -280,7 +280,7 @@
 1. **发货隔离：** `ship()` 增加守卫，`deliveryType=PICKUP` 订单**拒绝发货**（`ERR_ORDER_PICKUP_NOT_SHIPPABLE`），防止运营误把自提订单当快递订单发货。
 2. **核销副作用隔离（复制 confirm 真实副作用，不复用 ship）：** `verifyPickupOrder` 仅复制 `confirm()` 的真实收货副作用——积分赠送（`earnPointsForOrderConfirm`）+ 写 `pickupTime`；**不得**复用 `ship()` 的 `sendOrderShipNotification`/`logOrderSucceed("订单发货")`（自提无发货语义，强复用会向用户发出错误的「已发货」通知）。核销成功的站内信通知已由 successor 接线（见下「核销动作」）。
 3. **逾期未发货查询隔离：** `getOverdueUnshippedOrders` 查询**排除** `deliveryType=PICKUP`（自提订单合法停留 201，不应污染逾期未发货列表）。
-4. **已支付未自提订单生命周期：** 复用既有 `confirmExpiredOrders` 仅处理 SHIP(301) 的事实（不触及 201）。**新增显式残留风险**——已支付长期未自提订单**无自动超时取消/退款路径**（本基线由运营在订单运营工作台人工处理；自动超时取消作为 successor）。
+4. **已支付未自提订单生命周期（successor 已实现）：** 复用既有 `confirmExpiredOrders` 仅处理 SHIP(301) 的事实（不触及 201）。**新增定时任务 `cancelExpiredPickupOrders`**——扫描已支付(201)且 `deliveryType=PICKUP` 且 `payTime` 早于 cutoff（`mall_pickup_timeout_days` 配置，缺省 14 天）的订单，CAS-guard 翻转 201→203(REFUND_CONFIRM)，按 `order.payChannel` 分流退款（BALANCE→`walletBiz.creditBalance` 原路退回钱包 / 其余→`payService.refund`），并复用既有完整副作用链（还库/还券/还积分/释放满减参与额度/通知/日志）。**并发修复（D4）**：`verifyPickupOrder` 的 201→401 翻转改为 CAS `orderMapper.updateStatusIfMatch(orderId, 401, 201)` 守卫，避免与超时退款 201→203 间的 stale `updateEntity` 覆写造成 double-spend（用户既获退款又获订单完成）。
 
 ### 终态语义残留风险
 
