@@ -21,6 +21,15 @@
                             <cell>
                                 <value>amount</value>
                             </cell>
+                            <cell>
+                                <value>costAmount</value>
+                            </cell>
+                            <cell>
+                                <value>grossProfit</value>
+                            </cell>
+                            <cell>
+                                <value>marginRate</value>
+                            </cell>
                         </cells>
                     </row>
                     <row>
@@ -36,6 +45,15 @@
                             </cell>
                             <cell>
                                 <value>*=^productList!amount</value>
+                            </cell>
+                            <cell>
+                                <value>*=^productList!costAmount</value>
+                            </cell>
+                            <cell>
+                                <value>*=^productList!grossProfit</value>
+                            </cell>
+                            <cell>
+                                <value>*=^productList!marginRate</value>
                             </cell>
                         </cells>
                     </row>

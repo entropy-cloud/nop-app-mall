@@ -413,6 +413,7 @@ CREATE TABLE litemall_goods(
   is_recommend BOOLEAN  ,
   video_url VARCHAR(255)  ,
   safety_stock INT4  ,
+  cost_price NUMERIC(10,2)  ,
   constraint PK_litemall_goods primary key (id)
 );
 
@@ -1518,6 +1519,8 @@ CREATE TABLE litemall_pin_tuan_member(
       COMMENT ON COLUMN litemall_goods.video_url IS '商品视频链接';
                     
       COMMENT ON COLUMN litemall_goods.safety_stock IS '安全库存预警线（商品聚合级）';
+                    
+      COMMENT ON COLUMN litemall_goods.cost_price IS '成本价';
                     
       COMMENT ON TABLE litemall_coupon_user IS '优惠券用户使用表';
                 

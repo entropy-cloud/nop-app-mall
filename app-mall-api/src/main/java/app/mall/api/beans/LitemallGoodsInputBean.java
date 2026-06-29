@@ -305,6 +305,20 @@
         }
 
 
+        private java.math.BigDecimal _costPrice;
+
+    
+        @PropMeta(propId=25)
+    
+        public java.math.BigDecimal getCostPrice(){
+            return _costPrice;
+        }
+
+        public void setCostPrice(java.math.BigDecimal value){
+            this._costPrice = value;
+        }
+
+
         private String _goodsSn;
 
     

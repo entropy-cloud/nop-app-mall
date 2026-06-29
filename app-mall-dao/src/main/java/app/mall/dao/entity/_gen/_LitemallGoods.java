@@ -117,8 +117,12 @@ public class _LitemallGoods extends DynamicOrmEntity{
     public static final String PROP_NAME_safetyStock = "safetyStock";
     public static final int PROP_ID_safetyStock = 24;
     
+    /* 成本价: COST_PRICE DECIMAL */
+    public static final String PROP_NAME_costPrice = "costPrice";
+    public static final int PROP_ID_costPrice = 25;
+    
 
-    private static int _PROP_ID_BOUND = 25;
+    private static int _PROP_ID_BOUND = 26;
 
     
     /* relation: 商品类目 */
@@ -155,7 +159,7 @@ public class _LitemallGoods extends DynamicOrmEntity{
     protected static final List<String> PK_PROP_NAMES = Arrays.asList(PROP_NAME_id);
     protected static final int[] PK_PROP_IDS = new int[]{PROP_ID_id};
 
-    private static final String[] PROP_ID_TO_NAME = new String[25];
+    private static final String[] PROP_ID_TO_NAME = new String[26];
     private static final Map<String,Integer> PROP_NAME_TO_ID = new HashMap<>();
     static{
       
@@ -231,6 +235,9 @@ public class _LitemallGoods extends DynamicOrmEntity{
           PROP_ID_TO_NAME[PROP_ID_safetyStock] = PROP_NAME_safetyStock;
           PROP_NAME_TO_ID.put(PROP_NAME_safetyStock, PROP_ID_safetyStock);
       
+          PROP_ID_TO_NAME[PROP_ID_costPrice] = PROP_NAME_costPrice;
+          PROP_NAME_TO_ID.put(PROP_NAME_costPrice, PROP_ID_costPrice);
+      
     }
 
     
@@ -305,6 +312,9 @@ public class _LitemallGoods extends DynamicOrmEntity{
     
     /* 安全库存预警线（商品聚合级）: SAFETY_STOCK */
     private java.lang.Integer _safetyStock;
+    
+    /* 成本价: COST_PRICE */
+    private java.math.BigDecimal _costPrice;
     
 
     public _LitemallGoods(){
@@ -451,6 +461,9 @@ public class _LitemallGoods extends DynamicOrmEntity{
         
             case PROP_ID_safetyStock:
                return getSafetyStock();
+        
+            case PROP_ID_costPrice:
+               return getCostPrice();
         
            default:
               return super.orm_propValue(propId);
@@ -703,6 +716,16 @@ public class _LitemallGoods extends DynamicOrmEntity{
                break;
             }
         
+            case PROP_ID_costPrice:{
+               java.math.BigDecimal typedValue = null;
+               if(value != null){
+                   typedValue = ConvertHelper.toBigDecimal(value,
+                       err-> newTypeConversionError(PROP_NAME_costPrice));
+               }
+               setCostPrice(typedValue);
+               break;
+            }
+        
            default:
               super.orm_propValue(propId,value);
         }
@@ -876,6 +899,13 @@ public class _LitemallGoods extends DynamicOrmEntity{
             case PROP_ID_safetyStock:{
                onInitProp(propId);
                this._safetyStock = (java.lang.Integer)value;
+               
+               break;
+            }
+        
+            case PROP_ID_costPrice:{
+               onInitProp(propId);
+               this._costPrice = (java.math.BigDecimal)value;
                
                break;
             }
@@ -1338,6 +1368,25 @@ public class _LitemallGoods extends DynamicOrmEntity{
         if(onPropSet(PROP_ID_safetyStock,value)){
             this._safetyStock = value;
             internalClearRefs(PROP_ID_safetyStock);
+            
+        }
+    }
+    
+    /**
+     * 成本价: COST_PRICE
+     */
+    public final java.math.BigDecimal getCostPrice(){
+         onPropGet(PROP_ID_costPrice);
+         return _costPrice;
+    }
+
+    /**
+     * 成本价: COST_PRICE
+     */
+    public final void setCostPrice(java.math.BigDecimal value){
+        if(onPropSet(PROP_ID_costPrice,value)){
+            this._costPrice = value;
+            internalClearRefs(PROP_ID_costPrice);
             
         }
     }

@@ -338,6 +338,7 @@ prop:
       isRecommend: Is Recommend
       videoUrl: Video Url
       safetyStock: Safety Stock (Goods Level)
+      costPrice: Cost Price
       category: Category
       category.name: Category
       brand: Brand

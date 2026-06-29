@@ -313,6 +313,7 @@ prop:
       category: 商品类目
       category.name: 商品类目
       categoryId: 商品所属类目ID
+      costPrice: 成本价
       counterPrice: 市场售价
       deleted: 逻辑删除
       detail: 详情

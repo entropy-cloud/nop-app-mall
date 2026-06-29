@@ -292,12 +292,11 @@
             <source>
                 SELECT
                   og.GOODS_ID AS GOODS_ID, og.GOODS_NAME AS GOODS_NAME,
-                  SUM(og.NUMBER) AS SALES_COUNT, SUM(og.PRICE * og.NUMBER) AS SALES_AMOUNT
+                  SUM(og.NUMBER) AS SALES_COUNT, SUM(og.PRICE * og.NUMBER) AS SALES_AMOUNT,
+                  SUM(og.NUMBER * g.COST_PRICE) AS COST_AMOUNT
                 FROM litemall_order_goods og
                 INNER JOIN litemall_order o ON o.ID = og.ORDER_ID
-                <c:if test="${categoryId != null and !categoryId.isEmpty()}">
                 INNER JOIN litemall_goods g ON g.ID = og.GOODS_ID AND CAST(g.DELETED AS INT) = 0
-                </c:if>
                 WHERE CAST(o.DELETED AS INT) = 0 AND CAST(og.DELETED AS INT) = 0
                   AND CAST(o.ORDER_STATUS AS INT) NOT IN (102, 103)
                   AND o.ADD_TIME &gt;= ${startDate}

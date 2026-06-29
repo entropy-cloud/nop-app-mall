@@ -413,6 +413,7 @@ CREATE TABLE litemall_goods(
   IS_RECOMMEND BOOLEAN NULL    COMMENT '是否推荐',
   VIDEO_URL VARCHAR(255) NULL    COMMENT '商品视频链接',
   SAFETY_STOCK INTEGER NULL    COMMENT '安全库存预警线（商品聚合级）',
+  COST_PRICE DECIMAL(10,2) NULL    COMMENT '成本价',
   constraint PK_litemall_goods primary key (ID)
 )CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
 

@@ -1379,6 +1379,7 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
 
     @Override
     @BizQuery
+    @Auth(roles = "admin")
     public ProductAnalysisBean getProductAnalysis(@Optional @Name("startDate") String startDate,
                                                    @Optional @Name("endDate") String endDate,
                                                    @Optional @Name("categoryId") String categoryId,
@@ -1389,6 +1390,7 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
 
         int effectiveLimit = 20;
         List<GoodsStatisticsBean> ranking = orderMapper.getGoodsSalesRankingByCategory(start, end, cat, effectiveLimit);
+        enrichMarginFields(ranking);
         List<CartRankingItemBean> cartRanking = orderMapper.getCartRanking(start, end, cat, effectiveLimit);
         List<UnsalableGoodsBean> unsalable = orderMapper.getUnsalableGoods(start, end, cat, effectiveLimit);
 
@@ -1407,6 +1409,27 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
                 ? BigDecimal.valueOf(sold).divide(BigDecimal.valueOf(onSale), 4, RoundingMode.HALF_UP)
                 : BigDecimal.ZERO);
         return result;
+    }
+
+    private static void enrichMarginFields(List<GoodsStatisticsBean> ranking) {
+        if (ranking == null || ranking.isEmpty()) {
+            return;
+        }
+        for (GoodsStatisticsBean g : ranking) {
+            BigDecimal costAmount = g.getCostAmount();
+            if (costAmount == null || costAmount.signum() <= 0) {
+                g.setCostAmount(null);
+                continue;
+            }
+            BigDecimal salesAmount = g.getSalesAmount();
+            if (salesAmount == null || salesAmount.signum() <= 0) {
+                g.setCostAmount(null);
+                continue;
+            }
+            BigDecimal grossProfit = salesAmount.subtract(costAmount);
+            g.setGrossProfit(grossProfit);
+            g.setMarginRate(grossProfit.divide(salesAmount, 4, RoundingMode.HALF_UP));
+        }
     }
 
     private static Timestamp parseStartDate(String startDate) {
@@ -1877,6 +1900,9 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
                 m.put("goodsName", g.getGoodsName());
                 m.put("number", g.getSalesCount());
                 m.put("amount", g.getSalesAmount() == null ? "" : g.getSalesAmount().toPlainString());
+                m.put("costAmount", g.getCostAmount() == null ? "" : g.getCostAmount().toPlainString());
+                m.put("grossProfit", g.getGrossProfit() == null ? "" : g.getGrossProfit().toPlainString());
+                m.put("marginRate", g.getMarginRate() == null ? "" : g.getMarginRate().toPlainString());
                 list.add(m);
             }
         }

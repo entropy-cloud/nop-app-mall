@@ -123,6 +123,10 @@
               updatable="true">
             <schema type="java.lang.Integer"/>
         </prop>
+        <prop name="costPrice" displayName="成本价" propId="25" i18n-en:displayName="Cost Price" queryable="true"
+              sortable="true" insertable="true" updatable="true" internal="true" ui:show="X">
+            <schema type="java.math.BigDecimal" precision="10" scale="2"/>
+        </prop>
         <prop name="category" displayName="商品类目" i18n-en:displayName="Category" tagSet="pub,ref-pub" ext:kind="to-one"
               internal="true" queryable="true" ext:joinLeftProp="categoryId" ext:joinRightProp="id"
               ext:joinRightDisplayProp="name" insertable="false" updatable="false" lazy="true">

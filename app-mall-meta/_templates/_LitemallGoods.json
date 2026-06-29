@@ -34,6 +34,7 @@
   "isRecommend": false,
   "videoUrl": "",
   "safetyStock": 0,
+  "costPrice": 0.0,
   "category": null,
   "category.name": "",
   "brand": null,

@@ -752,6 +752,8 @@
                         stdDataType="string" stdDomain="file" stdSqlType="VARCHAR" i18n-en:displayName="Video Url"/>
                 <column code="SAFETY_STOCK" displayName="安全库存预警线（商品聚合级）" name="safetyStock" propId="24"
                         stdDataType="int" stdSqlType="INTEGER" i18n-en:displayName="Safety Stock (Goods Level)"/>
+                <column code="COST_PRICE" displayName="成本价" name="costPrice" precision="10" propId="25" scale="2"
+                        stdDataType="decimal" stdSqlType="DECIMAL" ui:show="X" i18n-en:displayName="Cost Price"/>
             </columns>
             <indexes>
                 <index name="idx_goods_categoryId" unique="false">

@@ -188,9 +188,11 @@ public interface ILitemallOrderBiz extends ICrudBiz<LitemallOrder> {
 
     /**
      * 商品分析（P19）。销量排行、加购排行、滞销品、动销率，支持类目筛选。
+     * 成本/毛利为内部数据，admin-only（{@code @Auth(roles="admin")}，与 {@link #exportReport} 同边界）。
      * 口径见 docs/design/system-configuration.md「报表与统计」。
      */
     @BizQuery
+    @io.nop.api.core.annotations.directive.Auth(roles = "admin")
     ProductAnalysisBean getProductAnalysis(@Optional @Name("startDate") String startDate,
                                            @Optional @Name("endDate") String endDate,
                                            @Optional @Name("categoryId") String categoryId,
