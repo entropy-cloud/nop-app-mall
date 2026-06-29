@@ -198,6 +198,7 @@
 - 赠送为幂等：同一 `orderId` 不重复赠送，按 `sourceType=order-confirm-earn` + `sourceId=orderId` 查重。
 - 签到得积分（P28，已落地，见本章「签到 / Daily Check-In」）、评价得积分（P33，已落地，见 `docs/design/product-catalog.md` 结构化评价章节「评价得积分联动」段）、分享得积分（不在基线）作为接入源复用同一账户 earn API。
   - **评价得积分交接确认：** 评价提交（`LitemallCommentBizModel.submitComment`）成功后，按 `mall_points_comment_reward` 配置（默认 `0` 关闭）发放固定积分。复用 P27 `earnPoints`，`sourceType="comment-reward"`、`sourceId=comment.id`，幂等继承 `(sourceType, sourceId)` 查重。
+  - **评价奖励站内信通知：** 积分发放（`reward>0`）时向评价用户投递一条 SYSTEM 站内信（标题「评价奖励到账」，content 含积分数 + 评价编号）。两条触发路径：预审 ON → `batchAuditComments` approve 分支（PENDING→APPROVED 时发放）；预审 OFF → `submitComment` 即时发放。主事务内读事件开关 `mall_message_event_enabled_comment-reward` 解析 notifyUid（关→null），`txn().afterCommit` 内投递（uid-null-skip 模式）。仅 `reward>0` 投递（`reward=0` 无奖励可通知）。幂等靠上游状态守卫（PENDING→APPROVED / 提交守卫），**非聚合**——同用户同日不同评价各获奖励各收一条消息（不复用 reminder 聚合模板）。详见 `system-configuration.md` 事件→站内信清单。
 
 ### 获取规则配置项
 
@@ -855,6 +856,7 @@
 - 抉择：团长 `openPinTuan` 创建 Group（status=进行中）+ 团长 Member；每 `joinPinTuan` 增一 Member；当 `Group.members.size() ≥ activity.minUserCount` 时自动置 Group.status=SUCCESS。
 - `maxUserCount`（最多人数，若设）为参团上限，达之拒绝新参团（抛 ErrorCode `nop.err.mall.pin-tuan.full`）。
 - 团长计入成员数（团长是成团必要参与方）。
+- **成团通知：** `markPinTuanSuccess` 在 ACTIVE→SUCCESS 翻转成功后，向团内**全部成员**（团长 + 已参团成员）各投递一条 ORDER 站内信（标题「拼团成功」，content 嵌商品名）。主事务内读事件开关 `mall_message_event_enabled_pintuan-success` + 查成员集 + 组装载荷，`txn().afterCommit` 内零 DB 查询逐人投递（uid-null-skip：开关关闭时不投递）。幂等靠 ACTIVE→SUCCESS 状态守卫（重复翻转 no-op），区别于聚合 reminder 类事件。详见 `system-configuration.md` 事件→站内信清单。
 - 残留风险：并发参团下成团判定的计数竞争——通过「先 count 再 insert Member」+ 事务隔离处理（参照团购既有容忍度，READ_COMMITTED 下并发参团仍存在越界残隙，由 `maxUserCount` 上限兜底）。
 
 ### 超时失败 + 退款语义（Decision）

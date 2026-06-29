@@ -135,7 +135,7 @@ Exit Criteria:
 - Classification: `out-of-scope improvement`
 - Why Not Blocking Closure: 本计划仅覆盖两份源 deferred（积分过期预警 + 自提核销）。其他事件通知为各自特性的 successor，非本计划结果面。
 - Successor Required: `partial`（触发条件：各特性要求事件→站内信接线时，按本计划同模式扩展）
-- **Successor Closed（部分）：** 「优惠券即将过期」已由 successor `docs/plans/2026-06-29-2330-2-coupon-expiry-notification-plan.md` 交付（`LitemallCouponUserBizModel.sendCouponExpiryReminders` 每日 job + 聚合 MARKETING 站内信 + remindDays 配置 + 幂等）。剩余「拼团成功 / 评价奖励」仍为各自特性的独立 successor。
+- **Successor Closed（部分）：** 「优惠券即将过期」已由 successor `docs/plans/2026-06-29-2330-2-coupon-expiry-notification-plan.md` 交付（`LitemallCouponUserBizModel.sendCouponExpiryReminders` 每日 job + 聚合 MARKETING 站内信 + remindDays 配置 + 幂等）。「拼团成功 / 评价奖励」已由 successor `docs/plans/2026-06-30-0229-1-remaining-event-notifications-plan.md` 交付（`markPinTuanSuccess` 成团全员 ORDER 站内信 + `batchAuditComments`/`submitComment` 评价奖励 SYSTEM 站内信，均 afterCommit + 事件开关 + 状态守卫幂等）。本 successor 项全部关闭。
 
 ## Closure
 

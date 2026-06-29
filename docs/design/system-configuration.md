@@ -166,12 +166,14 @@
 | 售后退款（`refund`） | `LitemallAftersaleBizModel` | 订单用户 | ORDER | 写 UserMessage（同时保留 SMS） |
 | 团购失败退款（`expireGroupons`） | `LitemallGrouponBizModel` | 订单用户 | ORDER | 写 UserMessage（同时保留 SMS） |
 | 拼团失败退款（`expirePinTuans`） | `LitemallPinTuanActivityBizModel` | 订单用户 | ORDER | 写 UserMessage（同时保留 SMS） |
+| 拼团成功成团（`markPinTuanSuccess`） | `LitemallPinTuanActivityBizModel` | 团内全部成员 | ORDER | 写 UserMessage（afterCommit，事件开关 `mall_message_event_enabled_pintuan-success`；幂等：靠 ACTIVE→SUCCESS 状态守卫，重复翻转 no-op） |
 | 自提核销成功（`verifyPickupOrder`） | `LitemallOrderBizModel` | 订单用户 | ORDER | 写 UserMessage（afterCommit，事件开关 `mall_message_event_enabled_pickup_verify`；幂等跳过分支不推送） |
+| 评价奖励发放（`batchAuditComments` approve / `submitComment` 预审关） | `LitemallCommentBizModel` | 评价用户 | SYSTEM | 写 UserMessage（afterCommit，事件开关 `mall_message_event_enabled_comment-reward`；仅 reward>0 投递；幂等：靠 PENDING→APPROVED/提交守卫，非聚合——同用户同日不同评价各收一条） |
 | 积分过期预警（`sendPointsExpiryReminders`） | `LitemallPointsAccountBizModel` | 账户用户 | SYSTEM | 调度 job 每日推送一条聚合站内信（事件开关 `mall_message_event_enabled_points-expiry-remind`；幂等：当日同标题不重复） |
 | 优惠券即将过期（`sendCouponExpiryReminders`） | `LitemallCouponUserBizModel` | 券用户 | MARKETING | 调度 job 每日推送一条聚合站内信（事件开关 `mall_message_event_enabled_coupon-expiry-remind`；幂等：当日同标题不重复） |
 | 新订单（管理员提醒） | `LitemallOrderBizModel` | 管理员邮箱 | — | **不写 UserMessage**（收件人是管理员，无 userId；维持 Email-only） |
 
-> 退款类事件（售后/团购失败/拼团失败）统一映射到 `ORDER` 类别，因它们都是订单交易链路的结果。积分过期预警为账户状态提醒，归 `SYSTEM` 类别（D1 of `2026-06-29-1921-3`）；优惠券即将过期预警为营销促活（驱动用户消费用券），归 `MARKETING` 类别（D1 of `2026-06-29-2330-2`）。
+> 退款类事件（售后/团购失败/拼团失败）统一映射到 `ORDER` 类别，因它们都是订单交易链路的结果。拼团成功成团同属订单交易链路的正向里程碑，归 `ORDER` 类别。积分过期预警为账户状态提醒，归 `SYSTEM` 类别（D1 of `2026-06-29-1921-3`）；优惠券即将过期预警为营销促活（驱动用户消费用券），归 `MARKETING` 类别（D1 of `2026-06-29-2330-2`）。评价奖励为积分到账通知，归 `SYSTEM` 类别。
 
 ### 用户侧能力
 
