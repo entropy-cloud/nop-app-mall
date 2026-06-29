@@ -141,6 +141,17 @@ public class MallJobInvoker {
         LOG.info("mall-job sendPointsExpiryReminders finished, pushed={}", count);
     }
 
+    // Coupon expiry pre-warning push (deferred successor of points expiry remind pattern): scan
+    // unused user coupons (status=0) expiring within N days (mall_coupon_expiry_remind_days,
+    // default 3), aggregate per user, push one MARKETING 站内信 per user. Idempotent per
+    // (userId, title, today). Daily.
+    // See docs/design/marketing-and-promotions.md 优惠券 过期预警.
+    public void sendCouponExpiryReminders() {
+        IServiceContext context = new ServiceContextImpl();
+        int count = couponUserBiz.sendCouponExpiryReminders(context);
+        LOG.info("mall-job sendCouponExpiryReminders finished, pushed={}", count);
+    }
+
     // Pickup-order auto-timeout cancel + refund (successor of P31 deferred「已支付未自提订单自动超时取消/退款」):
     // scan paid(201) PICKUP orders past the configurable pickup timeout (mall_pickup_timeout_days,
     // default 14), CAS 201→203 + route refund by payChannel + 还库/还券/还积分/释放满减/通知/日志.

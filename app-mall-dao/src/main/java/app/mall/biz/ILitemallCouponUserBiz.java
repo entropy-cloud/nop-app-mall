@@ -53,4 +53,7 @@ public interface ILitemallCouponUserBiz extends ICrudBiz<LitemallCouponUser> {
 
     @BizMutation
     int expireCoupons(IServiceContext context);
+
+    @BizMutation
+    int sendCouponExpiryReminders(IServiceContext context);
 }

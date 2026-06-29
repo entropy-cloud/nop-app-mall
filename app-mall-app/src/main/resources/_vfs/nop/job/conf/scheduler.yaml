@@ -120,3 +120,14 @@ jobs:
     invoker:
       bean: app.mall.service.scheduler.MallJobInvoker
       method: sendPointsExpiryReminders
+
+  - jobName: send-coupon-expiry-reminders
+    displayName: Send Coupon Expiry Reminders
+    description: Push a daily MARKETING in-app message for each user with unused coupons expiring within N days
+    trigger:
+      repeatInterval: 86400000
+      repeatFixedDelay: true
+      maxExecutionCount: 0
+    invoker:
+      bean: app.mall.service.scheduler.MallJobInvoker
+      method: sendCouponExpiryReminders

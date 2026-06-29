@@ -1,9 +1,12 @@
 package app.mall.service.entity;
 
 import app.mall.biz.ILitemallCouponUserBiz;
+import app.mall.dao._AppMallDaoConstants;
 import app.mall.dao.entity.LitemallCoupon;
 import app.mall.dao.entity.LitemallCouponUser;
 import app.mall.dao.entity.LitemallGoods;
+import app.mall.dao.entity.LitemallSystem;
+import app.mall.dao.entity.LitemallUserMessage;
 import io.nop.api.core.annotations.autotest.NopTestConfig;
 import io.nop.api.core.annotations.core.OptionalBoolean;
 import io.nop.api.core.beans.ApiRequest;
@@ -25,6 +28,7 @@ import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -290,5 +294,108 @@ public class TestLitemallCouponUserBizModel extends JunitBaseTestCase {
         ApiResponse<?> result = graphQLEngine.executeRpc(ctx);
         assertEquals(-1, result.getStatus(),
                 "category-scoped coupon should NOT match when goods.categoryId not in coupon.goodsValue");
+    }
+
+    // ===== 优惠券过期前置预警推送（deferred successor）=====
+
+    private LitemallCouponUser seedCouponUser(String userId, int status, LocalDateTime endTime) {
+        LitemallCouponUser cu = daoProvider.daoFor(LitemallCouponUser.class).newEntity();
+        cu.setUserId(userId);
+        cu.setCouponId(couponId);
+        cu.setStatus(status);
+        cu.setOrderId("");
+        cu.setStartTime(LocalDateTime.now().minusDays(1));
+        cu.setEndTime(endTime);
+        daoProvider.daoFor(LitemallCouponUser.class).saveEntity(cu);
+        return cu;
+    }
+
+    private void setSystemConfig(String key, String value) {
+        LitemallSystem cfg = daoProvider.daoFor(LitemallSystem.class).newEntity();
+        cfg.orm_propValueByName("keyName", key);
+        cfg.orm_propValueByName("keyValue", value);
+        daoProvider.daoFor(LitemallSystem.class).saveEntity(cfg);
+    }
+
+    private int sendCouponExpiryReminders() {
+        IGraphQLExecutionContext ctx = graphQLEngine.newRpcContext(
+                GraphQLOperationType.mutation, "LitemallCouponUser__sendCouponExpiryReminders",
+                ApiRequest.build(new HashMap<>()));
+        ApiResponse<?> r = graphQLEngine.executeRpc(ctx);
+        assertEquals(0, r.getStatus(), "sendCouponExpiryReminders failed: " + r);
+        return ((Number) r.getData()).intValue();
+    }
+
+    private long countCouponExpiryReminders(String userId) {
+        QueryBean q = new QueryBean();
+        q.addFilter(FilterBeans.eq(LitemallUserMessage.PROP_NAME_userId, userId));
+        q.addFilter(FilterBeans.eq(LitemallUserMessage.PROP_NAME_msgType,
+                _AppMallDaoConstants.MSG_TYPE_MARKETING));
+        q.addFilter(FilterBeans.eq(LitemallUserMessage.PROP_NAME_title,
+                LitemallCouponUserBizModel.EXPIRY_REMIND_TITLE));
+        return daoProvider.daoFor(LitemallUserMessage.class).findAllByQuery(q).size();
+    }
+
+    @Test
+    public void testSendCouponExpiryRemindersPushesAggregatedMessageForWindowCoupons() {
+        // Default remindDays=3: multiple unused in-window coupons for one user aggregate to ONE
+        // MARKETING 站内信 (covers aggregation D3 + per-user dedupe D2).
+        String uid = "coupon-remind-agg";
+        seedCouponUser(uid, 0, LocalDateTime.now().plusDays(2));
+        seedCouponUser(uid, 0, LocalDateTime.now().plusDays(3));
+
+        int pushed = sendCouponExpiryReminders();
+        assertEquals(1, pushed, "multiple in-window coupons aggregate to one reminder per user");
+        assertEquals(1, countCouponExpiryReminders(uid), "exactly one MARKETING reminder persisted");
+    }
+
+    @Test
+    public void testSendCouponExpiryRemindersSkipsOutOfWindowUsedAndExpired() {
+        // Out-of-window (endTime now+10, remindDays=3), used (status=1), and already-expired
+        // (status=2) coupons must not trigger a reminder.
+        String uid = "coupon-remind-skip";
+        seedCouponUser(uid, 0, LocalDateTime.now().plusDays(10));
+        seedCouponUser(uid, 1, LocalDateTime.now().plusDays(2));
+        seedCouponUser(uid, 2, LocalDateTime.now().plusDays(2));
+
+        int pushed = sendCouponExpiryReminders();
+        assertEquals(0, pushed, "out-of-window/used/expired coupons must not push");
+        assertEquals(0, countCouponExpiryReminders(uid));
+    }
+
+    @Test
+    public void testSendCouponExpiryRemindersIsIdempotentOnReplaySameDay() {
+        String uid = "coupon-remind-idem";
+        seedCouponUser(uid, 0, LocalDateTime.now().plusDays(2));
+
+        assertEquals(1, sendCouponExpiryReminders(), "first run pushes one reminder");
+        // Replay same day: idempotency guard (today same-title MARKETING 站内信 exists) skips.
+        assertEquals(0, sendCouponExpiryReminders(), "re-run same day must skip (idempotent)");
+        assertEquals(1, countCouponExpiryReminders(uid), "still only one reminder after replay");
+    }
+
+    @Test
+    public void testSendCouponExpiryRemindersRespectsEventToggle() {
+        // Event toggle mall_message_event_enabled_coupon-expiry-remind=false ⇒ no push.
+        setSystemConfig("mall_message_event_enabled_"
+                + LitemallCouponUserBizModel.EVENT_KEY_COUPON_EXPIRY_REMIND, "false");
+        String uid = "coupon-remind-toggle";
+        seedCouponUser(uid, 0, LocalDateTime.now().plusDays(2));
+
+        int pushed = sendCouponExpiryReminders();
+        assertEquals(0, pushed, "event toggle off ⇒ no push");
+        assertEquals(0, countCouponExpiryReminders(uid));
+    }
+
+    @Test
+    public void testSendCouponExpiryRemindersUsesConfiguredRemindDays() {
+        // Override remindDays to 30 ⇒ a coupon expiring in 20 days is in window.
+        setSystemConfig(LitemallCouponUserBizModel.CONFIG_COUPON_EXPIRY_REMIND_DAYS, "30");
+        String uid = "coupon-remind-window";
+        seedCouponUser(uid, 0, LocalDateTime.now().plusDays(20));
+
+        int pushed = sendCouponExpiryReminders();
+        assertEquals(1, pushed, "remindDays=30 should include coupon expiring in 20 days");
+        assertEquals(1, countCouponExpiryReminders(uid));
     }
 }
