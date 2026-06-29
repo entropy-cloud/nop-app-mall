@@ -583,6 +583,8 @@ graph TD
 > **P27 Deferred successor 已闭环：** PointsGoods（积分商品目录）/ PointsExchangeOrder（积分兑换订单）由 `docs/plans/2026-06-29-0900-1-points-mall-exchange-plan.md` 交付（纯积分兑换 firm 结果面）。
 >
 > **P27/P29 Deferred「积分+现金组合兑换」已闭环：** 由 `docs/plans/2026-06-29-1045-3-points-cash-combo-exchange-plan.md` 交付（PointsGoods.cashPrice + PointsExchangeOrder pay 字段 + AWAITING_PAYMENT 状态 + exchangeCombo/payComboByBalance/confirmExchangePaidByNotify + PE outTradeNo 回调路由 + 超时取消任务；消费 P30 多支付通道 + P29 钱包，不新建支付集成）。
+>
+> **P27 Deferred successor「积分有效期与自动过期」已闭环：** 由 `docs/plans/2026-06-29-1200-1-points-validity-auto-expiry-plan.md` 交付（`LitemallPointsExpireBatch` 批次账本实体 + earn 建批次/spend FIFO 消耗/正向调账建批次 + `expirePoints` `@BizMutation` 过期编排扣减 balance 写 EXPIRE 流水 + `MallJobInvoker.expirePoints` + `scheduler.yaml` expire-points job 每小时编排 + `getMyPointsExpiryHint` `@BizQuery` + my-points 页「即将过期」提示；存量积分按 D3 不过期，不变量 D2 `balance >= SUM(remainingPoints)` 保持；489 测试全绿）。
 
 | 扩展字段（现有实体新增字段） | Phase | 字段 |
 |---------------------------|-------|------|

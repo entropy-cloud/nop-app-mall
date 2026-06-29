@@ -148,7 +148,13 @@
 
 - 积分余额不可为负值。
 - 用户可查看积分余额和流水记录，支持按时间范围和类型筛选。
-- **积分有效期：** 业务规则要求积分有有效期，过期积分自动扣减并产生 `EXPIRE` 流水。当前**为计划中能力**——模型尚无有效期字段/过期批次实体，且批量过期需 nop-job-local 定时编排。账户/流水/抵扣/获取基座不依赖有效期，自动过期作为 successor（触发条件：积分有效期建模需求或 PointsAccount 模型修改时）。
+- **积分有效期：** 业务规则要求积分有有效期，过期积分自动扣减并产生 `EXPIRE` 流水。**已实现（successor 交付）**——
+  - **有效期批次账本：** 每笔 earn（含正向调账）生成一条 `LitemallPointsExpireBatch`（`totalPoints`/`remainingPoints`/`expireTime`，唯一键 `(sourceType,sourceId)` 与 earn 流水同源兜底幂等）。有效期时长由 `mall_points_validity_days` 配置（缺失默认 **730 天**）。
+  - **FIFO 消耗：** spend 与负向调账按 `expireTime ASC`（最早过期先消耗）扣减各批次 `remainingPoints`。
+  - **存量不过期：** 特性上线前已存在的 balance（无批次）视为不过期存量，自然消耗（spend 先耗批次，余量从 balance 扣），不回填为过期批次（无可靠 earn 时间戳）。
+  - **不变量：** `account.balance` 为可用积分真相源；`balance >= SUM(batch.remainingPoints WHERE userId AND remainingPoints>0)` 恒成立（差额即存量）。earn/spend/adjust/expire 四路径在同一事务内同步两侧。
+  - **自动过期编排：** nop-job-local 定时任务 `expire-points`（每小时）扫描到期批次，经 `PointsAccount.version` 乐观锁 CAS 扣减 `balance` 并写 `EXPIRE(20)` 流水（`sourceType=expire`, `sourceId=batchId`），单轮限 500 批、并发败者顺延下轮，幂等可重放安全。
+  - **前端提示：** 「我的积分」页消费 `getMyPointsExpiryHint`，展示最近一笔未到期批次的「即将过期」提示（仅存量时不展示）。账户/流水/抵扣/获取基座不依赖有效期语义。
 
 ### 获取规则（积分来源）
 

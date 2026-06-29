@@ -176,7 +176,8 @@ Exit Criteria:
 
 - Classification: `out-of-scope improvement`
 - Why Not Blocking Closure: 独立 P27 model-gap successor（需 PointsAccount 有效期字段 + 过期批次 + nop-job）；本计划不修改 PointsAccount，二者互不阻塞。
-- Successor Required: `yes`（触发条件：下次修改 PointsAccount 模型时，或业务要求积分有效期强一致时）
+- Successor Required: `yes`（触发条件：下次修改 PointsAccount 模型时，或业务要求积分有效期强一致时）→ **已触发并闭环**
+- Successor Closed: 已由 `docs/plans/2026-06-29-1200-1-points-validity-auto-expiry-plan.md` 交付（新增 `LitemallPointsExpireBatch` 批次实体 + earn/spend/adjust 同事务 FIFO 账本同步 + `expirePoints` @BizMutation 过期编排[复用 account.version CAS] + `getMyPointsExpiryHint` 查询 + `expire-points` nop-job 定时 + 「我的积分」页过期提示；不变量 `balance >= SUM(remainingPoints)`；489 测试全绿）。
 
 ### PointsFlow `(sourceType, sourceId)` 数据库唯一键
 

@@ -223,8 +223,9 @@ Exit Criteria:
 
 - Classification: `model-gap`
 - Why Not Blocking Closure: 模型无有效期字段/过期批次实体，且批量过期需 nop-job-local 定时编排；账户 earn/spend/抵扣核心不依赖有效期。`wallet-and-assets.md:80` 有效期业务规则标注为「计划中能力」。
-- Successor Required: `yes`
-- Model Gap Detail: 缺积分有效期建模（建议 PointsAccount 加 `earliestExpireTime` 或新建 `LitemallPointsExpireBatch` 有效期批次表）+ nop-job-local 定时过期任务；触发条件——下次修改 PointsAccount 模型时，或业务要求积分有效期强一致时。
+- Successor Required: `yes` → **已触发并闭环**
+- Successor Closed: 已由 `docs/plans/2026-06-29-1200-1-points-validity-auto-expiry-plan.md` 交付（新增 `LitemallPointsExpireBatch` 有效期批次实体 + earn 建批次/spend FIFO 消耗/正向调账建批次 + `expirePoints` @BizMutation 编排[复用 `mutateBalance` CAS 序列] + `getMyPointsExpiryHint` 查询 + `expire-points` nop-job 每小时定时 + 「我的积分」页过期提示；不变量 `balance >= SUM(remainingPoints)`；存量按 D3 不过期；489 测试全绿）。
+- Model Gap Detail: 缺积分有效期建模（建议 PointsAccount 加 `earliestExpireTime` 或新建 `LitemallPointsExpireBatch` 有效期批次表）+ nop-job-local 定时过期任务；触发条件——下次修改 PointsAccount 模型时，或业务要求积分有效期强一致时。**[已解决：采用新建 `LitemallPointsExpireBatch` 批次表方案]**
 
 ### 签到/评价/分享得积分触发
 
