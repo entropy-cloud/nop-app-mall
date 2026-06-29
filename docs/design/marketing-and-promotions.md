@@ -52,6 +52,19 @@
 - 用户在结算时使用符合条件的优惠券。
 - 已使用、已过期或已下架的优惠券状态会失去继续使用资格。
 
+### 过期前置预警（deferred successor）
+
+业务意图：用户券从「拉取式发现」升级为「主动推送 reminder」——每日扫描近 N 天即将过期且未使用的用户券，主动推一条聚合 MARKETING 站内信，驱动用户消费用券。
+
+- 宿主：`LitemallCouponUserBizModel.sendCouponExpiryReminders`（`@BizMutation`，调度 job 调用），镜像积分过期预警模式（`LitemallPointsAccountBizModel.sendPointsExpiryReminders`）。
+- 查询窗口（Decision D4）：`status=0`（未使用）且 `now <= endTime <= now+remindDays`，`endTime` ASC，扫描上限 500；`endTime` 列非 mandatory，NULL 行被 `ge/le` SQL 语义自动排除（安全）。
+- 聚合（Decision D3）：按 userId 聚合（Σ 张数 + 最早 endTime），不逐张列券名——消息体「您有 N 张优惠券将于 X 月 X 日过期，请尽快使用」，用户进「我的优惠券」查看明细。
+- msgType（Decision D1）：`MARKETING(10)`——优惠券为营销资产，预警目的为促转化，归营销消息分类（与积分过期预警归 `SYSTEM` 不同）。
+- 幂等（Decision D2）：每日每用户至多一条聚合消息——按 `userId + msgType(MARKETING) + title(优惠券即将过期) + addTime(today)` 查询当日是否已存在，存在则跳过。
+- 配置：`mall_coupon_expiry_remind_days`（预警提前天数，缺省 3）；事件开关 `mall_message_event_enabled_coupon-expiry-remind`（默认 enabled）。
+- 调度：`scheduler.yaml` 注册 `send-coupon-expiry-reminders` job（每日 86400000ms），入口 `MallJobInvoker.sendCouponExpiryReminders()`。
+- 过期**之后**的通知不在本范围（`expireCoupons` job 已将状态变更为过期，用户可在「我的优惠券」过期 Tab 查看）。
+
 ### 与订单的关系
 
 - 优惠券资格和发放逻辑由本文件负责。
