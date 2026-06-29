@@ -1,14 +1,18 @@
 package app.mall.service.entity;
 
+import app.mall.biz.ILitemallWalletBiz;
 import app.mall.dao._AppMallDaoConstants;
 import app.mall.dao.entity.LitemallAddress;
 import app.mall.dao.entity.LitemallCart;
 import app.mall.dao.entity.LitemallGoods;
 import app.mall.dao.entity.LitemallGoodsProduct;
 import app.mall.dao.entity.LitemallOrder;
+import app.mall.dao.entity.LitemallOrderGoods;
 import app.mall.dao.entity.LitemallPickupStore;
 import app.mall.dao.entity.LitemallSystem;
 import app.mall.dao.entity.LitemallUserMessage;
+import app.mall.dao.entity.LitemallWallet;
+import app.mall.pay.MockPayServiceImpl;
 import io.nop.api.core.annotations.autotest.NopTestConfig;
 import io.nop.api.core.annotations.autotest.NopTestProperty;
 import io.nop.api.core.annotations.core.OptionalBoolean;
@@ -25,6 +29,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,12 +41,16 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * P31 配送方式扩展/自提核销 IGraphQLEngine 测试。覆盖：
+ * P31 配送方式扩展/自提核销 IGraphQLEngine 测试 + pickup-auto-timeout successor 测试。覆盖：
  * - submit 自提分支（freight=0 + pickupCode + addressId 放宽 + 门店未启用/不存在拒绝）
  * - ship() 拒绝自提订单（隔离 a）
  * - getOverdueUnshippedOrders 排除 PICKUP（隔离 c）
- * - verifyPickupOrder 成功推进 401 + pickupTime + 积分赠送 + 幂等 + 无效码拒绝 + 非自提订单拒绝（隔离 b）
+ * - verifyPickupOrder 成功推进 401 + pickupTime + 积分赠送 + 幂等 + 无效码拒绝 + 非自提订单拒绝（隔离 b）+
+ *   D4 CAS-guard（verifyPickupOrder 在超时退款后 CAS 败→抛 ERR_PICKUP_ORDER_NOT_VERIFIABLE）
  * - listActiveStores 仅返回启用门店
+ * - cancelExpiredPickupOrders（successor of P31 deferred「已支付未自提订单自动超时取消/退款」）：
+ *   超时取消退款全副作用链 / 未超时不处理 / EXPRESS 不受影响 / 已核销不处理 / 余额退款 wallet credit-back /
+ *   并发幂等 / config 缺省与覆盖。
  */
 @NopTestConfig(localDb = true, initDatabaseSchema = OptionalBoolean.TRUE)
 @NopTestProperty(name = "nop.file.store-dir", value = "./target")
@@ -52,6 +61,12 @@ public class TestLitemallPickupDeliveryBizModel extends JunitBaseTestCase {
 
     @Inject
     io.nop.dao.api.IDaoProvider daoProvider;
+
+    @Inject
+    ILitemallWalletBiz walletBiz;
+
+    @Inject
+    app.mall.biz.ILitemallSystemBiz systemBiz;
 
     String goodsId;
     String productId;
@@ -436,5 +451,293 @@ public class TestLitemallPickupDeliveryBizModel extends JunitBaseTestCase {
         assertEquals(0, r.getStatus(), "verify must still succeed with toggle off: " + r);
         long after = countPickupVerifyMessages(userId);
         assertEquals(before, after, "event toggle off ⇒ no 站内信 pushed");
+    }
+
+    // ===== cancelExpiredPickupOrders（successor of P31 deferred）=====
+
+    /**
+     * Push an order's payTime back by {@code daysAgo} days so it falls past the
+     * cancelExpiredPickupOrders cutoff. Done via GraphQL update mutation (the production payTime
+     * is set by pay(), which writes "now"; we cannot wait in tests). GraphQL update runs inside
+     * the BizModel pipeline's own ORM session, unlike a bare daoProvider.updateEntity call.
+     */
+    private void setOrderPayTimeDaysAgo(String orderId, int daysAgo) {
+        Map<String, Object> data = new HashMap<>();
+        data.put("data", Map.of(
+                "id", orderId,
+                "payTime", LocalDateTime.now().minusDays(daysAgo + 1).toString()));
+        ApiRequest<Map<String, Object>> req = ApiRequest.build(data);
+        IGraphQLExecutionContext ctx = graphQLEngine.newRpcContext(
+                GraphQLOperationType.mutation, "LitemallOrder__update", req);
+        ApiResponse<?> resp = graphQLEngine.executeRpc(ctx);
+        assertEquals(0, resp.getStatus(), "update payTime failed: " + resp);
+    }
+
+    private void setOrderPayChannel(String orderId, int payChannel, BigDecimal walletPayAmount) {
+        Map<String, Object> data = new HashMap<>();
+        Map<String, Object> fields = new HashMap<>();
+        fields.put("id", orderId);
+        fields.put("payChannel", payChannel);
+        if (walletPayAmount != null) {
+            fields.put("walletPayAmount", walletPayAmount);
+        }
+        data.put("data", fields);
+        ApiRequest<Map<String, Object>> req = ApiRequest.build(data);
+        IGraphQLExecutionContext ctx = graphQLEngine.newRpcContext(
+                GraphQLOperationType.mutation, "LitemallOrder__update", req);
+        ApiResponse<?> resp = graphQLEngine.executeRpc(ctx);
+        assertEquals(0, resp.getStatus(), "update payChannel failed: " + resp);
+    }
+
+    private LitemallOrder reloadOrder(String orderId) {
+        return daoProvider.daoFor(LitemallOrder.class).getEntityById(orderId);
+    }
+
+    private int productStock(String prodId) {
+        LitemallGoodsProduct p = daoProvider.daoFor(LitemallGoodsProduct.class).getEntityById(prodId);
+        return p.getNumber();
+    }
+
+    private int callCancelExpiredPickupOrders(int timeoutDays) {
+        ApiResponse<?> r = callMutation("LitemallOrder", "cancelExpiredPickupOrders",
+                Map.of("timeoutDays", timeoutDays));
+        assertEquals(0, r.getStatus(), "cancelExpiredPickupOrders failed: " + r);
+        return ((Number) r.getData()).intValue();
+    }
+
+    private long countPickupTimeoutMessages(String userId) {
+        QueryBean q = new QueryBean();
+        q.addFilter(eq(LitemallUserMessage.PROP_NAME_userId, userId));
+        q.addFilter(eq(LitemallUserMessage.PROP_NAME_msgType, _AppMallDaoConstants.MSG_TYPE_ORDER));
+        q.addFilter(eq(LitemallUserMessage.PROP_NAME_title, "订单超时取消并退款"));
+        return daoProvider.daoFor(LitemallUserMessage.class).findAllByQuery(q).size();
+    }
+
+    @Test
+    public void testCancelExpiredPickupOrderFullSideEffects() {
+        Map<String, Object> order = submitPickupAndPay(activeStoreId);
+        String orderId = (String) order.get("id");
+        String userId = (String) order.get("userId");
+        setOrderPayTimeDaysAgo(orderId, 14);
+
+        int stockBefore = productStock(productId);
+        long messagesBefore = countPickupTimeoutMessages(userId);
+
+        int affected = callCancelExpiredPickupOrders(14);
+        assertEquals(1, affected, "exactly one order should be cancelled");
+
+        // Status advanced to 203 (REFUND_CONFIRM) + endTime written
+        LitemallOrder reloaded = reloadOrder(orderId);
+        assertEquals(_AppMallDaoConstants.ORDER_STATUS_REFUND_CONFIRM, reloaded.getOrderStatus(),
+                "order must advance to 203 (REFUND_CONFIRM)");
+        assertNotNull(reloaded.getEndTime(), "endTime must be set on auto-timeout cancel");
+
+        // Stock restored: product stock increased by Σ orderGoods.number (cart had number=2)
+        int stockAfter = productStock(productId);
+        assertTrue(stockAfter > stockBefore, "stock must be restored after cancel");
+        assertEquals(2, stockAfter - stockBefore, "stock delta must equal cart quantity (2)");
+
+        // 站内信 pushed (afterCommit, but JunitBaseTestCase flushes at test end)
+        long messagesAfter = countPickupTimeoutMessages(userId);
+        assertTrue(messagesAfter > messagesBefore, "pickup-timeout 站内信 must be pushed");
+    }
+
+    @Test
+    public void testCancelExpiredPickupOrderNotYetExpiredIsSkipped() {
+        Map<String, Object> order = submitPickupAndPay(activeStoreId);
+        String orderId = (String) order.get("id");
+        // payTime is "now" — not yet past the 14-day cutoff
+
+        int affected = callCancelExpiredPickupOrders(14);
+        assertEquals(0, affected, "unexpired order must NOT be cancelled");
+
+        LitemallOrder reloaded = reloadOrder(orderId);
+        assertEquals(_AppMallDaoConstants.ORDER_STATUS_PAY, reloaded.getOrderStatus(),
+                "unexpired order must stay at 201 (PAY)");
+    }
+
+    @Test
+    public void testCancelExpiredPickupOrderDoesNotTouchExpressOrders() {
+        // Express order paid + payTime pushed back — must NOT be cancelled (deliveryType != PICKUP).
+        resetCart();
+        Map<String, Object> expressData = new HashMap<>();
+        expressData.put("addressId", addressId);
+        expressData.put("message", "express");
+        expressData.put("freightPrice", BigDecimal.ZERO);
+        ApiResponse<?> submitR = callMutation("LitemallOrder", "submit", expressData);
+        assertEquals(0, submitR.getStatus(), "express submit failed: " + submitR);
+        @SuppressWarnings("unchecked")
+        Map<String, Object> expressOrder = (Map<String, Object>) submitR.getData();
+        String orderId = (String) expressOrder.get("id");
+        callMutation("LitemallOrder", "pay", Map.of("orderId", orderId));
+        setOrderPayTimeDaysAgo(orderId, 14);
+
+        int affected = callCancelExpiredPickupOrders(14);
+        assertEquals(0, affected, "EXPRESS order must NOT be picked up by pickup-timeout job");
+
+        LitemallOrder reloaded = reloadOrder(orderId);
+        assertEquals(_AppMallDaoConstants.ORDER_STATUS_PAY, reloaded.getOrderStatus(),
+                "EXPRESS order must stay at 201 (PAY) — not in pickup-timeout scope");
+    }
+
+    @Test
+    public void testCancelExpiredPickupOrderVerifiedOrderIsSkipped() {
+        Map<String, Object> order = submitPickupAndPay(activeStoreId);
+        String orderId = (String) order.get("id");
+        String pickupCode = (String) order.get("pickupCode");
+        // Verify first → 401, then run pickup-timeout with cutoff=0 (any payTime qualifies).
+        callMutation("LitemallOrder", "verifyPickupOrder", Map.of("pickupCode", pickupCode));
+
+        int affected = callCancelExpiredPickupOrders(0);
+        assertEquals(0, affected, "already-verified (401) order must NOT be cancelled");
+
+        LitemallOrder reloaded = reloadOrder(orderId);
+        assertEquals(_AppMallDaoConstants.ORDER_STATUS_CONFIRM, reloaded.getOrderStatus(),
+                "verified order must stay at 401 (CONFIRM)");
+    }
+
+    @Test
+    public void testCancelExpiredPickupOrderBalanceChannelCreditsWalletNotPayService() {
+        // Balance-paid pickup order: refund must go through wallet credit-back, NOT payService.
+        // We assert this by forcing payService.refund to fail — if the production code had called
+        // it, the mutation would throw ERR_PICKUP_AUTO_CANCEL_REFUND_FAILED.
+        Map<String, Object> order = submitPickupAndPay(activeStoreId);
+        String orderId = (String) order.get("id");
+        BigDecimal actualPrice = new BigDecimal(order.get("actualPrice").toString());
+
+        // Mark this paid order as balance-paid. Wallet is NOT pre-seeded — production
+        // walletBiz.creditBalance will lazy-create one with the refund amount as the opening
+        // balance, proving the credit-back path executed.
+        setOrderPayChannel(orderId, _AppMallDaoConstants.PAY_CHANNEL_BALANCE, actualPrice);
+        setOrderPayTimeDaysAgo(orderId, 14);
+
+        // Force payService.refund to fail; if the balance branch wrongly fell back to it,
+        // cancelExpiredPickupOrders would throw and the assertion below would fail.
+        MockPayServiceImpl.setForceRefundFailure(true);
+        try {
+            int affected = callCancelExpiredPickupOrders(14);
+            assertEquals(1, affected, "balance-paid order must still be cancelled via wallet credit-back");
+        } finally {
+            MockPayServiceImpl.setForceRefundFailure(false);
+        }
+
+        // Wallet was lazy-created by the production creditBalance and holds exactly the refund
+        // amount (proves credit-back happened, payService did not).
+        LitemallWallet wallet = walletBiz.getMyWallet(new io.nop.core.context.ServiceContextImpl());
+        assertNotNull(wallet, "wallet must exist after credit-back");
+        assertEquals(0, actualPrice.compareTo(wallet.getBalance()),
+                "wallet balance must equal actualPrice via credit-back");
+
+        assertEquals(_AppMallDaoConstants.ORDER_STATUS_REFUND_CONFIRM, reloadOrder(orderId).getOrderStatus(),
+                "order must end at 203 (REFUND_CONFIRM)");
+    }
+
+    @Test
+    public void testCancelExpiredPickupOrderIsIdempotent() {
+        Map<String, Object> order = submitPickupAndPay(activeStoreId);
+        String orderId = (String) order.get("id");
+        setOrderPayTimeDaysAgo(orderId, 14);
+
+        int stockBefore = productStock(productId);
+
+        int firstRun = callCancelExpiredPickupOrders(14);
+        assertEquals(1, firstRun, "first run should cancel the order");
+
+        int secondRun = callCancelExpiredPickupOrders(14);
+        assertEquals(0, secondRun, "second run must be a no-op (CAS guard rejects 203 order)");
+
+        // Stock restored exactly once — no double-restore from concurrent runs.
+        int stockAfter = productStock(productId);
+        assertEquals(2, stockAfter - stockBefore, "stock must be restored exactly once");
+    }
+
+    /**
+     * Resolve {@code mall_pickup_timeout_days} exactly as {@link MallJobInvoker#cancelExpiredPickupOrders}
+     * does, so we can exercise the config-driven path without instantiating the invoker (whose own
+     * {@code @Inject} fields are not populated when the test resolves it via {@code @Inject}).
+     */
+    private int resolvePickupTimeoutDaysFromConfig() {
+        io.nop.core.context.IServiceContext ctx = new io.nop.core.context.ServiceContextImpl();
+        String raw = systemBiz.getConfig("mall_pickup_timeout_days", ctx);
+        if (raw == null || raw.isEmpty()) {
+            return 14;
+        }
+        try {
+            int parsed = Integer.parseInt(raw.trim());
+            return parsed > 0 ? parsed : 14;
+        } catch (NumberFormatException e) {
+            return 14;
+        }
+    }
+
+    @Test
+    public void testCancelExpiredPickupOrderConfigOverride() {
+        // Default timeout is 14 days. Override to 1 day via config; an order 2 days old should now
+        // be cancelled (with default 14 it would not). Tests config resolution + BizModel wiring.
+        setConfig("mall_pickup_timeout_days", "1");
+
+        Map<String, Object> order = submitPickupAndPay(activeStoreId);
+        String orderId = (String) order.get("id");
+        setOrderPayTimeDaysAgo(orderId, 2); // 2 days ago — past 1-day cutoff, under 14-day default
+
+        int resolved = resolvePickupTimeoutDaysFromConfig();
+        assertEquals(1, resolved, "config override should resolve to 1 day");
+
+        int affected = callCancelExpiredPickupOrders(resolved);
+        assertEquals(1, affected, "2-day-old order must be cancelled under 1-day config cutoff");
+
+        LitemallOrder reloaded = reloadOrder(orderId);
+        assertEquals(_AppMallDaoConstants.ORDER_STATUS_REFUND_CONFIRM, reloaded.getOrderStatus(),
+                "config override (1 day) must cause the 2-day-old order to be cancelled");
+    }
+
+    @Test
+    public void testCancelExpiredPickupOrderConfigDefaultWhenAbsent() {
+        // No config set → resolver falls back to default 14 days. A 5-day-old order must NOT be
+        // cancelled (under default), but a 15-day-old order must be.
+        Map<String, Object> youngOrder = submitPickupAndPay(activeStoreId);
+        setOrderPayTimeDaysAgo((String) youngOrder.get("id"), 5);
+
+        Map<String, Object> oldOrder = submitPickupAndPay(activeStoreId);
+        setOrderPayTimeDaysAgo((String) oldOrder.get("id"), 15);
+
+        int resolved = resolvePickupTimeoutDaysFromConfig();
+        assertEquals(14, resolved, "absent config should fall back to default 14 days");
+
+        callCancelExpiredPickupOrders(resolved);
+
+        assertEquals(_AppMallDaoConstants.ORDER_STATUS_PAY, reloadOrder((String) youngOrder.get("id")).getOrderStatus(),
+                "5-day-old order must stay PAY under default 14-day cutoff");
+        assertEquals(_AppMallDaoConstants.ORDER_STATUS_REFUND_CONFIRM,
+                reloadOrder((String) oldOrder.get("id")).getOrderStatus(),
+                "15-day-old order must be cancelled under default 14-day cutoff");
+    }
+
+    @Test
+    public void testVerifyPickupOrderRejectedAfterAutoTimeoutCancel() {
+        // D4 sequential case: after cancelExpiredPickupOrders runs (201→203), verifyPickupOrder
+        // must reject (no double-spend — the user cannot get both the refund AND order completion).
+        Map<String, Object> order = submitPickupAndPay(activeStoreId);
+        String orderId = (String) order.get("id");
+        String pickupCode = (String) order.get("pickupCode");
+        setOrderPayTimeDaysAgo(orderId, 14);
+
+        // Auto-timeout cancels + refunds first → 203
+        int affected = callCancelExpiredPickupOrders(14);
+        assertEquals(1, affected, "auto-timeout should cancel the order");
+        assertEquals(_AppMallDaoConstants.ORDER_STATUS_REFUND_CONFIRM, reloadOrder(orderId).getOrderStatus(),
+                "order must be at 203 after auto-timeout");
+
+        // Subsequent verify must be rejected (the existing status guard catches 203 ≠ 201).
+        ApiResponse<?> verifyR = callMutation("LitemallOrder", "verifyPickupOrder",
+                Map.of("pickupCode", pickupCode));
+        assertEquals(-1, verifyR.getStatus(),
+                "verify after auto-timeout must be rejected (no double-spend): " + verifyR);
+        assertTrue(verifyR.getMsg().contains("not-verifiable") || verifyR.getMsg().contains("核销"),
+                "expected not-verifiable error: " + verifyR.getMsg());
+
+        // Order stays at 203 — verify did not advance it.
+        assertEquals(_AppMallDaoConstants.ORDER_STATUS_REFUND_CONFIRM, reloadOrder(orderId).getOrderStatus(),
+                "order must stay at 203 (verify rejected, no state change)");
     }
 }

@@ -9,6 +9,8 @@ import app.mall.biz.ILitemallOrderGoodsBiz;
 import app.mall.biz.ILitemallPinTuanActivityBiz;
 import app.mall.biz.ILitemallPointsAccountBiz;
 import app.mall.biz.ILitemallPointsExchangeOrderBiz;
+import app.mall.biz.ILitemallSystemBiz;
+import io.nop.commons.util.StringHelper;
 import io.nop.core.context.IServiceContext;
 import io.nop.core.context.ServiceContextImpl;
 import jakarta.inject.Inject;
@@ -24,6 +26,7 @@ public class MallJobInvoker {
     private static final int ORDER_CONFIRM_TIMEOUT_MINUTES = 10080;
     private static final int COMMENT_WINDOW_TIMEOUT_DAYS = 7;
     private static final int EXCHANGE_CANCEL_TIMEOUT_MINUTES = 30;
+    private static final int PICKUP_TIMEOUT_DEFAULT_DAYS = 14;
 
     @Inject
     ILitemallOrderBiz orderBiz;
@@ -51,6 +54,9 @@ public class MallJobInvoker {
 
     @Inject
     ILitemallPointsAccountBiz pointsAccountBiz;
+
+    @Inject
+    ILitemallSystemBiz systemBiz;
 
     public void cancelExpiredOrders() {
         IServiceContext context = new ServiceContextImpl();
@@ -133,5 +139,32 @@ public class MallJobInvoker {
         IServiceContext context = new ServiceContextImpl();
         int count = pointsAccountBiz.sendPointsExpiryReminders(context);
         LOG.info("mall-job sendPointsExpiryReminders finished, pushed={}", count);
+    }
+
+    // Pickup-order auto-timeout cancel + refund (successor of P31 deferred「已支付未自提订单自动超时取消/退款」):
+    // scan paid(201) PICKUP orders past the configurable pickup timeout (mall_pickup_timeout_days,
+    // default 14), CAS 201→203 + route refund by payChannel + 还库/还券/还积分/释放满减/通知/日志.
+    // See docs/design/order-and-cart.md 自提核销「已支付未自提订单生命周期」.
+    public void cancelExpiredPickupOrders() {
+        IServiceContext context = new ServiceContextImpl();
+        int timeoutDays = resolvePickupTimeoutDays(context);
+        int count = orderBiz.cancelExpiredPickupOrders(timeoutDays, context);
+        LOG.info("mall-job cancelExpiredPickupOrders finished, timeoutDays={}, affected={}",
+                timeoutDays, count);
+    }
+
+    private int resolvePickupTimeoutDays(IServiceContext context) {
+        // Config-driven (mirrors sendPointsExpiryReminders pattern). Returns default when key is
+        // absent, blank, or non-positive/non-numeric.
+        String raw = systemBiz.getConfig("mall_pickup_timeout_days", context);
+        if (StringHelper.isBlank(raw)) {
+            return PICKUP_TIMEOUT_DEFAULT_DAYS;
+        }
+        try {
+            int parsed = Integer.parseInt(raw.trim());
+            return parsed > 0 ? parsed : PICKUP_TIMEOUT_DEFAULT_DAYS;
+        } catch (NumberFormatException e) {
+            return PICKUP_TIMEOUT_DEFAULT_DAYS;
+        }
     }
 }

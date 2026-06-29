@@ -22,6 +22,17 @@ jobs:
       bean: app.mall.service.scheduler.MallJobInvoker
       method: confirmExpiredOrders
 
+  - jobName: cancel-expired-pickup-orders
+    displayName: Cancel Expired Pickup Orders
+    description: Auto-cancel and refund paid pickup orders past the pickup timeout (mall_pickup_timeout_days)
+    trigger:
+      repeatInterval: 3600000
+      repeatFixedDelay: true
+      maxExecutionCount: 0
+    invoker:
+      bean: app.mall.service.scheduler.MallJobInvoker
+      method: cancelExpiredPickupOrders
+
   - jobName: expire-coupons
     displayName: Expire Coupons
     description: Mark unused coupons as expired

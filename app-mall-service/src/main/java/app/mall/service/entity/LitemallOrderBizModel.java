@@ -74,6 +74,8 @@ import app.mall.dao.mapper.LitemallOrderMapper;
 import app.mall.dao.mapper.LitemallTimeDiscountMapper;
 import app.mall.pay.PayPrepayRequestBean;
 import app.mall.pay.PayPrepayResponseBean;
+import app.mall.pay.PayRefundRequestBean;
+import app.mall.pay.PayRefundResponseBean;
 import app.mall.pay.PayService;
 import app.mall.pay.IPayChannelRegistry;
 import app.mall.pay.PayChannel;
@@ -157,6 +159,7 @@ import static app.mall.service.AppMallErrors.ERR_PROMOTION_MAX_PER_USER;
 import static app.mall.service.AppMallErrors.ERR_PROMOTION_STACKING_NOT_ALLOWED;
 import static app.mall.service.AppMallErrors.ERR_PICKUP_CODE_INVALID;
 import static app.mall.service.AppMallErrors.ERR_PICKUP_ORDER_NOT_VERIFIABLE;
+import static app.mall.service.AppMallErrors.ERR_PICKUP_AUTO_CANCEL_REFUND_FAILED;
 import static app.mall.service.AppMallErrors.ERR_PICKUP_STORE_NOT_ACTIVE;
 import static app.mall.service.AppMallErrors.ERR_PICKUP_STORE_NOT_FOUND;
 import static app.mall.service.AppMallErrors.ERR_TIME_DISCOUNT_SOLD_OUT;
@@ -1100,11 +1103,33 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
                     .param(AppMallErrors.ARG_CURRENT_STATUS, order.getOrderStatus());
         }
 
+        // CAS-guard the 201→401 transition (D4 of pickup-auto-timeout plan): the original
+        // read-check-write had no atomic guard, so a concurrent cancelExpiredPickupOrders run
+        // could CAS 201→203 (refund) between verify's status check and its updateEntity. The
+        // stale updateEntity would then overwrite 203→401 while the refund side-effects (stock
+        // restore + wallet credit-back) had already executed → double-spend. updateStatusIfMatch
+        // issues a direct SQL UPDATE WHERE orderStatus=201; affected=0 means a concurrent
+        // transition already happened (e.g., 201→203 by the pickup-timeout job). We report the
+        // original loaded status (the in-memory cached value is stale post-CAS, but querying DB
+        // for the true current value would require clearing the live session — disproportionate
+        // for a rejection path; the operator can investigate via the admin order detail page).
+        int verifyCasAffected = orderMapper.updateStatusIfMatch(
+                order.orm_idString(),
+                _AppMallDaoConstants.ORDER_STATUS_CONFIRM,
+                _AppMallDaoConstants.ORDER_STATUS_PAY);
+        if (verifyCasAffected == 0) {
+            throw new NopException(ERR_PICKUP_ORDER_NOT_VERIFIABLE)
+                    .param(AppMallErrors.ARG_ORDER_ID, order.orm_idString())
+                    .param(AppMallErrors.ARG_CURRENT_STATUS, order.getOrderStatus());
+        }
+
         // 推进到 401（用户已收货）终态，不经 301。复制 confirm 的真实副作用：
         // 积分赠送 + 写 pickupTime。不发 ship 通知/日志（自提无发货语义）。
+        // CAS 已经在 DB 层把 orderStatus 翻到 401；这里把内存中的 orderStatus 同步到 401
+        // （避免 updateEntity 的 dirty 跟踪把陈旧的 201 写回），并写 confirmTime / pickupTime。
         order.setOrderStatus(_AppMallDaoConstants.ORDER_STATUS_CONFIRM);
-        order.setConfirmTime(LocalDateTime.now());
-        order.setPickupTime(LocalDateTime.now());
+        order.setConfirmTime(CoreMetrics.currentDateTime());
+        order.setPickupTime(CoreMetrics.currentDateTime());
         updateEntity(order, "verifyPickupOrder", context);
         earnPointsForOrderConfirm(order, context);
 
@@ -2377,6 +2402,140 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
         }
         return count;
     }
+
+    /**
+     * 自提订单超时自动取消并退款（successor of P31 deferred「已支付未自提订单自动超时取消/退款」）。
+     *
+     * <p>扫描 {@code orderStatus=201(PAY)} 且 {@code deliveryType=PICKUP(10)} 且 {@code payTime}
+     * 早于 {@code now - timeoutDays} 的订单，逐单：
+     * <ol>
+     *   <li>CAS-guard 翻转 {@code 201→203(REFUND_CONFIRM)}（并发守卫，败者 skip）；</li>
+     *   <li>按 {@code order.payChannel} 分流退款（D2）：
+     *     <ul>
+     *       <li>BALANCE(20) → {@code walletBiz.creditBalance} 原路退回钱包
+     *         （{@code WALLET_CHANGE_TYPE_REFUND + sourceType=order-refund}），不调 payService；</li>
+     *       <li>WECHAT/ALIPAY/其余 → {@code payService.refund}（in-tx 失败抛
+     *         {@code ERR_PICKUP_AUTO_CANCEL_REFUND_FAILED} 回滚）。</li>
+     *     </ul>
+     *   </li>
+     *   <li>还库（{@code goodsProductMapper.addStock}）、还券（{@code couponUserBiz.returnCoupon}）、
+     *     还积分（{@code returnDeductedPoints}）、释放满减参与额度（{@code releasePromotionUsage}）；</li>
+     *   <li>写 endTime + updateEntity；</li>
+     *   <li>afterCommit 推送 ORDER 站内信「订单超时取消并退款」（事件开关
+     *     {@code mall_message_event_enabled_pickup_timeout} 关闭时 uid=null，sendUserMessage 内部 null-guard 跳过）；</li>
+     *   <li>{@code logManager.logOrderSucceed}。</li>
+     * </ol>
+     *
+     * <p>本方法在单事务内逐单处理；任意一单的 in-tx 外部退款失败将抛 NopException 回滚整批
+     * （与 cancelExpiredOrders 一致的事务模型，避免部分成功造成 DB 与退款通道状态错位）。
+     */
+    @Override
+    @BizMutation
+    public int cancelExpiredPickupOrders(@Name("timeoutDays") int timeoutDays,
+                                          IServiceContext context) {
+        // CoreMetrics 与 ORM 自动 createTime/updateTime 同一时间线（与 cancelExpiredOrders 一致）。
+        LocalDateTime cutoff = CoreMetrics.currentDateTime().minusDays(timeoutDays);
+
+        QueryBean query = new QueryBean();
+        query.addFilter(FilterBeans.eq(LitemallOrder.PROP_NAME_orderStatus, _AppMallDaoConstants.ORDER_STATUS_PAY));
+        // deliveryType eq 查询算子受 xmeta 支持（getOverdueUnshippedOrders 注释：仅 eq/in/dateBetween 可用）。
+        query.addFilter(FilterBeans.eq(LitemallOrder.PROP_NAME_deliveryType, _AppMallDaoConstants.DELIVERY_TYPE_PICKUP));
+        query.addFilter(FilterBeans.le(LitemallOrder.PROP_NAME_payTime, cutoff));
+        query.setLimit(100);
+
+        List<LitemallOrder> orders = doFindListByQueryDirectly(query, context);
+
+        // Collect IDs then detach from session so the conditional CAS UPDATE executes as real SQL
+        // (a conditional update on a session-managed entity is routed in-memory and reports 0
+        // affected rows — same reason as cancelExpiredOrders:2310).
+        List<String> orderIds = new ArrayList<>();
+        for (LitemallOrder o : orders) {
+            orderIds.add(o.orm_idString());
+        }
+        dao().clearEntitySessionCache();
+
+        int count = 0;
+        for (String orderId : orderIds) {
+            // Atomic status guard: skip orders already transitioned by a concurrent path
+            // (verifyPickupOrder CAS 201→401, or aftersale GOODS_MISS refund 201→203).
+            int affected = orderMapper.updateStatusIfMatch(
+                    orderId,
+                    _AppMallDaoConstants.ORDER_STATUS_REFUND_CONFIRM,
+                    _AppMallDaoConstants.ORDER_STATUS_PAY);
+            if (affected == 0) {
+                continue;
+            }
+
+            LitemallOrder order = get(orderId, false, context);
+            BigDecimal refundAmount = order.getActualPrice();
+            Integer payChannel = order.getPayChannel();
+
+            if (payChannel != null && payChannel == _AppMallDaoConstants.PAY_CHANNEL_BALANCE) {
+                // D2: balance-payment refund must credit the wallet back synchronously —
+                // MockPayServiceImpl does not actually touch the wallet, so payService.refund would
+                // report success but lose the user's funds. Mirror LitemallPointsExchangeOrderBizModel
+                // refundComboCash balance branch (in-tx, no separate notify).
+                walletBiz.creditBalance(order.getUserId(), refundAmount,
+                        _AppMallDaoConstants.WALLET_CHANGE_TYPE_REFUND,
+                        SOURCE_TYPE_ORDER_REFUND,
+                        order.getOrderSn(),
+                        "自提订单超时取消退还余额 " + order.getOrderSn(),
+                        context);
+            } else {
+                // wxpay/mock/alipay channel: payService facade (in-tx; failure throws → rollback).
+                PayRefundRequestBean refundReq = new PayRefundRequestBean();
+                refundReq.setOutTradeNo(order.getOrderSn());
+                refundReq.setOutRefundNo("refund_" + order.getOrderSn());
+                refundReq.setTotalFee(refundAmount);
+                refundReq.setRefundFee(refundAmount);
+                PayRefundResponseBean refundResp = payService.refund(refundReq);
+                if (!refundResp.isSuccess()) {
+                    throw new NopException(ERR_PICKUP_AUTO_CANCEL_REFUND_FAILED)
+                            .param(AppMallErrors.ARG_ORDER_ID, orderId)
+                            .param("orderSn", order.getOrderSn());
+                }
+            }
+
+            // Restock whole-order (mirrors cancelExpiredOrders / aftersale refund whole-order branch).
+            for (LitemallOrderGoods orderGoods : order.getOrderGoods()) {
+                goodsProductMapper.addStock(orderGoods.getProductId(), orderGoods.getNumber());
+            }
+
+            // Coupon restore (whole-order, mirrors cancelExpiredOrders).
+            QueryBean cuQuery = new QueryBean();
+            cuQuery.addFilter(FilterBeans.eq(LitemallCouponUser.PROP_NAME_orderId, orderId));
+            cuQuery.addFilter(FilterBeans.eq(LitemallCouponUser.PROP_NAME_status, 1));
+            List<LitemallCouponUser> usedCoupons = couponUserBiz.findList(cuQuery, null, context);
+            for (LitemallCouponUser cu : usedCoupons) {
+                couponUserBiz.returnCoupon(cu.orm_idString(), context);
+            }
+
+            order.setEndTime(CoreMetrics.currentDateTime());
+            updateEntity(order, "cancelExpiredPickupOrders", context);
+            // Return deducted points (whole-order, mirrors cancelExpiredOrders).
+            returnDeductedPoints(order, context);
+            // Release promotion participation quota (whole-order).
+            releasePromotionUsage(order.orm_idString(), context);
+
+            // Notification: ORDER 站内信, afterCommit + isEventMessageEnabled + uid-null-skip
+            // (mirrors verifyPickupOrder / payment / ship notification pattern).
+            final String timeoutOrderSn = order.getOrderSn();
+            final String timeoutUserId = notificationService.isEventMessageEnabled("pickup_timeout", context)
+                    ? order.getUserId() : null;
+            txn().afterCommit(null, () -> notificationService.sendUserMessage(
+                    timeoutUserId, _AppMallDaoConstants.MSG_TYPE_ORDER,
+                    "订单超时取消并退款", "订单 " + timeoutOrderSn + " 因超时未自提已自动取消并退款"));
+
+            logManager.logOrderSucceed("自提订单超时自动取消退款",
+                    "订单编号 " + order.getOrderSn());
+            count++;
+        }
+        return count;
+    }
+
+    // sourceType for wallet credit-back on whole-order refund (symmetric with
+    // LitemallWalletBizModel.SOURCE_TYPE_PAY used by payByBalance debit).
+    private static final String SOURCE_TYPE_ORDER_REFUND = "order-refund";
 
     private String generateOrderSn() {
         return StringHelper.generateUUID();

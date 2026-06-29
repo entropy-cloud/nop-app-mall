@@ -297,6 +297,20 @@ public interface ILitemallOrderBiz extends ICrudBiz<LitemallOrder> {
                              IServiceContext context);
 
     /**
+     * 自提订单超时自动取消并退款（successor of P31 deferred「已支付未自提订单自动超时取消/退款」）。
+     * 扫描已支付(201) 且 deliveryType=PICKUP 且 payTime 早于 cutoff（{@code now - timeoutDays}）的订单，
+     * CAS-guard 翻转 201→203(REFUND_CONFIRM)，按 {@code order.payChannel} 分流退款
+     * （balance→wallet credit-back / 其余→payService.refund），并复用既有完整副作用链
+     * （还库 / 还券 / 还积分 / 释放满减参与额度 / 通知 / 日志）。
+     *
+     * <p>{@code timeoutDays} 由调度层（{@code MallJobInvoker}）从 {@code mall_pickup_timeout_days}
+     * config（缺省 14 天）读取后显式传入，便于本方法直接 API 直调与单元测试。
+     */
+    @BizMutation
+    int cancelExpiredPickupOrders(@Name("timeoutDays") int timeoutDays,
+                                   IServiceContext context);
+
+    /**
      * Flash-sale direct-buy order creation (P24 Decision A — independent path, NOT submit()).
      * Creates a single-line order with flashPrice as the unit price. No coupon / promotion /
      * integral / groupon slots are wired (all zeroed). Intended for internal trusted invocation

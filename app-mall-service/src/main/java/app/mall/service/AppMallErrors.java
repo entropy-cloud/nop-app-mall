@@ -613,6 +613,11 @@ public interface AppMallErrors {
             define("nop.err.mall.order.pickup-not-shippable",
                     "自提订单不可发货，请通过门店核销", ARG_ORDER_ID);
 
+    // 自提订单超时自动取消退款失败（successor of P31 deferred）
+    ErrorCode ERR_PICKUP_AUTO_CANCEL_REFUND_FAILED =
+            define("nop.err.mall.order.pickup-auto-cancel-refund-failed",
+                    "自提订单超时自动取消退款失败", ARG_ORDER_ID, "orderSn");
+
     // 商品运营工作台错误码（P36）
     ErrorCode ERR_GOODS_BATCH_EMPTY =
             define("nop.err.mall.goods.batch-empty",
