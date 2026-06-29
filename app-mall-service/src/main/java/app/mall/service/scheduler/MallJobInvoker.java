@@ -9,6 +9,7 @@ import app.mall.biz.ILitemallOrderGoodsBiz;
 import app.mall.biz.ILitemallPinTuanActivityBiz;
 import app.mall.biz.ILitemallPointsAccountBiz;
 import app.mall.biz.ILitemallPointsExchangeOrderBiz;
+import app.mall.biz.ILitemallResetCodeBiz;
 import app.mall.biz.ILitemallSystemBiz;
 import io.nop.commons.util.StringHelper;
 import io.nop.core.context.IServiceContext;
@@ -57,6 +58,9 @@ public class MallJobInvoker {
 
     @Inject
     ILitemallSystemBiz systemBiz;
+
+    @Inject
+    ILitemallResetCodeBiz resetCodeBiz;
 
     public void cancelExpiredOrders() {
         IServiceContext context = new ServiceContextImpl();
@@ -177,5 +181,16 @@ public class MallJobInvoker {
         } catch (NumberFormatException e) {
             return PICKUP_TIMEOUT_DEFAULT_DAYS;
         }
+    }
+
+    // Reset code periodic cleanup (successor of deferred「验证码过期记录的定期清理」, triggered by
+    // nop-job-local): logically delete password reset code records older than the retention window
+    // (mall_reset_code_retention_days, default 7). Daily. Covers codes never verified nor resent,
+    // which the lazy cleanup in sendResetCode/resetPassword never touches.
+    // See docs/design/user-and-address.md 密码重置「验证码定期清理」.
+    public void cleanupExpiredResetCodes() {
+        IServiceContext context = new ServiceContextImpl();
+        int count = resetCodeBiz.cleanupExpiredResetCodes(context);
+        LOG.info("mall-job cleanupExpiredResetCodes finished, affected={}", count);
     }
 }

@@ -4,6 +4,7 @@ import app.mall.biz.ILitemallCouponUserBiz;
 import app.mall.biz.ILitemallGrouponBiz;
 import app.mall.biz.ILitemallOrderBiz;
 import app.mall.biz.ILitemallOrderGoodsBiz;
+import app.mall.biz.ILitemallResetCodeBiz;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Proxy;
@@ -34,28 +35,33 @@ public class TestLitemallSchedulerJobInvoker {
         Map<String, Integer> couponCalls = new HashMap<>();
         Map<String, Integer> grouponCalls = new HashMap<>();
         Map<String, Integer> orderGoodsCalls = new HashMap<>();
+        Map<String, Integer> resetCodeCalls = new HashMap<>();
 
         ILitemallOrderBiz orderBiz = mockBiz(ILitemallOrderBiz.class, orderCalls);
         ILitemallCouponUserBiz couponUserBiz = mockBiz(ILitemallCouponUserBiz.class, couponCalls);
         ILitemallGrouponBiz grouponBiz = mockBiz(ILitemallGrouponBiz.class, grouponCalls);
         ILitemallOrderGoodsBiz orderGoodsBiz = mockBiz(ILitemallOrderGoodsBiz.class, orderGoodsCalls);
+        ILitemallResetCodeBiz resetCodeBiz = mockBiz(ILitemallResetCodeBiz.class, resetCodeCalls);
 
         MallJobInvoker invoker = new MallJobInvoker();
         invoker.orderBiz = orderBiz;
         invoker.couponUserBiz = couponUserBiz;
         invoker.grouponBiz = grouponBiz;
         invoker.orderGoodsBiz = orderGoodsBiz;
+        invoker.resetCodeBiz = resetCodeBiz;
 
         assertDoesNotThrow(invoker::cancelExpiredOrders);
         assertDoesNotThrow(invoker::confirmExpiredOrders);
         assertDoesNotThrow(invoker::expireCoupons);
         assertDoesNotThrow(invoker::expireGroupons);
         assertDoesNotThrow(invoker::expireCommentWindow);
+        assertDoesNotThrow(invoker::cleanupExpiredResetCodes);
 
         org.junit.jupiter.api.Assertions.assertEquals(1, orderCalls.getOrDefault("cancelExpiredOrders", 0));
         org.junit.jupiter.api.Assertions.assertEquals(1, orderCalls.getOrDefault("confirmExpiredOrders", 0));
         org.junit.jupiter.api.Assertions.assertEquals(1, couponCalls.getOrDefault("expireCoupons", 0));
         org.junit.jupiter.api.Assertions.assertEquals(1, grouponCalls.getOrDefault("expireGroupons", 0));
         org.junit.jupiter.api.Assertions.assertEquals(1, orderGoodsCalls.getOrDefault("expireCommentWindow", 0));
+        org.junit.jupiter.api.Assertions.assertEquals(1, resetCodeCalls.getOrDefault("cleanupExpiredResetCodes", 0));
     }
 }

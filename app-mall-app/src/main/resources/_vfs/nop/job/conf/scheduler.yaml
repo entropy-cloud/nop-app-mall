@@ -131,3 +131,14 @@ jobs:
     invoker:
       bean: app.mall.service.scheduler.MallJobInvoker
       method: sendCouponExpiryReminders
+
+  - jobName: cleanup-expired-reset-codes
+    displayName: Cleanup Expired Reset Codes
+    description: Logically delete password reset code records past the retention window (mall_reset_code_retention_days, default 7)
+    trigger:
+      repeatInterval: 86400000
+      repeatFixedDelay: true
+      maxExecutionCount: 0
+    invoker:
+      bean: app.mall.service.scheduler.MallJobInvoker
+      method: cleanupExpiredResetCodes
