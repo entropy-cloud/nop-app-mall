@@ -251,6 +251,7 @@ Exit Criteria:
 - Classification: `out-of-scope improvement`
 - Why Not Blocking Closure: 依赖 P35 站内信中心 done；本计划核销后不主动发站内信，核销结果由订单详情/后台反馈呈现。
 - Successor Required: `yes`（触发条件：P35 done 且运营要求核销成功通知用户时，接线 `MallNotificationService.sendUserMessage`）
+- Successor Closed: 已由 `docs/plans/2026-06-29-1921-3-deferred-notification-triggers-plan.md` 交付（`verifyPickupOrder` 核销成功分支 `txn().afterCommit` 推送 ORDER 站内信「订单核销成功」；事件开关 `mall_message_event_enabled_pickup_verify`；幂等跳过分支 alreadyVerified 不推送；沿用 payment/ship afterCommit+uid-null-skip 模式）。
 
 ### 多门店独立库存/调拨
 

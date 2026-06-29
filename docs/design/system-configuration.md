@@ -153,11 +153,11 @@
 
 | msgType（字典码） | 业务语义 | 产生方式 | 触发事件 |
 | ----------------- | -------- | -------- | -------- |
-| `ORDER`(0, 订单消息) | 订单/履约/退款类业务结果 | 业务事件触发，由 `MallNotificationService` 在事件钩子内写入 | 支付成功、发货、售后退款、团购失败退款、拼团失败退款 |
+| `ORDER`(0, 订单消息) | 订单/履约/退款类业务结果 | 业务事件触发，由 `MallNotificationService` 在事件钩子内写入 | 支付成功、发货、售后退款、团购失败退款、拼团失败退款、自提核销成功 |
 | `MARKETING`(10, 营销消息) | 营销活动类消息 | 本基线不主动产生（事件不映射到此类别） | 定向投放依赖 P20 标签分群，作为 successor |
-| `SYSTEM`(20, 系统消息) | 管理员系统公告 | `broadcastSystemMessage` 下发，全员可见 | 管理员后台主动发布 |
+| `SYSTEM`(20, 系统消息) | 管理员系统公告 + 账户状态提醒 | `broadcastSystemMessage` 下发（全员可见）；积分过期预警由调度 job 下发（单用户） | 管理员后台主动发布；积分即将过期前置预警 |
 
-事件→站内信通道接入清单（P35 落地）：
+事件→站内信通道接入清单（P35 落地 + 后续事件补全）：
 
 | 事件 | 宿主 BizModel 钩子 | 收件人 | msgType | 接入 |
 | ---- | ------------------ | ------ | ------- | ---- |
@@ -166,9 +166,11 @@
 | 售后退款（`refund`） | `LitemallAftersaleBizModel` | 订单用户 | ORDER | 写 UserMessage（同时保留 SMS） |
 | 团购失败退款（`expireGroupons`） | `LitemallGrouponBizModel` | 订单用户 | ORDER | 写 UserMessage（同时保留 SMS） |
 | 拼团失败退款（`expirePinTuans`） | `LitemallPinTuanActivityBizModel` | 订单用户 | ORDER | 写 UserMessage（同时保留 SMS） |
+| 自提核销成功（`verifyPickupOrder`） | `LitemallOrderBizModel` | 订单用户 | ORDER | 写 UserMessage（afterCommit，事件开关 `mall_message_event_enabled_pickup_verify`；幂等跳过分支不推送） |
+| 积分过期预警（`sendPointsExpiryReminders`） | `LitemallPointsAccountBizModel` | 账户用户 | SYSTEM | 调度 job 每日推送一条聚合站内信（事件开关 `mall_message_event_enabled_points-expiry-remind`；幂等：当日同标题不重复） |
 | 新订单（管理员提醒） | `LitemallOrderBizModel` | 管理员邮箱 | — | **不写 UserMessage**（收件人是管理员，无 userId；维持 Email-only） |
 
-> 退款类事件（售后/团购失败/拼团失败）统一映射到 `ORDER` 类别，因它们都是订单交易链路的结果；`MARKETING` 仅用于营销定向投放（successor）。
+> 退款类事件（售后/团购失败/拼团失败）统一映射到 `ORDER` 类别，因它们都是订单交易链路的结果；`MARKETING` 仅用于营销定向投放（successor）。积分过期预警为账户状态提醒，归 `SYSTEM` 类别（D1 of `2026-06-29-1921-3`）。
 
 ### 用户侧能力
 

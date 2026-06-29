@@ -278,7 +278,7 @@
 自提订单合法停留在 201，与「已支付待发货」快递订单共享 201 状态码，故必须显式隔离：
 
 1. **发货隔离：** `ship()` 增加守卫，`deliveryType=PICKUP` 订单**拒绝发货**（`ERR_ORDER_PICKUP_NOT_SHIPPABLE`），防止运营误把自提订单当快递订单发货。
-2. **核销副作用隔离（复制 confirm 真实副作用，不复用 ship）：** `verifyPickupOrder` 仅复制 `confirm()` 的真实收货副作用——积分赠送（`earnPointsForOrderConfirm`）+ 写 `pickupTime`；**不得**复用 `ship()` 的 `sendOrderShipNotification`/`logOrderSucceed("订单发货")`（自提无发货语义，强复用会向用户发出错误的「已发货」通知）。核销成功的站内信通知 deferred 至 P35（依赖 P35 done 后接线）。
+2. **核销副作用隔离（复制 confirm 真实副作用，不复用 ship）：** `verifyPickupOrder` 仅复制 `confirm()` 的真实收货副作用——积分赠送（`earnPointsForOrderConfirm`）+ 写 `pickupTime`；**不得**复用 `ship()` 的 `sendOrderShipNotification`/`logOrderSucceed("订单发货")`（自提无发货语义，强复用会向用户发出错误的「已发货」通知）。核销成功的站内信通知已由 successor 接线（见下「核销动作」）。
 3. **逾期未发货查询隔离：** `getOverdueUnshippedOrders` 查询**排除** `deliveryType=PICKUP`（自提订单合法停留 201，不应污染逾期未发货列表）。
 4. **已支付未自提订单生命周期：** 复用既有 `confirmExpiredOrders` 仅处理 SHIP(301) 的事实（不触及 201）。**新增显式残留风险**——已支付长期未自提订单**无自动超时取消/退款路径**（本基线由运营在订单运营工作台人工处理；自动超时取消作为 successor）。
 
@@ -298,8 +298,9 @@
 
 - `verifyPickupOrder(pickupCode)` `@BizMutation @Auth(roles="admin")`：按 pickupCode 反查订单。
 - **状态守卫：** 仅 `orderStatus==201(已支付) && deliveryType==PICKUP` 可核销，拒 `ERR_PICKUP_ORDER_NOT_VERIFIABLE`；无效码拒 `ERR_PICKUP_CODE_INVALID`。
-- **幂等：** 已核销（已进入 401）跳过（重复核销返回当前订单，不报错、不重复发积分）。
+- **幂等：** 已核销（已进入 401）跳过（重复核销返回当前订单，不报错、不重复发积分、不重复推站内信）。
 - **副作用：** 推进到 **401** 终态 + 复制 confirm 真实副作用（积分赠送 + 写 `pickupTime`），**不发** ship 通知/日志。
+- **核销成功站内信（successor 接线）：** 核销成功分支在 `txn().afterCommit` 内调 `MallNotificationService.sendUserMessage(uid, ORDER, "订单核销成功", ...)`（沿用 payment/ship 的 afterCommit + `isEventMessageEnabled("pickup_verify", ctx)` + uid-null-skip 模式）。事件开关 `mall_message_event_enabled_pickup_verify` 关闭时 uid=null，`sendUserMessage` 内部 null-guard 跳过。幂等跳过分支（alreadyVerified）**不**推送。
 - 跨实体门店查询经 `ILitemallPickupStoreBiz`。
 
 ### 核销权属（Decision E）

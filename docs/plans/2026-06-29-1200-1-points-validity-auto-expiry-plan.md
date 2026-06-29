@@ -155,6 +155,7 @@ Exit Criteria:
 - Classification: `out-of-scope improvement`
 - Why Not Blocking Closure: 本计划仅交付前端静态「即将过期」提示；主动推送（P35 站内信/SMS）为额外运营策略，非有效期闭环核心。
 - Successor Required: `yes`（触发条件：运营要求积分过期前主动提醒用户时，接线 `MallNotificationService.sendUserMessage` + 扫描近 N 天到期批次）
+- Successor Closed: 已由 `docs/plans/2026-06-29-1921-3-deferred-notification-triggers-plan.md` 交付（`sendPointsExpiryReminders` 每日 job 扫描近 N 天到期批次→按 userId 聚合推送一条 SYSTEM 站内信；`mall_points_expiry_remind_days` 配置缺省 3；幂等当日同标题不重复；事件开关 `mall_message_event_enabled_points-expiry-remind`）。
 
 ### 存量积分长期不过期
 

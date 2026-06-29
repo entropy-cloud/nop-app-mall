@@ -154,6 +154,7 @@
   - **存量不过期：** 特性上线前已存在的 balance（无批次）视为不过期存量，自然消耗（spend 先耗批次，余量从 balance 扣），不回填为过期批次（无可靠 earn 时间戳）。
   - **不变量：** `account.balance` 为可用积分真相源；`balance >= SUM(batch.remainingPoints WHERE userId AND remainingPoints>0)` 恒成立（差额即存量）。earn/spend/adjust/expire 四路径在同一事务内同步两侧。
   - **自动过期编排：** nop-job-local 定时任务 `expire-points`（每小时）扫描到期批次，经 `PointsAccount.version` 乐观锁 CAS 扣减 `balance` 并写 `EXPIRE(20)` 流水（`sourceType=expire`, `sourceId=batchId`），单轮限 500 批、并发败者顺延下轮，幂等可重放安全。
+  - **过期预警推送（successor of 前端提示）：** nop-job-local 定时任务 `send-points-expiry-reminders`（每日 86400000ms）扫描 `expireTime ∈ [now, now+remindDays]` 且 `remainingPoints>0` 的批次，按 userId 聚合（Σ points + 最早 expireTime）后推送一条 `SYSTEM` 站内信「积分即将过期」（`MallNotificationService.sendUserMessage`）。提前天数由 `mall_points_expiry_remind_days` 配置（缺失默认 **3 天**）。事件开关 `mall_message_event_enabled_points-expiry-remind` 关闭时整体跳过；幂等：当日同 userId+msgType(SYSTEM)+title 已存在则跳过（job 重跑/时区抖动不重复推送）。从「拉取式 hint」升级为「主动推送 reminder」。
   - **前端提示：** 「我的积分」页消费 `getMyPointsExpiryHint`，展示最近一笔未到期批次的「即将过期」提示（仅存量时不展示）。账户/流水/抵扣/获取基座不依赖有效期语义。
 
 ### 获取规则（积分来源）
