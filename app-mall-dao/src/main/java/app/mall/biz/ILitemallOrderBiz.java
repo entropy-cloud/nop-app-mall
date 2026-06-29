@@ -91,6 +91,28 @@ public interface ILitemallOrderBiz extends ICrudBiz<LitemallOrder> {
                                 IServiceContext context);
 
     /**
+     * Combo-payment channel (successor of P30 deferred「跨通道组合支付」): balance-deduct partial +
+     * third-party channel (WeChat) covers the remainder, in one cashier action. Validates ownership +
+     * status(101) + combo re-entry guard ({@code walletPayAmount>0} → ERR_ORDER_COMBO_PENDING) +
+     * {@code useBalanceAmount>0} + confirm credential (Decision B) + balance ≥ useBalanceAmount,
+     * atomically debits {@code debitAmount = min(useBalanceAmount, actualPrice)}, writes
+     * {@code walletPayAmount=debitAmount}. If {@code remainder = actualPrice − debitAmount == 0} the
+     * order degenerates to a full-balance payment ({@code payChannel=BALANCE} + markOrderPaidCore).
+     * Otherwise {@code payService.createPayment(totalFee=remainder)} records {@code payId}, the order
+     * stays at 101 until the WeChat async notify (confirmPaidByNotify) advances it to PAID with
+     * {@code payChannel=WECHAT} + the persisted {@code walletPayAmount}.
+     *
+     * <p>Combo re-entry guard (Decision D1): while an order is in the combo pending window (101 and
+     * {@code walletPayAmount>0}), {@code pay}/{@code payByBalance}/{@code prepay}/{@code payWithCombo}
+     * all reject re-entry, preventing a second debit / second prepay against the same order.
+     */
+    @BizMutation
+    Map<String, Object> payWithCombo(@Name("orderId") String orderId,
+                                       @Name("useBalanceAmount") BigDecimal useBalanceAmount,
+                                       @Name("confirmCredential") String confirmCredential,
+                                       IServiceContext context);
+
+    /**
      * Trusted internal entry: drive a CREATED order to PAY after WeChat Pay async notify
      * signature verification succeeds. Idempotent — already-PAY orders are skipped.
      * Invoked by {@code WxPayNotifyResource} via {@code IPaymentCallback}; not a user-facing
@@ -291,6 +313,33 @@ public interface ILitemallOrderBiz extends ICrudBiz<LitemallOrder> {
      * call this (promotion is an order-level discount).
      */
     void releasePromotionUsage(@Name("orderId") String orderId, IServiceContext context);
+
+    /**
+     * Combo-aware refund split (successor of P30 deferred「跨通道组合支付」资金安全面). Shared helper
+     * for the five whole-order/partial refund sites that previously called {@code payService.refund}
+     * directly. For a combo order ({@code walletPayAmount>0} and {@code actualPrice>0}) the refund
+     * amount is split by ratio: {@code walletPortion = refundAmount × walletPayAmount / actualPrice},
+     * {@code channelPortion = refundAmount − walletPortion} (Decision D3, remainder归通道), with the
+     * wallet portion credited back via {@code walletBiz.creditBalance(REFUND, sourceType=order-refund)}
+     * and the channel portion via {@code payService.refund(totalFee=actualPrice, refundFee=channelPortion)}.
+     * For a non-combo order ({@code walletPayAmount==0/null} or {@code actualPrice==0}) it falls back to
+     * the legacy single-channel {@code payService.refund(totalFee=actualPrice, refundFee=refundAmount)}.
+     *
+     * <p>Returns {@code true} when the channel portion refunded successfully OR there was no channel
+     * portion (pure-wallet refund). Returns {@code false} when the channel {@code payService.refund}
+     * reported failure — callers retain their own domain-specific failure handling (aftersale throws
+     * {@code ERR_AFTERSALE_REFUND_FAILED}, groupon/pintuan record to refundFailures, pickup-timeout
+     * throws {@code ERR_PICKUP_AUTO_CANCEL_REFUND_FAILED}). The wallet {@code creditBalance} portion
+     * throws {@code NopException} on optimistic-lock conflict (propagates to caller).
+     *
+     * <p>Internal helper (no {@code @BizMutation}/@BizQuery}/{@code @BizAction}, not GraphQL-exposed),
+     * called from the five refund sites: aftersale refund / aftersale confirmReturnReceived /
+     * cancelExpiredPickupOrders (non-BALANCE branch) / groupon refundGrouponOrder /
+     * pintuan refundMemberOrder.
+     */
+    boolean refundComboAware(@Name("order") LitemallOrder order,
+                              @Name("refundAmount") BigDecimal refundAmount,
+                              IServiceContext context);
 
     @BizMutation
     int confirmExpiredOrders(@Name("timeoutMinutes") int timeoutMinutes,

@@ -137,6 +137,8 @@ import static app.mall.service.AppMallErrors.ERR_ORDER_BATCH_SHIP_EMPTY;
 import static app.mall.service.AppMallErrors.ERR_ORDER_BATCH_SHIP_INVALID_ROW;
 import static app.mall.service.AppMallErrors.ERR_ORDER_CART_EMPTY;
 import static app.mall.service.AppMallErrors.ERR_ORDER_BALANCE_INSUFFICIENT;
+import static app.mall.service.AppMallErrors.ERR_ORDER_COMBO_AMOUNT_INVALID;
+import static app.mall.service.AppMallErrors.ERR_ORDER_COMBO_PENDING;
 import static app.mall.service.AppMallErrors.ERR_ORDER_NOT_ALLOW_CANCEL;
 import static app.mall.service.AppMallErrors.ERR_ORDER_NOT_ALLOW_CHANGE_ADDRESS;
 import static app.mall.service.AppMallErrors.ERR_ORDER_NOT_ALLOW_CONFIRM;
@@ -717,6 +719,11 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
         requireUserIdMatch(order, context);
         order.setEndTime(LocalDateTime.now());
 
+        // Combo balance credit-back (Decision D1 symmetry): a combo-pending CREATED order had its
+        // balance portion debited at payWithCombo; cancel must symmetrically credit it back. The CAS
+        // status guard above guarantees this runs at most once per order.
+        creditBackComboBalance(order, context);
+
         for (LitemallOrderGoods orderGoods : order.getOrderGoods()) {
             goodsProductMapper.addStock(orderGoods.getProductId(), orderGoods.getNumber());
         }
@@ -755,6 +762,9 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
                     .param("status", order.getOrderStatus());
         }
         requireUserIdMatch(order, context);
+        // Combo re-entry guard (Decision D1): a combo-pending order (101 with walletPayAmount>0) must
+        // not be re-entered by a single-channel prepay — the balance portion was already debited.
+        rejectComboReentry(order, orderId);
 
         PayPrepayRequestBean payReq = new PayPrepayRequestBean();
         payReq.setOutTradeNo(order.getOrderSn());
@@ -787,6 +797,9 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
                     .param("status", order.getOrderStatus());
         }
         requireUserIdMatch(order, context);
+        // Combo re-entry guard (Decision D1): a combo-pending order (101 with walletPayAmount>0) must
+        // not be re-entered by the demo/manual pay path.
+        rejectComboReentry(order, orderId);
         // pay() is the manual/demo confirmation path. In real WeChat Pay mode, non-zero orders
         // MUST go through prepay -> WeChat scan -> async notify -> confirmPaidByNotify.
         if (order.getActualPrice() != null
@@ -841,6 +854,9 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
                     .param("status", order.getOrderStatus());
         }
         requireUserIdMatch(order, context);
+        // Combo re-entry guard (Decision D1): a combo-pending order (101 with walletPayAmount>0) must
+        // not be re-entered by the full-balance payByBalance path.
+        rejectComboReentry(order, orderId);
 
         BigDecimal actualPrice = order.getActualPrice() == null ? BigDecimal.ZERO : order.getActualPrice();
         // Balance channel only serves non-zero orders. Zero-amount orders confirm via pay() in the
@@ -880,6 +896,143 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
         fresh.setPayChannel(_AppMallDaoConstants.PAY_CHANNEL_BALANCE);
         markOrderPaidCore(fresh, context);
         return fresh;
+    }
+
+    /**
+     * Combo re-entry guard (Decision D1). A combo-pending order is a CREATED(101) order whose balance
+     * portion was already atomically debited ({@code walletPayAmount>0}) and is now waiting for the
+     * third-party channel补差 async notify. Re-entering any single payment entry (pay / payByBalance /
+     * prepay / payWithCombo itself) against such an order would either double-debit the wallet or
+     * create a second prepay. The guard rejects all of them with {@code ERR_ORDER_COMBO_PENDING}.
+     */
+    private void rejectComboReentry(LitemallOrder order, String orderId) {
+        BigDecimal comboPending = order.getWalletPayAmount();
+        if (comboPending != null && comboPending.compareTo(BigDecimal.ZERO) > 0) {
+            throw new NopException(ERR_ORDER_COMBO_PENDING).param("orderId", orderId);
+        }
+    }
+
+    /**
+     * Combo balance credit-back on CREATED order cancel/expire (Decision D1 symmetry). A combo-pending
+     * order (101 with {@code walletPayAmount>0}) had its balance portion debited at
+     * {@code payWithCombo}; canceling/expiring it must symmetrically credit that balance back via the
+     * same order-refund taxonomy as {@code cancelExpiredPickupOrders} (REFUND +
+     * sourceType=order-refund). The CAS status guard of the caller guarantees idempotency. A no-op
+     * for ordinary orders (no {@code walletPayAmount}).
+     */
+    private void creditBackComboBalance(LitemallOrder order, IServiceContext context) {
+        BigDecimal walletPayAmount = order.getWalletPayAmount();
+        if (walletPayAmount == null || walletPayAmount.compareTo(BigDecimal.ZERO) <= 0) {
+            return;
+        }
+        walletBiz.creditBalance(order.getUserId(), walletPayAmount,
+                _AppMallDaoConstants.WALLET_CHANGE_TYPE_REFUND,
+                SOURCE_TYPE_ORDER_REFUND,
+                order.getOrderSn(),
+                "组合支付取消退还余额 " + order.getOrderSn(),
+                context);
+    }
+
+    @Override
+    @BizMutation
+    public Map<String, Object> payWithCombo(@Name("orderId") String orderId,
+                                              @Name("useBalanceAmount") BigDecimal useBalanceAmount,
+                                              @Name("confirmCredential") String confirmCredential,
+                                              IServiceContext context) {
+        LitemallOrder order = get(orderId, false, context);
+        if (order == null) {
+            throw new NopException(ERR_ORDER_NOT_FOUND).param("orderId", orderId);
+        }
+        if (order.getOrderStatus() != _AppMallDaoConstants.ORDER_STATUS_CREATED) {
+            throw new NopException(ERR_ORDER_NOT_ALLOW_PAY)
+                    .param("orderId", orderId)
+                    .param("status", order.getOrderStatus());
+        }
+        requireUserIdMatch(order, context);
+        // Combo re-entry guard (Decision D1): reject a second combo/single-channel entry on a
+        // combo-pending order whose balance portion was already debited.
+        rejectComboReentry(order, orderId);
+
+        BigDecimal actualPrice = order.getActualPrice() == null ? BigDecimal.ZERO : order.getActualPrice();
+        if (actualPrice.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new NopException(ERR_ORDER_NOT_ALLOW_PAY)
+                    .param("orderId", orderId)
+                    .param("reason", "zero-amount order must use pay(), not combo channel");
+        }
+        if (useBalanceAmount == null || useBalanceAmount.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new NopException(ERR_ORDER_COMBO_AMOUNT_INVALID).param("orderId", orderId);
+        }
+
+        // Confirm credential (Decision B): reuse the login password via the platform encoder.
+        verifyPayCredential(order.getUserId(), confirmCredential, context);
+
+        // Cap the balance portion at actualPrice (a useBalanceAmount that covers the whole order
+        // degenerates to a full-balance payment). Reject amounts exceeding actualPrice up-front so
+        // the user is not silently over-charged.
+        if (useBalanceAmount.compareTo(actualPrice) > 0) {
+            throw new NopException(ERR_ORDER_COMBO_AMOUNT_INVALID).param("orderId", orderId);
+        }
+
+        // Balance sufficiency pre-check (the optimistic-lock debit is the authoritative guard).
+        BigDecimal balance = lookupWalletBalance(context);
+        if (balance.compareTo(useBalanceAmount) < 0) {
+            throw new NopException(ERR_ORDER_BALANCE_INSUFFICIENT)
+                    .param("orderId", orderId)
+                    .param("balance", balance)
+                    .param("actualPrice", actualPrice);
+        }
+
+        BigDecimal debitAmount = useBalanceAmount;
+        BigDecimal remainder = actualPrice.subtract(debitAmount);
+
+        // Atomic debit (idempotency layer 2): optimistic version lock rejects concurrent double
+        // debit. sourceId=orderSn ties the flow to this order. Runs in the same @BizMutation tx.
+        walletBiz.debitBalance(order.getUserId(), debitAmount,
+                _AppMallDaoConstants.WALLET_CHANGE_TYPE_PAY,
+                LitemallWalletBizModel.SOURCE_TYPE_PAY,
+                order.getOrderSn(),
+                "组合支付余额抵扣订单 " + order.getOrderSn(),
+                context);
+
+        // Write the balance-portion field BEFORE any state change. Reload because debitBalance
+        // detaches entities from the session (forces the conditional UPDATE to real SQL).
+        LitemallOrder fresh = get(orderId, false, context);
+        fresh.setWalletPayAmount(debitAmount);
+        updateEntity(fresh, "payWithCombo:debit", context);
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("order", fresh);
+
+        if (remainder.compareTo(BigDecimal.ZERO) == 0) {
+            // Degenerate path: balance covered the whole order → full-balance payment semantics.
+            LitemallOrder paid = get(orderId, false, context);
+            paid.setPayChannel(_AppMallDaoConstants.PAY_CHANNEL_BALANCE);
+            markOrderPaidCore(paid, context);
+            result.put("codeUrl", null);
+            result.put("remainder", BigDecimal.ZERO);
+            result.put("paid", true);
+            return result;
+        }
+
+        // Remainder covered by the third-party channel: create a prepay for the补差 portion only.
+        // The order stays at 101 until confirmPaidByNotify advances it to PAID with
+        // payChannel=WECHAT + the persisted walletPayAmount (D2: channel field = third-party,
+        // walletPayAmount = balance deduction).
+        PayPrepayRequestBean payReq = new PayPrepayRequestBean();
+        payReq.setOutTradeNo(order.getOrderSn());
+        payReq.setTotalFee(remainder);
+        payReq.setDescription("商城订单组合补差 " + order.getOrderSn());
+        PayPrepayResponseBean payResp = payService.createPayment(payReq);
+
+        LitemallOrder prep = get(orderId, false, context);
+        prep.setPayId(payResp.getPayId());
+        updateEntity(prep, "payWithCombo:prepay", context);
+
+        result.put("order", get(orderId, false, context));
+        result.put("codeUrl", payResp.getCodeUrl());
+        result.put("remainder", remainder);
+        result.put("paid", false);
+        return result;
     }
 
     /**
@@ -2348,6 +2501,11 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
             LitemallOrder order = get(orderId, false, context);
             order.setEndTime(LocalDateTime.now());
 
+            // Combo balance credit-back (Decision D1 symmetry): a combo-pending CREATED order had its
+            // balance portion debited at payWithCombo; auto-cancel must symmetrically credit it back.
+            // The CAS status guard above guarantees this runs at most once per order.
+            creditBackComboBalance(order, context);
+
             for (LitemallOrderGoods orderGoods : order.getOrderGoods()) {
                 goodsProductMapper.addStock(orderGoods.getProductId(), orderGoods.getNumber());
             }
@@ -2482,14 +2640,14 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
                         "自提订单超时取消退还余额 " + order.getOrderSn(),
                         context);
             } else {
-                // wxpay/mock/alipay channel: payService facade (in-tx; failure throws → rollback).
-                PayRefundRequestBean refundReq = new PayRefundRequestBean();
-                refundReq.setOutTradeNo(order.getOrderSn());
-                refundReq.setOutRefundNo("refund_" + order.getOrderSn());
-                refundReq.setTotalFee(refundAmount);
-                refundReq.setRefundFee(refundAmount);
-                PayRefundResponseBean refundResp = payService.refund(refundReq);
-                if (!refundResp.isSuccess()) {
+                // Combo-aware refund split (successor): for a combo order (payChannel=WECHAT but
+                // walletPayAmount>0) the wallet portion is credited back and the channel portion
+                // refunded via payService; for a pure-channel order this is the legacy single-channel
+                // refund. The BALANCE branch above is retained for minimal-change zero-regression
+                // (a full-balance order has walletPayAmount==actualPrice, so refundComboAware would be
+                // equivalent — kept explicit to preserve the documented BALANCE fast-path).
+                boolean refundOk = refundComboAware(order, refundAmount, context);
+                if (!refundOk) {
                     throw new NopException(ERR_PICKUP_AUTO_CANCEL_REFUND_FAILED)
                             .param(AppMallErrors.ARG_ORDER_ID, orderId)
                             .param("orderSn", order.getOrderSn());
@@ -2727,6 +2885,73 @@ public class LitemallOrderBizModel extends CrudBizModel<LitemallOrder> implement
         for (LitemallPromotionUsage usage : usages) {
             promotionUsageBiz.deleteEntity(usage, null, context);
         }
+    }
+
+    @Override
+    public boolean refundComboAware(@Name("order") LitemallOrder order,
+                                      @Name("refundAmount") BigDecimal refundAmount,
+                                      IServiceContext context) {
+        // Decision D3: combo-aware refund split. For a combo order (walletPayAmount>0 and
+        // actualPrice>0) the refund amount is split by ratio: walletPortion = refundAmount ×
+        // walletPayAmount / actualPrice; channelPortion = refundAmount − walletPortion (remainder归
+        // 通道). The wallet portion is credited back via creditBalance (REFUND, order-refund,
+        // symmetric with the combo debit PAY/pay); the channel portion via payService.refund.
+        // Non-combo orders (walletPayAmount==0/null or actualPrice==0) keep the legacy single-channel
+        // refund. Returns the channel refund success so each caller retains its own domain-specific
+        // failure handling (aftersale/pickup throw, groupon/pintuan record to refundFailures).
+        BigDecimal walletPayAmount = order.getWalletPayAmount();
+        BigDecimal actualPrice = order.getActualPrice();
+        boolean isCombo = walletPayAmount != null
+                && walletPayAmount.compareTo(BigDecimal.ZERO) > 0
+                && actualPrice != null
+                && actualPrice.compareTo(BigDecimal.ZERO) > 0;
+
+        if (!isCombo) {
+            // Legacy single-channel refund (actualPrice>0 defensive guard avoids a meaningless refund
+            // call on a zero-amount order; matches the pre-combo behavior).
+            if (actualPrice == null || actualPrice.compareTo(BigDecimal.ZERO) <= 0) {
+                return true;
+            }
+            PayRefundRequestBean req = new PayRefundRequestBean();
+            req.setOutTradeNo(order.getOrderSn());
+            req.setOutRefundNo("refund_" + order.getOrderSn());
+            req.setTotalFee(actualPrice);
+            req.setRefundFee(refundAmount);
+            PayRefundResponseBean resp = payService.refund(req);
+            return resp.isSuccess();
+        }
+
+        // Combo split: scale=2 (currency cents), HALF_UP rounding, remainder归通道 (channelPortion
+        // absorbs the rounding residual so the wallet credits back a conservative amount and the
+        // channel covers the rest). For a whole-order refund (refundAmount==actualPrice) the split
+        // recovers walletPayAmount exactly into the wallet and (actualPrice−walletPayAmount) into the
+        // channel.
+        BigDecimal walletPortion = refundAmount.multiply(walletPayAmount)
+                .divide(actualPrice, 2, RoundingMode.HALF_UP);
+        BigDecimal channelPortion = refundAmount.subtract(walletPortion);
+
+        if (walletPortion.compareTo(BigDecimal.ZERO) > 0) {
+            walletBiz.creditBalance(order.getUserId(), walletPortion,
+                    _AppMallDaoConstants.WALLET_CHANGE_TYPE_REFUND,
+                    SOURCE_TYPE_ORDER_REFUND,
+                    order.getOrderSn(),
+                    "组合订单退款返还余额 " + order.getOrderSn(),
+                    context);
+        }
+
+        if (channelPortion.compareTo(BigDecimal.ZERO) <= 0) {
+            // Pure-wallet refund (e.g. partial refund fully covered by the balance portion): no
+            // channel call needed.
+            return true;
+        }
+
+        PayRefundRequestBean req = new PayRefundRequestBean();
+        req.setOutTradeNo(order.getOrderSn());
+        req.setOutRefundNo("refund_" + order.getOrderSn());
+        req.setTotalFee(actualPrice);
+        req.setRefundFee(channelPortion);
+        PayRefundResponseBean resp = payService.refund(req);
+        return resp.isSuccess();
     }
 
     private void copyGoodsPicToOrderGoods(LitemallOrderGoods orderGoods, String goodsPicUrl) {

@@ -67,6 +67,15 @@ public interface AppMallErrors {
             define("nop.err.mall.order.balance-insufficient",
                     "钱包余额不足以支付该订单");
 
+    // 组合支付错误码（successor：余额抵扣 + 第三方通道补差）
+    ErrorCode ERR_ORDER_COMBO_PENDING =
+            define("nop.err.mall.order.combo-pending",
+                    "订单已进入组合支付待支付窗口，不可重复发起支付", "orderId");
+
+    ErrorCode ERR_ORDER_COMBO_AMOUNT_INVALID =
+            define("nop.err.mall.order.combo-amount-invalid",
+                    "组合支付抵扣金额非法（须为正且不超过实付金额）", "orderId");
+
     ErrorCode ERR_ORDER_NOT_ALLOW_DELETE =
             define("nop.err.mall.order.not-allow-delete",
                     "当前订单状态不允许删除");

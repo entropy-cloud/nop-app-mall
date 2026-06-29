@@ -19,9 +19,6 @@ import app.mall.dao.entity.LitemallPinTuanMember;
 import app.mall.dao.entity.LitemallPointsFlow;
 import app.mall.dao.mapper.LitemallGoodsProductMapper;
 import app.mall.dao.mapper.LitemallMarketingMapper;
-import app.mall.pay.PayRefundRequestBean;
-import app.mall.pay.PayRefundResponseBean;
-import app.mall.pay.PayService;
 import app.mall.service.notification.MallNotificationService;
 import io.nop.api.core.annotations.biz.BizModel;
 import io.nop.api.core.annotations.biz.BizMutation;
@@ -74,9 +71,6 @@ public class LitemallPinTuanActivityBizModel extends CrudBizModel<LitemallPinTua
 
     @Inject
     LitemallGoodsProductMapper goodsProductMapper;
-
-    @Inject
-    PayService payService;
 
     @Inject
     MallNotificationService notificationService;
@@ -360,13 +354,11 @@ public class LitemallPinTuanActivityBizModel extends CrudBizModel<LitemallPinTua
         }
 
         try {
-            PayRefundRequestBean req = new PayRefundRequestBean();
-            req.setOutTradeNo(order.getOrderSn());
-            req.setOutRefundNo("refund_" + order.getOrderSn());
-            req.setTotalFee(order.getActualPrice());
-            req.setRefundFee(order.getActualPrice());
-            PayRefundResponseBean resp = payService.refund(req);
-            if (!resp.isSuccess()) {
+            // Combo-aware refund split (successor): routes wallet/channel portions correctly for combo
+            // orders; legacy single-channel refund for non-combo orders. Whole-order refund amount =
+            // actualPrice.
+            boolean refundOk = orderBiz.refundComboAware(order, order.getActualPrice(), context);
+            if (!refundOk) {
                 LOG.error("refundMemberOrder: refund failed for order {}", order.getOrderSn());
                 refundFailures.add(order.getOrderSn());
                 return;

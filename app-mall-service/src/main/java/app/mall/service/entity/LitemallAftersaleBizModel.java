@@ -14,9 +14,6 @@ import app.mall.dao.entity.LitemallOrderGoods;
 import app.mall.dao.entity.LitemallPointsFlow;
 import app.mall.dao.manager.MallLogManager;
 import app.mall.dao.mapper.LitemallGoodsProductMapper;
-import app.mall.pay.PayRefundRequestBean;
-import app.mall.pay.PayRefundResponseBean;
-import app.mall.pay.PayService;
 import app.mall.service.notification.MallNotificationService;
 import io.nop.api.core.annotations.biz.BizModel;
 import io.nop.api.core.annotations.biz.BizMutation;
@@ -63,9 +60,6 @@ public class LitemallAftersaleBizModel extends CrudBizModel<LitemallAftersale> i
 
     @Inject
     MallNotificationService notificationService;
-
-    @Inject
-    PayService payService;
 
     @Inject
     MallLogManager logManager;
@@ -154,15 +148,11 @@ public class LitemallAftersaleBizModel extends CrudBizModel<LitemallAftersale> i
                     .param("cap", cap);
         }
 
-        PayRefundRequestBean wxPayRefundRequest = new PayRefundRequestBean();
-        wxPayRefundRequest.setOutTradeNo(order.getOrderSn());
-        wxPayRefundRequest.setOutRefundNo("refund_" + order.getOrderSn());
-        wxPayRefundRequest.setTotalFee(order.getActualPrice());
-        wxPayRefundRequest.setRefundFee(entity.getAmount());
-
-        // payService.refund stays in-tx: external failure throws → tx rolls back, keeping DB consistent with no-refund
-        PayRefundResponseBean refundResult = payService.refund(wxPayRefundRequest);
-        if (!refundResult.isSuccess()) {
+        // Combo-aware refund split (successor): refundComboAware routes the wallet portion back to
+        // the wallet and the channel portion to payService for combo orders; legacy single-channel
+        // refund for non-combo orders. In-tx failure throws → tx rolls back (consistent with no-refund).
+        boolean refundOk = orderBiz.refundComboAware(order, entity.getAmount(), context);
+        if (!refundOk) {
             throw new NopException(ERR_AFTERSALE_REFUND_FAILED)
                     .param("aftersaleId", id)
                     .param("orderSn", order.getOrderSn());
@@ -306,14 +296,10 @@ public class LitemallAftersaleBizModel extends CrudBizModel<LitemallAftersale> i
                     .param("cap", cap);
         }
 
-        PayRefundRequestBean wxPayRefundRequest = new PayRefundRequestBean();
-        wxPayRefundRequest.setOutTradeNo(order.getOrderSn());
-        wxPayRefundRequest.setOutRefundNo("refund_" + order.getOrderSn());
-        wxPayRefundRequest.setTotalFee(order.getActualPrice());
-        wxPayRefundRequest.setRefundFee(entity.getAmount());
-
-        PayRefundResponseBean refundResult = payService.refund(wxPayRefundRequest);
-        if (!refundResult.isSuccess()) {
+        // Combo-aware refund split (successor): routes wallet/channel portions correctly for combo
+        // orders; legacy single-channel refund for non-combo orders.
+        boolean refundOk = orderBiz.refundComboAware(order, entity.getAmount(), context);
+        if (!refundOk) {
             throw new NopException(ERR_AFTERSALE_REFUND_FAILED)
                     .param("aftersaleId", id)
                     .param("orderSn", order.getOrderSn());
