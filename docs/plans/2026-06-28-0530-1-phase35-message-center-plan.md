@@ -238,6 +238,7 @@ Exit Criteria:
 - Classification: `out-of-scope improvement`
 - Why Not Blocking Closure: 营销消息精细化人群定向依赖 P20 用户标签分群被运营正式采用；本计划仅交付事件触发的 ORDER 消息 + 全员 SYSTEM 公告基座。
 - Successor Required: `yes`（触发条件：P20 标签分群能力被运营正式采用时）
+- **Status: 已由 successor 关闭** — `docs/plans/2026-06-30-0044-2-segment-directed-marketing-push-plan.md` done（`sendSegmentMessage` 向手工标签/RFM/生命周期分群全部成员定向推送 MARKETING 站内信，542 测试全绿）。
 
 ## Closure
 
@@ -259,5 +260,5 @@ Closure Audit Evidence:
 
 Follow-up:
 
-- MARKETING 定向投放（触发条件：P20 标签分群被运营正式采用）。
+- ~~MARKETING 定向投放（触发条件：P20 标签分群被运营正式采用）。~~ **已由 successor `2026-06-30-0044-2` 关闭**。
 - 多通道通知编排与 nop-integration 引入（触发条件：SMS/Email/站内信统一模板与重试需求出现）。

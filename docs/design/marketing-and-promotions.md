@@ -953,3 +953,40 @@
   - 满减 `goodsScope=CATEGORY`：经其分类下商品集与同时段 goodsId 活动求交集判定。
   - 满减 `goodsScope=GOODS`、限时折扣、秒杀、拼团：均按 goodsId（可选 productId）直接比对。
 - 冲突在前端按 4 类列表的 goodsId + 时间窗集合判定，无需后端冲突 API。
+
+## 分群定向营销推送（successor of P35 deferred「MARKETING 定向投放」）
+
+### 业务意图
+
+运营在后台选定一个分群（手工标签 / RFM 段 / 生命周期阶段），填写标题与内容后，向该分群的**全部**匹配成员一次性推送一条 MARKETING 站内信，并返回送达人数。补齐 P35「事件触发 ORDER 消息 + 全员 SYSTEM 公告」基座缺失的「向某个分群定向投放 MARKETING 营销消息」动作。
+
+### 触达口径
+
+- **动作：** `LitemallUserMessage__sendSegmentMessage(segmentType, segmentValue, title, content)`，`@BizMutation @Auth(roles="admin")`，逐成员写入 `msgType=MARKETING(10)` 的 `LitemallUserMessage`，返回送达人数。
+- **分群类型与成员解析（与「用户分群」查询页同源口径，避免分叉）：**
+  - `tag`（手工标签）：走 `LitemallUserTag`，`userTagBiz.findList(eq(tag))` 取 userId 去重。
+  - `rfm`（RFM 段）/ `lifecycle`（生命周期阶段）：走算法化分类，`orderBiz.collectRfmLifecycleMatches(segmentValue, byRfm)` 取全量匹配成员 userId。
+  - RFM 段值 = 中文 8 类、生命周期段值 = 中文 4 类（与 P20 一致）。
+- **限制：** `rfm`/`lifecycle` 分群**仅含 `lastPayTime != null`（有支付历史）的用户**——无消费用户不进入算法化分群，亦不会收到此类定向推送。手工标签分群不受此限（标签可打在任意用户上）。
+
+### 业务规则
+
+- **空分群返回 0 不抛错**（Decision D3）：空分群为正常运营状态（如新标签无人、某 RFM 段当前无人命中），投放动作成功但无人送达。
+- 非法 `segmentType` 抛 `nop.err.mall.user-portrait.invalid-segment-type`；空 title/content 抛 `nop.err.mall.message.segment-title-or-content-empty`。
+- **批量写入模型（Decision D2）：** 逐成员 `newEntity` + `saveEntity` 写入（与 `broadcastSystemMessage` 同先例，同步逐条写入），不引入 bulk-insert（基线无平台 bulk helper）。
+- **快照语义：** 按调用时的分群成员一次性写入；分群随用户打标/消费变化后的成员变动不影响已下发消息。不做跨多次推送去重（每次投放独立生成消息）。
+- 仅交付站内信 MARKETING 通道；外部通道（SMS / Email / 微信模板消息）属 P35 Follow-up「多通道通知编排 + nop-integration 引入」，不在本能力。
+
+### 关键设计抉择（Decision）
+
+1. **分群类型范围（D1）。** 抉择 A（支持全部三类：手工标签 / RFM 段 / 生命周期阶段）。备选（仅 RFM + 生命周期，拒绝手工标签）被否——手工标签是运营最直观的营销分群，且 `LitemallUserTag` + `findUsersByTag` 已可解析，无模型缺口。残留风险：手工标签随用户打标变化，投放时刻为快照语义（与分群查询一致，可接受）。
+2. **批量写入模型（D2）。** 抉择 A（逐成员 `saveEntity` 写入，同步返回送达数；不引入 bulk-insert）。备选（异步队列投放）被否——基线 admin 手动投放，同步写入最简。残留风险：超大分群（数万）同步写入耗时——successor（触发条件：单分群成员 > 1 万时评估异步队列投放 + 进度查询）。
+3. **空分群语义（D3）。** 抉择 A（空分群返回 0 不抛错）。备选（抛 `ERR_MESSAGE_SEGMENT_EMPTY`）被否——空分群为正常运营状态非错误。
+
+### 残留风险与 successor
+
+- **超大分群同步投放耗时：** `optimization candidate`，触发条件：单分群成员 > 1 万时评估异步队列投放 + 进度查询。
+- **定向推送多通道（SMS / Email / 微信模板消息）：** `out-of-scope improvement`，触发条件：SMS/Email/微信模板消息统一模板与重试需求出现时，引入 nop-integration 并扩展投放通道选择。
+- **自动化/定时定向投放：** `out-of-scope improvement`，本能力为 admin 手动一次性投放；自动化触发引擎（如「沉睡用户自动发券」）为独立 successor。
+- **推送效果回溯（触达/点击/转化统计）：** 属报表 successor，不在本能力。
+- **推送频控/防骚扰/用户退订：** 基线 admin 手动投放，频控为 successor（触发条件：投放频率上升影响体验时）。

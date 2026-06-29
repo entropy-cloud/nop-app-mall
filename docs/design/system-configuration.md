@@ -154,7 +154,7 @@
 | msgType（字典码） | 业务语义 | 产生方式 | 触发事件 |
 | ----------------- | -------- | -------- | -------- |
 | `ORDER`(0, 订单消息) | 订单/履约/退款类业务结果 | 业务事件触发，由 `MallNotificationService` 在事件钩子内写入 | 支付成功、发货、售后退款、团购失败退款、拼团失败退款、自提核销成功 |
-| `MARKETING`(10, 营销消息) | 营销活动类消息 | 优惠券即将过期预警由调度 job 下发（单用户） | 优惠券即将过期前置预警；定向投放依赖 P20 标签分群，作为 successor |
+| `MARKETING`(10, 营销消息) | 营销活动类消息 | 优惠券即将过期预警由调度 job 下发（单用户）；分群定向投放由 admin 手动一次性下发（`sendSegmentMessage`，向选定分群全部成员逐人写入） | 优惠券即将过期前置预警；分群定向营销推送（手工标签 / RFM 段 / 生命周期阶段，依赖 P20 分群解析能力） |
 | `SYSTEM`(20, 系统消息) | 管理员系统公告 + 账户状态提醒 | `broadcastSystemMessage` 下发（全员可见）；积分过期预警由调度 job 下发（单用户） | 管理员后台主动发布；积分即将过期前置预警 |
 
 事件→站内信通道接入清单（P35 落地 + 后续事件补全）：
@@ -184,6 +184,7 @@
 | 删除消息 | `LitemallUserMessage__deleteMessage` | 归属校验后逻辑删除（走既有 logical delete） |
 | 消息详情 | `LitemallUserMessage__getMessageDetail` | 拉取详情，首次拉取未读则顺带标记已读（单事务） |
 | 系统公告下发 | `LitemallUserMessage__broadcastSystemMessage` | `@Auth(roles="admin")`，下发 `msgType=SYSTEM` 消息 |
+| 分群定向推送 | `LitemallUserMessage__sendSegmentMessage` | `@Auth(roles="admin")`，选定分群（`segmentType=tag|rfm|lifecycle`）+ 段值后向全部匹配成员逐人写入一条 `msgType=MARKETING` 消息，返回送达人数 |
 
 ### 业务规则
 
@@ -192,6 +193,12 @@
 - 管理员系统公告（`broadcastSystemMessage`）按「逐活跃用户写入一条 `msgType=SYSTEM` 的 UserMessage」模型实现，仅管理员可达（`@Auth(roles="admin")`）。
 - 事件触发的 ORDER 消息受开关 `mall_message_event_enabled_<event>` 控制（存于系统配置，默认开启），允许运营关闭某类事件站内信。
 - 站内信内容（title/content）由应用层在事件方法内**直接拼装**（不引入 `NopSysNoticeTemplate` 模板渲染）；模板可视化运营编辑作为 successor。
+- **分群定向推送（`sendSegmentMessage`）口径：**
+  - 支持三类分群：`tag`（手工标签，走 `LitemallUserTag`）、`rfm`（RFM 段，算法化分类）、`lifecycle`（生命周期阶段，算法化分类）。分群成员解析复用既有能力，与「用户分群」查询页同源口径，避免分叉。
+  - `rfm`/`lifecycle` 段值 = 中文枚举（RFM 8 类 / 生命周期 4 类，与 P20 一致）；**仅含 `lastPayTime != null`（有支付历史）的用户**参与算法化分类——无消费用户不进入 RFM/生命周期分群，亦不会收到此类定向推送。
+  - 逐成员 `newEntity` + `setMsgType(MARKETING)` + `saveEntity` 写入（与 `broadcastSystemMessage` 同先例，同步逐条写入），返回送达人数；不引入 bulk-insert（基线无平台 bulk helper）。
+  - **空分群返回 0 不抛错**（投放动作成功但无人送达，空分群为正常运营状态如新标签）；非法 `segmentType` 抛 `nop.err.mall.user-portrait.invalid-segment-type`，空 title/content 抛 `nop.err.mall.message.segment-title-or-content-empty`。
+  - 投放时刻为**快照语义**：按调用时的分群成员一次性写入，与分群查询页一致；分群随用户打标/消费变化后的成员变动不影响已下发消息。不做跨多次推送去重（每次投放独立生成消息，与 `broadcastSystemMessage` 同模型）。
 
 ### 关键设计抉择（Decision）
 
@@ -200,6 +207,8 @@
 3. **已读语义与未读徽章。** 抉择 A（`isRead` 单字段 + `readTime`；进入详情即 markRead，未读数 = `findCount(userId,isRead=false)`）。备选 B（未读/已读双状态机）被否——单字段足以表达。
 4. **管理员系统公告下发模型。** 抉择 A（`broadcastSystemMessage` 下发时为每个活跃用户生成一条 `msgType=SYSTEM` 的 UserMessage）。备选 B（「公告表 + 用户读位」惰性可见）被否——基线用户量非超大，直接写入实现最简、未读计数语义一致。残留风险：写入放大（大用户量下逐用户插入成本），触发条件见各计划 Deferred。
 5. **消息内容拼装方式。** 抉择 A（应用层直接拼装 title/content，事件方法内就地组装文案）。备选 B（引入 `NopSysNoticeTemplate` 模板渲染）作为 successor——模板可视化运营编辑需求出现时再引入。理由：基线文案稳定，直接拼装最简、零额外依赖。
+6. **分群定向推送的分群类型范围（successor of P35 deferred「MARKETING 定向投放」）。** 抉择 A（支持全部三类：手工标签 / RFM 段 / 生命周期阶段）。备选 B（仅 RFM + 生命周期，拒绝手工标签）被否——手工标签是运营最直观的营销分群，且 `LitemallUserTag` + `findUsersByTag` 已可解析，无模型缺口。残留风险：手工标签随用户打标变化，投放时刻为快照语义（与分群查询一致，可接受）。
+7. **分群定向推送的批量写入模型与空分群语义。** 抉择 A（逐成员 `saveEntity` 写入，同步返回送达数；不引入 bulk-insert；空分群返回 0 不抛错）。备选（异步队列投放 / 空分群抛错）被否——基线 admin 手动投放，同步写入最简、空分群为正常运营状态非错误。残留风险：超大分群（数万）同步写入耗时——successor（触发条件：单分群成员 > 1 万时评估异步队列投放 + 进度查询）。
 
 ### 与通知/公告的边界
 
