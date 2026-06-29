@@ -197,6 +197,7 @@ Exit Criteria:
 - Classification: `out-of-scope improvement`
 - Why Not Blocking Closure: `walletPayAmount` 字段语义支持混合，但混合支付的拆分编排不在本计划范围（仅单通道全额支付）。
 - Successor Required: `yes`（触发条件：业务要求余额抵扣 + 第三方补差组合支付时）
+- **已由 successor 关闭：** `docs/plans/2026-06-30-0044-1-combo-payment-balance-plus-channel-plan.md`（`payWithCombo` + 组合重入守卫 + CREATED 回冲 + `refundComboAware` 退款拆分；536 测试全绿）。
 
 ### 充值多通道（支付宝充值）
 

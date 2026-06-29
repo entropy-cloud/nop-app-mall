@@ -205,6 +205,33 @@
 
 余额通道仅服务非零金额订单；零金额订单（`actualPrice==0`）在收银台零金额分支直接 `pay()` 确认，无需扣余额。
 
+### 组合支付流程（successor：余额抵扣 + 第三方通道补差）
+
+组合支付（余额抵扣一部分 + 第三方通道（微信）补差剩余）允许用户在收银台一次性完成订单支付，关闭 P30 Deferred「跨通道组合支付」。
+
+**扣减时机（Decision D1）：** 先原子扣减余额部分 → 创建第三方补差预支付；CREATED 组合待支付订单被取消/超时时，已扣余额对称回冲。备选「通知到达才扣减」被否（余额双花竞态）；备选「钱包冻结/预占」被否（基线无冻结机制，扩大钱包模型）。残留风险：第三方通知在超时取消之后到达——`confirmPaidByNotify` 对非 101 订单既有幂等 no-op，余额已回冲，迟到通知静默丢弃需人工对账（watch-only successor）。
+
+**通道字段语义（Decision D2）：** 组合订单 `payChannel`=第三方通道（WECHAT）、`walletPayAmount`=余额抵扣。备选「新增 `payChannel=COMBO` + 拆分报表」被否（破坏既有单通道口径与 `cancelExpiredPickupOrders` BALANCE 分支语义，扩大字典与报表面）。`confirmPaidByNotify` 既有逻辑设 WECHAT 且不触碰 `walletPayAmount`，天然满足。残留风险：报表「按通道」统计把组合订单归入 WECHAT——可接受（余额抵扣作补充字段 `walletPayAmount`，wallet-and-assets 口径已说明）。
+
+1. **payWithCombo**（`ILitemallOrderBiz.payWithCombo(orderId, useBalanceAmount, confirmCredential)`，`@BizMutation`）— 用户在收银台选择「余额抵扣 + 第三方补差」后调用。校验：订单归属 + 订单待支付(101) + **组合重入守卫**（`walletPayAmount>0` 抛 `ERR_ORDER_COMBO_PENDING`）+ `useBalanceAmount>0` 且 ≤ `actualPrice`（否则 `ERR_ORDER_COMBO_AMOUNT_INVALID`）+ 确认凭证（Decision B，经 `IPasswordEncoder` 校验登录密码）+ 余额可用额 ≥ `useBalanceAmount` → 原子扣款 `walletBiz.debitBalance(userId, debitAmount, PAY, sourceType=pay, sourceId=orderSn)`，其中 `debitAmount = useBalanceAmount`（已守卫 ≤ actualPrice）→ 写 `order.walletPayAmount=debitAmount`。
+2. **余额部分 == actualPrice（退化全额余额）：** `remainder = actualPrice − debitAmount == 0` → 设 `payChannel=BALANCE` + `markOrderPaidCore` 推进已支付（与 `payByBalance` 全额余额语义等价）。
+3. **余额部分 < actualPrice（第三方补差）：** `remainder > 0` → `payService.createPayment(totalFee=remainder)` 记录 `payId`，订单保持 101，等待微信异步通知。通知到达后 `confirmPaidByNotify` 推进已支付，设 `payChannel=WECHAT`（既有逻辑，D2）+ 保留已落库的 `walletPayAmount`。
+
+**组合重入守卫（Decision D1）：** 组合待支付窗口（订单仍 101 且 `walletPayAmount>0`）防重入——`pay`/`payByBalance`/`prepay`/`payWithCombo` 在既有 `status==101` 守卫后补 `rejectComboReentry`（`walletPayAmount>0` 抛 `ERR_ORDER_COMBO_PENDING`），保证组合待支付订单不可被任一支付入口二次进入（防双扣钱包 / 防二次预支付）。
+
+**CREATED 取消/超时余额回冲（Decision D1 对称）：** `cancel()` 与 `cancelExpiredOrders()` 在 CAS 守卫成功、加载订单后，若 `walletPayAmount>0` 则 `walletBiz.creditBalance(userId, walletPayAmount, REFUND, sourceType=order-refund, sourceId=orderSn)` 对称回冲——复用既有 `SOURCE_TYPE_ORDER_REFUND`（与 `cancelExpiredPickupOrders` 钱包回冲 taxonomy 一致）。CAS 守卫保证幂等；普通（无 `walletPayAmount`）订单取消零回归。
+
+### 组合订单退款拆分（successor：资金安全）
+
+已支付组合订单进入任何退款路径时，必须按比例拆分：钱包部分回冲钱包、剩余部分退第三方通道——不丢资金、不对通道超额退款。`refundComboAware(order, refundAmount, context)`（`ILitemallOrderBiz` 内部 helper，不暴露 GraphQL）是全站五个退款站点的共享契约。
+
+**退款金额钱包/通道分摊（Decision D3）：** 按比例分摊 `walletPortion = refundAmount × walletPayAmount / actualPrice`（scale=2 HALF_UP）；`channelPortion = refundAmount − walletPortion`（余数归通道）。整单退款（`refundAmount=actualPrice`）时 `walletPortion=walletPayAmount` 恰好、`channelPortion=actualPrice−walletPayAmount`；部分退款按比例分摊。备选「通道优先/钱包优先」被否（组合订单通道收到的就是补差，优先策略语义不清）。残留风险：多次部分退款的累计尾差——余数归通道，钱包累计回冲可能差分（scale=2 控制，记 owner doc）。
+
+- **组合订单（`walletPayAmount>0` 且 `actualPrice>0`）：** `walletPortion` 经 `walletBiz.creditBalance(userId, walletPortion, REFUND, sourceType=order-refund, sourceId=orderSn)` 回冲钱包；`channelPortion>0` 时 `payService.refund(totalFee=actualPrice, refundFee=channelPortion)`，返回通道退款结果（失败由调用方各自处理）。
+- **普通订单（`walletPayAmount==0/null` 或 `actualPrice==0`）：** 既有全额通道退款 `payService.refund(totalFee=actualPrice, refundFee=refundAmount)`，零回归。
+
+**五个退款站点经 `refundComboAware` 路由：** 售后 `refund()` / 售后 `confirmReturnReceived()`（`LitemallAftersaleBizModel`，替换直接 `payService.refund`，保留 `ERR_AFTERSALE_REFUND_FAILED` 失败语义）、自提超时退款 `cancelExpiredPickupOrders()` 非 BALANCE 分支（BALANCE 分支保留既有 `creditBalance` 全额回冲，全额余额订单 `walletPayAmount==actualPrice` 二者等价）、团购失败退款 `refundGrouponOrder()`、拼团失败退款 `refundMemberOrder()`（团购/拼团保留 try-catch 记 `refundFailures` 批次语义）。
+
 ### 前台支付消费者
 
 前台支付页（`/storefront-pay`，`mall/pay/pay.page.yaml`）是 Phase 14 微信支付后端在前台的唯一消费者页面，串起 prepay → 二维码 → 轮询 → pay 的完整前台流程：

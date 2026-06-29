@@ -50,6 +50,7 @@
   - 后台调账（扣） = `PAY` + `sourceType=admin-adjust`
   - 余额支付扣款 = `PAY` + `sourceType=pay`（P30 接线）
   - 退款返还 = `REFUND` + `sourceType=recharge-refund`（充值退款异步对账已落地，见下「充值退款对账」）
+  - 订单退款返还 = `REFUND` + `sourceType=order-refund`（自提超时退款 / 组合待支付取消回冲 / 组合订单退款钱包部分回冲，对称于 `PAY + sourceType=pay` 余额支付扣款）
   - 提现 = `WITHDRAW` + `sourceType=withdraw`（未实现，预留语义）
 - `sourceId` 记录来源业务 ID（rechargeId 等），支撑幂等查重（如同一 rechargeId 不重复入账）。
 
@@ -113,6 +114,9 @@
 - 余额支付成功后，钱包余额扣减对应金额，并产生余额扣减流水（`changeType=PAY(10)` + `sourceType=pay` + `sourceId=orderSn`）。
 - **扣款接线（P30 已落地）：** 收银台 `payByBalance(orderId, confirmCredential)`（`@BizMutation`）调用 `ILitemallWalletBiz.debitBalance(userId, actualPrice, WALLET_CHANGE_TYPE_PAY, SOURCE_TYPE_PAY, orderSn, ...)` 原子扣款（乐观锁），写 `order.walletPayAmount` + `order.payChannel=20(BALANCE)` 后推进订单已支付。关闭 P29 deferred「余额支付扣款 = PAY + sourceType=pay」。余额通道仅服务非零金额订单（零金额订单走收银台零金额分支直接 `pay()`，不扣余额）。
 - **双层幂等：** 订单状态守卫（重复调用见 status≠101 拒绝 `ERR_ORDER_NOT_ALLOW_PAY`）+ `debitBalance` 乐观锁（并发扣款版本冲突 `ERR_WALLET_VERSION_CONFLICT`）。
+- **组合支付抵扣（successor 已落地）：** 收银台 `payWithCombo(orderId, useBalanceAmount, confirmCredential)`（`@BizMutation`）支持「余额抵扣一部分 + 第三方通道补差剩余」一次性支付——校验订单归属 + 待支付(101) + 组合重入守卫（`walletPayAmount>0` 抛 `ERR_ORDER_COMBO_PENDING`）+ `useBalanceAmount>0` 且 ≤ actualPrice + 确认凭证 + 余额可用额 ≥ `useBalanceAmount` → `debitBalance(debitAmount, PAY, sourceType=pay, sourceId=orderSn)` 写 `walletPayAmount=debitAmount`；`remainder=actualPrice−debitAmount>0` 时创建第三方补差预支付（订单保持 101，通知到达后 `confirmPaidByNotify` 推进，`payChannel=WECHAT` + 保留 `walletPayAmount`），`remainder==0` 退化为全额余额。详见 `order-and-cart.md`「组合支付流程」。
+- **组合待支付取消/超时余额回冲（successor 已落地）：** `cancel()` / `cancelExpiredOrders()` 对组合待支付窗口（101 且 `walletPayAmount>0`）的订单，在 CAS 守卫成功后 `creditBalance(userId, walletPayAmount, REFUND, sourceType=order-refund, sourceId=orderSn)` 对称回冲已扣余额（复用既有 `SOURCE_TYPE_ORDER_REFUND`，与 `cancelExpiredPickupOrders` 钱包回冲 taxonomy 一致）。CAS 守卫保证幂等；普通（无 `walletPayAmount`）订单零回归。
+- **组合订单退款钱包部分回冲（successor 已落地）：** 已支付组合订单进入退款路径（售后 refund/confirmReturnReceived、自提超时、团购失败、拼团失败）时，`refundComboAware(order, refundAmount, context)`（`ILitemallOrderBiz` 共享 helper）按比例分摊 `walletPortion = refundAmount × walletPayAmount / actualPrice`（scale=2 HALF_UP，余数归通道）→ `creditBalance(userId, walletPortion, REFUND, sourceType=order-refund, sourceId=orderSn)` 回冲钱包部分，通道部分走 `payService.refund`。整单退款恰好回冲 `walletPayAmount`；普通订单（无 `walletPayAmount`）零回归。详见 `order-and-cart.md`「组合订单退款拆分」。残留风险：多次部分退款累计尾差（scale=2 控制，钱包累计回冲可能差分）。
 
 ## 积分账户
 

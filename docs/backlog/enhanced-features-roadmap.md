@@ -584,6 +584,8 @@ graph TD
 >
 > **P27/P29 Deferred「积分+现金组合兑换」已闭环：** 由 `docs/plans/2026-06-29-1045-3-points-cash-combo-exchange-plan.md` 交付（PointsGoods.cashPrice + PointsExchangeOrder pay 字段 + AWAITING_PAYMENT 状态 + exchangeCombo/payComboByBalance/confirmExchangePaidByNotify + PE outTradeNo 回调路由 + 超时取消任务；消费 P30 多支付通道 + P29 钱包，不新建支付集成）。
 >
+> **P30 Deferred「跨通道组合支付（余额 + 第三方混合）」已闭环：** 由 `docs/plans/2026-06-30-0044-1-combo-payment-balance-plus-channel-plan.md` 交付（`payWithCombo` `@BizMutation` 余额抵扣一部分 + 第三方通道补差剩余 + 退化全额余额 + 组合重入守卫 pay/payByBalance/prepay/payWithCombo 防 double-debit + CREATED cancel/cancelExpiredOrders 对称余额回冲 + `refundComboAware` 组合感知退款比例分摊落地全站 5 退款站点售后 refund/confirmReturnReceived/自提超时非 BALANCE/团购失败/拼团失败不丢钱包部分不对通道超额退款；复用 walletPayAmount/payChannel 字段 + PayService/walletBiz/markOrderPaidCore，无模型改动；pay.page.yaml 组合分支；536 测试全绿）。
+>
 > **P27 Deferred successor「积分有效期与自动过期」已闭环：** 由 `docs/plans/2026-06-29-1200-1-points-validity-auto-expiry-plan.md` 交付（`LitemallPointsExpireBatch` 批次账本实体 + earn 建批次/spend FIFO 消耗/正向调账建批次 + `expirePoints` `@BizMutation` 过期编排扣减 balance 写 EXPIRE 流水 + `MallJobInvoker.expirePoints` + `scheduler.yaml` expire-points job 每小时编排 + `getMyPointsExpiryHint` `@BizQuery` + my-points 页「即将过期」提示；存量积分按 D3 不过期，不变量 D2 `balance >= SUM(remainingPoints)` 保持；489 测试全绿）。
 
 | 扩展字段（现有实体新增字段） | Phase | 字段 |
