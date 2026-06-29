@@ -535,253 +535,267 @@
                         </resource>
                     </children>
                 </resource>
-                <resource id="LitemallPointsFlow-main" displayName="积分流水表" orderNo="10115" i18n-en:displayName=""
+                <resource id="LitemallPointsExpireBatch-main" displayName="积分有效期批次表" orderNo="10115"
+                          i18n-en:displayName="" icon="blocks" component="AMIS" resourceType="SUBM"
+                          url="/app/mall/pages/LitemallPointsExpireBatch/main.page.yaml">
+                    <children>
+                        <resource id="FNPT:LitemallPointsExpireBatch:query" displayName="查询积分有效期批次表"
+                                  i18n-en:displayName="" orderNo="10116" resourceType="FNPT">
+                            <permissions>LitemallPointsExpireBatch:query</permissions>
+                        </resource>
+                        <resource id="FNPT:LitemallPointsExpireBatch:mutation" displayName="修改积分有效期批次表"
+                                  i18n-en:displayName="" orderNo="10117" resourceType="FNPT">
+                            <permissions>LitemallPointsExpireBatch:mutation</permissions>
+                        </resource>
+                    </children>
+                </resource>
+                <resource id="LitemallPointsFlow-main" displayName="积分流水表" orderNo="10118" i18n-en:displayName=""
                           icon="blocks" component="AMIS" resourceType="SUBM"
                           url="/app/mall/pages/LitemallPointsFlow/main.page.yaml">
                     <children>
                         <resource id="FNPT:LitemallPointsFlow:query" displayName="查询积分流水表" i18n-en:displayName=""
-                                  orderNo="10116" resourceType="FNPT">
+                                  orderNo="10119" resourceType="FNPT">
                             <permissions>LitemallPointsFlow:query</permissions>
                         </resource>
                         <resource id="FNPT:LitemallPointsFlow:mutation" displayName="修改积分流水表" i18n-en:displayName=""
-                                  orderNo="10117" resourceType="FNPT">
+                                  orderNo="10120" resourceType="FNPT">
                             <permissions>LitemallPointsFlow:mutation</permissions>
                         </resource>
                     </children>
                 </resource>
-                <resource id="LitemallPointsGoods-main" displayName="积分商品表" orderNo="10118" i18n-en:displayName=""
+                <resource id="LitemallPointsGoods-main" displayName="积分商品表" orderNo="10121" i18n-en:displayName=""
                           icon="blocks" component="AMIS" resourceType="SUBM"
                           url="/app/mall/pages/LitemallPointsGoods/main.page.yaml">
                     <children>
                         <resource id="FNPT:LitemallPointsGoods:query" displayName="查询积分商品表" i18n-en:displayName=""
-                                  orderNo="10119" resourceType="FNPT">
+                                  orderNo="10122" resourceType="FNPT">
                             <permissions>LitemallPointsGoods:query</permissions>
                         </resource>
                         <resource id="FNPT:LitemallPointsGoods:mutation" displayName="修改积分商品表" i18n-en:displayName=""
-                                  orderNo="10120" resourceType="FNPT">
+                                  orderNo="10123" resourceType="FNPT">
                             <permissions>LitemallPointsGoods:mutation</permissions>
                         </resource>
                     </children>
                 </resource>
-                <resource id="LitemallPromotionActivity-main" displayName="促销活动表（满减送）" orderNo="10121"
+                <resource id="LitemallPromotionActivity-main" displayName="促销活动表（满减送）" orderNo="10124"
                           i18n-en:displayName="" icon="blocks" component="AMIS" resourceType="SUBM"
                           url="/app/mall/pages/LitemallPromotionActivity/main.page.yaml">
                     <children>
                         <resource id="FNPT:LitemallPromotionActivity:query" displayName="查询促销活动表（满减送）"
-                                  i18n-en:displayName="" orderNo="10122" resourceType="FNPT">
+                                  i18n-en:displayName="" orderNo="10125" resourceType="FNPT">
                             <permissions>LitemallPromotionActivity:query</permissions>
                         </resource>
                         <resource id="FNPT:LitemallPromotionActivity:mutation" displayName="修改促销活动表（满减送）"
-                                  i18n-en:displayName="" orderNo="10123" resourceType="FNPT">
+                                  i18n-en:displayName="" orderNo="10126" resourceType="FNPT">
                             <permissions>LitemallPromotionActivity:mutation</permissions>
                         </resource>
                     </children>
                 </resource>
-                <resource id="LitemallPromotionTier-main" displayName="满减档位表" orderNo="10124" i18n-en:displayName=""
+                <resource id="LitemallPromotionTier-main" displayName="满减档位表" orderNo="10127" i18n-en:displayName=""
                           icon="blocks" component="AMIS" resourceType="SUBM"
                           url="/app/mall/pages/LitemallPromotionTier/main.page.yaml">
                     <children>
                         <resource id="FNPT:LitemallPromotionTier:query" displayName="查询满减档位表" i18n-en:displayName=""
-                                  orderNo="10125" resourceType="FNPT">
+                                  orderNo="10128" resourceType="FNPT">
                             <permissions>LitemallPromotionTier:query</permissions>
                         </resource>
                         <resource id="FNPT:LitemallPromotionTier:mutation" displayName="修改满减档位表" i18n-en:displayName=""
-                                  orderNo="10126" resourceType="FNPT">
+                                  orderNo="10129" resourceType="FNPT">
                             <permissions>LitemallPromotionTier:mutation</permissions>
                         </resource>
                     </children>
                 </resource>
-                <resource id="LitemallPromotionUsage-main" displayName="满减参与记录表" orderNo="10127" i18n-en:displayName=""
+                <resource id="LitemallPromotionUsage-main" displayName="满减参与记录表" orderNo="10130" i18n-en:displayName=""
                           icon="blocks" component="AMIS" resourceType="SUBM"
                           url="/app/mall/pages/LitemallPromotionUsage/main.page.yaml">
                     <children>
                         <resource id="FNPT:LitemallPromotionUsage:query" displayName="查询满减参与记录表" i18n-en:displayName=""
-                                  orderNo="10128" resourceType="FNPT">
+                                  orderNo="10131" resourceType="FNPT">
                             <permissions>LitemallPromotionUsage:query</permissions>
                         </resource>
                         <resource id="FNPT:LitemallPromotionUsage:mutation" displayName="修改满减参与记录表"
-                                  i18n-en:displayName="" orderNo="10129" resourceType="FNPT">
+                                  i18n-en:displayName="" orderNo="10132" resourceType="FNPT">
                             <permissions>LitemallPromotionUsage:mutation</permissions>
                         </resource>
                     </children>
                 </resource>
-                <resource id="LitemallRecharge-main" displayName="充值记录表" orderNo="10130" i18n-en:displayName=""
+                <resource id="LitemallRecharge-main" displayName="充值记录表" orderNo="10133" i18n-en:displayName=""
                           icon="blocks" component="AMIS" resourceType="SUBM"
                           url="/app/mall/pages/LitemallRecharge/main.page.yaml">
                     <children>
                         <resource id="FNPT:LitemallRecharge:query" displayName="查询充值记录表" i18n-en:displayName=""
-                                  orderNo="10131" resourceType="FNPT">
+                                  orderNo="10134" resourceType="FNPT">
                             <permissions>LitemallRecharge:query</permissions>
                         </resource>
                         <resource id="FNPT:LitemallRecharge:mutation" displayName="修改充值记录表" i18n-en:displayName=""
-                                  orderNo="10132" resourceType="FNPT">
+                                  orderNo="10135" resourceType="FNPT">
                             <permissions>LitemallRecharge:mutation</permissions>
                         </resource>
                     </children>
                 </resource>
-                <resource id="LitemallRegion-main" displayName="行政区域表" orderNo="10133" i18n-en:displayName=""
+                <resource id="LitemallRegion-main" displayName="行政区域表" orderNo="10136" i18n-en:displayName=""
                           icon="blocks" component="AMIS" resourceType="SUBM"
                           url="/app/mall/pages/LitemallRegion/main.page.yaml">
                     <children>
                         <resource id="FNPT:LitemallRegion:query" displayName="查询行政区域表" i18n-en:displayName=""
-                                  orderNo="10134" resourceType="FNPT">
+                                  orderNo="10137" resourceType="FNPT">
                             <permissions>LitemallRegion:query</permissions>
                         </resource>
                         <resource id="FNPT:LitemallRegion:mutation" displayName="修改行政区域表" i18n-en:displayName=""
-                                  orderNo="10135" resourceType="FNPT">
+                                  orderNo="10138" resourceType="FNPT">
                             <permissions>LitemallRegion:mutation</permissions>
                         </resource>
                     </children>
                 </resource>
-                <resource id="LitemallResetCode-main" displayName="密码重置验证码" orderNo="10136" i18n-en:displayName=""
+                <resource id="LitemallResetCode-main" displayName="密码重置验证码" orderNo="10139" i18n-en:displayName=""
                           icon="blocks" component="AMIS" resourceType="SUBM"
                           url="/app/mall/pages/LitemallResetCode/main.page.yaml">
                     <children>
                         <resource id="FNPT:LitemallResetCode:query" displayName="查询密码重置验证码" i18n-en:displayName=""
-                                  orderNo="10137" resourceType="FNPT">
+                                  orderNo="10140" resourceType="FNPT">
                             <permissions>LitemallResetCode:query</permissions>
                         </resource>
                         <resource id="FNPT:LitemallResetCode:mutation" displayName="修改密码重置验证码" i18n-en:displayName=""
-                                  orderNo="10138" resourceType="FNPT">
+                                  orderNo="10141" resourceType="FNPT">
                             <permissions>LitemallResetCode:mutation</permissions>
                         </resource>
                     </children>
                 </resource>
-                <resource id="LitemallSearchHistory-main" displayName="搜索历史表" orderNo="10139" i18n-en:displayName=""
+                <resource id="LitemallSearchHistory-main" displayName="搜索历史表" orderNo="10142" i18n-en:displayName=""
                           icon="blocks" component="AMIS" resourceType="SUBM"
                           url="/app/mall/pages/LitemallSearchHistory/main.page.yaml">
                     <children>
                         <resource id="FNPT:LitemallSearchHistory:query" displayName="查询搜索历史表" i18n-en:displayName=""
-                                  orderNo="10140" resourceType="FNPT">
+                                  orderNo="10143" resourceType="FNPT">
                             <permissions>LitemallSearchHistory:query</permissions>
                         </resource>
                         <resource id="FNPT:LitemallSearchHistory:mutation" displayName="修改搜索历史表" i18n-en:displayName=""
-                                  orderNo="10141" resourceType="FNPT">
+                                  orderNo="10144" resourceType="FNPT">
                             <permissions>LitemallSearchHistory:mutation</permissions>
                         </resource>
                     </children>
                 </resource>
-                <resource id="LitemallStorage-main" displayName="文件存储表" orderNo="10142" i18n-en:displayName=""
+                <resource id="LitemallStorage-main" displayName="文件存储表" orderNo="10145" i18n-en:displayName=""
                           icon="blocks" component="AMIS" resourceType="SUBM"
                           url="/app/mall/pages/LitemallStorage/main.page.yaml">
                     <children>
                         <resource id="FNPT:LitemallStorage:query" displayName="查询文件存储表" i18n-en:displayName=""
-                                  orderNo="10143" resourceType="FNPT">
+                                  orderNo="10146" resourceType="FNPT">
                             <permissions>LitemallStorage:query</permissions>
                         </resource>
                         <resource id="FNPT:LitemallStorage:mutation" displayName="修改文件存储表" i18n-en:displayName=""
-                                  orderNo="10144" resourceType="FNPT">
+                                  orderNo="10147" resourceType="FNPT">
                             <permissions>LitemallStorage:mutation</permissions>
                         </resource>
                     </children>
                 </resource>
-                <resource id="LitemallSystem-main" displayName="系统配置表" orderNo="10145" i18n-en:displayName=""
+                <resource id="LitemallSystem-main" displayName="系统配置表" orderNo="10148" i18n-en:displayName=""
                           icon="blocks" component="AMIS" resourceType="SUBM"
                           url="/app/mall/pages/LitemallSystem/main.page.yaml">
                     <children>
                         <resource id="FNPT:LitemallSystem:query" displayName="查询系统配置表" i18n-en:displayName=""
-                                  orderNo="10146" resourceType="FNPT">
+                                  orderNo="10149" resourceType="FNPT">
                             <permissions>LitemallSystem:query</permissions>
                         </resource>
                         <resource id="FNPT:LitemallSystem:mutation" displayName="修改系统配置表" i18n-en:displayName=""
-                                  orderNo="10147" resourceType="FNPT">
+                                  orderNo="10150" resourceType="FNPT">
                             <permissions>LitemallSystem:mutation</permissions>
                         </resource>
                     </children>
                 </resource>
-                <resource id="LitemallTimeDiscount-main" displayName="限时折扣表" orderNo="10148" i18n-en:displayName=""
+                <resource id="LitemallTimeDiscount-main" displayName="限时折扣表" orderNo="10151" i18n-en:displayName=""
                           icon="blocks" component="AMIS" resourceType="SUBM"
                           url="/app/mall/pages/LitemallTimeDiscount/main.page.yaml">
                     <children>
                         <resource id="FNPT:LitemallTimeDiscount:query" displayName="查询限时折扣表" i18n-en:displayName=""
-                                  orderNo="10149" resourceType="FNPT">
+                                  orderNo="10152" resourceType="FNPT">
                             <permissions>LitemallTimeDiscount:query</permissions>
                         </resource>
                         <resource id="FNPT:LitemallTimeDiscount:mutation" displayName="修改限时折扣表" i18n-en:displayName=""
-                                  orderNo="10150" resourceType="FNPT">
+                                  orderNo="10153" resourceType="FNPT">
                             <permissions>LitemallTimeDiscount:mutation</permissions>
                         </resource>
                     </children>
                 </resource>
-                <resource id="LitemallTopic-main" displayName="专题表" orderNo="10151" i18n-en:displayName="" icon="blocks"
+                <resource id="LitemallTopic-main" displayName="专题表" orderNo="10154" i18n-en:displayName="" icon="blocks"
                           component="AMIS" resourceType="SUBM" url="/app/mall/pages/LitemallTopic/main.page.yaml">
                     <children>
                         <resource id="FNPT:LitemallTopic:query" displayName="查询专题表" i18n-en:displayName=""
-                                  orderNo="10152" resourceType="FNPT">
+                                  orderNo="10155" resourceType="FNPT">
                             <permissions>LitemallTopic:query</permissions>
                         </resource>
                         <resource id="FNPT:LitemallTopic:mutation" displayName="修改专题表" i18n-en:displayName=""
-                                  orderNo="10153" resourceType="FNPT">
+                                  orderNo="10156" resourceType="FNPT">
                             <permissions>LitemallTopic:mutation</permissions>
                         </resource>
                     </children>
                 </resource>
-                <resource id="LitemallUserBlacklist-main" displayName="用户黑名单表" orderNo="10154" i18n-en:displayName=""
+                <resource id="LitemallUserBlacklist-main" displayName="用户黑名单表" orderNo="10157" i18n-en:displayName=""
                           icon="blocks" component="AMIS" resourceType="SUBM"
                           url="/app/mall/pages/LitemallUserBlacklist/main.page.yaml">
                     <children>
                         <resource id="FNPT:LitemallUserBlacklist:query" displayName="查询用户黑名单表" i18n-en:displayName=""
-                                  orderNo="10155" resourceType="FNPT">
+                                  orderNo="10158" resourceType="FNPT">
                             <permissions>LitemallUserBlacklist:query</permissions>
                         </resource>
                         <resource id="FNPT:LitemallUserBlacklist:mutation" displayName="修改用户黑名单表" i18n-en:displayName=""
-                                  orderNo="10156" resourceType="FNPT">
+                                  orderNo="10159" resourceType="FNPT">
                             <permissions>LitemallUserBlacklist:mutation</permissions>
                         </resource>
                     </children>
                 </resource>
-                <resource id="LitemallUserMessage-main" displayName="用户站内信表" orderNo="10157" i18n-en:displayName=""
+                <resource id="LitemallUserMessage-main" displayName="用户站内信表" orderNo="10160" i18n-en:displayName=""
                           icon="blocks" component="AMIS" resourceType="SUBM"
                           url="/app/mall/pages/LitemallUserMessage/main.page.yaml">
                     <children>
                         <resource id="FNPT:LitemallUserMessage:query" displayName="查询用户站内信表" i18n-en:displayName=""
-                                  orderNo="10158" resourceType="FNPT">
+                                  orderNo="10161" resourceType="FNPT">
                             <permissions>LitemallUserMessage:query</permissions>
                         </resource>
                         <resource id="FNPT:LitemallUserMessage:mutation" displayName="修改用户站内信表" i18n-en:displayName=""
-                                  orderNo="10159" resourceType="FNPT">
+                                  orderNo="10162" resourceType="FNPT">
                             <permissions>LitemallUserMessage:mutation</permissions>
                         </resource>
                     </children>
                 </resource>
-                <resource id="LitemallUserTag-main" displayName="用户标签表" orderNo="10160" i18n-en:displayName=""
+                <resource id="LitemallUserTag-main" displayName="用户标签表" orderNo="10163" i18n-en:displayName=""
                           icon="blocks" component="AMIS" resourceType="SUBM"
                           url="/app/mall/pages/LitemallUserTag/main.page.yaml">
                     <children>
                         <resource id="FNPT:LitemallUserTag:query" displayName="查询用户标签表" i18n-en:displayName=""
-                                  orderNo="10161" resourceType="FNPT">
+                                  orderNo="10164" resourceType="FNPT">
                             <permissions>LitemallUserTag:query</permissions>
                         </resource>
                         <resource id="FNPT:LitemallUserTag:mutation" displayName="修改用户标签表" i18n-en:displayName=""
-                                  orderNo="10162" resourceType="FNPT">
+                                  orderNo="10165" resourceType="FNPT">
                             <permissions>LitemallUserTag:mutation</permissions>
                         </resource>
                     </children>
                 </resource>
-                <resource id="LitemallWallet-main" displayName="钱包账户表" orderNo="10163" i18n-en:displayName=""
+                <resource id="LitemallWallet-main" displayName="钱包账户表" orderNo="10166" i18n-en:displayName=""
                           icon="blocks" component="AMIS" resourceType="SUBM"
                           url="/app/mall/pages/LitemallWallet/main.page.yaml">
                     <children>
                         <resource id="FNPT:LitemallWallet:query" displayName="查询钱包账户表" i18n-en:displayName=""
-                                  orderNo="10164" resourceType="FNPT">
+                                  orderNo="10167" resourceType="FNPT">
                             <permissions>LitemallWallet:query</permissions>
                         </resource>
                         <resource id="FNPT:LitemallWallet:mutation" displayName="修改钱包账户表" i18n-en:displayName=""
-                                  orderNo="10165" resourceType="FNPT">
+                                  orderNo="10168" resourceType="FNPT">
                             <permissions>LitemallWallet:mutation</permissions>
                         </resource>
                     </children>
                 </resource>
-                <resource id="LitemallWalletFlow-main" displayName="钱包流水表" orderNo="10166" i18n-en:displayName=""
+                <resource id="LitemallWalletFlow-main" displayName="钱包流水表" orderNo="10169" i18n-en:displayName=""
                           icon="blocks" component="AMIS" resourceType="SUBM"
                           url="/app/mall/pages/LitemallWalletFlow/main.page.yaml">
                     <children>
                         <resource id="FNPT:LitemallWalletFlow:query" displayName="查询钱包流水表" i18n-en:displayName=""
-                                  orderNo="10167" resourceType="FNPT">
+                                  orderNo="10170" resourceType="FNPT">
                             <permissions>LitemallWalletFlow:query</permissions>
                         </resource>
                         <resource id="FNPT:LitemallWalletFlow:mutation" displayName="修改钱包流水表" i18n-en:displayName=""
-                                  orderNo="10168" resourceType="FNPT">
+                                  orderNo="10171" resourceType="FNPT">
                             <permissions>LitemallWalletFlow:mutation</permissions>
                         </resource>
                     </children>

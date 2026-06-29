@@ -53,6 +53,22 @@ body:
             - type: tpl
               tpl: '<div style="color:#999;font-size:12px">积分可用于结算抵扣（兑换比例与上限见结算页）</div>'
 
+      - type: service
+        name: pointsExpiryHint
+        api:
+          url: '@query:LitemallPointsAccount__getMyPointsExpiryHint'
+          sendOn: true
+        body:
+          type: alert
+          level: warning
+          showIcon: true
+          # 仅当存在可过期批次时展示；仅存量积分（无批次）返回 null → 隐藏（Decision D3）。
+          visibleOn: '${!!data}'
+          className: 'mb-2'
+          body:
+            - type: tpl
+              tpl: '<span>您有 <b style="color:#ff6700">${data.points}</b> 积分将于 <b>${data.expireTime | date:YYYY-MM-DD}</b> 过期，请尽快使用。</span>'
+
       - type: tabs
         tabs:
           - title: 全部

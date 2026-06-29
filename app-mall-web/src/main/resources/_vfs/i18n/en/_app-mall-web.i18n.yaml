@@ -152,6 +152,10 @@ site:
       displayName: ''
     FNPT:LitemallPointsExchangeOrder:query:
       displayName: ''
+    FNPT:LitemallPointsExpireBatch:mutation:
+      displayName: ''
+    FNPT:LitemallPointsExpireBatch:query:
+      displayName: ''
     FNPT:LitemallPointsFlow:mutation:
       displayName: ''
     FNPT:LitemallPointsFlow:query:
@@ -299,6 +303,8 @@ site:
     LitemallPointsAccount-main:
       displayName: ''
     LitemallPointsExchangeOrder-main:
+      displayName: ''
+    LitemallPointsExpireBatch-main:
       displayName: ''
     LitemallPointsFlow-main:
       displayName: ''
