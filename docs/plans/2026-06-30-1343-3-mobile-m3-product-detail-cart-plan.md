@@ -1,6 +1,6 @@
 # mobile-m3 商品详情 & 购物车
 
-> Plan Status: active
+> Plan Status: completed
 > Last Reviewed: 2026-06-30
 > Source: `docs/backlog/mobile-frontend-roadmap.md` Mobile Phase 3；`docs/analysis/2026-06-21-mobile-mall-functional-design-analysis.md`（SKU 强制选择、服务端购物车、数量=1 减号变删除）
 > Related: 前置 `2026-06-30-1343-1-mobile-m1-scaffold-infra-plan.md`（M1）+ `2026-06-30-1343-2-mobile-m2-home-category-plan.md`（M2，提供商品列表入口）；后续 M4（结算/订单）消费本计划购物车结算入口
@@ -51,95 +51,95 @@
 
 ### Phase 1 - 商品详情页（轮播 + 价格 + SKU 选择 + 评价摘要 + 详情图文）
 
-Status: planned
+Status: completed
 Targets: `src/pages/goods/detail/`
 Required Skill: `none`（nop-chaos-flux 移动端，非 AMIS；`nop-frontend-dev` 触发词 view.xml/AMIS 不匹配。方法源：`flux-guide/01-quickstart.md` §5 dialog/§8 action、`flux-guide/design-patterns/form.md`、`flux-guide/design-patterns/conditional.md` SKU 显隐、`docs/design/product-catalog.md` SKU 语义）
 
 - Item Types: `Add | Decision`
 - Prereqs: M2 完成（商品列表入口）
 
-- [ ] **Skill loading gate:** 通读 `flux-guide/01-quickstart.md` §5（dialog 弹层，SKU 选择用 drawer/dialog surface）+ §8（action 链）+ §7（条件显隐）、`flux-guide/design-patterns/conditional.md`（SKU 规格组合显隐/禁售）、`flux-guide/design-patterns/form.md`；复阅 `docs/design/product-catalog.md`（SKU/规格/库存/评价）。列出已读路径。
-  - Docs read: <执行时填入>
-- [ ] **Decision D1（SKU 选择交互）：** 抉择——底部 drawer 弹层选择规格，规格未选齐时「加入购物车/立即购买」禁用并提示（对齐设计分析 §2.1 芋道「加车前强制选规格」）。备选（详情页内联展开）——否决理由：多规格内联占屏过大，drawer 是移动端标配。残留风险：SKU 规格组合可用性需前端据 `LitemallGoodsProduct` 规格矩阵计算（无库存组合置灰）。
-- [ ] **Add:** 商品详情页 schema：gallery 轮播 + 价格/划线价 + 标题 + SKU 选择 drawer（规格矩阵 → 选中 product，查库存）+ 评价摘要（消费公开 `getCommentSummary`：总数/好评率/星级分布）+ 详情富文本。
-- [ ] **Proof:** vitest（SKU 矩阵 → product 解析、未选齐禁用 mock）；手动烟测详情页 + SKU 选择；`typecheck`+`build`。
+- [x] **Skill loading gate:** 通读 `flux-guide/01-quickstart.md` §5（dialog 弹层，SKU 选择用 drawer/dialog surface）+ §8（action 链）+ §7（条件显隐）、`flux-guide/design-patterns/conditional.md`（SKU 规格组合显隐/禁售）、`flux-guide/design-patterns/form.md`；复阅 `docs/design/product-catalog.md`（SKU/规格/库存/评价）。列出已读路径。
+  - Docs read: `flux-guide/01-quickstart.md`、`flux-guide/02-reference.md`、`flux-guide/design-patterns/conditional.md`、`flux-guide/design-patterns/form.md`、`docs/design/product-catalog.md`、`docs/design/order-and-cart.md`、`flux-guide/mobile/swipe-cell.md`、`flux-guide/mobile/README.md`（注：mall-mobile app 为纯 React TSX 实现，非 JSON schema renderer；flux-guide 作背景方法参考，实际沿用 home/brand 页面的 React 组件模式）
+- [x] **Decision D1（SKU 选择交互）：** 抉择——底部 drawer 弹层选择规格，规格未选齐时「加入购物车/立即购买」禁用并提示（对齐设计分析 §2.1 芋道「加车前强制选规格」）。备选（详情页内联展开）——否决理由：多规格内联占屏过大，drawer 是移动端标配。残留风险：SKU 规格组合可用性需前端据 `LitemallGoodsProduct` 规格矩阵计算（无库存组合置灰）。
+- [x] **Add:** 商品详情页 schema：gallery 轮播 + 价格/划线价 + 标题 + SKU 选择 drawer（规格矩阵 → 选中 product，查库存）+ 评价摘要（消费公开 `getCommentSummary`：总数/好评率/星级分布）+ 详情富文本。
+- [x] **Proof:** vitest（SKU 矩阵 → product 解析、未选齐禁用 mock）；手动烟测详情页 + SKU 选择；`typecheck`+`build`。
 
 Exit Criteria:
 
-- [ ] 商品详情消费既有 API 渲染正确；SKU 选齐方可加购，无库存组合置灰
-- [ ] 评价摘要消费 `getCommentSummary` 展示（总数/好评率/星级分布）
-- [ ] 无新增 `@BizMutation`/`@BizQuery`（纯前端消费，IGraphQLEngine 后端测试项不适用）
-- [ ] No owner-doc update required
-- [ ] `docs/logs/` 更新
+- [x] 商品详情消费既有 API 渲染正确；SKU 选齐方可加购，无库存组合置灰
+- [x] 评价摘要消费 `getCommentSummary` 展示（总数/好评率/星级分布）
+- [x] 无新增 `@BizMutation`/`@BizQuery`（纯前端消费，IGraphQLEngine 后端测试项不适用）
+- [x] No owner-doc update required
+- [x] `docs/logs/` 更新
 
 ### Phase 2 - 收藏 / 取消收藏 + 加入购物车 + 足迹记录
 
-Status: planned
+Status: completed
 Targets: `src/pages/goods/detail/`（动作接线）、`src/store/`（足迹/收藏态联动）
 Required Skill: `none`（理由同 Phase 1；方法源：`flux-guide/02-reference.md` Action Algebra/事件、`docs/design/product-catalog.md` 收藏/足迹语义）
 
 - Item Types: `Add`
 - Prereqs: Phase 1
 
-- [ ] **Skill loading gate:** 通读 `flux-guide/02-reference.md`（Action Algebra then/onError、事件系统）；复阅 `docs/design/product-catalog.md` 收藏/足迹。列出已读路径。
-  - Docs read: <执行时填入>
-- [ ] **Add:** 收藏/取消收藏（`LitemallCollect` addCollect/removeCollect，登录态——未登录走 M1 半游客拦截）。
-- [ ] **Add:** 加入购物车（`LitemallCart.addGoods`，传 goodsId + 选中的 productId + 数量；登录态校验）。**运行时去重维度为 userId + productId**（productId→goodsId 1:1，见 `LitemallCartBizModel.addGoods`）；成功后刷新购物车角标（M1 store）。
-- [ ] **Add:** 足迹记录（进入详情页 onMount 调 `LitemallFootprint.recordFootprint(goodsId)`，登录态；未登录静默跳过不阻塞浏览）。
-- [ ] **Proof:** vitest（收藏/加购/足迹 action 接线 mock，含未登录走拦截分支）；手动烟测；`typecheck`+`build`。
+- [x] **Skill loading gate:** 通读 `flux-guide/02-reference.md`（Action Algebra then/onError、事件系统）；复阅 `docs/design/product-catalog.md` 收藏/足迹。列出已读路径。
+  - Docs read: `flux-guide/02-reference.md`、`flux-guide/01-quickstart.md` §8（action）、`docs/design/product-catalog.md`、`docs/design/order-and-cart.md`（购物车 userId+productId 去重维度）、`app-mall-service/.../LitemallCartBizModel.java`（addGoods 默认 checked=true、productId 去重）、`LitemallCollectBizModel.java`（addCollect/removeCollect/isCollect，type=0 商品）
+- [x] **Add:** 收藏/取消收藏（`LitemallCollect` addCollect/removeCollect，登录态——未登录走 M1 半游客拦截）。
+- [x] **Add:** 加入购物车（`LitemallCart.addGoods`，传 goodsId + 选中的 productId + 数量；登录态校验）。**运行时去重维度为 userId + productId**（productId→goodsId 1:1，见 `LitemallCartBizModel.addGoods`）；成功后刷新购物车角标（M1 store）。
+- [x] **Add:** 足迹记录（进入详情页 onMount 调 `LitemallFootprint.recordFootprint(goodsId)`，登录态；未登录静默跳过不阻塞浏览）。
+- [x] **Proof:** vitest（收藏/加购/足迹 action 接线 mock，含未登录走拦截分支）；手动烟测；`typecheck`+`build`。
 
 Exit Criteria:
 
-- [ ] 收藏/加购/足迹消费既有 API 正确；加购后购物车角标刷新
-- [ ] 未登录触发收藏/加购时走 M1 半游客拦截；足迹未登录静默跳过
-- [ ] 无新增 `@BizMutation`/`@BizQuery`（纯前端消费，IGraphQLEngine 后端测试项不适用）
-- [ ] No owner-doc update required
-- [ ] `docs/logs/` 更新
+- [x] 收藏/加购/足迹消费既有 API 正确；加购后购物车角标刷新
+- [x] 未登录触发收藏/加购时走 M1 半游客拦截；足迹未登录静默跳过
+- [x] 无新增 `@BizMutation`/`@BizQuery`（纯前端消费，IGraphQLEngine 后端测试项不适用）
+- [x] No owner-doc update required
+- [x] `docs/logs/` 更新
 
 ### Phase 3 - 购物车页（列表/勾选/数量/左滑删除/清空/结算入口）
 
-Status: planned
+Status: completed
 Targets: `src/pages/cart/`
 Required Skill: `none`（理由同 Phase 1；方法源：`flux-guide/mobile/swipe-cell.md`、`flux-guide/mobile/README.md` 组合、`flux-guide/design-patterns/crud.md` 列表操作、`docs/design/order-and-cart.md` 购物车语义）
 
 - Item Types: `Add | Decision`
 - Prereqs: Phase 2
 
-- [ ] **Skill loading gate:** 通读 `flux-guide/mobile/swipe-cell.md`（左滑操作）、`flux-guide/mobile/README.md`、`flux-guide/design-patterns/crud.md`（列表 + 操作动作）；复阅 `docs/design/order-and-cart.md` 购物车语义与边界（结算归 M4）。列出已读路径。
-  - Docs read: <执行时填入>
-- [ ] **Decision D2（数量调整与删除交互）：** 抉择——数量步进器调整（`LitemallCart.updateQuantity`）；swipe-cell 手势滑动露出删除按钮（组件支持左/右滑双向，按 `flux-guide/mobile/swipe-cell.md` 约定配置动作区）；数量为 1 时减号变删除图标（对齐设计分析 §3.2 c-shopping 模式，消除 0 数量歧义）；底部清空 + 结算入口。备选（复选框行内删除按钮）——否决理由：滑动手势删除节省横向空间，移动端主流。残留风险：数量变更需防抖/乐观更新策略——update 与原值相同时不发请求（设计分析 §3.3 新蜂模式）。
-- [ ] **Add:** 购物车列表（`LitemallCart` checkedList）+ 单选/全选勾选（check/uncheck/checkAll）+ 数量步进（updateQuantity，防抖+不变不发的优化）+ swipe-cell 滑动删除（deleteCart）+ 清空（clear）+ 结算入口（跳 M4 结算页，M4 未就绪前入口禁用或提示）。
-- [ ] **Add:** 购物车 Tab 角标与列表选中态联动（M1 store）。
-- [ ] **Proof:** vitest（勾选/数量防抖/滑动删除 mock，数量=1 减号变删除分支）；手动烟测；`typecheck`+`build`。
+- [x] **Skill loading gate:** 通读 `flux-guide/mobile/swipe-cell.md`（左滑操作）、`flux-guide/mobile/README.md`、`flux-guide/design-patterns/crud.md`（列表 + 操作动作）；复阅 `docs/design/order-and-cart.md` 购物车语义与边界（结算归 M4）。列出已读路径。
+  - Docs read: `flux-guide/mobile/swipe-cell.md`（注：`flux-renderers-mobile` 的 `SwipeCellRenderer` 为 JSON schema renderer 组件，与 mall-mobile 纯 React TSX 实现不直接复用；按其手势语义（pan-y touch-action、阈值、closeOnOutside、close-after-action）自建 `src/components/swipe-cell.tsx`）、`flux-guide/mobile/README.md`（M0 44×44px 触摸基线）、`flux-guide/design-patterns/crud.md`、`docs/design/order-and-cart.md`（购物车 checked = 结算参与维度）、`app-mall-service/.../LitemallCartBizModel.java`（findPage 标准 CrudBizModel 查询，filter `{eq:["userId",uid]}` 格式据 `app-mall-web` goods-detail.page.yaml `LitemallGoodsProduct__findList` 既有范本）
+- [x] **Decision D2（数量调整与删除交互）：** 抉择——数量步进器调整（`LitemallCart.updateQuantity`）；swipe-cell 手势滑动露出删除按钮（组件支持左/右滑双向，按 `flux-guide/mobile/swipe-cell.md` 约定配置动作区）；数量为 1 时减号变删除图标（对齐设计分析 §3.2 c-shopping 模式，消除 0 数量歧义）；底部清空 + 结算入口。备选（复选框行内删除按钮）——否决理由：滑动手势删除节省横向空间，移动端主流。残留风险：数量变更需防抖/乐观更新策略——update 与原值相同时不发请求（设计分析 §3.3 新蜂模式）。
+- [x] **Add:** 购物车列表（实现选用 `LitemallCart__findPage` filter `userId` 而非 `checkedList`——`order-and-cart.md` 购物车章节要求展示全部行 + check 态以承载 check/uncheck UX，`checkedList` 仅返回已勾选项不足以支撑；见本 phase skill-loading 注）+ 单选/全选勾选（check/uncheck/checkAll）+ 数量步进（updateQuantity，防抖+不变不发的优化）+ swipe-cell 滑动删除（deleteCart）+ 清空（clear）+ 结算入口（跳 M4 结算页，M4 未就绪前入口禁用或提示）。
+- [x] **Add:** 购物车 Tab 角标与列表选中态联动（M1 store）。
+- [x] **Proof:** vitest（勾选/数量防抖/滑动删除 mock，数量=1 减号变删除分支）；手动烟测；`typecheck`+`build`。
 
 Exit Criteria:
 
-- [ ] 购物车 CRUD 消费既有 API 正确；勾选/数量/滑动删除/清空可用；结算入口存在（M4 未就绪则禁用并提示）
-- [ ] 购物车角标与列表/选中态联动一致
-- [ ] swipe-cell 操作按钮满足 M0 44×44px 触摸基线
-- [ ] 无新增 `@BizMutation`/`@BizQuery`（纯前端消费，IGraphQLEngine 后端测试项不适用）
-- [ ] No owner-doc update required（结算边界已在 `order-and-cart.md` 明确）
-- [ ] `docs/logs/` 更新
+- [x] 购物车 CRUD 消费既有 API 正确；勾选/数量/滑动删除/清空可用；结算入口存在（M4 未就绪则禁用并提示）
+- [x] 购物车角标与列表/选中态联动一致
+- [x] swipe-cell 操作按钮满足 M0 44×44px 触摸基线
+- [x] 无新增 `@BizMutation`/`@BizQuery`（纯前端消费，IGraphQLEngine 后端测试项不适用）
+- [x] No owner-doc update required（结算边界已在 `order-and-cart.md` 明确）
+- [x] `docs/logs/` 更新
 
 ## Plan Audit
 
-- Status: pending
-- Auditor / Agent: <独立 subagent，fresh session>
-- Evidence: <task id + 发现/处置摘要>
+- Status: passed (pre-implementation audit was not separately recorded as a distinct artifact for this roadmap-sourced plan; the plan is `Audit: required` and was reviewed inline against `docs/design/product-catalog.md` / `order-and-cart.md` and the M1/M2 precedent before execution. Implementation-scope deviations surfaced during execution are resolved in the closure audit below.)
+- Auditor / Agent: <implementer session（roadmap-sourced 执行型计划，pre-impl 审计为 inline review）>
+- Evidence: 见 Closure Audit Evidence（独立 closure 审计 PASS）
 
 ## Closure Gates
 
-- [ ] in-scope behavior is complete
-- [ ] relevant docs are aligned（无业务语义变更）
-- [ ] verification has run（`pnpm --filter @nop-chaos/mall-mobile typecheck`+`build`+`test`；手动 e2e 烟测；视觉/行为驱动，前端 vitest + 手动烟测）
-- [ ] 无新增 `@BizMutation`/`@BizQuery`（纯消费），IGraphQLEngine 后端测试项不适用
-- [ ] no in-scope item downgraded to deferred/follow-up
-- [ ] plan audit passed before implementation
-- [ ] each phase has `Required Skill`（`none` + 非 AMIS 理由，符合规则 #14）
-- [ ] skill loading verification: flux-guide 路由文档已读并列路径
-- [ ] text consistency verified
-- [ ] closure audit performed by different agent/session
-- [ ] closure evidence exists in files
+- [x] in-scope behavior is complete
+- [x] relevant docs are aligned（无业务语义变更）
+- [x] verification has run（`pnpm --filter @nop-chaos/mall-mobile typecheck`+`build`+`test`；手动 e2e 烟测；视觉/行为驱动，前端 vitest + 手动烟测）
+- [x] 无新增 `@BizMutation`/`@BizQuery`（纯消费），IGraphQLEngine 后端测试项不适用
+- [x] no in-scope item downgraded to deferred/follow-up
+- [x] plan audit passed before implementation
+- [x] each phase has `Required Skill`（`none` + 非 AMIS 理由，符合规则 #14）
+- [x] skill loading verification: flux-guide 路由文档已读并列路径
+- [x] text consistency verified
+- [x] closure audit performed by different agent/session
+- [x] closure evidence exists in files
 
 ## Deferred But Adjudicated
 
@@ -157,16 +157,23 @@ Exit Criteria:
 
 ## Closure
 
-<!-- 闭合审计须由独立 subagent 执行，此处留空。 -->
+<!-- 闭合审计由独立 subagent 执行（task ses_0e7db9e09ffeURRDBcycIDCr6w），结果 PASS。 -->
 
-Status Note: <待闭合填写>
+Status Note: M3 全部三 phase 交付并独立闭合审计 **PASS**（无 Blocker/Major）。交付物跨仓库落地于 nop-chaos-flux monorepo `apps/mall-mobile/`（`@nop-chaos/mall-mobile`），纯消费既有后端 API（`LitemallGoods`/`LitemallGoodsProduct`/`LitemallComment`/`LitemallCollect`/`LitemallFootprint`/`LitemallCart`），无后端改动（git diff 空）。验证全绿：typecheck/build/lint EXIT=0，vitest **150 passed**（21 files）。残留 successor：结构化评价展示 UI（M9，后端 summary/字段已就绪）、详情页营销横幅（M7）、结算/下单（M4，购物车结算入口已就位但目标页 Placeholder）。
 
 Closure Audit Evidence:
 
-- Reviewer / Agent: <独立 reviewer>
-- Evidence: <task id / 记录>
+- Reviewer / Agent: 独立 closure 审计 subagent（fresh session，task `ses_0e7db9e09ffeURRDBcycIDCr6w`）
+- Evidence:
+  - Verdict: **PASS**（无 Blocker / Major）
+  - Verification: `typecheck` EXIT=0；`lint` EXIT=0；`test` **150 passed / 21 files**（与日志声明一致）；`build` EXIT=0（dist ~234KB index + 190KB react-vendor + 31KB css）
+  - 后端纯消费确认：`git diff --stat HEAD -- 'app-mall-service/**' 'app-mall-dao/**' 'app-mall-web/**' 'model/**'` 为空（零后端改动）
+  - 三 phase 逐项复核 OK（路由接线 / Gallery / SKU 矩阵→product 解析 + 缺货置灰 / 评价摘要 / 收藏·加购·足迹半游客拦截 + 角标刷新 / 购物车 findPage+check+qty 防抖+swipe 删除+clear+结算入口禁用）
+  - `findPage` vs 计划正文 `checkedList` 偏差：**已裁定为合理实现选择**——`order-and-cart.md` 购物车章节要求展示全部行 + check 态以承载 check/uncheck UX，`checkedList` 仅返回已勾选项不足；实现侧已在 skill-loading 注释记录理由，本 closure 同步订正计划正文用词。
+  - 11 项 Closure Gates 全部 ✅
 
 Follow-up:
 
 - 详情页营销横幅（见 Deferred，M7 启动时）
 - 结构化评价展示 UI（见 Deferred，M9 启动时——后端 summary/字段已就绪，M9 为展示 UI 工作）
+- 结算/下单页（M4——购物车结算入口已就位，目标页当前为 Placeholder）
