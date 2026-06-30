@@ -20,7 +20,8 @@ nop-app-mall is a commercial-grade e-commerce reference application showcasing t
 - XML models drive code generation for ORM and API layers
 - Delta customization mechanism for overriding platform behavior
 - Quarkus as the runtime framework
-- AMIS as the frontend framework (JSON-driven, no separate frontend build)
+- AMIS as the web/admin frontend framework (JSON-driven, no separate frontend build)
+- Mobile mall H5 delivered via **nop-chaos-flux** (React 19 + JSON-described mobile UI components); mobile MUST reuse nop-chaos-flux's mobile mechanism directly, not a bespoke stack
 - Maven multi-module architecture with fixed dependency order
 - Java 17+ required
 
@@ -28,7 +29,7 @@ nop-app-mall is a commercial-grade e-commerce reference application showcasing t
 
 - Not a disposable prototype or throwaway demo implementation
 - Not a framework-core project (this is application-layer)
-- Not a mobile application (web-only)
+- Not a native mobile application (mobile is H5 via nop-chaos-flux, not iOS/Android native)
 - Not a microservices architecture (monolithic Quarkus app)
 - Not a template for other Nop applications (the AGE template is separate)
 

@@ -13,10 +13,42 @@ Record the current supported implementation baseline for `nop-app-mall`.
 
 ## Frontend Stack
 
+The application has two independent frontend surfaces sharing the same backend GraphQL APIs:
+
+### Web / Admin Console (existing, delivered)
+
 - Baidu AMIS (JSON-driven low-code UI framework)
 - Views defined as `.view.xml` files in `app-mall-web/src/main/resources/_vfs/`
 - No separate frontend build step — AMIS renders JSON server-side
 - AMIS editor available via `nop-web-amis-editor` dependency
+
+### Mobile Mall H5 (M1 delivered; M2+ per `docs/backlog/mobile-frontend-roadmap.md`)
+
+- **nop-chaos-flux** — JSON-to-React low-code framework (write JSON Schema, engine compiles & renders to React 19). Same paradigm as AMIS but for the mobile surface.
+- Mobile pages consume the already-delivered backend GraphQL/REST RPC APIs (Phase 1-14); no new backend work for mobile
+- Mobile development MUST reference and directly reuse nop-chaos-flux's mobile mechanism; do not build a bespoke mobile UI stack
+- Mobile native components come from `flux-renderers-mobile` package (pull-refresh / infinite-scroll / swipe-cell / countdown / notice-bar); event-driven, request sinking — components never hold data-fetch logic, all requests go through action/data-source layer
+- State management on mobile: Zustand (see State Management Approach below)
+
+**Engineering landing (Decision D1, cross-repo):** the mobile app lives in the nop-chaos-flux monorepo at `apps/mall-mobile/` (`@nop-chaos/mall-mobile`), consuming flux packages via `workspace:*`. It is NOT placed inside the `nop-app-mall` Maven repo because all flux packages are `private:true` workspace packages — cross-repo consumption would require publishing or `pnpm link`, and the canonical `apps/playground/` reference app already lives inside the monorepo. This mirrors the existing `nop-entropy` sibling-repo dependency pattern (mall plan docs drive flux-repo code; delivery is cross-repo). `pnpm-workspace.yaml` already globs `apps/*`, so the app is auto-discovered.
+
+**Auth consumption layer (Decision D3):** the mobile app purely consumes the existing `LoginApi` (platform `login`/`logout`/`refreshToken` + delta `signUp`/`sendResetCode`/`resetPassword`) over Nop's REST RPC transport `POST /r/LoginApi__<op>` with bare-args JSON body and `{status:0,msg,data}` envelope. No new backend mutations/queries.
+
+- `src/env.ts` `createFetcher` — the flux `RendererEnv.fetcher`: injects `Authorization: Bearer <accessToken>` from the Zustand store, parses the Nop envelope (`status:0` ⇒ ok), and on HTTP 401 calls `refreshAccessToken` then **replays the original request once** with the new token; refresh failure ⇒ `onUnauthorized` ⇒ redirect to login.
+- `src/auth/refresh.ts` `refreshAccessToken` — **single-flight**: concurrent 401s share one in-flight refresh promise (one `LoginApi__refreshToken` network call), writing the refreshed token back to the store. Refresh failure clears auth.
+- `src/store/` (Zustand + `persist`) — `accessToken` / `refreshToken` / `userInfo` persisted to `localStorage` (partialized; `cartBadge` is session-only). `src/guards/require-auth.ts` implements **half-guest mode**: a protected-action set (add-to-cart / checkout / view-profile / orders / collect / …) is intercepted when logged out, redirecting to `#/auth/login?returnTo=<original intent>`; after login the user returns to the original intent.
+- Vite dev server proxies `/api` (GraphQL) and `/r` (REST RPC) to the running Quarkus backend (`MALL_BACKEND_ORIGIN`, default `http://localhost:8080`); CORS is avoided by the dev proxy (production reverse-proxy is a deferred successor).
+
+**Reference location (nop-chaos-flux repo):** `~/app/nop-chaos-flux-wt/nop-chaos-flux-master/`
+
+- `apps/mall-mobile/` — the delivered M1 app (scaffold + router + Tab shell + Zustand store + auth pages + token intercept + half-guest guard)
+- `flux-guide/README.md` — core architecture + file index
+- `flux-guide/01-quickstart.md` — 17 most-used code snippets
+- `flux-guide/02-reference.md` — expression syntax, API config, event system, Action Algebra
+- `flux-guide/flux-types/` — TypeScript interfaces for all components (the authoritative field knowledge source)
+- `flux-guide/design-patterns/` — business-scenario cookbook
+- `flux-guide/mobile/` — mobile native components topic (`README.md` + per-component guides)
+- `packages/flux-renderers-mobile/` — mobile renderer implementations
 
 ## Backend Stack
 
@@ -29,8 +61,9 @@ Record the current supported implementation baseline for `nop-app-mall`.
 ## State Management Approach
 
 - Server-side state via Quarkus
-- AMIS manages client-side form state
-- No separate state management library
+- AMIS manages client-side form state for the web/admin console
+- Mobile (nop-chaos-flux) uses Zustand for client-side state (user info, cart badge, etc.)
+- No state management library on the AMIS web side
 
 ## Data Access Approach
 

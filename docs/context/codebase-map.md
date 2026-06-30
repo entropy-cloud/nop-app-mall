@@ -25,6 +25,7 @@ Keep it current enough to route common work. Do not turn it into a full architec
 | Delta module      | `app-mall-delta/`                           | Overrides nop-auth via delta mechanism              | 2026-06-17    | high       |
 | WeChat Pay module | `app-mall-wx/`                              | WxPayServiceImpl, WxPayNotifyResource              | 2026-06-17    | high       |
 | Meta module       | `app-mall-meta/`                            | i18n, xmeta generated resources                     | 2026-06-17    | high       |
+| Mobile frontend (planned) | `app-mall-mobile/`                  | nop-chaos-flux H5 (React 19 + Vite + pnpm). Placeholder until M1; not a Maven module. See `docs/backlog/mobile-frontend-roadmap.md` | 2026-06-30 | high |
 
 ## Common Change Routes
 

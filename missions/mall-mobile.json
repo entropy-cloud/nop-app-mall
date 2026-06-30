@@ -1,12 +1,12 @@
 {
   "name": "mall-mobile",
-  "description": "nop-app-mall 移动端前端（基于 nop-chaos-flux，React 19 + Vite）。独立于 enhanced-features-roadmap（后端+AMIS）。驱动 docs/plans 下的移动端计划起草、审查、执行与 closure 校验。",
+  "description": "nop-app-mall 移动端前端（基于 nop-chaos-flux，React 19 + Vite + pnpm），代码位于 app-mall-mobile/。独立于 enhanced-features-roadmap（后端+AMIS）。驱动 docs/plans 下的移动端计划起草、审查、执行与 closure 校验。M1 脚手架落地前 CHECK 无 package.json 可跑，视为未起步。",
   "roadmapPath": "docs/backlog/mobile-frontend-roadmap.md",
   "plansDir": "docs/plans",
   "planGuide": "docs/plans/00-plan-authoring-and-execution-guide.md",
   "auditsDir": "docs/audits",
   "contextDir": "docs/context",
-  "moduleDir": ".",
+  "moduleDir": "app-mall-mobile",
   "commands": {
     "test": "pnpm test",
     "build": "pnpm build",

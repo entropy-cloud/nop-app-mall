@@ -14,7 +14,7 @@
 
 > **状态更新只改这里，不改 Phase Details 中的状态行。**
 
-- M1. 项目脚手架 & 基础设施: `todo`
+- M1. 项目脚手架 & 基础设施: `done`
 - M2. 首页 & 分类导航: `todo`
 - M3. 商品详情 & 购物车: `todo`
 - M4. 地址 & 订单: `todo`
@@ -197,3 +197,19 @@
 - 组件风格遵循 nop-chaos-flux 的 JSON 描述规范
 - 阶段状态变更只需更新 Phase Status 列表（本文档顶部）
 - 每个 `planned`/`in-progress` 阶段由对应 execution plan 负责细节
+
+## nop-chaos-flux Reference
+
+移动端实现**必须直接复用** nop-chaos-flux 的 mobile 机制，不自建移动端 UI 栈。
+
+- **仓库位置：** `~/app/nop-chaos-flux-wt/nop-chaos-flux-master/`
+- **开发指南：** `flux-guide/`
+  - `README.md`（核心架构 + 文件索引）、`01-quickstart.md`（17 常用代码段）、`02-reference.md`（表达式/API/事件/Action Algebra）
+  - `flux-types/`（所有组件 TS 接口，字段知识源）、`design-patterns/`（业务场景 cookbook）
+  - `mobile/`（移动端原生组件专题：`README.md` + pull-refresh / infinite-scroll / swipe-cell / countdown / notice-bar）
+- **移动端组件包：** `packages/flux-renderers-mobile/`
+- **核心原则（来自 `flux-guide/mobile/README.md`）：**
+  - 事件驱动、请求下沉——组件不持有数据请求逻辑，统一走 action/data-source 层
+  - 与 CRUD/Page 集成（page.pullRefresh → pull-refresh → infinite-scroll → list/cards）
+  - M0 触摸基线：最小可交互区域 44×44px
+- M1 启动脚手架前，实现者须先通读 `flux-guide/README.md` 与 `flux-guide/mobile/README.md`
