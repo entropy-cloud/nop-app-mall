@@ -321,6 +321,10 @@ public interface AppMallErrors {
             define("nop.err.mall.topic.not-found",
                     "专题不存在");
 
+    ErrorCode ERR_BRAND_NOT_FOUND =
+            define("nop.err.mall.brand.not-found",
+                    "品牌不存在");
+
     ErrorCode ERR_ORDER_PRICE_INVALID =
             define("nop.err.mall.order.price-invalid",
                     "订单价格无效");
