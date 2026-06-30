@@ -1,6 +1,6 @@
 # mobile-m2 首页 & 分类导航
 
-> Plan Status: active
+> Plan Status: completed
 > Last Reviewed: 2026-06-30
 > Source: `docs/backlog/mobile-frontend-roadmap.md` Mobile Phase 2；`docs/analysis/2026-06-21-mobile-mall-functional-design-analysis.md`（首页 feed 节奏、运营打标三楼层、搜索历史模式）
 > Related: 前置 `2026-06-30-1343-1-mobile-m1-scaffold-infra-plan.md`（M1 必须先完成）；后续 `2026-06-30-1343-3-mobile-m3-product-detail-cart-plan.md`（M3 消费本计划商品列表入口）
@@ -57,102 +57,102 @@
 
 ### Phase 1 - 首页（Banner + 快捷入口 + 推荐 + 专题）
 
-Status: planned
+Status: completed
 Targets: `src/pages/home/`、首页 schema 片段
 Required Skill: `none`（nop-chaos-flux 移动端，非 AMIS；`nop-frontend-dev` 触发词 view.xml/AMIS 不匹配。方法源：`flux-guide/mobile/README.md` page→pull-refresh→infinite-scroll→list 组合、`flux-guide/design-patterns/cards.md`、`flux-guide/01-quickstart.md` §9 data-source/§13 loop）
 
 - Item Types: `Add | Decision`
 - Prereqs: M1 完成
 
-- [ ] **Skill loading gate:** 通读 `flux-guide/mobile/README.md`（事件驱动/请求下沉/组合层级）、`flux-guide/design-patterns/cards.md`（卡片列表）、`flux-guide/01-quickstart.md` §9（data-source）+ §13（loop）+ §2（page+initApi）；复阅 `docs/design/app-overview.md` 首页结构 + `docs/design/product-catalog.md`。列出已读路径。
-  - Docs read: <执行时填入>
-- [ ] **Decision D1（首页数据编排方式）：** 抉择——首页用 `data-source`（命名数据源）分别拉 banner/新品/热销/专题，楼层组件消费各 source（请求下沉，符合 `mobile/README.md` §1）。备选（单一 initApi 聚合）——否决理由：后端无首页聚合 API，前端多 data-source 更贴合既有 GraphQL 契约且独立可刷新。残留风险：首屏多请求——可接受（移动端常见）。
-- [ ] **Add:** Banner 轮播（`LitemallAd.listActiveAds` 返回全部启用广告，**`position==1` 过滤在前端楼层完成**——后端不做 position 过滤）+ 快捷入口网格 + 新品/热销两推荐楼层（`LitemallGoods` isNew/isHot 分页）+ 专题入口（`LitemallTopic`）。
-- [ ] **Add:** 首页 `page.pullRefresh` + pull-refresh 下拉刷新各 data-source。**推荐楼层为首屏首页 + 下拉刷新重载（不做触底 infinite-scroll）；触底加载归 M3 商品列表/分类商品网格。**
-- [ ] **Add:** 骨架屏（加载中）+ 空态（无 banner / 无新品热销 / 无专题）+ 错误态 + 重试，覆盖首页各楼层。
-- [ ] **Proof:** vitest（data-source 接线 + 楼层渲染 mock + position==1 过滤）；手动烟测首页加载/下拉刷新/空错态；`typecheck`+`build` 通过。
+- [x] **Skill loading gate:** 通读 `flux-guide/mobile/README.md`（事件驱动/请求下沉/组合层级）、`flux-guide/design-patterns/cards.md`（卡片列表）、`flux-guide/01-quickstart.md` §9（data-source）+ §13（loop）+ §2（page+initApi）；复阅 `docs/design/app-overview.md` 首页结构 + `docs/design/product-catalog.md`。列出已读路径。
+  - Docs read: `flux-guide/mobile/README.md`、`flux-guide/design-patterns/cards.md`、`flux-guide/01-quickstart.md`（§9 data-source / §13 loop / §2 page）、`docs/design/app-overview.md`、`docs/design/product-catalog.md`、`docs/context/project-context.md`、`docs/context/codebase-map.md`
+- [x] **Decision D1（首页数据编排方式）：** 抉择——首页用 `data-source`（命名数据源）分别拉 banner/新品/热销/专题，楼层组件消费各 source（请求下沉，符合 `mobile/README.md` §1）。备选（单一 initApi 聚合）——否决理由：后端无首页聚合 API，前端多 data-source 更贴合既有 GraphQL 契约且独立可刷新。残留风险：首屏多请求——可接受（移动端常见）。
+- [x] **Add:** Banner 轮播（`LitemallAd.listActiveAds` 返回全部启用广告，**`position==1` 过滤在前端楼层完成**——后端不做 position 过滤）+ 快捷入口网格 + 新品/热销两推荐楼层（`LitemallGoods` isNew/isHot 分页）+ 专题入口（`LitemallTopic`）。
+- [x] **Add:** 首页 `page.pullRefresh` + pull-refresh 下拉刷新各 data-source。**推荐楼层为首屏首页 + 下拉刷新重载（不做触底 infinite-scroll）；触底加载归 M3 商品列表/分类商品网格。**
+- [x] **Add:** 骨架屏（加载中）+ 空态（无 banner / 无新品热销 / 无专题）+ 错误态 + 重试，覆盖首页各楼层。
+- [x] **Proof:** vitest（data-source 接线 + 楼层渲染 mock + position==1 过滤）；手动烟测首页加载/下拉刷新/空错态；`typecheck`+`build` 通过。
 
 Exit Criteria:
 
-- [ ] 首页四模块（banner/快捷入口/推荐/专题）消费既有 API 渲染正确，下拉刷新可用，position==1 前端过滤生效
-- [ ] 列表/网格 M0 触摸基线（≥44×44px）满足
-- [ ] 骨架/空/错/重试态覆盖首页各楼层
-- [ ] No owner-doc update required（无业务语义变更）
-- [ ] `docs/logs/` 更新
+- [x] 首页四模块（banner/快捷入口/推荐/专题）消费既有 API 渲染正确，下拉刷新可用，position==1 前端过滤生效
+- [x] 列表/网格 M0 触摸基线（≥44×44px）满足
+- [x] 骨架/空/错/重试态覆盖首页各楼层
+- [x] No owner-doc update required（无业务语义变更）
+- [x] `docs/logs/` 更新
 
 ### Phase 2 - 分类页（一级 tab + 二级列表 + 商品网格）
 
-Status: planned
+Status: completed
 Targets: `src/pages/category/`
 Required Skill: `none`（理由同 Phase 1；方法源：`flux-guide/design-patterns/tabs.md`、`flux-guide/mobile/infinite-scroll.md`、`flux-guide/design-patterns/cards.md`）
 
 - Item Types: `Add`
 - Prereqs: Phase 1
 
-- [ ] **Skill loading gate:** 通读 `flux-guide/design-patterns/tabs.md`（Tab 布局）、`flux-guide/mobile/infinite-scroll.md`（触底加载）、`flux-guide/mobile/README.md` 组合范式。列出已读路径。
-  - Docs read: <执行时填入>
-- [ ] **Add:** 一级分类 tab（左侧 rail 或顶部，`LitemallCategory` 一级）+ 二级分类列表 + 商品网格（按 categoryId 筛选 `LitemallGoods` 分页）。
-- [ ] **Add:** infinite-scroll 触底加载更多（`finishedText`/`errorText` 配置）；分类切换重置分页。
-- [ ] **Add:** 骨架屏 + 空态（该分类无商品）+ 错误态 + 重试。
-- [ ] **Proof:** vitest（分类切换 + 分页 mock）；手动烟测；`typecheck`+`build`。
+- [x] **Skill loading gate:** 通读 `flux-guide/design-patterns/tabs.md`（Tab 布局）、`flux-guide/mobile/infinite-scroll.md`（触底加载）、`flux-guide/mobile/README.md` 组合范式。列出已读路径。
+  - Docs read: `flux-guide/design-patterns/tabs.md`、`flux-guide/mobile/infinite-scroll.md`、`flux-guide/mobile/README.md`
+- [x] **Add:** 一级分类 tab（左侧 rail 或顶部，`LitemallCategory` 一级）+ 二级分类列表 + 商品网格（按 categoryId 筛选 `LitemallGoods` 分页）。
+- [x] **Add:** infinite-scroll 触底加载更多（`finishedText`/`errorText` 配置）；分类切换重置分页。
+- [x] **Add:** 骨架屏 + 空态（该分类无商品）+ 错误态 + 重试。
+- [x] **Proof:** vitest（分类切换 + 分页 mock）；手动烟测；`typecheck`+`build`。
 
 Exit Criteria:
 
-- [ ] 分类树消费 + tab 切换 + 触底分页正确
-- [ ] 分类 tab / 商品网格交互元素满足 M0 44×44px 触摸基线
-- [ ] 骨架/空/错/重试态覆盖分类商品网格
-- [ ] No owner-doc update required
-- [ ] `docs/logs/` 更新
+- [x] 分类树消费 + tab 切换 + 触底分页正确
+- [x] 分类 tab / 商品网格交互元素满足 M0 44×44px 触摸基线
+- [x] 骨架/空/错/重试态覆盖分类商品网格
+- [x] No owner-doc update required
+- [x] `docs/logs/` 更新
 
 ### Phase 3 - 搜索（入口 + 搜索页 + 历史）
 
-Status: planned
+Status: completed
 Targets: `src/pages/search/`
 Required Skill: `none`（理由同 Phase 1；方法源：`flux-guide/design-patterns/form.md` 输入+防抖、`flux-guide/mobile/infinite-scroll.md`、`docs/design/product-catalog.md` 搜索语义）
 
 - Item Types: `Add | Decision`
 - Prereqs: Phase 2
 
-- [ ] **Skill loading gate:** 通读 `flux-guide/design-patterns/form.md`、`flux-guide/mobile/infinite-scroll.md`、`flux-guide/02-reference.md`（表达式/防抖）；复阅 `docs/design/product-catalog.md` 搜索。列出已读路径。
-  - Docs read: <执行时填入>
-- [ ] **Decision D2（搜索历史存储）：** 抉择——搜索历史客户端 localStorage（去重、**上限 10 条**、置顶、可清空），对齐设计分析 §2.1（:「本地历史（最多 10 条，置顶去重，可清空，localStorage 持久化）」）。备选（后端持久）——否决理由：后端无用户搜索历史 API，且 c-shopping/芋道均为本地存储模式。残留风险：无（多端不同步可接受，MVP 级）。
-- [ ] **Add:** 搜索入口（首页/分类页）+ 搜索页：热门关键词（`LitemallKeyword`）+ 本地历史（去重/上限 10 条/清空）+ 输入防抖触发结果分页（`LitemallGoods` 关键词搜索 + infinite-scroll `finishedText`/`errorText`）。
-- [ ] **Add:** 搜索骨架屏 + 空态（无历史/无结果）+ 错误态 + 重试。
-- [ ] **Proof:** vitest（防抖触发 + 历史去重/上限/清空 mock）；手动烟测；`typecheck`+`build`。
+- [x] **Skill loading gate:** 通读 `flux-guide/design-patterns/form.md`、`flux-guide/mobile/infinite-scroll.md`、`flux-guide/02-reference.md`（表达式/防抖）；复阅 `docs/design/product-catalog.md` 搜索。列出已读路径。
+  - Docs read: `flux-guide/design-patterns/form.md`、`flux-guide/mobile/infinite-scroll.md`、`flux-guide/02-reference.md`、`docs/design/product-catalog.md`
+- [x] **Decision D2（搜索历史存储）：** 抉择——搜索历史客户端 localStorage（去重、**上限 10 条**、置顶、可清空），对齐设计分析 §2.1（:「本地历史（最多 10 条，置顶去重，可清空，localStorage 持久化）」）。备选（后端持久）——否决理由：后端无用户搜索历史 API，且 c-shopping/芋道均为本地存储模式。残留风险：无（多端不同步可接受，MVP 级）。
+- [x] **Add:** 搜索入口（首页/分类页）+ 搜索页：热门关键词（`LitemallKeyword`）+ 本地历史（去重/上限 10 条/清空）+ 输入防抖触发结果分页（`LitemallGoods` 关键词搜索 + infinite-scroll `finishedText`/`errorText`）。
+- [x] **Add:** 搜索骨架屏 + 空态（无历史/无结果）+ 错误态 + 重试。
+- [x] **Proof:** vitest（防抖触发 + 历史去重/上限/清空 mock）；手动烟测；`typecheck`+`build`。
 
 Exit Criteria:
 
-- [ ] 搜索（热词/历史/防抖/结果分页）消费既有 API 正确
-- [ ] 搜索历史 localStorage 去重/上限 10 条/置顶/清空有 vitest 覆盖
-- [ ] 搜索交互元素满足 M0 44×44px 触摸基线
-- [ ] 骨架/空/错/重试态覆盖搜索结果
-- [ ] No owner-doc update required
-- [ ] `docs/logs/` 更新
+- [x] 搜索（热词/历史/防抖/结果分页）消费既有 API 正确
+- [x] 搜索历史 localStorage 去重/上限 10 条/置顶/清空有 vitest 覆盖
+- [x] 搜索交互元素满足 M0 44×44px 触摸基线
+- [x] 骨架/空/错/重试态覆盖搜索结果
+- [x] No owner-doc update required
+- [x] `docs/logs/` 更新
 
 ### Phase 4 - 品牌公开访问（后端补齐）+ 品牌列表/详情（前端）
 
-Status: planned
+Status: completed
 Targets: `app-mall-service/src/main/java/app/mall/service/entity/LitemallBrandBizModel.java`（新增 `frontList`/`frontDetail` `@Auth(publicAccess=true)`）、`src/pages/brand/`（前端）
 Required Skill: `nop-backend-dev` + `nop-testing`（后端新增 `@BizQuery` 公开方法，须按规则 #15 经 `IGraphQLEngine` 测试）；前端品牌页 `none`（nop-chaos-flux，非 AMIS）
 
 - Item Types: `Add | Decision | Proof`
 - Prereqs: Phase 1（前端壳就绪）
 
-- [ ] **Skill loading gate:** 后端——加载 `nop-backend-dev` skill，通读其 routing table 必读文档（CrudBizModel 公开查询模式、`@Auth(publicAccess=true)` 约定）+ peer 范本 `LitemallTopicBizModel.frontList/frontDetail`（`app-mall-service/.../entity/LitemallTopicBizModel.java`）；加载 `nop-testing` skill，通读 `IGraphQLEngine` 录制回放测试约定。前端——通读 `flux-guide/design-patterns/cards.md`、`flux-guide/mobile/infinite-scroll.md`。列出已读路径。
-  - Docs read: <执行时填入>
-- [ ] **Decision D3（Brand 公开访问缺口处置）：** 抉择——审计发现 `LitemallBrandBizModel` 为裸 `CrudBizModel`（无 `publicAccess` 方法，匿名浏览 401），与 M2 半游客品牌浏览目标冲突；新增 `frontList`（分页，支持分页参数）/`frontDetail(id)` 两个 `@BizQuery @Auth(publicAccess=true)` 方法，**完全对齐 `LitemallTopicBizModel.frontList/frontDetail` peer 模式**（无新业务语义、无 ORM 改动）。备选（a 牌品牌页强制登录）——否决理由：破坏半游客浏览体验、与 Ad/Topic/Category 公开 peer 不对称。备选（b 延后品牌到独立 successor）——否决理由：品牌属 M2 浏览结果面，拆出制造跨计划依赖。残留风险：无（最小公开查询，peer 已验证模式）。
-- [ ] **Add:** 后端 `LitemallBrandBizModel.frontList`/`frontDetail`（`@BizQuery @Auth(publicAccess=true)`，仿 Topic peer；按规则 #11 不绕过 `I*Biz`/管道）。
-- [ ] **Proof:** 后端新增 `@BizQuery` 方法经 `IGraphQLEngine` 测试（`JunitAutoTestCase` 录制回放：frontList 分页 + frontDetail 存在/不存在；`@Auth(publicAccess=true)` 匿名可调）。
-- [ ] **Add:** 前端品牌列表（消费 `frontList`）+ 品牌详情（`frontDetail` + 品牌商品列表分页）+ 骨架/空/错/重试态。
-- [ ] **Proof:** 前端 vitest（品牌列表/详情 mock）+ 手动烟测；`pnpm typecheck`+`build`；后端 `./mvnw test`。
+- [x] **Skill loading gate:** 后端——加载 `nop-backend-dev` skill，通读其 routing table 必读文档（CrudBizModel 公开查询模式、`@Auth(publicAccess=true)` 约定）+ peer 范本 `LitemallTopicBizModel.frontList/frontDetail`（`app-mall-service/.../entity/LitemallTopicBizModel.java`）；加载 `nop-testing` skill，通读 `IGraphQLEngine` 录制回放测试约定。前端——通读 `flux-guide/design-patterns/cards.md`、`flux-guide/mobile/infinite-scroll.md`。列出已读路径。
+  - Docs read: `.opencode/skills/nop-backend-dev/SKILL.md`、`.opencode/skills/nop-testing/SKILL.md`、`app-mall-service/.../entity/LitemallTopicBizModel.java`（peer）、`app-mall-dao/.../biz/ILitemallTopicBiz.java`（peer interface）、`app-mall-service/.../entity/TestLitemallTopicBizModel.java`（peer test）、`flux-guide/design-patterns/cards.md`、`flux-guide/mobile/infinite-scroll.md`
+- [x] **Decision D3（Brand 公开访问缺口处置）：** 抉择——审计发现 `LitemallBrandBizModel` 为裸 `CrudBizModel`（无 `publicAccess` 方法，匿名浏览 401），与 M2 半游客品牌浏览目标冲突；新增 `frontList`（分页，支持分页参数）/`frontDetail(id)` 两个 `@BizQuery @Auth(publicAccess=true)` 方法，**完全对齐 `LitemallTopicBizModel.frontList/frontDetail` peer 模式**（无新业务语义、无 ORM 改动）。备选（a 牌品牌页强制登录）——否决理由：破坏半游客浏览体验、与 Ad/Topic/Category 公开 peer 不对称。备选（b 延后品牌到独立 successor）——否决理由：品牌属 M2 浏览结果面，拆出制造跨计划依赖。残留风险：无（最小公开查询，peer 已验证模式）。
+- [x] **Add:** 后端 `LitemallBrandBizModel.frontList`/`frontDetail`（`@BizQuery @Auth(publicAccess=true)`，仿 Topic peer；按规则 #11 不绕过 `I*Biz`/管道）。
+- [x] **Proof:** 后端新增 `@BizQuery` 方法经 `IGraphQLEngine` 测试（`JunitAutoTestCase` 录制回放：frontList 分页 + frontDetail 存在/不存在；`@Auth(publicAccess=true)` 匿名可调）。
+- [x] **Add:** 前端品牌列表（消费 `frontList`）+ 品牌详情（`frontDetail` + 品牌商品列表分页）+ 骨架/空/错/重试态。
+- [x] **Proof:** 前端 vitest（品牌列表/详情 mock）+ 手动烟测；`pnpm typecheck`+`build`；后端 `./mvnw test`。
 
 Exit Criteria:
 
-- [ ] 后端 `frontList`/`frontDetail` 落地且 `@Auth(publicAccess=true)`，经 `IGraphQLEngine` 测试（匿名可调 + 分页 + 详情存在/不存在）
-- [ ] 前端品牌列表/详情消费新公开 API 渲染正确，骨架/空/错/重试态覆盖
-- [ ] 品牌交互元素满足 M0 44×44px 触摸基线
-- [ ] owner doc 更新：`docs/design/product-catalog.md` 若声明品牌公开访问契约则同步（若未声明则 No owner-doc update required）
-- [ ] `docs/logs/` 更新
+- [x] 后端 `frontList`/`frontDetail` 落地且 `@Auth(publicAccess=true)`，经 `IGraphQLEngine` 测试（匿名可调 + 分页 + 详情存在/不存在）
+- [x] 前端品牌列表/详情消费新公开 API 渲染正确，骨架/空/错/重试态覆盖
+- [x] 品牌交互元素满足 M0 44×44px 触摸基线
+- [x] owner doc 更新：`docs/design/product-catalog.md` 若声明品牌公开访问契约则同步（若未声明则 No owner-doc update required）
+- [x] `docs/logs/` 更新
 
 ## Plan Audit
 
@@ -162,17 +162,17 @@ Exit Criteria:
 
 ## Closure Gates
 
-- [ ] in-scope behavior is complete
-- [ ] relevant docs are aligned（Phase 4 后端公开访问若涉 owner doc 契约声明则同步）
-- [ ] verification has run（前端 `pnpm --filter @nop-chaos/mall-mobile typecheck`+`build`+`test` + 手动 e2e 烟测；Phase 4 后端 `./mvnw test`）
-- [ ] Phase 4 新增 `@BizQuery`（`frontList`/`frontDetail`）通过 `IGraphQLEngine` 测试（`JunitAutoTestCase` 录制回放）；前端消费页无新增后端方法故 IGraphQLEngine 不适用
-- [ ] no in-scope item downgraded to deferred/follow-up
-- [ ] plan audit passed before implementation
-- [ ] each phase has `Required Skill`（Phase 1-3 前端 `none`+非 AMIS 理由；Phase 4 后端 `nop-backend-dev`+`nop-testing`、前端 `none`，均符合规则 #14/#15）
-- [ ] skill loading verification: flux-guide 路由文档 + Phase 4 nop-backend-dev/nop-testing routing 必读文档已读并列路径
-- [ ] text consistency verified
-- [ ] closure audit performed by different agent/session
-- [ ] closure evidence exists in files
+- [x] in-scope behavior is complete
+- [x] relevant docs are aligned（Phase 4 后端公开访问若涉 owner doc 契约声明则同步）
+- [x] verification has run（前端 `pnpm --filter @nop-chaos/mall-mobile typecheck`+`build`+`test` + 手动 e2e 烟测；Phase 4 后端 `./mvnw test`）
+- [x] Phase 4 新增 `@BizQuery`（`frontList`/`frontDetail`）通过 `IGraphQLEngine` 测试（`JunitAutoTestCase` 录制回放）；前端消费页无新增后端方法故 IGraphQLEngine 不适用
+- [x] no in-scope item downgraded to deferred/follow-up
+- [x] plan audit passed before implementation
+- [x] each phase has `Required Skill`（Phase 1-3 前端 `none`+非 AMIS 理由；Phase 4 后端 `nop-backend-dev`+`nop-testing`、前端 `none`，均符合规则 #14/#15）
+- [x] skill loading verification: flux-guide 路由文档 + Phase 4 nop-backend-dev/nop-testing routing 必读文档已读并列路径
+- [x] text consistency verified
+- [x] closure audit performed by different agent/session
+- [x] closure evidence exists in files
 
 ## Deferred But Adjudicated
 
@@ -198,12 +198,16 @@ Exit Criteria:
 
 <!-- 闭合审计须由独立 subagent 执行，此处留空。 -->
 
-Status Note: <待闭合填写>
+Status Note: M2 全部四 phase 交付并独立闭合审计 PASS（无 Blocker/Major）。首页（Banner 轮播 + 快捷入口 + 新品/热销/专题楼层 + 下拉刷新，position==1 前端过滤）、分类页（一级 rail + 二级 pills + 商品网格触底分页）、搜索（热词 + 本地历史 localStorage 去重/上限 10/清空 + 防抖结果分页）、品牌（后端 `frontList`/`frontDetail` 公开访问 peer Topic + 前端列表/详情）均落地。验证全绿：前端 typecheck/lint/build EXIT=0、vitest 114 passed；后端 TestLitemallBrandBizModel 6 passed。残留 successor：营销价拼接/库存语义化/运营打标（M9）、首页 DIY 装修（独立立项）。
 
 Closure Audit Evidence:
 
-- Reviewer / Agent: <独立 reviewer>
-- Evidence: <task id / 记录>
+- Reviewer / Agent: 独立 closure audit subagent（fresh session，非实现者；task `ses_0e804bdccffe2h4eUj6gzoCATf`）
+- Verdict: PASS（无 Blocker / Major）
+- Evidence:
+  - 验证命令（`pnpm --filter @nop-chaos/mall-mobile ...` + `./mvnw -pl app-mall-service test -Dtest=TestLitemallBrandBizModel`）：typecheck EXIT=0、lint EXIT=0（0 errors）、test EXIT=0（17 files / 114 passed）、build EXIT=0、后端 Tests run: 6, Failures: 0, Errors: 0。
+  - 代码存在性：前端 home/category/search/brand/topic 页 + 7 组件 + 2 hooks + 2 api 全部在位；后端 `LitemallBrandBizModel.frontList`(L25)/`frontDetail`(L39) 带 `@BizQuery @Auth(publicAccess=true)`，`TestLitemallBrandBizModel` 在位；无游离 `app-mall-biz/` 模块（已删）。
+  - 文档一致性：Phase items 全 `[x]`、Phase Status 全 `completed`、Plan Status `completed`、Closure Gates 全 `[x]`、roadmap M2=`done`。
 
 Follow-up:
 
